@@ -1,5 +1,7 @@
 # 아키텍처
 
+그림 요약: [현재 구현과 앞으로의 설계도](design-map.md). 구현된 경로와 미구현 계획을 구분합니다.
+
 ## 현재 구조
 
 단일 Spring Boot 프로세스의 Modular Monolith를 사용합니다.
