@@ -120,6 +120,7 @@ node scripts/smoke.mjs
 ## 산출물
 
 - **다른 PC에서 이어서 개발:** [구현 현황 및 인수인계](HANDOFF.md)
+- **다음 작업 전체 체크리스트:** [남은 개발 작업과 완료 조건](docs/backlog.md)
 - 실행 JAR: `backend/target/knowledge-forge-0.1.0.jar`
 - 프런트엔드 번들: `frontend/dist`
 - [아키텍처](docs/architecture.md)

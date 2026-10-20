@@ -1,5 +1,8 @@
 # Phase 완료 기준 및 남은 작업
 
+실행 가능한 작업 단위와 상세 인수 조건은 [남은 개발 체크리스트](backlog.md)를 따릅니다.
+새 PC의 실행 절차와 다음 에이전트용 요청은 [HANDOFF](../HANDOFF.md)에 있습니다.
+
 ## Phase 1 — 완료
 
 - Java 21 / Spring Boot 4.1.x / React 빌드 성공

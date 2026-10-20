@@ -2,6 +2,9 @@
 
 기록일: 2026-10-21 (Asia/Seoul)
 
+구현 기준 커밋: `d4cd1e8` (Phase 2). 이후 문서 커밋은 이 상태의 인수인계를 보완합니다.
+전체 미완료 체크리스트와 기능별 인수 조건은 [남은 작업](docs/backlog.md)에 있습니다.
+
 ## 현재 상태
 
 **Phase 1에 이어 Phase 2의 수집·분석·검색을 구현했습니다.**
@@ -54,10 +57,19 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 ### macOS / Bash
 
 ```bash
+git clone https://github.com/thisisnew/knowledge-forge.git
 cd knowledge-forge
+java -version
+node --version
+git --version
 bash scripts/build.sh
+node scripts/smoke.mjs
 bash scripts/run.sh
 ```
+
+이미 clone했다면 프로젝트에서 `git status`로 미커밋 작업을 확인한 뒤
+`git pull --ff-only origin main`으로 받습니다. 로컬 변경을 강제로 초기화하지 마세요.
+최초 clone은 로그인 없이 가능하지만 이후 push에는 본인 GitHub 인증이 필요합니다.
 
 http://127.0.0.1:8787 에서 실행 화면을 확인합니다.
 개발 모드는 `bash scripts/dev.sh` → http://127.0.0.1:5173 입니다.
@@ -68,6 +80,7 @@ http://127.0.0.1:8787 에서 실행 화면을 확인합니다.
 `JAVA_HOME`이 Java 21을 가리키고 `java`, `node`, `npm`이 PATH에 있어야 합니다.
 
 ```powershell
+git clone https://github.com/thisisnew/knowledge-forge.git
 cd knowledge-forge
 cd frontend
 npm ci
@@ -79,6 +92,20 @@ cd ..
 $env:FORGE_DATA_DIR = Join-Path $PWD ".data"
 java -jar backend/target/knowledge-forge-0.1.0.jar
 ```
+
+현재 `scripts/smoke.mjs`는 Bash 실행 스크립트를 호출하므로 네이티브 PowerShell에서
+그대로 실행되는 것으로 간주하지 마세요. Windows용 smoke 실행 경로는 후속 검증 항목입니다.
+
+### 데이터 이전 주의
+
+Git clone으로 이전되는 것은 소스·문서·가상 fixture뿐입니다. 기존 Workspace,
+등록 Source, 원본 복사본, 분석 데이터는 자동 이전되지 않습니다.
+필요하면 기존 앱을 완전히 종료하고 `FORGE_DATA_DIR`(기본 `.data`) 전체를
+조직이 허용한 비공개 수단으로 복사하세요. DB나 회사 자료를 공개 Git에 올리지 마세요.
+현재 스키마는 v2이고 구버전 앱으로 역이동하는 마이그레이션은 없습니다.
+이전한 로컬 Source의 절대 경로가 새 PC에서 다르면 수집이 실패합니다.
+Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 새 Source로 등록하세요.
+기존 Source 삭제는 내부 스냅샷도 지우므로 백업 없이 재등록을 위해 삭제하지 마세요.
 
 회사 네트워크에서 Maven Central/npm registry 접근이 제한되면 조직 정책에 맞는
 프록시·사내 미러를 설정해야 합니다. 자격 증명이나 실제 회사 자료를 이 공개 저장소에
@@ -98,6 +125,21 @@ java -jar backend/target/knowledge-forge-0.1.0.jar
 Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 후속 모듈은 빈 클래스부터 대량으로 생성하지 말고 유스케이스·포트·어댑터·테스트를
 한 기능씩 추가합니다. 전체 완료 기준은 `docs/phase-plan.md`에 있습니다.
+
+### 다음 코딩 에이전트에게 전달할 요청
+
+```text
+이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
+docs/api.md, docs/phase2-report.md를 읽고 현재 코드와 비교해라.
+Phase 1 및 Phase 2 기본 수집/분석/검색은 구현되어 있다. 먼저 빌드와 테스트로
+기준 상태(백엔드 35개, 프런트엔드 11개)를 확인하고 실패를 숨기지 마라.
+다음 작업은 backlog의 P3-1이다. 변경 시 Source entry ID가 교체되는 현재 구조를
+고려해 영속적인 근거/원본 버전 모델부터 설계하고, 근거 있는 지식 초안·검증·게시를
+실제로 실행 가능한 기능 단위로 구현해라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
+사람 편집 보호, 검증 실패 시 이전 게시본 유지, Workspace 격리를 테스트해라.
+회사 자료 대신 synthetic fixture를 사용하고 외부 LLM은 승인 없이 호출하지 마라.
+GitHub Actions는 만들거나 수정하지 마라. 각 완료 항목의 문서와 실제 테스트 결과를 갱신해라.
+```
 
 ## 유지할 개발 원칙
 
