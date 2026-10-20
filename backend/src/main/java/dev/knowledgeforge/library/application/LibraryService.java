@@ -16,9 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LibraryService {
     private final LibraryStore store;
+    private final dev.knowledgeforge.ingestion.application.DocumentAnalyzer analyzer;
+    private final dev.knowledgeforge.ingestion.application.AnalysisStore analyses;
 
-    public LibraryService(LibraryStore store) {
+    public LibraryService(LibraryStore store, dev.knowledgeforge.ingestion.application.DocumentAnalyzer analyzer,
+                          dev.knowledgeforge.ingestion.application.AnalysisStore analyses) {
         this.store = store;
+        this.analyzer = analyzer;
+        this.analyses = analyses;
     }
 
     public record Session(List<Workspace> workspaces, String activeWorkspaceId) {}
@@ -72,9 +77,15 @@ public class LibraryService {
     private Entry createEntry(String workspaceId, String parentId, String name, String kind, byte[] content) {
         requireWorkspace(workspaceId);
         requireParent(workspaceId, "ORIGINAL", parentId);
+        if (parentId != null && store.managed(parentId)) {
+            throw new LibraryException(409, "Source가 관리하는 폴더입니다. 원본을 변경한 뒤 동기화하세요.");
+        }
         Entry entry = new Entry(UUID.randomUUID().toString(), workspaceId, parentId, validName(name),
                 kind, "ORIGINAL", content.length, Instant.now().toString());
         store.createEntry(entry, content);
+        if (kind.equals("FILE")) {
+            analyses.save(entry.id(), analyzer.analyze(name, content));
+        }
         return entry;
     }
 
@@ -113,7 +124,26 @@ public class LibraryService {
 
     public void deleteEntry(String workspaceId, String id) {
         requireEntry(workspaceId, id);
+        if (store.managed(id)) {
+            throw new LibraryException(409, "Source가 관리하는 자료입니다. Source 삭제 또는 동기화를 이용하세요.");
+        }
         store.deleteEntry(workspaceId, id);
+    }
+
+    public dev.knowledgeforge.ingestion.domain.Analysis analyze(String workspaceId, String id) {
+        Entry entry = requireEntry(workspaceId, id);
+        if (!entry.kind().equals("FILE")) {
+            throw new LibraryException(400, "파일만 분석할 수 있습니다.");
+        }
+        var analysis = analyzer.analyze(entry.name(), store.content(id));
+        analyses.save(id, analysis);
+        return analysis;
+    }
+
+    public dev.knowledgeforge.ingestion.domain.Analysis analysis(String workspaceId, String id) {
+        requireEntry(workspaceId, id);
+        return analyses.find(workspaceId, id).orElseGet(() -> new dev.knowledgeforge.ingestion.domain.Analysis(
+                "", null, "PENDING", "이전 버전에서 등록한 파일입니다. 분석을 실행하세요.", List.of()));
     }
 
     private void requireWorkspace(String id) {

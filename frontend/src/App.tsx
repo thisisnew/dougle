@@ -3,6 +3,8 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, Library, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Area, type Entry, type Preview, type Session } from './api'
+import SourcePanel from './SourcePanel'
+import AnalysisPanel from './AnalysisPanel'
 
 type Modal = { kind: 'workspace' | 'folder' } | { kind: 'delete-workspace' } | { kind: 'delete-entry'; entry: Entry }
 const emptySession: Session = { workspaces: [], activeWorkspaceId: null }
@@ -24,6 +26,7 @@ export default function App() {
   const [modalError, setModalError] = useState('')
   const [revision, setRevision] = useState(0)
   const uploadRef = useRef<HTMLInputElement>(null)
+  const selectionAbort = useRef<AbortController | null>(null)
   const activeId = session.activeWorkspaceId
   const workspace = session.workspaces.find(item => item.id === activeId)
   const parentId = trail.at(-1)?.id
@@ -45,6 +48,7 @@ export default function App() {
 
   useEffect(() => {
     const controller = new AbortController()
+    selectionAbort.current?.abort()
     setEntries([])
     setSelected(null)
     setPreview(null)
@@ -150,7 +154,7 @@ export default function App() {
           <button className={original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('ORIGINAL')}><FolderOpen size={19} /> 원본 자료 <ChevronRight size={15} /></button>
           <button className={!original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button>
         </nav>
-        <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>먼저 Workspace를 만들고<br />지식의 바탕이 될 자료를 모아 보세요.</p><span>PHASE 01 · 자료 정리</span></div>
+        <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>자료를 연결하고<br />문서와 코드의 근거를 찾아보세요.</p><span>PHASE 02 · 수집과 검색</span></div>
         <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 안전하게 저장<small>외부 AI 전송 없음</small></span></div>
       </aside>
 
@@ -167,6 +171,16 @@ export default function App() {
           ) : (
             <>
               <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">현재 폴더 · {entries.length}개 항목</span></div>
+              {original && <SourcePanel key={activeId} workspaceId={activeId!} revision={revision}
+                onChanged={() => setRevision(value => value + 1)}
+                onSelect={id => {
+                  selectionAbort.current?.abort()
+                  const controller = new AbortController()
+                  selectionAbort.current = controller
+                  void request<Entry>(entryPath(activeId!, id), { signal: controller.signal })
+                    .then(entry => { if (!controller.signal.aborted) setSelected(entry) })
+                    .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
+                }} />}
               <div className="explorer">
                 <section className="file-pane" aria-label="자료 탐색기">
                   <div className="toolbar">
@@ -187,13 +201,14 @@ export default function App() {
                 </section>
                 <aside className="preview-pane" aria-label="미리보기">
                   <div className="preview-heading"><span>자료 미리보기</span>{selected && <Button variant="ghost" size="icon" aria-label="미리보기 닫기" onClick={() => setSelected(null)}><X /></Button>}</div>
-                  {selected ? <div className="preview-content"><FileText size={28} /><h2>{selected.name}</h2><div className="tag">원본 · 미분석</div><dl><dt>파일 크기</dt><dd>{formatSize(selected.size)}</dd><dt>추가한 날짜</dt><dd>{new Date(selected.createdAt).toLocaleString('ko-KR')}</dd></dl>
+                  {selected ? <div className="preview-content"><FileText size={28} /><h2>{selected.name}</h2><div className="tag">보관된 원본</div><dl><dt>파일 크기</dt><dd>{formatSize(selected.size)}</dd><dt>추가한 날짜</dt><dd>{new Date(selected.createdAt).toLocaleString('ko-KR')}</dd></dl>
                     <Button asChild variant="outline" size="sm"><a href={`/api${entryPath(activeId!, selected.id)}/content`} download><Download /> 원본 다운로드</a></Button>
                     <h3>내용</h3>{!preview ? <p role="status">미리보기를 불러오는 중…</p> : preview.supported ? <pre>{preview.text || '(빈 파일)'}</pre> : <p>{preview.reason}</p>}
+                    <AnalysisPanel key={selected.id} workspaceId={activeId!} entryId={selected.id} />
                   </div> : <div className="preview-empty"><FileText size={32} /><strong>자료를 살펴보세요</strong><p>파일을 선택하면 내용과<br />상세 정보를 확인할 수 있습니다.</p></div>}
                 </aside>
               </div>
-              <p className="phase-note"><ShieldCheck size={15} /> 현재 단계에서는 자료를 저장하고 탐색합니다. 수집·검색·AI 분석은 후속 단계에서 연결됩니다.</p>
+              <p className="phase-note"><ShieldCheck size={15} /> 원본·추출 텍스트·Java 심볼을 로컬에서 검색합니다. AI 지식 생성과 채팅은 후속 단계에서 연결됩니다.</p>
             </>
           )}
         </div>

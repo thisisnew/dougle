@@ -75,4 +75,9 @@ public class SqliteLibraryStore implements LibraryStore {
     public void deleteEntry(String workspaceId, String id) {
         jdbc.update("DELETE FROM entry WHERE workspace_id=? AND id=?", workspaceId, id);
     }
+
+    public boolean managed(String id) {
+        return Boolean.TRUE.equals(jdbc.queryForObject(
+                "SELECT source_id IS NOT NULL FROM entry WHERE id=?", Boolean.class, id));
+    }
 }

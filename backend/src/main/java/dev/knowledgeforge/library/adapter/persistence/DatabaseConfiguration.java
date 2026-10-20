@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 1) {
+        if (version > 2) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -81,6 +81,49 @@ public class DatabaseConfiguration {
                 jdbc.execute("PRAGMA user_version=1");
             });
         }
+        if (version < 2) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE source (
+                                  id TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  name TEXT NOT NULL, kind TEXT NOT NULL, location TEXT NOT NULL,
+                                  domain TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'NEW',
+                                  revision TEXT, error TEXT, synced_at TEXT,
+                                  root_entry_id TEXT REFERENCES entry(id) ON DELETE SET NULL,
+                                  polling_enabled INTEGER NOT NULL DEFAULT 0,
+                                  poll_interval_seconds INTEGER NOT NULL DEFAULT 3600,
+                                  UNIQUE(workspace_id,name COLLATE NOCASE)
+                                )
+                                """);
+                        jdbc.execute("ALTER TABLE entry ADD COLUMN source_id TEXT REFERENCES source(id) ON DELETE CASCADE");
+                        jdbc.execute("ALTER TABLE entry ADD COLUMN relative_path TEXT");
+                        jdbc.execute("ALTER TABLE entry ADD COLUMN content_hash TEXT");
+                        jdbc.execute("CREATE INDEX entry_source ON entry(source_id)");
+                        jdbc.execute("""
+                                CREATE TABLE extracted_document (
+                                  entry_id TEXT PRIMARY KEY REFERENCES entry(id) ON DELETE CASCADE,
+                                  text TEXT NOT NULL, media_type TEXT, status TEXT NOT NULL, error TEXT
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE symbol (
+                                  entry_id TEXT NOT NULL REFERENCES entry(id) ON DELETE CASCADE,
+                                  name TEXT NOT NULL, kind TEXT NOT NULL, line INTEGER NOT NULL, signature TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX symbol_entry ON symbol(entry_id)");
+                        jdbc.execute("CREATE TABLE search_outbox(sequence INTEGER PRIMARY KEY AUTOINCREMENT, entry_id TEXT NOT NULL)");
+                        jdbc.execute("""
+                                CREATE TRIGGER entry_search_delete AFTER DELETE ON entry
+                                BEGIN INSERT INTO search_outbox(entry_id) VALUES(OLD.id); END
+                                """);
+                        jdbc.execute("PRAGMA user_version=2");
+                    });
+        }
+        jdbc.update("UPDATE source SET status='ERROR',error='이전 동기화가 중단되었습니다. 다시 동기화하세요.' WHERE status='SYNCING'");
         return source;
     }
 }

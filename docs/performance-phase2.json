@@ -1,0 +1,52 @@
+{
+  "measuredAt": "2026-10-20T21:41:44.157Z",
+  "platform": "darwin/x64",
+  "java": "21",
+  "springBoot": "4.1.1",
+  "dataset": "100 synthetic UTF-8 files (~2.5 KB each) + 1 nested fixture; sequential HTTP requests",
+  "checks": [
+    "packaged UI",
+    "upload/download byte equality",
+    "UTF-8 preview",
+    "restart persistence",
+    "active workspace persistence",
+    "independent knowledge area",
+    "cascade deletion",
+    "deletion persists after restart",
+    "local folder collection",
+    "Java symbol line numbers",
+    "search survives restart",
+    "unchanged revision preserves entry ids",
+    "failed collection preserves prior index",
+    "source deletion removes search hits",
+    "Korean Nori search"
+  ],
+  "sourceSyncMs": 630.6766619999999,
+  "livePublic": [
+    {
+      "kind": "URL",
+      "location": "https://example.org",
+      "revision": "18ffed908b367f757abd6b4da8f118dd275b862376dfd1fd5b4ad6a5f0743255"
+    },
+    {
+      "kind": "GITHUB",
+      "location": "https://github.com/thisisnew/knowledge-forge",
+      "revision": "510d7dd4d354e2db9a165121f1f7015e517ae4fd"
+    }
+  ],
+  "startupMs": 6533,
+  "restartMs": 6679,
+  "upload100": {
+    "p50Ms": 124.31213999999454,
+    "p95Ms": 172.71473599999445
+  },
+  "list101Entries50RequestsAfter5Warmups": {
+    "p50Ms": 9.72560199999134,
+    "p95Ms": 16.08746599999722
+  },
+  "search100Files30Requests": {
+    "p50Ms": 12.67240799999854,
+    "p95Ms": 34.20276300000842
+  },
+  "limitations": "Single local process, small synthetic dataset, no concurrency; not LLM performance."
+}

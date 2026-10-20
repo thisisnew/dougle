@@ -1,4 +1,4 @@
-# Phase 1 API 명세
+# Phase 1–2 API 명세
 
 기본 URL: `http://127.0.0.1:8787/api`
 
@@ -84,3 +84,65 @@ curl -X POST http://127.0.0.1:8787/api/workspaces \
 curl -X POST http://127.0.0.1:8787/api/workspaces/WORKSPACE_ID/files \
   -H 'X-Forge-Client: 1' -F 'file=@fixtures/research-notes.md'
 ```
+
+## Phase 2 Source / 분석 / 검색
+
+다음 경로는 `/api/workspaces/{workspaceId}` 기준입니다.
+
+| 메서드 | 경로 | 요청 / 응답 |
+|---|---|---|
+| GET | `/sources` | Source 배열 |
+| POST | `/sources` | name, kind, location, 선택 domain → 201 Source |
+| POST | `/sources/{sourceId}/sync` | 수동 수집 → 200 Source, 상태 READY 또는 ERROR |
+| DELETE | `/sources/{sourceId}` | Source와 보관된 원본만 삭제 → 204 |
+| GET | `/entries/{entryId}` | 단일 Entry 메타데이터 |
+| GET | `/entries/{entryId}/analysis` | 저장된 분석 결과. 재분석하지 않음 |
+| POST | `/entries/{entryId}/analyze` | 보관된 원본 재분석 → Analysis |
+| GET | `/search?query=...&domains=...&domains=...` | 검색 Hit 배열, 최대 30건 |
+
+```json
+{
+  "name": "가상 프로젝트",
+  "kind": "LOCAL_FOLDER",
+  "location": "/absolute/path/to/fixtures/synthetic-project",
+  "domain": "실험"
+}
+```
+
+kind는 LOCAL_FOLDER / URL / GITHUB입니다. URL은 공개 HTTPS 443, GITHUB는
+`https://github.com/owner/repository` 형태의 공개 기본 브랜치만 지원합니다.
+Source 이름은 같은 Workspace에서 고유하며 도메인은 0~80자입니다.
+Source 등록은 수집을 시작하지 않습니다.
+
+Source 필드: `id, workspaceId, name, kind, location, domain, status, revision,
+error, syncedAt, rootEntryId, pollingEnabled, pollIntervalSeconds`.
+상태는 NEW/SYNCING/READY/ERROR입니다. pollingEnabled는 현재 항상 false,
+pollIntervalSeconds는 예약된 설정 기본값 3600이며 실제 스케줄은 없습니다.
+revision은 로컬/URL 스냅샷 SHA-256 또는 Git commit SHA입니다.
+
+동기화의 수집 오류는 HTTP 200의 `status: "ERROR"`와 `error`로 표현합니다.
+이전 `revision`, `syncedAt`, 원본/검색 데이터는 유지됩니다.
+동시 동기화는 409, 없는/다른 Workspace의 Source는 404입니다.
+Source 관리 Entry의 개별 삭제나 하위 업로드/폴더 생성은 409입니다.
+Source 전체 삭제와 Workspace 삭제는 가능합니다.
+
+```json
+{
+  "text": "package synthetic; ...",
+  "mediaType": "text/x-java-source",
+  "status": "READY",
+  "error": null,
+  "symbols": [
+    { "name": "measureTemperature", "kind": "CALLABLE", "line": 4, "signature": "measureTemperature()" }
+  ]
+}
+```
+
+분석 상태: READY, PARTIAL(Java 구문 실패로 원문만 검색), UNSUPPORTED(추출 텍스트 없음),
+ERROR(추출 실패/크기 초과), PENDING(Phase 1 기존 파일).
+원본 바이트는 분석 실패에도 보존됩니다. OCR/임베디드 문서 재귀 추출은 비활성입니다.
+
+Hit 필드: `entryId, name, sourceId, domain, path, snippet, score`.
+직접 업로드한 파일의 sourceId/domain은 빈 문자열입니다.
+검색어는 1~256자, 도메인은 최대 20개이며 선택하지 않으면 Workspace 전체를 검색합니다.
+결과는 기존 인덱스에서만 조회하며 검색을 위해 네트워크 수집/원문 재분석을 실행하지 않습니다.

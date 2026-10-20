@@ -17,4 +17,5 @@ public interface LibraryStore {
     void createEntry(Entry entry, byte[] content);
     byte[] content(String id);
     void deleteEntry(String workspaceId, String id);
+    boolean managed(String id);
 }

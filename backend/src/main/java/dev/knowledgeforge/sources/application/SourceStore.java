@@ -1,0 +1,18 @@
+package dev.knowledgeforge.sources.application;
+
+import dev.knowledgeforge.ingestion.domain.Analysis;
+import dev.knowledgeforge.sources.domain.CollectedSnapshot;
+import dev.knowledgeforge.sources.domain.Source;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public interface SourceStore {
+    List<Source> list(String workspaceId);
+    Optional<Source> find(String workspaceId, String id);
+    void create(Source source);
+    boolean begin(String workspaceId, String id);
+    void fail(String id, String message);
+    void publish(Source source, CollectedSnapshot snapshot, Map<String, Analysis> analyses);
+    void delete(String workspaceId, String id);
+}

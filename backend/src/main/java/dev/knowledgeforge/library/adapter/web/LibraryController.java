@@ -19,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api")
 public class LibraryController {
     private final LibraryService service;
+    private final dev.knowledgeforge.search.application.SearchService search;
 
-    public LibraryController(LibraryService service) {
+    public LibraryController(LibraryService service, dev.knowledgeforge.search.application.SearchService search) {
         this.service = service;
+        this.search = search;
     }
 
     public record NameRequest(@NotBlank String name, String parentId) {}
@@ -47,6 +49,7 @@ public class LibraryController {
     @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
     public void deleteWorkspace(@PathVariable String id) {
         service.deleteWorkspace(id);
+        search.refresh();
     }
 
     @GetMapping("/workspaces/{workspaceId}/entries")
@@ -66,12 +69,19 @@ public class LibraryController {
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Entry upload(@PathVariable String workspaceId, @RequestParam(required = false) String parentId,
                         @RequestParam MultipartFile file) throws IOException {
-        return service.upload(workspaceId, parentId, file.getOriginalFilename(), file.getBytes());
+        Entry entry = service.upload(workspaceId, parentId, file.getOriginalFilename(), file.getBytes());
+        search.refresh();
+        return entry;
     }
 
     @GetMapping("/workspaces/{workspaceId}/entries/{id}/preview")
     public LibraryService.Preview preview(@PathVariable String workspaceId, @PathVariable String id) {
         return service.preview(workspaceId, id);
+    }
+
+    @GetMapping("/workspaces/{workspaceId}/entries/{id}")
+    public Entry entry(@PathVariable String workspaceId, @PathVariable String id) {
+        return service.requireEntry(workspaceId, id);
     }
 
     @GetMapping("/workspaces/{workspaceId}/entries/{id}/content")
@@ -87,5 +97,18 @@ public class LibraryController {
     @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
     public void deleteEntry(@PathVariable String workspaceId, @PathVariable String id) {
         service.deleteEntry(workspaceId, id);
+        search.refresh();
+    }
+
+    @GetMapping("/workspaces/{workspaceId}/entries/{id}/analysis")
+    public dev.knowledgeforge.ingestion.domain.Analysis analysis(@PathVariable String workspaceId, @PathVariable String id) {
+        return service.analysis(workspaceId, id);
+    }
+
+    @PostMapping("/workspaces/{workspaceId}/entries/{id}/analyze")
+    public dev.knowledgeforge.ingestion.domain.Analysis analyze(@PathVariable String workspaceId, @PathVariable String id) {
+        var result = service.analyze(workspaceId, id);
+        search.refresh();
+        return result;
     }
 }

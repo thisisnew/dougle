@@ -1,5 +1,7 @@
 # Phase 1 검증 결과
 
+이 문서는 Phase 1 당시 기록입니다. 최신 수집·검색 검증은 [Phase 2 보고서](phase2-report.md)를 참고하세요.
+
 검증일: 2026-10-21 (Asia/Seoul)
 환경: macOS Intel, Amazon Corretto 21.0.10, Node 24.2.0, npm 11.3.0,
 Maven 3.9.11, Spring Boot 4.1.1.

@@ -4,11 +4,12 @@
 
 ## 현재 상태
 
-**Phase 1 구현과 빌드·자동 테스트를 완료했습니다.**
+**Phase 1에 이어 Phase 2의 수집·분석·검색을 구현했습니다.**
 Java 21 / Spring Boot 4.1.1 / React / TypeScript / Vite / Tailwind / SQLite JDBC를
 사용하는 실제 실행 가능한 로컬 웹 앱입니다. 최종 배포 형태는 Tauri 2 데스크톱 앱입니다.
 
-현재는 원본을 정리하는 단계입니다. AI 분석·검색·자동 수집은 아직 구현하지 않았습니다.
+현재 Source 수동 수집, 문서·Java 분석, 로컬 검색을 사용할 수 있습니다.
+LLM 지식 생성·채팅·Source 자동 폴링은 아직 구현하지 않았습니다.
 GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 
 ### 완료
@@ -18,20 +19,27 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 10 MiB 이하 파일 업로드, 원본 바이트 다운로드, 폴더/자료 삭제
 - 1 MiB 이하 UTF-8 텍스트 미리보기, HTML 실행 방지
 - 원본과 지식 영역 분리, 미구현 지식 생성에 대한 명확한 안내
-- SQLite FK cascade / WAL / 스키마 버전 1 / 중복 이름 보호
+- SQLite FK cascade / WAL / 스키마 버전 2 / 중복 이름 보호
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료만 사용하는 백엔드 11개 / 프런트엔드 7개 자동 테스트
+- 가상 자료 기반 백엔드 35개 / 프런트엔드 11개 자동 테스트 통과
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
+- Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
+- 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
+- Tika HTML/PDF/일반 문서 추출, JavaParser 심볼·행 번호와 원문 보관
+- Lucene 10.3.1 + Nori 검색, 도메인 다중 선택, Workspace 검색 격리
+- 영속 분석 결과와 SQLite 인덱스 갱신 큐, 시작 시 저장된 분석 결과로 인덱스 복원
+- SQLite 스키마 1→2 마이그레이션과 원본·활성 Workspace 보존
+- Source 관리 파일 변경 방지, 사설 주소·리다이렉트·심볼릭 링크·용량 제한
 
 ### 미구현
 
 | Phase | 작업 | 상태 |
 |---|---|---|
-| 2 | 파일/로컬 폴더/URL/GitHub Collector, Source, Tika, JavaParser, Lucene 10 + Nori | 미착수 |
+| 2 확장 | 비공개 저장소 자격 증명, 대용량 ArtifactStore, 작업 취소·격리 파서 | 남음 |
 | 3 | Knowledge Curator, 카드/Markdown, 근거 연결, 검증 후 게시 | 미착수 |
-| 4 | 다중 도메인 검색, Ollama, 근거 선표시 SSE, 답변 중단, 외부 Provider 승인 | 미착수 |
+| 4 | 기존 다중 도메인 검색에 Ollama, 근거 선표시 SSE, 답변 중단, 외부 Provider 승인 연결 | 미착수 |
 | 5 | Source별 opt-in 폴링, Git 증분 갱신, 지식 무효화·버전·수동 편집 보호 | 미착수 |
 | 6 | Tauri 2, Java 런타임 포함 Mac 설치 앱, 통합 테스트, 설치 설명서 | 미착수 |
 
@@ -39,7 +47,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 
 ## 다른 PC에서 시작하기
 
-저장소를 clone한 뒤 Java 21과 Node.js 22.12 이상 또는 24를 준비합니다.
+저장소를 clone한 뒤 Java 21과 Node.js 22.12 이상 또는 24, Git CLI를 준비합니다.
 로컬 DB, 의존성 캐시, `node_modules`, 실행 JAR는 Git에 포함되지 않습니다.
 처음에는 의존성 다운로드가 필요하며 앱 데이터는 새로 생성됩니다.
 
@@ -79,13 +87,13 @@ java -jar backend/target/knowledge-forge-0.1.0.jar
 ## 다음 개발 세션의 첫 작업
 
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
-2. 빌드 및 기존 18개 테스트를 실행해 기준 상태를 확인합니다.
-3. **Phase 2 첫 기능 단위**로 `sources` 모델과 로컬 폴더 Collector를 구현합니다.
-4. Source의 기본 polling은 OFF로 두고 수동 수집부터 완성합니다.
-5. `ArtifactStore` 포트를 추가하여 대용량 원본 보관을 BLOB에서 분리할 계획을 세웁니다.
-6. 가상 폴더로 등록→읽기 전용 복사→버전/해시→탐색까지 테스트한 다음 Tika를 연결합니다.
-7. JavaParser 심볼 추출, Lucene/Nori 검색을 각각 작동 가능한 단위로 추가합니다.
-8. URL/GitHub Collector는 SSRF·리다이렉트·Git 명령 인자·토큰 보관 테스트와 함께 추가합니다.
+2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/phase2-report.md`에 있습니다.
+3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
+4. **다음 핵심 기능은 Phase 3**의 지식 초안·근거 연결·검증 후 게시입니다.
+5. 원본 revision과 근거 entry/행을 명시하는 지식 모델부터 구현합니다.
+6. Ollama Curator 어댑터는 출력 검증·실패 시 이전 게시 버전 유지 테스트와 함께 추가합니다.
+7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
+8. 필요 시 Phase 2 운영 확장(비공개 저장소·대용량·작업 취소)을 별도 기능 단위로 진행합니다.
 
 Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 후속 모듈은 빈 클래스부터 대량으로 생성하지 말고 유스케이스·포트·어댑터·테스트를
@@ -104,7 +112,10 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 
 ## 알려진 한계
 
-현재 단일 SQLite 연결/BLOB 저장, 목록 페이지네이션 없음, 파일 이동·이름 변경 없음,
-OS 계정 간 인증/암호화 없음, 매우 깊은 폴더 트리 처리 미검증 상태입니다.
-성능 측정은 가상 파일 100개와 폴더 1개에 대한 순차 HTTP 결과이며,
-검색·LLM·동시 수집 성능을 나타내지 않습니다.
+현재 단일 SQLite 연결/BLOB 저장, Source당 500개/50 MiB, 파일당 10 MiB, 경로 16단계 제한입니다.
+로컬 빈 폴더는 가져오지 않습니다. 텍스트 추출은 500,000자까지이며 OCR/임베디드 문서 재귀 추출은 꺼져 있습니다.
+공개 HTTPS URL과 공개 GitHub 기본 브랜치만 지원하며 토큰·SSH·사내 HTTP는 미지원입니다.
+변경된 Source는 전체 스냅샷을 교체합니다. 과거 원본 버전 보관·Git diff는 Phase 5 범위입니다.
+단일 문서 추출은 JVM 내부에서 동기 실행되므로 악성 문서 격리/강제 종료가 필요합니다.
+별도 ArtifactStore·페이지네이션·OS 계정 간 인증·암호화·Windows 실행 검증은 남아 있습니다.
+성능 측정은 가상 자료의 순차 HTTP 결과이며 LLM·대규모 동시 수집 성능을 나타내지 않습니다.

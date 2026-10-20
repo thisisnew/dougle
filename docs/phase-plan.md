@@ -1,6 +1,6 @@
 # Phase 완료 기준 및 남은 작업
 
-## Phase 1 — 이번 구현
+## Phase 1 — 완료
 
 - Java 21 / Spring Boot 4.1.x / React 빌드 성공
 - Workspace 생성·삭제·전환, 서버 재시작 후 선택/데이터 보존
@@ -12,13 +12,22 @@
 
 실행 증거와 결과는 `test-report.md`, `performance.json`에 기록합니다.
 
-## Phase 2
+## Phase 2 — 기본 수집·분석·검색 구현
 
 로컬 폴더/URL/GitHub read-only Collector, Source 모델, Git CLI·REST API,
 Tika·JavaParser, Lucene 10·Nori 및 심볼 인덱스를 구현합니다.
 SSRF, 리다이렉트, 심볼릭 링크, 대용량 파일, 중단/재시도, 자격 증명 보관을 검증합니다.
 가상 Java 프로젝트·문서·로컬 HTTP fixture로 수집 및 한글 검색 결과를 검증합니다.
 수집 후 원본 버전과 해시를 보존하고, 질문은 기존 인덱스만 이용하도록 합니다.
+
+현재 로컬 폴더/공개 HTTPS/공개 GitHub 기본 브랜치의 수동 수집, 원본 해시·마지막 revision,
+Tika 문서 추출, JavaParser 심볼, Lucene/Nori 다중 도메인 검색이 구현되어 있습니다.
+실패 원자성·중복 동기화·읽기 전용 Git·심볼릭 링크·사설 주소·리다이렉트와
+스키마 업그레이드를 테스트합니다. 실제 결과는 `phase2-report.md`에 기록합니다.
+
+운영 확장으로 남은 범위: 비공개 GitHub 자격 증명 보관, 사용자가 누르는 수집 취소,
+격리 프로세스 파서, 대용량 ArtifactStore, 세밀한 재시도 정책.
+현재 수집은 제한된 동기 요청이며 실패 후 수동 재시도할 수 있습니다.
 
 ## Phase 3
 
@@ -51,7 +60,9 @@ Intel/Apple Silicon 타깃 빌드, 설치·종료·재시작, 업그레이드·�
 - 대규모 디렉터리의 페이지네이션, 트리 가상화, 파일명 정규화/Unicode case folding 없음
 - 파일 최대 10 MiB, 미리보기는 1 MiB UTF-8만 지원
 - 단일 SQLite 연결, BLOB 저장이므로 대량 수집 전 저장소 확장 필요
-- Source 등록·자동 수집·분석·검색·AI·폴링 미구현
+- 공개 Source 등록·수동 수집·문서/Java 분석·검색 구현, AI·자동 폴링 미구현
+- Source당 500개/50 MiB, 경로 16단계, 추출 텍스트 500,000자 제한
+- 현재 원본 스냅샷/마지막 revision만 보관. 과거 원본 버전 이력은 미지원
 - 원본 폴더 생성/삭제만 지원하며 이름 변경·이동은 미지원
 - OS 사용자 간 인증, 데이터 암호화, 데스크톱 session token은 미구현
 - SQLite cascade의 매우 깊은 트리는 별도 제한/배치 삭제 설계가 필요

@@ -1,7 +1,7 @@
 # Knowledge Forge 개발 지침
 
 - 시작할 때 `HANDOFF.md`, `docs/architecture.md`, `docs/phase-plan.md`를 읽는다.
-- 현재 완료 범위는 Phase 1이다. 미구현 기능은 완료된 것처럼 표시하지 않는다.
+- Phase 1과 Phase 2의 수집·분석·검색이 구현되어 있다. 지원 범위와 한계는 HANDOFF.md를 따른다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.
