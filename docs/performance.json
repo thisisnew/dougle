@@ -1,0 +1,28 @@
+{
+  "measuredAt": "2026-10-20T15:25:52.308Z",
+  "platform": "darwin/x64",
+  "java": "21",
+  "springBoot": "4.1.1",
+  "dataset": "100 synthetic UTF-8 files (~2.5 KB each) + 1 nested fixture; sequential HTTP requests",
+  "checks": [
+    "packaged UI",
+    "upload/download byte equality",
+    "UTF-8 preview",
+    "restart persistence",
+    "active workspace persistence",
+    "independent knowledge area",
+    "cascade deletion",
+    "deletion persists after restart"
+  ],
+  "startupMs": 13610,
+  "restartMs": 13875,
+  "upload100": {
+    "p50Ms": 15.124711000000389,
+    "p95Ms": 28.563426000000618
+  },
+  "list101Entries50RequestsAfter5Warmups": {
+    "p50Ms": 12.070683000001736,
+    "p95Ms": 16.779404000000795
+  },
+  "limitations": "Single local process, warm filesystem cache, no concurrency; not search/LLM performance."
+}
