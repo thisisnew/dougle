@@ -2,7 +2,7 @@
 
 최신 흐름: **통합 검색 → 현재 원문·게시·범위 대조 → 인용문 묶음 저장 → 로컬 확인**.
 이어서 **저장된 근거 재검증 → 제공자/모델별 답변 요청 미리보기**도 구현했습니다.
-실제 전송 직전 재검증·승인·SSE 답변은 남았습니다. [현재 모델·흐름도·한계](bundle-validation.md).
+이어서 **요청별 10분 승인·철회·충돌 보호**도 구현했습니다. 실제 전송 직전 재검증·승인 일회 소비·SSE 답변은 남았습니다. [현재 모델·흐름도·한계](answer-approval.md).
 
 검색 후속 개선: **저장된 단어 위치 → 검색어 주변 글·추출 텍스트 행 범위 → 원본 열기**가 구현되었습니다.
 원본·게시 지식 통합 검색도 구현했습니다. 채팅은 아직 없습니다. [게시 검색 코드 대조](published-search.md).
@@ -127,11 +127,11 @@ flowchart TB
         RAW["🟩 library + sources + ingestion<br/>원본 · 수동 수집 · 분석"]
         RET["🟨 search<br/>현재 Lucene/심볼 + 향후 지식 관계"]
         KNOW["🟨 knowledge<br/>초안/근거/버전/사람 검토/게시 구현<br/>폴더/카드 배치 · 안전한 렌더링 구현 / 자동 의미 검증 남음"]
-        CHAT["🟦 conversation<br/>근거 먼저 · 답변 SSE · 취소"]
+        CHAT["🟨 conversation<br/>요청 승인·철회 구현 / 답변 SSE·취소 예정"]
         SYNC["🟦 synchronization<br/>Source별 opt-in · Git diff · 지식 무효화"]
         SQL[("🟨 SQLite v4<br/>원본/지식/근거/버전/생성 작업<br/>향후 대화/동기화 확장")]
         MODEL["🟨 Codex / Claude Code CLI<br/>로그인 재사용 · 새 요청 · 초안 구현"]
-        POLICY["🟨 외부 전송 승인<br/>초안 구현 · 채팅은 예정"]
+        POLICY["🟨 외부 전송 승인<br/>초안 구현 · 답변 승인 저장 구현 / 답변 전송 연결 예정"]
         HOST -.-> UI
         UI --> RAW
         UI --> RET
@@ -239,12 +239,13 @@ sequenceDiagram
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
 | 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx`, `GenerationComparison.tsx`, `PublicationPanel.tsx` | 오래된 근거 교체·줄 단위 충돌 표시, 채팅 |
-| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v14, 향후 데이터/보존 정책 확장 |
+| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v15, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 원본/게시 지식·불변 근거 묶음 구현, 의미 청크·관계 검색 후속 |
 | 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · AI 갱신 제안 |
-| 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
+| 답변 준비 | `backend/src/main/java/dev/knowledgeforge/conversation` | 승인·철회만 구현, 답변 작업·SSE 남음 |
+| 아직 없는 모듈 | `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
 **다음 한 작업:** **오래된 근거의 명시적 교체·줄 단위 충돌 표시**. [읽기 전용 비교](generation-comparison.md)와 [폴더 이름 변경/이동](folder-update.md)은 구현·검증했습니다. 개발 도구 보안 갱신은 [검증 완료](toolchain-report.md)했습니다. 안전한 표시와 원문 보존은 [Markdown 가이드](markdown-rendering.md), 독립 폴더/카드 배치는 [폴더 가이드](knowledge-folders.md) 범위로 구현했습니다. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
@@ -266,7 +267,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  Version["불변 Markdown 버전 · SQLite v14"] --> API["기존 조회 API · 원문 그대로"]
+  Version["불변 Markdown 버전 · SQLite v15"] --> API["기존 조회 API · 원문 그대로"]
   API --> Preview["React Markdown/GFM 미리보기"]
   API --> Raw["원문 보기 · 편집 입력"]
   Preview --> Safe["HTML 실행 없음 · 링크/이미지 비활성"]

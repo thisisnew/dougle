@@ -25,6 +25,16 @@ public class EvidenceAnswerPreview {
     }
 
     @Transactional(readOnly = true)
+    public java.util.Optional<Preview> current(String workspaceId, String id, String providerName, String selectedModel) {
+        try {
+            return java.util.Optional.of(prepare(workspaceId, id, providerName, selectedModel));
+        } catch (LibraryException exception) {
+            if (exception.status() == 409 || exception.status() == 413) return java.util.Optional.empty();
+            throw exception;
+        }
+    }
+
+    @Transactional(readOnly = true)
     public Preview prepare(String workspaceId, String id, String providerName, String selectedModel) {
         Provider provider;
         try { provider = Provider.valueOf(providerName); }

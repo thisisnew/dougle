@@ -1,5 +1,8 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+답변 승인: `GET/POST /api/workspaces/{workspaceId}/evidence-bundles/{bundleId}/answer-approval`,
+철회: `DELETE .../answer-approval/{approvalId}`. 10분 유효·명시 동의·기대 ID 충돌 보호, 실제 전송 없음. [전체 계약](answer-approval.md).
+
 P4 준비: `GET /api/workspaces/{workspaceId}/evidence-bundles/{id}/validation`,
 `POST /api/workspaces/{workspaceId}/evidence-bundles/{id}/answer-preview`.
 읽기 전용 재검증과 제공자/모델별 요청 미리보기이며 전송/승인이 아닙니다. [전체 계약·오류](bundle-validation.md).
@@ -23,7 +26,7 @@ P4 준비: `GET /api/workspaces/{workspaceId}/evidence-bundles/{id}/validation`,
 
 지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.
 Markdown 응답은 저장된 원문이며 HTML이 아닙니다. UI만 안전한 미리보기를 제공합니다.
-표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v14이며 로컬 근거 묶음 보관 테이블이 추가되었습니다. 게시 색인 큐와 FULL/MANUAL 채택 기록도 보존합니다.
+표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v15이며 답변 승인 테이블이 추가되었습니다. 기존 근거 묶음·게시 색인 큐·FULL/MANUAL 채택 기록도 보존합니다.
 
 폴더 이름/부모 변경: `PUT /workspaces/{workspaceId}/knowledge-organization/folders/{id}`.
 요청 `{parentId, name, expectedRevision}` → 변경한 Folder `{id,parentId,name,revision}`.

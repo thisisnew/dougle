@@ -166,3 +166,8 @@ dt { color: #97a28d; }
 .proposal-merge::backdrop { background: rgb(15 23 42 / 45%); }
 .proposal-merge textarea { width: 100%; }
 .proposal-merge pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.answer-preparation, .answer-approval { display: grid; gap: 12px; margin-top: 18px; padding: 16px; border: 1px solid #cedac8; border-radius: 8px; }
+.answer-preparation > label { display: grid; gap: 6px; }
+.answer-preparation > label > input { padding: 10px; border: 1px solid #cedac8; border-radius: 6px; width: 100%; }
+.answer-approval > div { display: grid; gap: 10px; }
+.answer-approval label { display: flex; gap: 8px; align-items: flex-start; }

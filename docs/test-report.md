@@ -1,6 +1,6 @@
 # Phase 1 검증 결과
 
-최신 기능 검증은 [근거 재검증·요청 미리보기 보고서](bundle-validation.md)를 보세요.
+최신 기능 검증은 [답변 승인·철회 보고서](answer-approval.md)를 보세요.
 
 최신 도구 버전·전체 회귀 검증은 [도구 갱신 보고서](toolchain-report.md)를 보세요.
 

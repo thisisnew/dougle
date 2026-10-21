@@ -5,9 +5,13 @@
 
 ## 현재 구조
 
+`conversation` 모듈은 `AnswerApprovalService → AnswerApprovalStore → JdbcAnswerApprovalStore`로 요청별 승인·철회·만료를 관리합니다.
+미리보기 재검증과 승인 저장은 같은 트랜잭션이며 외부 CLI는 호출하지 않습니다. v15 추가 테이블은 묶음당 현재 승인 하나입니다.
+실제 전송·승인 일회 소비·SSE는 아직 없습니다. [모델·경계](answer-approval.md).
+
 저장한 묶음은 `EvidenceBundleValidator`가 현재 원본/게시본/출처/도메인과 읽기 전용으로 대조합니다.
 `EvidenceAnswerPreview`는 통과한 묶음만 제공자·모델에 연결된 요청문/해시로 만듭니다. LLM 호출이나 승인 기록은 없습니다.
-새 테이블 없이 v14를 유지하며 검색 색인 잠금을 잡지 않습니다. [설계·API·한계](bundle-validation.md).
+미리보기 자체는 테이블을 추가하지 않으며 검색 색인 잠금을 잡지 않습니다. 이후 승인 테이블은 v15로 추가했습니다. [설계·API·한계](bundle-validation.md).
 
 v14의 `evidence_bundle`은 검색 결과 중 현재 자료와 일치하는 인용문·출처를 불변 JSON으로 보관합니다.
 `EvidenceBundleService`는 검색 잠금 해제 후 `EvidenceBundleWriter`의 트랜잭션을 실행합니다.
@@ -38,7 +42,7 @@ AI 결과 비교는 `GenerationComparisonService`가 기존 작업/지식 저장
 
 단일 Spring Boot 프로세스의 Modular Monolith를 사용합니다.
 `library`는 Workspace와 원본 보관함을 소유합니다. Phase 2에서 `sources`, `ingestion`,
-`search`를 추가했고 Phase 3에서 `knowledge`와 CLI Curator를 추가했습니다. 대화·자동 동기화 모듈은 후속 범위입니다.
+`search`를 추가했고 Phase 3에서 `knowledge`와 CLI Curator를 추가했습니다. `conversation`은 현재 승인만 담당하며 실제 대화·자동 동기화는 후속 범위입니다.
 
 ```text
 frontend/src
@@ -65,6 +69,10 @@ backend/.../knowledge
   domain                  Card, Version, Evidence, Citation 순수 record
   application             KnowledgeService, KnowledgeStore, CuratorService, CuratorModel 포트
   adapter                 JDBC 영속 스냅샷/버전, REST, CliCuratorModel
+backend/.../conversation
+  domain                  AnswerApproval 순수 record
+  application             AnswerApprovalService, AnswerApprovalStore 포트
+  adapter                 JDBC 승인 저장, REST (실제 답변/전송은 아직 없음)
 ```
 
 의존 방향은 웹 어댑터 → 애플리케이션 → 도메인/저장 포트입니다.
@@ -220,7 +228,7 @@ react-markdown/remark-gfm으로 React 요소에 표시하며 원문은 별도로
 raw HTML 파싱·실행 없이 링크는 비활성 텍스트, 이미지는 대체 설명으로 표시합니다.
 API·불변 버전·승인 digest·검토/게시 상태는 변경하지 않습니다. [표시 설계](markdown-rendering.md).
 
-## 독립 지식 폴더 (v8 도입, 현재 v14)
+## 독립 지식 폴더 (v8 도입, 현재 v15)
 
 v9는 폴더 revision으로 이름/부모 변경 충돌을 막습니다. 변경 후 전체 트리의 순환과 깊이를
 검사한 뒤 같은 트랜잭션에서 저장합니다. 문서·카드 배치 revision은 별개입니다. [설계·검증](folder-update.md).

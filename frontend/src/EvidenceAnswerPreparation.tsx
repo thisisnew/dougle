@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import AnswerApprovalPanel from './AnswerApprovalPanel'
 
 type Validation = { bundleId: string; digest: string; checkedAt: string; eligible: boolean; status: string; items: {
   label: string; status: string; currentEntryId: string | null; currentSourceRevision: string | null; supports: { label: string; status: string }[]
@@ -53,7 +54,7 @@ export default function EvidenceAnswerPreparation({ workspaceId, bundleId, bundl
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
 
-  return <section aria-label="근거 재검증과 요청 미리보기">
+  return <section aria-label="근거 재검증과 요청 미리보기" className="answer-preparation">
     <h3>근거 재검증 · 요청 미리보기</h3>
     <p>검사와 요청 구성만 합니다. CLI를 실행하거나 외부 AI에 전송하지 않습니다. 현재 코딩 대화를 사용하는 기능도 아닙니다.</p>
     <Button variant="outline" disabled={busy} onClick={() => void run('validate')}>근거 상태 다시 확인</Button>
@@ -74,8 +75,9 @@ export default function EvidenceAnswerPreparation({ workspaceId, bundleId, bundl
     {preview && <section aria-label="답변 요청 미리보기">
       <p>{preview.provider} · 요청 모델: {preview.requestedModel || 'CLI 기본값 (실행 모델 미확인)'}</p>
       <p>전체 요청 {preview.characters}/{preview.maxCharacters} UTF-16자 · 토큰 수가 아닙니다.</p>
-      <p>아직 승인·전송 버튼은 없습니다. 이후 전송 직전 다시 검증하고 이 조건을 명시적으로 승인해야 합니다.</p>
+      <p>아래에서 이 요청만 승인·철회할 수 있습니다. 승인 저장은 실제 전송이 아닙니다.</p>
       <details><summary>실제 요청 전문·해시 보기</summary><pre>{preview.prompt}</pre><pre>{preview.digest}</pre></details>
     </section>}
+    <AnswerApprovalPanel key={preview?.digest || 'no-preview'} workspaceId={workspaceId} bundleId={bundleId} preview={preview} />
   </section>
 }
