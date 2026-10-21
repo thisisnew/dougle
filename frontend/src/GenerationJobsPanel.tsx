@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import GenerationComparison from './GenerationComparison'
 
 export type GenerationJob = {
   id: string; sourceCardId: string; provider: string; status: string
@@ -24,6 +25,7 @@ export default function GenerationJobsPanel({ workspaceId, revision, onOpen, ope
   const [error, setError] = useState('')
   const [refresh, setRefresh] = useState(0)
   const [cancelling, setCancelling] = useState('')
+  const [comparisonId, setComparisonId] = useState('')
   const pending = useRef<AbortController | null>(null)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}/generation-jobs`
   useEffect(() => () => pending.current?.abort(), [])
@@ -69,6 +71,9 @@ export default function GenerationJobsPanel({ workspaceId, revision, onOpen, ope
       {job.error && <p>{job.error}</p>}
       {active(job) && <Button variant="outline" size="sm" disabled={!!cancelling || job.status === 'CANCELLING'} onClick={() => void cancel(job.id)}>생성 중단</Button>}
       {job.status === 'SUCCEEDED' && job.resultCardId && <Button variant="outline" size="sm" disabled={openDisabled} onClick={() => onOpen(job.resultCardId!)}>생성된 초안 열기</Button>}
+      {job.status === 'SUCCEEDED' && job.resultCardId && <Button variant="outline" size="sm" disabled={openDisabled} onClick={() => setComparisonId(job.id)}>원래 문서와 비교</Button>}
     </div>)}
+    {comparisonId && <GenerationComparison key={`${workspaceId}-${comparisonId}`} workspaceId={workspaceId} jobId={comparisonId}
+      disabled={openDisabled} onOpen={onOpen} onClose={() => setComparisonId('')} />}
   </section>
 }

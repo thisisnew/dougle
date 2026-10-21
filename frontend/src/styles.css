@@ -146,6 +146,9 @@ dt { color: #97a28d; }
 .markdown-table :is(th, td) { border: 1px solid #dfe6db; padding: 7px 12px; text-align: left; }
 .markdown-link small, .markdown-image { color: #526448; }
 .knowledge-document summary { cursor: pointer; font-size: 12px; }
+.comparison-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.comparison-grid > section { min-width: 0; border: 1px solid #dfe6db; padding: 12px; border-radius: 7px; }
+@media (max-width: 1100px) { .comparison-grid { grid-template-columns: minmax(0, 1fr); } }
 .evidence-item { margin-top: 16px; border: 1px solid #dfe6db; padding: 14px; border-radius: 8px; overflow-wrap: anywhere; font-size: 12px; }
 .evidence-item small { color: #526448; }
 .evidence-item a { text-decoration: underline; }

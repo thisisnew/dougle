@@ -53,7 +53,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   추가 구현: 독립 지식 폴더 생성/계층 탐색/빈 폴더 삭제, 카드 이동 CAS와 v8 마이그레이션. [설계·검증](knowledge-folders.md).
   추가 구현: 안전한 Markdown/GFM 표시·원문 열람, HTML 실행·링크 이동·이미지 요청 차단. [정책·검증](markdown-rendering.md).
   추가 구현: 폴더 이름/부모 변경·순환/깊이 제한·revision 충돌 보호·v9 마이그레이션. [검증](folder-update.md).
-  남음: AI 갱신 제안/충돌 해결 UI.
+  추가 구현: 완료 작업의 생성 당시/현재/AI 최초 결과 읽기 전용 비교, 편집·근거 변경 경고. [범위](generation-comparison.md).
+  남음: AI 갱신 제안 채택/거절 이력, 부분 선택·충돌 재확인 후 반영 UI/API.
 
 ### 다음 작업의 우선순위
 
@@ -142,8 +143,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 130개 통과 + live opt-in 1개 skip, 프런트엔드 63개 통과(worker 2개), JAR 빌드 성공.
-- 최신 구현/검증: [폴더 변경](folder-update.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 135개 통과 + live opt-in 1개 skip, 프런트엔드 69개 통과(worker 2개), JAR 빌드 성공.
+- 최신 구현/검증: [AI 결과 비교](generation-comparison.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
 - 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).

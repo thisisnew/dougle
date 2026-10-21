@@ -52,6 +52,8 @@ Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 
 ## Phase 4
 
+진입 전 남은 P3-4: AI 결과 읽기 전용 비교는 구현했으며 제안 채택/거절과 충돌 해결 저장은 남았습니다. [범위](generation-comparison.md).
+
 검색과 LLM 생성 유스케이스를 분리합니다.
 다중 도메인 검색, 근거 우선 SSE, CLI Provider, 중단, Provider 확장 및 외부 전송 승인을 구현합니다.
 SSE 이벤트 순서, 취소의 서버 자원 해제, 검색 실패/모델 미실행, 승인 없는 외부 전송 차단을 검증합니다.

@@ -5,6 +5,10 @@
 
 ## 현재 구조
 
+AI 결과 비교는 `GenerationComparisonService`가 기존 작업/지식 저장 포트를 조회합니다.
+생성 당시 버전·현재 버전·결과 v1을 한 읽기 트랜잭션으로 반환하며 저장이나 모델 호출을 하지 않습니다.
+[흐름과 한계](generation-comparison.md).
+
 단일 Spring Boot 프로세스의 Modular Monolith를 사용합니다.
 `library`는 Workspace와 원본 보관함을 소유합니다. Phase 2에서 `sources`, `ingestion`,
 `search`를 추가했고 Phase 3에서 `knowledge`와 CLI Curator를 추가했습니다. 대화·자동 동기화 모듈은 후속 범위입니다.

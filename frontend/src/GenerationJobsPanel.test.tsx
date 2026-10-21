@@ -7,7 +7,23 @@ import { request } from './api'
 vi.mock('./api', () => ({ request: vi.fn() }))
 const api = vi.mocked(request)
 const job = { id: 'job', provider: 'CODEX', status: 'RUNNING', resultCardId: null, error: null, createdAt: '2026-10-21T10:00:00Z' }
-beforeEach(() => api.mockReset())
+beforeEach(() => { api.mockReset() })
+
+it('완료 작업을 명시적으로 선택한 뒤에만 비교 자료를 조회한다', async () => {
+  const user = userEvent.setup()
+  api.mockImplementation(async path => {
+    if (path.endsWith('/comparison')) throw new Error('비교 테스트 오류')
+    return [{ ...job, status: 'SUCCEEDED', resultCardId: 'generated' }]
+  })
+  render(<GenerationJobsPanel workspaceId="one" revision={0} onOpen={vi.fn()} />)
+  await screen.findByRole('button', { name: '원래 문서와 비교' })
+  expect(api).toHaveBeenCalledTimes(1)
+  await user.click(screen.getByRole('button', { name: '원래 문서와 비교' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('비교 테스트 오류')
+  expect(api).toHaveBeenCalledWith('/workspaces/one/generation-jobs/job/comparison', expect.objectContaining({ signal: expect.any(AbortSignal) }))
+  await user.click(screen.getByRole('button', { name: '비교 닫기' }))
+  expect(screen.queryByLabelText('AI 결과 비교')).not.toBeInTheDocument()
+})
 
 it('과거 CLI 관측 버전과 진단 실패를 구분하고 현재 설치 버전으로 추정하지 않는다', async () => {
   api.mockResolvedValue([{ ...job, status: 'SUCCEEDED', cliVersionStatus: 'AVAILABLE', cliVersion: '0.1.0-fixture', cliCheckedAt: '2026-10-21T10:00:00Z' },

@@ -1,5 +1,8 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+추가: `GET /workspaces/{workspaceId}/generation-jobs/{jobId}/comparison` → `{base,current,generated}`.
+완료 작업의 생성 당시/현재/AI 최초 문서를 읽기 전용으로 비교합니다. [계약·오류·버전 선택](generation-comparison.md).
+
 기본 URL: `http://127.0.0.1:8787/api`
 
 지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.

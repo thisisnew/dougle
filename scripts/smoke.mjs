@@ -229,6 +229,13 @@ try {
     expectedVersion: 1, title: '가상 실험 초안', markdown: '사람이 수정한 두 번째 초안',
   })
   assert.equal(edited.version.number, 2)
+  const comparison = await api(`${jobBase}/${completed.id}/comparison`)
+  assert.equal(comparison.base.version.number, 1)
+  assert.equal(comparison.base.version.markdown, draft.version.markdown)
+  assert.equal(comparison.current.version.markdown, edited.version.markdown)
+  assert.equal(comparison.generated.version.number, 1)
+  assert.equal(comparison.generated.card.latestVersion, 2)
+  assert.equal((await api(`${publicationPath}/published`)).version.number, 1)
   assert.equal((await api(`${knowledgePath}/versions/1`)).version.markdown, draft.version.markdown)
   const conflict = await fetch(`${base}/api${knowledgePath}/versions`, {
     method: 'POST', headers: { 'X-Forge-Client': '1', 'Content-Type': 'application/json' },
@@ -308,7 +315,8 @@ try {
       'version-scoped evidence navigation survives restart and returns 404 after source deletion',
       'independent nested knowledge folders and card placement persist across restart',
       'nonempty folder deletion blocked and moving to root preserves document versions',
-      'folder rename and parent move revision survive restart'],
+      'folder rename and parent move revision survive restart',
+      'read-only generation comparison keeps base and initial AI version after later edits'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),
