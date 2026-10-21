@@ -1,6 +1,7 @@
 # 아키텍처
 
 그림 요약: [현재 구현과 앞으로의 설계도](design-map.md). 구현된 경로와 미구현 계획을 구분합니다.
+쉬운 설명: [데이터 모델과 코드 대조](modeling.md), [작동 원리·사용법](how-it-works.md).
 
 ## 현재 구조
 
@@ -149,7 +150,7 @@ Git 명령은 인자 배열로 실행하며 명령당 60초/임시 디스크 100
 
 ## 기술 버전
 
-Java 21, Spring Boot 4.1.1, React 19.1.1, Vite 7.1.7, Tailwind 4.1.13,
+Java 21, Spring Boot 4.1.1, React 19.1.1, Vite 7.3.7, Vitest 4.1.12, Tailwind 4.1.13,
 SQLite JDBC 3.50.3.0. npm은 lockfile, Maven은 parent/dependency 버전으로 고정합니다.
 Phase 2는 Tika 3.2.3, JavaParser 3.27.1, Lucene/Nori 10.3.1을 사용합니다.
 API는 [Lucene IndexWriter](https://lucene.apache.org/core/10_3_1/core/org/apache/lucene/index/IndexWriter.html)와

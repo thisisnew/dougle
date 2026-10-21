@@ -8,6 +8,10 @@ Phase 2 기준 커밋은 `d4cd1e8`이며, 이후 Phase 3 P3-1 구현과 검증 �
 
 ## 현재 상태
 
+사용자는 **Mac 설치형이 준비된 뒤 체험**하기로 했습니다. [준비 기준](docs/desktop-preview.md)을 따릅니다.
+쉬운 문서는 [작동 원리](docs/how-it-works.md), [모델링·실제 코드 대조](docs/modeling.md)입니다.
+최신 개발 도구는 Vite 7.3.7 / Vitest 4.1.12이며 npm audit 경고 0개입니다. [검증](docs/toolchain-report.md).
+
 **Phase 1·2와 Phase 3 P3-1(지식/근거 영속 모델 및 수동 초안 UI/API)을 구현했습니다.**
 Java 21 / Spring Boot 4.1.1 / React / TypeScript / Vite / Tailwind / SQLite JDBC를
 사용하는 실제 실행 가능한 로컬 웹 앱입니다. 최종 배포 형태는 Tauri 2 데스크톱 앱입니다.
@@ -132,11 +136,11 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 ## 다음 개발 세션의 첫 작업
 
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
-2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/markdown-rendering.md`에 있습니다.
+2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/toolchain-report.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
 4. **P3-2 CLI Curator의 남은 운영 기능**을 먼저 확인하세요. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
-6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시를 구현했습니다. 다음은 개발 도구 보안 갱신 후 폴더 이름 변경/이동입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
+6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시와 개발 도구 보안 갱신을 구현했습니다. 다음은 폴더 이름 변경/이동입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
 8. 필요 시 Phase 2 운영 확장(비공개 저장소·대용량·작업 취소)을 별도 기능 단위로 진행합니다.
 
@@ -157,7 +161,8 @@ UI 기본 병렬 실행에서 시간 초과가 관측되었으므로 자원 제�
 docs/generation-jobs.md, docs/model-selection.md, docs/cli-observation.md를 읽어라.
 건별 모델 선택·요청 모델 이력·승인 바인딩·실행 전 CLI 관측 이력은 구현했다.
 docs/publication.md, docs/evidence-navigation.md, docs/knowledge-folders.md의 구현/한계를 읽어라.
-docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 다음은 개발 도구 보안 갱신 후 P3-4 폴더 이름 변경/이동이다.
+docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 개발 도구 보안 갱신은 완료했고 다음은 P3-4 폴더 이름 변경/이동이다.
+docs/modeling.md와 docs/how-it-works.md도 코드와 맞게 유지해라. 사용자는 설치형 준비 후 체험한다.
 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 사람 검토를 자동 의미 검증으로 과장하지 마라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
@@ -184,7 +189,7 @@ GitHub Actions는 만들거나 수정하지 마라. 각 완료 항목의 문서�
 공개 HTTPS URL과 공개 GitHub 기본 브랜치만 지원하며 토큰·SSH·사내 HTTP는 미지원입니다.
 변경된 Source는 전체 스냅샷을 교체합니다. 지식이 인용한 원본만 당시 복사본을 보관하며 전체 원본 이력·Git diff는 Phase 5 범위입니다.
 지식은 수동/AI DRAFT를 저장하고 안전한 Markdown 미리보기와 원문을 표시합니다. 사람 검토·명시적 게시와 독립 폴더·카드 배치가 있습니다. 자동 의미 검증·지식 검색은 아직 없습니다.
-Markdown 링크/각주 이동·이미지는 비활성입니다. Vite/Vitest 개발 의존성 audit 경고 4개가 남아 있으며 갱신을 우선 진행해야 합니다. 상세는 `docs/markdown-rendering.md`를 확인하세요.
+Markdown 링크/각주 이동·이미지는 비활성입니다. 이전 개발 의존성 audit 경고 4개는 갱신 후 0개입니다. `docs/toolchain-report.md`를 확인하세요. audit 통과는 전체 보안 검증이 아닙니다.
 근거 최신성은 조회 시 마지막 로컬 복사본과 비교하며 자동 갱신/의존 관계 전파는 아닙니다.
 단일 문서 추출은 JVM 내부에서 동기 실행되므로 악성 문서 격리/강제 종료가 필요합니다.
 별도 ArtifactStore·페이지네이션·OS 계정 간 인증·암호화·Windows 실행 검증은 남아 있습니다.

@@ -1,6 +1,7 @@
 # Knowledge Forge 개발 지침
 
 - 시작할 때 `HANDOFF.md`, `docs/architecture.md`, `docs/phase-plan.md`를 읽는다.
+- 쉬운 모델링/매뉴얼은 `docs/modeling.md`, `docs/how-it-works.md`다. 기능 변경 시 실제 코드와 대조해 구현/예정을 구분한다. 사용자 체험은 `docs/desktop-preview.md`의 Mac 설치형 기준 이후다.
 - 이어서 개발할 때 `docs/backlog.md`의 미완료 항목과 인수 조건을 확인하고 완료 증거와 함께 갱신한다.
 - Phase 1·2, P3-1, P3-2 CLI AI 초안/전송 승인이 구현되어 있다. `docs/cli-ai.md`의 검증/남은 범위를 확인한다. 사람 검토 후 명시적 게시 경로는 `docs/publication.md`를 확인한다. 자동 의미 검증은 없다.
 - 사용자 요청으로 Ollama 대신 로그인된 Codex/Claude Code CLI를 사용한다. 현재 코딩 대화가 아닌 새 요청이며 외부 전송은 건별 승인한다.

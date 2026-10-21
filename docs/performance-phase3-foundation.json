@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T12:20:17.170Z",
+  "measuredAt": "2026-10-21T12:35:41.412Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -39,21 +39,21 @@
     "independent nested knowledge folders and card placement persist across restart",
     "nonempty folder deletion blocked and moving to root preserves document versions"
   ],
-  "sourceSyncMs": 1839.0645470000018,
+  "sourceSyncMs": 587.6763920000003,
   "livePublic": [],
-  "startupMs": 17389,
-  "restartMs": 23122,
+  "startupMs": 5705,
+  "restartMs": 6269,
   "upload100": {
-    "p50Ms": 235.6858479999937,
-    "p95Ms": 767.8733649999995
+    "p50Ms": 120.951559000001,
+    "p95Ms": 418.52938500000164
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 10.136796999999206,
-    "p95Ms": 13.353588999991189
+    "p50Ms": 3.3330069999938132,
+    "p95Ms": 4.664583999998285
   },
   "search100Files30Requests": {
-    "p50Ms": 21.878012000001036,
-    "p95Ms": 34.541282000005594
+    "p50Ms": 7.568215999999666,
+    "p95Ms": 26.436502999997174
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }
