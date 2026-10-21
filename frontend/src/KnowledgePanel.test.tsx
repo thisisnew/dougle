@@ -5,6 +5,7 @@ import KnowledgePanel, { DraftForm } from './KnowledgePanel'
 import { request } from './api'
 
 vi.mock('./api', async importOriginal => ({ ...await importOriginal<typeof import('./api')>(), request: vi.fn() }))
+vi.mock('./PublicationPanel', () => ({ default: () => <section aria-label="사람 검토와 게시" /> }))
 const api = vi.mocked(request)
 const card = { id: 'card', workspaceId: 'one', title: '관측 초안', latestVersion: 1, createdAt: '2026-10-21' }
 const document = {

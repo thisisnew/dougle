@@ -2,7 +2,7 @@
 
 기본 URL: `http://127.0.0.1:8787/api`
 
-지식 API는 수동/승인 기반 CLI AI DRAFT를 지원합니다. 의미 검증·게시 API는 아직 없습니다.
+지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.
 
 모든 변경 요청은 `X-Forge-Client: 1` 헤더가 필요합니다.
 JSON 요청은 `Content-Type: application/json`을 사용합니다.
@@ -282,3 +282,11 @@ cliVersionStatus는 NOT_CHECKED/AVAILABLE/UNAVAILABLE/UNRECOGNIZED/BUSY입니다
 잘못된 Provider 400, 변경 헤더 누락 403, 다른 진단 진행 중 409.
 설정된 CLI의 `--version`만 실행하며 설치 확인은 로그인·원격 연결·모델 지원 확인이 아닙니다.
 5초 실행 제한, 원문 출력 비노출. [설정·보안 경계](cli-settings.md).
+
+## 사람 검토·게시 API (v7 추가)
+
+`/api/workspaces/{workspaceId}/knowledge/{id}` 아래에 GET `/publication`, POST `/review`,
+POST `/publication`, GET `/published`를 제공합니다. 상세 요청/응답·오류·사용 순서는
+[검토/게시 계약](publication.md#rest-계약)을 따릅니다. 기존 Document의 `version.status`는
+불변 생성 상태 DRAFT이며 실제 사람 검토/게시 상태는 별도 `/publication` 응답으로 확인합니다.
+자동 의미 검증은 아직 제공하지 않습니다.

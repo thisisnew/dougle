@@ -36,12 +36,12 @@ Tika 문서 추출, JavaParser 심볼, Lucene/Nori 다중 도메인 검색이 �
 
 수동 지식 초안·불변 버전·근거 스냅샷·최신성 조회·편집 충돌 보호를 UI/API로 구현했습니다.
 v3 마이그레이션과 원본/지식 독립 삭제를 검증했습니다. [검증 기록](phase3-foundation-report.md).
-모든 초안은 DRAFT입니다. 로그인된 CLI로 승인 기반 AI 초안을 추가했으며 검증·게시는 아직 없습니다.
+모든 초안은 불변 DRAFT입니다. 로그인된 CLI로 승인 기반 AI 초안과 별도 사람 검토/게시 이력을 추가했습니다. [사람 검토 범위](publication.md).
 Ollama 대신 Codex/Claude Code를 사용합니다. [작업 상태·취소·멱등·재시작 복구](generation-jobs.md)도 구현했습니다.
 시작 설정 모델 고정·승인 바인딩·설치 버전 진단도 구현했습니다. [범위](cli-settings.md).
 건별 모델 선택·브라우저별 선택 저장 UI·요청 모델 영속 이력도 구현했습니다. [범위](model-selection.md).
 실행 전 CLI 관측 버전·시각·확인 실패 이력도 구현했습니다. [범위](cli-observation.md).
-인증·원격 연결 상태·실제 실행 모델/바이너리 증명은 아직 없으며 다음 핵심 작업은 검증·게시입니다.
+인증·원격 연결 상태·실제 실행 모델/바이너리 증명은 아직 없으며 자동 의미 검증·독립 지식 폴더는 남아 있습니다.
 
 Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 초안 검증 후 게시를 구현합니다.

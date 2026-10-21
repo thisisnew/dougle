@@ -40,6 +40,10 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   문장과 근거 일치 검증 정책 및 사람 검토 경로 마련.
   단순 인용 ID 존재 확인을 의미적 사실 검증으로 간주하지 않기.
   실패/중단 시 이전 게시 버전 유지와 동시 게시 충돌 테스트.
+  구현: 사람 검토 기록/별도 게시 UI·API, 최신 버전·인용 번호·CURRENT 근거 검사,
+  편집 후 재검토, 이전 게시본 보존, DB 실패/동시 게시 충돌 테스트, v7 마이그레이션.
+  [사용법·실행 증거](publication.md). 남음: 자동 의미 검증, 검토 철회/게시 취소 UX.
+  사람 진술을 의미적 증명으로 취급하지 않으므로 이 상위 항목은 미완료로 유지.
 - [ ] **P3-4: 독립 지식 탐색기.** 카드·Markdown 열람, 출처 이동, 버전/검증/최신성 표시,
   사람 편집 저장, 자동 갱신은 별도 제안으로 보관. 안전한 Markdown 렌더링과
   원본/지식 독립 삭제, 편집 내용 비덮어쓰기 UI/API 테스트.
@@ -126,8 +130,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 78개 통과 + live opt-in 1개 skip, 프런트엔드 23개 통과, JAR 빌드 성공.
-- 최신 구현/검증: [AI 생성 작업](generation-jobs.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 109개 통과 + live opt-in 1개 skip, 프런트엔드 36개 통과, JAR 빌드 성공.
+- 최신 구현/검증: [사람 검토와 게시](publication.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
 - 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).

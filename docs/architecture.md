@@ -59,12 +59,12 @@ Phase 2에서도 Source당 50 MiB/500개 제한을 유지해 같은 원자성을
 별도 `ArtifactStore`와 콘텐츠 해시 기반 파일 저장소 전환은 대용량 지원 시 진행합니다.
 
 SQLite는 WAL, 외래 키, 5초 busy timeout을 사용합니다. 연결 풀은 1개로
-로컬 쓰기를 직렬화합니다. `PRAGMA user_version=6`로 스키마를 관리하며 새 스키마를
+로컬 쓰기를 직렬화합니다. `PRAGMA user_version=7`로 스키마를 관리하며 새 스키마를
 구버전 앱으로 열면 실패합니다. 초기 스키마 생성도 트랜잭션입니다.
 
 ## 후속 모듈과 경계
 
-표는 목표 역할입니다. knowledge는 수동/AI 초안·버전·근거·CuratorModel이 구현되었고 게시 기능은 미구현입니다.
+표는 목표 역할입니다. knowledge는 수동/AI 초안·버전·근거·CuratorModel이 구현되었고 사람 검토/명시적 게시가 구현되었습니다. 자동 의미 검증은 미구현입니다.
 
 | 모듈 | 소유 데이터/역할 | 외부 연결 포트 |
 |---|---|---|
@@ -163,7 +163,7 @@ Spring Boot 4.1.1의 Java 21 호환성은
 `knowledge_version(card_id,number)`은 제목/Markdown/상태/수동 편집 여부를 저장합니다.
 기존 버전의 본문을 UPDATE하는 API는 없고 `expectedVersion` 비교 후 새 버전을 추가합니다.
 동시 편집은 한 요청만 성공하고 오래된 요청은 409입니다. 현재 생성 상태는 오직 DRAFT이며
-VERIFIED/PUBLISHED 스키마 값은 이후 검증·게시 유스케이스를 위한 예약 값입니다.
+VERIFIED/PUBLISHED 스키마 값은 사용하지 않습니다. v7 검토/게시 이력은 별도 테이블과 PublicationService/PublicationStore로 관리합니다. [불변 조건과 흐름](publication.md).
 
 `evidence_snapshot`은 근거 캡처 시 원본 BLOB, 추출 텍스트, SHA-256 두 개,
 Source ID/이름/종류/등록 위치/당시 revision/상대 경로, 당시 entry ID를 보존합니다.

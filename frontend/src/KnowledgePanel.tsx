@@ -3,6 +3,7 @@ import { request } from './api'
 import { Button } from './components/ui/button'
 import GenerationPanel from './GenerationPanel'
 import GenerationJobsPanel from './GenerationJobsPanel'
+import PublicationPanel from './PublicationPanel'
 
 type Card = { id: string; workspaceId: string; title: string; latestVersion: number; createdAt: string }
 type Evidence = {
@@ -123,7 +124,7 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
   }
 
   return <section className="knowledge-panel" aria-label="지식 초안 보관함">
-    <p>근거 연결 수동 초안과 승인 기반 AI 초안을 지원합니다. 사실 검증·게시는 아직 제공하지 않습니다.</p>
+    <p>근거 연결 초안, 승인 기반 AI 생성, 사람 검토 후 명시적 게시를 지원합니다. 자동 사실 검증은 제공하지 않습니다.</p>
     <GenerationJobsPanel workspaceId={workspaceId} revision={revision} openDisabled={editing || busy} onOpen={id => {
       if (!editing && !busy) { setSelected(id); setNumber(null); setRevision(value => value + 1) }
     }} />
@@ -137,7 +138,7 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
     {selected && !document && !error && <p role="status">지식을 불러오는 중…</p>}
     {document && <article className="knowledge-document">
       <h2>{document.version.title}</h2>
-      <p>v{document.version.number} / 최신 v{document.card.latestVersion} · {document.version.status} (미검증) · {document.version.manuallyEdited ? '사람이 작성·편집한 초안' : 'AI 생성 초안'}</p>
+      <p>v{document.version.number} / 최신 v{document.card.latestVersion} · 생성 상태 {document.version.status} · {document.version.manuallyEdited ? '사람이 작성·편집한 초안' : 'AI 생성 초안'} · 검토/게시 상태는 아래 별도 표시</p>
       <div className="source-actions">
         <Button variant="outline" size="sm" disabled={busy || editing || document.version.number <= 1} onClick={() => setNumber(document.version.number - 1)}>이전 버전</Button>
         <Button variant="outline" size="sm" disabled={busy || editing || document.version.number >= document.card.latestVersion} onClick={() => setNumber(document.version.number + 1)}>다음 버전</Button>
@@ -159,6 +160,9 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
       {!editing && document.version.number === document.card.latestVersion && <GenerationPanel
         key={`${selected}-${document.version.number}`} base={`${base}/${selected}`} disabled={busy || confirmDelete}
         onBusy={setBusy} onQueued={() => { setBusy(false); setRevision(value => value + 1) }} />}
+      {!editing && <PublicationPanel key={`publication-${selected}-${document.version.number}-${revision}`}
+        base={`${base}/${selected}`} version={document.version.number} disabled={busy || confirmDelete}
+        onBusy={setBusy} onOpen={setNumber} />}
       <h3>보존된 근거</h3><p>최신성은 마지막으로 수집한 로컬 복사본과 비교합니다. 외부 원본의 실시간 상태나 사실 검증 결과가 아닙니다.</p>
       {document.version.evidence.map((item, index) => <section className="evidence-item" key={`${item.snapshotId}-${index}`}>
         <strong>[E{index + 1}] {item.path} · 추출 텍스트 {item.startLine}~{item.endLine}행</strong>

@@ -1,10 +1,10 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
 > **수집·분석·검색에 이어, 근거를 보존하는 수동 지식 초안·버전이 동작합니다.**
-> 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 다음은 운영 보강·검증·게시입니다.
+> 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 사람 검토→명시적 게시도 지원합니다. 자동 의미 검증·지식 폴더는 남았습니다.
 
 기준: 2026-10-21 · Phase 3 CLI AI 작업 관리·모델 고정·설치 진단 추가.
-최신 범위는 [실행 전 CLI 관측 이력](cli-observation.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
+최신 범위는 [사람 검토와 게시](publication.md), 이전 변경은 [실행 전 CLI 관측 이력](cli-observation.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
 실제 JAR 재시작·근거 보존 검증 결과는 [보고서](phase3-foundation-report.md)에 기록합니다.
 
 **범례:** 🟩 구현됨 · 🟨 일부 구현/확장 필요 · 🟦 계획(미구현).
@@ -17,7 +17,7 @@
 flowchart LR
     P1["🟩 Phase 1<br/>Workspace · 원본 탐색기"]
     P2["🟨 Phase 2<br/>기본 수집 · 분석 · 검색 구현<br/>운영 확장 남음"]
-    P3["🟨 Phase 3 · 진행 중<br/>수동/AI 초안 · 근거 · 버전 구현<br/>다음: 운영 보강 · 검증 · 게시"]
+    P3["🟨 Phase 3 · 진행 중<br/>수동/AI 초안 · 근거 · 버전 구현<br/>사람 검토 · 게시 구현 / 자동 의미 검증 · 폴더 남음"]
     P4["🟦 Phase 4<br/>AI 질문 · 근거 우선 SSE"]
     P5["🟦 Phase 5<br/>선택적 폴링 · Git 증분 · 무효화"]
     P6["🟦 Phase 6<br/>Tauri · Mac 설치 앱"]
@@ -40,7 +40,7 @@ flowchart LR
 | 자료 등록 | 파일 업로드, 로컬 폴더·공개 URL·공개 GitHub | 비공개 저장소, Source 위치 수정 |
 | 자료 분석 | Tika 추출, Java 심볼·행 번호 | 청크·정교한 근거 위치, 격리 파서 |
 | 검색 | Lucene/Nori, 여러 도메인, 심볼 텍스트 | 지식·코드 관계 검색 |
-| 지식 백과사전 | 수동/승인 기반 CLI AI 초안·불변 버전·근거 복사본·편집 충돌 보호 | 검증·게시·폴더·렌더링 |
+| 지식 백과사전 | 수동/CLI AI 초안·불변 버전·근거 복사본·사람 검토·게시·충돌 보호 | 자동 의미 검증·폴더·렌더링 |
 | AI 운영 | 건별 모델 선택·요청 모델 이력·승인 바인딩·실행 전 CLI 관측 이력 | 인증 상태·실제 실행 모델/바이너리 증명 |
 | AI 질문 | 미구현 | CLI Provider, 근거 선표시, SSE, 중단 |
 | 최신성 관리 | 수동 동기화·revision·근거 CURRENT/STALE/MISSING 조회 | 자동 폴링·증분·의존 관계 전파·전체 원본 이력 |
@@ -119,7 +119,7 @@ flowchart TB
         UI["🟨 React UI<br/>탐색/검색/수동·AI 초안 + 향후 채팅"]
         RAW["🟩 library + sources + ingestion<br/>원본 · 수동 수집 · 분석"]
         RET["🟨 search<br/>현재 Lucene/심볼 + 향후 지식 관계"]
-        KNOW["🟨 knowledge<br/>수동·AI 초안/근거/버전 구현<br/>검증 · 게시 예정"]
+        KNOW["🟨 knowledge<br/>초안/근거/버전/사람 검토/게시 구현<br/>자동 의미 검증 · 폴더 남음"]
         CHAT["🟦 conversation<br/>근거 먼저 · 답변 SSE · 취소"]
         SYNC["🟦 synchronization<br/>Source별 opt-in · Git diff · 지식 무효화"]
         SQL[("🟨 SQLite v4<br/>원본/지식/근거/버전/생성 작업<br/>향후 대화/동기화 확장")]
@@ -158,7 +158,7 @@ JDBC/HTTP/LLM 어댑터가 포트를 구현합니다. 검색과 LLM 답변 생�
 
 ## 4. 지식이 만들어지고 갱신되는 과정 — 현재와 계획
 
-근거 캡처·수동 초안·승인 기반 별도 AI 초안은 구현되었습니다. **검증·게시·자동 갱신은 아직 계획**입니다.
+근거 캡처·수동/AI 초안·사람 검토·명시적 게시가 구현되었습니다. **자동 의미 검증·자동 갱신은 아직 계획**입니다.
 
 ```mermaid
 flowchart TD
@@ -166,20 +166,20 @@ flowchart TD
     EVID["🟩 불변 근거 스냅샷<br/>바이트 · 추출 텍스트 · Source · revision · 해시 · 범위"]
     MANUAL["🟩 사람 작성 DRAFT<br/>불변 버전 · 동시 편집 보호"]
     DRAFT["🟩 CLI Curator<br/>미리보기 + 승인 → 별도 AI DRAFT"]
-    CHECK{"🟦 주장과 근거 검증<br/>필요 시 사람 검토"}
-    FAIL["🟦 게시하지 않음<br/>초안 수정 / 이전 게시본 유지"]
-    PUB["🟦 검증된 새 버전 게시<br/>카드 · Markdown · 출처"]
+    CHECK{"🟩 사람 검토 기록<br/>인용/최신성 검사 · 자동 의미 검증 아님"}
+    FAIL["🟩 게시하지 않음<br/>초안 수정 / 이전 게시본 유지"]
+    PUB["🟩 검토 후 별도 게시 요청<br/>버전 · 게시 revision 충돌 보호"]
     CHANGE["🟦 원본 변경 감지 · Phase 5"]
     STALE["🟦 영향받는 지식 stale 표시"]
     HUMAN{"🟦 사람이 편집했는가?"}
     PROPOSE["🟦 갱신 제안만 저장<br/>자동 덮어쓰기 금지"]
     RAW --> EVID
     EVID --> MANUAL
-    MANUAL -.-> CHECK
+    MANUAL --> CHECK
     EVID --> DRAFT
-    DRAFT -.-> CHECK
-    CHECK -. 실패 .-> FAIL
-    CHECK -. 통과 .-> PUB
+    DRAFT --> CHECK
+    CHECK -- 실패 --> FAIL
+    CHECK -- 사람 검토 후 명시적 요청 --> PUB
     PUB -.-> CHANGE
     CHANGE -.-> STALE
     STALE -.-> HUMAN
@@ -187,13 +187,13 @@ flowchart TD
     HUMAN -. 아니오 .-> DRAFT
     classDef done fill:#dcfce7,stroke:#15803d,color:#14532d
     classDef planned fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-    class RAW,EVID,MANUAL,DRAFT done
-    class CHECK,FAIL,PUB,CHANGE,STALE,HUMAN,PROPOSE planned
+    class RAW,EVID,MANUAL,DRAFT,CHECK,FAIL,PUB done
+    class CHANGE,STALE,HUMAN,PROPOSE planned
 ```
 
 **구현된 보호 장치:** 현재 Source 변경 시 entry ID가 교체되어도 별도 근거 스냅샷은 유지됩니다.
 현재성과 비교할 때는 Source+상대 경로와 원본/텍스트 해시를 사용합니다.
-근거 일치 상태는 사실 검증이 아닙니다. 의미적 검증과 게시 정책은 P3-3에서 구현해야 합니다.
+근거 일치 상태는 사실 검증이 아닙니다. 사람 검토 후 게시 정책은 구현했으며 자동 의미 검증은 남아 있습니다.
 
 ## 5. AI 질문 시 처리 순서 — 계획
 
@@ -231,14 +231,14 @@ sequenceDiagram
 
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
-| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx` | 지식 폴더/렌더링, 검증·게시, 채팅 |
+| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx`, `PublicationPanel.tsx` | 지식 폴더/렌더링, 검토 철회/게시 취소, 채팅 |
 | 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v4, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 게시 지식·관계 검색 |
-| 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 검증 · 게시 |
+| 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · 지식 폴더 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** **P3-3 사람 검토 기반 검증·게시**. 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
+**다음 한 작업:** **P3-4 독립 지식 폴더·현재 출처 탐색 이동**. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
-실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [생성 작업 보고서](generation-jobs.md)를 참고하세요.
+실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [사람 검토/게시 보고서](publication.md)를 참고하세요.

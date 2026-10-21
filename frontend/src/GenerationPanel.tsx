@@ -103,6 +103,6 @@ export default function GenerationPanel({ base, disabled, onBusy, onQueued }: {
       <Button variant="outline" disabled={disabled} onClick={() => { setSubmission(null); setPreview(null); setApproved(false) }}>새 승인 준비</Button>
     </div>}
     {error && <p role="alert">{error}</p>}
-    <p>기존 문서를 덮어쓰지 않습니다. 결과는 미검증 DRAFT이며 사실 검증·자동 게시 기능은 아직 없습니다.</p>
+    <p>기존 문서를 덮어쓰지 않습니다. 결과는 미검증 DRAFT입니다. 자동 사실 검증·자동 게시 없이 사람이 별도로 검토하고 게시합니다.</p>
   </section>
 }

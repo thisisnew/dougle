@@ -167,11 +167,23 @@ try {
   assert.equal((await waitForJob(`${jobBase}/${cancellable.id}`, job => job.status === 'CANCELLED')).resultCardId, null)
   assert.equal((await api(knowledgeBase)).length, 2)
   const snapshotPath = `${knowledgePath}/evidence/${draft.version.evidence[0].snapshotId}/content`
+  const publicationPath = `${knowledgeBase}/${completed.resultCardId}`
+  const review = await api(`${publicationPath}/review`, 'POST', {
+    expectedVersion: 1, reviewer: 'Synthetic smoke reviewer', note: 'Synthetic fixture contract only; not semantic AI validation.',
+    claimsSupported: true, uncertaintyRemoved: true,
+  })
+  assert.equal(review.publication, null)
+  assert.equal((await api(`${publicationPath}/publication`, 'POST', { expectedVersion: 1, expectedPublicationRevision: 0 })).publication.version, 1)
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   await stop()
   configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
+  assert.equal((await api(`${publicationPath}/publication`)).review.reviewer, 'Synthetic smoke reviewer')
+  assert.equal((await api(`${publicationPath}/published`)).version.number, 1)
+  await api(`${publicationPath}/versions`, 'POST', { expectedVersion: 1, title: 'Synthetic revised draft', markdown: 'Synthetic fixture [E1]' })
+  assert.equal((await api(`${publicationPath}/published`)).version.number, 1)
+  assert.equal((await api(`${publicationPath}/publication`)).review, null)
   assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).status, 'SUCCEEDED')
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)).status, 'CANCELLED')
@@ -207,6 +219,8 @@ try {
   await api(`/workspaces/${workspace.id}/sources/${source.id}`, 'DELETE')
   assert.equal((await api(searchPath)).length, 0)
   assert.equal((await api(knowledgePath)).version.evidence[0].freshness, 'MISSING')
+  assert.equal((await api(`${publicationPath}/published`)).version.evidence[0].freshness, 'MISSING')
+  assert.equal((await api(`${publicationPath}/publication`)).publication.version, 1)
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   const livePublic = []
   if (process.argv.includes('--live-public')) {
@@ -260,7 +274,9 @@ try {
       'CLI payload preview without external call', 'unapproved and mismatched AI transmission rejected',
       'fake CLI async generation and cancellation', 'idempotent job replay across restart', 'completed job and draft persist',
       'per-request model overrides server default', 'requested model history survives changed defaults and restart',
-      'pre-inference CLI observation persists for completed and cancelled jobs'],
+      'pre-inference CLI observation persists for completed and cancelled jobs',
+      'separate human review and publication persist across restart',
+      'new draft and missing originals preserve prior publication with freshness warnings'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

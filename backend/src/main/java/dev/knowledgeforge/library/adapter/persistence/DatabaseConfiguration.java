@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 6) {
+        if (version > 7) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -204,6 +204,29 @@ public class DatabaseConfiguration {
                         jdbc.execute("ALTER TABLE generation_job ADD COLUMN cli_version_status TEXT NOT NULL DEFAULT 'NOT_CHECKED' CHECK(cli_version_status IN ('NOT_CHECKED','AVAILABLE','UNAVAILABLE','UNRECOGNIZED','BUSY'))");
                         jdbc.execute("ALTER TABLE generation_job ADD COLUMN cli_checked_at TEXT");
                         jdbc.execute("PRAGMA user_version=6");
+                    });
+        }
+        if (version < 7) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE knowledge_review (
+                                  card_id TEXT NOT NULL, version INTEGER NOT NULL,
+                                  reviewer TEXT NOT NULL, note TEXT NOT NULL, reviewed_at TEXT NOT NULL,
+                                  PRIMARY KEY(card_id,version),
+                                  FOREIGN KEY(card_id,version) REFERENCES knowledge_version(card_id,number) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE knowledge_publication (
+                                  card_id TEXT NOT NULL, revision INTEGER NOT NULL CHECK(revision>0),
+                                  version INTEGER NOT NULL, published_at TEXT NOT NULL,
+                                  PRIMARY KEY(card_id,revision), UNIQUE(card_id,version),
+                                  FOREIGN KEY(card_id,version) REFERENCES knowledge_review(card_id,version) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=7");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());
