@@ -26,7 +26,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(5);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(6);
                 assertThat(jdbc.queryForObject("SELECT active_workspace_id FROM app_state", String.class)).isEqualTo("one");
                 assertThat(jdbc.queryForObject("SELECT content FROM entry", byte[].class)).isEqualTo(new byte[] {97, 98, 99});
                 assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM source", Integer.class)).isZero();
@@ -53,7 +53,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(5);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(6);
                 assertThat(jdbc.queryForObject("SELECT revision FROM source", String.class)).isEqualTo("rev1");
                 assertThat(jdbc.queryForObject("SELECT text FROM extracted_document", String.class)).isEqualTo("abc");
                 assertThat(jdbc.queryForObject("SELECT content FROM entry", byte[].class)).isEqualTo(new byte[] {97, 98, 99});
@@ -76,7 +76,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(5);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(6);
             assertThat(jdbc.queryForList("SELECT manually_edited FROM knowledge_version ORDER BY number", Integer.class)).containsExactly(0, 1);
             assertThat(jdbc.queryForList("SELECT markdown FROM knowledge_version ORDER BY number", String.class)).containsExactly("unverified", "edited");
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM generation_job", Integer.class)).isZero();
@@ -88,18 +88,45 @@ class MigrationTest {
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
             jdbc.update("INSERT INTO workspace VALUES('one','synthetic','now')");
-            jdbc.update("INSERT INTO generation_job VALUES('done','one','card','CODEX',1,'digest','SUCCEEDED','result',NULL,'old','old',NULL)");
+            jdbc.update("INSERT INTO generation_job VALUES('done','one','card','CODEX',1,'digest','SUCCEEDED','result',NULL,'old','old',NULL,NULL,'NOT_CHECKED',NULL)");
+            jdbc.execute("ALTER TABLE generation_job DROP COLUMN cli_version");
+            jdbc.execute("ALTER TABLE generation_job DROP COLUMN cli_version_status");
+            jdbc.execute("ALTER TABLE generation_job DROP COLUMN cli_checked_at");
             jdbc.execute("ALTER TABLE generation_job DROP COLUMN requested_model");
             jdbc.execute("PRAGMA user_version=4");
         }
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(5);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(6);
                 assertThat(jdbc.queryForObject("SELECT requested_model FROM generation_job", String.class)).isNull();
                 assertThat(jdbc.queryForObject("SELECT result_card_id FROM generation_job", String.class)).isEqualTo("result");
                 assertThat(jdbc.queryForObject("SELECT digest FROM generation_job", String.class)).isEqualTo("digest");
                 assertThat(jdbc.queryForObject("SELECT status FROM generation_job", String.class)).isEqualTo("SUCCEEDED");
+            }
+        }
+    }
+
+    @Test
+    void migratesVersionFiveWithoutInventingPastCliVersions() throws Exception {
+        try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
+            var jdbc = new JdbcTemplate(source);
+            jdbc.update("INSERT INTO workspace VALUES('one','synthetic','now')");
+            jdbc.update("INSERT INTO generation_job VALUES('done','one','card','CODEX',1,'digest','SUCCEEDED','result',NULL,'old','old','selected',NULL,'NOT_CHECKED',NULL)");
+            jdbc.execute("ALTER TABLE generation_job DROP COLUMN cli_version");
+            jdbc.execute("ALTER TABLE generation_job DROP COLUMN cli_version_status");
+            jdbc.execute("ALTER TABLE generation_job DROP COLUMN cli_checked_at");
+            jdbc.execute("PRAGMA user_version=5");
+        }
+        for (int attempt = 0; attempt < 2; attempt++) {
+            try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
+                var jdbc = new JdbcTemplate(source);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(6);
+                assertThat(jdbc.queryForObject("SELECT cli_version FROM generation_job", String.class)).isNull();
+                assertThat(jdbc.queryForObject("SELECT cli_checked_at FROM generation_job", String.class)).isNull();
+                assertThat(jdbc.queryForObject("SELECT cli_version_status FROM generation_job", String.class)).isEqualTo("NOT_CHECKED");
+                assertThat(jdbc.queryForObject("SELECT requested_model FROM generation_job", String.class)).isEqualTo("selected");
+                assertThat(jdbc.queryForObject("SELECT result_card_id FROM generation_job", String.class)).isEqualTo("result");
             }
         }
     }
@@ -110,7 +137,7 @@ class MigrationTest {
             var jdbc = new JdbcTemplate(source);
             jdbc.update("INSERT INTO workspace VALUES('one','synthetic','now')");
             for (String state : java.util.List.of("QUEUED", "RUNNING", "CANCELLING", "SUCCEEDED", "FAILED", "CANCELLED")) {
-                jdbc.update("INSERT INTO generation_job VALUES(?,'one','card','CODEX',1,'digest',?,'result',NULL,'old','old','synthetic-model')", state, state);
+                jdbc.update("INSERT INTO generation_job VALUES(?,'one','card','CODEX',1,'digest',?,'result',NULL,'old','old','synthetic-model','0.1.0','AVAILABLE','observed')", state, state);
             }
         }
         for (int attempt = 0; attempt < 2; attempt++) {
@@ -121,6 +148,8 @@ class MigrationTest {
                 assertThat(jdbc.queryForObject("SELECT result_card_id FROM generation_job WHERE id='SUCCEEDED'", String.class)).isEqualTo("result");
                 assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM generation_job", Integer.class)).isEqualTo(6);
                 assertThat(jdbc.queryForList("SELECT requested_model FROM generation_job", String.class)).containsOnly("synthetic-model");
+                assertThat(jdbc.queryForList("SELECT cli_version FROM generation_job", String.class)).containsOnly("0.1.0");
+                assertThat(jdbc.queryForList("SELECT cli_checked_at FROM generation_job", String.class)).containsOnly("observed");
             }
         }
     }

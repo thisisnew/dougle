@@ -152,6 +152,9 @@ try {
   const completed = await waitForJob(`${jobBase}/${submitted.id}`, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
   assert.equal(completed.status, 'SUCCEEDED', completed.error)
   assert.equal(completed.requestedModel, 'synthetic-smoke-model')
+  assert.equal(completed.cliVersion, '0.0.0-test-fixture')
+  assert.equal(completed.cliVersionStatus, 'AVAILABLE')
+  assert.ok(completed.cliCheckedAt)
   assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.title, 'TEST FIXTURE 초안')
   assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.manuallyEdited, false)
   assert.ok((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.markdown.includes('요청 모델: synthetic-smoke-model'))
@@ -159,7 +162,7 @@ try {
   assert.equal((await api(knowledgePath)).version.markdown, draft.version.markdown)
   const cancelledRequest = { ...generation, requestId: crypto.randomUUID() }
   const cancellable = await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)
-  await waitForJob(`${jobBase}/${cancellable.id}`, job => job.status === 'RUNNING')
+  await waitForJob(`${jobBase}/${cancellable.id}`, job => job.status === 'RUNNING' && job.cliCheckedAt)
   await api(`${jobBase}/${cancellable.id}/cancel`, 'POST')
   assert.equal((await waitForJob(`${jobBase}/${cancellable.id}`, job => job.status === 'CANCELLED')).resultCardId, null)
   assert.equal((await api(knowledgeBase)).length, 2)
@@ -174,6 +177,9 @@ try {
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)).status, 'CANCELLED')
   assert.equal((await api(`${jobBase}/${completed.id}`)).requestedModel, 'synthetic-smoke-model')
   assert.equal((await api(`${jobBase}/${cancellable.id}`)).requestedModel, 'synthetic-smoke-model')
+  assert.equal((await api(`${jobBase}/${completed.id}`)).cliVersion, '0.0.0-test-fixture')
+  assert.equal((await api(`${jobBase}/${completed.id}`)).cliCheckedAt, completed.cliCheckedAt)
+  assert.equal((await api(`${jobBase}/${cancellable.id}`)).cliVersion, '0.0.0-test-fixture')
   assert.equal((await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX', requestedModel: 'synthetic-smoke-model' })).digest, transmission.digest)
   assert.equal((await api(knowledgeBase)).length, 2)
   assert.equal((await api('/session')).activeWorkspaceId, workspace.id)
@@ -253,7 +259,8 @@ try {
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',
       'CLI payload preview without external call', 'unapproved and mismatched AI transmission rejected',
       'fake CLI async generation and cancellation', 'idempotent job replay across restart', 'completed job and draft persist',
-      'per-request model overrides server default', 'requested model history survives changed defaults and restart'],
+      'per-request model overrides server default', 'requested model history survives changed defaults and restart',
+      'pre-inference CLI observation persists for completed and cancelled jobs'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

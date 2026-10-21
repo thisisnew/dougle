@@ -6,12 +6,16 @@ export type GenerationJob = {
   id: string; sourceCardId: string; provider: string; status: string
   resultCardId: string | null; error: string | null; createdAt: string
   requestedModel: string | null
+  cliVersion: string | null; cliVersionStatus: string; cliCheckedAt: string | null
 }
 const labels: Record<string, string> = {
   QUEUED: '대기', RUNNING: '생성 중', CANCELLING: '중단 처리 중', CANCELLED: '취소됨',
   SUCCEEDED: '완료', FAILED: '실패', INTERRUPTED: '앱 재시작으로 중단됨',
 }
 const active = (job: GenerationJob) => ['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status)
+const cliLabels: Record<string, string> = {
+  NOT_CHECKED: '기록 없음', UNAVAILABLE: '확인 실패', UNRECOGNIZED: '응답 형식 미인식', BUSY: '다른 진단 진행으로 건너뜀',
+}
 
 export default function GenerationJobsPanel({ workspaceId, revision, onOpen, openDisabled = false }: {
   workspaceId: string; revision: number; onOpen: (id: string) => void; openDisabled?: boolean
@@ -60,6 +64,8 @@ export default function GenerationJobsPanel({ workspaceId, revision, onOpen, ope
       <p>{job.provider} · {labels[job.status] ?? job.status} · {new Date(job.createdAt).toLocaleString()}</p>
       <small>작업 ID: {job.id}</small>
       <p>요청 모델: {job.requestedModel == null ? '기록 없음 (이전 작업)' : job.requestedModel || 'CLI 기본값'} · 실제 실행 모델: 미확인</p>
+      <p>실행 전 CLI 관측: {job.cliVersionStatus === 'AVAILABLE' ? job.cliVersion : cliLabels[job.cliVersionStatus] ?? '기록 없음'}
+        {job.cliCheckedAt && ` · ${new Date(job.cliCheckedAt).toLocaleString()}`}</p>
       {job.error && <p>{job.error}</p>}
       {active(job) && <Button variant="outline" size="sm" disabled={!!cancelling || job.status === 'CANCELLING'} onClick={() => void cancel(job.id)}>생성 중단</Button>}
       {job.status === 'SUCCEEDED' && job.resultCardId && <Button variant="outline" size="sm" disabled={openDisabled} onClick={() => onOpen(job.resultCardId!)}>생성된 초안 열기</Button>}

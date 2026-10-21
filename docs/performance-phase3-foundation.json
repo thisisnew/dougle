@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T11:30:23.912Z",
+  "measuredAt": "2026-10-21T11:38:01.244Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -31,23 +31,24 @@
     "idempotent job replay across restart",
     "completed job and draft persist",
     "per-request model overrides server default",
-    "requested model history survives changed defaults and restart"
+    "requested model history survives changed defaults and restart",
+    "pre-inference CLI observation persists for completed and cancelled jobs"
   ],
-  "sourceSyncMs": 995.710751999999,
+  "sourceSyncMs": 1274.196726000002,
   "livePublic": [],
-  "startupMs": 11944,
-  "restartMs": 11921,
+  "startupMs": 12750,
+  "restartMs": 14268,
   "upload100": {
-    "p50Ms": 152.28072299999621,
-    "p95Ms": 617.4315410000054
+    "p50Ms": 205.44528900000296,
+    "p95Ms": 649.2644990000044
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 5.017328000001726,
-    "p95Ms": 6.588002999997116
+    "p50Ms": 7.447932000002766,
+    "p95Ms": 9.57452199999534
   },
   "search100Files30Requests": {
-    "p50Ms": 10.237625000001572,
-    "p95Ms": 21.67975000000297
+    "p50Ms": 19.126257999996596,
+    "p95Ms": 31.939924000005703
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

@@ -1,5 +1,7 @@
 # 건별 모델 선택·요청 모델 이력 (SQLite v5)
 
+후속 [실행 전 CLI 관측 이력](cli-observation.md)에서 SQLite v6을 추가했습니다. 아래는 v5 구현 당시 기록입니다.
+
 2026-10-21. P3-2 운영 기능의 후속 구현입니다. 이전 시작 설정·설치 진단은
 [CLI 설정](cli-settings.md), 생성 수명주기는 [작업 설계](generation-jobs.md)를 참고하세요.
 

@@ -15,7 +15,8 @@ public class JdbcGenerationJobStore implements GenerationJobStore {
     private final RowMapper<GenerationJob> mapper = (row, number) -> new GenerationJob(row.getString("id"),
             row.getString("workspace_id"), row.getString("source_card_id"), row.getString("provider"),
             row.getInt("expected_version"), row.getString("digest"), row.getString("status"),
-            row.getString("result_card_id"), row.getString("error"), row.getString("created_at"), row.getString("updated_at"), row.getString("requested_model"));
+            row.getString("result_card_id"), row.getString("error"), row.getString("created_at"), row.getString("updated_at"), row.getString("requested_model"),
+            row.getString("cli_version"), row.getString("cli_version_status"), row.getString("cli_checked_at"));
 
     public JdbcGenerationJobStore(JdbcTemplate jdbc) { this.jdbc = jdbc; }
 
@@ -40,5 +41,12 @@ public class JdbcGenerationJobStore implements GenerationJobStore {
                 UPDATE generation_job SET status=?,result_card_id=?,error=?,updated_at=?
                 WHERE workspace_id=? AND id=? AND status IN ('QUEUED','RUNNING','CANCELLING')
                 """, status, resultCardId, error, Instant.now().toString(), workspace, id) == 1;
+    }
+
+    public boolean recordCli(String workspace, String id, String version, String status, String checkedAt) {
+        return jdbc.update("""
+                UPDATE generation_job SET cli_version=?,cli_version_status=?,cli_checked_at=?,updated_at=?
+                WHERE workspace_id=? AND id=? AND status='RUNNING' AND cli_checked_at IS NULL
+                """, version, status, checkedAt, checkedAt, workspace, id) == 1;
     }
 }

@@ -5,6 +5,7 @@
 후속 작업 상태·취소·재시작 복구의 최신 검증은 [AI 생성 작업](generation-jobs.md)에 있습니다.
 이후 모델 설정·설치 진단의 검증은 [CLI 설정](cli-settings.md)에 기록합니다.
 최신 건별 모델 선택·v5 마이그레이션의 검증은 [건별 모델 가이드](model-selection.md)에 기록합니다.
+후속 실행 전 CLI 관측·v6 마이그레이션 검증은 [관측 이력](cli-observation.md)에 기록합니다.
 
 검증일: 2026-10-21 (Asia/Seoul)
 환경: macOS Intel, Amazon Corretto 21.0.10, Node 24.2.0, npm 11.3.0,

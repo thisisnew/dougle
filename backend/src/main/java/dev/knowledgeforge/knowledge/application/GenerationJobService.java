@@ -24,6 +24,7 @@ public class GenerationJobService {
     private final CuratorService curator;
     private final KnowledgeService knowledge;
     private final LibraryStore library;
+    private final CliDiagnostics diagnostics;
     private final TransactionTemplate transaction;
     private GenerationJob active;
     private Thread worker;
@@ -31,11 +32,12 @@ public class GenerationJobService {
     private boolean closing;
 
     public GenerationJobService(GenerationJobStore store, CuratorService curator, KnowledgeService knowledge,
-                                LibraryStore library, PlatformTransactionManager manager) {
+                                LibraryStore library, PlatformTransactionManager manager, CliDiagnostics diagnostics) {
         this.store = store;
         this.curator = curator;
         this.knowledge = knowledge;
         this.library = library;
+        this.diagnostics = diagnostics;
         this.transaction = new TransactionTemplate(manager);
     }
 
@@ -63,7 +65,8 @@ public class GenerationJobService {
             String requestedModel = curator.checkRequest(workspace, card, request.provider(), request.expectedVersion(),
                     request.digest(), true, request.requestedModel());
             GenerationJob created = new GenerationJob(request.requestId(), workspace, card, request.provider(),
-                    request.expectedVersion(), request.digest(), "QUEUED", null, null, now, now, requestedModel);
+                    request.expectedVersion(), request.digest(), "QUEUED", null, null, now, now, requestedModel,
+                    null, "NOT_CHECKED", null);
             store.create(created);
             return created;
         });
@@ -105,6 +108,7 @@ public class GenerationJobService {
                 if (cancelled) throw new CancellationException();
                 if (!store.update(job.workspaceId(), job.id(), "RUNNING", null, null)) throw new CancellationException();
             }
+            observeCli(job);
             curator.generate(job.workspaceId(), job.sourceCardId(), job.provider(), job.expectedVersion(), job.digest(), true,
                     job.requestedModel(), draft -> save(job, draft));
         } catch (Exception exception) {
@@ -115,6 +119,33 @@ public class GenerationJobService {
             }
         } finally {
             synchronized (this) { active = null; worker = null; cancelled = false; }
+        }
+    }
+
+    private void observeCli(GenerationJob job) {
+        String version = null;
+        String status = "UNAVAILABLE";
+        try {
+            var observed = diagnostics.probe(CuratorModel.Provider.valueOf(job.provider()));
+            if (observed != null && java.util.Set.of("AVAILABLE", "UNAVAILABLE", "UNRECOGNIZED").contains(observed.status())) {
+                status = observed.status();
+                if (status.equals("AVAILABLE")) {
+                    String candidate = observed.version();
+                    if (candidate != null && candidate.length() <= 128
+                            && candidate.matches("[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?")) version = candidate;
+                    else status = "UNRECOGNIZED";
+                }
+            }
+        } catch (LibraryException exception) {
+            status = exception.status() == 409 ? "BUSY" : "UNAVAILABLE";
+        } catch (RuntimeException exception) {
+            status = "UNAVAILABLE";
+        }
+        synchronized (this) {
+            if (cancelled || Thread.currentThread().isInterrupted()) throw new CancellationException();
+            if (!store.recordCli(job.workspaceId(), job.id(), version, status, Instant.now().toString())) {
+                throw new LibraryException(409, "CLI 관측 이력을 저장하지 못해 생성을 중단했습니다.");
+            }
         }
     }
 

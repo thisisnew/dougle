@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 5) {
+        if (version > 6) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -194,6 +194,16 @@ public class DatabaseConfiguration {
                     .executeWithoutResult(status -> {
                         jdbc.execute("ALTER TABLE generation_job ADD COLUMN requested_model TEXT");
                         jdbc.execute("PRAGMA user_version=5");
+                    });
+        }
+        if (version < 6) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("ALTER TABLE generation_job ADD COLUMN cli_version TEXT");
+                        jdbc.execute("ALTER TABLE generation_job ADD COLUMN cli_version_status TEXT NOT NULL DEFAULT 'NOT_CHECKED' CHECK(cli_version_status IN ('NOT_CHECKED','AVAILABLE','UNAVAILABLE','UNRECOGNIZED','BUSY'))");
+                        jdbc.execute("ALTER TABLE generation_job ADD COLUMN cli_checked_at TEXT");
+                        jdbc.execute("PRAGMA user_version=6");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

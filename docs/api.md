@@ -241,7 +241,7 @@ Workspace 삭제는 해당 지식·버전·근거 복사본을 모두 삭제합�
 - 동기 API이며 전역 한 작업만 허용합니다. 화면 종료/HTTP 연결 해제는 작업 취소가 아닙니다.
   자동 재시도하지 마세요. 재요청은 별도 초안을 생성할 수 있습니다. 영속 작업 ID/취소는 다음 비동기 API에서 지원합니다.
 
-## AI 생성 작업 (v5)
+## AI 생성 작업 (v6)
 
 - `POST /workspaces/{workspaceId}/knowledge/{id}/generation/jobs`
   요청 `{ "requestId": "UUID", "provider": "CODEX", "expectedVersion": 1, "digest": "미리보기 SHA-256", "approved": true }`.
@@ -254,7 +254,8 @@ Workspace 삭제는 해당 지식·버전·근거 복사본을 모두 삭제합�
 
 ```text
 Job: { id, workspaceId, sourceCardId, provider, expectedVersion, digest, status,
-       resultCardId, error, createdAt, updatedAt, requestedModel }
+       resultCardId, error, createdAt, updatedAt, requestedModel,
+       cliVersion, cliVersionStatus, cliCheckedAt }
 status: QUEUED | RUNNING | CANCELLING | CANCELLED | SUCCEEDED | FAILED | INTERRUPTED
 ```
 
@@ -263,6 +264,10 @@ status: QUEUED | RUNNING | CANCELLING | CANCELLED | SUCCEEDED | FAILED | INTERRU
 명시한 요청 모델이 기존 작업과 달라도 409입니다. Job의 requestedModel은 승인 당시 모델이며,
 빈 문자열은 CLI 기본 선택, null은 v4에서 생성한 기존 작업의 미기록 값입니다. 실제 실행 모델을 의미하지 않습니다.
 v5 이력은 실패/취소/재시작 후에도 유지합니다. [건별 모델 선택 계약](model-selection.md).
+v6의 cliVersion/cliCheckedAt은 실행 전 관측한 버전/UTC 시각이며 미기록은 null입니다.
+cliVersionStatus는 NOT_CHECKED/AVAILABLE/UNAVAILABLE/UNRECOGNIZED/BUSY입니다.
+승인된 비동기 작업만 관측하며 재전송으로 갱신하지 않습니다. 실제 실행 바이너리 증명은 아닙니다.
+진단 실패는 기록 후 생성하지만 관측 DB 저장 실패는 모델 호출 전 FAILED가 됩니다. [상세](cli-observation.md).
 작업 오류는 status=FAILED/error로 조회하며 HTTP 접수 성공을 생성 성공으로 오인하지 마세요.
 같은 ID로 실패/취소/중단을 재실행하지 않습니다. 새 시도에는 새 미리보기·승인·ID가 필요합니다.
 실행 중이거나 중단 정리 중인 다른 작업이 있으면 409, 잘못된 ID는 400, 미승인은 403입니다.

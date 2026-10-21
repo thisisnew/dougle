@@ -45,6 +45,8 @@ class GenerationJobIntegrationTest {
     @Autowired JdbcTemplate jdbc;
     @Autowired MockMvc mvc;
     @MockitoBean CuratorModel model;
+    @MockitoBean CliDiagnostics diagnostics;
+    @Autowired GenerationJobStore store;
     String workspace;
     Document source;
     CountDownLatch entered;
@@ -61,6 +63,7 @@ class GenerationJobIntegrationTest {
         entered = new CountDownLatch(1);
         release = new CountDownLatch(1);
         worker = new AtomicReference<>();
+        when(diagnostics.probe(any())).thenReturn(new CliDiagnostics.Status("CODEX", "AVAILABLE", "0.1.0-fixture", "", "UNKNOWN", "NOT_CHECKED"));
         when(model.generate(any(), anyString(), anyString())).thenAnswer(invocation -> {
             worker.set(Thread.currentThread());
             entered.countDown();
@@ -93,6 +96,84 @@ class GenerationJobIntegrationTest {
             Thread.sleep(10);
         }
         throw new AssertionError("Job did not finish");
+    }
+
+    @Test
+    void capturesVersionBeforeInferenceAndNeverRewritesItOnReplay() throws Exception {
+        var request = request();
+        var job = submit(request);
+        assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
+        var running = jobs.get(workspace, job.id());
+        assertThat(running.cliVersion()).isEqualTo("0.1.0-fixture");
+        assertThat(running.cliVersionStatus()).isEqualTo("AVAILABLE");
+        assertThat(running.cliCheckedAt()).isNotBlank();
+        release.countDown();
+        var done = terminal(job.id());
+        assertThat(done.cliCheckedAt()).isEqualTo(running.cliCheckedAt());
+        assertThat(submit(request).cliVersion()).isEqualTo("0.1.0-fixture");
+        verify(diagnostics, times(1)).probe(any());
+        assertThat(store.recordCli(workspace, job.id(), "9.9.9", "AVAILABLE", "later")).isFalse();
+        assertThat(jobs.get(workspace, job.id()).cliVersion()).isEqualTo("0.1.0-fixture");
+    }
+
+    @Test
+    void diagnosticFailureDoesNotLeakDetailsOrBlockApprovedInference() throws Exception {
+        when(diagnostics.probe(any())).thenThrow(new IllegalStateException("secret-token"));
+        release.countDown();
+        var done = terminal(submit(request()).id());
+        assertThat(done.status()).isEqualTo("SUCCEEDED");
+        assertThat(done.cliVersionStatus()).isEqualTo("UNAVAILABLE");
+        assertThat(done.cliVersion()).isNull();
+        assertThat(done.toString()).doesNotContain("secret-token");
+    }
+
+    @Test
+    void busyDiagnosticIsRecordedWithoutDuplicatingTheProbe() throws Exception {
+        when(diagnostics.probe(any())).thenThrow(new LibraryException(409, "busy"));
+        release.countDown();
+        var done = terminal(submit(request()).id());
+        assertThat(done.status()).isEqualTo("SUCCEEDED");
+        assertThat(done.cliVersionStatus()).isEqualTo("BUSY");
+        verify(diagnostics, times(1)).probe(any());
+    }
+
+    @Test
+    void rejectsUntrustedVersionTextWithoutPersistingIt() throws Exception {
+        when(diagnostics.probe(any())).thenReturn(new CliDiagnostics.Status("CODEX", "AVAILABLE", "secret-token", "", "UNKNOWN", "NOT_CHECKED"));
+        release.countDown();
+        var done = terminal(submit(request()).id());
+        assertThat(done.status()).isEqualTo("SUCCEEDED");
+        assertThat(done.cliVersionStatus()).isEqualTo("UNRECOGNIZED");
+        assertThat(done.cliVersion()).isNull();
+    }
+
+    @Test
+    void cancellingDuringProbePreventsInferenceAndDiscardsLateObservation() throws Exception {
+        when(diagnostics.probe(any())).thenAnswer(invocation -> {
+            worker.set(Thread.currentThread());
+            entered.countDown();
+            try { release.await(5, TimeUnit.SECONDS); } catch (InterruptedException ignored) { }
+            return new CliDiagnostics.Status("CODEX", "AVAILABLE", "0.1.0", "", "UNKNOWN", "NOT_CHECKED");
+        });
+        var job = submit(request());
+        assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
+        jobs.cancel(workspace, job.id());
+        var done = terminal(job.id());
+        assertThat(done.status()).isEqualTo("CANCELLED");
+        assertThat(done.cliVersionStatus()).isEqualTo("NOT_CHECKED");
+        assertThat(done.cliCheckedAt()).isNull();
+        verifyNoInteractions(model);
+    }
+
+    @Test
+    void metadataPersistenceFailureStopsBeforeInference() throws Exception {
+        jdbc.execute("CREATE TRIGGER reject_cli_observation BEFORE UPDATE OF cli_checked_at ON generation_job BEGIN SELECT RAISE(ABORT,'fixture'); END");
+        try {
+            var done = terminal(submit(request()).id());
+            assertThat(done.status()).isEqualTo("FAILED");
+            assertThat(done.cliCheckedAt()).isNull();
+            verifyNoInteractions(model);
+        } finally { jdbc.execute("DROP TRIGGER reject_cli_observation"); }
     }
 
     @Test
@@ -152,7 +233,7 @@ class GenerationJobIntegrationTest {
         assertThatThrownBy(() -> submit(new GenerationJobService.Request(valid.requestId(), "CODEX", 1, "wrong", true))).isInstanceOf(LibraryException.class);
         assertThatThrownBy(() -> submit(new GenerationJobService.Request("bad", "CODEX", 1, valid.digest(), true))).isInstanceOf(LibraryException.class);
         assertThat(jobs.list(workspace)).isEmpty();
-        verifyNoInteractions(model);
+        verifyNoInteractions(model, diagnostics);
         GenerationJob job = submit(valid);
         assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
         assertThatThrownBy(() -> submit(new GenerationJobService.Request(valid.requestId(), "CLAUDE", 1, valid.digest(), true)))
@@ -169,6 +250,7 @@ class GenerationJobIntegrationTest {
         assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
         assertThat(jobs.cancel(workspace, job.id()).status()).isEqualTo("CANCELLING");
         assertThat(terminal(job.id()).status()).isEqualTo("CANCELLED");
+        assertThat(jobs.get(workspace, job.id()).cliVersion()).isEqualTo("0.1.0-fixture");
         assertThat(jobs.cancel(workspace, job.id()).status()).isEqualTo("CANCELLED");
         assertThat(knowledge.list(workspace)).hasSize(1);
     }
@@ -204,6 +286,7 @@ class GenerationJobIntegrationTest {
         GenerationJob job = submit(request);
         GenerationJob failed = terminal(job.id());
         assertThat(failed.status()).isEqualTo("FAILED");
+        assertThat(failed.cliVersion()).isEqualTo("0.1.0-fixture");
         assertThat(failed.error()).doesNotContain("secret-token");
         assertThat(submit(request)).isEqualTo(failed);
         assertThat(knowledge.list(workspace)).hasSize(1);

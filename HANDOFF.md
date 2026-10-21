@@ -14,7 +14,7 @@ Java 21 / Spring Boot 4.1.1 / React / TypeScript / Vite / Tailwind / SQLite JDBC
 
 현재 Source 수동 수집, 문서·Java 분석, 로컬 검색, 근거 연결 수동 지식 초안·버전을 사용할 수 있습니다.
 로그인된 Codex/Claude Code CLI로 승인 기반 별도 AI 초안을 생성합니다. 채팅·Source 자동 폴링은 아직 없습니다.
-최신 변경은 [건별 모델 선택·요청 모델 이력](docs/model-selection.md), [AI 생성 작업](docs/generation-jobs.md)을 확인하세요.
+최신 변경은 [실행 전 CLI 관측 이력](docs/cli-observation.md), [건별 모델 선택](docs/model-selection.md)을 확인하세요.
 사용자 요청으로 기본 AI 방향을 Ollama에서 로그인된 CLI로 변경했습니다. 이 결정이 이전 계획보다 우선합니다.
 GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 
@@ -25,11 +25,11 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 10 MiB 이하 파일 업로드, 원본 바이트 다운로드, 폴더/자료 삭제
 - 1 MiB 이하 UTF-8 텍스트 미리보기, HTML 실행 방지
 - 원본과 지식 영역 분리, 수동/AI 초안 구별, 미구현 검증·게시의 명확한 표시
-- SQLite FK cascade / WAL / 스키마 버전 5 / 중복 이름 보호
+- SQLite FK cascade / WAL / 스키마 버전 6 / 중복 이름 보호
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료 기반 백엔드 91개 / 프런트엔드 30개 자동 테스트 통과 (실제 CLI opt-in 테스트 1개는 기본 skip)
+- 가상 자료 기반 백엔드 98개 / 프런트엔드 31개 자동 테스트 통과 (실제 CLI opt-in 테스트 1개는 기본 skip)
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -47,6 +47,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - v3→v4 마이그레이션, Workspace별 최근 작업 목록과 재전송/중단 UI
 - 서버 시작 설정으로 모델 고정, 모델 포함 승인 digest, 초안 요청 모델/digest 기록, 명시적 CLI 버전 진단
 - 건별 모델 선택·브라우저별 선택 저장(승인 제외), 작업별 요청 모델 영속 이력, v4→v5 보존 마이그레이션
+- 실행 전 CLI 버전 관측·시각·실패 상태 보존, 관측 중 취소 보호, v5→v6 보존 마이그레이션
 
 ### 미구현
 
@@ -114,7 +115,7 @@ Git clone으로 이전되는 것은 소스·문서·가상 fixture뿐입니다. 
 등록 Source, 원본 복사본, 분석 데이터는 자동 이전되지 않습니다.
 필요하면 기존 앱을 완전히 종료하고 `FORGE_DATA_DIR`(기본 `.data`) 전체를
 조직이 허용한 비공개 수단으로 복사하세요. DB나 회사 자료를 공개 Git에 올리지 마세요.
-현재 스키마는 v5이고 구버전 앱으로 역이동하는 마이그레이션은 없습니다. 실행 전 기존 데이터 백업을 권장합니다.
+현재 스키마는 v6이고 구버전 앱으로 역이동하는 마이그레이션은 없습니다. 실행 전 기존 데이터 백업을 권장합니다.
 근거로 선택한 파일은 별도 복사본이 남습니다. 원본 삭제만으로 이 복사본까지 지워지지 않습니다.
 이전한 로컬 Source의 절대 경로가 새 PC에서 다르면 수집이 실패합니다.
 Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 새 Source로 등록하세요.
@@ -131,7 +132,7 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
 4. **P3-2 CLI Curator의 남은 운영 기능**을 먼저 확인하세요. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
-6. 작업 ID·취소·멱등·재시작 복구, 건별 모델 선택·요청 모델 이력·설치 진단은 구현했습니다. 실제 실행 모델/생성 당시 CLI 버전의 이력을 보강한 뒤 검증·게시를 구현합니다.
+6. 건별 모델 선택·요청 모델 이력·실행 전 CLI 관측 이력은 구현했습니다. 다음은 P3-3 사람 검토 기반 검증·게시입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
 8. 필요 시 Phase 2 운영 확장(비공개 저장소·대용량·작업 취소)을 별도 기능 단위로 진행합니다.
 
@@ -145,11 +146,12 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
 docs/api.md, docs/phase3-foundation-report.md를 읽고 현재 코드와 비교해라.
 Phase 1·2와 P3-1 수동 초안/버전/근거 스냅샷은 구현되어 있다. 먼저 빌드와 테스트로
-기준 상태(백엔드 91개 통과 + live opt-in 1개 skip, 프런트엔드 30개)를 확인하고 실패를 숨기지 마라.
+기준 상태(백엔드 98개 통과 + live opt-in 1개 skip, 프런트엔드 31개)를 확인하고 실패를 숨기지 마라.
 사용자는 Ollama 대신 로그인된 Codex/Claude Code CLI 사용을 선택했다. docs/cli-ai.md를 읽어라.
 별도 AI DRAFT·건별 승인·출력 검사·영속 작업·취소·멱등·재시작 상태 복구는 구현되었다.
-docs/generation-jobs.md와 docs/model-selection.md를 읽어라. 건별 모델 선택·요청 모델 이력·승인 바인딩·설치 진단은 구현했다.
-P3-2 인증·원격 연결 상태/실제 실행 모델·생성 당시 CLI 버전 이력의 남은 항목을 완성해라.
+docs/generation-jobs.md, docs/model-selection.md, docs/cli-observation.md를 읽어라.
+건별 모델 선택·요청 모델 이력·승인 바인딩·실행 전 CLI 관측 이력은 구현했다.
+P3-3 사람 검토 기반 검증·게시를 구현해라. 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 이후 P3-3 검증·게시를 완성해라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
 사람 편집 보호, 검증 실패 시 이전 게시본 유지, Workspace 격리를 테스트해라.

@@ -9,6 +9,14 @@ const api = vi.mocked(request)
 const job = { id: 'job', provider: 'CODEX', status: 'RUNNING', resultCardId: null, error: null, createdAt: '2026-10-21T10:00:00Z' }
 beforeEach(() => api.mockReset())
 
+it('과거 CLI 관측 버전과 진단 실패를 구분하고 현재 설치 버전으로 추정하지 않는다', async () => {
+  api.mockResolvedValue([{ ...job, status: 'SUCCEEDED', cliVersionStatus: 'AVAILABLE', cliVersion: '0.1.0-fixture', cliCheckedAt: '2026-10-21T10:00:00Z' },
+    { ...job, id: 'failed-probe', status: 'FAILED', cliVersionStatus: 'UNAVAILABLE', cliVersion: null }])
+  render(<GenerationJobsPanel workspaceId="one" revision={0} onOpen={vi.fn()} />)
+  expect(await screen.findByText(/실행 전 CLI 관측: 0.1.0-fixture/)).toBeInTheDocument()
+  expect(screen.getByText(/실행 전 CLI 관측: 확인 실패/)).toBeInTheDocument()
+})
+
 it('기록된 요청 모델과 이전 작업의 기록 없음을 구분한다', async () => {
   api.mockResolvedValue([{ ...job, status: 'CANCELLED', requestedModel: 'selected-model' },
     { ...job, id: 'old', status: 'FAILED', requestedModel: null }])
