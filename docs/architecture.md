@@ -6,7 +6,9 @@
 ## 현재 구조
 
 원본 검색의 `LuceneSearchIndex`는 본문 term vector offsets를 저장하고 검색어 주변과 추출 텍스트 행 범위를 반환합니다.
-검색 시 원본 재수집/재분석 없이 색인을 읽습니다. 게시 지식 통합·영속 청크는 아직 없습니다. [구현 범위](search-evidence.md).
+검색 시 원본 재수집/재분석 없이 색인을 읽습니다. [위치 표시](search-evidence.md).
+v13 게시 큐 트리거와 `JdbcSearchCatalog`가 최신 게시 버전만 같은 색인에 넣습니다.
+검색 후 삭제/교체된 게시본을 제외하고 근거 상태를 조회합니다. 영속 청크는 아직 없습니다. [게시 검색 모델](published-search.md).
 
 근거 번호 통합은 `MergeEvidencePlanner`가 현재 번호를 보존하고 AI 스냅샷/행 범위를 연결합니다.
 미리보기와 저장 시 동일 규칙으로 계산하며 기존 v12 근거 연결 테이블을 사용합니다. [정책](evidence-merge.md).
@@ -210,7 +212,7 @@ react-markdown/remark-gfm으로 React 요소에 표시하며 원문은 별도로
 raw HTML 파싱·실행 없이 링크는 비활성 텍스트, 이미지는 대체 설명으로 표시합니다.
 API·불변 버전·승인 digest·검토/게시 상태는 변경하지 않습니다. [표시 설계](markdown-rendering.md).
 
-## 독립 지식 폴더 (v8 도입, 현재 v12)
+## 독립 지식 폴더 (v8 도입, 현재 v13)
 
 v9는 폴더 revision으로 이름/부모 변경 충돌을 막습니다. 변경 후 전체 트리의 순환과 깊이를
 검사한 뒤 같은 트랜잭션에서 저장합니다. 문서·카드 배치 revision은 별개입니다. [설계·검증](folder-update.md).

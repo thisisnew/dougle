@@ -49,7 +49,8 @@ public class SourceController {
 
     @GetMapping("/search")
     public List<SearchIndex.Hit> search(@PathVariable String workspaceId, @RequestParam String query,
-                                       @RequestParam(required = false) List<String> domains) {
-        return search.search(workspaceId, query, domains == null ? List.of() : domains);
+                                       @RequestParam(required = false) List<String> domains,
+                                       @RequestParam(defaultValue = "false") boolean includeKnowledge) {
+        return search.search(workspaceId, query, domains == null ? List.of() : domains, includeKnowledge);
     }
 }

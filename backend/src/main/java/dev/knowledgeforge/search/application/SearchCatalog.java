@@ -10,5 +10,5 @@ public interface SearchCatalog {
     List<Change> changes();
     Optional<SearchIndex.Document> document(String id);
     void acknowledge(long sequence);
-    boolean exists(String workspaceId, String entryId);
+    boolean exists(String workspaceId, SearchIndex.Hit hit);
 }

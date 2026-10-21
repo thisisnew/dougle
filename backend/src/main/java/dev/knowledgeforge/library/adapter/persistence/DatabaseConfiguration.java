@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 12) {
+        if (version > 13) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -303,6 +303,36 @@ public class DatabaseConfiguration {
                     .executeWithoutResult(status -> {
                         jdbc.execute("ALTER TABLE proposal_acceptance ADD COLUMN mode TEXT NOT NULL DEFAULT 'FULL' CHECK(mode IN ('FULL','MANUAL'))");
                         jdbc.execute("PRAGMA user_version=12");
+                    });
+        }
+        if (version < 13) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TRIGGER publication_search_insert AFTER INSERT ON knowledge_publication
+                                BEGIN INSERT INTO search_outbox(entry_id) VALUES('knowledge:' || NEW.card_id); END
+                                """);
+                        jdbc.execute("""
+                                CREATE TRIGGER knowledge_search_delete AFTER DELETE ON knowledge_card
+                                BEGIN INSERT INTO search_outbox(entry_id) VALUES('knowledge:' || OLD.id); END
+                                """);
+                        jdbc.execute("""
+                                CREATE TRIGGER source_knowledge_search_delete AFTER DELETE ON source
+                                BEGIN INSERT INTO search_outbox(entry_id)
+                                  SELECT DISTINCT 'knowledge:' || e.card_id FROM knowledge_evidence e
+                                  JOIN evidence_snapshot snapshot ON snapshot.id=e.snapshot_id WHERE snapshot.source_id=OLD.id;
+                                END
+                                """);
+                        jdbc.execute("""
+                                CREATE TRIGGER source_knowledge_search_domain AFTER UPDATE OF domain ON source
+                                BEGIN INSERT INTO search_outbox(entry_id)
+                                  SELECT DISTINCT 'knowledge:' || e.card_id FROM knowledge_evidence e
+                                  JOIN evidence_snapshot snapshot ON snapshot.id=e.snapshot_id WHERE snapshot.source_id=NEW.id;
+                                END
+                                """);
+                        jdbc.execute("INSERT INTO search_outbox(entry_id) SELECT DISTINCT 'knowledge:' || card_id FROM knowledge_publication");
+                        jdbc.execute("PRAGMA user_version=13");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, it, vi } from 'vitest'
 import SourcePanel from './SourcePanel'
+vi.mock('./PublishedSearchPreview', () => ({ default: ({ cardId, version }: { cardId: string; version: number }) => <div>게시본 열기 {cardId} v{version}</div> }))
 import { request } from './api'
 
 vi.mock('./api', async original => ({ ...await original<typeof import('./api')>(), request: vi.fn() }))
@@ -63,6 +64,25 @@ it('이름이나 심볼만 일치하면 본문 일치와 구별한다', async ()
   await user.type(screen.getByLabelText('자료 검색'), 'telescope')
   await user.click(screen.getByRole('button', { name: '검색' }))
   expect(await screen.findByText('이름·심볼 일치 · 본문 앞부분 · 본문 없음')).toBeInTheDocument()
+})
+
+it('게시본을 원본 선택과 구분해 열고 미게시 초안 검색은 제공하지 않는다', async () => {
+  const user = userEvent.setup()
+  const select = vi.fn()
+  api.mockImplementation(async path => path.includes('/search?') ? [
+    { kind: 'KNOWLEDGE', cardId: 'card', version: 2, entryId: null, name: '게시 문서', domain: '연구', path: '', snippet: '요약 [E1]', startLine: 1, endLine: 2, bodyMatch: true, freshness: 'MISSING' },
+  ] : [])
+  render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={select} />)
+  await user.type(screen.getByLabelText('자료 검색'), '요약')
+  await user.click(screen.getByRole('button', { name: '검색' }))
+  await user.click(await screen.findByRole('button', { name: /게시 문서/ }))
+  expect(screen.getByText('게시본 열기 card v2')).toBeInTheDocument()
+  expect(select).not.toHaveBeenCalled()
+  expect(screen.getByText(/게시 지식 v2 · 근거 MISSING/)).toBeInTheDocument()
+  expect(api.mock.calls.some(([path]) => path.includes('includeKnowledge=true'))).toBe(true)
+  await user.click(screen.getByRole('checkbox', { name: '게시 지식도 검색 (미게시 초안 제외)' }))
+  await user.click(screen.getByRole('button', { name: '검색' }))
+  expect(api.mock.calls.some(([path]) => path.includes('includeKnowledge=false'))).toBe(true)
 })
 
 it('삭제 확인을 취소하면 Source와 원본이 유지된다', async () => {

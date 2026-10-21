@@ -19,7 +19,7 @@
 
 지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.
 Markdown 응답은 저장된 원문이며 HTML이 아닙니다. UI만 안전한 미리보기를 제공합니다.
-표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v12이며 채택 기록에 FULL/MANUAL 반영 방식을 보존합니다.
+표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v13이며 게시 지식 색인 큐 트리거가 추가되었습니다. FULL/MANUAL 채택 기록도 보존합니다.
 
 폴더 이름/부모 변경: `PUT /workspaces/{workspaceId}/knowledge-organization/folders/{id}`.
 요청 `{parentId, name, expectedRevision}` → 변경한 Folder `{id,parentId,name,revision}`.
@@ -165,8 +165,12 @@ Source 전체 삭제와 Workspace 삭제는 가능합니다.
 ERROR(추출 실패/크기 초과), PENDING(Phase 1 기존 파일).
 원본 바이트는 분석 실패에도 보존됩니다. OCR/임베디드 문서 재귀 추출은 비활성입니다.
 
-Hit 필드: `entryId, name, sourceId, domain, path, snippet, score, startLine, endLine, bodyMatch`.
-행 범위는 추출 텍스트 기준(1-based, 빈 본문은 0)입니다. 일부 행만 포함할 수 있습니다.
+Hit 필드: `entryId, name, sourceId, domain, path, snippet, score, startLine, endLine, bodyMatch, kind, cardId, version, domains, freshness`.
+`includeKnowledge=true`이면 원본과 최신 게시 지식을 함께 검색합니다. 기본 false(원본만), UI 기본 true입니다.
+`kind=ORIGINAL`은 entryId를, `kind=KNOWLEDGE`는 cardId/version을 사용하며 나머지 ID는 null입니다.
+게시 지식의 도메인은 현재 근거 Source 도메인들의 합집합이며 sourceId/path는 빈 문자열입니다.
+`freshness`는 게시 지식에서 CURRENT/STALE/MISSING, 원본에서는 UNCHECKED입니다. [정책·제한](published-search.md).
+행 범위는 원본의 추출 텍스트 또는 게시 지식의 Markdown 기준(1-based, 빈 본문은 0)입니다. 일부 행만 포함할 수 있습니다.
 `bodyMatch=true`는 본문 검색 단어 주변, false는 이름·심볼 일치의 앞부분 미리보기입니다.
 최대 320 UTF-16 코드 단위이며 확정 인용/최신성 보증은 아닙니다. [설명](search-evidence.md).
 직접 업로드한 파일의 sourceId/domain은 빈 문자열입니다.

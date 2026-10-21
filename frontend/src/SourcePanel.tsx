@@ -2,13 +2,14 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { FolderInput, Link, RefreshCw, Search, Trash2 } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { request } from './api'
+import PublishedSearchPreview from './PublishedSearchPreview'
 
 type Source = {
   id: string; name: string; kind: string; location: string; domain: string; status: string
   revision: string | null; error: string | null; syncedAt: string | null; rootEntryId: string | null
   pollingEnabled: boolean; pollIntervalSeconds: number
 }
-type Hit = { entryId: string; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean }
+type Hit = { entryId: string | null; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean; kind: 'ORIGINAL' | 'KNOWLEDGE'; cardId: string | null; version: number | null; freshness: string }
 type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void }
 const states: Record<string, string> = { NEW: '수집 전', SYNCING: '수집 중', READY: '반영 완료', ERROR: '오류 · 이전 자료 유지' }
 
@@ -25,6 +26,8 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [domains, setDomains] = useState<string[]>([])
   const [hits, setHits] = useState<Hit[] | null>(null)
   const [searching, setSearching] = useState(false)
+  const [includeKnowledge, setIncludeKnowledge] = useState(true)
+  const [published, setPublished] = useState<{ cardId: string; version: number } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
   const searchAbort = useRef<AbortController | null>(null)
   const mutationAbort = useRef<AbortController | null>(null)
@@ -77,7 +80,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     setSearching(true)
     setError('')
     setHits(null)
-    const params = new URLSearchParams({ query })
+    const params = new URLSearchParams({ query, includeKnowledge: String(includeKnowledge) })
     domains.forEach(value => params.append('domains', value))
     try {
       const found = await request<Hit[]>(`${base}/search?${params}`, { signal: controller.signal })
@@ -113,10 +116,15 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     </li>)}</ul>
     <form className="search-form" onSubmit={event => void search(event)}>
       <label className="sr-only" htmlFor="knowledge-query">자료 검색</label>
-      <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="문서 내용·파일명·Java 심볼 검색" />
+      <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="원본·게시 지식·Java 심볼 검색" />
       <Button type="submit" size="sm" disabled={searching || !query.trim()}><Search />{searching ? '검색 중…' : '검색'}</Button>
     </form>
+    <label><input type="checkbox" checked={includeKnowledge} onChange={event => { searchAbort.current?.abort(); setSearching(false); setIncludeKnowledge(event.target.checked); setHits(null) }} />게시 지식도 검색 (미게시 초안 제외)</label>
     {availableDomains.length > 0 && <fieldset className="domain-options"><legend>검색 도메인 · 선택하지 않으면 전체</legend>{availableDomains.map(value => <label key={value}><input type="checkbox" checked={domains.includes(value)} onChange={event => setDomains(event.target.checked ? [...domains, value] : domains.filter(item => item !== value))} />{value}</label>)}</fieldset>}
-    {hits && <div className="search-results" aria-live="polite"><p>검색 결과 {hits.length}개 (최대 30개)</p>{hits.map(hit => <button key={hit.entryId} onClick={() => onSelect(hit.entryId)}><strong>{hit.name}</strong><small>{hit.domain || '분류 없음'} · {hit.path}</small><small>{hit.bodyMatch ? '본문 검색어 주변' : '이름·심볼 일치 · 본문 앞부분'}{hit.startLine > 0 ? ` · 추출 텍스트 ${hit.startLine}–${hit.endLine}행 (일부)` : ' · 본문 없음'}</small><span>{hit.snippet}</span></button>)}</div>}
+    {hits && <div className="search-results" aria-live="polite"><p>검색 결과 {hits.length}개 (최대 30개)</p>{hits.map(hit => <button key={hit.cardId || hit.entryId} onClick={() => {
+      if (hit.kind === 'KNOWLEDGE' && hit.cardId && hit.version) setPublished({ cardId: hit.cardId, version: hit.version })
+      else if (hit.entryId) onSelect(hit.entryId)
+    }}><strong>{hit.name}</strong><small>{hit.kind === 'KNOWLEDGE' ? `게시 지식 v${hit.version} · 근거 ${hit.freshness}` : '원본'} · {hit.domain || '분류 없음'} · {hit.path}</small><small>{hit.bodyMatch ? '본문 검색어 주변' : '이름·심볼 일치 · 본문 앞부분'}{hit.startLine > 0 ? ` · ${hit.kind === 'KNOWLEDGE' ? '게시 Markdown' : '추출 텍스트'} ${hit.startLine}–${hit.endLine}행 (일부)` : ' · 본문 없음'}</small><span>{hit.snippet}</span></button>)}</div>}
+    {published && <PublishedSearchPreview workspaceId={workspaceId} cardId={published.cardId} version={published.version} onClose={() => setPublished(null)} />}
   </section>
 }

@@ -188,6 +188,18 @@ try {
   })
   assert.equal(review.publication, null)
   assert.equal((await api(`${publicationPath}/publication`, 'POST', { expectedVersion: 1, expectedPublicationRevision: 0 })).publication.version, 1)
+  const publishedSearchPath = `/workspaces/${workspace.id}/search?query=TEST&includeKnowledge=true`
+  const publicationDeadline = Date.now() + 10000
+  let publishedHit
+  while (Date.now() < publicationDeadline) {
+    publishedHit = (await api(publishedSearchPath)).find(hit => hit.cardId === completed.resultCardId)
+    if (publishedHit) break
+    await new Promise(resolveWait => setTimeout(resolveWait, 100))
+  }
+  assert.equal(publishedHit?.kind, 'KNOWLEDGE')
+  assert.equal(publishedHit.version, 1)
+  assert.equal(publishedHit.freshness, 'CURRENT')
+  assert.ok((await api(`${publishedSearchPath}&domains=${encodeURIComponent('실험')}`)).some(hit => hit.cardId === completed.resultCardId))
   const decisionsPath = `${jobBase}/${completed.id}/decisions`
   assert.deepEqual(await api(decisionsPath), [])
   const rejectedProposal = await api(decisionsPath, 'POST', {
@@ -286,6 +298,10 @@ try {
   await api(`${publicationPath}/versions`, 'POST', { expectedVersion: 1, title: 'Synthetic revised draft', markdown: 'Synthetic fixture [E1]' })
   assert.equal((await api(`${publicationPath}/published`)).version.number, 1)
   assert.equal((await api(`${publicationPath}/publication`)).review, null)
+  const restoredPublicationHit = (await api(publishedSearchPath)).find(hit => hit.cardId === completed.resultCardId)
+  assert.equal(restoredPublicationHit.version, 1)
+  assert.equal(restoredPublicationHit.name, publishedHit.name)
+  assert.equal(restoredPublicationHit.snippet, publishedHit.snippet)
   assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).status, 'SUCCEEDED')
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)).status, 'CANCELLED')
@@ -336,6 +352,8 @@ try {
   assert.equal((await fetch(`${base}/api${evidenceLocationPath}`)).status, 404)
   assert.equal((await api(`${publicationPath}/published`)).version.evidence[0].freshness, 'MISSING')
   assert.equal((await api(`${publicationPath}/publication`)).publication.version, 1)
+  assert.equal((await api(publishedSearchPath)).find(hit => hit.cardId === completed.resultCardId).freshness, 'MISSING')
+  assert.ok(!(await api(`${publishedSearchPath}&domains=${encodeURIComponent('실험')}`)).some(hit => hit.cardId === completed.resultCardId))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   const livePublic = []
   if (process.argv.includes('--live-public')) {
@@ -384,6 +402,7 @@ try {
       'active workspace persistence', 'independent knowledge area', 'cascade deletion', 'deletion persists after restart',
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',
       'search body offsets and extracted line ranges survive restart',
+      'published knowledge search excludes later drafts and survives restart with live evidence freshness and source domain filters',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',

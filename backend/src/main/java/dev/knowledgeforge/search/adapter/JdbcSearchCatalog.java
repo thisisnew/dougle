@@ -9,9 +9,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class JdbcSearchCatalog implements SearchCatalog {
+    private static final String PUBLISHED = """
+            SELECT c.id,c.workspace_id,v.title,v.markdown,p.version FROM knowledge_card c
+            JOIN knowledge_publication p ON p.card_id=c.id
+            JOIN knowledge_version v ON v.card_id=c.id AND v.number=p.version
+            WHERE p.revision=(SELECT MAX(revision) FROM knowledge_publication WHERE card_id=c.id)
+            """;
     private static final String SELECT = """
             SELECT e.id,e.workspace_id,e.name,e.source_id,COALESCE(e.relative_path,e.name) AS path,
             COALESCE(s.domain,'') AS domain,d.text,
@@ -28,8 +35,10 @@ public class JdbcSearchCatalog implements SearchCatalog {
         this.jdbc = jdbc;
     }
 
+    @Transactional(readOnly = true)
     public void each(Consumer<SearchIndex.Document> consumer) {
         jdbc.query(SELECT, (RowCallbackHandler) result -> consumer.accept(DOCUMENT.mapRow(result, 0)));
+        jdbc.query(PUBLISHED, (RowCallbackHandler) result -> consumer.accept(published(result)));
     }
 
     public List<Change> changes() {
@@ -37,16 +46,42 @@ public class JdbcSearchCatalog implements SearchCatalog {
                 (result, row) -> new Change(result.getLong("sequence"), result.getString("entry_id")));
     }
 
+    @Transactional(readOnly = true)
     public Optional<SearchIndex.Document> document(String id) {
+        if (id.startsWith("knowledge:")) {
+            return jdbc.query(PUBLISHED + " AND c.id=?", (result, row) -> published(result),
+                    id.substring("knowledge:".length())).stream().findFirst();
+        }
         return jdbc.query(SELECT + " AND e.id=?", DOCUMENT, id).stream().findFirst();
+    }
+
+    private SearchIndex.Document published(java.sql.ResultSet result) throws java.sql.SQLException {
+        String card = result.getString("id");
+        int version = result.getInt("version");
+        var domains = jdbc.queryForList("""
+                SELECT DISTINCT s.domain FROM knowledge_evidence e
+                JOIN evidence_snapshot snapshot ON snapshot.id=e.snapshot_id
+                JOIN source s ON s.id=snapshot.source_id AND s.workspace_id=snapshot.workspace_id
+                WHERE e.card_id=? AND e.version=? AND s.domain<>'' ORDER BY s.domain
+                """, String.class, card, version);
+        return new SearchIndex.Document("knowledge:" + card, result.getString("workspace_id"),
+                result.getString("title"), result.getString("markdown"), "", "", String.join(", ", domains),
+                "", "KNOWLEDGE", card, version, domains);
     }
 
     public void acknowledge(long sequence) {
         jdbc.update("DELETE FROM search_outbox WHERE sequence<=?", sequence);
     }
 
-    public boolean exists(String workspaceId, String entryId) {
+    public boolean exists(String workspaceId, SearchIndex.Hit hit) {
+        if ("KNOWLEDGE".equals(hit.kind())) {
+            return jdbc.queryForObject("""
+                    SELECT COUNT(*) FROM knowledge_card c JOIN knowledge_publication p ON p.card_id=c.id
+                    WHERE c.workspace_id=? AND c.id=? AND p.version=?
+                    AND p.revision=(SELECT MAX(revision) FROM knowledge_publication WHERE card_id=c.id)
+                    """, Integer.class, workspaceId, hit.cardId(), hit.version()) == 1;
+        }
         return jdbc.queryForObject("SELECT COUNT(*) FROM entry WHERE workspace_id=? AND id=?",
-                Integer.class, workspaceId, entryId) == 1;
+                Integer.class, workspaceId, hit.entryId()) == 1;
     }
 }

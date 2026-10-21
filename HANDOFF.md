@@ -1,6 +1,6 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
-> 최신 기능: [검색 근거 위치 표시](docs/search-evidence.md). SQLite v12이며 업데이트 전 데이터를 백업하세요.
+> 최신 기능: [원본·게시 지식 통합 검색](docs/published-search.md). SQLite v13이며 업데이트 전 데이터를 백업하세요.
 
 기록일: 2026-10-21 (Asia/Seoul)
 
@@ -31,17 +31,18 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 10 MiB 이하 파일 업로드, 원본 바이트 다운로드, 폴더/자료 삭제
 - 1 MiB 이하 UTF-8 텍스트 미리보기, HTML 실행 방지
 - 원본과 지식 영역 분리, 수동/AI 초안 구별, 사람 검토·명시적 게시와 자동 의미 검증의 구분
-- SQLite FK cascade / WAL / 스키마 버전 12 / 중복 이름 보호
+- SQLite FK cascade / WAL / 스키마 버전 13 / 중복 이름 보호
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료 기반 백엔드 173개 / 프런트엔드 91개 자동 테스트 통과 (UI worker 2개, 실제 CLI opt-in 테스트 1개는 기본 skip)
+- 가상 자료 기반 백엔드 181개 / 프런트엔드 95개 자동 테스트 통과 (UI worker 2개, 실제 CLI opt-in 테스트 1개는 기본 skip)
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
 - Tika HTML/PDF/일반 문서 추출, JavaParser 심볼·행 번호와 원문 보관
 - Lucene 10.3.1 + Nori 검색, 도메인 다중 선택, Workspace 검색 격리
 - 원본 검색의 단어 주변 미리보기·추출 텍스트 행 범위·본문/이름·심볼 일치 구분 ([한계](docs/search-evidence.md))
+- 원본·게시 지식 통합 검색, 초안 제외, 게시 버전 고정 열람, 복수 근거 Source 도메인 및 CURRENT/STALE/MISSING 표시 ([정책](docs/published-search.md))
 - 영속 분석 결과와 SQLite 인덱스 갱신 큐, 시작 시 저장된 분석 결과로 인덱스 복원
 - SQLite 스키마 1→2 마이그레이션과 원본·활성 Workspace 보존
 - Source 관리 파일 변경 방지, 사설 주소·리다이렉트·심볼릭 링크·용량 제한
@@ -126,7 +127,7 @@ Git clone으로 이전되는 것은 소스·문서·가상 fixture뿐입니다. 
 등록 Source, 원본 복사본, 분석 데이터는 자동 이전되지 않습니다.
 필요하면 기존 앱을 완전히 종료하고 `FORGE_DATA_DIR`(기본 `.data`) 전체를
 조직이 허용한 비공개 수단으로 복사하세요. DB나 회사 자료를 공개 Git에 올리지 마세요.
-현재 스키마는 v12이고 구버전 앱으로 역이동하는 마이그레이션은 없습니다. 실행 전 기존 데이터 백업을 권장합니다.
+현재 스키마는 v13이고 구버전 앱으로 역이동하는 마이그레이션은 없습니다. 실행 전 기존 데이터 백업을 권장합니다.
 근거로 선택한 파일은 별도 복사본이 남습니다. 원본 삭제만으로 이 복사본까지 지워지지 않습니다.
 이전한 로컬 Source의 절대 경로가 새 PC에서 다르면 수집이 실패합니다.
 Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 새 Source로 등록하세요.

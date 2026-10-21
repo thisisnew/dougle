@@ -63,7 +63,12 @@ public class LuceneSearchIndex implements SearchIndex {
         var document = new org.apache.lucene.document.Document();
         document.add(new StringField("id", value.id(), Field.Store.YES));
         document.add(new StringField("workspace", value.workspaceId(), Field.Store.NO));
-        document.add(new StringField("domain", value.domain(), Field.Store.YES));
+        for (String domain : value.domains()) document.add(new StringField("domain", domain, Field.Store.YES));
+        document.add(new StringField("kind", value.kind(), Field.Store.YES));
+        if (value.cardId() != null) {
+            document.add(new StoredField("card", value.cardId()));
+            document.add(new StoredField("version", value.version()));
+        }
         document.add(new StoredField("source", value.sourceId() == null ? "" : value.sourceId()));
         document.add(new StoredField("path", value.path()));
         document.add(new TextField("name", value.name(), Field.Store.YES));
@@ -81,12 +86,13 @@ public class LuceneSearchIndex implements SearchIndex {
         try { writer.commit(); } catch (IOException exception) { throw new UncheckedIOException(exception); }
     }
 
-    public List<Hit> search(String workspaceId, String question, List<String> domains) {
+    public List<Hit> search(String workspaceId, String question, List<String> domains, boolean includeKnowledge) {
         try (var tokens = analyzer.tokenStream("text", question);
              var reader = DirectoryReader.open(writer)) {
             var terms = tokens.addAttribute(CharTermAttribute.class);
             var query = new BooleanQuery.Builder();
             query.add(new TermQuery(new Term("workspace", workspaceId)), BooleanClause.Occur.FILTER);
+            if (!includeKnowledge) query.add(new TermQuery(new Term("kind", "ORIGINAL")), BooleanClause.Occur.FILTER);
             if (!domains.isEmpty()) {
                 query.add(new TermInSetQuery("domain", domains.stream().map(BytesRef::new).toList()), BooleanClause.Occur.FILTER);
             }
@@ -118,8 +124,13 @@ public class LuceneSearchIndex implements SearchIndex {
                 String snippet = text.substring(start, end);
                 int startLine = text.isEmpty() ? 0 : 1 + (int) text.substring(0, start).chars().filter(value -> value == '\n').count();
                 int endLine = startLine + (int) snippet.chars().limit(Math.max(0, snippet.length() - 1)).filter(value -> value == '\n').count();
-                results.add(new Hit(document.get("id"), document.get("name"), document.get("source"),
-                        document.get("domain"), document.get("path"), snippet, match.score, startLine, endLine, offset >= 0));
+                boolean published = "KNOWLEDGE".equals(document.get("kind"));
+                var resultDomains = List.of(document.getValues("domain"));
+                results.add(new Hit(published ? null : document.get("id"), document.get("name"), document.get("source"),
+                        String.join(", ", resultDomains), document.get("path"), snippet, match.score, startLine, endLine,
+                        offset >= 0, document.get("kind"), document.get("card"),
+                        published ? document.getField("version").numericValue().intValue() : null,
+                        resultDomains, "UNCHECKED"));
             }
             return results;
         } catch (IOException exception) {

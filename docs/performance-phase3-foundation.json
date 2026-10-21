@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T13:42:59.463Z",
+  "measuredAt": "2026-10-21T13:54:34.279Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -18,6 +18,7 @@
     "search survives restart",
     "unchanged revision preserves entry ids",
     "search body offsets and extracted line ranges survive restart",
+    "published knowledge search excludes later drafts and survives restart with live evidence freshness and source domain filters",
     "failed collection preserves prior index",
     "source deletion removes search hits",
     "Korean Nori search",
@@ -46,21 +47,21 @@
     "manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart",
     "explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart"
   ],
-  "sourceSyncMs": 455.86068799999975,
+  "sourceSyncMs": 584.890820999999,
   "livePublic": [],
-  "startupMs": 5386,
-  "restartMs": 5495,
+  "startupMs": 6330,
+  "restartMs": 5782,
   "upload100": {
-    "p50Ms": 113.30488100000002,
-    "p95Ms": 172.16062100000272
+    "p50Ms": 110.29248700000244,
+    "p95Ms": 161.07177100000263
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.2344889999949373,
-    "p95Ms": 3.937363999997615
+    "p50Ms": 3.143920000002254,
+    "p95Ms": 3.6104320000013104
   },
   "search100Files30Requests": {
-    "p50Ms": 7.9682329999996,
-    "p95Ms": 12.447476000001188
+    "p50Ms": 7.9809559999994235,
+    "p95Ms": 12.767324000000372
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }
