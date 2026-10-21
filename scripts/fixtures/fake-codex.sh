@@ -1,13 +1,22 @@
 #!/bin/sh
 set -eu
+if [ "$#" = 1 ] && [ "$1" = '--version' ]; then
+  printf '%s\n' 'codex-cli 0.0.0-test-fixture'
+  exit 0
+fi
 output=''
+model=''
 while [ "$#" -gt 0 ]; do
   if [ "$1" = '--output-last-message' ]; then
     shift
     output="$1"
+  elif [ "$1" = '--model' ]; then
+    shift
+    model="$1"
   fi
   shift
 done
+test "$model" = 'synthetic-smoke-model'
 test "$(basename "$output")" = 'answer.json'
 test "$(cd "$(dirname "$output")" && pwd -P)" = "$(pwd -P)"
 cat >/dev/null

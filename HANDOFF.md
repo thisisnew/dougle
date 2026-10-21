@@ -14,7 +14,7 @@ Java 21 / Spring Boot 4.1.1 / React / TypeScript / Vite / Tailwind / SQLite JDBC
 
 현재 Source 수동 수집, 문서·Java 분석, 로컬 검색, 근거 연결 수동 지식 초안·버전을 사용할 수 있습니다.
 로그인된 Codex/Claude Code CLI로 승인 기반 별도 AI 초안을 생성합니다. 채팅·Source 자동 폴링은 아직 없습니다.
-최신 변경은 [AI 생성 작업](docs/generation-jobs.md), CLI 설정은 [CLI AI 인수인계](docs/cli-ai.md)를 먼저 확인하세요.
+최신 변경은 [모델 설정·설치 진단](docs/cli-settings.md), [AI 생성 작업](docs/generation-jobs.md)을 확인하세요.
 사용자 요청으로 기본 AI 방향을 Ollama에서 로그인된 CLI로 변경했습니다. 이 결정이 이전 계획보다 우선합니다.
 GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 
@@ -29,7 +29,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료 기반 백엔드 78개 / 프런트엔드 23개 자동 테스트 통과 (실제 CLI opt-in 테스트 1개는 기본 skip)
+- 가상 자료 기반 백엔드 85개 / 프런트엔드 26개 자동 테스트 통과 (실제 CLI opt-in 테스트 1개는 기본 skip)
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -45,6 +45,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 실제 Codex 생성 성공. Claude 실제 생성은 인증 오류로 미검증: `docs/cli-ai.md`
 - 영속 AI 작업 상태·취소·멱등 요청·재시작 INTERRUPTED 복구, 늦은 출력 폐기, 결과 카드/성공 상태 원자적 저장
 - v3→v4 마이그레이션, Workspace별 최근 작업 목록과 재전송/중단 UI
+- 서버 시작 설정으로 모델 고정, 모델 포함 승인 digest, 초안 요청 모델/digest 기록, 명시적 CLI 버전 진단
 
 ### 미구현
 
@@ -129,7 +130,7 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
 4. **P3-2 CLI Curator의 남은 운영 기능**을 먼저 확인하세요. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
-6. 작업 ID·취소·멱등·재시작 상태 복구는 구현했습니다. CLI 상태/모델 선택과 상세 생성 메타데이터를 보강한 뒤 검증·게시를 구현합니다.
+6. 작업 ID·취소·멱등·재시작 복구, 시작 설정 모델 고정·설치 진단은 구현했습니다. 건별 설정 UI와 구조화된 실제 모델/CLI 생성 이력을 보강한 뒤 검증·게시를 구현합니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
 8. 필요 시 Phase 2 운영 확장(비공개 저장소·대용량·작업 취소)을 별도 기능 단위로 진행합니다.
 
@@ -143,10 +144,11 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
 docs/api.md, docs/phase3-foundation-report.md를 읽고 현재 코드와 비교해라.
 Phase 1·2와 P3-1 수동 초안/버전/근거 스냅샷은 구현되어 있다. 먼저 빌드와 테스트로
-기준 상태(백엔드 78개 통과 + live opt-in 1개 skip, 프런트엔드 23개)를 확인하고 실패를 숨기지 마라.
+기준 상태(백엔드 85개 통과 + live opt-in 1개 skip, 프런트엔드 26개)를 확인하고 실패를 숨기지 마라.
 사용자는 Ollama 대신 로그인된 Codex/Claude Code CLI 사용을 선택했다. docs/cli-ai.md를 읽어라.
 별도 AI DRAFT·건별 승인·출력 검사·영속 작업·취소·멱등·재시작 상태 복구는 구현되었다.
-docs/generation-jobs.md를 읽고 P3-2 모델 설정/연결 상태/상세 생성 이력의 남은 항목을 완성해라.
+docs/generation-jobs.md와 docs/cli-settings.md를 읽어라. 시작 설정 모델 고정·승인 바인딩·설치 진단은 구현했다.
+P3-2 건별 설정 UI/인증·원격 연결 상태/구조화된 실제 모델·CLI 생성 이력의 남은 항목을 완성해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 이후 P3-3 검증·게시를 완성해라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
 사람 편집 보호, 검증 실패 시 이전 게시본 유지, Workspace 격리를 테스트해라.

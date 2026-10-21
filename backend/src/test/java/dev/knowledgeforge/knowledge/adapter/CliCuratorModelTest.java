@@ -1,6 +1,7 @@
 package dev.knowledgeforge.knowledge.adapter;
 
 import dev.knowledgeforge.knowledge.application.CuratorModel.Provider;
+import dev.knowledgeforge.knowledge.application.CuratorSettings;
 import dev.knowledgeforge.library.application.LibraryException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,30 @@ class CliCuratorModelTest {
         Files.writeString(executable, "#!/bin/sh\n" + script);
         assertThat(executable.toFile().setExecutable(true)).isTrue();
         return new CliCuratorModel(executable.toString(), executable.toString(), timeout);
+    }
+
+    @Test
+    void configuredModelsAreSingleArgumentsAndDefaultOmitsFlag() {
+        var model = new CliCuratorModel("codex", "claude", Duration.ofSeconds(5),
+                new CuratorSettings("synthetic-model-a", "synthetic-model-b"));
+        assertThat(model.command(Provider.CODEX, directory)).containsSequence("--model", "synthetic-model-a", "-");
+        assertThat(model.command(Provider.CLAUDE, directory)).containsSequence("--model", "synthetic-model-b");
+        assertThat(new CliCuratorModel("codex", "claude").command(Provider.CODEX, directory)).doesNotContain("--model");
+        for (String invalid : java.util.List.of("--tools", "name --tools", "model\nother", "model;echo", "a".repeat(129))) {
+            assertThatThrownBy(() -> new CuratorSettings(invalid, "")).isInstanceOf(IllegalArgumentException.class);
+            assertThatThrownBy(() -> new CuratorSettings("", invalid)).isInstanceOf(IllegalArgumentException.class);
+        }
+    }
+
+    @Test
+    void configuredModelReachesActualChildProcess() throws Exception {
+        fixture("found=false\nwhile [ \"$#\" -gt 0 ]; do\n"
+                + "if [ \"$1\" = '--model' ]; then shift; [ \"$1\" = 'synthetic-model' ] || exit 9; found=true; fi\n"
+                + "shift\ndone\n[ \"$found\" = true ] || exit 8\ncat >/dev/null\n"
+                + "printf '%s' '{\"title\":\"fixture\",\"claims\":[]}' > answer.json\n", Duration.ofSeconds(5));
+        var model = new CliCuratorModel(directory.resolve("fake-cli").toString(), "unused", Duration.ofSeconds(5),
+                new CuratorSettings("synthetic-model", ""));
+        assertThat(model.generate(Provider.CODEX, "synthetic")).contains("fixture");
     }
 
     @Test

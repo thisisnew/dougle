@@ -38,7 +38,8 @@ Tika 문서 추출, JavaParser 심볼, Lucene/Nori 다중 도메인 검색이 �
 v3 마이그레이션과 원본/지식 독립 삭제를 검증했습니다. [검증 기록](phase3-foundation-report.md).
 모든 초안은 DRAFT입니다. 로그인된 CLI로 승인 기반 AI 초안을 추가했으며 검증·게시는 아직 없습니다.
 Ollama 대신 Codex/Claude Code를 사용합니다. [작업 상태·취소·멱등·재시작 복구](generation-jobs.md)도 구현했습니다.
-모델 설정/연결 상태·상세 생성 메타데이터와 검증·게시가 남았습니다.
+시작 설정 모델 고정·승인 바인딩·설치 버전 진단도 구현했습니다. [범위](cli-settings.md).
+건별 설정 UI/인증·원격 연결 상태·구조화된 실제 생성 메타데이터와 검증·게시가 남았습니다.
 
 Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 초안 검증 후 게시를 구현합니다.

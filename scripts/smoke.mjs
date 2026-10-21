@@ -24,6 +24,7 @@ async function start() {
   const started = performance.now()
   child = spawn('bash', ['scripts/run.sh',
     `--forge.ai.codex-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`,
+    '--forge.ai.codex-model=synthetic-smoke-model',
     `--forge.ai.claude-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`], {
     cwd: root,
     env: { ...process.env, PORT: String(port), FORGE_DATA_DIR: directory },
@@ -83,6 +84,12 @@ async function waitForJob(path, predicate) {
 
 try {
   const startupMs = await start()
+  const cliStatus = await api('/ai/providers/CODEX/probe', 'POST')
+  assert.equal(cliStatus.status, 'AVAILABLE')
+  assert.equal(cliStatus.version, '0.0.0-test-fixture')
+  assert.equal(cliStatus.requestedModel, 'synthetic-smoke-model')
+  assert.equal(cliStatus.authentication, 'UNKNOWN')
+  assert.equal(cliStatus.remoteConnection, 'NOT_CHECKED')
   const page = await fetch(base)
   assert.equal(page.status, 200)
   assert.match(await page.text(), /Knowledge Forge/)
@@ -121,6 +128,7 @@ try {
   assert.equal(draft.version.status, 'DRAFT')
   const knowledgePath = `${knowledgeBase}/${draft.card.id}`
   const transmission = await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX' })
+  assert.equal(transmission.requestedModel, 'synthetic-smoke-model')
   assert.ok(transmission.prompt.includes('E1'))
   assert.equal(transmission.digest.length, 64)
   for (const [approved, digest, status] of [[false, transmission.digest, 403], [true, 'wrong', 409]]) {
@@ -140,6 +148,8 @@ try {
   assert.equal(completed.status, 'SUCCEEDED', completed.error)
   assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.title, 'TEST FIXTURE 초안')
   assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.manuallyEdited, false)
+  assert.ok((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.markdown.includes('요청 모델: synthetic-smoke-model'))
+  assert.ok((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.markdown.includes(transmission.digest))
   assert.equal((await api(knowledgePath)).version.markdown, draft.version.markdown)
   const cancelledRequest = { ...generation, requestId: crypto.randomUUID() }
   const cancellable = await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)

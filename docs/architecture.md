@@ -107,7 +107,11 @@ Vite 개발 서버가 동일 출처 프록시를 제공합니다.
 미리보기는 React 텍스트로 렌더링하므로 HTML/스크립트를 실행하지 않습니다.
 SQLite 이름 충돌은 409이며 업로드로 덮어쓰지 않습니다.
 
-CLI AI 호출은 미리보기와 Provider/Workspace/버전/내용 SHA-256에 묶인 승인 후 실행합니다.
+CLI AI 호출은 미리보기와 Provider/요청 모델/Workspace/버전/내용 SHA-256에 묶인 승인 후 실행합니다.
+`CuratorSettings`는 시작 시 검증된 불변 모델 설정을 미리보기와 CLI 어댑터에 공유합니다.
+`CliDiagnostics` 포트는 사용자 요청 시 로컬 버전만 검사하며 생성/인증/원격 연결과 분리합니다.
+요청 모델·승인 digest는 생성된 불변 초안에 기록합니다. 실제 모델과 CLI 실행 이력의 구조화된 저장은 후속 작업입니다.
+계약과 한계는 [모델 설정·설치 진단](cli-settings.md)을 따릅니다.
 사용자 로그인은 CLI가 처리하고 앱은 인증 파일을 읽지 않습니다. [CLI 경계/제약](cli-ai.md).
 GitHub Actions는 변경하지 않습니다.
 Phase 6에서 데스크톱 세션 토큰, sidecar origin, 인증서 서명·공증을 검증해야 합니다.

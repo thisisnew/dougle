@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import type { GenerationJob } from './GenerationJobsPanel'
+import CliStatusPanel from './CliStatusPanel'
 
-type Preview = { provider: string; expectedVersion: number; digest: string; prompt: string }
+type Preview = { provider: string; expectedVersion: number; digest: string; prompt: string; requestedModel: string }
 
 export default function GenerationPanel({ base, disabled, onBusy, onQueued }: {
   base: string; disabled: boolean; onBusy: (busy: boolean) => void; onQueued: (id: string) => void
@@ -54,8 +55,11 @@ export default function GenerationPanel({ base, disabled, onBusy, onQueued }: {
     <label>AI 제공자 <select value={provider} disabled={disabled || busy || !!submission} onChange={event => {
       setProvider(event.target.value); setPreview(null); setApproved(false); setError('')
     }}><option value="CODEX">Codex (OpenAI)</option><option value="CLAUDE">Claude Code (Anthropic)</option></select></label>
+    <CliStatusPanel provider={provider} disabled={disabled || busy} />
     <Button variant="outline" disabled={disabled || busy || !!submission} onClick={() => void run(false)}>전송 내용 미리보기</Button>
     {preview && <div className="knowledge-form">
+      <p aria-label="요청 모델">요청 모델: {preview.requestedModel || 'CLI 기본값'} · 실제 실행 모델은 아직 확인하지 않습니다.</p>
+      <p>모델은 서버 시작 설정으로 고정합니다. 모델 변경 후에는 새 미리보기와 승인이 필요합니다.</p>
       <pre aria-label="AI 전송 내용">{preview.prompt}</pre>
       <label><input type="checkbox" checked={approved} disabled={disabled || busy} onChange={event => setApproved(event.target.checked)} />
         {provider}에 표시된 근거와 지시문을 전송하는 데 동의합니다</label>

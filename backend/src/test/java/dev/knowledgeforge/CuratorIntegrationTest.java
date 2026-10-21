@@ -59,6 +59,27 @@ class CuratorIntegrationTest {
     }
 
     @Test
+    void modelConfigurationIsBoundToConsentAndRecordedWithoutInventingActualModel() {
+        var first = new CuratorService(knowledge, model, new CuratorSettings("synthetic-a", ""));
+        var second = new CuratorService(knowledge, model, new CuratorSettings("synthetic-b", ""));
+        var preview = first.preview(workspace, source.card().id(), "CODEX");
+        assertThat(preview.requestedModel()).isEqualTo("synthetic-a");
+        assertThat(second.preview(workspace, source.card().id(), "CODEX").digest()).isNotEqualTo(preview.digest());
+        assertThatThrownBy(() -> second.generate(workspace, source.card().id(), "CODEX", 1, preview.digest(), true))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(409));
+        verifyNoInteractions(model);
+        var generated = first.generate(workspace, source.card().id(), "CODEX", 1, preview.digest(), true);
+        assertThat(generated.version().markdown()).contains("요청 모델: synthetic-a", "실제 실행 모델: 미확인", preview.digest());
+    }
+
+    @Test
+    void diagnosticsRequiresMutationHeaderAndRejectsUnknownProvider() throws Exception {
+        mvc.perform(post("/api/ai/providers/CODEX/probe")).andExpect(status().isForbidden());
+        mvc.perform(post("/api/ai/providers/OTHER/probe").header("X-Forge-Client", "1")).andExpect(status().isBadRequest());
+        verifyNoInteractions(model);
+    }
+
+    @Test
     void previewDoesNotCallModelAndOnlyIncludesSelectedQuotes() {
         var preview = curator.preview(workspace, source.card().id(), "CODEX");
         assertThat(preview.prompt()).contains("온도 21도", "E1").doesNotContain("private-name", "사람만의", workspace);

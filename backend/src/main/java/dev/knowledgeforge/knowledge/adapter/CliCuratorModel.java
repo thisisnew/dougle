@@ -1,6 +1,7 @@
 package dev.knowledgeforge.knowledge.adapter;
 
 import dev.knowledgeforge.knowledge.application.CuratorModel;
+import dev.knowledgeforge.knowledge.application.CuratorSettings;
 import dev.knowledgeforge.library.application.LibraryException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,17 +32,27 @@ public class CliCuratorModel implements CuratorModel {
     private final String codex;
     private final String claude;
     private final Duration timeout;
+    private final CuratorSettings settings;
 
     @Autowired
     public CliCuratorModel(@Value("${forge.ai.codex-command:codex}") String codex,
-                           @Value("${forge.ai.claude-command:claude}") String claude) {
+                           @Value("${forge.ai.claude-command:claude}") String claude, CuratorSettings settings) {
+        this(codex, claude, Duration.ofSeconds(120), settings);
+    }
+
+    CliCuratorModel(String codex, String claude) {
         this(codex, claude, Duration.ofSeconds(120));
     }
 
     CliCuratorModel(String codex, String claude, Duration timeout) {
+        this(codex, claude, timeout, new CuratorSettings("", ""));
+    }
+
+    CliCuratorModel(String codex, String claude, Duration timeout, CuratorSettings settings) {
         this.codex = codex;
         this.claude = claude;
         this.timeout = timeout;
+        this.settings = settings;
     }
 
     @Override
@@ -78,10 +89,12 @@ public class CliCuratorModel implements CuratorModel {
 
     List<String> command(Provider provider, Path directory) {
         if (provider == Provider.CLAUDE) {
-            return List.of(claude, "--print", "--output-format", "json", "--json-schema", SCHEMA,
+            List<String> arguments = new ArrayList<>(List.of(claude, "--print", "--output-format", "json", "--json-schema", SCHEMA,
                     "--tools", "", "--disallowedTools", "mcp__*", "--strict-mcp-config", "--mcp-config", "{\"mcpServers\":{}}",
                     "--setting-sources", "", "--settings", "{\"disableAllHooks\":true}", "--disable-slash-commands",
-                    "--no-session-persistence", "--no-chrome", "--permission-mode", "dontAsk");
+                    "--no-session-persistence", "--no-chrome", "--permission-mode", "dontAsk"));
+            addModel(arguments, provider);
+            return arguments;
         }
         List<String> arguments = new ArrayList<>(List.of(codex, "--no-daemon", "exec", "--ignore-user-config",
                 "--ephemeral", "--skip-git-repo-check", "--sandbox", "read-only", "--color", "never",
@@ -94,11 +107,21 @@ public class CliCuratorModel implements CuratorModel {
                 "browser_use", "computer_use", "image_generation", "code_mode", "skill_search")) {
             arguments.addAll(List.of("--disable", feature));
         }
+        addModel(arguments, provider);
         arguments.add("-");
         return arguments;
     }
 
+    private void addModel(List<String> arguments, Provider provider) {
+        String requestedModel = settings.requestedModel(provider);
+        if (!requestedModel.isEmpty()) arguments.addAll(List.of("--model", requestedModel));
+    }
+
     private String run(List<String> command, Path directory, String prompt) throws IOException {
+        return run(command, directory, prompt, timeout);
+    }
+
+    String run(List<String> command, Path directory, String prompt, Duration limit) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(command).directory(directory.toFile());
         builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
                 "SYSTEMROOT", "SystemRoot", "WINDIR", "CODEX_HOME"));
@@ -112,7 +135,7 @@ public class CliCuratorModel implements CuratorModel {
                 try (var stream = process.getOutputStream()) { stream.write(prompt.getBytes(StandardCharsets.UTF_8)); }
                 return true;
             });
-            long deadline = System.nanoTime() + timeout.toNanos();
+            long deadline = System.nanoTime() + limit.toNanos();
             while (!process.waitFor(100, TimeUnit.MILLISECONDS)) {
                 process.descendants().forEach(descendants::add);
                 if (System.nanoTime() >= deadline) throw new LibraryException(504, "AI CLI 응답 제한 시간을 초과했습니다. 기존 지식은 유지됩니다.");

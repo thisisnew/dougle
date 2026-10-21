@@ -6,7 +6,7 @@ import { request } from './api'
 
 vi.mock('./api', () => ({ request: vi.fn() }))
 const api = vi.mocked(request)
-const preview = { provider: 'CODEX', expectedVersion: 1, digest: 'hash', prompt: '선택 근거만 전송' }
+const preview = { provider: 'CODEX', expectedVersion: 1, digest: 'hash', prompt: '선택 근거만 전송', requestedModel: 'synthetic-model' }
 beforeEach(() => api.mockReset())
 
 it('미리보기 후 건별 승인해야 작업 ID와 함께 생성을 요청한다', async () => {
@@ -17,6 +17,7 @@ it('미리보기 후 건별 승인해야 작업 ID와 함께 생성을 요청한
   expect(api).not.toHaveBeenCalled()
   await user.click(screen.getByRole('button', { name: '전송 내용 미리보기' }))
   expect(await screen.findByLabelText('AI 전송 내용')).toHaveTextContent(preview.prompt)
+  expect(screen.getByLabelText('요청 모델')).toHaveTextContent('synthetic-model')
   const generate = screen.getByRole('button', { name: '승인하고 별도 AI 초안 생성' })
   expect(generate).toBeDisabled()
   await user.click(screen.getByRole('checkbox'))

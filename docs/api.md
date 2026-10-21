@@ -221,6 +221,10 @@ Workspace 삭제는 해당 지식·버전·근거 복사본을 모두 삭제합�
 
 접두사 `/workspaces/{workspaceId}/knowledge/{id}/generation`, 변경 헤더 필수.
 
+미리보기 응답의 `requestedModel`은 서버 시작 설정 모델입니다(빈 문자열은 CLI 기본 선택).
+승인 digest에 포함되므로 설정 변경 후에는 새 미리보기로 재승인해야 합니다.
+생성된 초안 Markdown은 요청 모델/실제 모델 미확인/승인 digest를 기록합니다.
+
 - `POST /preview` 요청 `{ "provider": "CODEX" }` 또는 `CLAUDE`.
   응답 `{ provider, expectedVersion, digest, prompt }`. 외부 호출 없음.
   최신 카드의 CURRENT 근거 인용문만 사용하며 파일명/경로/기존 Markdown은 전송하지 않습니다.
@@ -258,3 +262,12 @@ status: QUEUED | RUNNING | CANCELLING | CANCELLED | SUCCEEDED | FAILED | INTERRU
 같은 ID로 실패/취소/중단을 재실행하지 않습니다. 새 시도에는 새 미리보기·승인·ID가 필요합니다.
 실행 중이거나 중단 정리 중인 다른 작업이 있으면 409, 잘못된 ID는 400, 미승인은 403입니다.
 재시작 후 미완료 작업은 INTERRUPTED이며 자동 외부 재전송은 없습니다. 상세 [작업 설계](generation-jobs.md).
+
+## 로컬 CLI 설치 진단
+
+`POST /api/ai/providers/{CODEX|CLAUDE}/probe`, `X-Forge-Client: 1` 필수, body 없음.
+200 `{ "provider":"CODEX", "status":"AVAILABLE", "version":"0.1.0", "requestedModel":"", "authentication":"UNKNOWN", "remoteConnection":"NOT_CHECKED" }`.
+버전 예시는 가상 값입니다. `status`는 AVAILABLE/UNRECOGNIZED/UNAVAILABLE이며 마지막 두 경우 version은 null입니다.
+잘못된 Provider 400, 변경 헤더 누락 403, 다른 진단 진행 중 409.
+설정된 CLI의 `--version`만 실행하며 설치 확인은 로그인·원격 연결·모델 지원 확인이 아닙니다.
+5초 실행 제한, 원문 출력 비노출. [설정·보안 경계](cli-settings.md).

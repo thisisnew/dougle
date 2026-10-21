@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T10:58:39.595Z",
+  "measuredAt": "2026-10-21T11:12:58.439Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -31,21 +31,21 @@
     "idempotent job replay across restart",
     "completed job and draft persist"
   ],
-  "sourceSyncMs": 1853.5433830000002,
+  "sourceSyncMs": 1481.0319259999997,
   "livePublic": [],
-  "startupMs": 17272,
-  "restartMs": 18244,
+  "startupMs": 19272,
+  "restartMs": 22912,
   "upload100": {
-    "p50Ms": 554.1415559999878,
-    "p95Ms": 1079.4855629999947
+    "p50Ms": 721.297200999994,
+    "p95Ms": 1177.9749939999892
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 8.032065000006696,
-    "p95Ms": 9.979670000000624
+    "p50Ms": 6.715739999999641,
+    "p95Ms": 9.83328099999926
   },
   "search100Files30Requests": {
-    "p50Ms": 19.69316300000355,
-    "p95Ms": 25.296212000001105
+    "p50Ms": 18.3001920000097,
+    "p95Ms": 31.870143000007374
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

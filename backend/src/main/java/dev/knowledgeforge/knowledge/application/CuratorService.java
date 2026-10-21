@@ -15,16 +15,18 @@ import tools.jackson.databind.json.JsonMapper;
 
 @Service
 public class CuratorService {
-    public record Preview(String provider, int expectedVersion, String digest, String prompt) {}
+    public record Preview(String provider, int expectedVersion, String digest, String prompt, String requestedModel) {}
     public record Generated(Document source, String title, String markdown) {}
     private final KnowledgeService knowledge;
     private final CuratorModel model;
+    private final CuratorSettings settings;
     private final Semaphore slot = new Semaphore(1);
     private final JsonMapper json = JsonMapper.builder().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).build();
 
-    public CuratorService(KnowledgeService knowledge, CuratorModel model) {
+    public CuratorService(KnowledgeService knowledge, CuratorModel model, CuratorSettings settings) {
         this.knowledge = knowledge;
         this.model = model;
+        this.settings = settings;
     }
 
     public Preview preview(String workspace, String id, String provider) {
@@ -59,7 +61,9 @@ public class CuratorService {
             String output = model.generate(provider(provider), preview.prompt());
             String[] draft = validate(output, source.version().evidence().size());
             return publish.apply(new Generated(source, draft[0], "> AI 미검증 초안 · " + provider
-                    + " · 원본 지식 " + id + " v" + expectedVersion + "\n\n" + draft[1]));
+                    + " · 원본 지식 " + id + " v" + expectedVersion
+                    + "\n> 요청 모델: " + (preview.requestedModel().isEmpty() ? "CLI 기본값" : preview.requestedModel())
+                    + " · 실제 실행 모델: 미확인\n> 승인 digest: " + preview.digest() + "\n\n" + draft[1]));
         } finally {
             slot.release();
         }
@@ -84,11 +88,12 @@ public class CuratorService {
                 EVIDENCE:
                 """ + payload;
         if (prompt.length() > 16000) throw new LibraryException(413, "AI 전송 내용은 16,000자 이하여야 합니다. 근거 범위를 줄이세요.");
+        String requestedModel = settings.requestedModel(provider(provider));
         String binding = source.card().workspaceId() + "\n" + source.card().id() + "\n"
-                + source.card().latestVersion() + "\n" + provider + "\n" + prompt;
+                + source.card().latestVersion() + "\n" + provider + "\n" + requestedModel + "\n" + prompt;
         try {
             String digest = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(binding.getBytes(StandardCharsets.UTF_8)));
-            return new Preview(provider, source.card().latestVersion(), digest, prompt);
+            return new Preview(provider, source.card().latestVersion(), digest, prompt, requestedModel);
         } catch (NoSuchAlgorithmException exception) {
             throw new IllegalStateException(exception);
         }
