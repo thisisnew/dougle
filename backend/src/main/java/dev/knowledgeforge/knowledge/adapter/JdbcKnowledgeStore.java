@@ -114,9 +114,9 @@ public class JdbcKnowledgeStore implements KnowledgeStore {
                 workspaceId, id, expectedVersion) == 1;
     }
 
-    public void append(String id, int number, String title, String markdown, String createdAt, List<Reference> references) {
-        jdbc.update("INSERT INTO knowledge_version(card_id,number,title,markdown,status,manually_edited,created_at) VALUES(?,?,?,?,'DRAFT',1,?)",
-                id, number, title, markdown, createdAt);
+    public void append(String id, int number, String title, String markdown, String createdAt, List<Reference> references, boolean manuallyEdited) {
+        jdbc.update("INSERT INTO knowledge_version(card_id,number,title,markdown,status,manually_edited,created_at) VALUES(?,?,?,?,'DRAFT',?,?)",
+                id, number, title, markdown, manuallyEdited, createdAt);
         for (int index = 0; index < references.size(); index++) {
             Reference reference = references.get(index);
             jdbc.update("INSERT INTO knowledge_evidence(card_id,version,ordinal,snapshot_id,start_line,end_line) VALUES(?,?,?,?,?,?)",

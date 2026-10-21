@@ -65,6 +65,21 @@ public class KnowledgeService {
         store.delete(workspaceId, id);
     }
 
+    public Document createGenerated(Document source, String title, String markdown) {
+        String workspaceId = source.card().workspaceId();
+        Document current = get(workspaceId, source.card().id(), null);
+        if (!current.equals(source)) {
+            throw new LibraryException(409, "생성 중 지식 또는 근거 상태가 변경되었습니다. 다시 확인하고 승인하세요.");
+        }
+        validate(title, markdown);
+        String id = UUID.randomUUID().toString();
+        String now = Instant.now().toString();
+        store.create(workspaceId, id, now);
+        store.append(id, 1, title.strip(), markdown, now, source.version().evidence().stream()
+                .map(item -> new KnowledgeStore.Reference(item.snapshotId(), item.startLine(), item.endLine())).toList(), false);
+        return get(workspaceId, id, null);
+    }
+
     public byte[] snapshotContent(String workspaceId, String id, String snapshotId) {
         return store.snapshotContent(workspaceId, id, snapshotId)
                 .orElseThrow(() -> new LibraryException(404, "근거 원본을 찾을 수 없습니다."));

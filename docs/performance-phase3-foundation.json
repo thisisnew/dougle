@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T09:48:33.652Z",
+  "measuredAt": "2026-10-21T10:25:54.683Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -24,23 +24,25 @@
     "knowledge survives restart",
     "immutable prior version",
     "optimistic edit conflict",
-    "source deletion preserves historical evidence bytes"
+    "source deletion preserves historical evidence bytes",
+    "CLI payload preview without external call",
+    "unapproved and mismatched AI transmission rejected"
   ],
-  "sourceSyncMs": 1126.5631790000007,
+  "sourceSyncMs": 1731.4899119999973,
   "livePublic": [],
-  "startupMs": 8688,
-  "restartMs": 6121,
+  "startupMs": 17493,
+  "restartMs": 20482,
   "upload100": {
-    "p50Ms": 107.52200299999822,
-    "p95Ms": 174.48955899999783
+    "p50Ms": 349.6665839999987,
+    "p95Ms": 911.8346960000054
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.1199689999994007,
-    "p95Ms": 3.6377940000020317
+    "p50Ms": 8.144455000001471,
+    "p95Ms": 10.94902600000205
   },
   "search100Files30Requests": {
-    "p50Ms": 6.8589370000008785,
-    "p95Ms": 9.58730800000194
+    "p50Ms": 17.621134000000893,
+    "p95Ms": 29.6032450000057
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; not LLM performance."
 }

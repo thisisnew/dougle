@@ -108,6 +108,17 @@ try {
   })
   assert.equal(draft.version.status, 'DRAFT')
   const knowledgePath = `${knowledgeBase}/${draft.card.id}`
+  const transmission = await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX' })
+  assert.ok(transmission.prompt.includes('E1'))
+  assert.equal(transmission.digest.length, 64)
+  for (const [approved, digest, status] of [[false, transmission.digest, 403], [true, 'wrong', 409]]) {
+    const rejected = await fetch(`${base}/api${knowledgePath}/generation`, {
+      method: 'POST', headers: { 'X-Forge-Client': '1', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'CODEX', expectedVersion: 1, approved, digest }),
+    })
+    assert.equal(rejected.status, status)
+  }
+  assert.equal((await api(knowledgeBase)).length, 1)
   const snapshotPath = `${knowledgePath}/evidence/${draft.version.evidence[0].snapshotId}/content`
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
@@ -187,7 +198,8 @@ try {
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
-      'optimistic edit conflict', 'source deletion preserves historical evidence bytes'],
+      'optimistic edit conflict', 'source deletion preserves historical evidence bytes',
+      'CLI payload preview without external call', 'unapproved and mismatched AI transmission rejected'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

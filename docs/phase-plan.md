@@ -32,11 +32,12 @@ Tika 문서 추출, JavaParser 심볼, Lucene/Nori 다중 도메인 검색이 �
 격리 프로세스 파서, 대용량 ArtifactStore, 세밀한 재시도 정책.
 현재 수집은 제한된 동기 요청이며 실패 후 수동 재시도할 수 있습니다.
 
-## Phase 3 — P3-1 완료, P3-2부터 남음
+## Phase 3 — P3-1 완료, P3-2 CLI 초안 일부 구현
 
 수동 지식 초안·불변 버전·근거 스냅샷·최신성 조회·편집 충돌 보호를 UI/API로 구현했습니다.
 v3 마이그레이션과 원본/지식 독립 삭제를 검증했습니다. [검증 기록](phase3-foundation-report.md).
-아직 모든 초안은 DRAFT이며 AI 생성·검증·게시가 완료된 것은 아닙니다.
+모든 초안은 DRAFT입니다. 로그인된 CLI로 승인 기반 AI 초안을 추가했으며 검증·게시는 아직 없습니다.
+Ollama 대신 Codex/Claude Code를 사용합니다. 설정/취소 등 남은 범위는 [CLI AI](cli-ai.md)에 기록합니다.
 
 Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 초안 검증 후 게시를 구현합니다.
@@ -45,7 +46,7 @@ Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 ## Phase 4
 
 검색과 LLM 생성 유스케이스를 분리합니다.
-다중 도메인 검색, 근거 우선 SSE, Ollama, 중단, Provider 확장 및 외부 전송 승인을 구현합니다.
+다중 도메인 검색, 근거 우선 SSE, CLI Provider, 중단, Provider 확장 및 외부 전송 승인을 구현합니다.
 SSE 이벤트 순서, 취소의 서버 자원 해제, 검색 실패/모델 미실행, 승인 없는 외부 전송 차단을 검증합니다.
 
 ## Phase 5
@@ -67,7 +68,7 @@ Intel/Apple Silicon 타깃 빌드, 설치·종료·재시작, 업그레이드·�
 - 대규모 디렉터리의 페이지네이션, 트리 가상화, 파일명 정규화/Unicode case folding 없음
 - 파일 최대 10 MiB, 미리보기는 1 MiB UTF-8만 지원
 - 단일 SQLite 연결, BLOB 저장이므로 대량 수집 전 저장소 확장 필요
-- 공개 Source 등록·수동 수집·문서/Java 분석·검색 구현, AI·자동 폴링 미구현
+- 공개 Source 등록·수동 수집·문서/Java 분석·검색·CLI AI 초안 구현, 채팅·자동 폴링 미구현
 - Source당 500개/50 MiB, 경로 16단계, 추출 텍스트 500,000자 제한
 - Source는 현재 스냅샷/마지막 revision만 보관. 지식이 인용한 원본은 별도 보존하지만 전체 원본 이력은 미지원
 - 원본 폴더 생성/삭제만 지원하며 이름 변경·이동은 미지원

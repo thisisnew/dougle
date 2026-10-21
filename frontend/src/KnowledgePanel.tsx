@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import GenerationPanel from './GenerationPanel'
 
 type Card = { id: string; workspaceId: string; title: string; latestVersion: number; createdAt: string }
 type Evidence = {
@@ -121,7 +122,7 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
   }
 
   return <section className="knowledge-panel" aria-label="지식 초안 보관함">
-    <p>현재는 근거를 연결한 수동 초안만 지원합니다. AI 생성·사실 검증·게시는 아직 제공하지 않습니다.</p>
+    <p>근거 연결 수동 초안과 승인 기반 AI 초안을 지원합니다. 사실 검증·게시는 아직 제공하지 않습니다.</p>
     <Button variant="outline" size="sm" disabled={busy || editing} onClick={() => setRevision(value => value + 1)}>지식 새로고침</Button>
     {error && <p role="alert" className="error-banner">{error}</p>}
     {loading ? <p role="status">지식 목록을 불러오는 중…</p> : cards.length === 0 ? <div className="empty-state">
@@ -132,7 +133,7 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
     {selected && !document && !error && <p role="status">지식을 불러오는 중…</p>}
     {document && <article className="knowledge-document">
       <h2>{document.version.title}</h2>
-      <p>v{document.version.number} / 최신 v{document.card.latestVersion} · {document.version.status} (미검증) · 사람이 작성한 초안</p>
+      <p>v{document.version.number} / 최신 v{document.card.latestVersion} · {document.version.status} (미검증) · {document.version.manuallyEdited ? '사람이 작성·편집한 초안' : 'AI 생성 초안'}</p>
       <div className="source-actions">
         <Button variant="outline" size="sm" disabled={busy || editing || document.version.number <= 1} onClick={() => setNumber(document.version.number - 1)}>이전 버전</Button>
         <Button variant="outline" size="sm" disabled={busy || editing || document.version.number >= document.card.latestVersion} onClick={() => setNumber(document.version.number + 1)}>다음 버전</Button>
@@ -151,9 +152,12 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
         <div className="source-actions"><Button disabled={busy} type="submit">새 버전 저장</Button>
           <Button type="button" variant="outline" disabled={busy} onClick={() => { setEditing(false); setTitle(document.version.title); setMarkdown(document.version.markdown) }}>편집 취소</Button></div>
       </form> : <pre aria-label="지식 Markdown">{document.version.markdown}</pre>}
+      {!editing && document.version.number === document.card.latestVersion && <GenerationPanel
+        key={`${selected}-${document.version.number}`} base={`${base}/${selected}`} disabled={busy || confirmDelete}
+        onBusy={setBusy} onCreated={id => { setBusy(false); setSelected(id); setNumber(null); setRevision(value => value + 1) }} />}
       <h3>보존된 근거</h3><p>최신성은 마지막으로 수집한 로컬 복사본과 비교합니다. 외부 원본의 실시간 상태나 사실 검증 결과가 아닙니다.</p>
       {document.version.evidence.map((item, index) => <section className="evidence-item" key={`${item.snapshotId}-${index}`}>
-        <strong>{item.path} · 추출 텍스트 {item.startLine}~{item.endLine}행</strong>
+        <strong>[E{index + 1}] {item.path} · 추출 텍스트 {item.startLine}~{item.endLine}행</strong>
         {item.sourceLocation && <p>{item.sourceKind} · {item.sourceLocation}</p>}
         <p>{freshness[item.freshness]}</p><small>revision {item.sourceRevision}<br />SHA-256 {item.contentHash}</small>
         <pre>{item.quote}</pre>

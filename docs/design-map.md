@@ -1,9 +1,9 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
 > **수집·분석·검색에 이어, 근거를 보존하는 수동 지식 초안·버전이 동작합니다.**
-> 다음은 Ollama로 초안을 생성하고 근거를 검증해 게시하는 단계입니다.
+> 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 다음은 운영 보강·검증·게시입니다.
 
-기준: 2026-10-21 · Phase 3 P3-1 · 백엔드 48개/프런트엔드 17개 통과.
+기준: 2026-10-21 · Phase 3 CLI AI 추가. 최신 검증은 [CLI AI](cli-ai.md)를 확인하세요.
 실제 JAR 재시작·근거 보존 검증 결과는 [보고서](phase3-foundation-report.md)에 기록합니다.
 
 **범례:** 🟩 구현됨 · 🟨 일부 구현/확장 필요 · 🟦 계획(미구현).
@@ -16,7 +16,7 @@
 flowchart LR
     P1["🟩 Phase 1<br/>Workspace · 원본 탐색기"]
     P2["🟨 Phase 2<br/>기본 수집 · 분석 · 검색 구현<br/>운영 확장 남음"]
-    P3["🟨 Phase 3 · 진행 중<br/>수동 초안 · 근거 · 버전 구현<br/>다음: AI 생성 · 검증 · 게시"]
+    P3["🟨 Phase 3 · 진행 중<br/>수동/AI 초안 · 근거 · 버전 구현<br/>다음: 운영 보강 · 검증 · 게시"]
     P4["🟦 Phase 4<br/>AI 질문 · 근거 우선 SSE"]
     P5["🟦 Phase 5<br/>선택적 폴링 · Git 증분 · 무효화"]
     P6["🟦 Phase 6<br/>Tauri · Mac 설치 앱"]
@@ -39,8 +39,8 @@ flowchart LR
 | 자료 등록 | 파일 업로드, 로컬 폴더·공개 URL·공개 GitHub | 비공개 저장소, Source 위치 수정 |
 | 자료 분석 | Tika 추출, Java 심볼·행 번호 | 청크·정교한 근거 위치, 격리 파서 |
 | 검색 | Lucene/Nori, 여러 도메인, 심볼 텍스트 | 지식·코드 관계 검색 |
-| 지식 백과사전 | 수동 Markdown 초안·불변 버전·근거 복사본·편집 충돌 보호 | AI 생성·검증·게시·폴더·렌더링 |
-| AI 질문 | 미구현 | Ollama, 근거 선표시, SSE, 중단 |
+| 지식 백과사전 | 수동/승인 기반 CLI AI 초안·불변 버전·근거 복사본·편집 충돌 보호 | 검증·게시·폴더·렌더링 |
+| AI 질문 | 미구현 | CLI Provider, 근거 선표시, SSE, 중단 |
 | 최신성 관리 | 수동 동기화·revision·근거 CURRENT/STALE/MISSING 조회 | 자동 폴링·증분·의존 관계 전파·전체 원본 이력 |
 | 설치 | 개발용 웹 UI 포함 JAR | Mac `.app`/`.dmg`, Windows는 후속 |
 
@@ -98,7 +98,7 @@ flowchart TB
 - 실패하면 기존 원본과 검색 결과를 유지합니다. 변경된 Source는 현재 **전체 스냅샷 교체**입니다.
 - 큐는 API 완료 시 및 2초 주기로 소비합니다. 이 작업은 외부 Source 자동 폴링이 아닙니다.
 - 앱 시작 시 저장된 분석 결과로 재색인합니다. 검색마다 원본을 다시 수집·분석하지 않습니다.
-- 원본 보관 및 분석은 로컬 처리입니다. 현재 LLM 호출은 없습니다.
+- 원본 보관 및 분석은 로컬 처리입니다. AI 초안은 건별 승인 후 CLI로 외부 호출합니다.
 - 지식 초안은 별도 API/테이블로 관리하며 아직 Lucene 검색에는 포함하지 않습니다.
 - 원본 삭제 후에도 지식과 근거 복사본이 남습니다. Workspace 삭제 시에는 함께 삭제됩니다.
 
@@ -110,15 +110,15 @@ flowchart TB
 flowchart TB
     subgraph PC["내 PC · 최종 목표"]
         HOST["🟦 desktop / Tauri 2<br/>Java 런타임 포함 · 시작/종료 · Mac 패키지"]
-        UI["🟨 React UI<br/>탐색/검색/수동 초안 + 향후 AI/채팅"]
+        UI["🟨 React UI<br/>탐색/검색/수동·AI 초안 + 향후 채팅"]
         RAW["🟩 library + sources + ingestion<br/>원본 · 수동 수집 · 분석"]
         RET["🟨 search<br/>현재 Lucene/심볼 + 향후 지식 관계"]
-        KNOW["🟨 knowledge<br/>수동 초안/근거/버전 구현<br/>Curator · 검증 · 게시 예정"]
+        KNOW["🟨 knowledge<br/>수동·AI 초안/근거/버전 구현<br/>검증 · 게시 예정"]
         CHAT["🟦 conversation<br/>근거 먼저 · 답변 SSE · 취소"]
         SYNC["🟦 synchronization<br/>Source별 opt-in · Git diff · 지식 무효화"]
         SQL[("🟨 SQLite v3<br/>원본/분석/지식/근거/버전<br/>향후 대화/동기화 확장")]
-        MODEL["🟦 Ollama 연동<br/>로컬 모델 · 기본 Provider"]
-        POLICY["🟦 외부 Provider 정책<br/>명시적 선택 + 전송 승인"]
+        MODEL["🟨 Codex / Claude Code CLI<br/>로그인 재사용 · 새 요청 · 초안 구현"]
+        POLICY["🟨 외부 전송 승인<br/>초안 구현 · 채팅은 예정"]
         HOST -.-> UI
         UI --> RAW
         UI --> RET
@@ -129,21 +129,21 @@ flowchart TB
         RAW --> KNOW
         KNOW --> SQL
         KNOW -.-> RET
-        KNOW -.-> MODEL
+        POLICY --> MODEL
         CHAT -.-> RET
         CHAT -.-> MODEL
         CHAT -.-> POLICY
-        KNOW -.-> POLICY
+        KNOW --> POLICY
         SYNC -.-> RAW
         SYNC -.-> KNOW
     end
-    POLICY -.-> EXT["🟦 외부 LLM<br/>승인 없으면 전송 금지"]
+    MODEL --> EXT["외부 LLM 서버<br/>승인 없으면 전송 금지"]
     classDef done fill:#dcfce7,stroke:#15803d,color:#14532d
     classDef partial fill:#fef3c7,stroke:#b45309,color:#78350f
     classDef planned fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
     class RAW done
-    class UI,RET,SQL,KNOW partial
-    class HOST,CHAT,SYNC,MODEL,POLICY,EXT planned
+    class UI,RET,SQL,KNOW,MODEL,POLICY partial
+    class HOST,CHAT,SYNC planned
 ```
 
 벡터 DB·Elasticsearch·외부 DB 서버·GitHub Actions는 요구하지 않습니다.
@@ -152,14 +152,14 @@ JDBC/HTTP/LLM 어댑터가 포트를 구현합니다. 검색과 LLM 답변 생�
 
 ## 4. 지식이 만들어지고 갱신되는 과정 — 현재와 계획
 
-근거 캡처와 수동 초안은 구현되었습니다. **AI 생성·검증·게시·자동 갱신은 아직 계획**입니다.
+근거 캡처·수동 초안·승인 기반 별도 AI 초안은 구현되었습니다. **검증·게시·자동 갱신은 아직 계획**입니다.
 
 ```mermaid
 flowchart TD
     RAW["🟩 저장된 원본 · 분석"]
     EVID["🟩 불변 근거 스냅샷<br/>바이트 · 추출 텍스트 · Source · revision · 해시 · 범위"]
     MANUAL["🟩 사람 작성 DRAFT<br/>불변 버전 · 동시 편집 보호"]
-    DRAFT["🟦 Ollama Curator<br/>지식 초안 생성"]
+    DRAFT["🟩 CLI Curator<br/>미리보기 + 승인 → 별도 AI DRAFT"]
     CHECK{"🟦 주장과 근거 검증<br/>필요 시 사람 검토"}
     FAIL["🟦 게시하지 않음<br/>초안 수정 / 이전 게시본 유지"]
     PUB["🟦 검증된 새 버전 게시<br/>카드 · Markdown · 출처"]
@@ -170,7 +170,7 @@ flowchart TD
     RAW --> EVID
     EVID --> MANUAL
     MANUAL -.-> CHECK
-    EVID -.-> DRAFT
+    EVID --> DRAFT
     DRAFT -.-> CHECK
     CHECK -. 실패 .-> FAIL
     CHECK -. 통과 .-> PUB
@@ -181,8 +181,8 @@ flowchart TD
     HUMAN -. 아니오 .-> DRAFT
     classDef done fill:#dcfce7,stroke:#15803d,color:#14532d
     classDef planned fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-    class RAW,EVID,MANUAL done
-    class DRAFT,CHECK,FAIL,PUB,CHANGE,STALE,HUMAN,PROPOSE planned
+    class RAW,EVID,MANUAL,DRAFT done
+    class CHECK,FAIL,PUB,CHANGE,STALE,HUMAN,PROPOSE planned
 ```
 
 **구현된 보호 장치:** 현재 Source 변경 시 entry ID가 교체되어도 별도 근거 스냅샷은 유지됩니다.
@@ -191,7 +191,7 @@ flowchart TD
 
 ## 5. AI 질문 시 처리 순서 — 계획
 
-전체 시퀀스는 Phase 4 계획입니다. 검색 기반만 현재 존재하고, 채팅·LLM·SSE는 미구현입니다.
+전체 시퀀스는 Phase 4 계획입니다. 검색과 초안 생성 기반은 존재하지만 채팅·SSE는 미구현입니다.
 
 ```mermaid
 sequenceDiagram
@@ -199,7 +199,7 @@ sequenceDiagram
     participant UI as 채팅 UI (예정)
     participant Chat as conversation (예정)
     participant Search as 기존 검색 + 근거 검색 확장
-    participant Model as Ollama 연동 (예정)
+    participant Model as CLI 스트리밍 연동 (예정)
     User->>UI: 질문 + 도메인 선택
     UI->>Chat: 답변 요청
     Chat->>Search: 저장된 인덱스에서 검색
@@ -225,14 +225,14 @@ sequenceDiagram
 
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
-| 화면 | `frontend/src/App.tsx`, `SourcePanel.tsx`, `AnalysisPanel.tsx` | AI 생성 UI, 지식 폴더/렌더링, 채팅 |
+| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `AnalysisPanel.tsx` | AI 작업 취소/설정, 지식 폴더/렌더링, 채팅 |
 | 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v3, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 게시 지식·관계 검색 |
-| 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | Ollama Curator · 검증 · 게시 |
+| 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 검증 · 게시 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** [체크리스트](backlog.md)의 **P3-2: Ollama Curator**.
+**다음 한 작업:** [CLI AI](cli-ai.md)의 남은 운영 항목 → **P3-3 검증·게시**.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
 실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [Phase 3 기반 보고서](phase3-foundation-report.md)를 참고하세요.

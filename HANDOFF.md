@@ -13,7 +13,9 @@ Java 21 / Spring Boot 4.1.1 / React / TypeScript / Vite / Tailwind / SQLite JDBC
 사용하는 실제 실행 가능한 로컬 웹 앱입니다. 최종 배포 형태는 Tauri 2 데스크톱 앱입니다.
 
 현재 Source 수동 수집, 문서·Java 분석, 로컬 검색, 근거 연결 수동 지식 초안·버전을 사용할 수 있습니다.
-LLM 지식 생성·채팅·Source 자동 폴링은 아직 구현하지 않았습니다.
+로그인된 Codex/Claude Code CLI로 승인 기반 별도 AI 초안을 생성합니다. 채팅·Source 자동 폴링은 아직 없습니다.
+최신 변경·검증·남은 범위는 [CLI AI 인수인계](docs/cli-ai.md)를 먼저 확인하세요.
+사용자 요청으로 기본 AI 방향을 Ollama에서 로그인된 CLI로 변경했습니다. 이 결정이 이전 계획보다 우선합니다.
 GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 
 ### 완료
@@ -22,12 +24,12 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 원본 폴더 생성·계층 탐색·상위 경로 이동
 - 10 MiB 이하 파일 업로드, 원본 바이트 다운로드, 폴더/자료 삭제
 - 1 MiB 이하 UTF-8 텍스트 미리보기, HTML 실행 방지
-- 원본과 지식 영역 분리, 수동 초안과 미구현 AI 생성·게시의 명확한 구별
+- 원본과 지식 영역 분리, 수동/AI 초안 구별, 미구현 검증·게시의 명확한 표시
 - SQLite FK cascade / WAL / 스키마 버전 3 / 중복 이름 보호
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료 기반 백엔드 48개 / 프런트엔드 17개 자동 테스트 통과
+- 가상 자료 기반 백엔드 65개 / 프런트엔드 20개 자동 테스트 통과 (실제 CLI opt-in 테스트 1개는 기본 skip)
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -39,14 +41,16 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 지식 수동 초안 생성·독립 삭제, 불변 버전, expectedVersion 편집 충돌 409
 - 당시 원본 바이트/추출 텍스트/해시/revision 스냅샷, 원본 삭제 후에도 근거 보존
 - 근거 CURRENT/STALE/MISSING 조회, v1/v2→v3 마이그레이션
+- CLI 전송 미리보기·건별 승인, 별도 AI DRAFT, 출력 검사·타임아웃·기존 수동 문서 보호
+- 실제 Codex 생성 성공. Claude 실제 생성은 인증 오류로 미검증: `docs/cli-ai.md`
 
 ### 미구현
 
 | Phase | 작업 | 상태 |
 |---|---|---|
 | 2 확장 | 비공개 저장소 자격 증명, 대용량 ArtifactStore, 작업 취소·격리 파서 | 남음 |
-| 3 | P3-1 완료, 수동 초안 UI 일부 완료. Ollama Curator·검증·게시·지식 폴더는 남음 | 진행 중 |
-| 4 | 기존 다중 도메인 검색에 Ollama, 근거 선표시 SSE, 답변 중단, 외부 Provider 승인 연결 | 미착수 |
+| 3 | P3-1 완료, CLI AI 초안/전송 승인 구현. 설정·작업 취소·검증·게시·지식 폴더는 남음 | 진행 중 |
+| 4 | 기존 다중 도메인 검색에 CLI Provider, 근거 선표시 SSE, 답변 중단, 채팅별 승인 연결 | 미착수 |
 | 5 | Source별 opt-in 폴링, Git 증분 갱신, 지식 무효화·버전·수동 편집 보호 | 미착수 |
 | 6 | Tauri 2, Java 런타임 포함 Mac 설치 앱, 통합 테스트, 설치 설명서 | 미착수 |
 
@@ -121,9 +125,9 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
 2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/phase3-foundation-report.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
-4. **다음 핵심 기능은 P3-2** Ollama Curator입니다. P3-1을 다시 구현하지 마세요.
-5. `knowledge` 모듈의 불변 버전·근거 스냅샷과 수동 작성 플래그를 사용해 AI 초안을 별도 추가하세요.
-6. Ollama Curator 어댑터는 출력 검증·실패 시 이전 게시 버전 유지 테스트와 함께 추가합니다.
+4. **P3-2 CLI Curator의 남은 운영 기능**을 먼저 확인하세요. Ollama로 되돌리지 마세요.
+5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
+6. CLI 상태/모델 선택, 생성 작업 ID·취소·멱등성, 생성 메타데이터를 보강한 뒤 검증·게시를 구현합니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
 8. 필요 시 Phase 2 운영 확장(비공개 저장소·대용량·작업 취소)을 별도 기능 단위로 진행합니다.
 
@@ -137,9 +141,10 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
 docs/api.md, docs/phase3-foundation-report.md를 읽고 현재 코드와 비교해라.
 Phase 1·2와 P3-1 수동 초안/버전/근거 스냅샷은 구현되어 있다. 먼저 빌드와 테스트로
-기준 상태(백엔드 48개, 프런트엔드 17개)를 확인하고 실패를 숨기지 마라.
-다음 작업은 backlog의 P3-2 Ollama Curator다. 기존 지식 영속 모델을 재사용하되
-AI 생성은 사람이 편집한 버전을 덮어쓰지 않고 별도 초안으로 만들어라.
+기준 상태(백엔드 65개 통과 + live opt-in 1개 skip, 프런트엔드 20개)를 확인하고 실패를 숨기지 마라.
+사용자는 Ollama 대신 로그인된 Codex/Claude Code CLI 사용을 선택했다. docs/cli-ai.md를 읽어라.
+별도 AI DRAFT·건별 전송 승인·출력 검사는 이미 구현되었다. P3-2의 남은 운영 기능을 완성해라.
+현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 이후 P3-3 검증·게시를 완성해라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
 사람 편집 보호, 검증 실패 시 이전 게시본 유지, Workspace 격리를 테스트해라.
 회사 자료 대신 synthetic fixture를 사용하고 외부 LLM은 승인 없이 호출하지 마라.
@@ -163,7 +168,7 @@ GitHub Actions는 만들거나 수정하지 마라. 각 완료 항목의 문서�
 로컬 빈 폴더는 가져오지 않습니다. 텍스트 추출은 500,000자까지이며 OCR/임베디드 문서 재귀 추출은 꺼져 있습니다.
 공개 HTTPS URL과 공개 GitHub 기본 브랜치만 지원하며 토큰·SSH·사내 HTTP는 미지원입니다.
 변경된 Source는 전체 스냅샷을 교체합니다. 지식이 인용한 원본만 당시 복사본을 보관하며 전체 원본 이력·Git diff는 Phase 5 범위입니다.
-지식은 수동 DRAFT만 저장하고 Markdown 원문으로 표시합니다. AI·검증·게시·폴더·지식 검색은 아직 없습니다.
+지식은 수동/AI DRAFT를 저장하고 Markdown 원문으로 표시합니다. 검증·게시·폴더·지식 검색은 아직 없습니다.
 근거 최신성은 조회 시 마지막 로컬 복사본과 비교하며 자동 갱신/의존 관계 전파는 아닙니다.
 단일 문서 추출은 JVM 내부에서 동기 실행되므로 악성 문서 격리/강제 종료가 필요합니다.
 별도 ArtifactStore·페이지네이션·OS 계정 간 인증·암호화·Windows 실행 검증은 남아 있습니다.

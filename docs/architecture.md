@@ -6,7 +6,7 @@
 
 단일 Spring Boot 프로세스의 Modular Monolith를 사용합니다.
 `library`는 Workspace와 원본 보관함을 소유합니다. Phase 2에서 `sources`, `ingestion`,
-`search`를 추가했고 Phase 3 P3-1에서 `knowledge`를 추가했습니다. AI·대화·자동 동기화 모듈은 후속 범위입니다.
+`search`를 추가했고 Phase 3에서 `knowledge`와 CLI Curator를 추가했습니다. 대화·자동 동기화 모듈은 후속 범위입니다.
 
 ```text
 frontend/src
@@ -31,8 +31,8 @@ backend/.../search
   adapter                 LuceneSearchIndex, JdbcSearchCatalog
 backend/.../knowledge
   domain                  Card, Version, Evidence, Citation 순수 record
-  application             KnowledgeService, KnowledgeStore 포트
-  adapter                 JDBC 영속 스냅샷/버전, REST
+  application             KnowledgeService, KnowledgeStore, CuratorService, CuratorModel 포트
+  adapter                 JDBC 영속 스냅샷/버전, REST, CliCuratorModel
 ```
 
 의존 방향은 웹 어댑터 → 애플리케이션 → 도메인/저장 포트입니다.
@@ -64,7 +64,7 @@ SQLite는 WAL, 외래 키, 5초 busy timeout을 사용합니다. 연결 풀은 1
 
 ## 후속 모듈과 경계
 
-표는 목표 역할입니다. knowledge는 수동 초안/버전/근거만 구현되었고 CuratorModel·게시 기능은 미구현입니다.
+표는 목표 역할입니다. knowledge는 수동/AI 초안·버전·근거·CuratorModel이 구현되었고 게시 기능은 미구현입니다.
 
 | 모듈 | 소유 데이터/역할 | 외부 연결 포트 |
 |---|---|---|
@@ -107,8 +107,9 @@ Vite 개발 서버가 동일 출처 프록시를 제공합니다.
 미리보기는 React 텍스트로 렌더링하므로 HTML/스크립트를 실행하지 않습니다.
 SQLite 이름 충돌은 409이며 업로드로 덮어쓰지 않습니다.
 
-현재 외부 LLM 호출은 없습니다. 후속 외부 Provider는 선택 및 전송 승인 없이
-사용할 수 없도록 Provider 정책 포트를 통과하게 합니다. GitHub Actions는 변경하지 않습니다.
+CLI AI 호출은 미리보기와 Provider/Workspace/버전/내용 SHA-256에 묶인 승인 후 실행합니다.
+사용자 로그인은 CLI가 처리하고 앱은 인증 파일을 읽지 않습니다. [CLI 경계/제약](cli-ai.md).
+GitHub Actions는 변경하지 않습니다.
 Phase 6에서 데스크톱 세션 토큰, sidecar origin, 인증서 서명·공증을 검증해야 합니다.
 
 ## Phase 2 동기화와 인덱스 일관성

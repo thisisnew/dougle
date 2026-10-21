@@ -15,7 +15,10 @@ public interface KnowledgeStore {
     String capture(String workspaceId, Material material);
     void create(String workspaceId, String id, String createdAt);
     boolean advance(String workspaceId, String id, int expectedVersion);
-    void append(String id, int number, String title, String markdown, String createdAt, List<Reference> references);
+    default void append(String id, int number, String title, String markdown, String createdAt, List<Reference> references) {
+        append(id, number, title, markdown, createdAt, references, true);
+    }
+    void append(String id, int number, String title, String markdown, String createdAt, List<Reference> references, boolean manuallyEdited);
     void delete(String workspaceId, String id);
     Optional<byte[]> snapshotContent(String workspaceId, String cardId, String snapshotId);
 }

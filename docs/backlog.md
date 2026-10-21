@@ -8,7 +8,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 ## 권장 순서와 공통 완료 조건
 
 1. 새 PC에서 기준 빌드/테스트 → 가상 Source 수집/검색 확인.
-2. P3-1은 완료. 기존 모델을 확인한 뒤 P3-2 Ollama Curator부터 진행.
+2. P3-1 완료, P3-2 CLI Curator 일부 구현. 최신 결정/검증은 [CLI AI](cli-ai.md)를 확인.
 3. P4 검색/LLM/SSE → P5 선택적 동기화 → P6 패키징 순서로 진행.
 4. P2 확장은 필요한 사용 시나리오에 따라 병행하되 보안 제한을 임의로 풀지 않기.
 
@@ -24,10 +24,13 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   기존 v2 DB 보존, Workspace 격리, 원본 삭제 후 지식/근거 상태 테스트.
   구현: v3 마이그레이션, 근거 스냅샷, 수동 DRAFT UI/API, 충돌 409, 삭제 독립성.
   근거 CURRENT는 사실 검증이 아니라 마지막 로컬 복사본과의 일치입니다. [검증 기록](phase3-foundation-report.md).
-- [ ] **P3-2: Ollama Curator.** 포트/어댑터 분리, 모델 선택·연결 상태·설정 UI,
+- [ ] **P3-2: 로그인된 CLI Curator.** 사용자 요청으로 Ollama 대신 Codex/Claude Code 사용.
+  구현: 포트/CLI 어댑터, 전송 미리보기·Provider/버전/내용 digest 승인, 별도 AI DRAFT,
+  JSON/길이/근거 ID 검사, 120초 제한, 기존 수동 버전 보호, 가상 자료 실제 Codex 호출.
+  남음: 모델 선택·연결 상태·설정 UI, 영속 생성 메타데이터, 작업 ID/취소/멱등성,
   제한된 근거 컨텍스트로 카드/Markdown 초안 생성. 출력 스키마·길이·근거 ID 검사,
   타임아웃/잘못된 JSON/모델 미설치/작업 실패 처리. 모델 이름은 업무 도메인과 독립.
-  mock 계약 테스트와 실제 로컬 모델 실행 검증을 구분해 기록.
+  mock 계약 테스트와 실제 CLI/외부 모델 실행 검증을 구분해 기록. [현재 상세](cli-ai.md).
 - [ ] **P3-3: 검증 후 게시.** 초안→검증→게시를 명시적으로 분리하고
   근거 없는 주장/추론은 확정 사실과 구별. 존재하지 않는 인용·변경된 원본 차단,
   문장과 근거 일치 검증 정책 및 사람 검토 경로 마련.
@@ -50,21 +53,21 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
 - `search/application/SearchService.java`: 시작 시 저장된 분석 결과로 재색인합니다.
   검색 또는 질문 때 원본 수집/LLM 분석을 다시 실행하는 구조로 바꾸지 마세요.
-- `knowledge/application/KnowledgeService.java`: 현재 저장은 전부 수동 DRAFT입니다.
-  AI 생성용 유스케이스/작성 출처를 분리하고 수동 버전의 불변성과 보호를 유지하세요.
+- `knowledge/application/KnowledgeService.java`: 수동 DRAFT와 별도 AI DRAFT를 저장합니다.
+  `CuratorService`는 추론 중 DB 연결을 점유하지 않습니다. 수동 버전의 불변성과 보호를 유지하세요.
 
 ## Phase 4 — 검색 확장·질문·SSE
 
 - [ ] **P4-1: 근거 검색.** 원본/게시 지식 검색 결합, 청크/인용 범위, 코드 심볼 관계 및
   지식 관계 인덱스/조회 추가. 현재는 이름·본문·심볼 텍스트 검색이며 관계 그래프 검색은 없음.
   여러 도메인 검색과 Workspace 격리 유지, 오래된 근거 표시, 무관한 자료/검색 결과 없음 테스트.
-- [ ] **P4-2: 대화 유스케이스.** `conversation`과 `LlmProvider` 포트, Ollama 스트림,
+- [ ] **P4-2: 대화 유스케이스.** `conversation`과 `LlmProvider` 포트, CLI Provider 스트림,
   컨텍스트/토큰 예산, 대화 기록·삭제 정책, 근거 중심 프롬프트를 구현.
   검색 결과의 악성 명령을 지시로 실행하지 않으며 근거 부족 시 답변 유보.
 - [ ] **P4-3: SSE UI/API.** 근거 이벤트를 먼저 전송한 뒤 답변 delta, 완료/오류 이벤트 전달.
   이벤트 형식·순서를 API 문서에 확정. 답변 중단/연결 해제 시 모델 요청·서버 작업 취소,
   Workspace 전환, 중복 요청, 부분 응답 실패, 모델 중단/재연결 정책 테스트.
-- [ ] **P4-4: 외부 Provider 승인.** 기본 Ollama, 외부 모델은 명시적 선택과
+- [ ] **P4-4: 채팅 Provider 승인.** CLI도 외부 모델이며 명시적 선택과
   전송 대상/범위 승인 후만 호출. 키는 OS 보안 저장소 사용, 로그/DB 평문 노출 금지.
   승인 거부/철회 시 전송 없음과 Provider 변경 시 재승인 테스트.
 
@@ -119,7 +122,9 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 기준 검증: 백엔드 48개 + 프런트엔드 17개, 전체 빌드/지식 재시작 smoke 성공.
+- 최신 자동 검증: 백엔드 65개 통과 + live opt-in 1개 skip, 프런트엔드 20개 통과, JAR 빌드 성공.
+- 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
+- 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
 - 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
 - 실제 JAR/재시작/검색과 공개 URL·GitHub 수집 통과: [Phase 2 보고서](phase2-report.md).
 - 측정: [performance-phase2.json](performance-phase2.json). 소규모 순차 측정이며 SLA가 아님.

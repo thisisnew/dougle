@@ -156,7 +156,7 @@ export default function App() {
           <button className={!original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button>
         </nav>
         <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>자료를 연결하고<br />문서와 코드의 근거를 찾아보세요.</p><span>PHASE 03 · 근거 연결 초안</span></div>
-        <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 안전하게 저장<small>외부 AI 전송 없음</small></span></div>
+        <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 자료 저장<small>AI 전송은 건별 승인</small></span></div>
       </aside>
 
       <main>

@@ -2,7 +2,7 @@
 
 기본 URL: `http://127.0.0.1:8787/api`
 
-지식 API는 수동 DRAFT 전용입니다. AI 생성·검증·게시 API는 아직 없습니다.
+지식 API는 수동/승인 기반 CLI AI DRAFT를 지원합니다. 의미 검증·게시 API는 아직 없습니다.
 
 모든 변경 요청은 `X-Forge-Client: 1` 헤더가 필요합니다.
 JSON 요청은 `Content-Type: application/json`을 사용합니다.
@@ -199,7 +199,7 @@ evidence[]: { snapshotId, entryId, sourceId, sourceName, sourceKind, sourceLocat
               path, name, contentHash, startLine, endLine, quote, freshness, capturedAt }
 ```
 
-모든 생성/편집은 `status=DRAFT`, `manuallyEdited=true`입니다. 의미적 검증이나 자동 게시는 없습니다.
+수동 생성/편집은 `status=DRAFT`, `manuallyEdited=true`입니다. AI 생성은 false입니다. 의미적 검증이나 자동 게시는 없습니다.
 이전 버전 조회에서도 `card`는 최신 요약이고 `version`이 요청한 과거 버전입니다.
 직접 업로드한 파일은 sourceId/sourceName/sourceKind/sourceLocation이 null이며 sourceRevision은 원본 SHA-256입니다.
 entryId는 캡처 당시 식별자이므로 동기화/삭제 뒤 존재하지 않을 수 있습니다.
@@ -214,3 +214,21 @@ CURRENT는 마지막 로컬 수집본 기준이며 외부 Source의 실시간 �
 Workspace 삭제는 해당 지식·버전·근거 복사본을 모두 삭제합니다.
 다른 Workspace의 파일/지식/스냅샷 접근은 404입니다. 유효하지 않은 범위/본문은 400,
 근거 원본 용량 초과는 413입니다. 생성/수정 실패는 스냅샷을 포함해 트랜잭션 전체를 롤백합니다.
+
+## CLI AI 초안
+
+접두사 `/workspaces/{workspaceId}/knowledge/{id}/generation`, 변경 헤더 필수.
+
+- `POST /preview` 요청 `{ "provider": "CODEX" }` 또는 `CLAUDE`.
+  응답 `{ provider, expectedVersion, digest, prompt }`. 외부 호출 없음.
+  최신 카드의 CURRENT 근거 인용문만 사용하며 파일명/경로/기존 Markdown은 전송하지 않습니다.
+- `POST` 요청 `{ "provider": "CODEX", "expectedVersion": 1, "digest": "미리보기 SHA-256", "approved": true }`.
+  201 Document: **다른 ID의 새 AI DRAFT**, 기존 카드/버전은 변경하지 않음.
+  결과 근거 E1…E10은 원본 카드의 근거 순서와 같으며 동일 스냅샷을 참조합니다.
+- 400 잘못된 Provider/요청, 403 승인 거부, 404 Workspace/카드 없음,
+  409 오래된 승인/근거 변경/동시 생성, 413 전송 프롬프트 16,000자 초과,
+  502 CLI/출력 검증 실패, 503 인증 필요/중단, 504 120초 제한. 오류에 CLI stderr/인증 정보는 포함하지 않음.
+- 모델 출력은 title(120자), claims(1~20), 각 text(2,000자)/evidenceIds를 검사합니다.
+  ID 존재는 의미적 사실 검증이 아닙니다. 모든 결과는 미검증으로만 저장합니다.
+- 동기 API이며 전역 한 작업만 허용합니다. 화면 종료/HTTP 연결 해제는 작업 취소가 아닙니다.
+  자동 재시도하지 마세요. 재요청은 별도 초안을 생성할 수 있습니다. 영속 작업 ID/취소는 후속입니다.
