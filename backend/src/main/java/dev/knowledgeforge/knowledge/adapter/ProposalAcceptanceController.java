@@ -12,12 +12,17 @@ public class ProposalAcceptanceController {
 
     public record Request(int expectedRevision, int expectedSourceVersion, int expectedResultVersion, String note, boolean confirmed) {}
     public record MergeRequest(int expectedRevision, int expectedSourceVersion, int expectedResultVersion,
-                               String note, boolean confirmed, String title, String markdown) {}
+                               String note, boolean confirmed, String title, String markdown, Boolean combineEvidence) {}
+
+    @GetMapping("/merge-preview")
+    public ProposalAcceptanceService.MergePreview preview(@PathVariable String workspaceId, @PathVariable String jobId) {
+        return service.preview(workspaceId, jobId);
+    }
 
     @PostMapping("/merge")
     public ProposalAcceptanceService.State merge(@PathVariable String workspaceId, @PathVariable String jobId, @RequestBody MergeRequest request) {
         return service.merge(workspaceId, jobId, request.expectedRevision(), request.expectedSourceVersion(),
-                request.expectedResultVersion(), request.note(), request.confirmed(), request.title(), request.markdown());
+                request.expectedResultVersion(), request.note(), request.confirmed(), request.title(), request.markdown(), Boolean.TRUE.equals(request.combineEvidence()));
     }
 
     @GetMapping

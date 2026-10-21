@@ -5,6 +5,9 @@
 
 ## 현재 구조
 
+근거 번호 통합은 `MergeEvidencePlanner`가 현재 번호를 보존하고 AI 스냅샷/행 범위를 연결합니다.
+미리보기와 저장 시 동일 규칙으로 계산하며 기존 v12 근거 연결 테이블을 사용합니다. [정책](evidence-merge.md).
+
 수동 부분 반영은 `ProposalAcceptanceService.merge`가 최종 편집 본문을 검사한 뒤
 `KnowledgeService.revise`와 MANUAL 채택 이력을 한 트랜잭션으로 저장합니다.
 생성 이후 사람 편집은 허용하되 최신 기대 버전·동일 근거 연결 검사를 유지합니다. [범위](proposal-merge.md).

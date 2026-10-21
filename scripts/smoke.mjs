@@ -222,11 +222,15 @@ try {
   assert.equal(manualJob.status, 'SUCCEEDED', manualJob.error)
   await api(`${adoptionPath}/versions`, 'POST', {
     expectedVersion: 2, title: 'Human title', markdown: 'Human paragraph [E1]',
+    citations: [{ entryId: file.id, startLine: 1, endLine: 1 }],
   })
   const manualPath = `${jobBase}/${manualJob.id}/acceptance`
+  const evidencePlan = await api(`${manualPath}/merge-preview`)
+  assert.deepEqual(evidencePlan.plan.mapping, [2])
+  assert.ok(evidencePlan.plan.generatedMarkdown.includes('[E2]'))
   const manualAcceptance = await api(`${manualPath}/merge`, 'POST', {
     expectedRevision: 0, expectedSourceVersion: 3, expectedResultVersion: 1, confirmed: true,
-    note: 'Synthetic selected content', title: 'Human title', markdown: 'Human paragraph [E1]\nSelected AI sentence [E1]',
+    note: 'Synthetic selected content', title: 'Human title', markdown: 'Human paragraph [E1]\nSelected AI sentence [E2]', combineEvidence: true,
   })
   assert.equal(manualAcceptance.acceptance.mode, 'MANUAL')
   assert.equal(manualAcceptance.acceptance.appliedVersion, 4)
@@ -243,7 +247,9 @@ try {
   assert.deepEqual(await api(manualPath), manualAcceptance)
   assert.equal((await api(adoptionPath)).version.number, 4)
   assert.equal((await api(adoptionPath)).version.manuallyEdited, true)
-  assert.equal((await api(adoptionPath)).version.markdown, 'Human paragraph [E1]\nSelected AI sentence [E1]')
+  assert.equal((await api(adoptionPath)).version.markdown, 'Human paragraph [E1]\nSelected AI sentence [E2]')
+  assert.deepEqual((await api(adoptionPath)).version.evidence.map(item => item.snapshotId), evidencePlan.plan.evidence.map(item => item.snapshotId))
+  assert.equal((await api(`${adoptionPath}/versions/3`)).version.evidence.length, 1)
   assert.equal((await api(`${adoptionPath}/versions/2`)).version.manuallyEdited, false)
   assert.equal((await api(`${adoptionPath}/versions/3`)).version.markdown, 'Human paragraph [E1]')
   assert.equal((await api(`${adoptionPath}/versions/1`)).version.markdown, adoptionDraft.version.markdown)
@@ -384,7 +390,8 @@ try {
       'read-only generation comparison keeps base and initial AI version after later edits',
       'proposal rejection persists across restart and reopening preserves history without document changes',
       'explicit proposal acceptance persists as a new unverified draft while prior version and publication survive restart',
-      'manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart'],
+      'manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart',
+      'explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

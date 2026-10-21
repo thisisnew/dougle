@@ -74,7 +74,7 @@ Vite의 동일 출처 프록시가 API를 연결합니다.
 ## 사용 방법
 
 완료된 AI 작업에서 **원래 문서와 비교**를 누르면 생성 당시·현재·AI 최초 결과를 함께 확인합니다.
-비교는 읽기 전용이며 자동 덮어쓰기는 없습니다. [비교 안내](docs/generation-comparison.md). 별도 [처리 기록](docs/proposal-decisions.md)에서 거절·재검토 이유를 저장하고, [전체 채택](docs/proposal-acceptance.md)에서 미편집 제안을 새 초안으로 반영할 수 있습니다. 사람 편집을 남기면서 일부만 추가하려면 [부분 반영 편집](docs/proposal-merge.md)을 사용하세요.
+비교는 읽기 전용이며 자동 덮어쓰기는 없습니다. [비교 안내](docs/generation-comparison.md). 별도 [처리 기록](docs/proposal-decisions.md)에서 거절·재검토 이유를 저장하고, [전체 채택](docs/proposal-acceptance.md)에서 미편집 제안을 새 초안으로 반영할 수 있습니다. 사람 편집을 남기면서 일부만 추가하려면 [부분 반영 편집](docs/proposal-merge.md)을 사용하세요. 현재 수집본과 일치하는 근거끼리는 [번호 통합](docs/evidence-merge.md)도 선택할 수 있습니다.
 
 1. **Workspace 만들기**에서 프로젝트 이름을 입력합니다.
 2. **새 폴더**를 만들고 폴더 이름을 눌러 들어갑니다.

@@ -57,7 +57,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   추가 구현: 거절·재검토 추가 전용 이력, 예상 문서 버전/처리 revision 검사, v10 마이그레이션. [범위](proposal-decisions.md).
   추가 구현: 충돌 없는 최초 결과의 명시적 전체 채택·새 DRAFT/채택 이력 원자적 저장·v11 이관. [범위](proposal-acceptance.md).
   추가 구현: 선택한 AI 글 추가·수동 편집·최신 버전 재대조·편집 보존 모달·MANUAL 채택 이력·v12 이관. [범위](proposal-merge.md).
-  남음: 근거가 달라진 문서의 인용 재연결, 줄 단위 diff/충돌 표시, 임시 편집 복구 저장.
+  추가 구현: CURRENT 근거 번호 통합·AI 인용 변환 미리보기·명시적 선택 저장·기존 번호/버전 보존. [범위](evidence-merge.md).
+  남음: 오래된 근거의 새 원본 교체, 줄 단위 diff/충돌 표시, 임시 편집 복구 저장.
 
 ### 다음 작업의 우선순위
 
@@ -71,7 +72,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
   현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
   원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=9`, FK cascade,
+- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=12`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
@@ -146,11 +147,11 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 158개 통과 + live opt-in 1개 skip, 프런트엔드 87개 통과(worker 2개), JAR 빌드 성공.
-- 최신 구현/검증: [수동 부분 반영](proposal-merge.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 167개 통과 + live opt-in 1개 skip, 프런트엔드 90개 통과(worker 2개), JAR 빌드 성공.
+- 최신 구현/검증: [근거 번호 통합](evidence-merge.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
-- 최신 보고서: [수동 부분 반영](proposal-merge.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
+- 최신 보고서: [근거 번호 통합](evidence-merge.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
 - 실제 JAR/재시작/검색과 공개 URL·GitHub 수집 통과: [Phase 2 보고서](phase2-report.md).
 - 측정: [performance-phase2.json](performance-phase2.json). 소규모 순차 측정이며 SLA가 아님.
 - 문서만 바꾼 작업에서 이전 테스트를 이번에 재실행한 것처럼 기록하지 않기.

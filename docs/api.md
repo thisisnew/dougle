@@ -1,5 +1,8 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+근거 통합: `GET /api/workspaces/{workspaceId}/generation-jobs/{jobId}/acceptance/merge-preview`.
+기존 merge POST의 선택 필드 `combineEvidence: true`로 반영합니다. [번호 변환·제한](evidence-merge.md).
+
 수동 부분 반영: `POST /api/workspaces/{workspaceId}/generation-jobs/{jobId}/acceptance/merge`.
 [본문·버전·근거 계약](proposal-merge.md). 응답 채택 기록의 `mode`는 FULL 또는 MANUAL입니다.
 

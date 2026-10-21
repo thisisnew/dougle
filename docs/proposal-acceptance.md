@@ -83,7 +83,7 @@ acceptance 항목은 `sourceVersion,resultVersion,appliedVersion,decisionRevisio
 Workspace 격리·삭제, HTTP 헤더와 v10→v11 이관·재시작을 검사합니다.
 UI는 확인/이유 필수, 버전 바인딩, 오류 시 입력 보존, 상태별 차단, 중복 클릭·종료 취소를 검사합니다.
 
-동일 근거의 부분 선택·수동 편집·재대조 저장은 [후속 구현](proposal-merge.md)했습니다. 인용 재연결·줄 단위 충돌 표시는 남았습니다. 자동 폴링/Git 변경 기반 제안도 아직 없습니다.
+동일 근거의 부분 선택·수동 편집·재대조 저장은 [후속 구현](proposal-merge.md)했습니다. CURRENT 근거 번호 통합도 [후속 구현](evidence-merge.md)했습니다. 오래된 근거 교체·줄 단위 충돌 표시는 남았습니다. 자동 폴링/Git 변경 기반 제안도 아직 없습니다.
 실제 AI 호출·브라우저 시각 QA·Mac 설치형 검증은 이번 범위가 아닙니다.
 업데이트 전 앱을 종료하고 데이터 디렉터리 전체를 백업하세요. 현재 DB는 v12이며 구버전 앱 역이동은 지원하지 않습니다.
 

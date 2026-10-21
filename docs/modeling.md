@@ -78,7 +78,7 @@ flowchart TD
 | 원본 삭제 후에도 지식 근거 보존 | 구현됨. 근거의 원본 ID에 삭제 연쇄 FK 없음 | [DB 정의](../backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java), [지식 저장](../backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcKnowledgeStore.java) |
 | 편집 충돌 방지·이전 버전 유지 | 구현됨. 기대 버전이 다르면 409 | [KnowledgeService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/KnowledgeService.java) |
 | 새 지식 검증 후 게시 | 일부 구현. 사람 검토·인용 번호·최신성 검사, 자동 사실 판정은 없음 | [PublicationService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/PublicationService.java) |
-| AI가 사람이 쓴 글을 갱신 | 별도 AI 카드 생성 후 전체 채택 또는 동일 근거의 수동 부분 반영으로 다음 DRAFT 저장. 근거 재연결은 예정 | [ProposalAcceptanceService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalAcceptanceService.java) |
+| AI가 사람이 쓴 글을 갱신 | 별도 AI 카드 생성 후 전체 채택 또는 동일 근거의 수동 부분 반영으로 다음 DRAFT 저장. CURRENT 근거 번호 통합도 구현. 오래된 근거의 새 원본 교체는 예정 | [ProposalAcceptanceService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalAcceptanceService.java) |
 | Source 자동 폴링 | 미구현. 설정 열은 있지만 기본 OFF이며 수동 동기화만 제공 | [SourceService](../backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java) |
 | 질문/검색 때 재분석 | 검색은 기존 색인 조회. 채팅 질문 기능은 아직 없음 | [SearchService](../backend/src/main/java/dev/knowledgeforge/search/application/SearchService.java) |
 | Git 변경 파일만 반영 | 미구현. revision이 같으면 생략, 다르면 전체 수집 스냅샷 교체 | [SourceService](../backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java), [JdbcSourceStore](../backend/src/main/java/dev/knowledgeforge/sources/adapter/JdbcSourceStore.java) |
@@ -90,13 +90,13 @@ flowchart TD
 
 위 보호 규칙은 `KnowledgeIntegrationTest`, `PublicationIntegrationTest`, `SourceIntegrationTest`,
 `GenerationJobIntegrationTest`, `OrganizationIntegrationTest`, `GenerationComparisonIntegrationTest`와 대조했습니다.
-실제 실행 결과는 [최신 검증](proposal-merge.md), 후속 설계는 [전체 설계도](design-map.md)를 참고하세요.
+실제 실행 결과는 [최신 검증](evidence-merge.md), 후속 설계는 [전체 설계도](design-map.md)를 참고하세요.
 
 ## 5. 앞으로 더할 모델 — 아직 미구현
 
 현재는 작업의 원래 카드/기준 버전/결과 카드 연결로 [읽기 전용 비교](generation-comparison.md)를 제공합니다.
 거절·재검토는 별도 추가 전용 이력으로 구현했습니다. [모델·코드 대조](proposal-decisions.md).
-충돌 없는 전체 채택은 구현했습니다. [새 초안·채택 이력의 원자적 저장](proposal-acceptance.md). 동일 근거의 [수동 부분 반영](proposal-merge.md)도 구현했습니다. 근거 재연결은 아직 없습니다.
+충돌 없는 전체 채택은 구현했습니다. [새 초안·채택 이력의 원자적 저장](proposal-acceptance.md). 동일 근거의 [수동 부분 반영](proposal-merge.md)도 구현했습니다. CURRENT 근거의 [번호 통합](evidence-merge.md)도 구현했습니다. 오래된 근거의 새 원본 교체는 아직 없습니다.
 
 | 계획 | 목적 |
 |---|---|

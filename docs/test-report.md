@@ -1,6 +1,6 @@
 # Phase 1 검증 결과
 
-최신 기능 검증은 [수동 부분 반영 보고서](proposal-merge.md)를 보세요.
+최신 기능 검증은 [근거 번호 통합 보고서](evidence-merge.md)를 보세요.
 
 최신 도구 버전·전체 회귀 검증은 [도구 갱신 보고서](toolchain-report.md)를 보세요.
 

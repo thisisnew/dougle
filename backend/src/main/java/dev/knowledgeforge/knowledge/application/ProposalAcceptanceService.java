@@ -15,16 +15,29 @@ public class ProposalAcceptanceService {
     private final GenerationComparisonService comparison;
     private final KnowledgeService knowledge;
     private final ProposalAcceptanceStore store;
+    private final MergeEvidencePlanner planner;
 
     public ProposalAcceptanceService(ProposalDecisionService decisions, GenerationComparisonService comparison,
-                                     KnowledgeService knowledge, ProposalAcceptanceStore store) {
+                                     KnowledgeService knowledge, ProposalAcceptanceStore store, MergeEvidencePlanner planner) {
         this.decisions = decisions;
         this.comparison = comparison;
         this.knowledge = knowledge;
         this.store = store;
+        this.planner = planner;
     }
 
     public record State(String status, int decisionRevision, ProposalAcceptance acceptance) {}
+    public record MergePreview(int sourceVersion, int resultVersion, MergeEvidencePlanner.Plan plan) {}
+
+    public MergePreview preview(String workspace, String job) {
+        var documents = comparison.compare(workspace, job);
+        if (documents.generated().card().latestVersion() != 1) {
+            throw new LibraryException(409, "AI 결과 카드가 편집되었습니다. 최초 결과의 번호를 통합할 수 없습니다.");
+        }
+        return new MergePreview(documents.current().version().number(), 1,
+                planner.plan(documents.current().version().evidence(), documents.generated().version().evidence(),
+                        documents.generated().version().markdown()));
+    }
 
     public State state(String workspace, String job) {
         var history = decisions.history(workspace, job);
@@ -35,16 +48,21 @@ public class ProposalAcceptanceService {
 
     public State accept(String workspace, String job, int expectedRevision, int expectedSourceVersion,
                         int expectedResultVersion, String note, boolean confirmed) {
-        return apply(workspace, job, expectedRevision, expectedSourceVersion, expectedResultVersion, note, confirmed, false, null, null);
+        return apply(workspace, job, expectedRevision, expectedSourceVersion, expectedResultVersion, note, confirmed, false, false, null, null);
     }
 
     public State merge(String workspace, String job, int expectedRevision, int expectedSourceVersion,
                        int expectedResultVersion, String note, boolean confirmed, String title, String markdown) {
-        return apply(workspace, job, expectedRevision, expectedSourceVersion, expectedResultVersion, note, confirmed, true, title, markdown);
+        return merge(workspace, job, expectedRevision, expectedSourceVersion, expectedResultVersion, note, confirmed, title, markdown, false);
+    }
+
+    public State merge(String workspace, String job, int expectedRevision, int expectedSourceVersion,
+                       int expectedResultVersion, String note, boolean confirmed, String title, String markdown, boolean combineEvidence) {
+        return apply(workspace, job, expectedRevision, expectedSourceVersion, expectedResultVersion, note, confirmed, true, combineEvidence, title, markdown);
     }
 
     private State apply(String workspace, String job, int expectedRevision, int expectedSourceVersion,
-                        int expectedResultVersion, String note, boolean confirmed, boolean manual, String title, String markdown) {
+                        int expectedResultVersion, String note, boolean confirmed, boolean manual, boolean combineEvidence, String title, String markdown) {
         var state = state(workspace, job);
         if (!"OPEN".equals(state.status()) || state.decisionRevision() != expectedRevision) {
             throw new LibraryException(409, "이미 채택했거나 처리 상태가 변경되었습니다. 거절한 제안은 먼저 재검토로 돌리세요.");
@@ -60,8 +78,10 @@ public class ProposalAcceptanceService {
                 || generated.card().latestVersion() != expectedResultVersion || expectedResultVersion != 1) {
             throw new LibraryException(409, "문서 버전이 다르거나 결과 카드가 편집되었습니다. 최신 비교를 다시 확인하세요.");
         }
-        var evidence = generated.version().evidence();
-        if (evidence.isEmpty() || !evidence.equals(current.version().evidence())
+        var evidence = manual && combineEvidence
+                ? planner.plan(current.version().evidence(), generated.version().evidence(), generated.version().markdown()).evidence()
+                : generated.version().evidence();
+        if (evidence.isEmpty() || (!combineEvidence && !evidence.equals(current.version().evidence()))
                 || evidence.stream().anyMatch(item -> !"CURRENT".equals(item.freshness()))) {
             throw new LibraryException(409, "근거가 변경·삭제되었거나 연결이 다릅니다. 새 근거로 다시 작성하세요.");
         }
@@ -84,7 +104,7 @@ public class ProposalAcceptanceService {
         }
         if (!found) throw new LibraryException(400, "반영할 본문에 [E1] 형식의 근거 인용이 필요합니다.");
         var applied = manual
-                ? knowledge.revise(workspace, current.card().id(), expectedSourceVersion, title, markdown, null)
+                ? knowledge.reviseWithEvidence(workspace, current.card().id(), expectedSourceVersion, title, markdown, evidence)
                 : knowledge.acceptGenerated(workspace, current.card().id(), expectedSourceVersion, generated);
         store.save(workspace, job, new ProposalAcceptance(expectedSourceVersion, 1, applied.version().number(),
                 expectedRevision, note.strip(), Instant.now().toString(), manual ? "MANUAL" : "FULL"));

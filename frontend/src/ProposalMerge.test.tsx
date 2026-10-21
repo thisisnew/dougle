@@ -120,3 +120,61 @@ it('저장 중 닫기·재조회·중복 저장을 차단하고 종료 시 요�
   view.unmount()
   expect(signal.aborted).toBe(true)
 })
+
+it('근거 통합을 명시적으로 선택하면 AI 번호만 변환하고 추가 확인 후 저장한다', async () => {
+  const documents = { ...comparison, current: { ...original, version: { ...original.version,
+    evidence: [{ ...evidence[0], snapshotId: 'new-snapshot' }] } } }
+  const preview = { sourceVersion: 2, resultVersion: 1, plan: {
+    mapping: [2], evidence: [...documents.current.version.evidence, ...evidence], generatedMarkdown: 'Useful AI sentence [E2]',
+  } }
+  api.mockResolvedValueOnce(documents).mockResolvedValueOnce(open).mockResolvedValueOnce(preview).mockResolvedValueOnce(accepted)
+  render(<ProposalMerge {...props} />)
+  await screen.findByLabelText('반영할 Markdown')
+  expect(api).toHaveBeenCalledTimes(2)
+  await userEvent.click(screen.getByRole('button', { name: '근거 번호 통합 미리보기' }))
+  expect(await screen.findByText('AI [E1] → 통합 [E2]')).toBeInTheDocument()
+  expect(screen.getByLabelText('선택할 AI 원문')).toHaveValue('Useful AI sentence [E2]')
+  expect(screen.getByLabelText('반영할 Markdown')).toHaveValue('Human text [E1]')
+  const source = screen.getByLabelText('선택할 AI 원문') as HTMLTextAreaElement
+  source.setSelectionRange(0, source.value.length); fireEvent.select(source)
+  await userEvent.click(screen.getByRole('button', { name: '선택한 AI 문장 추가' }))
+  await userEvent.type(screen.getByLabelText('부분 반영 이유'), 'combined sources')
+  await userEvent.click(screen.getByRole('checkbox', { name: /최신 문서/ }))
+  const submit = screen.getByRole('button', { name: '편집한 내용을 새 초안으로 반영' })
+  expect(submit).toBeDisabled()
+  await userEvent.click(screen.getByRole('checkbox', { name: /변환표를 확인/ }))
+  await userEvent.click(submit)
+  await screen.findByText(/이미 채택 완료/)
+  expect(JSON.parse(api.mock.calls[3][1]!.body as string)).toMatchObject({
+    combineEvidence: true, expectedSourceVersion: 2, markdown: 'Human text [E1]\n\nUseful AI sentence [E2]',
+  })
+})
+
+it('번호 통합 미리보기 실패나 버전 변경 시 편집을 보존하고 통합 저장을 막는다', async () => {
+  api.mockResolvedValueOnce(comparison).mockResolvedValueOnce(open)
+    .mockResolvedValueOnce({ sourceVersion: 3, resultVersion: 1, plan: { evidence, mapping: [1], generatedMarkdown: 'AI [E1]' } })
+  render(<ProposalMerge {...props} />)
+  await edit()
+  await userEvent.click(screen.getByRole('button', { name: '근거 번호 통합 미리보기' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('문서 버전이 달라졌습니다')
+  expect(screen.getByLabelText('반영할 Markdown')).toHaveValue('Human text [E1]\nchosen text')
+  expect(screen.queryByLabelText('근거 번호 변환표')).not.toBeInTheDocument()
+  expect(screen.getByRole('checkbox')).not.toBeChecked()
+})
+
+it('번호 확인 후 본문 수정과 재조회는 통합 동의를 해제한다', async () => {
+  const preview = { sourceVersion: 2, resultVersion: 1, plan: { evidence, mapping: [1], generatedMarkdown: 'AI [E1]' } }
+  api.mockResolvedValueOnce(comparison).mockResolvedValueOnce(open).mockResolvedValueOnce(preview)
+    .mockResolvedValueOnce(comparison).mockResolvedValueOnce(open)
+  render(<ProposalMerge {...props} />)
+  await screen.findByLabelText('반영할 Markdown')
+  await userEvent.click(screen.getByRole('button', { name: '근거 번호 통합 미리보기' }))
+  await screen.findByLabelText('근거 번호 변환표')
+  await userEvent.click(screen.getByRole('checkbox', { name: /변환표를 확인/ }))
+  await userEvent.type(screen.getByLabelText('반영할 Markdown'), ' revised')
+  expect(screen.getByRole('checkbox', { name: /변환표를 확인/ })).not.toBeChecked()
+  await userEvent.click(screen.getByRole('button', { name: '최신 비교 다시 불러오기' }))
+  await waitFor(() => expect(api).toHaveBeenCalledTimes(5))
+  expect(screen.queryByLabelText('근거 번호 변환표')).not.toBeInTheDocument()
+  expect(screen.getByLabelText('반영할 Markdown')).toHaveValue('Human text [E1] revised')
+})

@@ -353,4 +353,91 @@ class GenerationComparisonIntegrationTest {
         mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json").content(body))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.acceptance.mode").value("MANUAL"));
     }
+
+    @Test
+    void combinesEvidenceWithoutRenumberingHumanTextOrChangingHistoricalDocuments() {
+        String other = library.upload(workspace, null, "new.txt", "new synthetic evidence".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "human title", "human new evidence [E1]", List.of(new Citation(other, 1, 1)));
+        var preview = acceptance.preview(workspace, "job");
+        assertThat(preview.sourceVersion()).isEqualTo(2);
+        assertThat(preview.plan().mapping()).containsExactly(2);
+        assertThat(preview.plan().generatedMarkdown()).isEqualTo("generated fixture [E2]");
+        assertThat(preview.plan().evidence()).extracting(item -> item.entryId()).containsExactly(other, entry);
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(2);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "no opt in", true, "human title", "human [E1] AI [E2]"));
+        var accepted = acceptance.merge(workspace, "job", 0, 2, 1, "explicit union", true,
+                "human title", "human new evidence [E1]\ngenerated fixture [E2]", true);
+        assertThat(accepted.acceptance().appliedVersion()).isEqualTo(3);
+        assertThat(knowledge.get(workspace, original, 3).version().evidence()).isEqualTo(preview.plan().evidence());
+        assertThat(knowledge.get(workspace, original, 2).version().evidence()).hasSize(1);
+        assertThat(knowledge.get(workspace, result, 1).version().markdown()).isEqualTo("generated fixture [E1]");
+        assertThat(publication.state(workspace, original).review()).isNull();
+    }
+
+    @Test
+    void reusesMatchingSnapshotAndRangeButPreservesHumanDuplicateOrdinals() {
+        String other = library.upload(workspace, null, "order.txt", "other synthetic".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "order", "human [E1] [E2] [E3]",
+                List.of(new Citation(other, 1, 1), new Citation(entry, 1, 1), new Citation(entry, 1, 1)));
+        var plan = acceptance.preview(workspace, "job").plan();
+        assertThat(plan.mapping()).containsExactly(2);
+        assertThat(plan.evidence()).hasSize(3);
+        assertThat(plan.generatedMarkdown()).isEqualTo("generated fixture [E2]");
+    }
+
+    @Test
+    void combinedEvidenceRejectsChangedOrMissingMaterialsAndTooManyReferences() {
+        var citations = new java.util.ArrayList<Citation>();
+        for (int index = 0; index < 10; index++) {
+            String added = library.upload(workspace, null, "extra-" + index + ".txt", ("synthetic " + index).getBytes()).id();
+            citations.add(new Citation(added, 1, 1));
+        }
+        knowledge.revise(workspace, original, 1, "many", "human [E1]", citations);
+        fails(409, () -> acceptance.preview(workspace, "job"));
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "too many", true, "many", "human [E1] AI [E11]", true));
+        knowledge.revise(workspace, original, 2, "fewer", "human [E1]", List.of(citations.getFirst()));
+        jdbc.update("UPDATE entry SET content=? WHERE id=?", "changed".getBytes(), entry);
+        fails(409, () -> acceptance.preview(workspace, "job"));
+        library.deleteEntry(workspace, entry);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 3, 1, "missing", true, "fewer", "human [E1] AI [E2]", true));
+    }
+
+    @Test
+    void combinedEvidenceStillChecksVersionsCitationNumbersAndWorkspace() {
+        fails(404, () -> acceptance.preview(library.createWorkspace("other").id(), "job"));
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "stale", true, "title", "AI [E1]", true));
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "bad", true, "title", "AI [E2]", true));
+        jdbc.update("UPDATE knowledge_version SET markdown='bad [E99]' WHERE card_id=?", result);
+        fails(400, () -> acceptance.preview(workspace, "job"));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+    }
+
+    @Test
+    void combinedEvidenceRollbackDoesNotLeaveNewReferences() {
+        String other = library.upload(workspace, null, "rollback.txt", "synthetic".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "human", "human [E1]", List.of(new Citation(other, 1, 1)));
+        jdbc.execute("CREATE TRIGGER fail_combined BEFORE INSERT ON proposal_acceptance BEGIN SELECT RAISE(ABORT,'synthetic'); END");
+        try {
+            assertThatThrownBy(() -> acceptance.merge(workspace, "job", 0, 2, 1, "note", true, "human", "human [E1] AI [E2]", true))
+                    .isInstanceOf(RuntimeException.class);
+            assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(2);
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_evidence WHERE card_id=? AND version=3", Integer.class, original)).isZero();
+        } finally {
+            jdbc.execute("DROP TRIGGER fail_combined");
+        }
+    }
+
+    @Test
+    void exposesReadOnlyMappingPreviewAndExplicitCombinedMerge() throws Exception {
+        String other = library.upload(workspace, null, "http.txt", "synthetic".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "human", "human [E1]", List.of(new Citation(other, 1, 1)));
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/acceptance";
+        mvc.perform(get(path + "/merge-preview")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.plan.mapping[0]").value(2)).andExpect(jsonPath("$.sourceVersion").value(2));
+        String body = """
+                {"expectedRevision":0,"expectedSourceVersion":2,"expectedResultVersion":1,"note":"synthetic","confirmed":true,"title":"human","markdown":"human [E1] AI [E2]","combineEvidence":true}
+                """;
+        mvc.perform(post(path + "/merge").header("X-Forge-Client", "1").contentType("application/json").content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.acceptance.appliedVersion").value(3));
+    }
 }
