@@ -61,13 +61,28 @@ public class CliCuratorModel implements CuratorModel {
 
     @Override
     public String generate(Provider provider, String prompt, String requestedModel) {
+        return generateInternal(provider, prompt, requestedModel, null);
+    }
+
+    @Override
+    public String generateWithText(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
+        return generateInternal(provider, prompt, requestedModel, provider == Provider.CLAUDE ? text : null);
+    }
+
+    private String generateInternal(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
         String selectedModel = CuratorSettings.normalize(requestedModel);
         Path directory = null;
         try {
             directory = Files.createTempDirectory("forge-curator-");
             Files.writeString(directory.resolve("schema.json"), SCHEMA);
             List<String> command = command(provider, directory, selectedModel);
-            String stdout = run(command, directory, prompt);
+            ClaudeTextStream stream = text == null ? null : new ClaudeTextStream(text);
+            if (stream != null) {
+                command.set(command.indexOf("--output-format") + 1, "stream-json");
+                command.addAll(List.of("--verbose", "--include-partial-messages"));
+            }
+            String stdout = run(command, directory, prompt, timeout, stream);
+            if (stream != null) return stream.result();
             if (provider == Provider.CODEX) {
                 Path output = directory.resolve("answer.json");
                 if (!Files.isRegularFile(output) || Files.size(output) > 65536) throw new IOException();
@@ -130,6 +145,10 @@ public class CliCuratorModel implements CuratorModel {
     }
 
     String run(List<String> command, Path directory, String prompt, Duration limit) throws IOException {
+        return run(command, directory, prompt, limit, null);
+    }
+
+    private String run(List<String> command, Path directory, String prompt, Duration limit, ClaudeTextStream stream) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(command).directory(directory.toFile());
         builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
                 "SYSTEMROOT", "SystemRoot", "WINDIR", "CODEX_HOME"));
@@ -137,14 +156,15 @@ public class CliCuratorModel implements CuratorModel {
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
         var executor = Executors.newVirtualThreadPerTaskExecutor();
         try {
-            var stdout = executor.submit(() -> read(process.getInputStream(), process));
+            var stdout = executor.submit(() -> stream == null ? read(process.getInputStream(), process) : readStream(process.getInputStream(), stream));
             var stderr = executor.submit(() -> read(process.getErrorStream(), process));
             var input = executor.submit(() -> {
-                try (var stream = process.getOutputStream()) { stream.write(prompt.getBytes(StandardCharsets.UTF_8)); }
+                try (var stdin = process.getOutputStream()) { stdin.write(prompt.getBytes(StandardCharsets.UTF_8)); }
                 return true;
             });
             long deadline = System.nanoTime() + limit.toNanos();
             while (!process.waitFor(100, TimeUnit.MILLISECONDS)) {
+                if (stdout.isDone()) stdout.get();
                 process.descendants().forEach(descendants::add);
                 if (System.nanoTime() >= deadline) throw new LibraryException(504, "AI CLI 응답 제한 시간을 초과했습니다. 기존 지식은 유지됩니다.");
                 Path output = directory.resolve("answer.json");
@@ -204,5 +224,26 @@ public class CliCuratorModel implements CuratorModel {
             bytes.write(buffer, 0, count);
         }
         return bytes.toString(StandardCharsets.UTF_8);
+    }
+
+    private String readStream(InputStream input, ClaudeTextStream stream) throws IOException {
+        ByteArrayOutputStream line = new ByteArrayOutputStream();
+        int total = 0;
+        byte[] buffer = new byte[4096];
+        int count;
+        while ((count = input.read(buffer)) != -1) {
+            total += count;
+            if (total > 262144) throw new IOException("CLI stream limit");
+            for (int offset = 0; offset < count; offset++) {
+                if (buffer[offset] == '\n') {
+                    stream.accept(line.toString(StandardCharsets.UTF_8)); line.reset();
+                } else {
+                    if (line.size() >= 65536) throw new IOException("CLI line limit");
+                    line.write(buffer[offset]);
+                }
+            }
+        }
+        if (line.size() > 0) stream.accept(line.toString(StandardCharsets.UTF_8));
+        return "";
     }
 }

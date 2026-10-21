@@ -1,5 +1,8 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+Claude 임시 출력은 **실행 중 메모리 문자열**이며 테이블/지식/답변 이력으로 저장하지 않습니다.
+`AnswerJobService.partial → SSE partial → 미검증 임시 영역`으로 보내고 최종/실패/중단 때 지웁니다. [코드 대조](partial-answer.md).
+
 SSE 화면은 새 데이터를 저장하지 않습니다. `AnswerJobsPanel → observeAnswerJob`이 기존 작업을 읽고 상태를 교체합니다.
 Workspace·묶음 전환 때 화면/관측만 초기화하며 서버 작업은 명시적으로 중단해야 합니다. [UI 코드 대조](answer-events-ui.md).
 

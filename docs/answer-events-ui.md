@@ -1,5 +1,7 @@
 # 답변 상태가 자동으로 바뀌는 화면
 
+후속 [Claude 미검증 임시 출력](partial-answer.md)을 추가했습니다. 아래는 상태 UI 도입 당시 기록이며 Codex는 여전히 완료 답변만 표시합니다.
+
 2026-10-22 · SQLite v16 유지. [SSE API 계약](answer-events.md)은 그대로입니다.
 
 ## 사용법 — 세 가지만 기억하세요

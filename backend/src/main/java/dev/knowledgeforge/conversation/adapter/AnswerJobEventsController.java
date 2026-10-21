@@ -50,6 +50,7 @@ public class AnswerJobEventsController {
             long deadline = System.nanoTime() + 55_000_000_000L;
             long heartbeat = System.nanoTime();
             AnswerJob previous = null;
+            String previousText = "";
             while (!Thread.currentThread().isInterrupted()) {
                 var current = jobs.get(workspaceId, id);
                 if (!current.equals(previous)) {
@@ -59,6 +60,11 @@ public class AnswerJobEventsController {
                 if (!current.active()) {
                     emitter.send(SseEmitter.event().name("done").data(Map.of("reason", "terminal")));
                     break;
+                }
+                var partial = jobs.partial(workspaceId, id);
+                if (partial != null && !partial.text().equals(previousText)) {
+                    emitter.send(SseEmitter.event().name("partial").data(partial));
+                    previousText = partial.text();
                 }
                 long now = System.nanoTime();
                 if (now >= deadline) {

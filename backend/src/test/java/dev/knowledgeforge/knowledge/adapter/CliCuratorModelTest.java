@@ -34,6 +34,35 @@ class CliCuratorModelTest {
     }
 
     @Test
+    void claudeDeliversPartialBeforeProcessExitAndRetainsStructuredResult() throws Exception {
+        String events = String.join("\n", ClaudeTextStreamTest.START, ClaudeTextStreamTest.BLOCK, ClaudeTextStreamTest.DELTA);
+        var model = fixture("case \"$*\" in *'--output-format stream-json'*'--include-partial-messages'*) ;; *) exit 9;; esac\n"
+                + "cat >/dev/null\nprintf '%s\\n' '" + events + "'\nsleep 1\nprintf '%s\\n' '" + ClaudeTextStreamTest.RESULT + "'\n", Duration.ofSeconds(5));
+        var texts = new java.util.concurrent.CopyOnWriteArrayList<String>();
+        var entered = new java.util.concurrent.CountDownLatch(1);
+        var result = new java.util.concurrent.CompletableFuture<String>();
+        var worker = Thread.ofVirtual().start(() -> {
+            try { result.complete(model.generateWithText(Provider.CLAUDE, "synthetic", "", text -> { texts.add(text); entered.countDown(); })); }
+            catch (Throwable error) { result.completeExceptionally(error); }
+        });
+        try {
+            assertThat(entered.await(3, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+            assertThat(result.isDone()).isFalse();
+            assertThat(texts).containsExactly("가상");
+            assertThat(result.get(5, java.util.concurrent.TimeUnit.SECONDS)).contains("claims");
+        } finally { worker.interrupt(); worker.join(5000); }
+    }
+
+    @Test
+    void streamProtocolFailureStopsChildPromptlyWithoutLeakingOutput() throws Exception {
+        var model = fixture("cat >/dev/null\necho private-malformed-event\nsleep 30\n", Duration.ofSeconds(30));
+        long start = System.nanoTime();
+        assertThatThrownBy(() -> model.generateWithText(Provider.CLAUDE, "synthetic", "", text -> {}))
+                .isInstanceOf(LibraryException.class).hasMessageNotContaining("private-malformed-event");
+        assertThat(Duration.ofNanos(System.nanoTime() - start)).isLessThan(Duration.ofSeconds(5));
+    }
+
+    @Test
     void configuredModelsAreSingleArgumentsAndDefaultOmitsFlag() {
         var model = new CliCuratorModel("codex", "claude", Duration.ofSeconds(5),
                 new CuratorSettings("synthetic-model-a", "synthetic-model-b"));

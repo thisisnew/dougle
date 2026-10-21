@@ -4,28 +4,32 @@ const statuses = ['QUEUED', 'RUNNING', 'CANCELLING', 'CANCELLED', 'SUCCEEDED', '
 
 export function observeAnswerJob(workspaceId: string, bundleId: string, jobId: string, callbacks: {
   job: (job: AnswerJob) => void; state: (message: string) => void; error: (message: string) => void
+  partial?: (text: string) => void
 }) {
   let stopped = false
   let failures = 0
   let disconnect = () => {}
   let retry: ReturnType<typeof setTimeout> | undefined
 
-  function stop() { stopped = true; disconnect(); clearTimeout(retry) }
+  function stop() { stopped = true; disconnect(); clearTimeout(retry); callbacks.partial?.('') }
   function fail(message: string) { stop(); callbacks.state('SSE 관측 중지'); callbacks.error(message) }
   function connect() {
     if (stopped) return
     callbacks.state('SSE 연결 중 — 근거 확인 대기')
+    callbacks.partial?.('')
     let source: EventSource
     try { source = new EventSource(`/api/workspaces/${encodeURIComponent(workspaceId)}/answer-jobs/${encodeURIComponent(jobId)}/events`) }
     catch { fail('SSE 연결을 시작하지 못했습니다. 작업 목록을 다시 조회하세요.'); return }
     let closed = false
     let evidence = false
     let receivedJob = false
+    let running = false
     const watchdog = setTimeout(() => reconnect(false), 65000)
     disconnect = () => { closed = true; clearTimeout(watchdog); source.close() }
     function reconnect(rotation: boolean) {
       if (stopped || closed) return
       disconnect()
+      callbacks.partial?.('')
       if (!rotation && failures >= 3) { fail('SSE 재연결 3회에 실패했습니다. 작업 목록을 다시 조회하세요.'); return }
       const delay = rotation ? 1000 : 1000 * 2 ** failures++
       callbacks.state(rotation ? 'SSE 연결 갱신 대기' : `SSE 재연결 대기 (${failures}/3)`)
@@ -54,8 +58,15 @@ export function observeAnswerJob(workspaceId: string, bundleId: string, jobId: s
         || (value.status !== 'SUCCEEDED' && value.answer !== null)) throw new Error()
       receivedJob = true
       const job = value as AnswerJob
+      running = job.status === 'RUNNING'
       callbacks.job(job)
+      if (job.status !== 'RUNNING') callbacks.partial?.('')
       if (!activeAnswerJob(job)) { stop(); callbacks.state('SSE 관측 완료') }
+    })
+    listen('partial', value => {
+      if (!evidence || !receivedJob || value.workspaceId !== workspaceId || value.bundleId !== bundleId || value.jobId !== jobId
+        || value.unverified !== true || typeof value.text !== 'string' || value.text.length > 20000 || (!running && value.text !== '')) throw new Error()
+      callbacks.partial?.(value.text)
     })
     listen('done', value => {
       if (!receivedJob || value.reason !== 'reconnect') throw new Error()

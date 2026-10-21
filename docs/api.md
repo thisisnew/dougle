@@ -1,5 +1,7 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+SSE에 `partial` 이벤트를 추가했습니다. Workspace/job/bundle ID와 `text`, `unverified:true`인 임시 스냅샷입니다. 근거·작업 이벤트 뒤에만 전달하며 DB에 저장하지 않습니다. [계약](partial-answer.md).
+
 답변 작업: `POST /api/workspaces/{workspaceId}/evidence-bundles/{bundleId}/answer-jobs` → 202.
 조회 `GET /api/workspaces/{workspaceId}/answer-jobs` 및 `/{id}`, 중단 `POST .../answer-jobs/{id}/cancel`.
 승인 일회 소비·재시도 멱등·실제 CLI 답변을 지원합니다. [전체 계약](answer-jobs.md).

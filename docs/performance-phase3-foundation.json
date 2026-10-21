@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T15:16:03.120Z",
+  "measuredAt": "2026-10-21T15:31:58.644Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -23,6 +23,7 @@
     "read-only bundle revalidation and provider/model-bound answer previews survive restart and block deleted evidence",
     "single-use answer approval dispatches fake CLI, retains cited answer and idempotency across restart, and supports revocation",
     "read-only SSE sends immutable evidence before completed answer and replays matching snapshots after restart",
+    "fake Claude stream sends unverified temporary text before independently validated final answer without persisting partials",
     "failed collection preserves prior index",
     "source deletion removes search hits",
     "Korean Nori search",
@@ -51,21 +52,21 @@
     "manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart",
     "explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart"
   ],
-  "sourceSyncMs": 510.8674599999995,
+  "sourceSyncMs": 536.3208329999998,
   "livePublic": [],
-  "startupMs": 5748,
-  "restartMs": 6089,
+  "startupMs": 6669,
+  "restartMs": 6253,
   "upload100": {
-    "p50Ms": 116.89985399999932,
-    "p95Ms": 579.4801240000015
+    "p50Ms": 110.20061500000156,
+    "p95Ms": 169.61031999999977
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.201652000003378,
-    "p95Ms": 3.5328740000040852
+    "p50Ms": 2.78425900000002,
+    "p95Ms": 3.5292069999995874
   },
   "search100Files30Requests": {
-    "p50Ms": 8.676052000002528,
-    "p95Ms": 12.516457000005175
+    "p50Ms": 8.551661999998032,
+    "p95Ms": 13.264337000000523
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

@@ -1,5 +1,7 @@
 # 답변 작업 SSE — 근거를 먼저 보내는 관측 API
 
+후속 [Claude 임시 출력 partial 이벤트](partial-answer.md)를 추가했습니다. 아래는 기본 관측 API 도입 당시 기록입니다.
+
 2026-10-22 · SQLite v16 유지. 후속 [React SSE 화면 연결](answer-events-ui.md)도 구현했습니다. 아래 검증 표는 API 도입 당시 기록입니다.
 
 ## 쉽게 설명하면

@@ -10,7 +10,8 @@ v16 `AnswerJobService`는 승인 ID 유일성이 있는 작업을 같은 트랜�
 기존 제한된 CLI 전송 어댑터를 재사용하되 지식 생성/게시는 하지 않습니다. 결과는 인용 검사·취소/근거 확인 후 작업에만 저장합니다.
 `AnswerJobEventsController`는 이 작업을 읽기 전용 SSE로 관측합니다. 근거→상태→완료 순서이며 16개 연결 한도와 연결 수명 제한을 둡니다.
 `AnswerJobsPanel → observeAnswerJob → EventSource`로 실행 중 작업의 SSE를 표시합니다. 제한 재연결·범위/순서 검사·전환 시 관측 정리를 지원합니다.
-토큰 출력·다중 대화는 아직 없습니다. [UI 연결](answer-events-ui.md), [SSE 경계](answer-events.md), [실제 생성 흐름](answer-jobs.md).
+Claude는 `StreamingAnswerModel → CliCuratorModel → ClaudeTextStream`으로 텍스트를 메모리에 누적하고 SSE partial로 전달합니다.
+최종 JSON 검증 경로와 임시 글을 분리합니다. Codex 토큰 출력·다중 대화는 남았습니다. [실제 경계](partial-answer.md), [UI 연결](answer-events-ui.md).
 
 `conversation` 모듈은 `AnswerApprovalService → AnswerApprovalStore → JdbcAnswerApprovalStore`로 요청별 승인·철회·만료를 관리합니다.
 미리보기 재검증과 승인 저장은 같은 트랜잭션이며 외부 CLI는 호출하지 않습니다. v15 추가 테이블은 묶음당 현재 승인 하나입니다.

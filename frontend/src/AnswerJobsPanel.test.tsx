@@ -100,6 +100,23 @@ it('SSE 실패 후 새로고침으로 같은 작업을 다시 관측한다', asy
   expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
 })
 
+it('미검증 출력은 텍스트로만 표시하고 검증 실패하면 지운다', async () => {
+  api.mockResolvedValueOnce([{ ...done, status: 'RUNNING', answer: null }])
+  render(<AnswerJobsPanel {...props} approval={null} />)
+  await userEvent.click(screen.getByRole('button', { name: '답변 작업 조회·새로고침' }))
+  const source = FakeEventSource.instances[0]
+  act(() => {
+    source.emit('evidence', { id: 'bundle', workspaceId: 'workspace', digest: 'digest' })
+    source.emit('job', { ...done, workspaceId: 'workspace', status: 'RUNNING', answer: null })
+    source.emit('partial', { workspaceId: 'workspace', bundleId: 'bundle', jobId: 'job', text: '<img src="https://invalid.example" />', unverified: true })
+  })
+  expect(screen.getByLabelText('미검증 임시 출력')).toHaveTextContent('인용·사실성 미검증')
+  expect(document.querySelector('img')).toBeNull()
+  expect(screen.queryByLabelText('AI 답변')).not.toBeInTheDocument()
+  act(() => source.emit('job', { ...done, workspaceId: 'workspace', status: 'FAILED', answer: null }))
+  expect(screen.queryByLabelText('미검증 임시 출력')).not.toBeInTheDocument()
+})
+
 it('닫으면 조회 대기를 취소하되 서버 중단을 가장하지 않는다', async () => {
   api.mockImplementation(() => new Promise(() => {}))
   const view = render(<AnswerJobsPanel {...props} approval={null} />)

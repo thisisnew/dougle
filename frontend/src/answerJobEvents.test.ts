@@ -8,7 +8,7 @@ let stop: (() => void) | undefined
 beforeEach(() => { vi.useFakeTimers(); FakeEventSource.instances = []; vi.stubGlobal('EventSource', FakeEventSource) })
 afterEach(() => { stop?.(); vi.useRealTimers(); vi.unstubAllGlobals() })
 function start() {
-  const callbacks = { job: vi.fn(), state: vi.fn(), error: vi.fn() }
+  const callbacks = { job: vi.fn(), state: vi.fn(), error: vi.fn(), partial: vi.fn() }
   stop = observeAnswerJob('workspace', 'bundle', 'job', callbacks)
   return { callbacks, source: FakeEventSource.instances[0] }
 }
@@ -94,4 +94,30 @@ it('응답이 멎으면 65초 watchdog으로 제한된 재연결을 한다', () 
   expect(source.closed).toBe(true)
   vi.advanceTimersByTime(1000)
   expect(FakeEventSource.instances).toHaveLength(2)
+})
+
+it('미검증 스냅샷을 교체하고 재연결/완료 시 폐기한다', () => {
+  const { callbacks, source } = start()
+  source.emit('evidence', evidence); source.emit('job', job)
+  const partial = { workspaceId: 'workspace', bundleId: 'bundle', jobId: 'job', text: '임시', unverified: true }
+  source.emit('partial', partial); source.emit('partial', { ...partial, text: '임시 출력' })
+  expect(callbacks.partial).toHaveBeenLastCalledWith('임시 출력')
+  source.onerror?.()
+  expect(callbacks.partial).toHaveBeenLastCalledWith('')
+  vi.advanceTimersByTime(1000)
+  const next = FakeEventSource.instances[1]
+  next.emit('evidence', evidence); next.emit('job', job); next.emit('partial', partial)
+  next.emit('job', { ...job, status: 'FAILED' })
+  expect(callbacks.partial).toHaveBeenLastCalledWith('')
+})
+
+it.each([
+  { workspaceId: 'other', bundleId: 'bundle', jobId: 'job', text: '임시', unverified: true },
+  { workspaceId: 'workspace', bundleId: 'bundle', jobId: 'job', text: '임시', unverified: false },
+  { workspaceId: 'workspace', bundleId: 'bundle', jobId: 'job', text: 'x'.repeat(20001), unverified: true },
+])('잘못된 임시 출력은 표시하지 않는다', partial => {
+  const { callbacks, source } = start()
+  source.emit('evidence', evidence); source.emit('job', job); source.emit('partial', partial)
+  expect(callbacks.error).toHaveBeenCalledOnce()
+  expect(callbacks.partial).toHaveBeenLastCalledWith('')
 })

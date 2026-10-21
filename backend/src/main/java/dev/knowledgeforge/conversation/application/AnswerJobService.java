@@ -28,6 +28,8 @@ public class AnswerJobService {
     private Thread worker;
     private boolean cancelled;
     private boolean closing;
+    private String partialText = "";
+    public record Partial(String workspaceId, String jobId, String bundleId, String text, boolean unverified) {}
 
     public AnswerJobService(AnswerJobStore store, AnswerApprovalStore approvals, EvidenceAnswerPreview previews,
                             EvidenceBundleService bundles, LibraryStore library, AnswerModel model, PlatformTransactionManager manager) {
@@ -68,7 +70,7 @@ public class AnswerJobService {
             store.create(created);
             return created;
         });
-        active = job; cancelled = false;
+        active = job; cancelled = false; partialText = "";
         worker = Thread.ofVirtual().name("forge-answer-" + job.id()).unstarted(() -> run(job));
         try { worker.start(); }
         catch (RuntimeException exception) {
@@ -84,6 +86,19 @@ public class AnswerJobService {
     }
     public List<AnswerJob> list(String workspaceId) { requireWorkspace(workspaceId); return store.list(workspaceId); }
 
+    public synchronized Partial partial(String workspaceId, String id) {
+        var job = get(workspaceId, id);
+        String text = active != null && active.id().equals(id) && active.workspaceId().equals(workspaceId)
+                && job.status().equals("RUNNING") && !cancelled ? partialText : "";
+        return new Partial(workspaceId, id, job.bundleId(), text, true);
+    }
+
+    private synchronized void receiveText(AnswerJob job, String text) {
+        if (active != job || cancelled || closing) return;
+        if (text == null || text.length() > 20000) throw new LibraryException(502, "임시 출력 한도를 초과했습니다.");
+        partialText = text;
+    }
+
     public synchronized AnswerJob cancel(String workspaceId, String id) {
         var job = get(workspaceId, id);
         if (job.active() && active != null && active.id().equals(id) && active.workspaceId().equals(workspaceId)) stop();
@@ -91,7 +106,7 @@ public class AnswerJobService {
     }
 
     private void stop() {
-        cancelled = true;
+        cancelled = true; partialText = "";
         store.update(active.workspaceId(), active.id(), "CANCELLING", null, null);
         worker.interrupt();
     }
@@ -109,7 +124,9 @@ public class AnswerJobService {
                 });
             }
             if (Thread.currentThread().isInterrupted()) throw new CancellationException();
-            String raw = model.generate(job.provider(), prompt, job.requestedModel());
+            String raw = model instanceof StreamingAnswerModel streaming
+                    ? streaming.generateWithText(job.provider(), prompt, job.requestedModel(), text -> receiveText(job, text))
+                    : model.generate(job.provider(), prompt, job.requestedModel());
             synchronized (this) {
                 transaction.executeWithoutResult(status -> {
                     checkActive(job, false);
@@ -126,7 +143,7 @@ public class AnswerJobService {
                 store.update(job.workspaceId(), job.id(), cancelled ? "CANCELLED" : "FAILED", null, cancelled ? null : error);
             }
         } finally {
-            synchronized (this) { active = null; worker = null; cancelled = false; }
+            synchronized (this) { active = null; worker = null; cancelled = false; partialText = ""; }
         }
     }
 

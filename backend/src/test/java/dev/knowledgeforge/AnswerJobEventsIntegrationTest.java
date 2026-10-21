@@ -98,6 +98,19 @@ class AnswerJobEventsIntegrationTest {
     }
 
     @Test
+    void partialSnapshotFollowsEvidenceAndJobAndNeverReplacesFinalAnswer() throws Exception {
+        when(jobs.partial("workspace", "job")).thenReturn(new AnswerJobService.Partial("workspace", "job", "bundle", "미검증 조각", true));
+        try (var reader = reader(connect("workspace", "job"))) {
+            assertThat(event(reader)).contains("event:evidence");
+            assertThat(event(reader)).contains("event:job", "RUNNING");
+            assertThat(event(reader)).contains("event:partial", "미검증 조각", "\"unverified\":true");
+            current.set(job("FAILED", null));
+            assertThat(event(reader)).contains("event:job", "FAILED").doesNotContain("미검증 조각");
+            assertThat(event(reader)).contains("event:done");
+        }
+    }
+
+    @Test
     void deletedJobEndsObservationWithoutLeakingExceptionDetails() throws Exception {
         try (var reader = reader(connect("workspace", "job"))) {
             event(reader); event(reader);

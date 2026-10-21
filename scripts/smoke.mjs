@@ -26,7 +26,7 @@ async function start() {
   child = spawn('bash', ['scripts/run.sh',
     `--forge.ai.codex-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`,
     `--forge.ai.codex-model=${configuredModel}`,
-    `--forge.ai.claude-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`], {
+    `--forge.ai.claude-command=${resolve(root, 'scripts/fixtures/fake-claude-stream.sh')}`], {
     cwd: root,
     env: { ...process.env, PORT: String(port), FORGE_DATA_DIR: directory },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -435,6 +435,30 @@ try {
   await api(`${bundleBase}/${missingBundle.id}`, 'DELETE')
   assert.equal((await api(bundleBase)).length, 2)
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
+  const streamWorkspace = await api('/workspaces', 'POST', { name: 'synthetic streaming smoke' })
+  const streamBase = `/workspaces/${streamWorkspace.id}`
+  const streamForm = new FormData()
+  streamForm.append('file', new Blob(['synthetic telescope observation']), 'stream-fixture.txt')
+  await api(`${streamBase}/files`, 'POST', streamForm)
+  const streamBundle = await api(`${streamBase}/evidence-bundles`, 'POST', { question: 'telescope', domains: [], includeKnowledge: false })
+  const streamPath = `${streamBase}/evidence-bundles/${streamBundle.id}`
+  const streamPreview = await api(`${streamPath}/answer-preview`, 'POST', { provider: 'CLAUDE', requestedModel: 'stream-fixture-model' })
+  const streamApproval = await api(`${streamPath}/answer-approval`, 'POST', { provider: 'CLAUDE', requestedModel: 'stream-fixture-model', digest: streamPreview.digest, acknowledged: true, expectedApprovalId: null })
+  const streamJob = await api(`${streamPath}/answer-jobs`, 'POST', { requestId: crypto.randomUUID(), approvalId: streamApproval.approval.id, digest: streamPreview.digest, approved: true })
+  const streamResponse = await fetch(`${base}/api${streamBase}/answer-jobs/${streamJob.id}/events`, { signal: AbortSignal.timeout(15000) })
+  assert.equal(streamResponse.status, 200)
+  const streamEvents = (await streamResponse.text()).trim().split(/\r?\n\r?\n/).filter(block => block.startsWith('event:')).map(block => {
+    const lines = block.split(/\r?\n/)
+    return { name: lines[0].slice(6).trim(), data: JSON.parse(lines.filter(line => line.startsWith('data:')).map(line => line.slice(5)).join('\n')) }
+  })
+  assert.equal(streamEvents[0].name, 'evidence')
+  assert.ok(streamEvents.some(event => event.name === 'partial' && event.data.unverified && event.data.text.includes('가상 임시 출력')))
+  const partialIndex = streamEvents.findIndex(event => event.name === 'partial')
+  const finalIndex = streamEvents.findIndex(event => event.name === 'job' && event.data.status === 'SUCCEEDED')
+  assert.ok(partialIndex > 0 && finalIndex > partialIndex)
+  assert.equal(streamEvents[finalIndex].data.answer, '검사를 통과한 가상 최종 답변입니다. [R1]')
+  assert.ok(!JSON.stringify(await api(`${streamBase}/answer-jobs/${streamJob.id}`)).includes('가상 임시 출력'))
+  await api(streamBase, 'DELETE')
   const livePublic = []
   if (process.argv.includes('--live-public')) {
     for (const registration of [
@@ -487,6 +511,7 @@ try {
       'read-only bundle revalidation and provider/model-bound answer previews survive restart and block deleted evidence',
       'single-use answer approval dispatches fake CLI, retains cited answer and idempotency across restart, and supports revocation',
       'read-only SSE sends immutable evidence before completed answer and replays matching snapshots after restart',
+      'fake Claude stream sends unverified temporary text before independently validated final answer without persisting partials',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',

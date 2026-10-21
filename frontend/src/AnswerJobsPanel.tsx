@@ -18,6 +18,7 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval }: Props) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [observation, setObservation] = useState('')
+  const [partial, setPartial] = useState('')
   const requestId = useRef<{ approvalId: string; id: string } | null>(null)
   const pending = useRef<AbortController | null>(null)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}`
@@ -28,7 +29,7 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval }: Props) {
       job: value => {
         setJob(value)
         setJobs(previous => previous.map(item => item.id === value.id ? value : item))
-      }, state: setObservation, error: setError,
+      }, state: setObservation, error: setError, partial: setPartial,
     })
   }, [workspaceId, bundleId, job?.id, busy])
 
@@ -36,7 +37,7 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval }: Props) {
     if (busy || (action === 'start' && (!approval || !agreed)) || (action === 'cancel' && !active(job))) return
     const controller = new AbortController()
     pending.current = controller
-    setBusy(true); setError(''); setObservation(''); setAgreed(false)
+    setBusy(true); setError(''); setObservation(''); setPartial(''); setAgreed(false)
     try {
       if (action === 'list') {
         const values = await request<Job[]>(`${base}/answer-jobs`, { signal: controller.signal })
@@ -60,7 +61,7 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval }: Props) {
 
   return <section aria-label="답변 작업" className="answer-approval">
     <h3>실제 답변 요청</h3>
-    <p>아래 전송 버튼은 외부 AI를 호출합니다. SSE로 근거를 확인한 뒤 상태와 완료 답변을 받습니다. 글자 단위 출력은 아닙니다.</p>
+    <p>아래 전송 버튼은 외부 AI를 호출합니다. Claude가 텍스트 조각을 보내면 미검증 임시 출력을 표시합니다. Codex는 완료 답변만 표시합니다.</p>
     <p>닫거나 다른 Workspace로 이동해도 작업은 계속됩니다. 중단하려면 답변 중단을 누르세요. 이미 전송된 자료는 회수할 수 없습니다.</p>
     {approval && <><label><input type="checkbox" checked={agreed} disabled={busy || active(job)} onChange={event => setAgreed(event.target.checked)} />승인한 요청을 지금 외부 AI에 전송합니다.</label>
       <Button disabled={busy || active(job) || !agreed} onClick={() => void act('start')}>승인한 요청 전송·답변 시작</Button></>}
@@ -69,6 +70,7 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval }: Props) {
       {jobs.map(value => <option key={value.id} value={value.id}>{value.id} · {names[value.status] || value.status}</option>)}
     </select></label>}
     {observation && <p role="status" aria-label="SSE 연결 상태">{observation}</p>}
+    {partial && active(job) && <div aria-label="미검증 임시 출력"><p>생성 중 임시 출력 — 인용·사실성 미검증. 최종 답변과 다를 수 있으며 저장하지 않습니다.</p><pre>{partial}</pre></div>}
     {job && <div><p role="status">{names[job.status] || job.status}</p><p>{job.provider} · 요청 모델 {job.requestedModel || 'CLI 기본값 (실제 모델 미확인)'}</p>
       {active(job) && <Button disabled={busy || job.status === 'CANCELLING'} variant="outline" onClick={() => void act('cancel')}>답변 중단</Button>}
       {job.answer && <><p>생성 당시 근거 기준의 AI 답변입니다. 사실성은 별도 확인하세요. 지식 문서로 자동 게시하지 않습니다.</p><pre aria-label="AI 답변">{job.answer}</pre></>}
