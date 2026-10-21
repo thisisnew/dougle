@@ -6,6 +6,7 @@ export type Entry = {
 }
 export type Session = { workspaces: Workspace[]; activeWorkspaceId: string | null }
 export type Preview = { text: string | null; supported: boolean; reason: string | null }
+export type EvidenceLocation = { entry: Entry; ancestors: Entry[]; freshness: 'CURRENT' | 'STALE' }
 
 export async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)

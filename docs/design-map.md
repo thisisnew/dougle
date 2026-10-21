@@ -4,7 +4,7 @@
 > 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 사람 검토→명시적 게시도 지원합니다. 자동 의미 검증·지식 폴더는 남았습니다.
 
 기준: 2026-10-21 · Phase 3 CLI AI 작업 관리·모델 고정·설치 진단 추가.
-최신 범위는 [사람 검토와 게시](publication.md), 이전 변경은 [실행 전 CLI 관측 이력](cli-observation.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
+최신 범위는 [현재 원본 탐색](evidence-navigation.md), 이전 변경은 [사람 검토와 게시](publication.md), [실행 전 CLI 관측 이력](cli-observation.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
 실제 JAR 재시작·근거 보존 검증 결과는 [보고서](phase3-foundation-report.md)에 기록합니다.
 
 **범례:** 🟩 구현됨 · 🟨 일부 구현/확장 필요 · 🟦 계획(미구현).
@@ -239,6 +239,6 @@ sequenceDiagram
 | 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · 지식 폴더 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** **P3-4 독립 지식 폴더·현재 출처 탐색 이동**. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
+**다음 한 작업:** **P3-4 독립 지식 폴더 생성·카드 배치**. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
-실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [사람 검토/게시 보고서](publication.md)를 참고하세요.
+실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [현재 원본 탐색 보고서](evidence-navigation.md)를 참고하세요.

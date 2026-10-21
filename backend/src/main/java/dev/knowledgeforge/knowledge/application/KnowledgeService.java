@@ -3,8 +3,10 @@ package dev.knowledgeforge.knowledge.application;
 import dev.knowledgeforge.knowledge.domain.Knowledge.*;
 import dev.knowledgeforge.library.application.LibraryException;
 import dev.knowledgeforge.library.application.LibraryStore;
+import dev.knowledgeforge.library.domain.Entry;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -83,6 +85,32 @@ public class KnowledgeService {
     public byte[] snapshotContent(String workspaceId, String id, String snapshotId) {
         return store.snapshotContent(workspaceId, id, snapshotId)
                 .orElseThrow(() -> new LibraryException(404, "근거 원본을 찾을 수 없습니다."));
+    }
+
+    public record EvidenceLocation(Entry entry, List<Entry> ancestors, String freshness) {}
+
+    public EvidenceLocation locateEvidence(String workspaceId, String id, int number, String snapshotId) {
+        Evidence evidence = get(workspaceId, id, number).version().evidence().stream()
+                .filter(item -> item.snapshotId().equals(snapshotId)).findFirst()
+                .orElseThrow(() -> new LibraryException(404, "이 지식 버전의 근거를 찾을 수 없습니다."));
+        var current = store.currentMaterial(workspaceId, evidence.entryId(), evidence.sourceId(), evidence.path())
+                .orElseThrow(() -> new LibraryException(404, "현재 원본이 없습니다. 당시 근거 원본 다운로드를 이용하세요."));
+        Entry entry = library.entry(workspaceId, current.entryId())
+                .orElseThrow(() -> new LibraryException(404, "현재 원본을 찾을 수 없습니다."));
+        List<Entry> ancestors = new ArrayList<>();
+        var visited = new HashSet<String>();
+        String parentId = entry.parentId();
+        while (parentId != null) {
+            if (!visited.add(parentId)) throw new LibraryException(409, "원본 폴더 경로에 순환 참조가 있습니다.");
+            Entry parent = library.entry(workspaceId, parentId)
+                    .orElseThrow(() -> new LibraryException(409, "원본 폴더 경로가 변경되었습니다. 다시 확인하세요."));
+            if (!"FOLDER".equals(parent.kind()) || !"ORIGINAL".equals(parent.area())) {
+                throw new LibraryException(409, "원본 폴더 경로가 올바르지 않습니다.");
+            }
+            ancestors.add(parent);
+            parentId = parent.parentId();
+        }
+        return new EvidenceLocation(entry, List.copyOf(ancestors.reversed()), evidence.freshness());
     }
 
     private List<KnowledgeStore.Reference> capture(String workspaceId, List<Citation> citations) {

@@ -185,6 +185,13 @@ entry ID가 교체되어도 같은 Source+경로+해시라면 CURRENT입니다. 
 이는 원격 폴링·자동 지식 무효화/재생성이나 사실 검증이 아닙니다.
 초안은 Lucene 검색에 아직 포함하지 않으며, Markdown은 HTML로 렌더링하지 않고 텍스트로 표시합니다.
 
+## 근거의 현재 원본 탐색
+
+지식 근거의 현재 원본 탐색은 `KnowledgeService.locateEvidence`가 선택한 카드/버전의 근거 소속을
+확인한 뒤 `KnowledgeStore.currentMaterial`과 `LibraryStore`로 파일·부모 경로를 읽습니다.
+최신성 판정과 탐색은 같은 Source ID+경로/업로드 ID 해석을 공유하며 스냅샷은 수정하지 않습니다.
+UI는 폴더 목록을 재조회하고 현재 ID가 있을 때만 미리보기를 선택합니다. [탐색 설계](evidence-navigation.md).
+
 ## AI 생성 작업 (v6, 작업 상태는 v4에서 도입)
 
 `generation_job(workspace_id,id)`는 승인 digest/Provider/기반 카드·버전/상태/결과 카드/시각을 저장합니다.

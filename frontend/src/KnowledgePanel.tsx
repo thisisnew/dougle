@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { request } from './api'
+import { request, type EvidenceLocation } from './api'
 import { Button } from './components/ui/button'
 import GenerationPanel from './GenerationPanel'
 import GenerationJobsPanel from './GenerationJobsPanel'
 import PublicationPanel from './PublicationPanel'
+import EvidenceOriginButton from './EvidenceOriginButton'
 
 type Card = { id: string; workspaceId: string; title: string; latestVersion: number; createdAt: string }
 type Evidence = {
@@ -64,7 +65,9 @@ export function DraftForm({ workspaceId, entryId, text }: { workspaceId: string;
   </section>
 }
 
-export default function KnowledgePanel({ workspaceId }: { workspaceId: string }) {
+export default function KnowledgePanel({ workspaceId, onOpenOriginal }: {
+  workspaceId: string; onOpenOriginal?: (location: EvidenceLocation) => void
+}) {
   const [cards, setCards] = useState<Card[]>([])
   const [selected, setSelected] = useState('')
   const [number, setNumber] = useState<number | null>(null)
@@ -169,6 +172,10 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
         {item.sourceLocation && <p>{item.sourceKind} · {item.sourceLocation}</p>}
         <p>{freshness[item.freshness]}</p><small>revision {item.sourceRevision}<br />SHA-256 {item.contentHash}</small>
         <pre>{item.quote}</pre>
+        {onOpenOriginal && <EvidenceOriginButton key={`${document.version.number}-${item.snapshotId}`}
+          path={`${base}/${selected}/versions/${document.version.number}/evidence/${item.snapshotId}/location`}
+          disabled={busy || editing || confirmDelete} onBusy={setBusy} onOpen={onOpenOriginal} />}
+        <p>현재 원본은 인용 당시 복사본과 다를 수 있습니다. 아래 다운로드는 당시 원본입니다.</p>
         <a href={`/api${base}/${selected}/evidence/${item.snapshotId}/content`} download>당시 근거 원본 다운로드</a>
       </section>)}
     </article>}

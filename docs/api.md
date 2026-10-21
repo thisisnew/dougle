@@ -290,3 +290,11 @@ POST `/publication`, GET `/published`를 제공합니다. 상세 요청/응답·
 [검토/게시 계약](publication.md#rest-계약)을 따릅니다. 기존 Document의 `version.status`는
 불변 생성 상태 DRAFT이며 실제 사람 검토/게시 상태는 별도 `/publication` 응답으로 확인합니다.
 자동 의미 검증은 아직 제공하지 않습니다.
+
+## 근거의 현재 원본 위치
+
+`GET /api/workspaces/{workspaceId}/knowledge/{id}/versions/{number}/evidence/{snapshotId}/location`
+→ `{entry,ancestors,freshness}`. ancestors는 루트부터 부모까지의 Entry 배열입니다.
+소속 버전의 근거만 조회 가능하며 Source ID+경로 또는 업로드 entry ID로 현재 파일을 해석합니다.
+CURRENT/STALE은 당시 스냅샷과 마지막 로컬 수집본의 비교입니다. 없는 근거/원본/다른 Workspace는 404,
+손상된 폴더 경로는 409입니다. [응답 예제·일관성·한계](evidence-navigation.md).

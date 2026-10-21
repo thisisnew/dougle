@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
@@ -15,6 +15,45 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it.each([false, true])('근거에서 폴더와 파일 미리보기로 이동하며 이동 중 삭제=%s를 처리한다', async missing => {
+    const user = userEvent.setup()
+    const folder = { ...file, id: 'folder', kind: 'FOLDER', name: '가상 원본 폴더' }
+    const currentFile = { ...file, id: 'new-id', parentId: 'folder' }
+    const card = { id: 'card', workspaceId: 'one', title: '가상 지식', latestVersion: 1, createdAt: workspace.createdAt }
+    api.mockImplementation(async path => {
+      if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
+      if (path.endsWith('/knowledge')) return [card]
+      if (path.endsWith('/knowledge/card')) return { card, version: {
+        number: 1, title: card.title, markdown: '옛 근거 [E1]', status: 'DRAFT', manuallyEdited: true,
+        evidence: [{ snapshotId: 'snapshot', path: 'notes.md', name: 'notes.md', sourceRevision: 'old', contentHash: 'hash',
+          startLine: 1, endLine: 1, quote: '옛 내용', freshness: 'STALE' }],
+      } }
+      if (path.endsWith('/publication')) return { latestVersion: 1, review: null, publication: null, publishedEvidence: [] }
+      if (path.endsWith('/location')) return { entry: currentFile, ancestors: [folder], freshness: 'STALE' }
+      if (path.includes('parentId=folder')) return missing ? [] : [currentFile]
+      if (path.endsWith('/preview')) return { supported: true, text: '새 원본 내용', reason: null }
+      if (path.endsWith('/analysis')) return { text: '', status: 'PENDING', symbols: [] }
+      return []
+    })
+    render(<App />)
+    await screen.findByText('자료를 담을 준비가 되었어요')
+    await user.click(screen.getByRole('button', { name: '지식 문서' }))
+    await user.click(await screen.findByRole('button', { name: '가상 지식 · v1' }))
+    await user.click(await screen.findByRole('button', { name: '현재 원본에서 보기' }))
+    expect(api).toHaveBeenCalledWith('/workspaces/one/knowledge/card/versions/1/evidence/snapshot/location', expect.anything())
+    expect(within(await screen.findByLabelText('폴더 경로')).getByRole('button', { name: '가상 원본 폴더' })).toBeInTheDocument()
+    if (missing) {
+      expect(await screen.findByRole('alert')).toHaveTextContent('이동 중 원본이 변경·삭제')
+      expect(screen.queryByRole('link', { name: '원본 다운로드' })).not.toBeInTheDocument()
+    } else {
+      expect(await screen.findByText('새 원본 내용')).toBeInTheDocument()
+      expect(screen.getByText(/현재 원본은 인용 당시 근거와 다릅니다/)).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: '원본 다운로드' })).toHaveAttribute('href', '/api/workspaces/one/entries/new-id/content')
+      await user.click(screen.getByRole('button', { name: '미리보기 닫기' }))
+      expect(screen.queryByText(/현재 원본은 인용 당시 근거와 다릅니다/)).not.toBeInTheDocument()
+    }
+  })
+
   it('빈 상태에서 Workspace를 만들고 새 세션으로 이동한다', async () => {
     const user = userEvent.setup()
     let created = false

@@ -219,6 +219,108 @@ class KnowledgeIntegrationTest {
     }
 
     @Test
+    void locatesUploadedEvidenceWithRootOrderedAncestors() {
+        Document root = draft();
+        var rootLocation = knowledge.locateEvidence(workspace, root.card().id(), 1, root.version().evidence().getFirst().snapshotId());
+        assertThat(rootLocation.entry().id()).isEqualTo(entry);
+        assertThat(rootLocation.ancestors()).isEmpty();
+        String parent = library.createFolder(workspace, null, "가상 폴더").id();
+        String child = library.createFolder(workspace, parent, "하위 폴더").id();
+        String nested = library.upload(workspace, child, "nested.txt", "가상 근거".getBytes(StandardCharsets.UTF_8)).id();
+        Document document = knowledge.create(workspace, "중첩 근거", "내용 [E1]", List.of(new Citation(nested, 1, 1)));
+        var location = knowledge.locateEvidence(workspace, document.card().id(), 1, document.version().evidence().getFirst().snapshotId());
+        assertThat(location.entry().id()).isEqualTo(nested);
+        assertThat(location.ancestors()).extracting(dev.knowledgeforge.library.domain.Entry::id).containsExactly(parent, child);
+        assertThat(location.freshness()).isEqualTo("CURRENT");
+    }
+
+    @Test
+    void navigationResolvesReplacedSourceEntryAndReportsChangedContent() throws Exception {
+        Files.writeString(fixture.resolve("source.txt"), "가상 첫 근거");
+        var source = sources.sync(workspace, sources.create(workspace, "가상 위치", "LOCAL_FOLDER", fixture.toString(), "실험").id());
+        String original = library.entries(workspace, "ORIGINAL", source.rootEntryId()).getFirst().id();
+        Document document = knowledge.create(workspace, "Source 위치", "내용 [E1]", List.of(new Citation(original, 1, 1)));
+        String snapshot = document.version().evidence().getFirst().snapshotId();
+        Files.writeString(fixture.resolve("other.txt"), "다른 파일");
+        sources.sync(workspace, source.id());
+        var current = knowledge.locateEvidence(workspace, document.card().id(), 1, snapshot);
+        assertThat(current.entry().id()).isNotEqualTo(original);
+        assertThat(current.entry().name()).isEqualTo("source.txt");
+        assertThat(current.freshness()).isEqualTo("CURRENT");
+        Files.writeString(fixture.resolve("source.txt"), "가상 바뀐 근거");
+        sources.sync(workspace, source.id());
+        var changed = knowledge.locateEvidence(workspace, document.card().id(), 1, snapshot);
+        assertThat(changed.freshness()).isEqualTo("STALE");
+        assertThat(library.content(workspace, changed.entry().id())).isEqualTo("가상 바뀐 근거".getBytes(StandardCharsets.UTF_8));
+        assertThat(knowledge.snapshotContent(workspace, document.card().id(), snapshot)).isEqualTo("가상 첫 근거".getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void deletedUploadDoesNotResolveToNewFileWithSameName() {
+        Document document = draft();
+        String snapshot = document.version().evidence().getFirst().snapshotId();
+        library.deleteEntry(workspace, entry);
+        library.upload(workspace, null, "notes.txt", "대체 파일".getBytes(StandardCharsets.UTF_8));
+        assertThatThrownBy(() -> knowledge.locateEvidence(workspace, document.card().id(), 1, snapshot))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(404));
+        assertThat(knowledge.snapshotContent(workspace, document.card().id(), snapshot)).isNotEmpty();
+    }
+
+    @Test
+    void renamedOrReregisteredSourceNeverAliasesOldEvidence() throws Exception {
+        Files.writeString(fixture.resolve("old.txt"), "가상 원본");
+        var source = sources.sync(workspace, sources.create(workspace, "가상 Source", "LOCAL_FOLDER", fixture.toString(), "실험").id());
+        String original = library.entries(workspace, "ORIGINAL", source.rootEntryId()).getFirst().id();
+        Document document = knowledge.create(workspace, "이름 변경", "내용 [E1]", List.of(new Citation(original, 1, 1)));
+        String snapshot = document.version().evidence().getFirst().snapshotId();
+        Files.move(fixture.resolve("old.txt"), fixture.resolve("new.txt"));
+        sources.sync(workspace, source.id());
+        assertThatThrownBy(() -> knowledge.locateEvidence(workspace, document.card().id(), 1, snapshot)).isInstanceOf(LibraryException.class);
+        sources.delete(workspace, source.id());
+        Files.move(fixture.resolve("new.txt"), fixture.resolve("old.txt"));
+        sources.sync(workspace, sources.create(workspace, "새 Source", "LOCAL_FOLDER", fixture.toString(), "실험").id());
+        assertThatThrownBy(() -> knowledge.locateEvidence(workspace, document.card().id(), 1, snapshot))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(404));
+    }
+
+    @Test
+    void navigationRequiresEvidenceMembershipInRequestedCardVersion() {
+        Document first = draft();
+        String other = library.upload(workspace, null, "other.txt", "다른 근거".getBytes(StandardCharsets.UTF_8)).id();
+        Document second = knowledge.revise(workspace, first.card().id(), 1, "새 근거", "내용 [E1]", List.of(new Citation(other, 1, 1)));
+        String snapshot = second.version().evidence().getFirst().snapshotId();
+        assertThatThrownBy(() -> knowledge.locateEvidence(workspace, first.card().id(), 1, snapshot)).isInstanceOf(LibraryException.class);
+        assertThat(knowledge.locateEvidence(workspace, first.card().id(), 2, snapshot).entry().id()).isEqualTo(other);
+        Document unrelated = draft();
+        assertThatThrownBy(() -> knowledge.locateEvidence(workspace, unrelated.card().id(), 1, snapshot)).isInstanceOf(LibraryException.class);
+        assertThatThrownBy(() -> knowledge.locateEvidence(workspace, first.card().id(), 99, snapshot)).isInstanceOf(LibraryException.class);
+    }
+
+    @Test
+    void locationRestIsReadOnlyAndWorkspaceScoped() throws Exception {
+        Document document = draft();
+        String suffix = "/knowledge/" + document.card().id() + "/versions/1/evidence/" + document.version().evidence().getFirst().snapshotId() + "/location";
+        mvc.perform(get("/api/workspaces/" + workspace + suffix)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.entry.id").value(entry)).andExpect(jsonPath("$.freshness").value("CURRENT"));
+        String other = library.createWorkspace("다른 공간").id();
+        mvc.perform(get("/api/workspaces/" + other + suffix)).andExpect(status().isNotFound());
+        library.deleteEntry(workspace, entry);
+        mvc.perform(get("/api/workspaces/" + workspace + suffix)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void corruptFolderCycleFailsInsteadOfLooping() {
+        String folder = library.createFolder(workspace, null, "가상 순환").id();
+        String nested = library.upload(workspace, folder, "nested.txt", "가상 근거".getBytes(StandardCharsets.UTF_8)).id();
+        Document document = knowledge.create(workspace, "순환 경로", "내용", List.of(new Citation(nested, 1, 1)));
+        jdbc.update("UPDATE entry SET parent_id=? WHERE id=?", folder, folder);
+        try {
+            assertThatThrownBy(() -> knowledge.locateEvidence(workspace, document.card().id(), 1, document.version().evidence().getFirst().snapshotId()))
+                    .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(409));
+        } finally { jdbc.update("UPDATE entry SET parent_id=NULL WHERE id=?", folder); }
+    }
+
+    @Test
     void explicitRecaptureCreatesNewEvidenceWhileRetainingPriorVersion() {
         Document first = draft();
         String other = library.upload(workspace, null, "new.txt", "새 근거".getBytes(StandardCharsets.UTF_8)).id();

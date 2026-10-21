@@ -59,4 +59,10 @@ public class KnowledgeController {
                 .header("Content-Disposition", "attachment; filename=\"evidence-original.bin\"")
                 .body(service.snapshotContent(workspaceId, id, snapshotId));
     }
+
+    @GetMapping("/{id}/versions/{number}/evidence/{snapshotId}/location")
+    public KnowledgeService.EvidenceLocation location(@PathVariable String workspaceId, @PathVariable String id,
+            @PathVariable int number, @PathVariable String snapshotId) {
+        return service.locateEvidence(workspaceId, id, number, snapshotId);
+    }
 }

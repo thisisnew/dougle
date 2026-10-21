@@ -128,6 +128,11 @@ try {
   })
   assert.equal(draft.version.status, 'DRAFT')
   const knowledgePath = `${knowledgeBase}/${draft.card.id}`
+  const evidenceLocationPath = `${knowledgePath}/versions/1/evidence/${draft.version.evidence[0].snapshotId}/location`
+  const evidenceLocation = await api(evidenceLocationPath)
+  assert.equal(evidenceLocation.entry.id, symbolHits[0].entryId)
+  assert.equal(evidenceLocation.freshness, 'CURRENT')
+  assert.equal(evidenceLocation.ancestors.at(-1).id, evidenceLocation.entry.parentId)
   const serverDefault = await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX' })
   assert.equal(serverDefault.requestedModel, configuredModel)
   const transmission = await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX', requestedModel: 'synthetic-smoke-model' })
@@ -179,6 +184,7 @@ try {
   await stop()
   configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
+  assert.equal((await api(evidenceLocationPath)).entry.id, symbolHits[0].entryId)
   assert.equal((await api(`${publicationPath}/publication`)).review.reviewer, 'Synthetic smoke reviewer')
   assert.equal((await api(`${publicationPath}/published`)).version.number, 1)
   await api(`${publicationPath}/versions`, 'POST', { expectedVersion: 1, title: 'Synthetic revised draft', markdown: 'Synthetic fixture [E1]' })
@@ -219,6 +225,7 @@ try {
   await api(`/workspaces/${workspace.id}/sources/${source.id}`, 'DELETE')
   assert.equal((await api(searchPath)).length, 0)
   assert.equal((await api(knowledgePath)).version.evidence[0].freshness, 'MISSING')
+  assert.equal((await fetch(`${base}/api${evidenceLocationPath}`)).status, 404)
   assert.equal((await api(`${publicationPath}/published`)).version.evidence[0].freshness, 'MISSING')
   assert.equal((await api(`${publicationPath}/publication`)).publication.version, 1)
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
@@ -276,7 +283,8 @@ try {
       'per-request model overrides server default', 'requested model history survives changed defaults and restart',
       'pre-inference CLI observation persists for completed and cancelled jobs',
       'separate human review and publication persist across restart',
-      'new draft and missing originals preserve prior publication with freshness warnings'],
+      'new draft and missing originals preserve prior publication with freshness warnings',
+      'version-scoped evidence navigation survives restart and returns 404 after source deletion'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, Library, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { Button } from './components/ui/button'
-import { entryPath, request, type Area, type Entry, type Preview, type Session } from './api'
+import { entryPath, request, type Area, type Entry, type EvidenceLocation, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
 import AnalysisPanel from './AnalysisPanel'
 import KnowledgePanel from './KnowledgePanel'
@@ -28,6 +28,8 @@ export default function App() {
   const [revision, setRevision] = useState(0)
   const uploadRef = useRef<HTMLInputElement>(null)
   const selectionAbort = useRef<AbortController | null>(null)
+  const pendingOriginal = useRef<Entry | null>(null)
+  const [originNotice, setOriginNotice] = useState<{ entryId: string; message: string } | null>(null)
   const activeId = session.activeWorkspaceId
   const workspace = session.workspaces.find(item => item.id === activeId)
   const parentId = trail.at(-1)?.id
@@ -53,12 +55,22 @@ export default function App() {
     setEntries([])
     setSelected(null)
     setPreview(null)
+    const target = pendingOriginal.current
+    pendingOriginal.current = null
     if (!activeId || area === 'KNOWLEDGE') { setLoading(false); return () => controller.abort() }
     setLoading(true)
     const params = new URLSearchParams({ area })
     if (parentId) params.set('parentId', parentId)
     request<Entry[]>(`${entryPath(activeId)}?${params}`, { signal: controller.signal })
-      .then(setEntries)
+      .then(value => {
+        if (controller.signal.aborted) return
+        setEntries(value)
+        if (target) {
+          const current = value.find(item => item.id === target.id)
+          if (current) setSelected(current)
+          else setError('이동 중 원본이 변경·삭제되었습니다. 지식 문서에서 현재 원본을 다시 확인하세요.')
+        }
+      })
       .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
       .finally(() => { if (!controller.signal.aborted) setLoading(false) })
     return () => controller.abort()
@@ -69,17 +81,30 @@ export default function App() {
     setPreview(null)
     if (activeId && selected?.kind === 'FILE') {
       request<Preview>(`${entryPath(activeId, selected.id)}/preview`, { signal: controller.signal })
-        .then(setPreview)
+        .then(value => { if (!controller.signal.aborted) setPreview(value) })
         .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
     }
     return () => controller.abort()
   }, [activeId, selected])
 
   function resetNavigation(nextArea: Area = area) {
+    pendingOriginal.current = null
+    setOriginNotice(null)
     setArea(nextArea)
     setTrail([])
     setSelected(null)
     setError('')
+  }
+
+  function openEvidenceOriginal(location: EvidenceLocation) {
+    pendingOriginal.current = location.entry
+    setOriginNotice({ entryId: location.entry.id, message: location.freshness === 'STALE'
+      ? '현재 원본은 인용 당시 근거와 다릅니다. 인용 행 번호를 현재 파일에 그대로 적용하지 마세요.'
+      : '지식 근거에서 이동했습니다. 이동 확인 시 마지막 로컬 수집본과 일치했습니다.' })
+    setError('')
+    setTrail(location.ancestors)
+    setArea('ORIGINAL')
+    setRevision(value => value + 1)
   }
 
   async function switchWorkspace(id: string) {
@@ -182,7 +207,8 @@ export default function App() {
                     .then(entry => { if (!controller.signal.aborted) setSelected(entry) })
                     .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
                 }} />}
-              {!original ? <KnowledgePanel key={activeId} workspaceId={activeId!} /> : <div className="explorer">
+              {original && originNotice && selected?.id === originNotice.entryId && <p role="status">{originNotice.message}</p>}
+              {!original ? <KnowledgePanel key={activeId} workspaceId={activeId!} onOpenOriginal={openEvidenceOriginal} /> : <div className="explorer">
                 <section className="file-pane" aria-label="자료 탐색기">
                   <div className="toolbar">
                     <div className="breadcrumbs" aria-label="폴더 경로"><button disabled={busy} onClick={() => setTrail([])}>{original ? '원본 자료' : '지식 문서'}</button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>

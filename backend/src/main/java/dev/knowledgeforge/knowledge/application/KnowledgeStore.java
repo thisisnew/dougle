@@ -12,6 +12,7 @@ public interface KnowledgeStore {
     Optional<Card> card(String workspaceId, String id);
     Optional<Version> version(String workspaceId, String id, int number);
     Optional<Material> material(String workspaceId, String entryId);
+    Optional<Material> currentMaterial(String workspaceId, String entryId, String sourceId, String path);
     String capture(String workspaceId, Material material);
     void create(String workspaceId, String id, String createdAt);
     boolean advance(String workspaceId, String id, int expectedVersion);

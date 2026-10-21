@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T11:49:50.974Z",
+  "measuredAt": "2026-10-21T11:57:59.199Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -34,23 +34,24 @@
     "requested model history survives changed defaults and restart",
     "pre-inference CLI observation persists for completed and cancelled jobs",
     "separate human review and publication persist across restart",
-    "new draft and missing originals preserve prior publication with freshness warnings"
+    "new draft and missing originals preserve prior publication with freshness warnings",
+    "version-scoped evidence navigation survives restart and returns 404 after source deletion"
   ],
-  "sourceSyncMs": 1214.2231460000003,
+  "sourceSyncMs": 1723.4854000000014,
   "livePublic": [],
-  "startupMs": 12765,
-  "restartMs": 18053,
+  "startupMs": 17562,
+  "restartMs": 18180,
   "upload100": {
-    "p50Ms": 246.20444000000134,
-    "p95Ms": 856.8268759999992
+    "p50Ms": 185.24660399999993,
+    "p95Ms": 492.57963599999493
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 8.139826000013272,
-    "p95Ms": 10.886101000010967
+    "p50Ms": 6.751040999995894,
+    "p95Ms": 9.196676000006846
   },
   "search100Files30Requests": {
-    "p50Ms": 18.37110699999903,
-    "p95Ms": 30.119610000008834
+    "p50Ms": 13.359079000001657,
+    "p95Ms": 22.642410000000382
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

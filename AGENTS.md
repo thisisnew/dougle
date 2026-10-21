@@ -9,6 +9,7 @@
 - 건별 모델 선택·브라우저 선택 저장·요청 모델 작업 이력은 `docs/model-selection.md`를 확인한다. v5에서 도입했으며 과거 모델 미기록 값은 null로 보존한다.
 - 후속 CLI 관측 이력은 `docs/cli-observation.md`를 확인한다. CLI 관측은 v6에서 도입했으며 실행 전 관측 버전을 정확한 생성 바이너리 버전으로 단정하지 않는다.
 - 현재 스키마는 v7이다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
+- P3-4 출처 탐색 연결은 `docs/evidence-navigation.md`를 확인한다. 원본 해석은 Source ID+경로 또는 업로드 ID이며 지식 폴더는 아직 없다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.

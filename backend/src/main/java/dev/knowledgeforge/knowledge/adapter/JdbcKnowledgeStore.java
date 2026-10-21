@@ -68,9 +68,7 @@ public class JdbcKnowledgeStore implements KnowledgeStore {
                     String path = result.getString("path");
                     String contentHash = result.getString("content_hash");
                     String textHash = result.getString("text_hash");
-                    Optional<Material> current = sourceId == null ? material(workspaceId, entryId)
-                            : jdbc.query(MATERIAL + " AND e.source_id=? AND e.relative_path=?", MATERIAL_ROW,
-                                    workspaceId, sourceId, path).stream().findFirst();
+                    Optional<Material> current = currentMaterial(workspaceId, entryId, sourceId, path);
                     String freshness = current.map(value -> contentHash.equals(hash(value.content()))
                             && textHash.equals(hash(value.text().getBytes(StandardCharsets.UTF_8))) ? "CURRENT" : "STALE").orElse("MISSING");
                     int start = result.getInt("start_line");
@@ -85,6 +83,12 @@ public class JdbcKnowledgeStore implements KnowledgeStore {
 
     public Optional<Material> material(String workspaceId, String entryId) {
         return jdbc.query(MATERIAL + " AND e.id=?", MATERIAL_ROW, workspaceId, entryId).stream().findFirst();
+    }
+
+    public Optional<Material> currentMaterial(String workspaceId, String entryId, String sourceId, String path) {
+        return sourceId == null ? material(workspaceId, entryId)
+                : jdbc.query(MATERIAL + " AND e.source_id=? AND e.relative_path=?", MATERIAL_ROW,
+                        workspaceId, sourceId, path).stream().findFirst();
     }
 
     public String capture(String workspaceId, Material material) {
