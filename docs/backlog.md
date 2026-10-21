@@ -7,6 +7,9 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 권장 순서와 공통 완료 조건
 
+- 원본 검색의 단어 주변 미리보기·추출 텍스트 행 범위·본문 일치 구분은 구현했습니다. [검증/제한](search-evidence.md).
+- P4-1의 게시 지식 통합, 영속 청크/인용 스냅샷, 심볼·지식 관계 검색은 여전히 미완료입니다.
+
 1. 새 PC에서 기준 빌드/테스트 → 가상 Source 수집/검색 확인.
 2. P3-1 완료, P3-2 CLI Curator 일부 구현. 최신 결정/검증은 [CLI AI](cli-ai.md)를 확인.
 3. P4 검색/LLM/SSE → P5 선택적 동기화 → P6 패키징 순서로 진행.
@@ -147,11 +150,11 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 167개 통과 + live opt-in 1개 skip, 프런트엔드 90개 통과(worker 2개), JAR 빌드 성공.
-- 최신 구현/검증: [근거 번호 통합](evidence-merge.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 173개 통과 + live opt-in 1개 skip, 프런트엔드 91개 통과(worker 2개), JAR 빌드 성공.
+- 최신 구현/검증: [검색 근거 위치](search-evidence.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
-- 최신 보고서: [근거 번호 통합](evidence-merge.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
+- 최신 보고서: [검색 근거 위치](search-evidence.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
 - 실제 JAR/재시작/검색과 공개 URL·GitHub 수집 통과: [Phase 2 보고서](phase2-report.md).
 - 측정: [performance-phase2.json](performance-phase2.json). 소규모 순차 측정이며 SLA가 아님.
 - 문서만 바꾼 작업에서 이전 테스트를 이번에 재실행한 것처럼 기록하지 않기.

@@ -165,7 +165,10 @@ Source 전체 삭제와 Workspace 삭제는 가능합니다.
 ERROR(추출 실패/크기 초과), PENDING(Phase 1 기존 파일).
 원본 바이트는 분석 실패에도 보존됩니다. OCR/임베디드 문서 재귀 추출은 비활성입니다.
 
-Hit 필드: `entryId, name, sourceId, domain, path, snippet, score`.
+Hit 필드: `entryId, name, sourceId, domain, path, snippet, score, startLine, endLine, bodyMatch`.
+행 범위는 추출 텍스트 기준(1-based, 빈 본문은 0)입니다. 일부 행만 포함할 수 있습니다.
+`bodyMatch=true`는 본문 검색 단어 주변, false는 이름·심볼 일치의 앞부분 미리보기입니다.
+최대 320 UTF-16 코드 단위이며 확정 인용/최신성 보증은 아닙니다. [설명](search-evidence.md).
 직접 업로드한 파일의 sourceId/domain은 빈 문자열입니다.
 검색어는 1~256자, 도메인은 최대 20개이며 선택하지 않으면 Workspace 전체를 검색합니다.
 결과는 기존 인덱스에서만 조회하며 검색을 위해 네트워크 수집/원문 재분석을 실행하지 않습니다.

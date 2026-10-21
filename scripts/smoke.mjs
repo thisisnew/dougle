@@ -119,6 +119,10 @@ try {
   const searchPath = `/workspaces/${workspace.id}/search?query=measureTemperature&domains=${encodeURIComponent('실험')}`
   const symbolHits = await api(searchPath)
   assert.equal(symbolHits.length, 1)
+  assert.equal(symbolHits[0].bodyMatch, true)
+  assert.ok(symbolHits[0].startLine >= 1)
+  assert.ok(symbolHits[0].endLine >= symbolHits[0].startLine)
+  assert.ok(symbolHits[0].snippet.includes('measureTemperature'))
   const analysis = await api(`/workspaces/${workspace.id}/entries/${symbolHits[0].entryId}/analysis`)
   assert.ok(analysis.symbols.some(symbol => symbol.name === 'measureTemperature' && symbol.line === 4))
   const knowledgeBase = `/workspaces/${workspace.id}/knowledge`
@@ -315,7 +319,12 @@ try {
   assert.equal(conflict.status, 409)
   const same = await api(`/workspaces/${workspace.id}/sources/${source.id}/sync`, 'POST')
   assert.equal(same.revision, synced.revision)
-  assert.equal((await api(searchPath))[0].entryId, symbolHits[0].entryId)
+  const restoredHit = (await api(searchPath))[0]
+  assert.equal(restoredHit.entryId, symbolHits[0].entryId)
+  assert.equal(restoredHit.snippet, symbolHits[0].snippet)
+  assert.equal(restoredHit.startLine, symbolHits[0].startLine)
+  assert.equal(restoredHit.endLine, symbolHits[0].endLine)
+  assert.equal(restoredHit.bodyMatch, true)
   await rm(sourceDirectory, { recursive: true })
   const failed = await api(`/workspaces/${workspace.id}/sources/${source.id}/sync`, 'POST')
   assert.equal(failed.status, 'ERROR')
@@ -374,6 +383,7 @@ try {
     checks: ['packaged UI', 'upload/download byte equality', 'UTF-8 preview', 'restart persistence',
       'active workspace persistence', 'independent knowledge area', 'cascade deletion', 'deletion persists after restart',
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',
+      'search body offsets and extracted line ranges survive restart',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',

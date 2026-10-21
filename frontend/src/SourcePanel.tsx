@@ -8,7 +8,7 @@ type Source = {
   revision: string | null; error: string | null; syncedAt: string | null; rootEntryId: string | null
   pollingEnabled: boolean; pollIntervalSeconds: number
 }
-type Hit = { entryId: string; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number }
+type Hit = { entryId: string; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean }
 type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void }
 const states: Record<string, string> = { NEW: '수집 전', SYNCING: '수집 중', READY: '반영 완료', ERROR: '오류 · 이전 자료 유지' }
 
@@ -117,6 +117,6 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       <Button type="submit" size="sm" disabled={searching || !query.trim()}><Search />{searching ? '검색 중…' : '검색'}</Button>
     </form>
     {availableDomains.length > 0 && <fieldset className="domain-options"><legend>검색 도메인 · 선택하지 않으면 전체</legend>{availableDomains.map(value => <label key={value}><input type="checkbox" checked={domains.includes(value)} onChange={event => setDomains(event.target.checked ? [...domains, value] : domains.filter(item => item !== value))} />{value}</label>)}</fieldset>}
-    {hits && <div className="search-results" aria-live="polite"><p>검색 결과 {hits.length}개 (최대 30개)</p>{hits.map(hit => <button key={hit.entryId} onClick={() => onSelect(hit.entryId)}><strong>{hit.name}</strong><small>{hit.domain || '분류 없음'} · {hit.path}</small><span>{hit.snippet}</span></button>)}</div>}
+    {hits && <div className="search-results" aria-live="polite"><p>검색 결과 {hits.length}개 (최대 30개)</p>{hits.map(hit => <button key={hit.entryId} onClick={() => onSelect(hit.entryId)}><strong>{hit.name}</strong><small>{hit.domain || '분류 없음'} · {hit.path}</small><small>{hit.bodyMatch ? '본문 검색어 주변' : '이름·심볼 일치 · 본문 앞부분'}{hit.startLine > 0 ? ` · 추출 텍스트 ${hit.startLine}–${hit.endLine}행 (일부)` : ' · 본문 없음'}</small><span>{hit.snippet}</span></button>)}</div>}
   </section>
 }

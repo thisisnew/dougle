@@ -40,7 +40,7 @@ it('다중 도메인을 함께 검색하고 근거 파일을 선택한다', asyn
   const user = userEvent.setup()
   const select = vi.fn()
   api.mockImplementation(async path => path.includes('/search?') ? [
-    { entryId: 'file', name: '가상.md', domain: '연구', path: 'notes/가상.md', snippet: '<script>원문</script>', score: 1 },
+    { entryId: 'file', name: '가상.md', domain: '연구', path: 'notes/가상.md', snippet: '<script>원문</script>', score: 1, startLine: 100, endLine: 105, bodyMatch: true },
   ] : [source, { ...source, id: 'other', name: '다른 자료', domain: '문헌' }])
   render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={select} />)
   await user.click(await screen.findByRole('checkbox', { name: '연구' }))
@@ -49,8 +49,20 @@ it('다중 도메인을 함께 검색하고 근거 파일을 선택한다', asyn
   await user.click(screen.getByRole('button', { name: '검색' }))
   await user.click(await screen.findByRole('button', { name: /가상.md/ }))
   expect(select).toHaveBeenCalledWith('file')
+  expect(screen.getByText('본문 검색어 주변 · 추출 텍스트 100–105행 (일부)')).toBeInTheDocument()
   expect(api.mock.calls.some(([path]) => path.includes('domains=%EC%97%B0%EA%B5%AC&domains=%EB%AC%B8%ED%97%8C'))).toBe(true)
   expect(document.querySelector('.search-results script')).toBeNull()
+})
+
+it('이름이나 심볼만 일치하면 본문 일치와 구별한다', async () => {
+  const user = userEvent.setup()
+  api.mockImplementation(async path => path.includes('/search?') ? [
+    { entryId: 'file', name: 'telescope', domain: '', path: 'telescope', snippet: '', score: 1, startLine: 0, endLine: 0, bodyMatch: false },
+  ] : [])
+  render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await user.type(screen.getByLabelText('자료 검색'), 'telescope')
+  await user.click(screen.getByRole('button', { name: '검색' }))
+  expect(await screen.findByText('이름·심볼 일치 · 본문 앞부분 · 본문 없음')).toBeInTheDocument()
 })
 
 it('삭제 확인을 취소하면 Source와 원본이 유지된다', async () => {

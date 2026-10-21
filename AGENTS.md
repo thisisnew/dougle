@@ -17,6 +17,7 @@
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.
 - 후속 검색은 Lucene 10 + Nori 및 심볼/관계 인덱스를 사용한다. 외부 DB 서버는 추가하지 않는다.
+- 원본 검색 미리보기의 본문 위치/행 범위는 `docs/search-evidence.md`를 따른다. 확정 인용이나 최신성 보증으로 취급하지 않는다. 게시 지식 통합 검색은 아직 없다.
 - 특정 업무 도메인을 하드코딩하지 않는다. 테스트는 `fixtures`의 가상 자료만 사용한다.
 - 원본과 지식 수명주기를 분리하고, 검증 후 게시와 수동 편집 보호 원칙을 지킨다.
 - 수집은 읽기 전용, 폴링은 Source별 opt-in, 외부 LLM 전송은 명시적 승인으로 제한한다.

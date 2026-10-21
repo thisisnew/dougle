@@ -5,6 +5,9 @@
 
 ## 현재 구조
 
+원본 검색의 `LuceneSearchIndex`는 본문 term vector offsets를 저장하고 검색어 주변과 추출 텍스트 행 범위를 반환합니다.
+검색 시 원본 재수집/재분석 없이 색인을 읽습니다. 게시 지식 통합·영속 청크는 아직 없습니다. [구현 범위](search-evidence.md).
+
 근거 번호 통합은 `MergeEvidencePlanner`가 현재 번호를 보존하고 AI 스냅샷/행 범위를 연결합니다.
 미리보기와 저장 시 동일 규칙으로 계산하며 기존 v12 근거 연결 테이블을 사용합니다. [정책](evidence-merge.md).
 
