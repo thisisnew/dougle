@@ -1,5 +1,8 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+2026-10-22 대조: 작업 관측 SSE는 저장 테이블 없이 기존 묶음/작업을 읽습니다.
+`AnswerJobEventsController → EvidenceBundleService/AnswerJobService.get` 경로이며 생성/취소 권한을 갖지 않습니다. [그림·코드 대조](answer-events.md).
+
 새 `AnswerJob`은 묶음에 속하는 답변 작업입니다. 승인 ID는 UNIQUE라 작업 하나에만 쓰입니다.
 답변/오류/상태/요청 모델을 보관하며 재시작 시 진행 중 작업은 INTERRUPTED입니다. 지식 버전과는 독립입니다. [코드 대조·그림](answer-jobs.md).
 

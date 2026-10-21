@@ -1,6 +1,6 @@
 # Phase 1 검증 결과
 
-최신 기능 검증은 [답변 작업·중단 보고서](answer-jobs.md)를 보세요.
+최신 기능 검증은 [작업 관측 SSE 보고서](answer-events.md)를 보세요. 이전 기능은 [답변 작업·중단 보고서](answer-jobs.md)입니다.
 
 최신 도구 버전·전체 회귀 검증은 [도구 갱신 보고서](toolchain-report.md)를 보세요.
 

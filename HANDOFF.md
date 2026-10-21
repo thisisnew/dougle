@@ -1,8 +1,8 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
-> 최신 기능: [승인 기반 답변 작업·중단](docs/answer-jobs.md). SQLite v16이며 업데이트 전 데이터를 백업하세요. 실제 전송 코드와 fake CLI 검증을 완료했으며 SSE·다중 대화는 아직 없습니다.
+> 최신 기능: [근거 우선 작업 관측 SSE API](docs/answer-events.md). SQLite v16 유지. UI는 기존 조회 방식이며 토큰 스트림·다중 대화는 아직 없습니다. 다음 작업은 React SSE 연결/재연결 UI입니다.
 
-기록일: 2026-10-21 (Asia/Seoul)
+기록일: 2026-10-22 (Asia/Seoul)
 
 Phase 2 기준 커밋은 `d4cd1e8`이며, 이후 Phase 3 P3-1 구현과 검증 기록을 추가했습니다.
 전체 미완료 체크리스트와 기능별 인수 조건은 [남은 작업](docs/backlog.md)에 있습니다.
@@ -35,7 +35,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료 기반 백엔드 225개 / 프런트엔드 118개 자동 테스트 통과 (UI worker 2개, 실제 CLI opt-in 테스트 1개는 기본 skip)
+- 최신 검증: 백엔드 231개 통과 + 실제 CLI opt-in 1개 skip / 프런트엔드 118개 통과. 통합 빌드·실제 JAR 재시작 smoke 통과. [SSE 검증](docs/answer-events.md).
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -46,7 +46,8 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 답변용 근거 묶음: 본문 해시/게시/도메인 재대조, 불변 인용·출처 보관, 개수/문자/보관 한도와 독립 삭제. 외부 AI 전송 없음 ([정책](docs/evidence-bundles.md))
 - 저장된 근거 재검증·제공자/모델별 답변 요청 미리보기, 변경/삭제/범위 변경 차단. 검사 결과는 로컬 상태이며 승인이나 실제 호출이 아님 ([정책](docs/bundle-validation.md))
 - 답변 요청별 10분 승인·철회·만료·오래된 화면 충돌 보호와 v15 보존 마이그레이션 ([정책](docs/answer-approval.md))
-- v16 승인 일회 소비·답변 작업·CLI 호출·인용 검사·중단·재시작 INTERRUPTED 복구. 완료 답변 표시이며 SSE는 아님. fake CLI로 검증 ([정책](docs/answer-jobs.md))
+- v16 승인 일회 소비·답변 작업·CLI 호출·인용 검사·중단·재시작 INTERRUPTED 복구. UI는 완료 답변 표시. fake CLI로 검증 ([정책](docs/answer-jobs.md))
+- 근거 우선 작업 관측 SSE API: 재연결은 현재 상태 재조회이며 AI를 재호출하지 않음. UI 연결·토큰 출력은 후속 ([계약](docs/answer-events.md))
 - 영속 분석 결과와 SQLite 인덱스 갱신 큐, 시작 시 저장된 분석 결과로 인덱스 복원
 - SQLite 스키마 1→2 마이그레이션과 원본·활성 Workspace 보존
 - Source 관리 파일 변경 방지, 사설 주소·리다이렉트·심볼릭 링크·용량 제한
@@ -71,7 +72,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 |---|---|---|
 | 2 확장 | 비공개 저장소 자격 증명, 대용량 ArtifactStore, 작업 취소·격리 파서 | 남음 |
 | 3 | 초안/승인/작업/모델 선택, 사람 검토/게시, 폴더·카드 배치, Markdown 표시 구현. 자동 의미 검증·실제 실행 메타데이터·AI 갱신 제안은 남음 | 진행 중 |
-| 4 | 통합 검색·근거 묶음·승인·CLI 답변 작업·중단 구현. 실시간 SSE·다중 대화·연결 해제 취소는 남음 | 진행 중 |
+| 4 | 통합 검색·근거 묶음·승인·CLI 답변·중단·관측 SSE API 구현. SSE UI·토큰 출력·다중 대화는 남음 | 진행 중 |
 | 5 | Source별 opt-in 폴링, Git 증분 갱신, 지식 무효화·버전·수동 편집 보호 | 미착수 |
 | 6 | Tauri 2, Java 런타임 포함 Mac 설치 앱, 통합 테스트, 설치 설명서 | 미착수 |
 
@@ -146,7 +147,7 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
 2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/answer-jobs.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
-4. **P4 근거 우선 SSE·실시간 CLI 스트림·연결 해제 취소·다중 대화**를 다음 기능 단위로 구현하세요. 미리보기 digest를 승인으로 취급하지 마세요. Ollama로 되돌리지 마세요.
+4. **P4 관측 SSE의 React 연결/재연결 UI**부터 진행하세요. `docs/answer-events.md`의 스냅샷·종료 계약을 따르고 토큰 스트림으로 표시하지 마세요. 이후 실제 CLI 스트림·다중 대화를 구현합니다. 미리보기 digest는 승인이 아닙니다. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
 6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시와 개발 도구 보안 갱신을 구현했습니다. 폴더 이름 변경/이동과 AI 결과 읽기 전용 비교도 구현했습니다. 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
@@ -172,7 +173,7 @@ docs/publication.md, docs/evidence-navigation.md, docs/knowledge-folders.md의 �
 docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 개발 도구 보안 갱신, 폴더 이름 변경/이동, AI 결과 읽기 전용 비교는 완료했다. 거절·재검토·전체 채택과 수동 부분 반영과 CURRENT 근거 번호 통합도 구현했다. docs/evidence-merge.md를 읽고 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시을 구현해라. 비교 화면에 자동 저장/외부 전송을 추가하지 마라.
 docs/modeling.md와 docs/how-it-works.md도 코드와 맞게 유지해라. 사용자는 설치형 준비 후 체험한다.
 최신 P4 구현은 docs/answer-jobs.md다. 승인 일회 소비·직전 재검증·실제 답변 작업·중단·재시작 복구까지 구현했다. 실제 외부 모델 검증은 아니며 fake CLI 테스트다.
-다음 우선 작업은 근거 우선 SSE·실시간 CLI 스트림·연결 해제 취소·다중 대화다. 미리보기는 승인이나 실제 AI 호출이 아니다.
+다음 우선 작업은 docs/answer-events.md의 관측 SSE를 React UI에 연결하는 것이다. 재연결로 AI를 재호출하지 말고 관측 종료와 명시적 작업 취소를 구분해라. 실제 CLI 토큰 스트림·다중 대화는 이후다. 미리보기는 승인이나 실제 AI 호출이 아니다.
 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 사람 검토를 자동 의미 검증으로 과장하지 마라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.

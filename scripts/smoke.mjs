@@ -149,6 +149,21 @@ try {
   const completedAnswer = await waitForJob(answerJobPath, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
   assert.equal(completedAnswer.status, 'SUCCEEDED', completedAnswer.error)
   assert.equal(completedAnswer.answer, '테스트 전용 가상 답변입니다. [R1]')
+  async function checkAnswerEvents() {
+    const response = await fetch(`${base}/api${answerJobPath}/events`, { signal: AbortSignal.timeout(10000) })
+    assert.equal(response.status, 200)
+    assert.ok(response.headers.get('content-type').startsWith('text/event-stream'))
+    const events = (await response.text()).trim().split(/\r?\n\r?\n/).map(block => {
+      const lines = block.split(/\r?\n/)
+      return { name: lines.find(line => line.startsWith('event:')).slice(6).trim(),
+        data: JSON.parse(lines.filter(line => line.startsWith('data:')).map(line => line.slice(5)).join('\n')) }
+    })
+    assert.deepEqual(events.map(event => event.name), ['evidence', 'job', 'done'])
+    assert.deepEqual(events[0].data, originalBundle)
+    assert.deepEqual(events[1].data, completedAnswer)
+    assert.equal(events[2].data.reason, 'terminal')
+  }
+  await checkAnswerEvents()
   assert.equal((await api(approvalPath)).status, 'CONSUMED')
   assert.deepEqual(await api(answerSubmitPath, 'POST', answerRequest), completedAnswer)
   assert.equal((await api(`/workspaces/${workspace.id}/generation-jobs`)).length, 0)
@@ -344,6 +359,7 @@ try {
   assert.equal((await api(`${bundleBase}/${originalBundle.id}/answer-preview`, 'POST', { provider: 'CODEX', requestedModel: 'preview-only-model' })).digest, originalAnswerPreview.digest)
   assert.deepEqual(await api(approvalPath), { ...answerApproval, status: 'CONSUMED' })
   assert.deepEqual(await api(answerJobPath), completedAnswer)
+  await checkAnswerEvents()
   assert.deepEqual(await api(answerSubmitPath, 'POST', answerRequest), completedAnswer)
   assert.equal((await api(`${bundleBase}/${publishedBundle.id}/answer-preview`, 'POST', { provider: 'CLAUDE', requestedModel: 'preview-only-model' })).digest, publishedAnswerPreview.digest)
   assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
@@ -470,6 +486,7 @@ try {
       'immutable original and published evidence bundles survive restart and source deletion without LLM calls',
       'read-only bundle revalidation and provider/model-bound answer previews survive restart and block deleted evidence',
       'single-use answer approval dispatches fake CLI, retains cited answer and idempotency across restart, and supports revocation',
+      'read-only SSE sends immutable evidence before completed answer and replays matching snapshots after restart',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',

@@ -2,8 +2,8 @@
 
 실행 가능한 작업 단위와 상세 인수 조건은 [남은 개발 체크리스트](backlog.md)를 따릅니다.
 원본 검색의 [근거 위치 표시](search-evidence.md)는 구현했지만 P4 근거 검색 전체 완료는 아닙니다.
-[원본·게시 지식 통합 검색](published-search.md)도 구현했습니다. 영속 청크·관계 검색·채팅/SSE는 남아 있습니다.
-[답변용 불변 근거 묶음](evidence-bundles.md), [재검증·미리보기](bundle-validation.md), [승인·철회](answer-approval.md), [답변 작업·재검증·일회 소비·중단](answer-jobs.md)을 구현했습니다. 의미 기반 청크 선택·SSE·다중 대화는 남았습니다.
+[원본·게시 지식 통합 검색](published-search.md)도 구현했습니다. 영속 청크·관계 검색·채팅 UI는 남아 있습니다.
+[답변용 불변 근거 묶음](evidence-bundles.md), [재검증·미리보기](bundle-validation.md), [승인·철회](answer-approval.md), [답변 작업·재검증·일회 소비·중단](answer-jobs.md), [관측 SSE API](answer-events.md)를 구현했습니다. 의미 기반 청크 선택·SSE UI/토큰 출력·다중 대화는 남았습니다.
 새 PC의 실행 절차와 다음 에이전트용 요청은 [HANDOFF](../HANDOFF.md)에 있습니다.
 사용자 체험 시점은 **Mac 설치형 준비 후**입니다. [체험 완료 기준](desktop-preview.md).
 
@@ -54,6 +54,8 @@ Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 근거 없는 문장 게시 차단, 수동 편집 보호, 검증 실패 시 이전 게시 버전 유지가 완료 기준입니다.
 
 ## Phase 4
+
+2026-10-22: [근거 우선 작업 관측 SSE API](answer-events.md) 구현. UI 연결/실제 토큰 delta는 남았으며 아래 완료 기준 전체를 충족한 것은 아닙니다.
 
 진입 전 남은 P3-4: AI 결과 읽기 전용 비교는 구현했으며 거절·재검토 이력도 구현했습니다. 충돌 없는 전체 채택도 구현했습니다. 동일 근거의 수동 부분 반영·재조회 후 재확인도 구현했습니다. CURRENT 근거 번호 통합도 구현했습니다. 오래된 근거 교체·줄 단위 충돌 표시는 남았습니다. [번호 통합](evidence-merge.md). [부분 반영](proposal-merge.md). [채택 범위](proposal-acceptance.md). [처리 기록](proposal-decisions.md). [범위](generation-comparison.md).
 

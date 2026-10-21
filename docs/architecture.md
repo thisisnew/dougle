@@ -8,7 +8,8 @@
 v16 `AnswerJobService`는 승인 ID 유일성이 있는 작업을 같은 트랜잭션으로 예약합니다.
 가상 스레드는 전송 직전 재검증 후 DB 연결 없이 `AnswerModel → CliAnswerModel`을 호출합니다.
 기존 제한된 CLI 전송 어댑터를 재사용하되 지식 생성/게시는 하지 않습니다. 결과는 인용 검사·취소/근거 확인 후 작업에만 저장합니다.
-SSE·다중 대화는 아직 없습니다. [실제 흐름과 제한](answer-jobs.md).
+`AnswerJobEventsController`는 이 작업을 읽기 전용 SSE로 관측합니다. 근거→상태→완료 순서이며 16개 연결 한도와 연결 수명 제한을 둡니다.
+UI 연결·토큰 출력·다중 대화는 아직 없습니다. [SSE 경계](answer-events.md), [실제 생성 흐름](answer-jobs.md).
 
 `conversation` 모듈은 `AnswerApprovalService → AnswerApprovalStore → JdbcAnswerApprovalStore`로 요청별 승인·철회·만료를 관리합니다.
 미리보기 재검증과 승인 저장은 같은 트랜잭션이며 외부 CLI는 호출하지 않습니다. v15 추가 테이블은 묶음당 현재 승인 하나입니다.
