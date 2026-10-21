@@ -4,7 +4,7 @@ import { Button } from './components/ui/button'
 
 export type AcceptanceState = {
   status: 'OPEN' | 'REJECTED' | 'ACCEPTED'; decisionRevision: number
-  acceptance: { appliedVersion: number; note: string; acceptedAt: string } | null
+  acceptance: { appliedVersion: number; note: string; acceptedAt: string; mode: 'FULL' | 'MANUAL' } | null
 }
 
 export default function ProposalAcceptance({ workspaceId, jobId, sourceVersion, resultVersion, eligible, disabled, onApplied }: {
@@ -55,6 +55,7 @@ export default function ProposalAcceptance({ workspaceId, jobId, sourceVersion, 
     {state?.acceptance ? <div role="status">
       <p>채택 완료 · 원래 문서 v{state.acceptance.appliedVersion}에 반영했습니다. 게시하려면 별도 검토가 필요합니다.</p>
       <pre>{state.acceptance.note}</pre><p>{state.acceptance.acceptedAt}</p>
+      <p>반영 방식: {state.acceptance.mode === 'MANUAL' ? '수동 병합' : '전체 채택'}</p>
     </div> : state && <>
       {state.status === 'REJECTED' && <p>거절된 제안입니다. 처리 기록에서 먼저 재검토로 돌리세요.</p>}
       {!eligible && <p>생성 후 문서 편집 또는 근거 변경이 있습니다. 전체 채택은 차단됩니다. 현재 문서에서 직접 병합하세요.</p>}

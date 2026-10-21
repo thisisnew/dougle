@@ -35,39 +35,59 @@ public class ProposalAcceptanceService {
 
     public State accept(String workspace, String job, int expectedRevision, int expectedSourceVersion,
                         int expectedResultVersion, String note, boolean confirmed) {
+        return apply(workspace, job, expectedRevision, expectedSourceVersion, expectedResultVersion, note, confirmed, false, null, null);
+    }
+
+    public State merge(String workspace, String job, int expectedRevision, int expectedSourceVersion,
+                       int expectedResultVersion, String note, boolean confirmed, String title, String markdown) {
+        return apply(workspace, job, expectedRevision, expectedSourceVersion, expectedResultVersion, note, confirmed, true, title, markdown);
+    }
+
+    private State apply(String workspace, String job, int expectedRevision, int expectedSourceVersion,
+                        int expectedResultVersion, String note, boolean confirmed, boolean manual, String title, String markdown) {
         var state = state(workspace, job);
         if (!"OPEN".equals(state.status()) || state.decisionRevision() != expectedRevision) {
             throw new LibraryException(409, "이미 채택했거나 처리 상태가 변경되었습니다. 거절한 제안은 먼저 재검토로 돌리세요.");
         }
         if (!confirmed || note == null || note.isBlank() || note.length() > 4000) {
-            throw new LibraryException(400, "전체 내용을 새 초안으로 반영할지 확인하고 이유를 1~4,000자로 입력하세요.");
+            throw new LibraryException(400, "내용을 새 초안으로 반영할지 확인하고 이유를 1~4,000자로 입력하세요.");
         }
         var documents = comparison.compare(workspace, job);
         var current = documents.current();
         var generated = documents.generated();
         if (current.version().number() != expectedSourceVersion
-                || current.version().number() != documents.base().version().number()
+                || (!manual && current.version().number() != documents.base().version().number())
                 || generated.card().latestVersion() != expectedResultVersion || expectedResultVersion != 1) {
-            throw new LibraryException(409, "생성 후 문서가 편집되었습니다. 전체 채택 대신 현재 문서에서 직접 병합하세요.");
+            throw new LibraryException(409, "문서 버전이 다르거나 결과 카드가 편집되었습니다. 최신 비교를 다시 확인하세요.");
         }
         var evidence = generated.version().evidence();
         if (evidence.isEmpty() || !evidence.equals(current.version().evidence())
                 || evidence.stream().anyMatch(item -> !"CURRENT".equals(item.freshness()))) {
             throw new LibraryException(409, "근거가 변경·삭제되었거나 연결이 다릅니다. 새 근거로 다시 작성하세요.");
         }
-        var matcher = CITATION.matcher(generated.version().markdown());
+        String finalMarkdown = manual ? markdown : generated.version().markdown();
+        if (finalMarkdown == null || finalMarkdown.isBlank() || finalMarkdown.length() > 100_000) {
+            throw new LibraryException(400, "본문은 1~100,000자로 입력하세요.");
+        }
+        if (manual && current.version().title().equals(title == null ? null : title.strip())
+                && current.version().markdown().equals(markdown)) {
+            throw new LibraryException(400, "현재 문서와 내용이 같습니다. 반영할 내용을 편집하세요.");
+        }
+        var matcher = CITATION.matcher(finalMarkdown);
         boolean found = false;
         while (matcher.find()) {
             found = true;
             String reference = matcher.group(1);
             if (!reference.matches("[1-9][0-9]?") || Integer.parseInt(reference) > evidence.size()) {
-                throw new LibraryException(400, "AI 결과의 근거 번호가 유효하지 않습니다.");
+                throw new LibraryException(400, "반영할 본문의 근거 번호가 유효하지 않습니다.");
             }
         }
-        if (!found) throw new LibraryException(400, "AI 결과에 [E1] 형식의 근거 인용이 필요합니다.");
-        var applied = knowledge.acceptGenerated(workspace, current.card().id(), expectedSourceVersion, generated);
+        if (!found) throw new LibraryException(400, "반영할 본문에 [E1] 형식의 근거 인용이 필요합니다.");
+        var applied = manual
+                ? knowledge.revise(workspace, current.card().id(), expectedSourceVersion, title, markdown, null)
+                : knowledge.acceptGenerated(workspace, current.card().id(), expectedSourceVersion, generated);
         store.save(workspace, job, new ProposalAcceptance(expectedSourceVersion, 1, applied.version().number(),
-                expectedRevision, note.strip(), Instant.now().toString()));
+                expectedRevision, note.strip(), Instant.now().toString(), manual ? "MANUAL" : "FULL"));
         return state(workspace, job);
     }
 }

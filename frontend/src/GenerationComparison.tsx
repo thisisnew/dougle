@@ -3,13 +3,14 @@ import { request } from './api'
 import { Button } from './components/ui/button'
 import ProposalDecisions from './ProposalDecisions'
 import ProposalAcceptance from './ProposalAcceptance'
+import ProposalMerge from './ProposalMerge'
 
 type Document = {
   card: { id: string; latestVersion: number }
   version: { number: number; title: string; markdown: string
     evidence: { snapshotId: string; path: string; startLine: number; endLine: number; quote: string; freshness: string }[] }
 }
-type Comparison = { base: Document; current: Document; generated: Document }
+export type Comparison = { base: Document; current: Document; generated: Document }
 const labels = { base: '생성 당시 문서', current: '현재 문서', generated: 'AI 최초 결과' } as const
 
 export default function GenerationComparison({ workspaceId, jobId, disabled, onOpen, onClose }: {
@@ -20,6 +21,7 @@ export default function GenerationComparison({ workspaceId, jobId, disabled, onO
   const [refresh, setRefresh] = useState(0)
   const [showDecisions, setShowDecisions] = useState(false)
   const [showAcceptance, setShowAcceptance] = useState(false)
+  const [showMerge, setShowMerge] = useState(false)
   useEffect(() => {
     const controller = new AbortController()
     setComparison(null); setError('')
@@ -53,13 +55,18 @@ export default function GenerationComparison({ workspaceId, jobId, disabled, onO
             <div key={`${item.snapshotId}-${index}`}><p>[E{index + 1}] {item.path} · {item.startLine}~{item.endLine}행 · {item.freshness}</p><pre>{item.quote}</pre></div>)}</details>
         </section>
       })}</div>
-      <p>수정 충돌이 없는 최초 결과는 전체 채택할 수 있습니다. 부분 반영은 현재 문서에서 직접 편집하세요. 자동 병합은 하지 않습니다.</p>
+      <p>수정 충돌이 없는 최초 결과는 전체 채택할 수 있습니다. 부분 반영 편집에서는 현재 문서를 보존하며 필요한 문장만 선택해 추가하세요. 자동 병합은 하지 않습니다.</p>
       <Button variant="outline" disabled={disabled} onClick={() => onOpen(comparison.current.card.id)}>현재 문서 열기</Button>
       <Button variant="outline" disabled={disabled} onClick={() => onOpen(comparison.generated.card.id)}>AI 결과의 최신 문서 열기</Button>
       <Button variant="outline" disabled={disabled} onClick={() => setShowDecisions(value => !value)}>제안 처리 기록 {showDecisions ? '닫기' : '열기'}</Button>
       {showDecisions && <ProposalDecisions key={`${workspaceId}-${jobId}-${refresh}`} workspaceId={workspaceId} jobId={jobId}
         sourceVersion={comparison.current.version.number} resultVersion={comparison.generated.card.latestVersion} disabled={disabled} />}
       <Button variant="outline" disabled={disabled} onClick={() => setShowAcceptance(value => !value)}>전체 채택 {showAcceptance ? '닫기' : '검토'}</Button>
+      <Button variant="outline" disabled={disabled} onClick={() => setShowMerge(true)}>부분 반영 편집</Button>
+      {showMerge && <ProposalMerge workspaceId={workspaceId} jobId={jobId} onClose={saved => {
+        setShowMerge(false)
+        if (saved) { setShowDecisions(false); setShowAcceptance(false); setRefresh(value => value + 1) }
+      }} />}
       {showAcceptance && <ProposalAcceptance key={`accept-${workspaceId}-${jobId}-${refresh}`} workspaceId={workspaceId} jobId={jobId}
         sourceVersion={comparison.current.version.number} resultVersion={comparison.generated.card.latestVersion} disabled={disabled}
         eligible={comparison.current.version.number === comparison.base.version.number && comparison.generated.card.latestVersion === 1

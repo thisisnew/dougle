@@ -211,7 +211,25 @@ try {
     expectedRevision: 0, expectedSourceVersion: 1, expectedResultVersion: 1, confirmed: true, note: 'Synthetic adoption',
   })
   assert.equal(acceptedProposal.acceptance.appliedVersion, 2)
+  assert.equal(acceptedProposal.acceptance.mode, 'FULL')
   assert.equal((await api(`${adoptionPath}/published`)).version.number, 1)
+  const manualPreview = await api(`${adoptionPath}/generation/preview`, 'POST', { provider: 'CODEX', requestedModel: 'synthetic-smoke-model' })
+  const manualRequest = await api(`${adoptionPath}/generation/jobs`, 'POST', {
+    requestId: crypto.randomUUID(), provider: 'CODEX', requestedModel: manualPreview.requestedModel,
+    expectedVersion: 2, digest: manualPreview.digest, approved: true,
+  })
+  const manualJob = await waitForJob(`${jobBase}/${manualRequest.id}`, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
+  assert.equal(manualJob.status, 'SUCCEEDED', manualJob.error)
+  await api(`${adoptionPath}/versions`, 'POST', {
+    expectedVersion: 2, title: 'Human title', markdown: 'Human paragraph [E1]',
+  })
+  const manualPath = `${jobBase}/${manualJob.id}/acceptance`
+  const manualAcceptance = await api(`${manualPath}/merge`, 'POST', {
+    expectedRevision: 0, expectedSourceVersion: 3, expectedResultVersion: 1, confirmed: true,
+    note: 'Synthetic selected content', title: 'Human title', markdown: 'Human paragraph [E1]\nSelected AI sentence [E1]',
+  })
+  assert.equal(manualAcceptance.acceptance.mode, 'MANUAL')
+  assert.equal(manualAcceptance.acceptance.appliedVersion, 4)
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   const movedFolder = await api(`${organizationPath}/folders/${knowledgeChild.id}`, 'PUT', {
@@ -222,13 +240,18 @@ try {
   configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
   assert.deepEqual(await api(acceptancePath), acceptedProposal)
-  assert.equal((await api(adoptionPath)).version.number, 2)
-  assert.equal((await api(adoptionPath)).version.manuallyEdited, false)
+  assert.deepEqual(await api(manualPath), manualAcceptance)
+  assert.equal((await api(adoptionPath)).version.number, 4)
+  assert.equal((await api(adoptionPath)).version.manuallyEdited, true)
+  assert.equal((await api(adoptionPath)).version.markdown, 'Human paragraph [E1]\nSelected AI sentence [E1]')
+  assert.equal((await api(`${adoptionPath}/versions/2`)).version.manuallyEdited, false)
+  assert.equal((await api(`${adoptionPath}/versions/3`)).version.markdown, 'Human paragraph [E1]')
   assert.equal((await api(`${adoptionPath}/versions/1`)).version.markdown, adoptionDraft.version.markdown)
   assert.equal((await api(`${adoptionPath}/published`)).version.number, 1)
   assert.equal((await api(`${adoptionPath}/publication`)).review, null)
   await api(adoptionPath, 'DELETE')
   await api(`${knowledgeBase}/${adoptionJob.resultCardId}`, 'DELETE')
+  await api(`${knowledgeBase}/${manualJob.resultCardId}`, 'DELETE')
   assert.deepEqual(await api(acceptancePath), acceptedProposal)
   assert.deepEqual(await api(decisionsPath), rejectedProposal)
   const reopenedProposal = await api(decisionsPath, 'POST', {
@@ -360,7 +383,8 @@ try {
       'folder rename and parent move revision survive restart',
       'read-only generation comparison keeps base and initial AI version after later edits',
       'proposal rejection persists across restart and reopening preserves history without document changes',
-      'explicit proposal acceptance persists as a new unverified draft while prior version and publication survive restart'],
+      'explicit proposal acceptance persists as a new unverified draft while prior version and publication survive restart',
+      'manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

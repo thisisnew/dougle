@@ -5,6 +5,10 @@
 
 ## 현재 구조
 
+수동 부분 반영은 `ProposalAcceptanceService.merge`가 최종 편집 본문을 검사한 뒤
+`KnowledgeService.revise`와 MANUAL 채택 이력을 한 트랜잭션으로 저장합니다.
+생성 이후 사람 편집은 허용하되 최신 기대 버전·동일 근거 연결 검사를 유지합니다. [범위](proposal-merge.md).
+
 전체 채택은 `ProposalAcceptanceService`가 처리 상태·버전·근거·인용을 검사하고,
 하나의 트랜잭션에서 새 DRAFT와 v11 채택 이력을 저장합니다. 편집 충돌은 병합하지 않고 거절합니다.
 [실제 모델과 제한](proposal-acceptance.md).
@@ -200,7 +204,7 @@ react-markdown/remark-gfm으로 React 요소에 표시하며 원문은 별도로
 raw HTML 파싱·실행 없이 링크는 비활성 텍스트, 이미지는 대체 설명으로 표시합니다.
 API·불변 버전·승인 digest·검토/게시 상태는 변경하지 않습니다. [표시 설계](markdown-rendering.md).
 
-## 독립 지식 폴더 (v8 도입, 현재 v11)
+## 독립 지식 폴더 (v8 도입, 현재 v12)
 
 v9는 폴더 revision으로 이름/부모 변경 충돌을 막습니다. 변경 후 전체 트리의 순환과 깊이를
 검사한 뒤 같은 트랜잭션에서 저장합니다. 문서·카드 배치 revision은 별개입니다. [설계·검증](folder-update.md).

@@ -11,7 +11,7 @@
 4. **전체 결과를 새 초안으로 채택**을 누릅니다.
 5. 비교가 새로고침되면 반영 버전을 확인합니다. **현재 문서 열기**로 이동해 검토 후 별도로 게시합니다.
 
-제목과 본문 **전체**를 반영합니다. 일부 문장만 선택하거나 기존 편집과 자동 병합하지 않습니다.
+제목과 본문 **전체**를 반영합니다. 이 전체 채택 화면은 일부 문장만 선택하거나 기존 편집과 자동 병합하지 않습니다. 후속 [부분 반영 편집](proposal-merge.md)에서는 동일 근거를 유지한 수동 편집을 지원합니다.
 사람이 확인해 채택해도 AI 본문 자체는 미검증 DRAFT이며 `manuallyEdited=false`입니다.
 
 ## 언제 차단되나?
@@ -71,7 +71,7 @@ POST는 `X-Forge-Client: 1` 헤더와 다음 본문을 받으며 같은 State를
 }
 ```
 
-acceptance 항목은 `sourceVersion,resultVersion,appliedVersion,decisionRevision,note,acceptedAt`입니다.
+acceptance 항목은 `sourceVersion,resultVersion,appliedVersion,decisionRevision,note,acceptedAt,mode`입니다. v12에서 FULL/MANUAL 구분을 추가했습니다.
 400: 확인/이유 누락, 잘못된 인용. 404: 작업·Workspace 불일치, 저장 시 카드 없음.
 409: 미완료/거절/기채택 작업, 버전·처리 순번·근거 충돌.
 이유는 공백만 입력할 수 없고 전체 4,000자 이내입니다.
@@ -83,9 +83,9 @@ acceptance 항목은 `sourceVersion,resultVersion,appliedVersion,decisionRevisio
 Workspace 격리·삭제, HTTP 헤더와 v10→v11 이관·재시작을 검사합니다.
 UI는 확인/이유 필수, 버전 바인딩, 오류 시 입력 보존, 상태별 차단, 중복 클릭·종료 취소를 검사합니다.
 
-부분 선택·인용 재연결·편집 충돌 해결은 후속입니다. 자동 폴링/Git 변경 기반 제안도 아직 없습니다.
+동일 근거의 부분 선택·수동 편집·재대조 저장은 [후속 구현](proposal-merge.md)했습니다. 인용 재연결·줄 단위 충돌 표시는 남았습니다. 자동 폴링/Git 변경 기반 제안도 아직 없습니다.
 실제 AI 호출·브라우저 시각 QA·Mac 설치형 검증은 이번 범위가 아닙니다.
-업데이트 전 앱을 종료하고 데이터 디렉터리 전체를 백업하세요. v11 DB의 구버전 앱 역이동은 지원하지 않습니다.
+업데이트 전 앱을 종료하고 데이터 디렉터리 전체를 백업하세요. 현재 DB는 v12이며 구버전 앱 역이동은 지원하지 않습니다.
 
 ## 실행 결과 (2026-10-21, macOS Intel)
 

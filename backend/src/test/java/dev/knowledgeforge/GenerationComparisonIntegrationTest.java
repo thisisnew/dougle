@@ -277,4 +277,80 @@ class GenerationComparisonIntegrationTest {
                 .andExpect(status().isOk()).andExpect(jsonPath("$.acceptance.appliedVersion").value(2));
         assertThat(publication.state(workspace, original).publication()).isNull();
     }
+
+    @Test
+    void manualMergePreservesHumanEditsAsNewDraftAndLeavesPublicationUntouched() {
+        publication.review(workspace, original, 1, "synthetic", "checked", true, true);
+        publication.publish(workspace, original, 1, 0);
+        knowledge.revise(workspace, original, 1, "human title", "human paragraph [E1]", null);
+        var state = acceptance.merge(workspace, "job", 0, 2, 1, "selected useful sentence", true,
+                "human title", "human paragraph [E1]\nselected AI sentence [E1]");
+        assertThat(state.acceptance().mode()).isEqualTo("MANUAL");
+        assertThat(state.acceptance().sourceVersion()).isEqualTo(2);
+        assertThat(state.acceptance().appliedVersion()).isEqualTo(3);
+        var merged = knowledge.get(workspace, original, null);
+        assertThat(merged.version().manuallyEdited()).isTrue();
+        assertThat(merged.version().markdown()).isEqualTo("human paragraph [E1]\nselected AI sentence [E1]");
+        assertThat(knowledge.get(workspace, original, 2).version().markdown()).isEqualTo("human paragraph [E1]");
+        assertThat(merged.version().evidence()).isEqualTo(knowledge.get(workspace, result, 1).version().evidence());
+        assertThat(publication.published(workspace, original).version().number()).isEqualTo(1);
+        assertThat(publication.state(workspace, original).review()).isNull();
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 3, 1, "duplicate", true, "title", "again [E1]"));
+    }
+
+    @Test
+    void manualMergeRequiresCurrentVersionsAndExplicitConfirmation() {
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "note", false, "title", "merged [E1]"));
+        knowledge.revise(workspace, original, 1, "human", "human [E1]", null);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 1, 1, "stale", true, "title", "merged [E1]"));
+        knowledge.revise(workspace, result, 1, "result edit", "result [E1]", null);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 2, "result edit", true, "title", "merged [E1]"));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(2);
+    }
+
+    @Test
+    void manualMergeRejectsChangedEvidenceMappingAndMissingEvidence() {
+        String otherEntry = library.upload(workspace, null, "other.txt", "other synthetic evidence".getBytes(java.nio.charset.StandardCharsets.UTF_8)).id();
+        knowledge.revise(workspace, original, 1, "different evidence", "human [E1]", List.of(new Citation(otherEntry, 1, 1)));
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "ambiguous E1", true, "title", "merged [E1]"));
+        library.deleteEntry(workspace, entry);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "missing", true, "title", "merged [E1]"));
+        assertThat(acceptance.state(workspace, "job").acceptance()).isNull();
+    }
+
+    @Test
+    void manualMergeValidatesEditedTextAndRollsBackInvalidTitle() {
+        for (String markdown : List.of("", "missing citation", "invalid [E2]", "invalid [E0]", "x".repeat(100001))) {
+            fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "invalid", true, "title", markdown));
+        }
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "invalid", true, "", "valid [E1]"));
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "unchanged", true, "original", "base [E1]"));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+        assertThat(acceptance.state(workspace, "job").acceptance()).isNull();
+    }
+
+    @Test
+    void manualMergeAuditFailureRollsBackDocumentAndVersions() {
+        jdbc.execute("CREATE TRIGGER fail_manual BEFORE INSERT ON proposal_acceptance BEGIN SELECT RAISE(ABORT,'synthetic'); END");
+        try {
+            assertThatThrownBy(() -> acceptance.merge(workspace, "job", 0, 1, 1, "note", true, "title", "merged [E1]"))
+                    .isInstanceOf(RuntimeException.class);
+            assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_version", Integer.class)).isEqualTo(2);
+        } finally {
+            jdbc.execute("DROP TRIGGER fail_manual");
+        }
+    }
+
+    @Test
+    void manualMergeHttpIsWorkspaceScopedAndRequiresWriteHeader() throws Exception {
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/acceptance/merge";
+        String body = """
+                {"expectedRevision":0,"expectedSourceVersion":1,"expectedResultVersion":1,"note":"synthetic","confirmed":true,"title":"selected","markdown":"selected [E1]"}
+                """;
+        mvc.perform(post(path).contentType("application/json").content(body)).andExpect(status().isForbidden());
+        fails(404, () -> acceptance.merge(library.createWorkspace("other").id(), "job", 0, 1, 1, "note", true, "title", "merged [E1]"));
+        mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json").content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.acceptance.mode").value("MANUAL"));
+    }
 }

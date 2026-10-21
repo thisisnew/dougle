@@ -52,7 +52,7 @@ Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 
 ## Phase 4
 
-진입 전 남은 P3-4: AI 결과 읽기 전용 비교는 구현했으며 거절·재검토 이력도 구현했습니다. 충돌 없는 전체 채택도 구현했습니다. 부분 반영·편집 충돌 해결은 남았습니다. [채택 범위](proposal-acceptance.md). [처리 기록](proposal-decisions.md). [범위](generation-comparison.md).
+진입 전 남은 P3-4: AI 결과 읽기 전용 비교는 구현했으며 거절·재검토 이력도 구현했습니다. 충돌 없는 전체 채택도 구현했습니다. 동일 근거의 수동 부분 반영·재조회 후 재확인도 구현했습니다. 근거 재연결·줄 단위 충돌 표시는 남았습니다. [부분 반영](proposal-merge.md). [채택 범위](proposal-acceptance.md). [처리 기록](proposal-decisions.md). [범위](generation-comparison.md).
 
 검색과 LLM 생성 유스케이스를 분리합니다.
 다중 도메인 검색, 근거 우선 SSE, CLI Provider, 중단, Provider 확장 및 외부 전송 승인을 구현합니다.
