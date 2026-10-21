@@ -1,5 +1,8 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
+최신 흐름: **통합 검색 → 현재 원문·게시·범위 대조 → 인용문 묶음 저장 → 로컬 확인**.
+이 경로는 구현되었습니다. AI 전송 전 재검증·승인·SSE 답변은 남았습니다. [모델·한계](evidence-bundles.md).
+
 검색 후속 개선: **저장된 단어 위치 → 검색어 주변 글·추출 텍스트 행 범위 → 원본 열기**가 구현되었습니다.
 원본·게시 지식 통합 검색도 구현했습니다. 채팅은 아직 없습니다. [게시 검색 코드 대조](published-search.md).
 
@@ -235,10 +238,10 @@ sequenceDiagram
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
 | 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx`, `GenerationComparison.tsx`, `PublicationPanel.tsx` | 오래된 근거 교체·줄 단위 충돌 표시, 채팅 |
-| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v13, 향후 데이터/보존 정책 확장 |
+| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v14, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
-| 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 원본/게시 지식 구현, 청크·관계 검색 후속 |
+| 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 원본/게시 지식·불변 근거 묶음 구현, 의미 청크·관계 검색 후속 |
 | 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · AI 갱신 제안 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
@@ -262,7 +265,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  Version["불변 Markdown 버전 · SQLite v13"] --> API["기존 조회 API · 원문 그대로"]
+  Version["불변 Markdown 버전 · SQLite v14"] --> API["기존 조회 API · 원문 그대로"]
   API --> Preview["React Markdown/GFM 미리보기"]
   API --> Raw["원문 보기 · 편집 입력"]
   Preview --> Safe["HTML 실행 없음 · 링크/이미지 비활성"]

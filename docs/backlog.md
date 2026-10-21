@@ -8,7 +8,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 ## 권장 순서와 공통 완료 조건
 
 - 원본 검색의 단어 주변 미리보기·추출 텍스트 행 범위·본문 일치 구분은 구현했습니다. [검증/제한](search-evidence.md).
-- P4-1의 [게시 지식 통합 검색](published-search.md)은 구현했습니다. 영속 청크/인용 스냅샷, 심볼·지식 관계 검색은 여전히 미완료입니다.
+- P4-1의 [게시 지식 통합 검색](published-search.md)과 [불변 근거 묶음](evidence-bundles.md)은 구현했습니다. 의미 기반 청크 선택, 심볼·지식 관계 검색은 여전히 미완료입니다.
 
 1. 새 PC에서 기준 빌드/테스트 → 가상 Source 수집/검색 확인.
 2. P3-1 완료, P3-2 CLI Curator 일부 구현. 최신 결정/검증은 [CLI AI](cli-ai.md)를 확인.
@@ -75,7 +75,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
   현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
   원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=13`, FK cascade,
+- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=14`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
@@ -90,7 +90,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   지식 관계 인덱스/조회 추가. 현재는 이름·본문·심볼 텍스트 검색이며 관계 그래프 검색은 없음.
   여러 도메인 검색과 Workspace 격리 유지, 오래된 근거 표시, 무관한 자료/검색 결과 없음 테스트.
   완료된 하위 단위: 원본/최신 게시본 통합, 초안 제외, 게시 버전·최신성·복수 도메인, 읽기 전용 열람.
-  남은 인수 조건: 영속 청크/인용 스냅샷, 관계 조회, 답변용 근거 묶음. [검증](published-search.md).
+  후속 완료: 답변용 불변 인용/출처 묶음과 로컬 보관. [검증](evidence-bundles.md).
+  남은 인수 조건: 의미 기반 청크 선택, 관계 조회, 실제 전송 전 묶음 재검증/토큰 예산.
 - [ ] **P4-2: 대화 유스케이스.** `conversation`과 `LlmProvider` 포트, CLI Provider 스트림,
   컨텍스트/토큰 예산, 대화 기록·삭제 정책, 근거 중심 프롬프트를 구현.
   검색 결과의 악성 명령을 지시로 실행하지 않으며 근거 부족 시 답변 유보.
@@ -152,11 +153,11 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 181개 통과 + live opt-in 1개 skip, 프런트엔드 95개 통과(worker 2개), JAR 빌드 성공.
-- 최신 구현/검증: [원본·게시 지식 통합 검색](published-search.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 191개 통과 + live opt-in 1개 skip, 프런트엔드 100개 통과(worker 2개), JAR 빌드 성공.
+- 최신 구현/검증: [답변용 근거 묶음](evidence-bundles.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
-- 최신 보고서: [원본·게시 지식 통합 검색](published-search.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
+- 최신 보고서: [답변용 근거 묶음](evidence-bundles.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
 - 실제 JAR/재시작/검색과 공개 URL·GitHub 수집 통과: [Phase 2 보고서](phase2-report.md).
 - 측정: [performance-phase2.json](performance-phase2.json). 소규모 순차 측정이며 SLA가 아님.
 - 문서만 바꾼 작업에서 이전 테스트를 이번에 재실행한 것처럼 기록하지 않기.

@@ -1,6 +1,7 @@
 package dev.knowledgeforge.search.adapter;
 
 import dev.knowledgeforge.search.application.SearchIndex;
+import dev.knowledgeforge.search.domain.ContentDigest;
 import jakarta.annotation.PreDestroy;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -65,6 +66,7 @@ public class LuceneSearchIndex implements SearchIndex {
         document.add(new StringField("workspace", value.workspaceId(), Field.Store.NO));
         for (String domain : value.domains()) document.add(new StringField("domain", domain, Field.Store.YES));
         document.add(new StringField("kind", value.kind(), Field.Store.YES));
+        document.add(new StoredField("textHash", ContentDigest.of(value.text())));
         if (value.cardId() != null) {
             document.add(new StoredField("card", value.cardId()));
             document.add(new StoredField("version", value.version()));
@@ -130,7 +132,7 @@ public class LuceneSearchIndex implements SearchIndex {
                         String.join(", ", resultDomains), document.get("path"), snippet, match.score, startLine, endLine,
                         offset >= 0, document.get("kind"), document.get("card"),
                         published ? document.getField("version").numericValue().intValue() : null,
-                        resultDomains, "UNCHECKED"));
+                        resultDomains, "UNCHECKED", document.get("textHash")));
             }
             return results;
         } catch (IOException exception) {

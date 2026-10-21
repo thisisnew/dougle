@@ -3,6 +3,7 @@ import { FolderInput, Link, RefreshCw, Search, Trash2 } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { request } from './api'
 import PublishedSearchPreview from './PublishedSearchPreview'
+import EvidenceBundlePanel from './EvidenceBundlePanel'
 
 type Source = {
   id: string; name: string; kind: string; location: string; domain: string; status: string
@@ -26,6 +27,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [domains, setDomains] = useState<string[]>([])
   const [hits, setHits] = useState<Hit[] | null>(null)
   const [searching, setSearching] = useState(false)
+  const [bundleOpen, setBundleOpen] = useState(false)
   const [includeKnowledge, setIncludeKnowledge] = useState(true)
   const [published, setPublished] = useState<{ cardId: string; version: number } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
@@ -118,6 +120,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       <label className="sr-only" htmlFor="knowledge-query">자료 검색</label>
       <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="원본·게시 지식·Java 심볼 검색" />
       <Button type="submit" size="sm" disabled={searching || !query.trim()}><Search />{searching ? '검색 중…' : '검색'}</Button>
+      <Button type="button" size="sm" variant="outline" onClick={() => setBundleOpen(true)}>근거 묶음</Button>
     </form>
     <label><input type="checkbox" checked={includeKnowledge} onChange={event => { searchAbort.current?.abort(); setSearching(false); setIncludeKnowledge(event.target.checked); setHits(null) }} />게시 지식도 검색 (미게시 초안 제외)</label>
     {availableDomains.length > 0 && <fieldset className="domain-options"><legend>검색 도메인 · 선택하지 않으면 전체</legend>{availableDomains.map(value => <label key={value}><input type="checkbox" checked={domains.includes(value)} onChange={event => setDomains(event.target.checked ? [...domains, value] : domains.filter(item => item !== value))} />{value}</label>)}</fieldset>}
@@ -126,5 +129,6 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       else if (hit.entryId) onSelect(hit.entryId)
     }}><strong>{hit.name}</strong><small>{hit.kind === 'KNOWLEDGE' ? `게시 지식 v${hit.version} · 근거 ${hit.freshness}` : '원본'} · {hit.domain || '분류 없음'} · {hit.path}</small><small>{hit.bodyMatch ? '본문 검색어 주변' : '이름·심볼 일치 · 본문 앞부분'}{hit.startLine > 0 ? ` · ${hit.kind === 'KNOWLEDGE' ? '게시 Markdown' : '추출 텍스트'} ${hit.startLine}–${hit.endLine}행 (일부)` : ' · 본문 없음'}</small><span>{hit.snippet}</span></button>)}</div>}
     {published && <PublishedSearchPreview workspaceId={workspaceId} cardId={published.cardId} version={published.version} onClose={() => setPublished(null)} />}
+    {bundleOpen && <EvidenceBundlePanel workspaceId={workspaceId} question={query} domains={domains} includeKnowledge={includeKnowledge} onClose={() => setBundleOpen(false)} />}
   </section>
 }

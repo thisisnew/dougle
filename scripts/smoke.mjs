@@ -123,6 +123,13 @@ try {
   assert.ok(symbolHits[0].startLine >= 1)
   assert.ok(symbolHits[0].endLine >= symbolHits[0].startLine)
   assert.ok(symbolHits[0].snippet.includes('measureTemperature'))
+  assert.equal(symbolHits[0].textHash.length, 64)
+  const bundleBase = `/workspaces/${workspace.id}/evidence-bundles`
+  const originalBundle = await api(bundleBase, 'POST', { question: 'measureTemperature', domains: ['실험'], includeKnowledge: false })
+  assert.equal(originalBundle.payload.status, 'READY')
+  assert.equal(originalBundle.payload.items[0].entryId, symbolHits[0].entryId)
+  assert.equal(originalBundle.payload.items[0].quote, symbolHits[0].snippet)
+  assert.equal(originalBundle.digest.length, 64)
   const analysis = await api(`/workspaces/${workspace.id}/entries/${symbolHits[0].entryId}/analysis`)
   assert.ok(analysis.symbols.some(symbol => symbol.name === 'measureTemperature' && symbol.line === 4))
   const knowledgeBase = `/workspaces/${workspace.id}/knowledge`
@@ -200,6 +207,11 @@ try {
   assert.equal(publishedHit.version, 1)
   assert.equal(publishedHit.freshness, 'CURRENT')
   assert.ok((await api(`${publishedSearchPath}&domains=${encodeURIComponent('실험')}`)).some(hit => hit.cardId === completed.resultCardId))
+  const publishedBundle = await api(bundleBase, 'POST', { question: '출력', includeKnowledge: true })
+  assert.equal(publishedBundle.payload.status, 'READY')
+  assert.equal(publishedBundle.payload.items[0].cardId, completed.resultCardId)
+  assert.equal(publishedBundle.payload.items[0].version, 1)
+  assert.ok(publishedBundle.payload.items[0].supports.length > 0)
   const decisionsPath = `${jobBase}/${completed.id}/decisions`
   assert.deepEqual(await api(decisionsPath), [])
   const rejectedProposal = await api(decisionsPath, 'POST', {
@@ -302,6 +314,9 @@ try {
   assert.equal(restoredPublicationHit.version, 1)
   assert.equal(restoredPublicationHit.name, publishedHit.name)
   assert.equal(restoredPublicationHit.snippet, publishedHit.snippet)
+  assert.deepEqual(await api(`${bundleBase}/${originalBundle.id}`), originalBundle)
+  assert.deepEqual(await api(`${bundleBase}/${publishedBundle.id}`), publishedBundle)
+  assert.equal((await api(bundleBase)).length, 2)
   assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).status, 'SUCCEEDED')
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)).status, 'CANCELLED')
@@ -354,6 +369,13 @@ try {
   assert.equal((await api(`${publicationPath}/publication`)).publication.version, 1)
   assert.equal((await api(publishedSearchPath)).find(hit => hit.cardId === completed.resultCardId).freshness, 'MISSING')
   assert.ok(!(await api(`${publishedSearchPath}&domains=${encodeURIComponent('실험')}`)).some(hit => hit.cardId === completed.resultCardId))
+  assert.deepEqual(await api(`${bundleBase}/${originalBundle.id}`), originalBundle)
+  assert.deepEqual(await api(`${bundleBase}/${publishedBundle.id}`), publishedBundle)
+  const missingBundle = await api(bundleBase, 'POST', { question: '출력', includeKnowledge: true })
+  assert.equal(missingBundle.payload.status, 'NO_EVIDENCE')
+  assert.ok(missingBundle.payload.excluded.some(item => item.reason === 'NOT_CURRENT'))
+  await api(`${bundleBase}/${missingBundle.id}`, 'DELETE')
+  assert.equal((await api(bundleBase)).length, 2)
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   const livePublic = []
   if (process.argv.includes('--live-public')) {
@@ -403,6 +425,7 @@ try {
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',
       'search body offsets and extracted line ranges survive restart',
       'published knowledge search excludes later drafts and survives restart with live evidence freshness and source domain filters',
+      'immutable original and published evidence bundles survive restart and source deletion without LLM calls',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',

@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 13) {
+        if (version > 14) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -333,6 +333,22 @@ public class DatabaseConfiguration {
                                 """);
                         jdbc.execute("INSERT INTO search_outbox(entry_id) SELECT DISTINCT 'knowledge:' || card_id FROM knowledge_publication");
                         jdbc.execute("PRAGMA user_version=13");
+                    });
+        }
+        if (version < 14) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE evidence_bundle (
+                                  id TEXT PRIMARY KEY, workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  question TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('READY','NO_EVIDENCE')),
+                                  used_characters INTEGER NOT NULL CHECK(used_characters BETWEEN 0 AND 12000),
+                                  payload_json TEXT NOT NULL, digest TEXT NOT NULL, created_at TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX evidence_bundle_workspace ON evidence_bundle(workspace_id,created_at)");
+                        jdbc.execute("PRAGMA user_version=14");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

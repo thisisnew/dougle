@@ -19,7 +19,7 @@
 
 지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.
 Markdown 응답은 저장된 원문이며 HTML이 아닙니다. UI만 안전한 미리보기를 제공합니다.
-표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v13이며 게시 지식 색인 큐 트리거가 추가되었습니다. FULL/MANUAL 채택 기록도 보존합니다.
+표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v14이며 로컬 근거 묶음 보관 테이블이 추가되었습니다. 게시 색인 큐와 FULL/MANUAL 채택 기록도 보존합니다.
 
 폴더 이름/부모 변경: `PUT /workspaces/{workspaceId}/knowledge-organization/folders/{id}`.
 요청 `{parentId, name, expectedRevision}` → 변경한 Folder `{id,parentId,name,revision}`.
@@ -165,7 +165,8 @@ Source 전체 삭제와 Workspace 삭제는 가능합니다.
 ERROR(추출 실패/크기 초과), PENDING(Phase 1 기존 파일).
 원본 바이트는 분석 실패에도 보존됩니다. OCR/임베디드 문서 재귀 추출은 비활성입니다.
 
-Hit 필드: `entryId, name, sourceId, domain, path, snippet, score, startLine, endLine, bodyMatch, kind, cardId, version, domains, freshness`.
+Hit 필드: `entryId, name, sourceId, domain, path, snippet, score, startLine, endLine, bodyMatch, kind, cardId, version, domains, freshness, textHash`.
+`textHash`는 색인 본문 UTF-8 SHA-256입니다. [답변용 근거 묶음 API](evidence-bundles.md)는 이 값으로 현재 본문과 다시 대조한 뒤 로컬에 인용문을 보관합니다. AI 전송은 없습니다.
 `includeKnowledge=true`이면 원본과 최신 게시 지식을 함께 검색합니다. 기본 false(원본만), UI 기본 true입니다.
 `kind=ORIGINAL`은 entryId를, `kind=KNOWLEDGE`는 cardId/version을 사용하며 나머지 ID는 null입니다.
 게시 지식의 도메인은 현재 근거 Source 도메인들의 합집합이며 sourceId/path는 빈 문자열입니다.
