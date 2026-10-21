@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T10:25:54.683Z",
+  "measuredAt": "2026-10-21T10:58:39.595Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -26,23 +26,26 @@
     "optimistic edit conflict",
     "source deletion preserves historical evidence bytes",
     "CLI payload preview without external call",
-    "unapproved and mismatched AI transmission rejected"
+    "unapproved and mismatched AI transmission rejected",
+    "fake CLI async generation and cancellation",
+    "idempotent job replay across restart",
+    "completed job and draft persist"
   ],
-  "sourceSyncMs": 1731.4899119999973,
+  "sourceSyncMs": 1853.5433830000002,
   "livePublic": [],
-  "startupMs": 17493,
-  "restartMs": 20482,
+  "startupMs": 17272,
+  "restartMs": 18244,
   "upload100": {
-    "p50Ms": 349.6665839999987,
-    "p95Ms": 911.8346960000054
+    "p50Ms": 554.1415559999878,
+    "p95Ms": 1079.4855629999947
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 8.144455000001471,
-    "p95Ms": 10.94902600000205
+    "p50Ms": 8.032065000006696,
+    "p95Ms": 9.979670000000624
   },
   "search100Files30Requests": {
-    "p50Ms": 17.621134000000893,
-    "p95Ms": 29.6032450000057
+    "p50Ms": 19.69316300000355,
+    "p95Ms": 25.296212000001105
   },
-  "limitations": "Single local process, small synthetic dataset, no concurrency; not LLM performance."
+  "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.concurrent.Semaphore;
+import java.util.function.Function;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.DeserializationFeature;
@@ -15,6 +16,7 @@ import tools.jackson.databind.json.JsonMapper;
 @Service
 public class CuratorService {
     public record Preview(String provider, int expectedVersion, String digest, String prompt) {}
+    public record Generated(Document source, String title, String markdown) {}
     private final KnowledgeService knowledge;
     private final CuratorModel model;
     private final Semaphore slot = new Semaphore(1);
@@ -30,18 +32,34 @@ public class CuratorService {
     }
 
     public Document generate(String workspace, String id, String provider, int expectedVersion, String digest, boolean approved) {
+        return generate(workspace, id, provider, expectedVersion, digest, approved,
+                draft -> knowledge.createGenerated(draft.source(), draft.title(), draft.markdown()));
+    }
+
+    public void checkRequest(String workspace, String id, String provider, int expectedVersion, String digest, boolean approved) {
+        if (!approved) throw new LibraryException(403, "선택한 AI 제공자에게 근거를 전송하려면 명시적으로 승인하세요.");
+        checkPreview(preview(workspace, id, provider), expectedVersion, digest);
+    }
+
+    private void checkPreview(Preview preview, int expectedVersion, String digest) {
+        if (preview.expectedVersion() != expectedVersion || !preview.digest().equals(digest)) {
+            throw new LibraryException(409, "전송 내용이 변경되었습니다. 미리보기를 다시 확인하고 승인하세요.");
+        }
+    }
+
+    public Document generate(String workspace, String id, String provider, int expectedVersion, String digest,
+                             boolean approved, Function<Generated, Document> publish) {
         if (!approved) throw new LibraryException(403, "선택한 AI 제공자에게 근거를 전송하려면 명시적으로 승인하세요.");
         if (!slot.tryAcquire()) throw new LibraryException(409, "다른 AI 생성이 진행 중입니다.");
         try {
             Document source = knowledge.get(workspace, id, null);
             Preview preview = prepare(source, provider);
-            if (preview.expectedVersion() != expectedVersion || !preview.digest().equals(digest)) {
-                throw new LibraryException(409, "전송 내용이 변경되었습니다. 미리보기를 다시 확인하고 승인하세요.");
-            }
+            checkPreview(preview, expectedVersion, digest);
+            if (Thread.currentThread().isInterrupted()) throw new LibraryException(503, "AI 생성이 중단되었습니다.");
             String output = model.generate(provider(provider), preview.prompt());
             String[] draft = validate(output, source.version().evidence().size());
-            return knowledge.createGenerated(source, draft[0], "> AI 미검증 초안 · " + provider
-                    + " · 원본 지식 " + id + " v" + expectedVersion + "\n\n" + draft[1]);
+            return publish.apply(new Generated(source, draft[0], "> AI 미검증 초안 · " + provider
+                    + " · 원본 지식 " + id + " v" + expectedVersion + "\n\n" + draft[1]));
         } finally {
             slot.release();
         }

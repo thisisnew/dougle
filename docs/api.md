@@ -217,6 +217,8 @@ Workspace 삭제는 해당 지식·버전·근거 복사본을 모두 삭제합�
 
 ## CLI AI 초안
 
+아래 동기 API는 호환용입니다. 새 UI는 다음 절의 비동기 작업 API를 사용합니다.
+
 접두사 `/workspaces/{workspaceId}/knowledge/{id}/generation`, 변경 헤더 필수.
 
 - `POST /preview` 요청 `{ "provider": "CODEX" }` 또는 `CLAUDE`.
@@ -231,4 +233,28 @@ Workspace 삭제는 해당 지식·버전·근거 복사본을 모두 삭제합�
 - 모델 출력은 title(120자), claims(1~20), 각 text(2,000자)/evidenceIds를 검사합니다.
   ID 존재는 의미적 사실 검증이 아닙니다. 모든 결과는 미검증으로만 저장합니다.
 - 동기 API이며 전역 한 작업만 허용합니다. 화면 종료/HTTP 연결 해제는 작업 취소가 아닙니다.
-  자동 재시도하지 마세요. 재요청은 별도 초안을 생성할 수 있습니다. 영속 작업 ID/취소는 후속입니다.
+  자동 재시도하지 마세요. 재요청은 별도 초안을 생성할 수 있습니다. 영속 작업 ID/취소는 다음 비동기 API에서 지원합니다.
+
+## AI 생성 작업 (v4)
+
+- `POST /workspaces/{workspaceId}/knowledge/{id}/generation/jobs`
+  요청 `{ "requestId": "UUID", "provider": "CODEX", "expectedVersion": 1, "digest": "미리보기 SHA-256", "approved": true }`.
+  202 Job. 원본 프롬프트를 클라이언트에서 받지 않습니다. 승인/내용/크기 검사는 접수 때 실행합니다.
+- `GET /workspaces/{workspaceId}/generation-jobs`: 최근 20개 Job (생성 시각 내림차순).
+- `GET /workspaces/{workspaceId}/generation-jobs/{jobId}`: 개별 Job.
+- `POST /workspaces/{workspaceId}/generation-jobs/{jobId}/cancel`: 200 Job.
+  CANCELLING은 중단 요청 접수이며, CANCELLED는 worker의 정리가 끝난 상태입니다.
+  이미 완료/실패/취소된 작업에는 상태 변경 없이 현재 Job을 반환합니다.
+
+```text
+Job: { id, workspaceId, sourceCardId, provider, expectedVersion, digest, status,
+       resultCardId, error, createdAt, updatedAt }
+status: QUEUED | RUNNING | CANCELLING | CANCELLED | SUCCEEDED | FAILED | INTERRUPTED
+```
+
+변경 헤더가 필수이며 Workspace 격리(다른 공간 작업은 404)를 적용합니다.
+동일 Workspace/requestId의 같은 요청은 **기존 작업만 반환**합니다. 다른 내용은 409입니다.
+작업 오류는 status=FAILED/error로 조회하며 HTTP 접수 성공을 생성 성공으로 오인하지 마세요.
+같은 ID로 실패/취소/중단을 재실행하지 않습니다. 새 시도에는 새 미리보기·승인·ID가 필요합니다.
+실행 중이거나 중단 정리 중인 다른 작업이 있으면 409, 잘못된 ID는 400, 미승인은 403입니다.
+재시작 후 미완료 작업은 INTERRUPTED이며 자동 외부 재전송은 없습니다. 상세 [작업 설계](generation-jobs.md).

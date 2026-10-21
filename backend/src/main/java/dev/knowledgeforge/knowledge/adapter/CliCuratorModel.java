@@ -103,6 +103,7 @@ public class CliCuratorModel implements CuratorModel {
         builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
                 "SYSTEMROOT", "SystemRoot", "WINDIR", "CODEX_HOME"));
         Process process = builder.start();
+        Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
         var executor = Executors.newVirtualThreadPerTaskExecutor();
         try {
             var stdout = executor.submit(() -> read(process.getInputStream(), process));
@@ -113,6 +114,7 @@ public class CliCuratorModel implements CuratorModel {
             });
             long deadline = System.nanoTime() + timeout.toNanos();
             while (!process.waitFor(100, TimeUnit.MILLISECONDS)) {
+                process.descendants().forEach(descendants::add);
                 if (System.nanoTime() >= deadline) throw new LibraryException(504, "AI CLI 응답 제한 시간을 초과했습니다. 기존 지식은 유지됩니다.");
                 Path output = directory.resolve("answer.json");
                 if (Files.exists(output) && Files.size(output) > 65536) throw new IOException();
@@ -138,12 +140,23 @@ public class CliCuratorModel implements CuratorModel {
         } catch (java.util.concurrent.ExecutionException exception) {
             throw new IOException("CLI I/O failed");
         } finally {
-            process.descendants().forEach(ProcessHandle::destroyForcibly);
-            process.destroyForcibly();
-            process.getInputStream().close();
-            process.getErrorStream().close();
-            process.getOutputStream().close();
-            executor.shutdownNow();
+            boolean interrupted = Thread.interrupted();
+            try {
+                process.descendants().forEach(descendants::add);
+                descendants.forEach(ProcessHandle::destroyForcibly);
+                process.destroyForcibly();
+                long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2);
+                while ((process.isAlive() || descendants.stream().anyMatch(ProcessHandle::isAlive)) && System.nanoTime() < deadline) {
+                    try { Thread.sleep(10); }
+                    catch (InterruptedException exception) { interrupted = true; }
+                }
+                try { process.getInputStream().close(); } catch (IOException ignored) { }
+                try { process.getErrorStream().close(); } catch (IOException ignored) { }
+                try { process.getOutputStream().close(); } catch (IOException ignored) { }
+            } finally {
+                executor.shutdownNow();
+                if (interrupted) Thread.currentThread().interrupt();
+            }
         }
     }
 

@@ -33,7 +33,7 @@ it('추출 텍스트의 선택한 행으로 미검증 수동 초안을 저장한
 
 it('원본이 삭제된 근거와 Markdown을 실행하지 않고 표시한다', async () => {
   const user = userEvent.setup()
-  api.mockImplementation(async path => path.endsWith('/knowledge') ? [card] : document)
+  api.mockImplementation(async path => path.endsWith('/generation-jobs') ? [] : path.endsWith('/knowledge') ? [card] : document)
   const { container } = render(<KnowledgePanel workspaceId="one" />)
   await user.click(await screen.findByRole('button', { name: '관측 초안 · v1' }))
   expect(await screen.findByLabelText('지식 Markdown')).toHaveTextContent('<script>window.injected=true</script>')
@@ -46,6 +46,7 @@ it('사람 편집은 기대 버전을 전달하며 이전 근거를 유지한 �
   const user = userEvent.setup()
   let saved = false
   api.mockImplementation(async (path, options) => {
+    if (path.endsWith('/generation-jobs')) return []
     if (options?.method === 'POST') { saved = true; return document }
     const latest = saved ? 2 : 1
     if (path.endsWith('/knowledge')) return [{ ...card, latestVersion: latest }]
@@ -67,6 +68,7 @@ it('사람 편집은 기대 버전을 전달하며 이전 근거를 유지한 �
 it('충돌 응답에도 사용자가 입력한 초안을 잃지 않는다', async () => {
   const user = userEvent.setup()
   api.mockImplementation(async (path, options) => {
+    if (path.endsWith('/generation-jobs')) return []
     if (options?.method === 'POST') throw new Error('다른 편집이 저장되었습니다. 최신 버전을 다시 열어 주세요.')
     return path.endsWith('/knowledge') ? [card] : document
   })
@@ -83,6 +85,7 @@ it('충돌 응답에도 사용자가 입력한 초안을 잃지 않는다', asyn
 it('이전 버전은 읽기 전용이며 삭제 취소는 요청을 보내지 않는다', async () => {
   const user = userEvent.setup()
   api.mockImplementation(async path => {
+    if (path.endsWith('/generation-jobs')) return []
     if (path.endsWith('/knowledge')) return [{ ...card, latestVersion: 2 }]
     return { card: { ...card, latestVersion: 2 }, version: { ...document.version, number: path.endsWith('/versions/1') ? 1 : 2 } }
   })

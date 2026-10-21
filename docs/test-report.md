@@ -2,6 +2,7 @@
 
 이 문서는 Phase 1 당시 기록입니다. 최신 수집·검색 검증은 [Phase 2 보고서](phase2-report.md)를 참고하세요.
 이후 지식 영속 모델은 [Phase 3 기반](phase3-foundation-report.md), 최신 CLI AI 검증은 [CLI AI](cli-ai.md)에 기록합니다.
+후속 작업 상태·취소·재시작 복구의 최신 검증은 [AI 생성 작업](generation-jobs.md)에 있습니다.
 
 검증일: 2026-10-21 (Asia/Seoul)
 환경: macOS Intel, Amazon Corretto 21.0.10, Node 24.2.0, npm 11.3.0,

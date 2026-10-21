@@ -22,7 +22,9 @@ let logs = ''
 async function start() {
   logs = ''
   const started = performance.now()
-  child = spawn('bash', ['scripts/run.sh'], {
+  child = spawn('bash', ['scripts/run.sh',
+    `--forge.ai.codex-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`,
+    `--forge.ai.claude-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`], {
     cwd: root,
     env: { ...process.env, PORT: String(port), FORGE_DATA_DIR: directory },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -68,6 +70,16 @@ const measure = async action => {
   return performance.now() - started
 }
 const percentile = (values, quantile) => [...values].sort((left, right) => left - right)[Math.ceil(values.length * quantile) - 1]
+
+async function waitForJob(path, predicate) {
+  const deadline = Date.now() + 15000
+  while (Date.now() < deadline) {
+    const job = await api(path)
+    if (predicate(job)) return job
+    await new Promise(resolveWait => setTimeout(resolveWait, 100))
+  }
+  throw new Error(`Job did not reach expected state: ${path}`)
+}
 
 try {
   const startupMs = await start()
@@ -119,11 +131,31 @@ try {
     assert.equal(rejected.status, status)
   }
   assert.equal((await api(knowledgeBase)).length, 1)
+  const jobBase = `/workspaces/${workspace.id}/generation-jobs`
+  const generation = { requestId: crypto.randomUUID(), provider: 'CODEX', expectedVersion: 1, digest: transmission.digest, approved: true }
+  const submitted = await api(`${knowledgePath}/generation/jobs`, 'POST', generation)
+  assert.equal(submitted.id, generation.requestId)
+  assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).id, submitted.id)
+  const completed = await waitForJob(`${jobBase}/${submitted.id}`, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
+  assert.equal(completed.status, 'SUCCEEDED', completed.error)
+  assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.title, 'TEST FIXTURE 초안')
+  assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.manuallyEdited, false)
+  assert.equal((await api(knowledgePath)).version.markdown, draft.version.markdown)
+  const cancelledRequest = { ...generation, requestId: crypto.randomUUID() }
+  const cancellable = await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)
+  await waitForJob(`${jobBase}/${cancellable.id}`, job => job.status === 'RUNNING')
+  await api(`${jobBase}/${cancellable.id}/cancel`, 'POST')
+  assert.equal((await waitForJob(`${jobBase}/${cancellable.id}`, job => job.status === 'CANCELLED')).resultCardId, null)
+  assert.equal((await api(knowledgeBase)).length, 2)
   const snapshotPath = `${knowledgePath}/evidence/${draft.version.evidence[0].snapshotId}/content`
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   await stop()
   const restartMs = await start()
+  assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
+  assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).status, 'SUCCEEDED')
+  assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)).status, 'CANCELLED')
+  assert.equal((await api(knowledgeBase)).length, 2)
   assert.equal((await api('/session')).activeWorkspaceId, workspace.id)
   assert.equal((await api(`${contentPath}/preview`)).text, bytes.toString('utf8'))
   assert.equal((await api(searchPath)).length, 1)
@@ -199,7 +231,8 @@ try {
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',
-      'CLI payload preview without external call', 'unapproved and mismatched AI transmission rejected'],
+      'CLI payload preview without external call', 'unapproved and mismatched AI transmission rejected',
+      'fake CLI async generation and cancellation', 'idempotent job replay across restart', 'completed job and draft persist'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),
@@ -207,7 +240,7 @@ try {
     upload100: { p50Ms: percentile(uploadTimes, 0.5), p95Ms: percentile(uploadTimes, 0.95) },
     list101Entries50RequestsAfter5Warmups: { p50Ms: percentile(listTimes, 0.5), p95Ms: percentile(listTimes, 0.95) },
     search100Files30Requests: { p50Ms: percentile(searchTimes, 0.5), p95Ms: percentile(searchTimes, 0.95) },
-    limitations: 'Single local process, small synthetic dataset, no concurrency; not LLM performance.',
+    limitations: 'Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance.',
   }
   await writeFile(resolve(root, 'docs/performance-phase3-foundation.json'), JSON.stringify(result, null, 2) + '\n')
   console.log(JSON.stringify(result, null, 2))

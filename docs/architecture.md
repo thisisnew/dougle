@@ -59,7 +59,7 @@ Phase 2에서도 Source당 50 MiB/500개 제한을 유지해 같은 원자성을
 별도 `ArtifactStore`와 콘텐츠 해시 기반 파일 저장소 전환은 대용량 지원 시 진행합니다.
 
 SQLite는 WAL, 외래 키, 5초 busy timeout을 사용합니다. 연결 풀은 1개로
-로컬 쓰기를 직렬화합니다. `PRAGMA user_version=3`로 스키마를 관리하며 새 스키마를
+로컬 쓰기를 직렬화합니다. `PRAGMA user_version=4`로 스키마를 관리하며 새 스키마를
 구버전 앱으로 열면 실패합니다. 초기 스키마 생성도 트랜잭션입니다.
 
 ## 후속 모듈과 경계
@@ -179,3 +179,13 @@ entry ID가 교체되어도 같은 Source+경로+해시라면 CURRENT입니다. 
 파일/Source 삭제는 MISSING입니다. 같은 경로의 다른 Source 등록은 기존 출처로 간주하지 않습니다.
 이는 원격 폴링·자동 지식 무효화/재생성이나 사실 검증이 아닙니다.
 초안은 Lucene 검색에 아직 포함하지 않으며, Markdown은 HTML로 렌더링하지 않고 텍스트로 표시합니다.
+
+## AI 생성 작업 (v4)
+
+`generation_job(workspace_id,id)`는 승인 digest/Provider/기반 카드·버전/상태/결과 카드/시각을 저장합니다.
+`GenerationJobService`는 짧은 트랜잭션으로 요청을 등록하고 가상 스레드에서 CLI를 실행합니다.
+CLI I/O 동안 DB 트랜잭션을 점유하지 않습니다. 결과 카드와 SUCCEEDED는 같은 트랜잭션으로 커밋합니다.
+취소와 결과 커밋은 같은 잠금으로 직렬화하며 취소가 먼저면 늦은 출력을 폐기합니다.
+같은 요청 ID는 다시 호출하지 않습니다. 재시작 시 미완료 작업은 INTERRUPTED로 복구하고 자동 실행하지 않습니다.
+Workspace 삭제는 작업 이력도 제거하며 실행 중 worker는 로컬 감시로 중단합니다.
+전체 계약/상태 흐름/보안 경계/한계는 [AI 생성 작업](generation-jobs.md)을 따릅니다.

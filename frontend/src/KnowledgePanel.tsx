@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import GenerationPanel from './GenerationPanel'
+import GenerationJobsPanel from './GenerationJobsPanel'
 
 type Card = { id: string; workspaceId: string; title: string; latestVersion: number; createdAt: string }
 type Evidence = {
@@ -123,6 +124,9 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
 
   return <section className="knowledge-panel" aria-label="지식 초안 보관함">
     <p>근거 연결 수동 초안과 승인 기반 AI 초안을 지원합니다. 사실 검증·게시는 아직 제공하지 않습니다.</p>
+    <GenerationJobsPanel workspaceId={workspaceId} revision={revision} openDisabled={editing || busy} onOpen={id => {
+      if (!editing && !busy) { setSelected(id); setNumber(null); setRevision(value => value + 1) }
+    }} />
     <Button variant="outline" size="sm" disabled={busy || editing} onClick={() => setRevision(value => value + 1)}>지식 새로고침</Button>
     {error && <p role="alert" className="error-banner">{error}</p>}
     {loading ? <p role="status">지식 목록을 불러오는 중…</p> : cards.length === 0 ? <div className="empty-state">
@@ -154,7 +158,7 @@ export default function KnowledgePanel({ workspaceId }: { workspaceId: string })
       </form> : <pre aria-label="지식 Markdown">{document.version.markdown}</pre>}
       {!editing && document.version.number === document.card.latestVersion && <GenerationPanel
         key={`${selected}-${document.version.number}`} base={`${base}/${selected}`} disabled={busy || confirmDelete}
-        onBusy={setBusy} onCreated={id => { setBusy(false); setSelected(id); setNumber(null); setRevision(value => value + 1) }} />}
+        onBusy={setBusy} onQueued={() => { setBusy(false); setRevision(value => value + 1) }} />}
       <h3>보존된 근거</h3><p>최신성은 마지막으로 수집한 로컬 복사본과 비교합니다. 외부 원본의 실시간 상태나 사실 검증 결과가 아닙니다.</p>
       {document.version.evidence.map((item, index) => <section className="evidence-item" key={`${item.snapshotId}-${index}`}>
         <strong>[E{index + 1}] {item.path} · 추출 텍스트 {item.startLine}~{item.endLine}행</strong>

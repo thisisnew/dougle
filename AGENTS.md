@@ -4,6 +4,7 @@
 - 이어서 개발할 때 `docs/backlog.md`의 미완료 항목과 인수 조건을 확인하고 완료 증거와 함께 갱신한다.
 - Phase 1·2, P3-1, P3-2 CLI AI 초안/전송 승인이 구현되어 있다. `docs/cli-ai.md`의 검증/남은 범위를 확인한다. 검증·게시는 아직 없다.
 - 사용자 요청으로 Ollama 대신 로그인된 Codex/Claude Code CLI를 사용한다. 현재 코딩 대화가 아닌 새 요청이며 외부 전송은 건별 승인한다.
+- SQLite v4 생성 작업 상태·취소·멱등·재시작 복구가 추가되었다. `docs/generation-jobs.md`를 확인한다. smoke의 fake CLI는 테스트 전용이며 실제 AI 성공으로 보고하지 않는다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.

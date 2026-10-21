@@ -3,7 +3,7 @@
 > **수집·분석·검색에 이어, 근거를 보존하는 수동 지식 초안·버전이 동작합니다.**
 > 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 다음은 운영 보강·검증·게시입니다.
 
-기준: 2026-10-21 · Phase 3 CLI AI 추가. 최신 검증은 [CLI AI](cli-ai.md)를 확인하세요.
+기준: 2026-10-21 · Phase 3 CLI AI 작업 관리 추가. 최신 검증은 [생성 작업](generation-jobs.md)을 확인하세요.
 실제 JAR 재시작·근거 보존 검증 결과는 [보고서](phase3-foundation-report.md)에 기록합니다.
 
 **범례:** 🟩 구현됨 · 🟨 일부 구현/확장 필요 · 🟦 계획(미구현).
@@ -62,8 +62,9 @@ flowchart TB
         COL["읽기 전용 Collector<br/>파일 읽기 / HTTP / Git CLI + REST"]
         ING["ingestion<br/>Tika 텍스트 추출 + JavaParser 심볼"]
         SAVE["성공한 수집 결과만 원자적 반영"]
-        DB[("SQLite v3<br/>원본 · 분석 · 지식 버전 · 근거 복사본")]
+        DB[("SQLite v4<br/>원본 · 분석 · 지식 · 근거 · 생성 작업")]
         KNOW["knowledge<br/>수동 DRAFT · 버전 · 편집 충돌 409"]
+        JOB["generation jobs<br/>승인 · 상태 · 취소 · 멱등 · 재시작 복구"]
         EVID["근거 스냅샷<br/>당시 바이트 · 추출 텍스트 · 해시 · revision"]
         QUEUE["search_outbox<br/>영속 인덱스 갱신 큐"]
         IDX[("Lucene 10 + Nori<br/>파일명 · 본문 · 심볼")]
@@ -72,6 +73,9 @@ flowchart TB
         API --> SRC
         API --> SEARCH
         API --> KNOW
+        API --> JOB
+        JOB --> KNOW
+        JOB --> DB
         KNOW --> EVID
         EVID --> DB
         KNOW --> DB
@@ -116,7 +120,7 @@ flowchart TB
         KNOW["🟨 knowledge<br/>수동·AI 초안/근거/버전 구현<br/>검증 · 게시 예정"]
         CHAT["🟦 conversation<br/>근거 먼저 · 답변 SSE · 취소"]
         SYNC["🟦 synchronization<br/>Source별 opt-in · Git diff · 지식 무효화"]
-        SQL[("🟨 SQLite v3<br/>원본/분석/지식/근거/버전<br/>향후 대화/동기화 확장")]
+        SQL[("🟨 SQLite v4<br/>원본/지식/근거/버전/생성 작업<br/>향후 대화/동기화 확장")]
         MODEL["🟨 Codex / Claude Code CLI<br/>로그인 재사용 · 새 요청 · 초안 구현"]
         POLICY["🟨 외부 전송 승인<br/>초안 구현 · 채팅은 예정"]
         HOST -.-> UI
@@ -225,14 +229,14 @@ sequenceDiagram
 
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
-| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `AnalysisPanel.tsx` | AI 작업 취소/설정, 지식 폴더/렌더링, 채팅 |
-| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v3, 향후 데이터/보존 정책 확장 |
+| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx` | AI 모델 설정, 지식 폴더/렌더링, 채팅 |
+| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v4, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 게시 지식·관계 검색 |
 | 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 검증 · 게시 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** [CLI AI](cli-ai.md)의 남은 운영 항목 → **P3-3 검증·게시**.
+**다음 한 작업:** [생성 작업](generation-jobs.md)의 남은 모델 설정/상세 이력 → **P3-3 검증·게시**.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
-실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [Phase 3 기반 보고서](phase3-foundation-report.md)를 참고하세요.
+실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [생성 작업 보고서](generation-jobs.md)를 참고하세요.

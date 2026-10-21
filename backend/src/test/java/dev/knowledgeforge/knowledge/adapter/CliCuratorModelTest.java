@@ -79,4 +79,31 @@ class CliCuratorModelTest {
         assertThatThrownBy(() -> model.generate(Provider.CLAUDE, "synthetic")).isInstanceOf(LibraryException.class);
         assertThatThrownBy(() -> model.generate(Provider.CODEX, "synthetic")).isInstanceOf(LibraryException.class);
     }
+
+    @Test
+    void interruptKillsActualProcessAndChildAndRemovesTemporaryDirectory() throws Exception {
+        Path parentFile = directory.resolve("parent.pid");
+        Path childFile = directory.resolve("child.pid");
+        Path workingDirectory = directory.resolve("cwd.txt");
+        var model = fixture("cat >/dev/null\necho $$ > '" + parentFile + "'\npwd > '" + workingDirectory
+                + "'\nsleep 30 &\necho $! > '" + childFile + "'\nwait\n", Duration.ofSeconds(30));
+        var failure = new java.util.concurrent.atomic.AtomicReference<Throwable>();
+        Thread worker = Thread.ofPlatform().start(() -> {
+            try { model.generate(Provider.CLAUDE, "synthetic"); }
+            catch (Throwable exception) { failure.set(exception); }
+        });
+        try {
+            long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
+            while ((!Files.exists(childFile) || Files.readString(childFile).isBlank()) && System.nanoTime() < deadline) Thread.sleep(10);
+            long parent = Long.parseLong(Files.readString(parentFile).strip());
+            long child = Long.parseLong(Files.readString(childFile).strip());
+            worker.interrupt();
+            worker.join(5000);
+            assertThat(worker.isAlive()).isFalse();
+            assertThat(failure.get()).isInstanceOf(LibraryException.class);
+            assertThat(ProcessHandle.of(parent).map(ProcessHandle::isAlive).orElse(false)).isFalse();
+            assertThat(ProcessHandle.of(child).map(ProcessHandle::isAlive).orElse(false)).isFalse();
+            assertThat(Files.exists(Path.of(Files.readString(workingDirectory).strip()))).isFalse();
+        } finally { worker.interrupt(); worker.join(5000); }
+    }
 }

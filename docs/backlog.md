@@ -27,9 +27,10 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - [ ] **P3-2: 로그인된 CLI Curator.** 사용자 요청으로 Ollama 대신 Codex/Claude Code 사용.
   구현: 포트/CLI 어댑터, 전송 미리보기·Provider/버전/내용 digest 승인, 별도 AI DRAFT,
   JSON/길이/근거 ID 검사, 120초 제한, 기존 수동 버전 보호, 가상 자료 실제 Codex 호출.
-  남음: 모델 선택·연결 상태·설정 UI, 영속 생성 메타데이터, 작업 ID/취소/멱등성,
-  제한된 근거 컨텍스트로 카드/Markdown 초안 생성. 출력 스키마·길이·근거 ID 검사,
-  타임아웃/잘못된 JSON/모델 미설치/작업 실패 처리. 모델 이름은 업무 도메인과 독립.
+  추가 구현: 영속 작업 ID/상태, 명시적 취소, 같은 ID 중복 호출 방지, 미완료 작업 재시작 복구,
+  새 DRAFT와 성공 상태의 원자적 커밋, Workspace별 작업 목록. [작업 설계](generation-jobs.md).
+  남음: 모델 선택·연결 상태·설정 UI, 실제 모델/CLI 버전 등 상세 생성 메타데이터,
+  강제 종료 시 OS 프로세스 감독. 모델 이름은 업무 도메인과 독립.
   mock 계약 테스트와 실제 CLI/외부 모델 실행 검증을 구분해 기록. [현재 상세](cli-ai.md).
 - [ ] **P3-3: 검증 후 게시.** 초안→검증→게시를 명시적으로 분리하고
   근거 없는 주장/추론은 확정 사실과 구별. 존재하지 않는 인용·변경된 원본 차단,
@@ -47,7 +48,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
   현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
   원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=3`, FK cascade,
+- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=4`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
@@ -122,7 +123,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 65개 통과 + live opt-in 1개 skip, 프런트엔드 20개 통과, JAR 빌드 성공.
+- 최신 자동 검증: 백엔드 78개 통과 + live opt-in 1개 skip, 프런트엔드 23개 통과, JAR 빌드 성공.
+- 최신 구현/검증: [AI 생성 작업](generation-jobs.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
 - 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).

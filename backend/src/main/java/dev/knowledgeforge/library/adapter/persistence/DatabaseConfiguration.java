@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 3) {
+        if (version > 4) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -170,6 +170,25 @@ public class DatabaseConfiguration {
                         jdbc.execute("PRAGMA user_version=3");
                     });
         }
+        if (version < 4) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE generation_job (
+                                  id TEXT NOT NULL, workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  source_card_id TEXT NOT NULL, provider TEXT NOT NULL,
+                                  expected_version INTEGER NOT NULL, digest TEXT NOT NULL,
+                                  status TEXT NOT NULL CHECK(status IN ('QUEUED','RUNNING','CANCELLING','CANCELLED','SUCCEEDED','FAILED','INTERRUPTED')),
+                                  result_card_id TEXT, error TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+                                  PRIMARY KEY(workspace_id,id)
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX generation_job_recent ON generation_job(workspace_id,created_at DESC)");
+                        jdbc.execute("PRAGMA user_version=4");
+                    });
+        }
+        jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());
         jdbc.update("UPDATE source SET status='ERROR',error='이전 동기화가 중단되었습니다. 다시 동기화하세요.' WHERE status='SYNCING'");
         return source;
     }
