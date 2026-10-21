@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import ProposalDecisions from './ProposalDecisions'
+import ProposalAcceptance from './ProposalAcceptance'
 
 type Document = {
   card: { id: string; latestVersion: number }
@@ -18,6 +19,7 @@ export default function GenerationComparison({ workspaceId, jobId, disabled, onO
   const [error, setError] = useState('')
   const [refresh, setRefresh] = useState(0)
   const [showDecisions, setShowDecisions] = useState(false)
+  const [showAcceptance, setShowAcceptance] = useState(false)
   useEffect(() => {
     const controller = new AbortController()
     setComparison(null); setError('')
@@ -51,12 +53,19 @@ export default function GenerationComparison({ workspaceId, jobId, disabled, onO
             <div key={`${item.snapshotId}-${index}`}><p>[E{index + 1}] {item.path} · {item.startLine}~{item.endLine}행 · {item.freshness}</p><pre>{item.quote}</pre></div>)}</details>
         </section>
       })}</div>
-      <p>반영할 내용은 직접 선택해 현재 문서의 초안 편집에서 새 버전으로 저장하세요. 자동 병합·제안 채택 이력은 아직 없습니다.</p>
+      <p>수정 충돌이 없는 최초 결과는 전체 채택할 수 있습니다. 부분 반영은 현재 문서에서 직접 편집하세요. 자동 병합은 하지 않습니다.</p>
       <Button variant="outline" disabled={disabled} onClick={() => onOpen(comparison.current.card.id)}>현재 문서 열기</Button>
       <Button variant="outline" disabled={disabled} onClick={() => onOpen(comparison.generated.card.id)}>AI 결과의 최신 문서 열기</Button>
       <Button variant="outline" disabled={disabled} onClick={() => setShowDecisions(value => !value)}>제안 처리 기록 {showDecisions ? '닫기' : '열기'}</Button>
       {showDecisions && <ProposalDecisions key={`${workspaceId}-${jobId}-${refresh}`} workspaceId={workspaceId} jobId={jobId}
         sourceVersion={comparison.current.version.number} resultVersion={comparison.generated.card.latestVersion} disabled={disabled} />}
+      <Button variant="outline" disabled={disabled} onClick={() => setShowAcceptance(value => !value)}>전체 채택 {showAcceptance ? '닫기' : '검토'}</Button>
+      {showAcceptance && <ProposalAcceptance key={`accept-${workspaceId}-${jobId}-${refresh}`} workspaceId={workspaceId} jobId={jobId}
+        sourceVersion={comparison.current.version.number} resultVersion={comparison.generated.card.latestVersion} disabled={disabled}
+        eligible={comparison.current.version.number === comparison.base.version.number && comparison.generated.card.latestVersion === 1
+          && comparison.generated.version.evidence.length > 0
+          && Object.values(comparison).every(document => document.version.evidence.every(item => item.freshness === 'CURRENT'))}
+        onApplied={() => { setShowDecisions(false); setRefresh(value => value + 1) }} />}
     </>}
   </section>
 }

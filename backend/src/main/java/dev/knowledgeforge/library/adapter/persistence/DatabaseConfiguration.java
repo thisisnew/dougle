@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 10) {
+        if (version > 11) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -276,6 +276,25 @@ public class DatabaseConfiguration {
                                 )
                                 """);
                         jdbc.execute("PRAGMA user_version=10");
+                    });
+        }
+        if (version < 11) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE proposal_acceptance (
+                                  workspace_id TEXT NOT NULL, job_id TEXT NOT NULL,
+                                  source_version INTEGER NOT NULL CHECK(source_version>0),
+                                  result_version INTEGER NOT NULL CHECK(result_version=1),
+                                  applied_version INTEGER NOT NULL CHECK(applied_version=source_version+1),
+                                  decision_revision INTEGER NOT NULL CHECK(decision_revision>=0),
+                                  note TEXT NOT NULL, accepted_at TEXT NOT NULL,
+                                  PRIMARY KEY(workspace_id,job_id),
+                                  FOREIGN KEY(workspace_id,job_id) REFERENCES generation_job(workspace_id,id) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=11");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

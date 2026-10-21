@@ -190,6 +190,28 @@ try {
     expectedRevision: 0, expectedSourceVersion: 1, expectedResultVersion: 1, status: 'REJECTED', note: 'Synthetic rejection',
   })
   assert.equal(rejectedProposal[0].revision, 1)
+  const adoptionDraft = await api(knowledgeBase, 'POST', {
+    title: 'Synthetic adoption original', markdown: 'Original fixture [E1]',
+    citations: [{ entryId: symbolHits[0].entryId, startLine: 1, endLine: 4 }],
+  })
+  const adoptionPath = `${knowledgeBase}/${adoptionDraft.card.id}`
+  await api(`${adoptionPath}/review`, 'POST', {
+    expectedVersion: 1, reviewer: 'Synthetic reviewer', note: 'Fixture contract only', claimsSupported: true, uncertaintyRemoved: true,
+  })
+  await api(`${adoptionPath}/publication`, 'POST', { expectedVersion: 1, expectedPublicationRevision: 0 })
+  const adoptionPreview = await api(`${adoptionPath}/generation/preview`, 'POST', { provider: 'CODEX', requestedModel: 'synthetic-smoke-model' })
+  const adoptionRequest = await api(`${adoptionPath}/generation/jobs`, 'POST', {
+    requestId: crypto.randomUUID(), provider: 'CODEX', requestedModel: adoptionPreview.requestedModel,
+    expectedVersion: 1, digest: adoptionPreview.digest, approved: true,
+  })
+  const adoptionJob = await waitForJob(`${jobBase}/${adoptionRequest.id}`, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
+  assert.equal(adoptionJob.status, 'SUCCEEDED', adoptionJob.error)
+  const acceptancePath = `${jobBase}/${adoptionJob.id}/acceptance`
+  const acceptedProposal = await api(acceptancePath, 'POST', {
+    expectedRevision: 0, expectedSourceVersion: 1, expectedResultVersion: 1, confirmed: true, note: 'Synthetic adoption',
+  })
+  assert.equal(acceptedProposal.acceptance.appliedVersion, 2)
+  assert.equal((await api(`${adoptionPath}/published`)).version.number, 1)
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   const movedFolder = await api(`${organizationPath}/folders/${knowledgeChild.id}`, 'PUT', {
@@ -199,6 +221,15 @@ try {
   await stop()
   configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
+  assert.deepEqual(await api(acceptancePath), acceptedProposal)
+  assert.equal((await api(adoptionPath)).version.number, 2)
+  assert.equal((await api(adoptionPath)).version.manuallyEdited, false)
+  assert.equal((await api(`${adoptionPath}/versions/1`)).version.markdown, adoptionDraft.version.markdown)
+  assert.equal((await api(`${adoptionPath}/published`)).version.number, 1)
+  assert.equal((await api(`${adoptionPath}/publication`)).review, null)
+  await api(adoptionPath, 'DELETE')
+  await api(`${knowledgeBase}/${adoptionJob.resultCardId}`, 'DELETE')
+  assert.deepEqual(await api(acceptancePath), acceptedProposal)
   assert.deepEqual(await api(decisionsPath), rejectedProposal)
   const reopenedProposal = await api(decisionsPath, 'POST', {
     expectedRevision: 1, expectedSourceVersion: 1, expectedResultVersion: 1, status: 'OPEN', note: 'Synthetic reconsideration',
@@ -328,7 +359,8 @@ try {
       'nonempty folder deletion blocked and moving to root preserves document versions',
       'folder rename and parent move revision survive restart',
       'read-only generation comparison keeps base and initial AI version after later edits',
-      'proposal rejection persists across restart and reopening preserves history without document changes'],
+      'proposal rejection persists across restart and reopening preserves history without document changes',
+      'explicit proposal acceptance persists as a new unverified draft while prior version and publication survive restart'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

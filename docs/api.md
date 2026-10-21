@@ -1,5 +1,8 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+제안 전체 채택: `GET/POST /api/workspaces/{workspaceId}/generation-jobs/{jobId}/acceptance`.
+[계약·제한](proposal-acceptance.md). 명시적 확인 후 새 DRAFT로만 반영하며 게시하지 않습니다.
+
 제안 거절·재검토: `GET/POST /api/workspaces/{workspaceId}/generation-jobs/{jobId}/decisions`.
 [요청·응답·충돌 계약](proposal-decisions.md). 문서 반영이나 게시 API가 아닙니다.
 
@@ -10,7 +13,7 @@
 
 지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.
 Markdown 응답은 저장된 원문이며 HTML이 아닙니다. UI만 안전한 미리보기를 제공합니다.
-표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v10이며 제안 거절·재검토 이력이 추가되었습니다.
+표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v11이며 전체 채택·새 초안 반영 이력이 추가되었습니다.
 
 폴더 이름/부모 변경: `PUT /workspaces/{workspaceId}/knowledge-organization/folders/{id}`.
 요청 `{parentId, name, expectedRevision}` → 변경한 Folder `{id,parentId,name,revision}`.

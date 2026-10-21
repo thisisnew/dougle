@@ -69,7 +69,7 @@ it('작업 전환·종료는 이전 조회를 취소한다', async () => {
 })
 
 it('처리 기록을 명시적으로 열기 전에는 추가 조회나 저장을 하지 않는다', async () => {
-  api.mockResolvedValueOnce(comparison).mockResolvedValueOnce([])
+  api.mockResolvedValueOnce(comparison).mockResolvedValueOnce([]).mockResolvedValueOnce({ status: 'OPEN' })
   render(<GenerationComparison {...props} />)
   await screen.findByLabelText('생성 당시 문서')
   expect(api).toHaveBeenCalledTimes(1)
@@ -77,4 +77,14 @@ it('처리 기록을 명시적으로 열기 전에는 추가 조회나 저장을
   expect(await screen.findByText('처리 상태: 검토 대기')).toBeInTheDocument()
   expect(api.mock.calls[1][0]).toBe('/workspaces/one/generation-jobs/job/decisions')
   expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
+})
+
+it('전체 채택 검토는 명시적으로 열며 사람 편집이 있으면 저장을 차단한다', async () => {
+  api.mockResolvedValueOnce(comparison).mockResolvedValueOnce({ status: 'OPEN', decisionRevision: 0, acceptance: null })
+  render(<GenerationComparison {...props} />)
+  await screen.findByLabelText('생성 당시 문서')
+  expect(api).toHaveBeenCalledTimes(1)
+  await userEvent.click(screen.getByRole('button', { name: '전체 채택 검토' }))
+  expect(await screen.findByRole('button', { name: '전체 결과를 새 초안으로 채택' })).toBeDisabled()
+  expect(screen.getByText(/생성 후 문서 편집 또는 근거 변경/)).toBeInTheDocument()
 })

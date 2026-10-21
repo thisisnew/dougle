@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T13:00:44.536Z",
+  "measuredAt": "2026-10-21T13:07:58.150Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -40,23 +40,24 @@
     "nonempty folder deletion blocked and moving to root preserves document versions",
     "folder rename and parent move revision survive restart",
     "read-only generation comparison keeps base and initial AI version after later edits",
-    "proposal rejection persists across restart and reopening preserves history without document changes"
+    "proposal rejection persists across restart and reopening preserves history without document changes",
+    "explicit proposal acceptance persists as a new unverified draft while prior version and publication survive restart"
   ],
-  "sourceSyncMs": 532.7845520000001,
+  "sourceSyncMs": 641.0191880000002,
   "livePublic": [],
-  "startupMs": 5265,
-  "restartMs": 5660,
+  "startupMs": 7461,
+  "restartMs": 9734,
   "upload100": {
-    "p50Ms": 110.02592999999979,
-    "p95Ms": 566.7395810000016
+    "p50Ms": 132.92849800000113,
+    "p95Ms": 335.5169620000015
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.035790999994788,
-    "p95Ms": 3.5766160000057425
+    "p50Ms": 4.008769000000029,
+    "p95Ms": 4.671990000002552
   },
   "search100Files30Requests": {
-    "p50Ms": 6.2778700000053504,
-    "p95Ms": 10.402726000000257
+    "p50Ms": 8.928610000002664,
+    "p95Ms": 13.202558000004501
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

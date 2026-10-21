@@ -62,6 +62,18 @@ public class KnowledgeService {
         return get(workspaceId, id, null);
     }
 
+    public Document acceptGenerated(String workspaceId, String id, int expectedVersion, Document generated) {
+        validate(generated.version().title(), generated.version().markdown());
+        get(workspaceId, id, null);
+        if (!store.advance(workspaceId, id, expectedVersion)) {
+            throw new LibraryException(409, "다른 편집이 저장되었습니다. 최신 버전을 다시 열어 주세요.");
+        }
+        store.append(id, expectedVersion + 1, generated.version().title(), generated.version().markdown(),
+                Instant.now().toString(), generated.version().evidence().stream()
+                        .map(item -> new KnowledgeStore.Reference(item.snapshotId(), item.startLine(), item.endLine())).toList(), false);
+        return get(workspaceId, id, null);
+    }
+
     public void delete(String workspaceId, String id) {
         get(workspaceId, id, null);
         store.delete(workspaceId, id);

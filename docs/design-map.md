@@ -4,7 +4,7 @@
 > 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 사람 검토→명시적 게시, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시도 구현했습니다. 자동 의미 검증은 남았습니다.
 
 기준: 2026-10-21 · Phase 3 CLI AI 작업 관리·모델 고정·설치 진단 추가.
-최신 범위는 [제안 거절·재검토](proposal-decisions.md), 폴더는 [독립 지식 폴더](knowledge-folders.md), 출처 연결은 [현재 원본 탐색](evidence-navigation.md), 이전 변경은 [사람 검토와 게시](publication.md), [실행 전 CLI 관측 이력](cli-observation.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
+최신 범위는 [제안 전체 채택](proposal-acceptance.md), 폴더는 [독립 지식 폴더](knowledge-folders.md), 출처 연결은 [현재 원본 탐색](evidence-navigation.md), 이전 변경은 [사람 검토와 게시](publication.md), [실행 전 CLI 관측 이력](cli-observation.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
 실제 JAR 재시작·근거 보존 검증 결과는 [보고서](phase3-foundation-report.md)에 기록합니다.
 
 **범례:** 🟩 구현됨 · 🟨 일부 구현/확장 필요 · 🟦 계획(미구현).
@@ -231,15 +231,15 @@ sequenceDiagram
 
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
-| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx`, `GenerationComparison.tsx`, `PublicationPanel.tsx` | 제안 채택·부분 반영, 채팅 |
-| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v10, 향후 데이터/보존 정책 확장 |
+| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx`, `GenerationComparison.tsx`, `PublicationPanel.tsx` | 부분 반영·편집 충돌 해결, 채팅 |
+| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v11, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 게시 지식·관계 검색 |
 | 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · AI 갱신 제안 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** **제안 채택 이력·부분 선택·충돌 재확인 후 반영**. [읽기 전용 비교](generation-comparison.md)와 [폴더 이름 변경/이동](folder-update.md)은 구현·검증했습니다. 개발 도구 보안 갱신은 [검증 완료](toolchain-report.md)했습니다. 안전한 표시와 원문 보존은 [Markdown 가이드](markdown-rendering.md), 독립 폴더/카드 배치는 [폴더 가이드](knowledge-folders.md) 범위로 구현했습니다. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
+**다음 한 작업:** **부분 선택·인용 재연결·편집 충돌 해결 후 반영**. [읽기 전용 비교](generation-comparison.md)와 [폴더 이름 변경/이동](folder-update.md)은 구현·검증했습니다. 개발 도구 보안 갱신은 [검증 완료](toolchain-report.md)했습니다. 안전한 표시와 원문 보존은 [Markdown 가이드](markdown-rendering.md), 독립 폴더/카드 배치는 [폴더 가이드](knowledge-folders.md) 범위로 구현했습니다. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
 ```mermaid
 flowchart LR
@@ -251,15 +251,15 @@ flowchart LR
     GENERATED --> VIEW
 ```
 
-비교 조회는 기존 문서를 변경하거나 AI를 호출하지 않습니다. 거절·재검토 이력은 별도 구현했고 채택 저장은 앞으로 구현합니다.
+비교 조회는 기존 문서를 변경하거나 AI를 호출하지 않습니다. 거절·재검토 이력과 명시적 전체 채택은 별도 구현했습니다. 부분 병합은 앞으로 구현합니다.
 
-실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [거절·재검토 보고서](proposal-decisions.md)를 참고하세요.
+실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [전체 채택 보고서](proposal-acceptance.md)를 참고하세요.
 쉽게 읽으려면 [작동 원리](how-it-works.md)와 [모델링·코드 대조](modeling.md)를 먼저 보세요.
 사용자 체험은 [Mac 설치형](desktop-preview.md) 준비 후 진행합니다. 최신 도구 검증은 [별도 보고서](toolchain-report.md)를 참고하세요.
 
 ```mermaid
 flowchart LR
-  Version["불변 Markdown 버전 · SQLite v10"] --> API["기존 조회 API · 원문 그대로"]
+  Version["불변 Markdown 버전 · SQLite v11"] --> API["기존 조회 API · 원문 그대로"]
   API --> Preview["React Markdown/GFM 미리보기"]
   API --> Raw["원문 보기 · 편집 입력"]
   Preview --> Safe["HTML 실행 없음 · 링크/이미지 비활성"]

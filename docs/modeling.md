@@ -1,7 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
 **한 줄 요약: 원본 자료와 지식 문서를 따로 보관하고, 지식에는 당시 근거를 붙입니다.**
-2026-10-21 코드 대조 기준, SQLite v10. 아래 그림은 현재 구현입니다.
+2026-10-21 코드 대조 기준, SQLite v11. 아래 그림은 현재 구현입니다.
 
 ## 1. 용어를 쉽게
 
@@ -41,6 +41,8 @@ flowchart TD
   K --> L
   W --> J[AI 생성 작업 이력]
   J --> D[제안 거절·재검토 이력]
+  J --> ACCEPT[작업별 채택 기록]
+  ACCEPT --> V
 ```
 
 - 원본 폴더와 지식 폴더는 별도입니다. 지식 폴더 이동으로 원본이 이동하지 않습니다.
@@ -62,6 +64,7 @@ flowchart TD
 | 지식 폴더·배치 | `knowledge_folder`, `knowledge_placement` |
 | AI 작업 | `generation_job` |
 | 제안 거절·재검토 | `proposal_decision` · 작업별 revision/상태/판단 시 문서 버전/이유/시각 |
+| 제안 전체 채택 | `proposal_acceptance` · 기준/결과/반영 버전·처리 revision·이유·시각 |
 | 검색 색인 | SQLite와 별도인 로컬 Lucene 파일 |
 
 원본 바이트와 근거 복사본은 현재 SQLite BLOB에 저장합니다. Markdown도 DB의 문자열이며,
@@ -74,7 +77,7 @@ flowchart TD
 | 원본 삭제 후에도 지식 근거 보존 | 구현됨. 근거의 원본 ID에 삭제 연쇄 FK 없음 | [DB 정의](../backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java), [지식 저장](../backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcKnowledgeStore.java) |
 | 편집 충돌 방지·이전 버전 유지 | 구현됨. 기대 버전이 다르면 409 | [KnowledgeService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/KnowledgeService.java) |
 | 새 지식 검증 후 게시 | 일부 구현. 사람 검토·인용 번호·최신성 검사, 자동 사실 판정은 없음 | [PublicationService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/PublicationService.java) |
-| AI가 사람이 쓴 글을 갱신 | 현재는 덮어쓰기 대신 별도 AI 카드 생성. 변경 제안 병합은 예정 | [CuratorService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/CuratorService.java) |
+| AI가 사람이 쓴 글을 갱신 | 별도 AI 카드 생성 후, 미편집 문서만 명시적 전체 채택으로 다음 DRAFT 반영. 편집 병합은 예정 | [ProposalAcceptanceService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalAcceptanceService.java) |
 | Source 자동 폴링 | 미구현. 설정 열은 있지만 기본 OFF이며 수동 동기화만 제공 | [SourceService](../backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java) |
 | 질문/검색 때 재분석 | 검색은 기존 색인 조회. 채팅 질문 기능은 아직 없음 | [SearchService](../backend/src/main/java/dev/knowledgeforge/search/application/SearchService.java) |
 | Git 변경 파일만 반영 | 미구현. revision이 같으면 생략, 다르면 전체 수집 스냅샷 교체 | [SourceService](../backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java), [JdbcSourceStore](../backend/src/main/java/dev/knowledgeforge/sources/adapter/JdbcSourceStore.java) |
@@ -85,14 +88,14 @@ flowchart TD
 검색의 2초 주기 작업도 외부 Source 폴링이 아니라 **로컬 색인 갱신**입니다.
 
 위 보호 규칙은 `KnowledgeIntegrationTest`, `PublicationIntegrationTest`, `SourceIntegrationTest`,
-`GenerationJobIntegrationTest`, `OrganizationIntegrationTest`와 대조했습니다.
-실제 실행 결과는 [최신 검증](folder-update.md), 후속 설계는 [전체 설계도](design-map.md)를 참고하세요.
+`GenerationJobIntegrationTest`, `OrganizationIntegrationTest`, `GenerationComparisonIntegrationTest`와 대조했습니다.
+실제 실행 결과는 [최신 검증](proposal-acceptance.md), 후속 설계는 [전체 설계도](design-map.md)를 참고하세요.
 
 ## 5. 앞으로 더할 모델 — 아직 미구현
 
 현재는 작업의 원래 카드/기준 버전/결과 카드 연결로 [읽기 전용 비교](generation-comparison.md)를 제공합니다.
 거절·재검토는 별도 추가 전용 이력으로 구현했습니다. [모델·코드 대조](proposal-decisions.md).
-채택과 문서 반영은 아직 없습니다.
+충돌 없는 전체 채택은 구현했습니다. [새 초안·채택 이력의 원자적 저장](proposal-acceptance.md). 부분 병합은 아직 없습니다.
 
 | 계획 | 목적 |
 |---|---|

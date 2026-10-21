@@ -13,11 +13,13 @@ public class ProposalDecisionService {
     private final GenerationJobStore jobs;
     private final GenerationComparisonService comparison;
     private final ProposalDecisionStore store;
+    private final ProposalAcceptanceStore acceptances;
 
-    public ProposalDecisionService(GenerationJobStore jobs, GenerationComparisonService comparison, ProposalDecisionStore store) {
+    public ProposalDecisionService(GenerationJobStore jobs, GenerationComparisonService comparison, ProposalDecisionStore store, ProposalAcceptanceStore acceptances) {
         this.jobs = jobs;
         this.comparison = comparison;
         this.store = store;
+        this.acceptances = acceptances;
     }
 
     public List<ProposalDecision> history(String workspace, String job) {
@@ -31,6 +33,9 @@ public class ProposalDecisionService {
     public List<ProposalDecision> decide(String workspace, String job, int expectedRevision, int expectedSourceVersion,
                                          int expectedResultVersion, String status, String note) {
         var history = history(workspace, job);
+        if (acceptances.find(workspace, job).isPresent()) {
+            throw new LibraryException(409, "이미 채택한 제안입니다. 반영된 초안은 지식 편집에서 수정하세요.");
+        }
         if (!"REJECTED".equals(status) && !"OPEN".equals(status)) {
             throw new LibraryException(400, "거절 또는 재검토만 기록할 수 있습니다.");
         }
