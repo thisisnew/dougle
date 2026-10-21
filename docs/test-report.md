@@ -8,6 +8,7 @@
 후속 실행 전 CLI 관측·v6 마이그레이션 검증은 [관측 이력](cli-observation.md)에 기록합니다.
 최신 사람 검토·명시적 게시·v7 마이그레이션 검증은 [게시 보고서](publication.md)에 기록합니다.
 후속 현재 원본 탐색 연결 검증은 [탐색 보고서](evidence-navigation.md)에 기록합니다.
+최신 독립 지식 폴더·카드 배치·v8 마이그레이션 검증은 [폴더 보고서](knowledge-folders.md)에 기록합니다.
 
 검증일: 2026-10-21 (Asia/Seoul)
 환경: macOS Intel, Amazon Corretto 21.0.10, Node 24.2.0, npm 11.3.0,

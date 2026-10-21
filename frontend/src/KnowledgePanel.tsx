@@ -5,6 +5,7 @@ import GenerationPanel from './GenerationPanel'
 import GenerationJobsPanel from './GenerationJobsPanel'
 import PublicationPanel from './PublicationPanel'
 import EvidenceOriginButton from './EvidenceOriginButton'
+import KnowledgeOrganization from './KnowledgeOrganization'
 
 type Card = { id: string; workspaceId: string; title: string; latestVersion: number; createdAt: string }
 type Evidence = {
@@ -69,6 +70,7 @@ export default function KnowledgePanel({ workspaceId, onOpenOriginal }: {
   workspaceId: string; onOpenOriginal?: (location: EvidenceLocation) => void
 }) {
   const [cards, setCards] = useState<Card[]>([])
+  const [visibleIds, setVisibleIds] = useState<string[] | null>(null)
   const [selected, setSelected] = useState('')
   const [number, setNumber] = useState<number | null>(null)
   const [document, setDocument] = useState<Document | null>(null)
@@ -132,10 +134,13 @@ export default function KnowledgePanel({ workspaceId, onOpenOriginal }: {
       if (!editing && !busy) { setSelected(id); setNumber(null); setRevision(value => value + 1) }
     }} />
     <Button variant="outline" size="sm" disabled={busy || editing} onClick={() => setRevision(value => value + 1)}>지식 새로고침</Button>
+    <KnowledgeOrganization workspaceId={workspaceId} cards={cards} selected={selected} revision={revision}
+      disabled={busy || editing || confirmDelete} onFilter={setVisibleIds} onBusy={setBusy} />
     {error && <p role="alert" className="error-banner">{error}</p>}
+    {!loading && visibleIds !== null && !cards.some(card => visibleIds.includes(card.id)) && <p>현재 지식 폴더에 카드가 없습니다.</p>}
     {loading ? <p role="status">지식 목록을 불러오는 중…</p> : cards.length === 0 ? <div className="empty-state">
       <h2>아직 저장된 지식 초안이 없습니다</h2><p>원본 파일을 선택하고 분석 영역의 “근거로 지식 초안 작성”을 이용하세요.</p>
-    </div> : <ul className="source-list">{cards.map(card => <li key={card.id}>
+    </div> : <ul className="source-list">{cards.filter(card => visibleIds === null || visibleIds.includes(card.id)).map(card => <li key={card.id}>
       <Button variant="ghost" disabled={busy || editing} onClick={() => { setSelected(card.id); setNumber(null) }}>{card.title} · v{card.latestVersion}</Button>
     </li>)}</ul>}
     {selected && !document && !error && <p role="status">지식을 불러오는 중…</p>}

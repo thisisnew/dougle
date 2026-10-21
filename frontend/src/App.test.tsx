@@ -21,6 +21,7 @@ describe('Workspace와 자료 탐색기', () => {
     const currentFile = { ...file, id: 'new-id', parentId: 'folder' }
     const card = { id: 'card', workspaceId: 'one', title: '가상 지식', latestVersion: 1, createdAt: workspace.createdAt }
     api.mockImplementation(async path => {
+      if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
       if (path.endsWith('/knowledge')) return [card]
       if (path.endsWith('/knowledge/card')) return { card, version: {
@@ -58,6 +59,7 @@ describe('Workspace와 자료 탐색기', () => {
     const user = userEvent.setup()
     let created = false
     api.mockImplementation(async (path, options) => {
+      if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
       if (path === '/session') return { workspaces: created ? [workspace] : [], activeWorkspaceId: created ? 'one' : null }
       if (path === '/workspaces' && options?.method === 'POST') { created = true; return workspace }
       return []
@@ -74,6 +76,7 @@ describe('Workspace와 자료 탐색기', () => {
   it('HTML 원문을 실행하지 않고 텍스트로 표시한다', async () => {
     const user = userEvent.setup()
     api.mockImplementation(async path => {
+      if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
       if (path.endsWith('/preview')) return { supported: true, text: '<script>window.injected=true</script>', reason: null }
       return [file]
@@ -88,6 +91,7 @@ describe('Workspace와 자료 탐색기', () => {
   it('삭제 취소는 API를 호출하지 않으며 오류는 모달 안에 남긴다', async () => {
     const user = userEvent.setup()
     api.mockImplementation(async (path, options) => {
+      if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
       if (options?.method === 'DELETE') throw new Error('저장소를 사용할 수 없습니다.')
       return [file]
@@ -105,6 +109,7 @@ describe('Workspace와 자료 탐색기', () => {
   it('폴더로 이동하고 지식 영역 전환 시 경로를 초기화한다', async () => {
     const user = userEvent.setup()
     api.mockImplementation(async path => {
+      if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
       if (path.includes('parentId=folder') || path.endsWith('/knowledge')) return []
       return [{ ...file, id: 'folder', kind: 'FOLDER', name: '참고 자료' }]

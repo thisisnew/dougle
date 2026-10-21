@@ -298,3 +298,11 @@ POST `/publication`, GET `/published`를 제공합니다. 상세 요청/응답·
 소속 버전의 근거만 조회 가능하며 Source ID+경로 또는 업로드 entry ID로 현재 파일을 해석합니다.
 CURRENT/STALE은 당시 스냅샷과 마지막 로컬 수집본의 비교입니다. 없는 근거/원본/다른 Workspace는 404,
 손상된 폴더 경로는 409입니다. [응답 예제·일관성·한계](evidence-navigation.md).
+
+## 독립 지식 폴더·카드 배치 (v8)
+
+`/api/workspaces/{workspaceId}/knowledge-organization` 아래 GET catalog,
+POST `/folders` 생성, DELETE `/folders/{id}` 빈 폴더 삭제,
+PUT `/cards/{id}` 카드 배치를 제공합니다. 이동 body는 `{folderId,expectedRevision}`이며 루트는 null입니다.
+위치 revision은 문서 버전과 독립이고 최초 0입니다. 기존 `/knowledge` API는 전체 목록을 유지합니다.
+[전체 요청·응답·오류 계약](knowledge-folders.md#api)을 확인하세요.

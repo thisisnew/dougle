@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 7) {
+        if (version > 8) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -227,6 +227,28 @@ public class DatabaseConfiguration {
                                 )
                                 """);
                         jdbc.execute("PRAGMA user_version=7");
+                    });
+        }
+        if (version < 8) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE knowledge_folder (
+                                  id TEXT PRIMARY KEY, workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  parent_id TEXT REFERENCES knowledge_folder(id) ON DELETE CASCADE, name TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("CREATE UNIQUE INDEX knowledge_folder_name ON knowledge_folder(workspace_id,COALESCE(parent_id,''),name)");
+                        jdbc.execute("""
+                                CREATE TABLE knowledge_placement (
+                                  card_id TEXT PRIMARY KEY REFERENCES knowledge_card(id) ON DELETE CASCADE,
+                                  folder_id TEXT REFERENCES knowledge_folder(id) ON DELETE SET NULL,
+                                  revision INTEGER NOT NULL CHECK(revision>0)
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX knowledge_placement_folder ON knowledge_placement(folder_id)");
+                        jdbc.execute("PRAGMA user_version=8");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T11:57:59.199Z",
+  "measuredAt": "2026-10-21T12:08:28.241Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -35,23 +35,25 @@
     "pre-inference CLI observation persists for completed and cancelled jobs",
     "separate human review and publication persist across restart",
     "new draft and missing originals preserve prior publication with freshness warnings",
-    "version-scoped evidence navigation survives restart and returns 404 after source deletion"
+    "version-scoped evidence navigation survives restart and returns 404 after source deletion",
+    "independent nested knowledge folders and card placement persist across restart",
+    "nonempty folder deletion blocked and moving to root preserves document versions"
   ],
-  "sourceSyncMs": 1723.4854000000014,
+  "sourceSyncMs": 1238.011853,
   "livePublic": [],
-  "startupMs": 17562,
-  "restartMs": 18180,
+  "startupMs": 14456,
+  "restartMs": 16628,
   "upload100": {
-    "p50Ms": 185.24660399999993,
-    "p95Ms": 492.57963599999493
+    "p50Ms": 197.1101819999967,
+    "p95Ms": 616.5673270000116
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 6.751040999995894,
-    "p95Ms": 9.196676000006846
+    "p50Ms": 7.0796640000044135,
+    "p95Ms": 9.0752119999961
   },
   "search100Files30Requests": {
-    "p50Ms": 13.359079000001657,
-    "p95Ms": 22.642410000000382
+    "p50Ms": 20.380962000010186,
+    "p95Ms": 26.360908999995445
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

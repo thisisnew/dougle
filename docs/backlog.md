@@ -50,14 +50,15 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   일부 구현: 평면 초안 목록, Markdown 원문 표시, 수동 편집·버전 열람, 보존된 근거 다운로드.
   추가 구현: 버전별 근거에서 현재 원본 폴더/미리보기로 이동, Source entry ID 교체 대응,
   STALE 경고와 삭제 시 404·근거 복사본 유지. [설계·검증](evidence-navigation.md).
-  남음: 지식 폴더, 안전한 Markdown 렌더링, AI 갱신 제안/충돌 해결 UI.
+  추가 구현: 독립 지식 폴더 생성/계층 탐색/빈 폴더 삭제, 카드 이동 CAS와 v8 마이그레이션. [설계·검증](knowledge-folders.md).
+  남음: 폴더 이름 변경/이동, 안전한 Markdown 렌더링, AI 갱신 제안/충돌 해결 UI.
 
 ### P3-2 시작 전 반드시 확인할 현재 구조
 
 - `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
   현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
   원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=6`, FK cascade,
+- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=8`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
@@ -132,8 +133,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 116개 통과 + live opt-in 1개 skip, 프런트엔드 42개 통과, JAR 빌드 성공.
-- 최신 구현/검증: [현재 원본 탐색](evidence-navigation.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 125개 통과 + live opt-in 1개 skip, 프런트엔드 48개 통과(worker 2개), JAR 빌드 성공.
+- 최신 구현/검증: [지식 폴더](knowledge-folders.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
 - 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).

@@ -128,6 +128,11 @@ try {
   })
   assert.equal(draft.version.status, 'DRAFT')
   const knowledgePath = `${knowledgeBase}/${draft.card.id}`
+  const organizationPath = `/workspaces/${workspace.id}/knowledge-organization`
+  const knowledgeFolder = await api(`${organizationPath}/folders`, 'POST', { name: '가상 지식 폴더', parentId: null })
+  const knowledgeChild = await api(`${organizationPath}/folders`, 'POST', { name: '가상 하위 폴더', parentId: knowledgeFolder.id })
+  assert.equal((await api(`${organizationPath}/cards/${draft.card.id}`, 'PUT', { folderId: knowledgeChild.id, expectedRevision: 0 })).placements[0].revision, 1)
+  assert.equal((await api(knowledgePath)).version.number, 1)
   const evidenceLocationPath = `${knowledgePath}/versions/1/evidence/${draft.version.evidence[0].snapshotId}/location`
   const evidenceLocation = await api(evidenceLocationPath)
   assert.equal(evidenceLocation.entry.id, symbolHits[0].entryId)
@@ -184,6 +189,17 @@ try {
   await stop()
   configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
+  const restoredOrganization = await api(organizationPath)
+  assert.equal(restoredOrganization.folders.length, 2)
+  assert.equal(restoredOrganization.placements[0].folderId, knowledgeChild.id)
+  const folderConflict = await fetch(`${base}/api${organizationPath}/folders/${knowledgeChild.id}`, {
+    method: 'DELETE', headers: { 'X-Forge-Client': '1' },
+  })
+  assert.equal(folderConflict.status, 409)
+  await api(`${organizationPath}/cards/${draft.card.id}`, 'PUT', { folderId: null, expectedRevision: 1 })
+  await api(`${organizationPath}/folders/${knowledgeChild.id}`, 'DELETE')
+  await api(`${organizationPath}/folders/${knowledgeFolder.id}`, 'DELETE')
+  assert.equal((await api(knowledgePath)).version.number, 1)
   assert.equal((await api(evidenceLocationPath)).entry.id, symbolHits[0].entryId)
   assert.equal((await api(`${publicationPath}/publication`)).review.reviewer, 'Synthetic smoke reviewer')
   assert.equal((await api(`${publicationPath}/published`)).version.number, 1)
@@ -284,7 +300,9 @@ try {
       'pre-inference CLI observation persists for completed and cancelled jobs',
       'separate human review and publication persist across restart',
       'new draft and missing originals preserve prior publication with freshness warnings',
-      'version-scoped evidence navigation survives restart and returns 404 after source deletion'],
+      'version-scoped evidence navigation survives restart and returns 404 after source deletion',
+      'independent nested knowledge folders and card placement persist across restart',
+      'nonempty folder deletion blocked and moving to root preserves document versions'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

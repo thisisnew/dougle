@@ -59,7 +59,7 @@ Phase 2에서도 Source당 50 MiB/500개 제한을 유지해 같은 원자성을
 별도 `ArtifactStore`와 콘텐츠 해시 기반 파일 저장소 전환은 대용량 지원 시 진행합니다.
 
 SQLite는 WAL, 외래 키, 5초 busy timeout을 사용합니다. 연결 풀은 1개로
-로컬 쓰기를 직렬화합니다. `PRAGMA user_version=7`로 스키마를 관리하며 새 스키마를
+로컬 쓰기를 직렬화합니다. `PRAGMA user_version=8`로 스키마를 관리하며 새 스키마를
 구버전 앱으로 열면 실패합니다. 초기 스키마 생성도 트랜잭션입니다.
 
 ## 후속 모듈과 경계
@@ -184,6 +184,14 @@ entry ID가 교체되어도 같은 Source+경로+해시라면 CURRENT입니다. 
 파일/Source 삭제는 MISSING입니다. 같은 경로의 다른 Source 등록은 기존 출처로 간주하지 않습니다.
 이는 원격 폴링·자동 지식 무효화/재생성이나 사실 검증이 아닙니다.
 초안은 Lucene 검색에 아직 포함하지 않으며, Markdown은 HTML로 렌더링하지 않고 텍스트로 표시합니다.
+
+## 독립 지식 폴더 (v8)
+
+`OrganizationService` → `OrganizationStore` → `JdbcOrganizationStore`가 폴더와 카드 배치를 관리합니다.
+`knowledge_folder`는 원본 entry와 독립이며 `knowledge_placement`의 위치 revision은 문서 버전과 분리합니다.
+카드 이동은 제목/Markdown/근거/검토/게시본을 바꾸지 않습니다. 기존 목록 API는 전체 카드를 반환하고
+UI가 catalog로 필터링합니다. 빈 폴더만 삭제하며 Workspace 삭제는 구조/배치를 정리합니다.
+마이그레이션, CAS, 삭제 정책과 한계는 [폴더 설계](knowledge-folders.md)를 따릅니다.
 
 ## 근거의 현재 원본 탐색
 
