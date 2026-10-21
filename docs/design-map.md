@@ -236,10 +236,10 @@ sequenceDiagram
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 게시 지식·관계 검색 |
-| 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · 폴더 이름 변경/이동 |
+| 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · AI 갱신 제안 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** **P3-4 폴더 이름 변경/이동**. 개발 도구 보안 갱신은 [검증 완료](toolchain-report.md)했습니다. 안전한 표시와 원문 보존은 [Markdown 가이드](markdown-rendering.md), 독립 폴더/카드 배치는 [폴더 가이드](knowledge-folders.md) 범위로 구현했습니다. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
+**다음 한 작업:** **AI 갱신 제안·충돌 해결**. [폴더 이름 변경/이동](folder-update.md)은 구현·검증했습니다. 개발 도구 보안 갱신은 [검증 완료](toolchain-report.md)했습니다. 안전한 표시와 원문 보존은 [Markdown 가이드](markdown-rendering.md), 독립 폴더/카드 배치는 [폴더 가이드](knowledge-folders.md) 범위로 구현했습니다. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
 실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [Markdown 보고서](markdown-rendering.md)를 참고하세요.
 쉽게 읽으려면 [작동 원리](how-it-works.md)와 [모델링·코드 대조](modeling.md)를 먼저 보세요.
@@ -247,7 +247,7 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-  Version["불변 Markdown 버전 · SQLite v8"] --> API["기존 조회 API · 원문 그대로"]
+  Version["불변 Markdown 버전 · SQLite v9"] --> API["기존 조회 API · 원문 그대로"]
   API --> Preview["React Markdown/GFM 미리보기"]
   API --> Raw["원문 보기 · 편집 입력"]
   Preview --> Safe["HTML 실행 없음 · 링크/이미지 비활성"]

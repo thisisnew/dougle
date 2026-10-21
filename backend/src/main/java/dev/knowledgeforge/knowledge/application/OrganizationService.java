@@ -29,20 +29,47 @@ public class OrganizationService {
 
     public Folder create(String workspaceId, String parentId, String name) {
         Catalog catalog = catalog(workspaceId);
-        if (name == null || name.isBlank() || name.strip().length() > 120
-                || name.contains("/") || name.contains("\\") || name.codePoints().anyMatch(Character::isISOControl)
-                || List.of(".", "..").contains(name.strip())) {
-            throw new LibraryException(400, "폴더 이름은 경로 구분자 없이 1~120자로 입력하세요.");
-        }
+        validateName(name);
         String ancestor = parentId;
         var visited = new HashSet<String>();
         while (ancestor != null) {
             if (!visited.add(ancestor) || visited.size() >= 16) throw new LibraryException(400, "지식 폴더는 최대 16단계까지 만들 수 있습니다.");
             ancestor = requireFolder(catalog, ancestor).parentId();
         }
-        Folder folder = new Folder(UUID.randomUUID().toString(), parentId, name.strip());
+        Folder folder = new Folder(UUID.randomUUID().toString(), parentId, name.strip(), 1);
         store.create(workspaceId, folder);
         return folder;
+    }
+
+    public Folder update(String workspaceId, String id, String parentId, String name, int expectedRevision) {
+        Catalog catalog = catalog(workspaceId);
+        Folder current = requireFolder(catalog, id);
+        validateName(name);
+        if (current.revision() != expectedRevision) throw new LibraryException(409, "폴더가 변경되었습니다. 새로고침 후 변경 화면을 다시 여세요.");
+        if (parentId != null) requireFolder(catalog, parentId);
+        var parents = new java.util.HashMap<String, String>();
+        catalog.folders().forEach(folder -> parents.put(folder.id(), folder.parentId()));
+        parents.put(id, parentId);
+        for (Folder folder : catalog.folders()) {
+            var visited = new HashSet<String>();
+            String ancestor = folder.id();
+            while (ancestor != null) {
+                if (!visited.add(ancestor)) throw new LibraryException(400, "자신이나 하위 폴더로 이동할 수 없습니다.");
+                if (visited.size() > 16) throw new LibraryException(400, "하위 폴더를 포함해 최대 16단계까지 이동할 수 있습니다.");
+                ancestor = parents.get(ancestor);
+            }
+        }
+        Folder updated = new Folder(id, parentId, name.strip(), expectedRevision + 1);
+        if (!store.update(workspaceId, updated, expectedRevision)) throw new LibraryException(409, "폴더가 변경되었습니다. 다시 확인하세요.");
+        return updated;
+    }
+
+    private void validateName(String name) {
+        if (name == null || name.isBlank() || name.strip().length() > 120
+                || name.contains("/") || name.contains("\\") || name.codePoints().anyMatch(Character::isISOControl)
+                || List.of(".", "..").contains(name.strip())) {
+            throw new LibraryException(400, "폴더 이름은 경로 구분자 없이 1~120자로 입력하세요.");
+        }
     }
 
     public void delete(String workspaceId, String id) {

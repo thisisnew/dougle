@@ -12,6 +12,13 @@ public class OrganizationController {
     public OrganizationController(OrganizationService service) { this.service = service; }
     public record FolderRequest(String parentId, String name) {}
     public record MoveRequest(String folderId, Integer expectedRevision) {}
+    public record UpdateFolderRequest(String parentId, String name, Integer expectedRevision) {}
+
+    @PutMapping("/folders/{id}")
+    public Folder update(@PathVariable String workspaceId, @PathVariable String id, @RequestBody UpdateFolderRequest request) {
+        if (request.expectedRevision() == null) throw new dev.knowledgeforge.library.application.LibraryException(400, "기대 폴더 revision을 입력하세요.");
+        return service.update(workspaceId, id, request.parentId(), request.name(), request.expectedRevision());
+    }
 
     @GetMapping
     public Catalog catalog(@PathVariable String workspaceId) { return service.catalog(workspaceId); }

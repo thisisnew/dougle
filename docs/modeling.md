@@ -1,7 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
 **한 줄 요약: 원본 자료와 지식 문서를 따로 보관하고, 지식에는 당시 근거를 붙입니다.**
-2026-10-21 코드 대조 기준, SQLite v8. 아래 그림은 현재 구현입니다.
+2026-10-21 코드 대조 기준, SQLite v9. 아래 그림은 현재 구현입니다.
 
 ## 1. 용어를 쉽게
 
@@ -43,6 +43,7 @@ flowchart TD
 ```
 
 - 원본 폴더와 지식 폴더는 별도입니다. 지식 폴더 이동으로 원본이 이동하지 않습니다.
+- 지식 폴더는 이름·부모 변경마다 자체 revision이 증가합니다. 오래된 편집은 거절하고 하위 카드·문서·게시 이력은 유지합니다. [코드 대조·검증](folder-update.md).
 - 한 카드에는 여러 버전이 있습니다. 편집은 이전 버전을 바꾸지 않고 새 버전을 추가합니다.
 - 한 버전은 여러 근거를 인용할 수 있고, 같은 근거 복사본을 여러 버전이 공유할 수 있습니다.
 - 검토와 게시는 별도 기록입니다. **최신 초안과 현재 게시본이 다를 수 있습니다.**
@@ -83,7 +84,7 @@ flowchart TD
 
 위 보호 규칙은 `KnowledgeIntegrationTest`, `PublicationIntegrationTest`, `SourceIntegrationTest`,
 `GenerationJobIntegrationTest`, `OrganizationIntegrationTest`와 대조했습니다.
-실제 실행 결과는 [최신 검증](toolchain-report.md), 후속 설계는 [전체 설계도](design-map.md)를 참고하세요.
+실제 실행 결과는 [최신 검증](folder-update.md), 후속 설계는 [전체 설계도](design-map.md)를 참고하세요.
 
 ## 5. 앞으로 더할 모델 — 아직 미구현
 

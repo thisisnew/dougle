@@ -60,7 +60,7 @@ Phase 2에서도 Source당 50 MiB/500개 제한을 유지해 같은 원자성을
 별도 `ArtifactStore`와 콘텐츠 해시 기반 파일 저장소 전환은 대용량 지원 시 진행합니다.
 
 SQLite는 WAL, 외래 키, 5초 busy timeout을 사용합니다. 연결 풀은 1개로
-로컬 쓰기를 직렬화합니다. `PRAGMA user_version=8`로 스키마를 관리하며 새 스키마를
+로컬 쓰기를 직렬화합니다. `PRAGMA user_version=9`로 스키마를 관리하며 새 스키마를
 구버전 앱으로 열면 실패합니다. 초기 스키마 생성도 트랜잭션입니다.
 
 ## 후속 모듈과 경계
@@ -189,7 +189,10 @@ react-markdown/remark-gfm으로 React 요소에 표시하며 원문은 별도로
 raw HTML 파싱·실행 없이 링크는 비활성 텍스트, 이미지는 대체 설명으로 표시합니다.
 API·불변 버전·승인 digest·검토/게시 상태는 변경하지 않습니다. [표시 설계](markdown-rendering.md).
 
-## 독립 지식 폴더 (v8)
+## 독립 지식 폴더 (v8 도입, 현재 v9)
+
+v9는 폴더 revision으로 이름/부모 변경 충돌을 막습니다. 변경 후 전체 트리의 순환과 깊이를
+검사한 뒤 같은 트랜잭션에서 저장합니다. 문서·카드 배치 revision은 별개입니다. [설계·검증](folder-update.md).
 
 `OrganizationService` → `OrganizationStore` → `JdbcOrganizationStore`가 폴더와 카드 배치를 관리합니다.
 `knowledge_folder`는 원본 entry와 독립이며 `knowledge_placement`의 위치 revision은 문서 버전과 분리합니다.

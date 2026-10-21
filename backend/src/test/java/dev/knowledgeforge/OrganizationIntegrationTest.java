@@ -70,6 +70,87 @@ class OrganizationIntegrationTest {
     }
 
     @Test
+    void renamingAndMovingSubtreePreservesCardsEvidenceAndPublication() {
+        var root = organization.create(workspace, null, "root");
+        var child = organization.create(workspace, root.id(), "child");
+        var target = organization.create(workspace, null, "target");
+        organization.place(workspace, card, child.id(), 0);
+        var before = knowledge.get(workspace, card, null);
+        publication.review(workspace, card, 1, "synthetic", "checked", true, true);
+        var published = publication.publish(workspace, card, 1, 0);
+        var moved = organization.update(workspace, root.id(), target.id(), "renamed", 1);
+        assertThat(moved.revision()).isEqualTo(2);
+        assertThat(moved.parentId()).isEqualTo(target.id());
+        assertThat(organization.catalog(workspace).folders()).contains(child);
+        assertThat(organization.catalog(workspace).placements().getFirst().folderId()).isEqualTo(child.id());
+        assertThat(knowledge.get(workspace, card, null)).isEqualTo(before);
+        assertThat(publication.state(workspace, card)).isEqualTo(published);
+        assertThat(library.content(workspace, entry)).isNotEmpty();
+        fails(409, () -> organization.update(workspace, root.id(), null, "stale", 1));
+        assertThat(organization.update(workspace, root.id(), null, "root", 2).revision()).isEqualTo(3);
+        fails(409, () -> organization.update(workspace, root.id(), null, "old request", 1));
+    }
+
+    @Test
+    void folderUpdateRejectsCyclesCrossWorkspaceAndSubtreeDepth() {
+        var root = organization.create(workspace, null, "root");
+        var child = organization.create(workspace, root.id(), "child");
+        fails(400, () -> organization.update(workspace, root.id(), root.id(), "root", 1));
+        fails(400, () -> organization.update(workspace, root.id(), child.id(), "root", 1));
+        String other = library.createWorkspace("foreign").id();
+        var foreign = organization.create(other, null, "foreign");
+        fails(404, () -> organization.update(workspace, root.id(), foreign.id(), "root", 1));
+        fails(404, () -> organization.update(other, root.id(), null, "root", 1));
+        String parent = null;
+        for (int depth = 1; depth <= 15; depth++) parent = organization.create(workspace, parent, "depth " + depth).id();
+        String deepest = parent;
+        fails(400, () -> organization.update(workspace, root.id(), deepest, "root", 1));
+        assertThat(organization.catalog(workspace).folders()).contains(root, child);
+        assertThat(organization.update(workspace, child.id(), deepest, "allowed at 16", 1).revision()).isEqualTo(2);
+    }
+
+    @Test
+    void folderUpdateRestValidatesRevisionNamesAndCollisionAtomically() throws Exception {
+        var root = organization.create(workspace, null, "root");
+        var target = organization.create(workspace, null, "target");
+        organization.create(workspace, target.id(), "taken");
+        String endpoint = "/api/workspaces/" + workspace + "/knowledge-organization/folders/" + root.id();
+        mvc.perform(put(endpoint).contentType("application/json").content("{}")) .andExpect(status().isForbidden());
+        mvc.perform(put(endpoint).header("X-Forge-Client", "1").contentType("application/json").content("{\"name\":\"name\"}"))
+                .andExpect(status().isBadRequest());
+        for (String name : List.of(" ", ".", "..", "a/b", "a\\b", "x".repeat(121))) {
+            fails(400, () -> organization.update(workspace, root.id(), null, name, 1));
+        }
+        mvc.perform(put(endpoint).header("X-Forge-Client", "1").contentType("application/json")
+                .content("{\"name\":\"taken\",\"parentId\":\"" + target.id() + "\",\"expectedRevision\":1}"))
+                .andExpect(status().isConflict());
+        assertThat(organization.catalog(workspace).folders()).contains(root);
+        mvc.perform(put(endpoint).header("X-Forge-Client", "1").contentType("application/json")
+                .content("{\"name\":\"new\",\"parentId\":null,\"expectedRevision\":1}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(2)).andExpect(jsonPath("$.name").value("new"));
+    }
+
+    @Test
+    void simultaneousFolderChangesHaveOneWinner() throws Exception {
+        var folder = organization.create(workspace, null, "folder");
+        var ready = new java.util.concurrent.CountDownLatch(2);
+        var release = new java.util.concurrent.CountDownLatch(1);
+        try (var executor = java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor()) {
+            java.util.concurrent.Callable<Integer> change = () -> {
+                ready.countDown(); release.await();
+                try { organization.update(workspace, folder.id(), null, "renamed", 1); return 200; }
+                catch (LibraryException exception) { return exception.status(); }
+            };
+            var first = executor.submit(change);
+            var second = executor.submit(change);
+            assertThat(ready.await(5, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+            release.countDown();
+            assertThat(List.of(first.get(5, java.util.concurrent.TimeUnit.SECONDS), second.get(5, java.util.concurrent.TimeUnit.SECONDS)))
+                    .containsExactlyInAnyOrder(200, 409);
+        }
+    }
+
+    @Test
     void cardPlacementDoesNotChangeVersionsReviewPublicationOrOriginal() {
         var folder = organization.create(workspace, null, "가상 지식");
         var before = knowledge.get(workspace, card, null);

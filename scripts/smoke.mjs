@@ -186,11 +186,16 @@ try {
   assert.equal((await api(`${publicationPath}/publication`, 'POST', { expectedVersion: 1, expectedPublicationRevision: 0 })).publication.version, 1)
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
+  const movedFolder = await api(`${organizationPath}/folders/${knowledgeChild.id}`, 'PUT', {
+    parentId: null, name: '이동한 가상 폴더', expectedRevision: 1,
+  })
+  assert.equal(movedFolder.revision, 2)
   await stop()
   configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
   const restoredOrganization = await api(organizationPath)
   assert.equal(restoredOrganization.folders.length, 2)
+  assert.deepEqual(restoredOrganization.folders.find(folder => folder.id === knowledgeChild.id), movedFolder)
   assert.equal(restoredOrganization.placements[0].folderId, knowledgeChild.id)
   const folderConflict = await fetch(`${base}/api${organizationPath}/folders/${knowledgeChild.id}`, {
     method: 'DELETE', headers: { 'X-Forge-Client': '1' },
@@ -302,7 +307,8 @@ try {
       'new draft and missing originals preserve prior publication with freshness warnings',
       'version-scoped evidence navigation survives restart and returns 404 after source deletion',
       'independent nested knowledge folders and card placement persist across restart',
-      'nonempty folder deletion blocked and moving to root preserves document versions'],
+      'nonempty folder deletion blocked and moving to root preserves document versions',
+      'folder rename and parent move revision survive restart'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

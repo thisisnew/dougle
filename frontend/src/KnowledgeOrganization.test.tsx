@@ -8,9 +8,55 @@ vi.mock('./api', () => ({ request: vi.fn() }))
 const api = vi.mocked(request)
 const base = '/workspaces/one/knowledge-organization'
 const cards = [{ id: 'card', title: '가상 카드' }, { id: 'root-card', title: '루트 카드' }]
-const catalog = { folders: [{ id: 'folder', parentId: null, name: '가상 폴더' }, { id: 'child', parentId: 'folder', name: '하위 폴더' }],
+const catalog = { folders: [{ id: 'folder', parentId: null, name: '가상 폴더', revision: 1 }, { id: 'child', parentId: 'folder', name: '하위 폴더', revision: 2 }],
   placements: [{ cardId: 'card', folderId: 'folder', revision: 3 }] }
 beforeEach(() => { api.mockReset() })
+
+it('폴더 이름과 위치를 기대 revision으로 변경하고 새 경로를 표시한다', async () => {
+  const user = userEvent.setup()
+  let updated = false
+  api.mockImplementation(async (_path, options) => {
+    if (options?.method === 'PUT') { updated = true; return {} }
+    return updated ? { ...catalog, folders: [catalog.folders[0], { id: 'child', parentId: null, name: '변경됨', revision: 3 }] } : catalog
+  })
+  render(<KnowledgeOrganization workspaceId="one" cards={cards} selected="" disabled={false} revision={0} onFilter={vi.fn()} onBusy={vi.fn()} />)
+  await user.click(await screen.findByRole('button', { name: '폴더: 가상 폴더' }))
+  await user.click(screen.getByRole('button', { name: '폴더: 하위 폴더' }))
+  await user.click(screen.getByRole('button', { name: '폴더 이름·위치 변경' }))
+  await user.clear(screen.getByLabelText('변경할 폴더 이름'))
+  await user.type(screen.getByLabelText('변경할 폴더 이름'), '변경됨')
+  await user.selectOptions(screen.getByLabelText('이동할 상위 폴더'), '')
+  await user.click(screen.getByRole('button', { name: '폴더 변경 저장' }))
+  expect(api).toHaveBeenCalledWith(`${base}/folders/child`, expect.objectContaining({ method: 'PUT',
+    body: JSON.stringify({ parentId: null, name: '변경됨', expectedRevision: 2 }) }))
+  await waitFor(() => expect(screen.getByLabelText('지식 폴더 경로')).toHaveTextContent('지식 루트 / 변경됨'))
+  expect(screen.queryByLabelText('변경할 폴더 이름')).not.toBeInTheDocument()
+})
+
+it('폴더 변경 충돌은 입력을 보존하며 취소는 추가 요청을 보내지 않는다', async () => {
+  const user = userEvent.setup()
+  api.mockResolvedValueOnce(catalog).mockRejectedValueOnce(new Error('폴더가 변경되었습니다'))
+  render(<KnowledgeOrganization workspaceId="one" cards={cards} selected="" disabled={false} revision={0} onFilter={vi.fn()} onBusy={vi.fn()} />)
+  await user.click(await screen.findByRole('button', { name: '폴더: 가상 폴더' }))
+  await user.click(screen.getByRole('button', { name: '폴더 이름·위치 변경' }))
+  await user.clear(screen.getByLabelText('변경할 폴더 이름'))
+  await user.type(screen.getByLabelText('변경할 폴더 이름'), '보존할 이름')
+  await user.click(screen.getByRole('button', { name: '폴더 변경 저장' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('폴더가 변경되었습니다')
+  expect(screen.getByLabelText('변경할 폴더 이름')).toHaveValue('보존할 이름')
+  await user.click(screen.getByRole('button', { name: '폴더 변경 취소' }))
+  expect(api.mock.calls.filter(([, options]) => options?.method === 'PUT')).toHaveLength(1)
+})
+
+it('문서 편집 중 폴더 변경 버튼도 비활성화한다', async () => {
+  const user = userEvent.setup()
+  api.mockResolvedValue(catalog)
+  const props = { workspaceId: 'one', cards, selected: '', revision: 0, onFilter: vi.fn(), onBusy: vi.fn() }
+  const view = render(<KnowledgeOrganization {...props} disabled={false} />)
+  await user.click(await screen.findByRole('button', { name: '폴더: 가상 폴더' }))
+  view.rerender(<KnowledgeOrganization {...props} disabled />)
+  expect(screen.getByRole('button', { name: '폴더 이름·위치 변경' })).toBeDisabled()
+})
 
 it('전체·루트·하위 폴더 탐색은 카드 목록만 필터링한다', async () => {
   const user = userEvent.setup()

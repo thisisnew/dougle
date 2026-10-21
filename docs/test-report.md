@@ -1,5 +1,7 @@
 # Phase 1 검증 결과
 
+최신 기능 검증은 [폴더 이름·위치 변경 보고서](folder-update.md)를 보세요.
+
 최신 도구 버전·전체 회귀 검증은 [도구 갱신 보고서](toolchain-report.md)를 보세요.
 
 이 문서는 Phase 1 당시 기록입니다. 최신 수집·검색 검증은 [Phase 2 보고서](phase2-report.md)를 참고하세요.

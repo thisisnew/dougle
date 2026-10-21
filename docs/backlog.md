@@ -52,14 +52,14 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   STALE 경고와 삭제 시 404·근거 복사본 유지. [설계·검증](evidence-navigation.md).
   추가 구현: 독립 지식 폴더 생성/계층 탐색/빈 폴더 삭제, 카드 이동 CAS와 v8 마이그레이션. [설계·검증](knowledge-folders.md).
   추가 구현: 안전한 Markdown/GFM 표시·원문 열람, HTML 실행·링크 이동·이미지 요청 차단. [정책·검증](markdown-rendering.md).
-  남음: 폴더 이름 변경/이동, AI 갱신 제안/충돌 해결 UI.
+  추가 구현: 폴더 이름/부모 변경·순환/깊이 제한·revision 충돌 보호·v9 마이그레이션. [검증](folder-update.md).
+  남음: AI 갱신 제안/충돌 해결 UI.
 
 ### 다음 작업의 우선순위
 
 1. 개발 도구 보안 갱신 완료: Vite 7.3.7 / Vitest 4.1.12, 전체 npm audit 경고 0개.
    [검증 기록](toolchain-report.md). 앱 전체의 보안 증명은 아니며 개발 서버/UI 테스트 서버 외부 노출 금지.
-2. P3-4 지식 폴더 이름 변경/이동: Workspace 격리, 이름 충돌, 순환·깊이 제한,
-   동시 변경 충돌과 카드/문서/게시 이력 불변성을 API·UI 테스트로 검증.
+2. P3-4 지식 폴더 이름 변경/이동 완료. Workspace 격리·순환/깊이·충돌·이력 보존 검증. [보고서](folder-update.md).
 3. AI 갱신 제안/사람 편집 충돌 해결 후 P4 검색·근거 선표시 SSE 진행.
 
 ### P3-2 시작 전 반드시 확인할 현재 구조
@@ -67,7 +67,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
   현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
   원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=8`, FK cascade,
+- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=9`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
@@ -142,8 +142,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 125개 통과 + live opt-in 1개 skip, 프런트엔드 60개 통과(worker 2개), JAR 빌드 성공.
-- 최신 구현/검증: [도구 갱신](toolchain-report.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 130개 통과 + live opt-in 1개 skip, 프런트엔드 63개 통과(worker 2개), JAR 빌드 성공.
+- 최신 구현/검증: [폴더 변경](folder-update.md), [모델링 대조표](modeling.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
 - 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).

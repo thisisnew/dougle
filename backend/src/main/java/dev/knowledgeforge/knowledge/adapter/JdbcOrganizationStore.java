@@ -12,13 +12,18 @@ public class JdbcOrganizationStore implements OrganizationStore {
 
     public Catalog catalog(String workspaceId) {
         return new Catalog(jdbc.query("SELECT * FROM knowledge_folder WHERE workspace_id=? ORDER BY name,id",
-                (row, index) -> new Folder(row.getString("id"), row.getString("parent_id"), row.getString("name")), workspaceId),
+                (row, index) -> new Folder(row.getString("id"), row.getString("parent_id"), row.getString("name"), row.getInt("revision")), workspaceId),
                 jdbc.query("SELECT p.* FROM knowledge_placement p JOIN knowledge_card c ON c.id=p.card_id WHERE c.workspace_id=? ORDER BY p.card_id",
                         (row, index) -> new Placement(row.getString("card_id"), row.getString("folder_id"), row.getInt("revision")), workspaceId));
     }
 
     public void create(String workspaceId, Folder folder) {
         jdbc.update("INSERT INTO knowledge_folder(id,workspace_id,parent_id,name) VALUES(?,?,?,?)", folder.id(), workspaceId, folder.parentId(), folder.name());
+    }
+
+    public boolean update(String workspaceId, Folder folder, int expectedRevision) {
+        return jdbc.update("UPDATE knowledge_folder SET parent_id=?,name=?,revision=revision+1 WHERE workspace_id=? AND id=? AND revision=?",
+                folder.parentId(), folder.name(), workspaceId, folder.id(), expectedRevision) == 1;
     }
 
     public boolean deleteEmpty(String workspaceId, String id) {

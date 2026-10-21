@@ -125,7 +125,7 @@ dt { color: #97a28d; }
 .knowledge-panel p, .draft-section p { font-size: 12px; line-height: 1.8; }
 .knowledge-form { display: grid; gap: 12px; margin: 18px 0; }
 .knowledge-form label { display: grid; gap: 6px; font-size: 12px; }
-.knowledge-form input, .knowledge-form textarea { width: 100%; min-width: 0; border: 1px solid #cedac8; border-radius: 6px; padding: 10px; background: white; }
+.knowledge-form input, .knowledge-form textarea, .knowledge-form select { width: 100%; min-width: 0; border: 1px solid #cedac8; border-radius: 6px; padding: 10px; background: white; }
 .knowledge-form textarea { resize: vertical; }
 .knowledge-panel pre, .draft-section pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 420px; overflow: auto; padding: 14px; background: #f4f7ef; border-radius: 6px; font-size: 12px; }
 .knowledge-document { border-top: 1px solid #dfe6db; margin-top: 20px; padding-top: 16px; }
