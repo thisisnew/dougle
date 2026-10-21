@@ -19,8 +19,8 @@
 - 후속 검색은 Lucene 10 + Nori 및 심볼/관계 인덱스를 사용한다. 외부 DB 서버는 추가하지 않는다.
 - 원본 검색 미리보기의 본문 위치/행 범위는 `docs/search-evidence.md`를 따른다. 확정 인용이나 최신성 보증으로 취급하지 않는다. 게시 지식 통합 검색·v13 큐·초안 제외·도메인/최신성 규칙은 `docs/published-search.md`를 따른다.
 - 답변용 근거 묶음의 v14 로컬 보관·불변 인용·해시·제외 규칙·삭제 정책은 `docs/evidence-bundles.md`를 따른다. 저장은 전송 승인이 아니며 후속 AI 전송 전 재검증을 생략하지 않는다.
-- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`, v16 실제 답변 작업·일회 소비·재검증·중단은 `docs/answer-jobs.md`를 따른다. 요청문은 V2이며 오래된 승인은 재확인한다. SSE UI·실제 토큰 스트림·다중 대화는 아직 없다. fake CLI 성공을 실제 외부 모델 검증으로 보고하지 않는다.
-- 후속 읽기 전용 작업 관측 SSE API는 `docs/answer-events.md`를 따른다. UI는 기존 조회 방식이며 토큰 delta는 없다. 재연결로 생성/전송하지 않으며 관측 종료와 명시적 작업 취소를 구분한다.
+- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`, v16 실제 답변 작업·일회 소비·재검증·중단은 `docs/answer-jobs.md`를 따른다. 요청문은 V2이며 오래된 승인은 재확인한다. 실제 토큰 스트림·다중 대화는 아직 없다. fake CLI 성공을 실제 외부 모델 검증으로 보고하지 않는다.
+- 후속 읽기 전용 작업 관측 SSE API는 `docs/answer-events.md`, 화면은 `docs/answer-events-ui.md`를 따른다. UI는 제한적 재연결을 지원하며 토큰 delta는 없다. 재연결로 생성/전송하지 않으며 관측 종료와 명시적 작업 취소를 구분한다.
 - 특정 업무 도메인을 하드코딩하지 않는다. 테스트는 `fixtures`의 가상 자료만 사용한다.
 - 원본과 지식 수명주기를 분리하고, 검증 후 게시와 수동 편집 보호 원칙을 지킨다.
 - 수집은 읽기 전용, 폴링은 Source별 opt-in, 외부 LLM 전송은 명시적 승인으로 제한한다.

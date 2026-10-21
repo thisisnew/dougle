@@ -1,14 +1,16 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import AnswerJobsPanel from './AnswerJobsPanel'
 import { request } from './api'
+import { FakeEventSource } from './test/FakeEventSource'
 
 vi.mock('./api', () => ({ request: vi.fn() }))
 const api = vi.mocked(request)
 const props = { workspaceId: 'workspace', bundleId: 'bundle', approval: { id: 'approval', digest: 'digest' } }
 const done = { id: 'job', bundleId: 'bundle', approvalId: 'approval', status: 'SUCCEEDED', provider: 'CODEX', requestedModel: 'model', answer: '<script>bad()</script> [R1]', error: null }
-beforeEach(() => { api.mockReset() })
+beforeEach(() => { api.mockReset(); FakeEventSource.instances = []; vi.stubGlobal('EventSource', FakeEventSource) })
+afterEach(() => vi.unstubAllGlobals())
 
 it('명시적 전송 확인 없이는 호출하지 않고 답변을 안전하게 표시한다', async () => {
   api.mockResolvedValue(done)
@@ -47,18 +49,55 @@ it('실행 중 작업 중단 요청 후 늦은 답변을 표시하지 않는다'
   api.mockResolvedValueOnce([{ ...done, status: 'RUNNING', answer: null }]).mockResolvedValueOnce({ ...done, status: 'CANCELLED', answer: null })
   render(<AnswerJobsPanel {...props} approval={null} />)
   await userEvent.click(screen.getByRole('button', { name: '답변 작업 조회·새로고침' }))
+  const source = FakeEventSource.instances[0]
   await userEvent.click(await screen.findByRole('button', { name: '답변 중단' }))
   expect(await screen.findByText('중단됨')).toBeInTheDocument()
+  expect(source.closed).toBe(true)
+  act(() => { source.emit('evidence', { id: 'bundle', workspaceId: 'workspace', digest: 'digest' }); source.emit('job', { ...done, workspaceId: 'workspace' }) })
   expect(api.mock.calls[1][0]).toBe('/workspaces/workspace/answer-jobs/job/cancel')
   expect(screen.queryByLabelText('AI 답변')).not.toBeInTheDocument()
 })
 
-it('상태를 폴링해 완료 답변을 표시하며 더 이상 조회하지 않는다', async () => {
-  api.mockResolvedValueOnce([{ ...done, status: 'RUNNING', answer: null }]).mockResolvedValueOnce(done)
+it('SSE 근거 확인 후 완료 답변을 안전하게 표시하고 폴링하지 않는다', async () => {
+  api.mockResolvedValueOnce([{ ...done, status: 'RUNNING', answer: null }])
   render(<AnswerJobsPanel {...props} approval={null} />)
   await userEvent.click(screen.getByRole('button', { name: '답변 작업 조회·새로고침' }))
-  expect(await screen.findByLabelText('AI 답변', {}, { timeout: 2500 })).toBeInTheDocument()
-  expect(api).toHaveBeenCalledTimes(2)
+  const source = FakeEventSource.instances[0]
+  act(() => source.emit('evidence', { id: 'bundle', workspaceId: 'workspace', digest: 'digest' }))
+  expect(screen.getByLabelText('SSE 연결 상태')).toHaveTextContent('근거 확인 완료')
+  expect(screen.queryByLabelText('AI 답변')).not.toBeInTheDocument()
+  act(() => source.emit('job', { ...done, workspaceId: 'workspace' }))
+  expect(await screen.findByLabelText('AI 답변')).toHaveTextContent(done.answer)
+  expect(document.querySelector('script')).toBeNull()
+  expect(source.closed).toBe(true)
+  expect(api).toHaveBeenCalledOnce()
+})
+
+it('Workspace 변경 시 관측을 닫고 늦은 응답과 이전 화면을 버린다', async () => {
+  api.mockResolvedValueOnce([{ ...done, status: 'RUNNING', answer: null }])
+  const view = render(<AnswerJobsPanel {...props} approval={null} />)
+  await userEvent.click(screen.getByRole('button', { name: '답변 작업 조회·새로고침' }))
+  const source = FakeEventSource.instances[0]
+  view.rerender(<AnswerJobsPanel {...props} workspaceId="other" approval={null} />)
+  expect(source.closed).toBe(true)
+  act(() => { source.emit('evidence', { id: 'bundle', workspaceId: 'workspace', digest: 'digest' }); source.emit('job', { ...done, workspaceId: 'workspace' }) })
+  expect(screen.queryByLabelText('AI 답변')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('저장된 답변 작업')).not.toBeInTheDocument()
+  expect(api).toHaveBeenCalledOnce()
+})
+
+it('SSE 실패 후 새로고침으로 같은 작업을 다시 관측한다', async () => {
+  api.mockResolvedValue([{ ...done, status: 'RUNNING', answer: null }])
+  const view = render(<AnswerJobsPanel {...props} approval={null} />)
+  await userEvent.click(screen.getByRole('button', { name: '답변 작업 조회·새로고침' }))
+  act(() => FakeEventSource.instances[0].emit('unavailable', {}))
+  await screen.findByRole('alert')
+  await userEvent.click(screen.getByRole('button', { name: '답변 작업 조회·새로고침' }))
+  expect(FakeEventSource.instances).toHaveLength(2)
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  view.unmount()
+  expect(FakeEventSource.instances[1].closed).toBe(true)
+  expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
 })
 
 it('닫으면 조회 대기를 취소하되 서버 중단을 가장하지 않는다', async () => {

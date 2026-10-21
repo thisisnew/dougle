@@ -1,5 +1,8 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+SSE 화면은 새 데이터를 저장하지 않습니다. `AnswerJobsPanel → observeAnswerJob`이 기존 작업을 읽고 상태를 교체합니다.
+Workspace·묶음 전환 때 화면/관측만 초기화하며 서버 작업은 명시적으로 중단해야 합니다. [UI 코드 대조](answer-events-ui.md).
+
 2026-10-22 대조: 작업 관측 SSE는 저장 테이블 없이 기존 묶음/작업을 읽습니다.
 `AnswerJobEventsController → EvidenceBundleService/AnswerJobService.get` 경로이며 생성/취소 권한을 갖지 않습니다. [그림·코드 대조](answer-events.md).
 

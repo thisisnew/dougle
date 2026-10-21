@@ -5,6 +5,7 @@
 승인 일회 소비·재시도 멱등·실제 CLI 답변을 지원합니다. [전체 계약](answer-jobs.md).
 관측 SSE: `GET /api/workspaces/{workspaceId}/answer-jobs/{id}/events` → 근거, 작업 상태, 완료.
 토큰 delta는 없으며 GET/재연결로 AI를 호출하지 않습니다. [이벤트·오류·재연결 계약](answer-events.md).
+React 화면도 이 계약에 연결했습니다. [UI의 재연결/종료 정책](answer-events-ui.md). API·스키마 변경은 없습니다.
 
 답변 승인: `GET/POST /api/workspaces/{workspaceId}/evidence-bundles/{bundleId}/answer-approval`,
 철회: `DELETE .../answer-approval/{approvalId}`. 10분 유효·명시 동의·기대 ID 충돌 보호, 실제 전송 없음. [전체 계약](answer-approval.md).

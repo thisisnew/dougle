@@ -1,6 +1,6 @@
 # 답변 작업 SSE — 근거를 먼저 보내는 관측 API
 
-2026-10-22 · SQLite v16 유지. **API 구현이며 화면은 아직 기존 조회 방식입니다.**
+2026-10-22 · SQLite v16 유지. 후속 [React SSE 화면 연결](answer-events-ui.md)도 구현했습니다. 아래 검증 표는 API 도입 당시 기록입니다.
 
 ## 쉽게 설명하면
 
@@ -65,7 +65,7 @@ GET events → AnswerJobEventsController → 근거 → job 상태 → done
 JAR smoke에는 실제 저장 묶음/완료 작업의 SSE 일치 및 재시작 후 재조회 검증을 추가했습니다.
 smoke 모델은 fake CLI이며 실제 외부 AI 검증이 아닙니다.
 
-남음: React SSE 연결·재연결 UI, CLI 실제 토큰 스트림, 부분 답변의 미검증 표시,
+후속 완료: [React SSE 연결·재연결 UI](answer-events-ui.md). 남음: CLI 실제 토큰 스트림, 부분 답변의 미검증 표시,
 다중 대화, 장시간/느린 클라이언트 부하·연결 해제 스트레스 테스트. P4 전체 완료는 아닙니다.
 
 ### 이번 전체 실행 결과
