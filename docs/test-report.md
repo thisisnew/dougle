@@ -1,6 +1,6 @@
 # Phase 1 검증 결과
 
-최신 내부 부품 검증은 [Codex 알림 프로토콜 보고서](codex-stream-protocol.md)입니다. 합성 알림 검증이며 실제 App Server/외부 모델 성공 검증이 아닙니다.
+최신 실행기 검증은 [Codex 선택적 스트리밍 보고서](codex-streaming.md)입니다. 가상 프로세스 생성 검증과 실제 CLI의 비생성 설정 조회를 구분합니다. 실제 외부 모델 답변 생성은 검증하지 않았습니다.
 
 최신 임시 출력 검증은 [Claude 스트림 보고서](partial-answer.md)를 보세요. 실제 외부 모델 검증이 아닌 fake CLI 검증입니다.
 

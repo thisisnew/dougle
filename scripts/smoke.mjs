@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
 import { once } from 'node:events'
-import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:net'
 import { tmpdir } from 'node:os'
 import { dirname, resolve } from 'node:path'
@@ -19,12 +19,15 @@ const base = `http://127.0.0.1:${port}`
 let child
 let logs = ''
 let configuredModel = 'server-default-fixture'
+let configuredCodex = resolve(root, 'scripts/fixtures/fake-codex.sh')
+let configuredStreamHome = ''
 
 async function start() {
   logs = ''
   const started = performance.now()
   child = spawn('bash', ['scripts/run.sh',
-    `--forge.ai.codex-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`,
+    `--forge.ai.codex-command=${configuredCodex}`,
+    `--forge.ai.codex-stream-home=${configuredStreamHome}`,
     `--forge.ai.codex-model=${configuredModel}`,
     `--forge.ai.claude-command=${resolve(root, 'scripts/fixtures/fake-claude-stream.sh')}`], {
     cwd: root,
@@ -458,6 +461,28 @@ try {
   assert.ok(partialIndex > 0 && finalIndex > partialIndex)
   assert.equal(streamEvents[finalIndex].data.answer, '검사를 통과한 가상 최종 답변입니다. [R1]')
   assert.ok(!JSON.stringify(await api(`${streamBase}/answer-jobs/${streamJob.id}`)).includes('가상 임시 출력'))
+  await stop()
+  configuredCodex = resolve(root, 'scripts/fixtures/fake-codex-app-server.mjs')
+  configuredStreamHome = resolve(directory, 'codex-profile')
+  await mkdir(configuredStreamHome, { mode: 0o700 })
+  await writeFile(resolve(configuredStreamHome, 'auth.json'), '{"synthetic":true}', { mode: 0o600 })
+  await start()
+  const codexPreview = await api(`${streamPath}/answer-preview`, 'POST', { provider: 'CODEX', requestedModel: 'app-server-fixture-model' })
+  const codexApproval = await api(`${streamPath}/answer-approval`, 'POST', { provider: 'CODEX', requestedModel: 'app-server-fixture-model', digest: codexPreview.digest, acknowledged: true, expectedApprovalId: streamApproval.approval.id })
+  const codexJob = await api(`${streamPath}/answer-jobs`, 'POST', { requestId: crypto.randomUUID(), approvalId: codexApproval.approval.id, digest: codexPreview.digest, approved: true })
+  const codexEvents = await (await fetch(`${base}/api${streamBase}/answer-jobs/${codexJob.id}/events`, { signal: AbortSignal.timeout(15000) })).text()
+  assert.ok(codexEvents.indexOf('event:evidence') < codexEvents.indexOf('event:partial'))
+  assert.ok(codexEvents.includes('가상 Codex 임시 출력'))
+  assert.ok(codexEvents.includes('SUCCEEDED'))
+  const codexFinal = await api(`${streamBase}/answer-jobs/${codexJob.id}`)
+  assert.equal(codexFinal.answer, '검사를 통과한 Codex 가상 답변입니다. [R1]')
+  assert.ok(!JSON.stringify(codexFinal).includes('임시 출력'))
+  const cancelApproval = await api(`${streamPath}/answer-approval`, 'POST', { provider: 'CODEX', requestedModel: 'app-server-fixture-model', digest: codexPreview.digest, acknowledged: true, expectedApprovalId: codexApproval.approval.id })
+  const cancelJob = await api(`${streamPath}/answer-jobs`, 'POST', { requestId: crypto.randomUUID(), approvalId: cancelApproval.approval.id, digest: codexPreview.digest, approved: true })
+  await waitForJob(`${streamBase}/answer-jobs/${cancelJob.id}`, job => job.status === 'RUNNING')
+  await api(`${streamBase}/answer-jobs/${cancelJob.id}/cancel`, 'POST')
+  const cancelledCodex = await waitForJob(`${streamBase}/answer-jobs/${cancelJob.id}`, job => job.status === 'CANCELLED')
+  assert.equal(cancelledCodex.answer, null)
   await api(streamBase, 'DELETE')
   const livePublic = []
   if (process.argv.includes('--live-public')) {
@@ -502,7 +527,8 @@ try {
     java: '21',
     springBoot: '4.1.1',
     dataset: '100 synthetic UTF-8 files (~2.5 KB each) + 1 nested fixture; sequential HTTP requests',
-    checks: ['packaged UI', 'upload/download byte equality', 'UTF-8 preview', 'restart persistence',
+    checks: ['Codex opt-in fake App Server evidence-first partial/final SSE and cancellation',
+      'packaged UI', 'upload/download byte equality', 'UTF-8 preview', 'restart persistence',
       'active workspace persistence', 'independent knowledge area', 'cascade deletion', 'deletion persists after restart',
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',
       'search body offsets and extracted line ranges survive restart',

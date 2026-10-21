@@ -33,15 +33,21 @@ public class CliCuratorModel implements CuratorModel {
     private final String claude;
     private final Duration timeout;
     private final CuratorSettings settings;
+    private final String codexStreamHome;
 
     @Autowired
     public CliCuratorModel(@Value("${forge.ai.codex-command:codex}") String codex,
-                           @Value("${forge.ai.claude-command:claude}") String claude, CuratorSettings settings) {
-        this(codex, claude, Duration.ofSeconds(120), settings);
+                           @Value("${forge.ai.claude-command:claude}") String claude, CuratorSettings settings,
+                           @Value("${forge.ai.codex-stream-home:}") String codexStreamHome) {
+        this(codex, claude, Duration.ofSeconds(120), settings, codexStreamHome);
     }
 
     CliCuratorModel(String codex, String claude) {
         this(codex, claude, Duration.ofSeconds(120));
+    }
+
+    CliCuratorModel(String codex, String claude, CuratorSettings settings) {
+        this(codex, claude, Duration.ofSeconds(120), settings);
     }
 
     CliCuratorModel(String codex, String claude, Duration timeout) {
@@ -49,10 +55,15 @@ public class CliCuratorModel implements CuratorModel {
     }
 
     CliCuratorModel(String codex, String claude, Duration timeout, CuratorSettings settings) {
+        this(codex, claude, timeout, settings, "");
+    }
+
+    CliCuratorModel(String codex, String claude, Duration timeout, CuratorSettings settings, String codexStreamHome) {
         this.codex = codex;
         this.claude = claude;
         this.timeout = timeout;
         this.settings = settings;
+        this.codexStreamHome = codexStreamHome;
     }
 
     public String generate(Provider provider, String prompt) {
@@ -66,6 +77,10 @@ public class CliCuratorModel implements CuratorModel {
 
     @Override
     public String generateWithText(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
+        if (provider == Provider.CODEX && !codexStreamHome.isBlank()) {
+            return new CodexAppServer(codex, Path.of(codexStreamHome), timeout)
+                    .generate(prompt, CuratorSettings.normalize(requestedModel), text);
+        }
         return generateInternal(provider, prompt, requestedModel, provider == Provider.CLAUDE ? text : null);
     }
 

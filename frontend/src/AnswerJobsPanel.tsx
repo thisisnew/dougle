@@ -61,7 +61,7 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval }: Props) {
 
   return <section aria-label="답변 작업" className="answer-approval">
     <h3>실제 답변 요청</h3>
-    <p>아래 전송 버튼은 외부 AI를 호출합니다. Claude가 텍스트 조각을 보내면 미검증 임시 출력을 표시합니다. Codex는 완료 답변만 표시합니다.</p>
+    <p>아래 전송 버튼은 외부 AI를 호출합니다. Claude 또는 전용 스트리밍 설정을 켠 Codex가 글 조각을 보내면 미검증 임시 출력을 표시합니다. Codex 기본 설정은 완료 답변만 표시합니다.</p>
     <p>닫거나 다른 Workspace로 이동해도 작업은 계속됩니다. 중단하려면 답변 중단을 누르세요. 이미 전송된 자료는 회수할 수 없습니다.</p>
     {approval && <><label><input type="checkbox" checked={agreed} disabled={busy || active(job)} onChange={event => setAgreed(event.target.checked)} />승인한 요청을 지금 외부 AI에 전송합니다.</label>
       <Button disabled={busy || active(job) || !agreed} onClick={() => void act('start')}>승인한 요청 전송·답변 시작</Button></>}

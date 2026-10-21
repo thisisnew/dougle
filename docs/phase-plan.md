@@ -1,11 +1,11 @@
 # Phase 완료 기준 및 남은 작업
 
-Codex 스트림은 [독립 알림 검증기](codex-stream-protocol.md)까지 추가했습니다. 앱 실행 경로와 연결하지 않았으므로 P4 스트리밍 완료로 체크하지 않습니다.
+Codex 스트림은 [선택적 실행기](codex-streaming.md)까지 답변 작업/SSE에 연결했습니다. 실제 서비스 스트림 검증과 다중 대화가 남아 P4 전체 완료는 아닙니다.
 
 실행 가능한 작업 단위와 상세 인수 조건은 [남은 개발 체크리스트](backlog.md)를 따릅니다.
 원본 검색의 [근거 위치 표시](search-evidence.md)는 구현했지만 P4 근거 검색 전체 완료는 아닙니다.
 [원본·게시 지식 통합 검색](published-search.md)도 구현했습니다. 영속 청크·관계 검색·채팅 UI는 남아 있습니다.
-[답변용 불변 근거 묶음](evidence-bundles.md), [재검증·미리보기](bundle-validation.md), [승인·철회](answer-approval.md), [답변 작업·재검증·일회 소비·중단](answer-jobs.md), [관측 SSE API](answer-events.md)와 [UI](answer-events-ui.md), [Claude 임시 출력](partial-answer.md)을 구현했습니다. 의미 기반 청크 선택·Codex 스트림·다중 대화는 남았습니다.
+[답변용 불변 근거 묶음](evidence-bundles.md), [재검증·미리보기](bundle-validation.md), [승인·철회](answer-approval.md), [답변 작업·재검증·일회 소비·중단](answer-jobs.md), [관측 SSE API](answer-events.md)와 [UI](answer-events-ui.md), [Claude 임시 출력](partial-answer.md), [선택적 Codex 스트리밍](codex-streaming.md)을 구현했습니다. 의미 기반 청크 선택·실제 서비스 스트림 검증·다중 대화는 남았습니다.
 새 PC의 실행 절차와 다음 에이전트용 요청은 [HANDOFF](../HANDOFF.md)에 있습니다.
 사용자 체험 시점은 **Mac 설치형 준비 후**입니다. [체험 완료 기준](desktop-preview.md).
 
@@ -57,7 +57,7 @@ Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
 
 ## Phase 4
 
-Claude text_delta를 미검증 임시 영역으로 보내는 경로를 추가했습니다. fake CLI로 검증하며 Codex 스트림·실제 서비스 확인·다중 대화는 남았습니다. [현재 범위](partial-answer.md).
+Claude text_delta와 선택적 Codex 스트림을 미검증 임시 영역으로 보내는 경로를 추가했습니다. fake CLI로 검증하며 실제 서비스 확인·다중 대화는 남았습니다. [현재 범위](codex-streaming.md).
 
 2026-10-22: [근거 우선 작업 관측 SSE API](answer-events.md)와 [UI 연결](answer-events-ui.md) 구현. 후속 Claude 임시 출력을 추가했지만 Codex 스트림과 아래 완료 기준 전체를 충족한 것은 아닙니다.
 

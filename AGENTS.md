@@ -13,14 +13,14 @@
 - AI 결과 비교는 `docs/generation-comparison.md`를 확인한다. 생성 당시/현재/최초 결과를 읽기 전용 조회한다. 거절·재검토 이력은 `docs/proposal-decisions.md`에 구현했다. 명시적 전체 채택은 `docs/proposal-acceptance.md`에 구현했다. 동일 근거의 수동 부분 반영은 `docs/proposal-merge.md`를 따르며, 현재 수집본과 일치하는 근거의 번호 통합은 `docs/evidence-merge.md`에 구현했다. 오래된 근거를 새 원본으로 교체하는 재연결은 아직 없다.
 - P3-4 출처 탐색 연결은 `docs/evidence-navigation.md`를 확인한다. 원본 해석은 Source ID+경로 또는 업로드 ID이며 독립 지식 폴더·카드 배치는 `docs/knowledge-folders.md`를 확인한다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
-- Codex 스트림은 `docs/codex-stream-protocol.md`의 독립 알림 검증기까지만 구현했다. 앱 실행 경로에는 미연결이다. 다음은 설정 격리·JSON-RPC 실행기·취소/출력 한도 검증이며, 검증기 테스트를 실제 서비스 성공으로 보고하지 않는다.
+- Codex 스트림은 `docs/codex-streaming.md`의 전용 프로필 opt-in 실행기까지 답변 작업에 연결했다. 기본 exec/지식 생성 경로는 유지하며 실패 시 자동 재전송하지 않는다. 가상 CLI 테스트를 실제 서비스 생성 성공으로 보고하지 않는다. 다중 대화는 후속이다.
 - 지식 Markdown 표시 보안 경계는 `docs/markdown-rendering.md`를 따른다. 링크/이미지 자동 로딩이나 raw HTML 실행을 추가하지 않는다.
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.
 - 후속 검색은 Lucene 10 + Nori 및 심볼/관계 인덱스를 사용한다. 외부 DB 서버는 추가하지 않는다.
 - 원본 검색 미리보기의 본문 위치/행 범위는 `docs/search-evidence.md`를 따른다. 확정 인용이나 최신성 보증으로 취급하지 않는다. 게시 지식 통합 검색·v13 큐·초안 제외·도메인/최신성 규칙은 `docs/published-search.md`를 따른다.
 - 답변용 근거 묶음의 v14 로컬 보관·불변 인용·해시·제외 규칙·삭제 정책은 `docs/evidence-bundles.md`를 따른다. 저장은 전송 승인이 아니며 후속 AI 전송 전 재검증을 생략하지 않는다.
-- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`, v16 실제 답변 작업·일회 소비·재검증·중단은 `docs/answer-jobs.md`를 따른다. 요청문은 V2이며 오래된 승인은 재확인한다. Codex 토큰 스트림·다중 대화는 아직 없다. fake CLI 성공을 실제 외부 모델 검증으로 보고하지 않는다.
+- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`, v16 실제 답변 작업·일회 소비·재검증·중단은 `docs/answer-jobs.md`를 따른다. 요청문은 V2이며 오래된 승인은 재확인한다. 다중 대화는 아직 없다. fake CLI 성공을 실제 외부 모델 검증으로 보고하지 않는다.
 - 후속 읽기 전용 작업 관측 SSE API는 `docs/answer-events.md`, 화면은 `docs/answer-events-ui.md`, Claude 미검증 임시 출력은 `docs/partial-answer.md`를 따른다. 임시 글은 메모리만 사용하고 실패·중단 때 폐기한다. 재연결로 생성/전송하지 않으며 관측 종료와 명시적 작업 취소를 구분한다.
 - 특정 업무 도메인을 하드코딩하지 않는다. 테스트는 `fixtures`의 가상 자료만 사용한다.
 - 원본과 지식 수명주기를 분리하고, 검증 후 게시와 수동 편집 보호 원칙을 지킨다.

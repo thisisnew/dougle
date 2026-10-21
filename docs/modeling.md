@@ -1,6 +1,6 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
-Codex용 `CodexTextStream`은 thread/turn/item에 묶인 **메모리 상태 검증기**입니다. 테이블 변경 없이 독립 테스트했으며 앱에는 미연결입니다. [현재/예정 대조](codex-stream-protocol.md).
+Codex용 `CodexTextStream`은 thread/turn/item에 묶인 **메모리 상태 검증기**입니다. 전용 프로필 옵션이 켜지면 `CodexAppServerSession`에서 호출하고 기존 작업 메모리/SSE로 보냅니다. 새 테이블은 없습니다. [현재/예정 대조](codex-streaming.md).
 
 Claude 임시 출력은 **실행 중 메모리 문자열**이며 테이블/지식/답변 이력으로 저장하지 않습니다.
 `AnswerJobService.partial → SSE partial → 미검증 임시 영역`으로 보내고 최종/실패/중단 때 지웁니다. [코드 대조](partial-answer.md).

@@ -125,6 +125,8 @@ final class CodexTextStream {
         return property.asString();
     }
 
+    boolean completed() { return !failed && result != null; }
+
     String result() throws IOException {
         if (failed || result == null) throw new IOException("Missing Codex result");
         return result;
