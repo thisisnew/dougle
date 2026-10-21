@@ -130,6 +130,12 @@ try {
   assert.equal(originalBundle.payload.items[0].entryId, symbolHits[0].entryId)
   assert.equal(originalBundle.payload.items[0].quote, symbolHits[0].snippet)
   assert.equal(originalBundle.digest.length, 64)
+  assert.equal((await api(`${bundleBase}/${originalBundle.id}/validation`)).eligible, true)
+  const originalAnswerPreview = await api(`${bundleBase}/${originalBundle.id}/answer-preview`, 'POST', { provider: 'CODEX', requestedModel: 'preview-only-model' })
+  assert.equal(originalAnswerPreview.bundleDigest, originalBundle.digest)
+  assert.equal(originalAnswerPreview.requestedModel, 'preview-only-model')
+  assert.ok(originalAnswerPreview.prompt.includes('untrusted data'))
+  assert.equal((await api(`/workspaces/${workspace.id}/generation-jobs`)).length, 0)
   const analysis = await api(`/workspaces/${workspace.id}/entries/${symbolHits[0].entryId}/analysis`)
   assert.ok(analysis.symbols.some(symbol => symbol.name === 'measureTemperature' && symbol.line === 4))
   const knowledgeBase = `/workspaces/${workspace.id}/knowledge`
@@ -212,6 +218,8 @@ try {
   assert.equal(publishedBundle.payload.items[0].cardId, completed.resultCardId)
   assert.equal(publishedBundle.payload.items[0].version, 1)
   assert.ok(publishedBundle.payload.items[0].supports.length > 0)
+  const publishedAnswerPreview = await api(`${bundleBase}/${publishedBundle.id}/answer-preview`, 'POST', { provider: 'CLAUDE', requestedModel: 'preview-only-model' })
+  assert.ok(publishedAnswerPreview.prompt.includes('R1/E1'))
   const decisionsPath = `${jobBase}/${completed.id}/decisions`
   assert.deepEqual(await api(decisionsPath), [])
   const rejectedProposal = await api(decisionsPath, 'POST', {
@@ -317,6 +325,8 @@ try {
   assert.deepEqual(await api(`${bundleBase}/${originalBundle.id}`), originalBundle)
   assert.deepEqual(await api(`${bundleBase}/${publishedBundle.id}`), publishedBundle)
   assert.equal((await api(bundleBase)).length, 2)
+  assert.equal((await api(`${bundleBase}/${originalBundle.id}/answer-preview`, 'POST', { provider: 'CODEX', requestedModel: 'preview-only-model' })).digest, originalAnswerPreview.digest)
+  assert.equal((await api(`${bundleBase}/${publishedBundle.id}/answer-preview`, 'POST', { provider: 'CLAUDE', requestedModel: 'preview-only-model' })).digest, publishedAnswerPreview.digest)
   assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).status, 'SUCCEEDED')
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)).status, 'CANCELLED')
@@ -373,6 +383,14 @@ try {
   assert.deepEqual(await api(`${bundleBase}/${publishedBundle.id}`), publishedBundle)
   const missingBundle = await api(bundleBase, 'POST', { question: '출력', includeKnowledge: true })
   assert.equal(missingBundle.payload.status, 'NO_EVIDENCE')
+  for (const frozen of [originalBundle, publishedBundle]) {
+    assert.equal((await api(`${bundleBase}/${frozen.id}/validation`)).eligible, false)
+    const blocked = await fetch(`${base}/api${bundleBase}/${frozen.id}/answer-preview`, {
+      method: 'POST', headers: { 'X-Forge-Client': '1', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'CODEX', requestedModel: 'preview-only-model' }),
+    })
+    assert.equal(blocked.status, 409)
+  }
   assert.ok(missingBundle.payload.excluded.some(item => item.reason === 'NOT_CURRENT'))
   await api(`${bundleBase}/${missingBundle.id}`, 'DELETE')
   assert.equal((await api(bundleBase)).length, 2)
@@ -426,6 +444,7 @@ try {
       'search body offsets and extracted line ranges survive restart',
       'published knowledge search excludes later drafts and survives restart with live evidence freshness and source domain filters',
       'immutable original and published evidence bundles survive restart and source deletion without LLM calls',
+      'read-only bundle revalidation and provider/model-bound answer previews survive restart and block deleted evidence',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',

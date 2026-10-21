@@ -1,6 +1,6 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
-> 최신 기능: [답변용 근거 묶음](docs/evidence-bundles.md). SQLite v14이며 업데이트 전 데이터를 백업하세요.
+> 최신 기능: [근거 재검증·답변 요청 미리보기](docs/bundle-validation.md). SQLite v14이며 업데이트 전 데이터를 백업하세요. 실제 답변 전송·승인·SSE는 아직 없습니다.
 
 기록일: 2026-10-21 (Asia/Seoul)
 
@@ -35,7 +35,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료 기반 백엔드 191개 / 프런트엔드 100개 자동 테스트 통과 (UI worker 2개, 실제 CLI opt-in 테스트 1개는 기본 skip)
+- 가상 자료 기반 백엔드 201개 / 프런트엔드 106개 자동 테스트 통과 (UI worker 2개, 실제 CLI opt-in 테스트 1개는 기본 skip)
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -44,6 +44,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 원본 검색의 단어 주변 미리보기·추출 텍스트 행 범위·본문/이름·심볼 일치 구분 ([한계](docs/search-evidence.md))
 - 원본·게시 지식 통합 검색, 초안 제외, 게시 버전 고정 열람, 복수 근거 Source 도메인 및 CURRENT/STALE/MISSING 표시 ([정책](docs/published-search.md))
 - 답변용 근거 묶음: 본문 해시/게시/도메인 재대조, 불변 인용·출처 보관, 개수/문자/보관 한도와 독립 삭제. 외부 AI 전송 없음 ([정책](docs/evidence-bundles.md))
+- 저장된 근거 재검증·제공자/모델별 답변 요청 미리보기, 변경/삭제/범위 변경 차단. 검사 결과는 로컬 상태이며 승인이나 실제 호출이 아님 ([정책](docs/bundle-validation.md))
 - 영속 분석 결과와 SQLite 인덱스 갱신 큐, 시작 시 저장된 분석 결과로 인덱스 복원
 - SQLite 스키마 1→2 마이그레이션과 원본·활성 Workspace 보존
 - Source 관리 파일 변경 방지, 사설 주소·리다이렉트·심볼릭 링크·용량 제한
@@ -68,7 +69,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 |---|---|---|
 | 2 확장 | 비공개 저장소 자격 증명, 대용량 ArtifactStore, 작업 취소·격리 파서 | 남음 |
 | 3 | 초안/승인/작업/모델 선택, 사람 검토/게시, 폴더·카드 배치, Markdown 표시 구현. 자동 의미 검증·실제 실행 메타데이터·AI 갱신 제안은 남음 | 진행 중 |
-| 4 | 기존 다중 도메인 검색에 CLI Provider, 근거 선표시 SSE, 답변 중단, 채팅별 승인 연결 | 미착수 |
+| 4 | 통합 검색·근거 묶음·재검증·요청 미리보기 구현. CLI 답변, 근거 선표시 SSE, 답변 중단, 채팅별 승인 연결은 남음 | 진행 중 |
 | 5 | Source별 opt-in 폴링, Git 증분 갱신, 지식 무효화·버전·수동 편집 보호 | 미착수 |
 | 6 | Tauri 2, Java 런타임 포함 Mac 설치 앱, 통합 테스트, 설치 설명서 | 미착수 |
 
@@ -141,9 +142,9 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 ## 다음 개발 세션의 첫 작업
 
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
-2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/evidence-merge.md`에 있습니다.
+2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/bundle-validation.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
-4. **P3-2 CLI Curator의 남은 운영 기능**을 먼저 확인하세요. Ollama로 되돌리지 마세요.
+4. **P4 답변 요청의 건별 승인·전송 직전 재검증·취소·SSE**를 다음 기능 단위로 구현하세요. 미리보기 digest를 승인으로 취급하지 마세요. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
 6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시와 개발 도구 보안 갱신을 구현했습니다. 폴더 이름 변경/이동과 AI 결과 읽기 전용 비교도 구현했습니다. 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
@@ -159,7 +160,7 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
 docs/api.md, docs/phase3-foundation-report.md를 읽고 현재 코드와 비교해라.
 Phase 1·2와 P3-1 수동 초안/버전/근거 스냅샷은 구현되어 있다. 먼저 빌드와 테스트로
-기준 상태(백엔드 167개 통과 + live opt-in 1개 skip, 프런트엔드 90개)를 확인하고 실패를 숨기지 마라.
+기준 상태(백엔드 201개 통과 + live opt-in 1개 skip, 프런트엔드 106개)를 확인하고 실패를 숨기지 마라.
 UI 기본 병렬 실행에서 시간 초과가 관측되었으므로 자원 제약 환경에서는 npm --prefix frontend test -- --maxWorkers=2로 검증해라.
 사용자는 Ollama 대신 로그인된 Codex/Claude Code CLI 사용을 선택했다. docs/cli-ai.md를 읽어라.
 별도 AI DRAFT·건별 승인·출력 검사·영속 작업·취소·멱등·재시작 상태 복구는 구현되었다.
@@ -168,6 +169,8 @@ docs/generation-jobs.md, docs/model-selection.md, docs/cli-observation.md를 읽
 docs/publication.md, docs/evidence-navigation.md, docs/knowledge-folders.md의 구현/한계를 읽어라.
 docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 개발 도구 보안 갱신, 폴더 이름 변경/이동, AI 결과 읽기 전용 비교는 완료했다. 거절·재검토·전체 채택과 수동 부분 반영과 CURRENT 근거 번호 통합도 구현했다. docs/evidence-merge.md를 읽고 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시을 구현해라. 비교 화면에 자동 저장/외부 전송을 추가하지 마라.
 docs/modeling.md와 docs/how-it-works.md도 코드와 맞게 유지해라. 사용자는 설치형 준비 후 체험한다.
+최신 P4 구현은 docs/bundle-validation.md다. 저장된 근거 재검증과 제공자/모델별 답변 요청 미리보기까지 완료했다.
+다음 우선 작업은 답변 전송의 건별 승인·직전 재검증·작업 취소·SSE 연결이다. 미리보기는 승인이나 실제 AI 호출이 아니다.
 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 사람 검토를 자동 의미 검증으로 과장하지 마라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
@@ -193,7 +196,7 @@ GitHub Actions는 만들거나 수정하지 마라. 각 완료 항목의 문서�
 로컬 빈 폴더는 가져오지 않습니다. 텍스트 추출은 500,000자까지이며 OCR/임베디드 문서 재귀 추출은 꺼져 있습니다.
 공개 HTTPS URL과 공개 GitHub 기본 브랜치만 지원하며 토큰·SSH·사내 HTTP는 미지원입니다.
 변경된 Source는 전체 스냅샷을 교체합니다. 지식이 인용한 원본만 당시 복사본을 보관하며 전체 원본 이력·Git diff는 Phase 5 범위입니다.
-지식은 수동/AI DRAFT를 저장하고 안전한 Markdown 미리보기와 원문을 표시합니다. 사람 검토·명시적 게시와 독립 폴더·카드 배치가 있습니다. 자동 의미 검증·지식 검색은 아직 없습니다.
+지식은 수동/AI DRAFT를 저장하고 안전한 Markdown 미리보기와 원문을 표시합니다. 사람 검토·명시적 게시와 독립 폴더·카드 배치가 있습니다. 게시 지식 검색은 구현했고 자동 의미 검증·관계 검색은 아직 없습니다.
 Markdown 링크/각주 이동·이미지는 비활성입니다. 이전 개발 의존성 audit 경고 4개는 갱신 후 0개입니다. `docs/toolchain-report.md`를 확인하세요. audit 통과는 전체 보안 검증이 아닙니다.
 근거 최신성은 조회 시 마지막 로컬 복사본과 비교하며 자동 갱신/의존 관계 전파는 아닙니다.
 단일 문서 추출은 JVM 내부에서 동기 실행되므로 악성 문서 격리/강제 종료가 필요합니다.

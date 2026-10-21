@@ -1,7 +1,8 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
 최신 흐름: **통합 검색 → 현재 원문·게시·범위 대조 → 인용문 묶음 저장 → 로컬 확인**.
-이 경로는 구현되었습니다. AI 전송 전 재검증·승인·SSE 답변은 남았습니다. [모델·한계](evidence-bundles.md).
+이어서 **저장된 근거 재검증 → 제공자/모델별 답변 요청 미리보기**도 구현했습니다.
+실제 전송 직전 재검증·승인·SSE 답변은 남았습니다. [현재 모델·흐름도·한계](bundle-validation.md).
 
 검색 후속 개선: **저장된 단어 위치 → 검색어 주변 글·추출 텍스트 행 범위 → 원본 열기**가 구현되었습니다.
 원본·게시 지식 통합 검색도 구현했습니다. 채팅은 아직 없습니다. [게시 검색 코드 대조](published-search.md).
@@ -23,8 +24,8 @@
 flowchart LR
     P1["🟩 Phase 1<br/>Workspace · 원본 탐색기"]
     P2["🟨 Phase 2<br/>기본 수집 · 분석 · 검색 구현<br/>운영 확장 남음"]
-    P3["🟨 Phase 3 · 진행 중<br/>수동/AI 초안 · 근거 · 버전 구현<br/>사람 검토 · 게시 구현 / 폴더/카드 배치 구현 / 자동 의미 검증 · 렌더링 남음"]
-    P4["🟦 Phase 4<br/>AI 질문 · 근거 우선 SSE"]
+    P3["🟨 Phase 3 · 진행 중<br/>수동/AI 초안 · 근거 · 버전 구현<br/>사람 검토 · 게시 · 폴더/카드 배치 · 안전한 렌더링 구현 / 자동 의미 검증 남음"]
+    P4["🟨 Phase 4<br/>통합 검색 · 근거 묶음 · 재검증/요청 미리보기 구현<br/>AI 답변 · SSE 남음"]
     P5["🟦 Phase 5<br/>선택적 폴링 · Git 증분 · 무효화"]
     P6["🟦 Phase 6<br/>Tauri · Mac 설치 앱"]
     P1 --> P2
@@ -36,8 +37,8 @@ flowchart LR
     classDef partial fill:#fef3c7,stroke:#b45309,color:#78350f
     classDef planned fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
     class P1 done
-    class P2,P3 partial
-    class P4,P5,P6 planned
+    class P2,P3,P4 partial
+    class P5,P6 planned
 ```
 
 | 사용자가 할 수 있는 일 | 지금 | 앞으로 |
@@ -125,7 +126,7 @@ flowchart TB
         UI["🟨 React UI<br/>탐색/검색/수동·AI 초안 + 향후 채팅"]
         RAW["🟩 library + sources + ingestion<br/>원본 · 수동 수집 · 분석"]
         RET["🟨 search<br/>현재 Lucene/심볼 + 향후 지식 관계"]
-        KNOW["🟨 knowledge<br/>초안/근거/버전/사람 검토/게시 구현<br/>폴더/카드 배치 구현 / 자동 의미 검증 · 렌더링 남음"]
+        KNOW["🟨 knowledge<br/>초안/근거/버전/사람 검토/게시 구현<br/>폴더/카드 배치 · 안전한 렌더링 구현 / 자동 의미 검증 남음"]
         CHAT["🟦 conversation<br/>근거 먼저 · 답변 SSE · 취소"]
         SYNC["🟦 synchronization<br/>Source별 opt-in · Git diff · 지식 무효화"]
         SQL[("🟨 SQLite v4<br/>원본/지식/근거/버전/생성 작업<br/>향후 대화/동기화 확장")]

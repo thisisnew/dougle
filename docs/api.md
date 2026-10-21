@@ -1,5 +1,9 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+P4 준비: `GET /api/workspaces/{workspaceId}/evidence-bundles/{id}/validation`,
+`POST /api/workspaces/{workspaceId}/evidence-bundles/{id}/answer-preview`.
+읽기 전용 재검증과 제공자/모델별 요청 미리보기이며 전송/승인이 아닙니다. [전체 계약·오류](bundle-validation.md).
+
 근거 통합: `GET /api/workspaces/{workspaceId}/generation-jobs/{jobId}/acceptance/merge-preview`.
 기존 merge POST의 선택 필드 `combineEvidence: true`로 반영합니다. [번호 변환·제한](evidence-merge.md).
 

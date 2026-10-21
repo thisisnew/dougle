@@ -5,6 +5,10 @@
 
 ## 현재 구조
 
+저장한 묶음은 `EvidenceBundleValidator`가 현재 원본/게시본/출처/도메인과 읽기 전용으로 대조합니다.
+`EvidenceAnswerPreview`는 통과한 묶음만 제공자·모델에 연결된 요청문/해시로 만듭니다. LLM 호출이나 승인 기록은 없습니다.
+새 테이블 없이 v14를 유지하며 검색 색인 잠금을 잡지 않습니다. [설계·API·한계](bundle-validation.md).
+
 v14의 `evidence_bundle`은 검색 결과 중 현재 자료와 일치하는 인용문·출처를 불변 JSON으로 보관합니다.
 `EvidenceBundleService`는 검색 잠금 해제 후 `EvidenceBundleWriter`의 트랜잭션을 실행합니다.
 게시 교체/범위/본문 해시를 재확인하며 5개·인용문 12,000자·100개 보관 한도를 적용합니다. [구조·한계](evidence-bundles.md).

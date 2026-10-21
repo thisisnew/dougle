@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import EvidenceAnswerPreparation from './EvidenceAnswerPreparation'
 
 type Support = { label: string; name: string; startLine: number; endLine: number; quote: string }
 type Item = { label: string; kind: string; title: string; version: number | null; path: string | null; sourceRevision: string | null; contentHash: string | null; textHash: string; startLine: number; endLine: number; quote: string; supports: Support[] }
@@ -79,6 +80,7 @@ export default function EvidenceBundlePanel({ workspaceId, question, domains, in
         {item.supports.map(support => <details key={support.label}><summary>[{item.label}/{support.label}] {support.name} · {support.startLine}–{support.endLine}행</summary><pre>{support.quote}</pre></details>)}
       </section>)}
       {bundle.payload.excluded.length > 0 && <details><summary>제외한 검색 후보 {bundle.payload.excluded.length}개</summary><ul>{bundle.payload.excluded.map((value, index) => <li key={index}>{value.kind} · {value.entryId || value.cardId} · {reasons[value.reason] || value.reason}</li>)}</ul></details>}
+      <EvidenceAnswerPreparation key={bundle.id} workspaceId={workspaceId} bundleId={bundle.id} bundleDigest={bundle.digest} />
       <Button variant="destructive" disabled={busy} onClick={() => void act('delete', bundle.id)}>이 묶음 삭제</Button>
     </section>}
   </dialog>
