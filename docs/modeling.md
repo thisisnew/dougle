@@ -1,7 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
 **한 줄 요약: 원본 자료와 지식 문서를 따로 보관하고, 지식에는 당시 근거를 붙입니다.**
-2026-10-21 코드 대조 기준, SQLite v9. 아래 그림은 현재 구현입니다.
+2026-10-21 코드 대조 기준, SQLite v10. 아래 그림은 현재 구현입니다.
 
 ## 1. 용어를 쉽게
 
@@ -40,6 +40,7 @@ flowchart TD
   F --> L[카드 배치]
   K --> L
   W --> J[AI 생성 작업 이력]
+  J --> D[제안 거절·재검토 이력]
 ```
 
 - 원본 폴더와 지식 폴더는 별도입니다. 지식 폴더 이동으로 원본이 이동하지 않습니다.
@@ -60,6 +61,7 @@ flowchart TD
 | 검토·게시 | `knowledge_review`, `knowledge_publication` |
 | 지식 폴더·배치 | `knowledge_folder`, `knowledge_placement` |
 | AI 작업 | `generation_job` |
+| 제안 거절·재검토 | `proposal_decision` · 작업별 revision/상태/판단 시 문서 버전/이유/시각 |
 | 검색 색인 | SQLite와 별도인 로컬 Lucene 파일 |
 
 원본 바이트와 근거 복사본은 현재 SQLite BLOB에 저장합니다. Markdown도 DB의 문자열이며,
@@ -89,7 +91,8 @@ flowchart TD
 ## 5. 앞으로 더할 모델 — 아직 미구현
 
 현재는 작업의 원래 카드/기준 버전/결과 카드 연결로 [읽기 전용 비교](generation-comparison.md)를 제공합니다.
-별도 제안 상태나 채택/거절 이력 모델은 아직 없습니다.
+거절·재검토는 별도 추가 전용 이력으로 구현했습니다. [모델·코드 대조](proposal-decisions.md).
+채택과 문서 반영은 아직 없습니다.
 
 | 계획 | 목적 |
 |---|---|

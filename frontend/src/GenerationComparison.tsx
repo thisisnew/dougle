@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import ProposalDecisions from './ProposalDecisions'
 
 type Document = {
   card: { id: string; latestVersion: number }
@@ -16,6 +17,7 @@ export default function GenerationComparison({ workspaceId, jobId, disabled, onO
   const [comparison, setComparison] = useState<Comparison | null>(null)
   const [error, setError] = useState('')
   const [refresh, setRefresh] = useState(0)
+  const [showDecisions, setShowDecisions] = useState(false)
   useEffect(() => {
     const controller = new AbortController()
     setComparison(null); setError('')
@@ -27,7 +29,7 @@ export default function GenerationComparison({ workspaceId, jobId, disabled, onO
 
   return <section className="evidence-item" aria-label="AI 결과 비교">
     <h3>AI 결과 비교 · 읽기 전용</h3>
-    <p>이 화면은 저장·게시·AI 전송을 하지 않습니다. 비교 시점의 내용이며 자동 갱신되지 않습니다.</p>
+    <p>비교 조회는 문서 저장·게시·AI 전송을 하지 않습니다. 비교 시점의 내용이며 자동 갱신되지 않습니다.</p>
     <Button variant="outline" disabled={disabled} onClick={() => setRefresh(value => value + 1)}>비교 새로고침</Button>
     <Button variant="outline" onClick={onClose}>비교 닫기</Button>
     {error && <p role="alert">{error} 원본 카드나 결과 카드가 삭제됐다면 비교할 수 없습니다. 남은 문서는 지식 목록에서 확인하세요.</p>}
@@ -52,6 +54,9 @@ export default function GenerationComparison({ workspaceId, jobId, disabled, onO
       <p>반영할 내용은 직접 선택해 현재 문서의 초안 편집에서 새 버전으로 저장하세요. 자동 병합·제안 채택 이력은 아직 없습니다.</p>
       <Button variant="outline" disabled={disabled} onClick={() => onOpen(comparison.current.card.id)}>현재 문서 열기</Button>
       <Button variant="outline" disabled={disabled} onClick={() => onOpen(comparison.generated.card.id)}>AI 결과의 최신 문서 열기</Button>
+      <Button variant="outline" disabled={disabled} onClick={() => setShowDecisions(value => !value)}>제안 처리 기록 {showDecisions ? '닫기' : '열기'}</Button>
+      {showDecisions && <ProposalDecisions key={`${workspaceId}-${jobId}-${refresh}`} workspaceId={workspaceId} jobId={jobId}
+        sourceVersion={comparison.current.version.number} resultVersion={comparison.generated.card.latestVersion} disabled={disabled} />}
     </>}
   </section>
 }

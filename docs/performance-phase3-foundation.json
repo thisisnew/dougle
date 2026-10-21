@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T12:54:29.707Z",
+  "measuredAt": "2026-10-21T13:00:44.536Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -39,23 +39,24 @@
     "independent nested knowledge folders and card placement persist across restart",
     "nonempty folder deletion blocked and moving to root preserves document versions",
     "folder rename and parent move revision survive restart",
-    "read-only generation comparison keeps base and initial AI version after later edits"
+    "read-only generation comparison keeps base and initial AI version after later edits",
+    "proposal rejection persists across restart and reopening preserves history without document changes"
   ],
-  "sourceSyncMs": 1328.9100940000026,
+  "sourceSyncMs": 532.7845520000001,
   "livePublic": [],
-  "startupMs": 12419,
-  "restartMs": 15869,
+  "startupMs": 5265,
+  "restartMs": 5660,
   "upload100": {
-    "p50Ms": 268.14081300000544,
-    "p95Ms": 809.424131000007
+    "p50Ms": 110.02592999999979,
+    "p95Ms": 566.7395810000016
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 7.654350999990129,
-    "p95Ms": 10.096899000011035
+    "p50Ms": 3.035790999994788,
+    "p95Ms": 3.5766160000057425
   },
   "search100Files30Requests": {
-    "p50Ms": 16.915156000002753,
-    "p95Ms": 28.383568999997806
+    "p50Ms": 6.2778700000053504,
+    "p95Ms": 10.402726000000257
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

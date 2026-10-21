@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 9) {
+        if (version > 10) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -257,6 +257,25 @@ public class DatabaseConfiguration {
                     .executeWithoutResult(status -> {
                         jdbc.execute("ALTER TABLE knowledge_folder ADD COLUMN revision INTEGER NOT NULL DEFAULT 1 CHECK(revision>0)");
                         jdbc.execute("PRAGMA user_version=9");
+                    });
+        }
+        if (version < 10) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE proposal_decision (
+                                  workspace_id TEXT NOT NULL, job_id TEXT NOT NULL,
+                                  revision INTEGER NOT NULL CHECK(revision>0),
+                                  status TEXT NOT NULL CHECK(status IN ('OPEN','REJECTED')),
+                                  source_version INTEGER NOT NULL CHECK(source_version>0),
+                                  result_version INTEGER NOT NULL CHECK(result_version>0),
+                                  note TEXT NOT NULL, created_at TEXT NOT NULL,
+                                  PRIMARY KEY(workspace_id,job_id,revision),
+                                  FOREIGN KEY(workspace_id,job_id) REFERENCES generation_job(workspace_id,id) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=10");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

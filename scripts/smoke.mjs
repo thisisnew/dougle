@@ -184,6 +184,12 @@ try {
   })
   assert.equal(review.publication, null)
   assert.equal((await api(`${publicationPath}/publication`, 'POST', { expectedVersion: 1, expectedPublicationRevision: 0 })).publication.version, 1)
+  const decisionsPath = `${jobBase}/${completed.id}/decisions`
+  assert.deepEqual(await api(decisionsPath), [])
+  const rejectedProposal = await api(decisionsPath, 'POST', {
+    expectedRevision: 0, expectedSourceVersion: 1, expectedResultVersion: 1, status: 'REJECTED', note: 'Synthetic rejection',
+  })
+  assert.equal(rejectedProposal[0].revision, 1)
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   const movedFolder = await api(`${organizationPath}/folders/${knowledgeChild.id}`, 'PUT', {
@@ -193,6 +199,11 @@ try {
   await stop()
   configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
+  assert.deepEqual(await api(decisionsPath), rejectedProposal)
+  const reopenedProposal = await api(decisionsPath, 'POST', {
+    expectedRevision: 1, expectedSourceVersion: 1, expectedResultVersion: 1, status: 'OPEN', note: 'Synthetic reconsideration',
+  })
+  assert.deepEqual(reopenedProposal.map(item => item.status), ['OPEN', 'REJECTED'])
   const restoredOrganization = await api(organizationPath)
   assert.equal(restoredOrganization.folders.length, 2)
   assert.deepEqual(restoredOrganization.folders.find(folder => folder.id === knowledgeChild.id), movedFolder)
@@ -316,7 +327,8 @@ try {
       'independent nested knowledge folders and card placement persist across restart',
       'nonempty folder deletion blocked and moving to root preserves document versions',
       'folder rename and parent move revision survive restart',
-      'read-only generation comparison keeps base and initial AI version after later edits'],
+      'read-only generation comparison keeps base and initial AI version after later edits',
+      'proposal rejection persists across restart and reopening preserves history without document changes'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

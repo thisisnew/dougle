@@ -36,6 +36,7 @@ class GenerationComparisonIntegrationTest {
     @Autowired LibraryService library;
     @Autowired JdbcTemplate jdbc;
     @Autowired MockMvc mvc;
+    @Autowired ProposalDecisionService decisions;
     String workspace;
     String entry;
     String original;
@@ -108,5 +109,74 @@ class GenerationComparisonIntegrationTest {
                 .andExpect(jsonPath("$.current.card.id").value(original))
                 .andExpect(jsonPath("$.generated.card.id").value(result));
         mvc.perform(post(path).header("X-Forge-Client", "1")).andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void recordsRejectionAndReopeningWithoutChangingDocumentsOrPublication() {
+        publication.review(workspace, original, 1, "synthetic", "checked", true, true);
+        publication.publish(workspace, original, 1, 0);
+        assertThat(decisions.history(workspace, "job")).isEmpty();
+        var rejected = decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "not useful");
+        assertThat(rejected.getFirst().revision()).isEqualTo(1);
+        assertThat(rejected.getFirst().note()).isEqualTo("not useful");
+        var reopened = decisions.decide(workspace, "job", 1, 1, 1, "OPEN", "reconsider");
+        assertThat(reopened).extracting(item -> item.status()).containsExactly("OPEN", "REJECTED");
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_version", Integer.class)).isEqualTo(2);
+        assertThat(publication.published(workspace, original).version().number()).isEqualTo(1);
+        assertThat(jdbc.queryForObject("SELECT status FROM generation_job", String.class)).isEqualTo("SUCCEEDED");
+    }
+
+    @Test
+    void staleDecisionsAndChangedDocumentsCannotBeSilentlyOverwritten() {
+        decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "first");
+        fails(409, () -> decisions.decide(workspace, "job", 0, 1, 1, "OPEN", "stale"));
+        fails(409, () -> decisions.decide(workspace, "job", 1, 1, 1, "REJECTED", "duplicate"));
+        knowledge.revise(workspace, original, 1, "changed", "human [E1]", null);
+        fails(409, () -> decisions.decide(workspace, "job", 1, 1, 1, "OPEN", "old view"));
+        knowledge.revise(workspace, result, 1, "changed result", "human result [E1]", null);
+        fails(409, () -> decisions.decide(workspace, "job", 1, 2, 1, "OPEN", "old result"));
+        assertThat(decisions.decide(workspace, "job", 1, 2, 2, "OPEN", "reviewed again")).hasSize(2);
+    }
+
+    @Test
+    void validatesDecisionInputAndWorkspaceBeforeWriting() {
+        fails(404, () -> decisions.decide(library.createWorkspace("other").id(), "job", 0, 1, 1, "REJECTED", "no"));
+        fails(400, () -> decisions.decide(workspace, "job", 0, 1, 1, "ACCEPTED", "unsupported"));
+        fails(400, () -> decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", " "));
+        fails(400, () -> decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "x".repeat(4001)));
+        jdbc.update("UPDATE generation_job SET status='FAILED'");
+        fails(409, () -> decisions.history(workspace, "job"));
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM proposal_decision", Integer.class)).isZero();
+    }
+
+    @Test
+    void keepsHistoryAfterCardDeletionButDoesNotRecreateCards() {
+        decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "keep history");
+        knowledge.delete(workspace, result);
+        assertThat(decisions.history(workspace, "job")).hasSize(1);
+        fails(404, () -> decisions.decide(workspace, "job", 1, 1, 1, "OPEN", "deleted"));
+        jdbc.update("DELETE FROM workspace WHERE id=?", workspace);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM proposal_decision", Integer.class)).isZero();
+    }
+
+    @Test
+    void rejectionWithMissingEvidenceDoesNotMarkKnowledgeAsVerified() {
+        library.deleteEntry(workspace, entry);
+        decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "missing evidence");
+        assertThat(comparison.compare(workspace, "job").generated().version().evidence().getFirst().freshness()).isEqualTo("MISSING");
+        assertThat(publication.state(workspace, original).review()).isNull();
+        assertThat(publication.state(workspace, original).publication()).isNull();
+    }
+
+    @Test
+    void decisionsUseSeparateHttpEndpointAndRequireClientHeader() throws Exception {
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/decisions";
+        String body = """
+                {"expectedRevision":0,"expectedSourceVersion":1,"expectedResultVersion":1,"status":"REJECTED","note":"synthetic"}
+                """;
+        mvc.perform(post(path).contentType("application/json").content(body)).andExpect(status().isForbidden());
+        mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json").content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].status").value("REJECTED"));
+        mvc.perform(get(path)).andExpect(status().isOk()).andExpect(jsonPath("$[0].revision").value(1));
     }
 }

@@ -1,6 +1,6 @@
 # Phase 1 검증 결과
 
-최신 기능 검증은 [AI 결과 비교 보고서](generation-comparison.md)를 보세요.
+최신 기능 검증은 [거절·재검토 보고서](proposal-decisions.md)를 보세요.
 
 최신 도구 버전·전체 회귀 검증은 [도구 갱신 보고서](toolchain-report.md)를 보세요.
 
