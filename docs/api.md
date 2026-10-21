@@ -1,5 +1,7 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+Codex 스트림 검증기 추가는 내부 부품 작업이며 새 API/설정은 없습니다. Codex 실행 경로는 아직 완료 결과 방식입니다. [구현 범위](codex-stream-protocol.md).
+
 SSE에 `partial` 이벤트를 추가했습니다. Workspace/job/bundle ID와 `text`, `unverified:true`인 임시 스냅샷입니다. 근거·작업 이벤트 뒤에만 전달하며 DB에 저장하지 않습니다. [계약](partial-answer.md).
 
 답변 작업: `POST /api/workspaces/{workspaceId}/evidence-bundles/{bundleId}/answer-jobs` → 202.

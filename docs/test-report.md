@@ -1,5 +1,7 @@
 # Phase 1 검증 결과
 
+최신 내부 부품 검증은 [Codex 알림 프로토콜 보고서](codex-stream-protocol.md)입니다. 합성 알림 검증이며 실제 App Server/외부 모델 성공 검증이 아닙니다.
+
 최신 임시 출력 검증은 [Claude 스트림 보고서](partial-answer.md)를 보세요. 실제 외부 모델 검증이 아닌 fake CLI 검증입니다.
 
 최신 기능 검증은 [SSE UI 보고서](answer-events-ui.md)를 보세요. API는 [작업 관측 SSE 보고서](answer-events.md), 이전 기능은 [답변 작업·중단 보고서](answer-jobs.md)입니다.

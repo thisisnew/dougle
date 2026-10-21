@@ -5,6 +5,8 @@
 
 ## 현재 구조
 
+`CodexTextStream`은 합성 App Server 알림을 검사하는 독립 어댑터 부품입니다. 실제 `CliCuratorModel`에서는 아직 호출하지 않습니다. 실행 환경 격리와 JSON-RPC 프로세스 연결은 [후속 설계](codex-stream-protocol.md)를 따릅니다.
+
 v16 `AnswerJobService`는 승인 ID 유일성이 있는 작업을 같은 트랜잭션으로 예약합니다.
 가상 스레드는 전송 직전 재검증 후 DB 연결 없이 `AnswerModel → CliAnswerModel`을 호출합니다.
 기존 제한된 CLI 전송 어댑터를 재사용하되 지식 생성/게시는 하지 않습니다. 결과는 인용 검사·취소/근거 확인 후 작업에만 저장합니다.

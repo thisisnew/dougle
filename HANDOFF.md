@@ -1,5 +1,7 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
+> 최신 개발: [Codex 스트림 검증기](docs/codex-stream-protocol.md)와 합성 프로토콜 테스트 12개를 추가했습니다. **앱에는 아직 연결하지 않았습니다.** 다음은 설정 격리·JSON-RPC 실행기·취소 검증입니다. 기존 Codex 완료 답변 경로를 유지합니다.
+
 > 최신 기능: [Claude 생성 중 임시 출력](docs/partial-answer.md). SQLite v16 유지. CLI 텍스트 조각을 미검증 영역에 표시하고 검사된 최종 답변만 저장합니다. fake CLI 검증이며 실제 서비스 검증·Codex 토큰 스트림·다중 대화는 남았습니다.
 
 기록일: 2026-10-22 (Asia/Seoul)
@@ -35,7 +37,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 최신 검증: 백엔드 242개 통과 + 실제 CLI opt-in 1개 skip / 프런트엔드 139개 통과. 통합 빌드·실제 JAR 재시작 smoke·가상 CLI 스트림 검증 통과. [임시 출력 검증](docs/partial-answer.md).
+- 최신 전체 빌드 검증: 백엔드 254개 통과 + 실제 CLI opt-in 1개 skip / 프런트엔드 139개 통과. Codex 합성 알림 검증 12개를 포함합니다. [현재 검증 범위](docs/codex-stream-protocol.md). 이전 Claude 가상 CLI 스트림 검증은 [임시 출력 보고서](docs/partial-answer.md)를 확인하세요.
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -147,7 +149,7 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
 2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/answer-jobs.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
-4. **P4 Codex App Server 토큰 스트림**의 격리/승인/프로토콜부터 확인하세요. `docs/partial-answer.md`의 Claude 임시 출력은 fake CLI로 검증했습니다. 실제 서비스 호출은 별도 명시 승인이 필요합니다. 다중 대화도 남았습니다. 미리보기 digest는 승인이 아닙니다. Ollama로 되돌리지 마세요.
+4. **P4 Codex App Server 토큰 스트림**은 `docs/codex-stream-protocol.md`의 검증기까지 구현했습니다. 실행 환경 격리·요청/응답 연결·취소/시간 초과부터 이어가세요. 앱에는 아직 미연결입니다. `docs/partial-answer.md`의 Claude 임시 출력은 fake CLI로 검증했습니다. 실제 서비스 호출은 별도 명시 승인이 필요합니다. 다중 대화도 남았습니다. 미리보기 digest는 승인이 아닙니다. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
 6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시와 개발 도구 보안 갱신을 구현했습니다. 폴더 이름 변경/이동과 AI 결과 읽기 전용 비교도 구현했습니다. 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
@@ -173,7 +175,7 @@ docs/publication.md, docs/evidence-navigation.md, docs/knowledge-folders.md의 �
 docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 개발 도구 보안 갱신, 폴더 이름 변경/이동, AI 결과 읽기 전용 비교는 완료했다. 거절·재검토·전체 채택과 수동 부분 반영과 CURRENT 근거 번호 통합도 구현했다. docs/evidence-merge.md를 읽고 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시을 구현해라. 비교 화면에 자동 저장/외부 전송을 추가하지 마라.
 docs/modeling.md와 docs/how-it-works.md도 코드와 맞게 유지해라. 사용자는 설치형 준비 후 체험한다.
 최신 P4 구현은 docs/answer-jobs.md다. 승인 일회 소비·직전 재검증·실제 답변 작업·중단·재시작 복구까지 구현했다. 실제 외부 모델 검증은 아니며 fake CLI 테스트다.
-docs/partial-answer.md의 Claude 미검증 임시 출력은 구현했다. 다음은 Codex App Server 토큰 스트림이며 다중 대화도 남았다. 재연결로 AI를 재호출하지 말고 관측 종료와 명시적 작업 취소를 구분해라. 미리보기는 승인이나 실제 AI 호출이 아니다.
+docs/partial-answer.md의 Claude 미검증 임시 출력은 구현했다. docs/codex-stream-protocol.md의 Codex 알림 검증기는 독립 테스트만 완료했고 앱에는 미연결이다. 다음은 격리된 App Server 실행기와 취소/출력 한도 검증이다. 다중 대화도 남았다. 재연결로 AI를 재호출하지 말고 관측 종료와 명시적 작업 취소를 구분해라. 미리보기는 승인이나 실제 AI 호출이 아니다.
 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 사람 검토를 자동 의미 검증으로 과장하지 마라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
