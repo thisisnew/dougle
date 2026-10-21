@@ -38,6 +38,7 @@ PC에 원본 자료와 지식을 독립적으로 보관하는 로컬 지식 서�
 - 최초 의존성 설치 시 인터넷 연결이 필요합니다. AI 생성은 건별 승인 후 외부 서버를 호출합니다.
 - AI 기능은 로그인된 Codex 또는 Claude Code CLI가 필요합니다. Ollama 설치는 필요 없습니다.
 - 모델 고정·CLI 설치 확인 방법과 남은 범위는 [모델 설정 가이드](docs/cli-settings.md)를 확인하세요.
+- 건별 모델 선택·브라우저 선택 저장·요청 모델 이력과 v5 업그레이드는 [건별 모델 가이드](docs/model-selection.md)를 확인하세요.
 
 ```bash
 cd knowledge-forge

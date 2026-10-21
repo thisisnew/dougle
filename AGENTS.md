@@ -6,6 +6,7 @@
 - 사용자 요청으로 Ollama 대신 로그인된 Codex/Claude Code CLI를 사용한다. 현재 코딩 대화가 아닌 새 요청이며 외부 전송은 건별 승인한다.
 - SQLite v4 생성 작업 상태·취소·멱등·재시작 복구가 추가되었다. `docs/generation-jobs.md`를 확인한다. smoke의 fake CLI는 테스트 전용이며 실제 AI 성공으로 보고하지 않는다.
 - 모델 고정·승인 바인딩·CLI 설치 진단은 `docs/cli-settings.md`를 확인한다. 설치 버전 확인을 로그인/원격 연결 성공으로 표시하지 않는다.
+- 건별 모델 선택·브라우저 선택 저장·요청 모델 작업 이력은 `docs/model-selection.md`를 확인한다. 현재 SQLite 스키마는 v5이고 과거 모델 미기록 값은 null로 보존한다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.

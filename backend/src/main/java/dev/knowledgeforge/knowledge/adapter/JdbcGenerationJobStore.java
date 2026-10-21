@@ -15,7 +15,7 @@ public class JdbcGenerationJobStore implements GenerationJobStore {
     private final RowMapper<GenerationJob> mapper = (row, number) -> new GenerationJob(row.getString("id"),
             row.getString("workspace_id"), row.getString("source_card_id"), row.getString("provider"),
             row.getInt("expected_version"), row.getString("digest"), row.getString("status"),
-            row.getString("result_card_id"), row.getString("error"), row.getString("created_at"), row.getString("updated_at"));
+            row.getString("result_card_id"), row.getString("error"), row.getString("created_at"), row.getString("updated_at"), row.getString("requested_model"));
 
     public JdbcGenerationJobStore(JdbcTemplate jdbc) { this.jdbc = jdbc; }
 
@@ -29,10 +29,10 @@ public class JdbcGenerationJobStore implements GenerationJobStore {
 
     public void create(GenerationJob job) {
         jdbc.update("""
-                INSERT INTO generation_job(id,workspace_id,source_card_id,provider,expected_version,digest,status,created_at,updated_at)
-                VALUES(?,?,?,?,?,?,?,?,?)
+                INSERT INTO generation_job(id,workspace_id,source_card_id,provider,expected_version,digest,status,created_at,updated_at,requested_model)
+                VALUES(?,?,?,?,?,?,?,?,?,?)
                 """, job.id(), job.workspaceId(), job.sourceCardId(), job.provider(), job.expectedVersion(), job.digest(),
-                job.status(), job.createdAt(), job.updatedAt());
+                job.status(), job.createdAt(), job.updatedAt(), job.requestedModel());
     }
 
     public boolean update(String workspace, String id, String status, String resultCardId, String error) {

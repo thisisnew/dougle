@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 4) {
+        if (version > 5) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -186,6 +186,14 @@ public class DatabaseConfiguration {
                                 """);
                         jdbc.execute("CREATE INDEX generation_job_recent ON generation_job(workspace_id,created_at DESC)");
                         jdbc.execute("PRAGMA user_version=4");
+                    });
+        }
+        if (version < 5) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("ALTER TABLE generation_job ADD COLUMN requested_model TEXT");
+                        jdbc.execute("PRAGMA user_version=5");
                     });
         }
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

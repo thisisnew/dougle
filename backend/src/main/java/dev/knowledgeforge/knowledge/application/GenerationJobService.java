@@ -15,7 +15,11 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 public class GenerationJobService {
-    public record Request(String requestId, String provider, int expectedVersion, String digest, boolean approved) {}
+    public record Request(String requestId, String provider, int expectedVersion, String digest, boolean approved, String requestedModel) {
+        public Request(String requestId, String provider, int expectedVersion, String digest, boolean approved) {
+            this(requestId, provider, expectedVersion, digest, approved, null);
+        }
+    }
     private final GenerationJobStore store;
     private final CuratorService curator;
     private final KnowledgeService knowledge;
@@ -45,7 +49,9 @@ public class GenerationJobService {
         if (previous.isPresent()) {
             var job = previous.get();
             if (!job.sourceCardId().equals(card) || !job.provider().equals(request.provider())
-                    || job.expectedVersion() != request.expectedVersion() || !job.digest().equals(request.digest())) {
+                    || job.expectedVersion() != request.expectedVersion() || !job.digest().equals(request.digest())
+                    || (request.requestedModel() != null
+                        && !CuratorSettings.normalize(request.requestedModel()).equals(job.requestedModel()))) {
                 throw new LibraryException(409, "같은 요청 ID를 다른 생성 내용에 사용할 수 없습니다.");
             }
             return job;
@@ -53,11 +59,13 @@ public class GenerationJobService {
         if (closing) throw new LibraryException(503, "앱이 종료 중입니다.");
         if (worker != null) throw new LibraryException(409, "다른 AI 작업이 실행 또는 취소 중입니다.");
         String now = Instant.now().toString();
-        GenerationJob job = new GenerationJob(request.requestId(), workspace, card, request.provider(),
-                request.expectedVersion(), request.digest(), "QUEUED", null, null, now, now);
-        transaction.executeWithoutResult(status -> {
-            curator.checkRequest(workspace, card, request.provider(), request.expectedVersion(), request.digest(), true);
-            store.create(job);
+        GenerationJob job = transaction.execute(status -> {
+            String requestedModel = curator.checkRequest(workspace, card, request.provider(), request.expectedVersion(),
+                    request.digest(), true, request.requestedModel());
+            GenerationJob created = new GenerationJob(request.requestId(), workspace, card, request.provider(),
+                    request.expectedVersion(), request.digest(), "QUEUED", null, null, now, now, requestedModel);
+            store.create(created);
+            return created;
         });
         active = job;
         cancelled = false;
@@ -98,7 +106,7 @@ public class GenerationJobService {
                 if (!store.update(job.workspaceId(), job.id(), "RUNNING", null, null)) throw new CancellationException();
             }
             curator.generate(job.workspaceId(), job.sourceCardId(), job.provider(), job.expectedVersion(), job.digest(), true,
-                    draft -> save(job, draft));
+                    job.requestedModel(), draft -> save(job, draft));
         } catch (Exception exception) {
             synchronized (this) {
                 Thread.interrupted();

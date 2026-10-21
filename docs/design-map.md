@@ -4,7 +4,7 @@
 > 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 다음은 운영 보강·검증·게시입니다.
 
 기준: 2026-10-21 · Phase 3 CLI AI 작업 관리·모델 고정·설치 진단 추가.
-최신 범위는 [모델 설정·설치 진단](cli-settings.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
+최신 범위는 [건별 모델 선택·요청 이력](model-selection.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
 실제 JAR 재시작·근거 보존 검증 결과는 [보고서](phase3-foundation-report.md)에 기록합니다.
 
 **범례:** 🟩 구현됨 · 🟨 일부 구현/확장 필요 · 🟦 계획(미구현).
@@ -41,7 +41,7 @@ flowchart LR
 | 자료 분석 | Tika 추출, Java 심볼·행 번호 | 청크·정교한 근거 위치, 격리 파서 |
 | 검색 | Lucene/Nori, 여러 도메인, 심볼 텍스트 | 지식·코드 관계 검색 |
 | 지식 백과사전 | 수동/승인 기반 CLI AI 초안·불변 버전·근거 복사본·편집 충돌 보호 | 검증·게시·폴더·렌더링 |
-| AI 운영 | 시작 설정 모델 고정·승인 바인딩·명시적 CLI 버전 진단 | 건별 설정 UI·인증 상태·실제 모델/CLI 생성 이력 |
+| AI 운영 | 건별 모델 선택·브라우저 선택 저장·요청 모델 이력·승인 바인딩·CLI 버전 진단 | 인증 상태·실제 실행 모델/생성 당시 CLI 이력 |
 | AI 질문 | 미구현 | CLI Provider, 근거 선표시, SSE, 중단 |
 | 최신성 관리 | 수동 동기화·revision·근거 CURRENT/STALE/MISSING 조회 | 자동 폴링·증분·의존 관계 전파·전체 원본 이력 |
 | 설치 | 개발용 웹 UI 포함 JAR | Mac `.app`/`.dmg`, Windows는 후속 |
@@ -231,7 +231,7 @@ sequenceDiagram
 
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
-| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx` | AI 모델 설정, 지식 폴더/렌더링, 채팅 |
+| 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx` | 지식 폴더/렌더링, 검증·게시, 채팅 |
 | 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v4, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
@@ -239,6 +239,6 @@ sequenceDiagram
 | 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 검증 · 게시 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** [생성 작업](generation-jobs.md)의 남은 모델 설정/상세 이력 → **P3-3 검증·게시**.
+**다음 한 작업:** [건별 모델 선택](model-selection.md)의 남은 실제 실행 메타데이터 → **P3-3 검증·게시**.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
 실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [생성 작업 보고서](generation-jobs.md)를 참고하세요.

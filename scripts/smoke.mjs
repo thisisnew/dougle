@@ -18,13 +18,14 @@ await new Promise(resolveClose => portServer.close(resolveClose))
 const base = `http://127.0.0.1:${port}`
 let child
 let logs = ''
+let configuredModel = 'server-default-fixture'
 
 async function start() {
   logs = ''
   const started = performance.now()
   child = spawn('bash', ['scripts/run.sh',
     `--forge.ai.codex-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`,
-    '--forge.ai.codex-model=synthetic-smoke-model',
+    `--forge.ai.codex-model=${configuredModel}`,
     `--forge.ai.claude-command=${resolve(root, 'scripts/fixtures/fake-codex.sh')}`], {
     cwd: root,
     env: { ...process.env, PORT: String(port), FORGE_DATA_DIR: directory },
@@ -87,7 +88,7 @@ try {
   const cliStatus = await api('/ai/providers/CODEX/probe', 'POST')
   assert.equal(cliStatus.status, 'AVAILABLE')
   assert.equal(cliStatus.version, '0.0.0-test-fixture')
-  assert.equal(cliStatus.requestedModel, 'synthetic-smoke-model')
+  assert.equal(cliStatus.requestedModel, configuredModel)
   assert.equal(cliStatus.authentication, 'UNKNOWN')
   assert.equal(cliStatus.remoteConnection, 'NOT_CHECKED')
   const page = await fetch(base)
@@ -127,8 +128,11 @@ try {
   })
   assert.equal(draft.version.status, 'DRAFT')
   const knowledgePath = `${knowledgeBase}/${draft.card.id}`
-  const transmission = await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX' })
+  const serverDefault = await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX' })
+  assert.equal(serverDefault.requestedModel, configuredModel)
+  const transmission = await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX', requestedModel: 'synthetic-smoke-model' })
   assert.equal(transmission.requestedModel, 'synthetic-smoke-model')
+  assert.notEqual(transmission.digest, serverDefault.digest)
   assert.ok(transmission.prompt.includes('E1'))
   assert.equal(transmission.digest.length, 64)
   for (const [approved, digest, status] of [[false, transmission.digest, 403], [true, 'wrong', 409]]) {
@@ -140,12 +144,14 @@ try {
   }
   assert.equal((await api(knowledgeBase)).length, 1)
   const jobBase = `/workspaces/${workspace.id}/generation-jobs`
-  const generation = { requestId: crypto.randomUUID(), provider: 'CODEX', expectedVersion: 1, digest: transmission.digest, approved: true }
+  const generation = { requestId: crypto.randomUUID(), provider: 'CODEX', requestedModel: transmission.requestedModel, expectedVersion: 1, digest: transmission.digest, approved: true }
   const submitted = await api(`${knowledgePath}/generation/jobs`, 'POST', generation)
   assert.equal(submitted.id, generation.requestId)
+  assert.equal(submitted.requestedModel, 'synthetic-smoke-model')
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).id, submitted.id)
   const completed = await waitForJob(`${jobBase}/${submitted.id}`, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
   assert.equal(completed.status, 'SUCCEEDED', completed.error)
+  assert.equal(completed.requestedModel, 'synthetic-smoke-model')
   assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.title, 'TEST FIXTURE 초안')
   assert.equal((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.manuallyEdited, false)
   assert.ok((await api(`${knowledgeBase}/${completed.resultCardId}`)).version.markdown.includes('요청 모델: synthetic-smoke-model'))
@@ -161,10 +167,14 @@ try {
   const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
   assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   await stop()
+  configuredModel = 'changed-server-default-fixture'
   const restartMs = await start()
   assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).status, 'SUCCEEDED')
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', cancelledRequest)).status, 'CANCELLED')
+  assert.equal((await api(`${jobBase}/${completed.id}`)).requestedModel, 'synthetic-smoke-model')
+  assert.equal((await api(`${jobBase}/${cancellable.id}`)).requestedModel, 'synthetic-smoke-model')
+  assert.equal((await api(`${knowledgePath}/generation/preview`, 'POST', { provider: 'CODEX', requestedModel: 'synthetic-smoke-model' })).digest, transmission.digest)
   assert.equal((await api(knowledgeBase)).length, 2)
   assert.equal((await api('/session')).activeWorkspaceId, workspace.id)
   assert.equal((await api(`${contentPath}/preview`)).text, bytes.toString('utf8'))
@@ -242,7 +252,8 @@ try {
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',
       'CLI payload preview without external call', 'unapproved and mismatched AI transmission rejected',
-      'fake CLI async generation and cancellation', 'idempotent job replay across restart', 'completed job and draft persist'],
+      'fake CLI async generation and cancellation', 'idempotent job replay across restart', 'completed job and draft persist',
+      'per-request model overrides server default', 'requested model history survives changed defaults and restart'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),

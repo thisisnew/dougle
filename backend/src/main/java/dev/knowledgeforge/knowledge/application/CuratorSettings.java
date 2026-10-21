@@ -18,7 +18,20 @@ public class CuratorSettings {
         return provider == CuratorModel.Provider.CODEX ? codexModel : claudeModel;
     }
 
-    private String validate(String value) {
+    public String resolve(CuratorModel.Provider provider, String requestedModel) {
+        if (requestedModel == null) return requestedModel(provider);
+        return normalize(requestedModel);
+    }
+
+    public static String normalize(String requestedModel) {
+        try { return validate(requestedModel); }
+        catch (IllegalArgumentException exception) {
+            throw new dev.knowledgeforge.library.application.LibraryException(400,
+                    "모델 ID는 영문·숫자로 시작하는 128자 이하 식별자여야 합니다. CLI 옵션은 사용할 수 없습니다.");
+        }
+    }
+
+    private static String validate(String value) {
         String model = value == null ? "" : value.strip();
         if (!model.isEmpty() && !model.matches("[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}")) {
             throw new IllegalArgumentException("AI model must be an identifier of at most 128 characters, not CLI options.");

@@ -36,7 +36,7 @@ export default function CliStatusPanel({ provider, disabled }: { provider: strin
     {busy && <p role="status">로컬 CLI 버전 확인 중…</p>}
     {status && <p role="status">{status.status === 'AVAILABLE' ? `CLI 실행 확인 · 버전 ${status.version}`
       : status.status === 'UNRECOGNIZED' ? '버전 응답을 인식하지 못했습니다.' : 'CLI 실행을 확인하지 못했습니다. 설치·실행 경로를 확인하세요.'}
-      {' '}요청 모델: {status.requestedModel || 'CLI 기본값'}. 로그인·원격 연결·모델 이용 가능 여부는 미확인입니다.</p>}
+      {' '}서버 기본 모델: {status.requestedModel || 'CLI 기본값'}. 로그인·원격 연결·모델 이용 가능 여부는 미확인입니다.</p>}
     {error && <p role="alert">{error}</p>}
   </div>
 }

@@ -51,11 +51,37 @@ class CuratorIntegrationTest {
         workspace = library.createWorkspace("가상 AI 테스트").id();
         entry = library.upload(workspace, null, "private-name.txt", "가상 관측\n온도 21도".getBytes(StandardCharsets.UTF_8)).id();
         source = knowledge.create(workspace, "사람 제목", "사람만의 비공개 메모", List.of(new Citation(entry, 1, 2)));
-        when(model.generate(any(), anyString())).thenReturn(VALID);
+        when(model.generate(any(), anyString(), anyString())).thenReturn(VALID);
     }
 
     Document generate(CuratorService.Preview preview) {
         return curator.generate(workspace, source.card().id(), preview.provider(), preview.expectedVersion(), preview.digest(), true);
+    }
+
+    @Test
+    void perRequestModelOverridesServerAndBindsTheActualInvocation() {
+        var service = new CuratorService(knowledge, model, new CuratorSettings("server-model", ""));
+        var preview = service.preview(workspace, source.card().id(), "CODEX", " custom-model ");
+        assertThat(preview.requestedModel()).isEqualTo("custom-model");
+        assertThat(service.preview(workspace, source.card().id(), "CODEX").requestedModel()).isEqualTo("server-model");
+        assertThat(service.preview(workspace, source.card().id(), "CODEX", "").requestedModel()).isEmpty();
+        assertThatThrownBy(() -> service.generate(workspace, source.card().id(), "CODEX", 1, preview.digest(), true, "other-model"))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(409));
+        verifyNoInteractions(model);
+        var result = service.generate(workspace, source.card().id(), "CODEX", 1, preview.digest(), true, "custom-model");
+        verify(model).generate(eq(CuratorModel.Provider.CODEX), eq(preview.prompt()), eq("custom-model"));
+        assertThat(result.version().markdown()).contains("요청 모델: custom-model");
+    }
+
+    @Test
+    void rejectsModelOptionsBeforeInvokingCli() throws Exception {
+        String path = "/api/workspaces/" + workspace + "/knowledge/" + source.card().id() + "/generation/preview";
+        mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json")
+                .content("{\"provider\":\"CODEX\",\"requestedModel\":\"--tools\"}")).andExpect(status().isBadRequest());
+        mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json")
+                .content("{\"provider\":\"CLAUDE\",\"requestedModel\":\"synthetic-model\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.requestedModel").value("synthetic-model"));
+        verifyNoInteractions(model);
     }
 
     @Test
@@ -114,7 +140,7 @@ class CuratorIntegrationTest {
         for (String output : List.of("not json", VALID + " {}", VALID.replace("E1", "E2"),
                 VALID.replace("[\"E1\"]", "[]"), VALID.replace("관측", "x".repeat(121)),
                 "{\"title\":\"\",\"claims\":[]}")) {
-            when(model.generate(any(), anyString())).thenReturn(output);
+            when(model.generate(any(), anyString(), anyString())).thenReturn(output);
             assertThatThrownBy(() -> generate(curator.preview(workspace, source.card().id(), "CLAUDE"))).isInstanceOf(LibraryException.class);
             assertThat(knowledge.list(workspace)).hasSize(1);
         }
@@ -122,7 +148,7 @@ class CuratorIntegrationTest {
 
     @Test
     void rechecksHumanEditsAfterInferenceWithoutHoldingDatabaseConnection() {
-        when(model.generate(any(), anyString())).thenAnswer(invocation -> {
+        when(model.generate(any(), anyString(), anyString())).thenAnswer(invocation -> {
             knowledge.revise(workspace, source.card().id(), 1, "수동 수정", "보존", null);
             return VALID;
         });
@@ -142,12 +168,12 @@ class CuratorIntegrationTest {
 
     @Test
     void rejectsSourceDeletionDuringGenerationAndReleasesSlotAfterFailure() {
-        when(model.generate(any(), anyString())).thenThrow(new LibraryException(504, "timeout"));
+        when(model.generate(any(), anyString(), anyString())).thenThrow(new LibraryException(504, "timeout"));
         assertThatThrownBy(() -> generate(curator.preview(workspace, source.card().id(), "CODEX"))).isInstanceOf(LibraryException.class);
-        doAnswer(invocation -> { library.deleteEntry(workspace, entry); return VALID; }).when(model).generate(any(), anyString());
+        doAnswer(invocation -> { library.deleteEntry(workspace, entry); return VALID; }).when(model).generate(any(), anyString(), anyString());
         assertThatThrownBy(() -> generate(curator.preview(workspace, source.card().id(), "CODEX"))).isInstanceOf(LibraryException.class);
         assertThat(knowledge.list(workspace)).hasSize(1);
-        verify(model, times(2)).generate(any(), anyString());
+        verify(model, times(2)).generate(any(), anyString(), anyString());
     }
 
     @Test
@@ -174,12 +200,12 @@ class CuratorIntegrationTest {
     @Test
     void concurrentGenerationIsRejectedWithoutSecondModelCall() {
         var preview = curator.preview(workspace, source.card().id(), "CODEX");
-        when(model.generate(any(), anyString())).thenAnswer(invocation -> {
+        when(model.generate(any(), anyString(), anyString())).thenAnswer(invocation -> {
             assertThatThrownBy(() -> generate(preview)).isInstanceOfSatisfying(LibraryException.class,
                     error -> assertThat(error.status()).isEqualTo(409));
             return VALID;
         });
         generate(preview);
-        verify(model, times(1)).generate(any(), anyString());
+        verify(model, times(1)).generate(any(), anyString(), anyString());
     }
 }

@@ -30,7 +30,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   추가 구현: 영속 작업 ID/상태, 명시적 취소, 같은 ID 중복 호출 방지, 미완료 작업 재시작 복구,
   새 DRAFT와 성공 상태의 원자적 커밋, Workspace별 작업 목록. [작업 설계](generation-jobs.md).
   추가 구현: 시작 설정 모델 고정·승인 digest 바인딩, 명시적 로컬 버전 진단, 초안 요청 모델/digest 기록. [설계](cli-settings.md).
-  남음: 건별 모델 선택·설정 저장 UI, 인증/원격 연결 상태, 실제 모델/CLI 버전 등 구조화된 상세 생성 메타데이터,
+  추가 구현: 건별 모델 선택·브라우저별 선택 저장 UI, 작업별 요청 모델 영속 이력, v4→v5 보존 마이그레이션. [설계](model-selection.md).
+  남음: 인증/원격 연결 상태, 실제 실행 모델/생성 당시 CLI 버전 등 상세 생성 메타데이터,
   강제 종료 시 OS 프로세스 감독. 모델 이름은 업무 도메인과 독립.
   mock 계약 테스트와 실제 CLI/외부 모델 실행 검증을 구분해 기록. [현재 상세](cli-ai.md).
 - [ ] **P3-3: 검증 후 게시.** 초안→검증→게시를 명시적으로 분리하고
@@ -49,7 +50,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
   현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
   원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=4`, FK cascade,
+- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=5`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.

@@ -9,6 +9,14 @@ const api = vi.mocked(request)
 const job = { id: 'job', provider: 'CODEX', status: 'RUNNING', resultCardId: null, error: null, createdAt: '2026-10-21T10:00:00Z' }
 beforeEach(() => api.mockReset())
 
+it('기록된 요청 모델과 이전 작업의 기록 없음을 구분한다', async () => {
+  api.mockResolvedValue([{ ...job, status: 'CANCELLED', requestedModel: 'selected-model' },
+    { ...job, id: 'old', status: 'FAILED', requestedModel: null }])
+  render(<GenerationJobsPanel workspaceId="one" revision={0} onOpen={vi.fn()} />)
+  expect(await screen.findByText(/요청 모델: selected-model/)).toHaveTextContent('실제 실행 모델: 미확인')
+  expect(screen.getByText(/기록 없음 \(이전 작업\)/)).toBeInTheDocument()
+})
+
 it('화면을 다시 열면 서버 작업 목록을 복원하고 명시적 취소 API를 호출한다', async () => {
   const user = userEvent.setup()
   let cancelled = false

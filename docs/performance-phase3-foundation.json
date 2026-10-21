@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T11:12:58.439Z",
+  "measuredAt": "2026-10-21T11:30:23.912Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -29,23 +29,25 @@
     "unapproved and mismatched AI transmission rejected",
     "fake CLI async generation and cancellation",
     "idempotent job replay across restart",
-    "completed job and draft persist"
+    "completed job and draft persist",
+    "per-request model overrides server default",
+    "requested model history survives changed defaults and restart"
   ],
-  "sourceSyncMs": 1481.0319259999997,
+  "sourceSyncMs": 995.710751999999,
   "livePublic": [],
-  "startupMs": 19272,
-  "restartMs": 22912,
+  "startupMs": 11944,
+  "restartMs": 11921,
   "upload100": {
-    "p50Ms": 721.297200999994,
-    "p95Ms": 1177.9749939999892
+    "p50Ms": 152.28072299999621,
+    "p95Ms": 617.4315410000054
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 6.715739999999641,
-    "p95Ms": 9.83328099999926
+    "p50Ms": 5.017328000001726,
+    "p95Ms": 6.588002999997116
   },
   "search100Files30Requests": {
-    "p50Ms": 18.3001920000097,
-    "p95Ms": 31.870143000007374
+    "p50Ms": 10.237625000001572,
+    "p95Ms": 21.67975000000297
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

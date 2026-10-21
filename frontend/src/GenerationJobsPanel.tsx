@@ -5,6 +5,7 @@ import { Button } from './components/ui/button'
 export type GenerationJob = {
   id: string; sourceCardId: string; provider: string; status: string
   resultCardId: string | null; error: string | null; createdAt: string
+  requestedModel: string | null
 }
 const labels: Record<string, string> = {
   QUEUED: '대기', RUNNING: '생성 중', CANCELLING: '중단 처리 중', CANCELLED: '취소됨',
@@ -58,6 +59,7 @@ export default function GenerationJobsPanel({ workspaceId, revision, onOpen, ope
     {jobs.map(job => <div key={job.id} className="evidence-item">
       <p>{job.provider} · {labels[job.status] ?? job.status} · {new Date(job.createdAt).toLocaleString()}</p>
       <small>작업 ID: {job.id}</small>
+      <p>요청 모델: {job.requestedModel == null ? '기록 없음 (이전 작업)' : job.requestedModel || 'CLI 기본값'} · 실제 실행 모델: 미확인</p>
       {job.error && <p>{job.error}</p>}
       {active(job) && <Button variant="outline" size="sm" disabled={!!cancelling || job.status === 'CANCELLING'} onClick={() => void cancel(job.id)}>생성 중단</Button>}
       {job.status === 'SUCCEEDED' && job.resultCardId && <Button variant="outline" size="sm" disabled={openDisabled} onClick={() => onOpen(job.resultCardId!)}>생성된 초안 열기</Button>}

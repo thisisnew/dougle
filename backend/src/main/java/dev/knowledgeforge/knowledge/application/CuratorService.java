@@ -30,17 +30,29 @@ public class CuratorService {
     }
 
     public Preview preview(String workspace, String id, String provider) {
-        return prepare(knowledge.get(workspace, id, null), provider);
+        return preview(workspace, id, provider, null);
+    }
+
+    public Preview preview(String workspace, String id, String provider, String requestedModel) {
+        return prepare(knowledge.get(workspace, id, null), provider, requestedModel);
     }
 
     public Document generate(String workspace, String id, String provider, int expectedVersion, String digest, boolean approved) {
-        return generate(workspace, id, provider, expectedVersion, digest, approved,
+        return generate(workspace, id, provider, expectedVersion, digest, approved, null);
+    }
+
+    public Document generate(String workspace, String id, String provider, int expectedVersion, String digest,
+                             boolean approved, String requestedModel) {
+        return generate(workspace, id, provider, expectedVersion, digest, approved, requestedModel,
                 draft -> knowledge.createGenerated(draft.source(), draft.title(), draft.markdown()));
     }
 
-    public void checkRequest(String workspace, String id, String provider, int expectedVersion, String digest, boolean approved) {
+    public String checkRequest(String workspace, String id, String provider, int expectedVersion, String digest,
+                               boolean approved, String requestedModel) {
         if (!approved) throw new LibraryException(403, "선택한 AI 제공자에게 근거를 전송하려면 명시적으로 승인하세요.");
-        checkPreview(preview(workspace, id, provider), expectedVersion, digest);
+        Preview preview = preview(workspace, id, provider, requestedModel);
+        checkPreview(preview, expectedVersion, digest);
+        return preview.requestedModel();
     }
 
     private void checkPreview(Preview preview, int expectedVersion, String digest) {
@@ -50,15 +62,15 @@ public class CuratorService {
     }
 
     public Document generate(String workspace, String id, String provider, int expectedVersion, String digest,
-                             boolean approved, Function<Generated, Document> publish) {
+                             boolean approved, String requestedModel, Function<Generated, Document> publish) {
         if (!approved) throw new LibraryException(403, "선택한 AI 제공자에게 근거를 전송하려면 명시적으로 승인하세요.");
         if (!slot.tryAcquire()) throw new LibraryException(409, "다른 AI 생성이 진행 중입니다.");
         try {
             Document source = knowledge.get(workspace, id, null);
-            Preview preview = prepare(source, provider);
+            Preview preview = prepare(source, provider, requestedModel);
             checkPreview(preview, expectedVersion, digest);
             if (Thread.currentThread().isInterrupted()) throw new LibraryException(503, "AI 생성이 중단되었습니다.");
-            String output = model.generate(provider(provider), preview.prompt());
+            String output = model.generate(provider(provider), preview.prompt(), preview.requestedModel());
             String[] draft = validate(output, source.version().evidence().size());
             return publish.apply(new Generated(source, draft[0], "> AI 미검증 초안 · " + provider
                     + " · 원본 지식 " + id + " v" + expectedVersion
@@ -69,7 +81,7 @@ public class CuratorService {
         }
     }
 
-    private Preview prepare(Document source, String provider) {
+    private Preview prepare(Document source, String provider, String selectedModel) {
         provider(provider);
         var evidence = source.version().evidence();
         if (evidence.isEmpty() || evidence.stream().anyMatch(item -> !item.freshness().equals("CURRENT"))) {
@@ -88,7 +100,7 @@ public class CuratorService {
                 EVIDENCE:
                 """ + payload;
         if (prompt.length() > 16000) throw new LibraryException(413, "AI 전송 내용은 16,000자 이하여야 합니다. 근거 범위를 줄이세요.");
-        String requestedModel = settings.requestedModel(provider(provider));
+        String requestedModel = settings.resolve(provider(provider), selectedModel);
         String binding = source.card().workspaceId() + "\n" + source.card().id() + "\n"
                 + source.card().latestVersion() + "\n" + provider + "\n" + requestedModel + "\n" + prompt;
         try {

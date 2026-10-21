@@ -55,13 +55,18 @@ public class CliCuratorModel implements CuratorModel {
         this.settings = settings;
     }
 
-    @Override
     public String generate(Provider provider, String prompt) {
+        return generate(provider, prompt, settings.requestedModel(provider));
+    }
+
+    @Override
+    public String generate(Provider provider, String prompt, String requestedModel) {
+        String selectedModel = CuratorSettings.normalize(requestedModel);
         Path directory = null;
         try {
             directory = Files.createTempDirectory("forge-curator-");
             Files.writeString(directory.resolve("schema.json"), SCHEMA);
-            List<String> command = command(provider, directory);
+            List<String> command = command(provider, directory, selectedModel);
             String stdout = run(command, directory, prompt);
             if (provider == Provider.CODEX) {
                 Path output = directory.resolve("answer.json");
@@ -88,12 +93,16 @@ public class CliCuratorModel implements CuratorModel {
     }
 
     List<String> command(Provider provider, Path directory) {
+        return command(provider, directory, settings.requestedModel(provider));
+    }
+
+    List<String> command(Provider provider, Path directory, String requestedModel) {
         if (provider == Provider.CLAUDE) {
             List<String> arguments = new ArrayList<>(List.of(claude, "--print", "--output-format", "json", "--json-schema", SCHEMA,
                     "--tools", "", "--disallowedTools", "mcp__*", "--strict-mcp-config", "--mcp-config", "{\"mcpServers\":{}}",
                     "--setting-sources", "", "--settings", "{\"disableAllHooks\":true}", "--disable-slash-commands",
                     "--no-session-persistence", "--no-chrome", "--permission-mode", "dontAsk"));
-            addModel(arguments, provider);
+            addModel(arguments, requestedModel);
             return arguments;
         }
         List<String> arguments = new ArrayList<>(List.of(codex, "--no-daemon", "exec", "--ignore-user-config",
@@ -107,13 +116,12 @@ public class CliCuratorModel implements CuratorModel {
                 "browser_use", "computer_use", "image_generation", "code_mode", "skill_search")) {
             arguments.addAll(List.of("--disable", feature));
         }
-        addModel(arguments, provider);
+        addModel(arguments, requestedModel);
         arguments.add("-");
         return arguments;
     }
 
-    private void addModel(List<String> arguments, Provider provider) {
-        String requestedModel = settings.requestedModel(provider);
+    private void addModel(List<String> arguments, String requestedModel) {
         if (!requestedModel.isEmpty()) arguments.addAll(List.of("--model", requestedModel));
     }
 

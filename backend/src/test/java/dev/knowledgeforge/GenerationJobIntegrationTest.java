@@ -61,7 +61,7 @@ class GenerationJobIntegrationTest {
         entered = new CountDownLatch(1);
         release = new CountDownLatch(1);
         worker = new AtomicReference<>();
-        when(model.generate(any(), anyString())).thenAnswer(invocation -> {
+        when(model.generate(any(), anyString(), anyString())).thenAnswer(invocation -> {
             worker.set(Thread.currentThread());
             entered.countDown();
             if (!release.await(5, TimeUnit.SECONDS)) throw new IllegalStateException("fixture timeout");
@@ -96,6 +96,36 @@ class GenerationJobIntegrationTest {
     }
 
     @Test
+    void persistsApprovedModelAndRejectsSameIdWithDifferentModel() throws Exception {
+        var preview = curator.preview(workspace, source.card().id(), "CODEX", "synthetic-selected");
+        var request = new GenerationJobService.Request(UUID.randomUUID().toString(), "CODEX", 1, preview.digest(), true, "synthetic-selected");
+        var job = submit(request);
+        assertThat(job.requestedModel()).isEqualTo("synthetic-selected");
+        assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThatThrownBy(() -> submit(new GenerationJobService.Request(request.requestId(), "CODEX", 1, request.digest(), true, "different")))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(409));
+        release.countDown();
+        assertThat(terminal(job.id()).status()).isEqualTo("SUCCEEDED");
+        assertThat(submit(request).requestedModel()).isEqualTo("synthetic-selected");
+        assertThat(jobs.list(workspace).getFirst().requestedModel()).isEqualTo("synthetic-selected");
+        verify(model, times(1)).generate(any(), anyString(), eq("synthetic-selected"));
+    }
+
+    @Test
+    void cancelledAndFailedJobsKeepTheirRequestedModel() throws Exception {
+        var preview = curator.preview(workspace, source.card().id(), "CODEX", "synthetic-selected");
+        var job = submit(new GenerationJobService.Request(UUID.randomUUID().toString(), "CODEX", 1, preview.digest(), true, "synthetic-selected"));
+        assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
+        jobs.cancel(workspace, job.id());
+        assertThat(terminal(job.id()).requestedModel()).isEqualTo("synthetic-selected");
+        worker.get().join(5000);
+        doThrow(new LibraryException(502, "synthetic failure")).when(model).generate(any(), anyString(), anyString());
+        var failed = submit(new GenerationJobService.Request(UUID.randomUUID().toString(), "CODEX", 1, preview.digest(), true, "synthetic-selected"));
+        assertThat(terminal(failed.id()).status()).isEqualTo("FAILED");
+        assertThat(jobs.get(workspace, failed.id()).requestedModel()).isEqualTo("synthetic-selected");
+    }
+
+    @Test
     void persistsQueuedJobAndDeduplicatesRunningAndCompletedRequests() throws Exception {
         var request = request();
         GenerationJob job = submit(request);
@@ -111,7 +141,7 @@ class GenerationJobIntegrationTest {
         knowledge.delete(workspace, source.card().id());
         assertThat(submit(request)).isEqualTo(completed);
         assertThat(jobs.cancel(workspace, job.id())).isEqualTo(completed);
-        verify(model, times(1)).generate(any(), anyString());
+        verify(model, times(1)).generate(any(), anyString(), anyString());
     }
 
     @Test
@@ -153,7 +183,7 @@ class GenerationJobIntegrationTest {
                 catch (InterruptedException ignored) { }
             }
             return VALID;
-        }).when(model).generate(any(), anyString());
+        }).when(model).generate(any(), anyString(), anyString());
         var request = request();
         GenerationJob job = submit(request);
         assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
@@ -169,7 +199,7 @@ class GenerationJobIntegrationTest {
     @Test
     void failureIsRecordedWithoutRawExceptionAndRetryDoesNotCallAgain() throws Exception {
         doAnswer(invocation -> { worker.set(Thread.currentThread()); throw new IllegalStateException("secret-token"); })
-                .when(model).generate(any(), anyString());
+                .when(model).generate(any(), anyString(), anyString());
         var request = request();
         GenerationJob job = submit(request);
         GenerationJob failed = terminal(job.id());
@@ -177,7 +207,7 @@ class GenerationJobIntegrationTest {
         assertThat(failed.error()).doesNotContain("secret-token");
         assertThat(submit(request)).isEqualTo(failed);
         assertThat(knowledge.list(workspace)).hasSize(1);
-        verify(model, times(1)).generate(any(), anyString());
+        verify(model, times(1)).generate(any(), anyString(), anyString());
     }
 
     @Test

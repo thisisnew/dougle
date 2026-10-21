@@ -24,6 +24,16 @@ class CliCuratorModelTest {
     }
 
     @Test
+    void requestSelectionDoesNotFallBackToServerConfiguration() throws Exception {
+        var model = new CliCuratorModel("codex", "claude", Duration.ofSeconds(5), new CuratorSettings("server-model", "server-model"));
+        assertThat(model.command(Provider.CODEX, directory, "per-request")).containsSequence("--model", "per-request").doesNotContain("server-model");
+        assertThat(model.command(Provider.CLAUDE, directory, "per-request")).containsSequence("--model", "per-request").doesNotContain("server-model");
+        assertThat(model.command(Provider.CODEX, directory, "")).doesNotContain("--model", "server-model");
+        assertThatThrownBy(() -> model.generate(Provider.CODEX, "synthetic", "--tools"))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(400));
+    }
+
+    @Test
     void configuredModelsAreSingleArgumentsAndDefaultOmitsFlag() {
         var model = new CliCuratorModel("codex", "claude", Duration.ofSeconds(5),
                 new CuratorSettings("synthetic-model-a", "synthetic-model-b"));
