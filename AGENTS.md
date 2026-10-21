@@ -11,6 +11,7 @@
 - 현재 스키마는 v8이다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
 - P3-4 출처 탐색 연결은 `docs/evidence-navigation.md`를 확인한다. 원본 해석은 Source ID+경로 또는 업로드 ID이며 독립 지식 폴더·카드 배치는 `docs/knowledge-folders.md`를 확인한다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
+- 지식 Markdown 표시 보안 경계는 `docs/markdown-rendering.md`를 따른다. 링크/이미지 자동 로딩이나 raw HTML 실행을 추가하지 않는다.
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.
 - 후속 검색은 Lucene 10 + Nori 및 심볼/관계 인덱스를 사용한다. 외부 DB 서버는 추가하지 않는다.

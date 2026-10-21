@@ -61,6 +61,9 @@ it('원본이 삭제된 근거와 Markdown을 실행하지 않고 표시한다',
   const { container } = render(<KnowledgePanel workspaceId="one" />)
   await user.click(await screen.findByRole('button', { name: '관측 초안 · v1' }))
   expect(await screen.findByLabelText('지식 Markdown')).toHaveTextContent('<script>window.injected=true</script>')
+  expect(screen.getByLabelText('지식 Markdown 미리보기')).toBeInTheDocument()
+  await user.click(screen.getByText('Markdown 원문 보기'))
+  expect(screen.getByLabelText('지식 Markdown')).toBeVisible()
   expect(container.querySelector('script')).toBeNull()
   expect(screen.getByText('원본 삭제됨 · 근거 복사본 보존')).toBeInTheDocument()
   expect(screen.getByRole('link', { name: '당시 근거 원본 다운로드' })).toHaveAttribute('href', '/api/workspaces/one/knowledge/card/evidence/snapshot/content')
@@ -114,11 +117,14 @@ it('이전 버전은 읽기 전용이며 삭제 취소는 요청을 보내지 �
     if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
     if (path.endsWith('/generation-jobs')) return []
     if (path.endsWith('/knowledge')) return [{ ...card, latestVersion: 2 }]
-    return { card: { ...card, latestVersion: 2 }, version: { ...document.version, number: path.endsWith('/versions/1') ? 1 : 2 } }
+    const previous = path.endsWith('/versions/1')
+    return { card: { ...card, latestVersion: 2 }, version: { ...document.version, number: previous ? 1 : 2, markdown: previous ? '# 이전 문서' : '# 최신 문서' } }
   })
   render(<KnowledgePanel workspaceId="one" />)
   await user.click(await screen.findByRole('button', { name: '관측 초안 · v2' }))
+  expect(await screen.findByRole('heading', { name: '최신 문서' })).toBeInTheDocument()
   await user.click(await screen.findByRole('button', { name: '이전 버전' }))
+  expect(await screen.findByRole('heading', { name: '이전 문서' })).toBeInTheDocument()
   await waitFor(() => expect(screen.getByRole('button', { name: '초안 편집' })).toBeDisabled())
   await user.click(screen.getByRole('button', { name: '지식 삭제' }))
   await user.click(screen.getByRole('button', { name: '취소' }))

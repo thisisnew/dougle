@@ -3,6 +3,8 @@
 기본 URL: `http://127.0.0.1:8787/api`
 
 지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.
+Markdown 응답은 저장된 원문이며 HTML이 아닙니다. UI만 안전한 미리보기를 제공합니다.
+이번 표시 변경은 API/SQLite v8 계약을 바꾸지 않습니다. [렌더링 정책](markdown-rendering.md).
 
 모든 변경 요청은 `X-Forge-Client: 1` 헤더가 필요합니다.
 JSON 요청은 `Content-Type: application/json`을 사용합니다.

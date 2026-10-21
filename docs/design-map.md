@@ -1,7 +1,7 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
 > **수집·분석·검색에 이어, 근거를 보존하는 수동 지식 초안·버전이 동작합니다.**
-> 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 사람 검토→명시적 게시도 지원합니다. 독립 지식 폴더·카드 배치도 구현했습니다. 자동 의미 검증·Markdown 렌더링은 남았습니다.
+> 이제 로그인된 Codex/Claude Code CLI로 승인 후 별도 AI 초안도 생성합니다. 사람 검토→명시적 게시, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시도 구현했습니다. 자동 의미 검증은 남았습니다.
 
 기준: 2026-10-21 · Phase 3 CLI AI 작업 관리·모델 고정·설치 진단 추가.
 최신 범위는 [독립 지식 폴더](knowledge-folders.md), 출처 연결은 [현재 원본 탐색](evidence-navigation.md), 이전 변경은 [사람 검토와 게시](publication.md), [실행 전 CLI 관측 이력](cli-observation.md), 작업 관리는 [생성 작업](generation-jobs.md)을 확인하세요.
@@ -239,6 +239,16 @@ sequenceDiagram
 | 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | CLI 운영 보강 · 자동 의미 검증 · 폴더 이름 변경/이동 |
 | 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** **P3-4 안전한 Markdown 렌더링**. 독립 폴더/카드 배치는 [폴더 가이드](knowledge-folders.md) 범위로 구현했습니다. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
+**다음 한 작업:** 개발 도구 보안 갱신 후 **P3-4 폴더 이름 변경/이동**. 안전한 표시와 원문 보존은 [Markdown 가이드](markdown-rendering.md), 독립 폴더/카드 배치는 [폴더 가이드](knowledge-folders.md) 범위로 구현했습니다. 현재 출처 탐색 이동은 [탐색 가이드](evidence-navigation.md) 범위로 구현했습니다. 사람 검토/게시의 경계는 [게시 가이드](publication.md), 실행 모델/바이너리 증명 한계는 [관측 이력](cli-observation.md)에 기록했습니다.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
-실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [지식 폴더 보고서](knowledge-folders.md)를 참고하세요.
+실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [Markdown 보고서](markdown-rendering.md)를 참고하세요.
+
+```mermaid
+flowchart LR
+  Version["불변 Markdown 버전 · SQLite v8"] --> API["기존 조회 API · 원문 그대로"]
+  API --> Preview["React Markdown/GFM 미리보기"]
+  API --> Raw["원문 보기 · 편집 입력"]
+  Preview --> Safe["HTML 실행 없음 · 링크/이미지 비활성"]
+  Raw --> Save["expectedVersion 검사 · 새 버전 저장"]
+  Save --> Review["별도 사람 검토 → 명시적 게시"]
+```

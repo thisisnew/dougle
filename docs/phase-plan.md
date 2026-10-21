@@ -41,7 +41,8 @@ Ollama 대신 Codex/Claude Code를 사용합니다. [작업 상태·취소·멱�
 시작 설정 모델 고정·승인 바인딩·설치 버전 진단도 구현했습니다. [범위](cli-settings.md).
 건별 모델 선택·브라우저별 선택 저장 UI·요청 모델 영속 이력도 구현했습니다. [범위](model-selection.md).
 실행 전 CLI 관측 버전·시각·확인 실패 이력도 구현했습니다. [범위](cli-observation.md).
-인증·원격 연결 상태·실제 실행 모델/바이너리 증명은 아직 없으며 자동 의미 검증·안전한 Markdown 렌더링은 남아 있습니다. 독립 지식 폴더·카드 배치를 구현했습니다. [범위·검증](knowledge-folders.md).
+인증·원격 연결 상태·실제 실행 모델/바이너리 증명과 자동 의미 검증은 아직 없습니다. 독립 지식 폴더·카드 배치를 구현했습니다. [범위·검증](knowledge-folders.md).
+안전한 Markdown 표시·원문 보존을 구현했습니다. [정책·검증](markdown-rendering.md). 폴더 이름 변경/이동과 AI 갱신 제안은 남아 있습니다.
 P3-4 중 근거에서 현재 원본 폴더/미리보기로 이동하는 경로를 추가했습니다. [범위·검증](evidence-navigation.md).
 
 Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,

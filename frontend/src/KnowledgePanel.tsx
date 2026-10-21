@@ -6,6 +6,7 @@ import GenerationJobsPanel from './GenerationJobsPanel'
 import PublicationPanel from './PublicationPanel'
 import EvidenceOriginButton from './EvidenceOriginButton'
 import KnowledgeOrganization from './KnowledgeOrganization'
+import KnowledgeMarkdown from './KnowledgeMarkdown'
 
 type Card = { id: string; workspaceId: string; title: string; latestVersion: number; createdAt: string }
 type Evidence = {
@@ -164,7 +165,7 @@ export default function KnowledgePanel({ workspaceId, onOpenOriginal }: {
         <p>이전 버전과 근거 복사본을 유지하고 새로운 미검증 버전을 저장합니다.</p>
         <div className="source-actions"><Button disabled={busy} type="submit">새 버전 저장</Button>
           <Button type="button" variant="outline" disabled={busy} onClick={() => { setEditing(false); setTitle(document.version.title); setMarkdown(document.version.markdown) }}>편집 취소</Button></div>
-      </form> : <pre aria-label="지식 Markdown">{document.version.markdown}</pre>}
+      </form> : <KnowledgeMarkdown key={`markdown-${selected}-${document.version.number}`} markdown={document.version.markdown} />}
       {!editing && document.version.number === document.card.latestVersion && <GenerationPanel
         key={`${selected}-${document.version.number}`} base={`${base}/${selected}`} disabled={busy || confirmDelete}
         onBusy={setBusy} onQueued={() => { setBusy(false); setRevision(value => value + 1) }} />}

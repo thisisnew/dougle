@@ -183,7 +183,10 @@ Workspace FK는 cascade입니다. 전체 Source 이력이 아니라 **지식에�
 entry ID가 교체되어도 같은 Source+경로+해시라면 CURRENT입니다. 파일 내용 변경은 STALE,
 파일/Source 삭제는 MISSING입니다. 같은 경로의 다른 Source 등록은 기존 출처로 간주하지 않습니다.
 이는 원격 폴링·자동 지식 무효화/재생성이나 사실 검증이 아닙니다.
-초안은 Lucene 검색에 아직 포함하지 않으며, Markdown은 HTML로 렌더링하지 않고 텍스트로 표시합니다.
+초안은 Lucene 검색에 아직 포함하지 않습니다. Markdown은 `KnowledgeMarkdown`에서
+react-markdown/remark-gfm으로 React 요소에 표시하며 원문은 별도로 보존합니다.
+raw HTML 파싱·실행 없이 링크는 비활성 텍스트, 이미지는 대체 설명으로 표시합니다.
+API·불변 버전·승인 digest·검토/게시 상태는 변경하지 않습니다. [표시 설계](markdown-rendering.md).
 
 ## 독립 지식 폴더 (v8)
 

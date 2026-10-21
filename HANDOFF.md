@@ -14,7 +14,7 @@ Java 21 / Spring Boot 4.1.1 / React / TypeScript / Vite / Tailwind / SQLite JDBC
 
 현재 Source 수동 수집, 문서·Java 분석, 로컬 검색, 근거 연결 수동 지식 초안·버전을 사용할 수 있습니다.
 로그인된 Codex/Claude Code CLI로 승인 기반 별도 AI 초안을 생성합니다. 채팅·Source 자동 폴링은 아직 없습니다.
-최신 변경은 [독립 지식 폴더·카드 배치](docs/knowledge-folders.md)입니다. [현재 원본 탐색](docs/evidence-navigation.md)도 구현되어 있습니다. 이전 변경은 [사람 검토와 게시](docs/publication.md), [실행 전 CLI 관측 이력](docs/cli-observation.md), [건별 모델 선택](docs/model-selection.md)을 확인하세요.
+최신 변경은 [안전한 Markdown 표시·원문 보존](docs/markdown-rendering.md)입니다. [독립 지식 폴더·카드 배치](docs/knowledge-folders.md), [현재 원본 탐색](docs/evidence-navigation.md)도 구현되어 있습니다. 이전 변경은 [사람 검토와 게시](docs/publication.md), [실행 전 CLI 관측 이력](docs/cli-observation.md), [건별 모델 선택](docs/model-selection.md)을 확인하세요.
 사용자 요청으로 기본 AI 방향을 Ollama에서 로그인된 CLI로 변경했습니다. 이 결정이 이전 계획보다 우선합니다.
 GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 
@@ -29,7 +29,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 가상 자료 기반 백엔드 125개 / 프런트엔드 48개 자동 테스트 통과 (UI worker 2개, 실제 CLI opt-in 테스트 1개는 기본 skip)
+- 가상 자료 기반 백엔드 125개 / 프런트엔드 60개 자동 테스트 통과 (UI worker 2개, 실제 CLI opt-in 테스트 1개는 기본 skip)
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -51,13 +51,14 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 사람 검토 기록→별도 게시, 근거 변경/삭제 차단, 이전 게시본 유지, 게시 충돌 보호, v6→v7 마이그레이션
 - 지식 버전의 근거에서 현재 원본 폴더/미리보기로 이동, 동기화 ID 교체 대응, STALE 경고, 삭제 시 복사본 보존
 - 독립 지식 폴더 생성·계층 탐색·빈 폴더 삭제, 카드 이동 CAS, 문서/게시 이력 보존, v8 마이그레이션
+- Markdown/GFM 미리보기·원문 열람, HTML 실행·링크 이동·이미지 로딩 차단, 편집/이전 버전 보존
 
 ### 미구현
 
 | Phase | 작업 | 상태 |
 |---|---|---|
 | 2 확장 | 비공개 저장소 자격 증명, 대용량 ArtifactStore, 작업 취소·격리 파서 | 남음 |
-| 3 | 초안/전송 승인/작업 상태·취소/건별 모델 선택 구현. 사람 검토/게시 추가. 폴더·카드 배치 추가. 자동 의미 검증·실제 실행 메타데이터·Markdown 렌더링은 남음 | 진행 중 |
+| 3 | 초안/승인/작업/모델 선택, 사람 검토/게시, 폴더·카드 배치, Markdown 표시 구현. 자동 의미 검증·실제 실행 메타데이터·AI 갱신 제안은 남음 | 진행 중 |
 | 4 | 기존 다중 도메인 검색에 CLI Provider, 근거 선표시 SSE, 답변 중단, 채팅별 승인 연결 | 미착수 |
 | 5 | Source별 opt-in 폴링, Git 증분 갱신, 지식 무효화·버전·수동 편집 보호 | 미착수 |
 | 6 | Tauri 2, Java 런타임 포함 Mac 설치 앱, 통합 테스트, 설치 설명서 | 미착수 |
@@ -131,11 +132,11 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 ## 다음 개발 세션의 첫 작업
 
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
-2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/knowledge-folders.md`에 있습니다.
+2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/markdown-rendering.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
 4. **P3-2 CLI Curator의 남은 운영 기능**을 먼저 확인하세요. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
-6. 사람 검토·게시와 P3-4 현재 출처 탐색 이동을 구현했습니다. 독립 지식 폴더·카드 배치도 구현했습니다. 다음은 안전한 Markdown 렌더링입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
+6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시를 구현했습니다. 다음은 개발 도구 보안 갱신 후 폴더 이름 변경/이동입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
 8. 필요 시 Phase 2 운영 확장(비공개 저장소·대용량·작업 취소)을 별도 기능 단위로 진행합니다.
 
@@ -149,13 +150,15 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
 docs/api.md, docs/phase3-foundation-report.md를 읽고 현재 코드와 비교해라.
 Phase 1·2와 P3-1 수동 초안/버전/근거 스냅샷은 구현되어 있다. 먼저 빌드와 테스트로
-기준 상태(백엔드 125개 통과 + live opt-in 1개 skip, 프런트엔드 48개)를 확인하고 실패를 숨기지 마라.
+기준 상태(백엔드 125개 통과 + live opt-in 1개 skip, 프런트엔드 60개)를 확인하고 실패를 숨기지 마라.
 UI 기본 병렬 실행에서 시간 초과가 관측되었으므로 자원 제약 환경에서는 npm --prefix frontend test -- --maxWorkers=2로 검증해라.
 사용자는 Ollama 대신 로그인된 Codex/Claude Code CLI 사용을 선택했다. docs/cli-ai.md를 읽어라.
 별도 AI DRAFT·건별 승인·출력 검사·영속 작업·취소·멱등·재시작 상태 복구는 구현되었다.
 docs/generation-jobs.md, docs/model-selection.md, docs/cli-observation.md를 읽어라.
 건별 모델 선택·요청 모델 이력·승인 바인딩·실행 전 CLI 관측 이력은 구현했다.
-docs/publication.md와 docs/evidence-navigation.md의 구현/한계를 읽고 docs/knowledge-folders.md의 폴더·배치 구현을 확인하고 P3-4 안전한 Markdown 렌더링을 진행해라. 현재 원본 탐색 연결은 구현되었다. 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
+docs/publication.md, docs/evidence-navigation.md, docs/knowledge-folders.md의 구현/한계를 읽어라.
+docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 다음은 개발 도구 보안 갱신 후 P3-4 폴더 이름 변경/이동이다.
+인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 사람 검토를 자동 의미 검증으로 과장하지 마라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.
 사람 편집 보호, 검증 실패 시 이전 게시본 유지, Workspace 격리를 테스트해라.
@@ -180,7 +183,8 @@ GitHub Actions는 만들거나 수정하지 마라. 각 완료 항목의 문서�
 로컬 빈 폴더는 가져오지 않습니다. 텍스트 추출은 500,000자까지이며 OCR/임베디드 문서 재귀 추출은 꺼져 있습니다.
 공개 HTTPS URL과 공개 GitHub 기본 브랜치만 지원하며 토큰·SSH·사내 HTTP는 미지원입니다.
 변경된 Source는 전체 스냅샷을 교체합니다. 지식이 인용한 원본만 당시 복사본을 보관하며 전체 원본 이력·Git diff는 Phase 5 범위입니다.
-지식은 수동/AI DRAFT를 저장하고 Markdown 원문으로 표시합니다. 사람 검토·명시적 게시가 있으며 독립 폴더·카드 배치가 있습니다. 자동 의미 검증·Markdown 렌더링·지식 검색은 아직 없습니다.
+지식은 수동/AI DRAFT를 저장하고 안전한 Markdown 미리보기와 원문을 표시합니다. 사람 검토·명시적 게시와 독립 폴더·카드 배치가 있습니다. 자동 의미 검증·지식 검색은 아직 없습니다.
+Markdown 링크/각주 이동·이미지는 비활성입니다. Vite/Vitest 개발 의존성 audit 경고 4개가 남아 있으며 갱신을 우선 진행해야 합니다. 상세는 `docs/markdown-rendering.md`를 확인하세요.
 근거 최신성은 조회 시 마지막 로컬 복사본과 비교하며 자동 갱신/의존 관계 전파는 아닙니다.
 단일 문서 추출은 JVM 내부에서 동기 실행되므로 악성 문서 격리/강제 종료가 필요합니다.
 별도 ArtifactStore·페이지네이션·OS 계정 간 인증·암호화·Windows 실행 검증은 남아 있습니다.

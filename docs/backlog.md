@@ -51,7 +51,17 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
   추가 구현: 버전별 근거에서 현재 원본 폴더/미리보기로 이동, Source entry ID 교체 대응,
   STALE 경고와 삭제 시 404·근거 복사본 유지. [설계·검증](evidence-navigation.md).
   추가 구현: 독립 지식 폴더 생성/계층 탐색/빈 폴더 삭제, 카드 이동 CAS와 v8 마이그레이션. [설계·검증](knowledge-folders.md).
-  남음: 폴더 이름 변경/이동, 안전한 Markdown 렌더링, AI 갱신 제안/충돌 해결 UI.
+  추가 구현: 안전한 Markdown/GFM 표시·원문 열람, HTML 실행·링크 이동·이미지 요청 차단. [정책·검증](markdown-rendering.md).
+  남음: 폴더 이름 변경/이동, AI 갱신 제안/충돌 해결 UI.
+
+### 다음 작업의 우선순위
+
+1. 개발 도구 의존성 보안 갱신: npm audit에서 Vite/Vitest 계열 4개 경고(critical 2, high 1, moderate 1).
+   별도 변경으로 호환성 검증 후 갱신하고 전체 UI/JAR 테스트를 재실행. 강제 자동 수정 금지.
+   현재 production 의존성 audit은 0개이나 앱 전체의 보안 증명은 아님. 개발 서버/UI 테스트 서버 외부 노출 금지.
+2. P3-4 지식 폴더 이름 변경/이동: Workspace 격리, 이름 충돌, 순환·깊이 제한,
+   동시 변경 충돌과 카드/문서/게시 이력 불변성을 API·UI 테스트로 검증.
+3. AI 갱신 제안/사람 편집 충돌 해결 후 P4 검색·근거 선표시 SSE 진행.
 
 ### P3-2 시작 전 반드시 확인할 현재 구조
 
@@ -133,8 +143,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 최신 자동 검증: 백엔드 125개 통과 + live opt-in 1개 skip, 프런트엔드 48개 통과(worker 2개), JAR 빌드 성공.
-- 최신 구현/검증: [지식 폴더](knowledge-folders.md). 남은 작업을 완료한 것으로 표시하지 않기.
+- 최신 자동 검증: 백엔드 125개 통과 + live opt-in 1개 skip, 프런트엔드 60개 통과(worker 2개), JAR 빌드 성공.
+- 최신 구현/검증: [안전한 Markdown](markdown-rendering.md). 남은 작업을 완료한 것으로 표시하지 않기.
 - 실제 Codex 성공/Claude 인증 오류 및 CLI 남은 범위는 [CLI AI 기록](cli-ai.md)을 확인.
 - 실제 JAR 재시작 smoke와 승인 차단 성공. 최신 측정은 `performance-phase3-foundation.json`.
 - 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
