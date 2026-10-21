@@ -1,5 +1,7 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
+> 최신 화면: [질문별 답변 이력](docs/answer-history.md). Workspace의 답변 작업을 질문·상태로 찾고 당시 근거와 완료 답변을 읽습니다. GET 전용이며 새 전송·대화방·이전 문맥 자동 전송은 하지 않습니다. SQLite v16 유지.
+
 > 최신 개발: [전용 Codex 스트리밍 실행기](docs/codex-streaming.md)를 답변 작업에 연결했습니다. 기본값은 기존 완료 답변이며 전용 로그인 폴더 지정 시에만 켭니다. 가상 CLI 검증과 실제 서비스 검증을 구분합니다.
 
 > SQLite v16 유지. [Claude 생성 중 임시 출력](docs/partial-answer.md)과 선택적 Codex 임시 출력을 지원하며 검사된 최종 답변만 저장합니다. 실제 서비스 스트림 검증·다중 대화는 남았습니다.
@@ -37,7 +39,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 최신 검증: 백엔드 275개 통과 + 실제 CLI opt-in 1개 skip / 프런트엔드 139개 통과. 통합 빌드·JAR 재시작 smoke·선택적 Codex 임시 출력/최종/중단 검증 통과. [현재 검증 범위와 초기 실패 기록](docs/codex-streaming.md). 가상 CLI 검증이며 실제 서비스 생성 성공과 구분합니다.
+- 최신 검증: 백엔드 275개 통과 + 실제 CLI opt-in 1개 skip / 프런트엔드 149개 통과. 통합 빌드·JAR 재시작 smoke·답변 이력 브라우저 검증 통과. [현재 검증 범위와 남은 빌드 경고](docs/answer-history.md). 가상 CLI 검증이며 실제 서비스 생성 성공과 구분합니다.
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -149,7 +151,7 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
 2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/answer-jobs.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
-4. **P4 스트림 실행기**는 `docs/codex-streaming.md`의 전용 프로필 opt-in까지 연결했습니다. 다음은 다중 대화의 보관/턴별 승인/재검증 설계와 실제 서비스 호환성 검증입니다. 실제 서비스 호출은 별도 명시 승인이 필요하므로 승인 없이 수행하지 마세요. 미리보기 digest는 승인이 아닙니다. Ollama로 되돌리지 마세요.
+4. **P4 스트림 실행기**는 `docs/codex-streaming.md`의 전용 프로필 opt-in까지 연결했습니다. `docs/answer-history.md`의 질문별 읽기 전용 이력 화면도 구현했습니다. 다음은 대화방/턴 순서와 이전 문맥을 포함하는 미리보기·턴별 승인·재검증입니다. 실제 서비스 호출은 별도 명시 승인이 필요하므로 승인 없이 수행하지 마세요. 미리보기 digest는 승인이 아닙니다. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
 6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시와 개발 도구 보안 갱신을 구현했습니다. 폴더 이름 변경/이동과 AI 결과 읽기 전용 비교도 구현했습니다. 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
@@ -165,7 +167,7 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
 docs/api.md, docs/phase3-foundation-report.md를 읽고 현재 코드와 비교해라.
 Phase 1·2와 P3-1 수동 초안/버전/근거 스냅샷은 구현되어 있다. 먼저 빌드와 테스트로
-기준 상태(백엔드 242개 통과 + live opt-in 1개 skip, 프런트엔드 139개)를 확인하고 실패를 숨기지 마라.
+기준 상태(백엔드 275개 통과 + live opt-in 1개 skip, 프런트엔드 149개)를 확인하고 실패를 숨기지 마라.
 UI 기본 병렬 실행에서 시간 초과가 관측되었으므로 자원 제약 환경에서는 npm --prefix frontend test -- --maxWorkers=2로 검증해라.
 사용자는 Ollama 대신 로그인된 Codex/Claude Code CLI 사용을 선택했다. docs/cli-ai.md를 읽어라.
 별도 AI DRAFT·건별 승인·출력 검사·영속 작업·취소·멱등·재시작 상태 복구는 구현되었다.
@@ -175,7 +177,7 @@ docs/publication.md, docs/evidence-navigation.md, docs/knowledge-folders.md의 �
 docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 개발 도구 보안 갱신, 폴더 이름 변경/이동, AI 결과 읽기 전용 비교는 완료했다. 거절·재검토·전체 채택과 수동 부분 반영과 CURRENT 근거 번호 통합도 구현했다. docs/evidence-merge.md를 읽고 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시을 구현해라. 비교 화면에 자동 저장/외부 전송을 추가하지 마라.
 docs/modeling.md와 docs/how-it-works.md도 코드와 맞게 유지해라. 사용자는 설치형 준비 후 체험한다.
 최신 P4 구현은 docs/answer-jobs.md다. 승인 일회 소비·직전 재검증·실제 답변 작업·중단·재시작 복구까지 구현했다. 실제 외부 모델 검증은 아니며 fake CLI 테스트다.
-docs/partial-answer.md의 Claude 임시 출력과 docs/codex-streaming.md의 선택적 Codex 실행기를 구현했다. 전용 프로필이 없으면 기존 exec 경로이며 자동 재전송하지 않는다. 다음은 다중 대화의 보관/턴별 승인/재검증이다. 실제 서비스 검증은 별도 승인이 필요하다. 재연결로 AI를 재호출하지 말고 관측 종료와 명시적 작업 취소를 구분해라. 미리보기는 승인이나 실제 AI 호출이 아니다.
+docs/partial-answer.md의 Claude 임시 출력과 docs/codex-streaming.md의 선택적 Codex 실행기를 구현했다. 전용 프로필이 없으면 기존 exec 경로이며 자동 재전송하지 않는다. docs/answer-history.md의 질문별 읽기 전용 이력도 구현했다. 다음은 다중 대화의 보관/턴별 승인/재검증이다. 실제 서비스 검증은 별도 승인이 필요하다. 재연결로 AI를 재호출하지 말고 관측 종료와 명시적 작업 취소를 구분해라. 미리보기는 승인이나 실제 AI 호출이 아니다.
 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 사람 검토를 자동 의미 검증으로 과장하지 마라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.

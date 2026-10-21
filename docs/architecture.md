@@ -5,6 +5,8 @@
 
 ## 현재 구조
 
+`SourcePanel → AnswerHistoryPanel`은 v16 작업/근거 목록과 선택한 상세를 GET으로만 조회합니다. 당시 근거를 먼저 표시하며 새 생성 경로나 테이블은 없습니다. Workspace 전환 시 조회를 중단하고 늦은 응답을 제외합니다. [이력 화면·후속 대화 설계](answer-history.md).
+
 `CliCuratorModel → CodexAppServer → CodexAppServerSession → CodexTextStream`은 전용 프로필 옵션이 켜진 Codex 답변 경로입니다. 설정·thread 검사 후 요청문을 한 번 전송합니다. 기본 exec와 지식 생성 경로는 그대로입니다. [격리·한도·한계](codex-streaming.md).
 
 v16 `AnswerJobService`는 승인 ID 유일성이 있는 작업을 같은 트랜잭션으로 예약합니다.

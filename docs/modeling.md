@@ -1,5 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+질문별 답변 이력은 새 저장 모델이 아닙니다. `answer_job.bundle_id → evidence_bundle`을 읽어 질문·당시 근거·답변을 함께 표시합니다. 대화방과 턴 관계는 아직 없습니다. [코드와 후속 모델 대조](answer-history.md).
+
 Codex용 `CodexTextStream`은 thread/turn/item에 묶인 **메모리 상태 검증기**입니다. 전용 프로필 옵션이 켜지면 `CodexAppServerSession`에서 호출하고 기존 작업 메모리/SSE로 보냅니다. 새 테이블은 없습니다. [현재/예정 대조](codex-streaming.md).
 
 Claude 임시 출력은 **실행 중 메모리 문자열**이며 테이블/지식/답변 이력으로 저장하지 않습니다.

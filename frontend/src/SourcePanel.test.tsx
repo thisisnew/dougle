@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, it, vi } from 'vitest'
 import SourcePanel from './SourcePanel'
 vi.mock('./PublishedSearchPreview', () => ({ default: ({ cardId, version }: { cardId: string; version: number }) => <div>게시본 열기 {cardId} v{version}</div> }))
+vi.mock('./AnswerHistoryPanel', () => ({ default: ({ workspaceId, onClose }: { workspaceId: string; onClose: () => void }) => <div>이력 화면 {workspaceId}<button onClick={onClose}>이력 닫기</button></div> }))
 import { request } from './api'
 
 vi.mock('./api', async original => ({ ...await original<typeof import('./api')>(), request: vi.fn() }))
@@ -14,6 +15,17 @@ const source = {
 }
 
 beforeEach(() => { api.mockReset() })
+
+it('검색어 없이 답변 이력을 명시적으로 열고 닫는다', async () => {
+  api.mockResolvedValue([])
+  render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  expect(screen.queryByText('이력 화면 one')).not.toBeInTheDocument()
+  await userEvent.click(screen.getByRole('button', { name: '답변 이력' }))
+  expect(await screen.findByText('이력 화면 one')).toBeInTheDocument()
+  expect(api.mock.calls.some(([path]) => path.includes('/search'))).toBe(false)
+  await userEvent.click(screen.getByRole('button', { name: '이력 닫기' }))
+  expect(screen.queryByText('이력 화면 one')).not.toBeInTheDocument()
+})
 
 it('Source를 등록하고 별도 수동 동기화로 수집한다', async () => {
   const user = userEvent.setup()
