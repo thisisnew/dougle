@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 2) {
+        if (version > 3) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -121,6 +121,53 @@ public class DatabaseConfiguration {
                                 BEGIN INSERT INTO search_outbox(entry_id) VALUES(OLD.id); END
                                 """);
                         jdbc.execute("PRAGMA user_version=2");
+                    });
+        }
+        if (version < 3) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE knowledge_card (
+                                  id TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  latest_version INTEGER NOT NULL CHECK(latest_version>0), created_at TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX knowledge_workspace ON knowledge_card(workspace_id)");
+                        jdbc.execute("""
+                                CREATE TABLE knowledge_version (
+                                  card_id TEXT NOT NULL REFERENCES knowledge_card(id) ON DELETE CASCADE,
+                                  number INTEGER NOT NULL CHECK(number>0), title TEXT NOT NULL, markdown TEXT NOT NULL,
+                                  status TEXT NOT NULL CHECK(status IN ('DRAFT','VERIFIED','PUBLISHED')),
+                                  manually_edited INTEGER NOT NULL, created_at TEXT NOT NULL,
+                                  PRIMARY KEY(card_id,number)
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE evidence_snapshot (
+                                  id TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  origin_key TEXT NOT NULL, entry_id TEXT NOT NULL, source_id TEXT,
+                                  source_name TEXT, source_kind TEXT, source_location TEXT,
+                                  source_revision TEXT NOT NULL, path TEXT NOT NULL, name TEXT NOT NULL,
+                                  content_hash TEXT NOT NULL, text_hash TEXT NOT NULL,
+                                  content BLOB NOT NULL, extracted_text TEXT NOT NULL, captured_at TEXT NOT NULL,
+                                  UNIQUE(workspace_id,origin_key,source_revision,content_hash,text_hash)
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE knowledge_evidence (
+                                  card_id TEXT NOT NULL, version INTEGER NOT NULL, ordinal INTEGER NOT NULL,
+                                  snapshot_id TEXT NOT NULL REFERENCES evidence_snapshot(id),
+                                  start_line INTEGER NOT NULL CHECK(start_line>0),
+                                  end_line INTEGER NOT NULL CHECK(end_line>=start_line),
+                                  PRIMARY KEY(card_id,version,ordinal),
+                                  FOREIGN KEY(card_id,version) REFERENCES knowledge_version(card_id,number) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX knowledge_evidence_snapshot ON knowledge_evidence(snapshot_id)");
+                        jdbc.execute("PRAGMA user_version=3");
                     });
         }
         jdbc.update("UPDATE source SET status='ERROR',error='이전 동기화가 중단되었습니다. 다시 동기화하세요.' WHERE status='SYNCING'");

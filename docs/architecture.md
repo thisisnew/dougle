@@ -6,7 +6,7 @@
 
 단일 Spring Boot 프로세스의 Modular Monolith를 사용합니다.
 `library`는 Workspace와 원본 보관함을 소유합니다. Phase 2에서 `sources`, `ingestion`,
-`search`를 추가했습니다. 나머지 모듈은 후속 Phase에서 실제 기능과 함께 추가합니다.
+`search`를 추가했고 Phase 3 P3-1에서 `knowledge`를 추가했습니다. AI·대화·자동 동기화 모듈은 후속 범위입니다.
 
 ```text
 frontend/src
@@ -29,6 +29,10 @@ backend/.../ingestion
 backend/.../search
   application             SearchIndex/SearchCatalog 포트, SearchService
   adapter                 LuceneSearchIndex, JdbcSearchCatalog
+backend/.../knowledge
+  domain                  Card, Version, Evidence, Citation 순수 record
+  application             KnowledgeService, KnowledgeStore 포트
+  adapter                 JDBC 영속 스냅샷/버전, REST
 ```
 
 의존 방향은 웹 어댑터 → 애플리케이션 → 도메인/저장 포트입니다.
@@ -46,7 +50,8 @@ JDBC 어댑터가 저장 포트를 구현하고 Spring이 주입합니다.
 - ID는 서버에서 UUID로 생성합니다. 파일명은 저장 경로로 사용하지 않습니다.
 - FK cascade로 Workspace/폴더의 모든 하위 자료를 같은 트랜잭션에서 삭제합니다.
 - 마지막 활성 Workspace 삭제 시 가장 먼저 생성된 남은 Workspace를 선택합니다.
-- 원본과 지식은 `area`로 분리합니다. 현재 쓰기 API는 원본만 지원합니다.
+- 원본 탐색은 `entry.area`를 사용하며 지식은 별도 `knowledge_card/version` API와 테이블을 사용합니다.
+  기존 `entries?area=KNOWLEDGE`는 지식 카드 목록 API가 아닙니다.
 - 조회 목록은 BLOB을 읽지 않습니다. 텍스트 미리보기는 크기를 확인한 후 읽습니다.
 
 제한된 파일(10 MiB)을 SQLite BLOB에 보관하여 메타데이터와 내용의 원자성을 확보합니다.
@@ -54,10 +59,12 @@ Phase 2에서도 Source당 50 MiB/500개 제한을 유지해 같은 원자성을
 별도 `ArtifactStore`와 콘텐츠 해시 기반 파일 저장소 전환은 대용량 지원 시 진행합니다.
 
 SQLite는 WAL, 외래 키, 5초 busy timeout을 사용합니다. 연결 풀은 1개로
-로컬 쓰기를 직렬화합니다. `PRAGMA user_version=2`로 스키마를 관리하며 새 스키마를
+로컬 쓰기를 직렬화합니다. `PRAGMA user_version=3`로 스키마를 관리하며 새 스키마를
 구버전 앱으로 열면 실패합니다. 초기 스키마 생성도 트랜잭션입니다.
 
 ## 후속 모듈과 경계
+
+표는 목표 역할입니다. knowledge는 수동 초안/버전/근거만 구현되었고 CuratorModel·게시 기능은 미구현입니다.
 
 | 모듈 | 소유 데이터/역할 | 외부 연결 포트 |
 |---|---|---|
@@ -143,3 +150,31 @@ API는 [Lucene IndexWriter](https://lucene.apache.org/core/10_3_1/core/org/apach
 [Tika API](https://tika.apache.org/3.2.3/api/org/apache/tika/Tika.html)를 확인했습니다.
 Spring Boot 4.1.1의 Java 21 호환성은
 [공식 시스템 요구사항](https://docs.spring.io/spring-boot/system-requirements.html)에서 확인했습니다.
+
+## Phase 3 기반: 독립 지식과 불변 근거
+
+`knowledge_card`는 Workspace를 소유 범위로 하며 `latest_version`을 가집니다.
+`knowledge_version(card_id,number)`은 제목/Markdown/상태/수동 편집 여부를 저장합니다.
+기존 버전의 본문을 UPDATE하는 API는 없고 `expectedVersion` 비교 후 새 버전을 추가합니다.
+동시 편집은 한 요청만 성공하고 오래된 요청은 409입니다. 현재 생성 상태는 오직 DRAFT이며
+VERIFIED/PUBLISHED 스키마 값은 이후 검증·게시 유스케이스를 위한 예약 값입니다.
+
+`evidence_snapshot`은 근거 캡처 시 원본 BLOB, 추출 텍스트, SHA-256 두 개,
+Source ID/이름/종류/등록 위치/당시 revision/상대 경로, 당시 entry ID를 보존합니다.
+Source와 entry에 FK를 걸지 않아 Source의 전체 스냅샷 교체 또는 삭제와 독립적으로 유지됩니다.
+Workspace FK는 cascade입니다. 전체 Source 이력이 아니라 **지식에서 인용한 원본만** 보관합니다.
+같은 Workspace·origin·revision·원본 해시·텍스트 해시 조합은 재사용합니다.
+`knowledge_evidence`는 버전별 스냅샷 및 추출 텍스트 행 범위를 연결합니다.
+현재 일반 문서의 물리 페이지/원문 행 위치 매핑은 없으므로 UI/API에서 추출 행임을 명시합니다.
+
+초안 생성과 근거 캡처는 같은 SQLite 트랜잭션입니다. 원본/분석의 일관된 복사본을 얻으며
+잘못된 근거가 포함되면 캡처·버전 변경 모두 롤백합니다. 한 초안에 최대 10개/50 MiB입니다.
+버전 개수·전체 DB 용량 제한 및 보존 기한은 아직 없으므로 장기 사용 시 저장소가 커질 수 있습니다.
+지식 삭제는 그 버전들을 삭제하고, 다른 지식이 참조하지 않는 스냅샷만 정리합니다.
+원본만 삭제할 때는 지식 근거 복사본이 남으므로 민감 자료 삭제 시 이 보존 정책에 주의해야 합니다.
+
+최신성은 조회 시 마지막 로컬 원본/추출 해시와 비교합니다. Source의 다른 파일만 바뀌어
+entry ID가 교체되어도 같은 Source+경로+해시라면 CURRENT입니다. 파일 내용 변경은 STALE,
+파일/Source 삭제는 MISSING입니다. 같은 경로의 다른 Source 등록은 기존 출처로 간주하지 않습니다.
+이는 원격 폴링·자동 지식 무효화/재생성이나 사실 검증이 아닙니다.
+초안은 Lucene 검색에 아직 포함하지 않으며, Markdown은 HTML로 렌더링하지 않고 텍스트로 표시합니다.

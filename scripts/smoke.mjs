@@ -101,11 +101,32 @@ try {
   assert.equal(symbolHits.length, 1)
   const analysis = await api(`/workspaces/${workspace.id}/entries/${symbolHits[0].entryId}/analysis`)
   assert.ok(analysis.symbols.some(symbol => symbol.name === 'measureTemperature' && symbol.line === 4))
+  const knowledgeBase = `/workspaces/${workspace.id}/knowledge`
+  const draft = await api(knowledgeBase, 'POST', {
+    title: '가상 실험 초안', markdown: '검토가 필요한 수동 메모',
+    citations: [{ entryId: symbolHits[0].entryId, startLine: 1, endLine: 4 }],
+  })
+  assert.equal(draft.version.status, 'DRAFT')
+  const knowledgePath = `${knowledgeBase}/${draft.card.id}`
+  const snapshotPath = `${knowledgePath}/evidence/${draft.version.evidence[0].snapshotId}/content`
+  const originalJava = await readFile(resolve(sourceDirectory, 'src/Greenhouse.java'))
+  assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   await stop()
   const restartMs = await start()
   assert.equal((await api('/session')).activeWorkspaceId, workspace.id)
   assert.equal((await api(`${contentPath}/preview`)).text, bytes.toString('utf8'))
   assert.equal((await api(searchPath)).length, 1)
+  assert.equal((await api(knowledgePath)).version.markdown, '검토가 필요한 수동 메모')
+  const edited = await api(`${knowledgePath}/versions`, 'POST', {
+    expectedVersion: 1, title: '가상 실험 초안', markdown: '사람이 수정한 두 번째 초안',
+  })
+  assert.equal(edited.version.number, 2)
+  assert.equal((await api(`${knowledgePath}/versions/1`)).version.markdown, draft.version.markdown)
+  const conflict = await fetch(`${base}/api${knowledgePath}/versions`, {
+    method: 'POST', headers: { 'X-Forge-Client': '1', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ expectedVersion: 1, title: '충돌', markdown: '덮어쓰면 안 되는 내용' }),
+  })
+  assert.equal(conflict.status, 409)
   const same = await api(`/workspaces/${workspace.id}/sources/${source.id}/sync`, 'POST')
   assert.equal(same.revision, synced.revision)
   assert.equal((await api(searchPath))[0].entryId, symbolHits[0].entryId)
@@ -116,6 +137,8 @@ try {
   assert.equal((await api(searchPath)).length, 1)
   await api(`/workspaces/${workspace.id}/sources/${source.id}`, 'DELETE')
   assert.equal((await api(searchPath)).length, 0)
+  assert.equal((await api(knowledgePath)).version.evidence[0].freshness, 'MISSING')
+  assert.deepEqual(Buffer.from(await (await fetch(`${base}/api${snapshotPath}`)).arrayBuffer()), originalJava)
   const livePublic = []
   if (process.argv.includes('--live-public')) {
     for (const registration of [
@@ -162,7 +185,9 @@ try {
     checks: ['packaged UI', 'upload/download byte equality', 'UTF-8 preview', 'restart persistence',
       'active workspace persistence', 'independent knowledge area', 'cascade deletion', 'deletion persists after restart',
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',
-      'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search'],
+      'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
+      'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
+      'optimistic edit conflict', 'source deletion preserves historical evidence bytes'],
     sourceSyncMs,
     livePublic,
     startupMs: Math.round(startupMs),
@@ -172,7 +197,7 @@ try {
     search100Files30Requests: { p50Ms: percentile(searchTimes, 0.5), p95Ms: percentile(searchTimes, 0.95) },
     limitations: 'Single local process, small synthetic dataset, no concurrency; not LLM performance.',
   }
-  await writeFile(resolve(root, 'docs/performance-phase2.json'), JSON.stringify(result, null, 2) + '\n')
+  await writeFile(resolve(root, 'docs/performance-phase3-foundation.json'), JSON.stringify(result, null, 2) + '\n')
   console.log(JSON.stringify(result, null, 2))
 } catch (error) {
   console.error(logs.slice(-12000))

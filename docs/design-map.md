@@ -1,10 +1,10 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
-> **지금은 자료를 모으고, 분석하고, 검색하는 단계까지 동작합니다.**
-> 다음은 검색한 근거로 지식 문서를 만들고 검증하는 단계입니다.
+> **수집·분석·검색에 이어, 근거를 보존하는 수동 지식 초안·버전이 동작합니다.**
+> 다음은 Ollama로 초안을 생성하고 근거를 검증해 게시하는 단계입니다.
 
-기준: 2026-10-21 · 구현 `d4cd1e8` · 백엔드 35개/프런트엔드 11개 통과 기록.
-이 문서 추가 시 앱 테스트를 다시 실행한 것은 아닙니다.
+기준: 2026-10-21 · Phase 3 P3-1 · 백엔드 48개/프런트엔드 17개 통과.
+실제 JAR 재시작·근거 보존 검증 결과는 [보고서](phase3-foundation-report.md)에 기록합니다.
 
 **범례:** 🟩 구현됨 · 🟨 일부 구현/확장 필요 · 🟦 계획(미구현).
 그림의 노드에도 상태를 적었으며, 점선 화살표는 앞으로 추가할 연결입니다.
@@ -16,12 +16,12 @@
 flowchart LR
     P1["🟩 Phase 1<br/>Workspace · 원본 탐색기"]
     P2["🟨 Phase 2<br/>기본 수집 · 분석 · 검색 구현<br/>운영 확장 남음"]
-    P3["🟦 Phase 3 · 다음 작업<br/>근거 기반 지식 생성 · 검증 · 게시"]
+    P3["🟨 Phase 3 · 진행 중<br/>수동 초안 · 근거 · 버전 구현<br/>다음: AI 생성 · 검증 · 게시"]
     P4["🟦 Phase 4<br/>AI 질문 · 근거 우선 SSE"]
     P5["🟦 Phase 5<br/>선택적 폴링 · Git 증분 · 무효화"]
     P6["🟦 Phase 6<br/>Tauri · Mac 설치 앱"]
     P1 --> P2
-    P2 -.-> P3
+    P2 --> P3
     P3 -.-> P4
     P4 -.-> P5
     P5 -.-> P6
@@ -29,8 +29,8 @@ flowchart LR
     classDef partial fill:#fef3c7,stroke:#b45309,color:#78350f
     classDef planned fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
     class P1 done
-    class P2 partial
-    class P3,P4,P5,P6 planned
+    class P2,P3 partial
+    class P4,P5,P6 planned
 ```
 
 | 사용자가 할 수 있는 일 | 지금 | 앞으로 |
@@ -39,9 +39,9 @@ flowchart LR
 | 자료 등록 | 파일 업로드, 로컬 폴더·공개 URL·공개 GitHub | 비공개 저장소, Source 위치 수정 |
 | 자료 분석 | Tika 추출, Java 심볼·행 번호 | 청크·정교한 근거 위치, 격리 파서 |
 | 검색 | Lucene/Nori, 여러 도메인, 심볼 텍스트 | 지식·코드 관계 검색 |
-| 지식 백과사전 | 원본과 분리된 빈 UI 영역만 존재 | 카드·Markdown·근거·검증·사람 편집 |
+| 지식 백과사전 | 수동 Markdown 초안·불변 버전·근거 복사본·편집 충돌 보호 | AI 생성·검증·게시·폴더·렌더링 |
 | AI 질문 | 미구현 | Ollama, 근거 선표시, SSE, 중단 |
-| 최신성 관리 | 수동 동기화·revision·실패 시 이전 자료 유지 | 자동 폴링·증분·지식 stale·버전 이력 |
+| 최신성 관리 | 수동 동기화·revision·근거 CURRENT/STALE/MISSING 조회 | 자동 폴링·증분·의존 관계 전파·전체 원본 이력 |
 | 설치 | 개발용 웹 UI 포함 JAR | Mac `.app`/`.dmg`, Windows는 후속 |
 
 Phase 수는 작업량 비율이 아니므로 전체 완료율을 퍼센트로 표시하지 않습니다.
@@ -52,7 +52,7 @@ Phase 수는 작업량 비율이 아니므로 전체 완료율을 퍼센트로 �
 
 ```mermaid
 flowchart TB
-    UI["React UI<br/>Workspace · 탐색기 · Source · 검색"]
+    UI["React UI<br/>Workspace · 탐색기 · Source · 검색 · 지식 초안"]
     FILE["업로드한 파일"]
     INPUT["로컬 폴더 / 공개 HTTPS / 공개 GitHub"]
     subgraph APP["내 PC · Spring Boot 4.1.1 / Java 21"]
@@ -62,13 +62,19 @@ flowchart TB
         COL["읽기 전용 Collector<br/>파일 읽기 / HTTP / Git CLI + REST"]
         ING["ingestion<br/>Tika 텍스트 추출 + JavaParser 심볼"]
         SAVE["성공한 수집 결과만 원자적 반영"]
-        DB[("SQLite v2<br/>원본 BLOB · Source · 분석 · 심볼")]
+        DB[("SQLite v3<br/>원본 · 분석 · 지식 버전 · 근거 복사본")]
+        KNOW["knowledge<br/>수동 DRAFT · 버전 · 편집 충돌 409"]
+        EVID["근거 스냅샷<br/>당시 바이트 · 추출 텍스트 · 해시 · revision"]
         QUEUE["search_outbox<br/>영속 인덱스 갱신 큐"]
         IDX[("Lucene 10 + Nori<br/>파일명 · 본문 · 심볼")]
         SEARCH["search<br/>Workspace 격리 · 도메인 OR 필터"]
         API --> LIB
         API --> SRC
         API --> SEARCH
+        API --> KNOW
+        KNOW --> EVID
+        EVID --> DB
+        KNOW --> DB
         LIB --> DB
         LIB --> ING
         SRC --> COL
@@ -85,7 +91,7 @@ flowchart TB
     SEARCH --> RESULT["검색 결과 · 원문 · 추출 텍스트 · 심볼 행 번호"]
     RESULT --> UI
     classDef done fill:#dcfce7,stroke:#15803d,color:#14532d
-    class UI,FILE,INPUT,API,LIB,SRC,COL,ING,SAVE,DB,QUEUE,IDX,SEARCH,RESULT done
+    class UI,FILE,INPUT,API,LIB,SRC,COL,ING,SAVE,DB,QUEUE,IDX,SEARCH,RESULT,KNOW,EVID done
 ```
 
 - Source 등록만으로 수집하지 않으며 사용자가 **동기화**를 눌러야 읽습니다.
@@ -93,6 +99,8 @@ flowchart TB
 - 큐는 API 완료 시 및 2초 주기로 소비합니다. 이 작업은 외부 Source 자동 폴링이 아닙니다.
 - 앱 시작 시 저장된 분석 결과로 재색인합니다. 검색마다 원본을 다시 수집·분석하지 않습니다.
 - 원본 보관 및 분석은 로컬 처리입니다. 현재 LLM 호출은 없습니다.
+- 지식 초안은 별도 API/테이블로 관리하며 아직 Lucene 검색에는 포함하지 않습니다.
+- 원본 삭제 후에도 지식과 근거 복사본이 남습니다. Workspace 삭제 시에는 함께 삭제됩니다.
 
 ## 3. 앞으로 연결할 목표 구조
 
@@ -102,24 +110,24 @@ flowchart TB
 flowchart TB
     subgraph PC["내 PC · 최종 목표"]
         HOST["🟦 desktop / Tauri 2<br/>Java 런타임 포함 · 시작/종료 · Mac 패키지"]
-        UI["🟨 React UI<br/>현재 탐색/검색 + 향후 지식/채팅"]
+        UI["🟨 React UI<br/>탐색/검색/수동 초안 + 향후 AI/채팅"]
         RAW["🟩 library + sources + ingestion<br/>원본 · 수동 수집 · 분석"]
         RET["🟨 search<br/>현재 Lucene/심볼 + 향후 지식 관계"]
-        KNOW["🟦 knowledge<br/>Curator · 카드/Markdown · 검증 · 게시"]
+        KNOW["🟨 knowledge<br/>수동 초안/근거/버전 구현<br/>Curator · 검증 · 게시 예정"]
         CHAT["🟦 conversation<br/>근거 먼저 · 답변 SSE · 취소"]
         SYNC["🟦 synchronization<br/>Source별 opt-in · Git diff · 지식 무효화"]
-        SQL[("🟨 SQLite<br/>현재 원본/분석 + 향후 지식/근거/버전")]
+        SQL[("🟨 SQLite v3<br/>원본/분석/지식/근거/버전<br/>향후 대화/동기화 확장")]
         MODEL["🟦 Ollama 연동<br/>로컬 모델 · 기본 Provider"]
         POLICY["🟦 외부 Provider 정책<br/>명시적 선택 + 전송 승인"]
         HOST -.-> UI
         UI --> RAW
         UI --> RET
-        UI -.-> KNOW
+        UI --> KNOW
         UI -.-> CHAT
         RAW --> SQL
         RAW --> RET
-        RAW -.-> KNOW
-        KNOW -.-> SQL
+        RAW --> KNOW
+        KNOW --> SQL
         KNOW -.-> RET
         KNOW -.-> MODEL
         CHAT -.-> RET
@@ -134,22 +142,23 @@ flowchart TB
     classDef partial fill:#fef3c7,stroke:#b45309,color:#78350f
     classDef planned fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
     class RAW done
-    class UI,RET,SQL partial
-    class HOST,KNOW,CHAT,SYNC,MODEL,POLICY,EXT planned
+    class UI,RET,SQL,KNOW partial
+    class HOST,CHAT,SYNC,MODEL,POLICY,EXT planned
 ```
 
 벡터 DB·Elasticsearch·외부 DB 서버·GitHub Actions는 요구하지 않습니다.
 모듈 내부는 `adapter → application → domain/port` 방향으로 분리하고,
 JDBC/HTTP/LLM 어댑터가 포트를 구현합니다. 검색과 LLM 답변 생성은 별도 유스케이스입니다.
 
-## 4. 지식이 만들어지고 갱신되는 과정 — 계획
+## 4. 지식이 만들어지고 갱신되는 과정 — 현재와 계획
 
-**Phase 3에서 처음 구현할 흐름**입니다. 검증 정책과 영속 모델은 구현 시 확정해야 합니다.
+근거 캡처와 수동 초안은 구현되었습니다. **AI 생성·검증·게시·자동 갱신은 아직 계획**입니다.
 
 ```mermaid
 flowchart TD
     RAW["🟩 저장된 원본 · 분석"]
-    EVID["🟦 불변 근거 참조<br/>Source · 경로 · revision · 해시 · 위치"]
+    EVID["🟩 불변 근거 스냅샷<br/>바이트 · 추출 텍스트 · Source · revision · 해시 · 범위"]
+    MANUAL["🟩 사람 작성 DRAFT<br/>불변 버전 · 동시 편집 보호"]
     DRAFT["🟦 Ollama Curator<br/>지식 초안 생성"]
     CHECK{"🟦 주장과 근거 검증<br/>필요 시 사람 검토"}
     FAIL["🟦 게시하지 않음<br/>초안 수정 / 이전 게시본 유지"]
@@ -158,7 +167,9 @@ flowchart TD
     STALE["🟦 영향받는 지식 stale 표시"]
     HUMAN{"🟦 사람이 편집했는가?"}
     PROPOSE["🟦 갱신 제안만 저장<br/>자동 덮어쓰기 금지"]
-    RAW -.-> EVID
+    RAW --> EVID
+    EVID --> MANUAL
+    MANUAL -.-> CHECK
     EVID -.-> DRAFT
     DRAFT -.-> CHECK
     CHECK -. 실패 .-> FAIL
@@ -170,13 +181,13 @@ flowchart TD
     HUMAN -. 아니오 .-> DRAFT
     classDef done fill:#dcfce7,stroke:#15803d,color:#14532d
     classDef planned fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-    class RAW done
-    class EVID,DRAFT,CHECK,FAIL,PUB,CHANGE,STALE,HUMAN,PROPOSE planned
+    class RAW,EVID,MANUAL done
+    class DRAFT,CHECK,FAIL,PUB,CHANGE,STALE,HUMAN,PROPOSE planned
 ```
 
-**가장 중요한 다음 설계 결정:** 현재 Source 변경 시 entry ID가 교체됩니다.
-지식이 현재 entry ID에만 의존하면 근거를 잃습니다. 따라서 불변 원본 버전/근거 참조를 먼저 설계하고,
-원본 삭제가 지식을 연쇄 삭제하지 않도록 해야 합니다. 인용 ID 존재만으로 사실 검증을 대신하지 않습니다.
+**구현된 보호 장치:** 현재 Source 변경 시 entry ID가 교체되어도 별도 근거 스냅샷은 유지됩니다.
+현재성과 비교할 때는 Source+상대 경로와 원본/텍스트 해시를 사용합니다.
+근거 일치 상태는 사실 검증이 아닙니다. 의미적 검증과 게시 정책은 P3-3에서 구현해야 합니다.
 
 ## 5. AI 질문 시 처리 순서 — 계획
 
@@ -214,13 +225,14 @@ sequenceDiagram
 
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
-| 화면 | `frontend/src/App.tsx`, `SourcePanel.tsx`, `AnalysisPanel.tsx` | 지식 탐색/편집, 채팅 |
-| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | v2 보존 마이그레이션, 근거 수명주기 |
+| 화면 | `frontend/src/App.tsx`, `SourcePanel.tsx`, `AnalysisPanel.tsx` | AI 생성 UI, 지식 폴더/렌더링, 채팅 |
+| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v3, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 게시 지식·관계 검색 |
-| 아직 없는 모듈 | `knowledge`, `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
+| 지식 | `backend/src/main/java/dev/knowledgeforge/knowledge`, `frontend/src/KnowledgePanel.tsx` | Ollama Curator · 검증 · 게시 |
+| 아직 없는 모듈 | `conversation`, `synchronization`, `desktop` | 실제 기능·테스트와 함께 추가 |
 
-**다음 한 작업:** [체크리스트](backlog.md)의 **P3-1: 지식/근거 영속 모델**.
+**다음 한 작업:** [체크리스트](backlog.md)의 **P3-2: Ollama Curator**.
 모든 단계의 상세 완료 조건은 [backlog.md](backlog.md), 기술 설명은 [architecture.md](architecture.md),
-실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 검증 기록은 [phase2-report.md](phase2-report.md)를 참고하세요.
+실행/PC 이전은 [HANDOFF.md](../HANDOFF.md), 최신 검증은 [Phase 3 기반 보고서](phase3-foundation-report.md)를 참고하세요.

@@ -1,6 +1,6 @@
 # 남은 개발 작업 — 다른 PC 인수인계
 
-기준: 2026-10-21, 구현 커밋 `d4cd1e8`. 체크되지 않은 항목은 **미완료**입니다.
+기준: 2026-10-21, Phase 3 P3-1 추가. 체크되지 않은 항목은 **미완료 또는 일부 구현**입니다.
 Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 아닙니다.
 이 문서는 작업 계획이며 아래 제안 모델·API는 아직 구현된 계약이 아닙니다.
 실제 API는 [api.md](api.md), 실행 절차는 [HANDOFF](../HANDOFF.md)를 따릅니다.
@@ -8,7 +8,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 ## 권장 순서와 공통 완료 조건
 
 1. 새 PC에서 기준 빌드/테스트 → 가상 Source 수집/검색 확인.
-2. P3-1부터 지식 버전·근거 모델과 테스트를 완성한 다음 P3-2~4 진행.
+2. P3-1은 완료. 기존 모델을 확인한 뒤 P3-2 Ollama Curator부터 진행.
 3. P4 검색/LLM/SSE → P5 선택적 동기화 → P6 패키징 순서로 진행.
 4. P2 확장은 필요한 사용 시나리오에 따라 병행하되 보안 제한을 임의로 풀지 않기.
 
@@ -18,10 +18,12 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## Phase 3 — 지식 생성·근거·게시 (다음 핵심 작업)
 
-- [ ] **P3-1: 지식/근거 영속 모델.** `knowledge` 모듈에 카드, Markdown 버전,
+- [x] **P3-1: 지식/근거 영속 모델.** `knowledge` 모듈에 카드, Markdown 버전,
   근거 위치·해시·Source revision, 검증/최신성 상태, 수동 편집 여부를 설계하고 마이그레이션 추가.
   원본 entry가 바뀌거나 삭제되어도 게시된 지식이 연쇄 삭제되지 않도록 수명주기 분리.
   기존 v2 DB 보존, Workspace 격리, 원본 삭제 후 지식/근거 상태 테스트.
+  구현: v3 마이그레이션, 근거 스냅샷, 수동 DRAFT UI/API, 충돌 409, 삭제 독립성.
+  근거 CURRENT는 사실 검증이 아니라 마지막 로컬 복사본과의 일치입니다. [검증 기록](phase3-foundation-report.md).
 - [ ] **P3-2: Ollama Curator.** 포트/어댑터 분리, 모델 선택·연결 상태·설정 UI,
   제한된 근거 컨텍스트로 카드/Markdown 초안 생성. 출력 스키마·길이·근거 ID 검사,
   타임아웃/잘못된 JSON/모델 미설치/작업 실패 처리. 모델 이름은 업무 도메인과 독립.
@@ -34,18 +36,22 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - [ ] **P3-4: 독립 지식 탐색기.** 카드·Markdown 열람, 출처 이동, 버전/검증/최신성 표시,
   사람 편집 저장, 자동 갱신은 별도 제안으로 보관. 안전한 Markdown 렌더링과
   원본/지식 독립 삭제, 편집 내용 비덮어쓰기 UI/API 테스트.
+  일부 구현: 평면 초안 목록, Markdown 원문 표시, 수동 편집·버전 열람, 보존된 근거 다운로드.
+  남음: 지식 폴더, 안전한 Markdown 렌더링, 현재 출처 탐색 이동, AI 갱신 제안/충돌 해결 UI.
 
-### P3-1 시작 전 반드시 확인할 현재 구조
+### P3-2 시작 전 반드시 확인할 현재 구조
 
 - `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
-  현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. 불변 원본 버전 또는
-  Source+상대 경로+revision+해시 기반 참조와 보관 정책을 먼저 결정하세요.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=2`, FK cascade,
+  현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
+  원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
+- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=3`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
 - `search/application/SearchService.java`: 시작 시 저장된 분석 결과로 재색인합니다.
   검색 또는 질문 때 원본 수집/LLM 분석을 다시 실행하는 구조로 바꾸지 마세요.
+- `knowledge/application/KnowledgeService.java`: 현재 저장은 전부 수동 DRAFT입니다.
+  AI 생성용 유스케이스/작성 출처를 분리하고 수동 버전의 불변성과 보호를 유지하세요.
 
 ## Phase 4 — 검색 확장·질문·SSE
 
@@ -113,7 +119,8 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## 인수인계 시 유지할 증거
 
-- 기준 검증: 백엔드 35개 + 프런트엔드 11개, 전체 빌드 성공.
+- 최신 기준 검증: 백엔드 48개 + 프런트엔드 17개, 전체 빌드/지식 재시작 smoke 성공.
+- 최신 보고서: [Phase 3 기반](phase3-foundation-report.md), 측정: [performance-phase3-foundation.json](performance-phase3-foundation.json).
 - 실제 JAR/재시작/검색과 공개 URL·GitHub 수집 통과: [Phase 2 보고서](phase2-report.md).
 - 측정: [performance-phase2.json](performance-phase2.json). 소규모 순차 측정이며 SLA가 아님.
 - 문서만 바꾼 작업에서 이전 테스트를 이번에 재실행한 것처럼 기록하지 않기.

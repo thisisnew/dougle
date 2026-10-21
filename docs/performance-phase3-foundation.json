@@ -1,0 +1,46 @@
+{
+  "measuredAt": "2026-10-21T09:48:33.652Z",
+  "platform": "darwin/x64",
+  "java": "21",
+  "springBoot": "4.1.1",
+  "dataset": "100 synthetic UTF-8 files (~2.5 KB each) + 1 nested fixture; sequential HTTP requests",
+  "checks": [
+    "packaged UI",
+    "upload/download byte equality",
+    "UTF-8 preview",
+    "restart persistence",
+    "active workspace persistence",
+    "independent knowledge area",
+    "cascade deletion",
+    "deletion persists after restart",
+    "local folder collection",
+    "Java symbol line numbers",
+    "search survives restart",
+    "unchanged revision preserves entry ids",
+    "failed collection preserves prior index",
+    "source deletion removes search hits",
+    "Korean Nori search",
+    "manual knowledge draft and snapshot",
+    "knowledge survives restart",
+    "immutable prior version",
+    "optimistic edit conflict",
+    "source deletion preserves historical evidence bytes"
+  ],
+  "sourceSyncMs": 1126.5631790000007,
+  "livePublic": [],
+  "startupMs": 8688,
+  "restartMs": 6121,
+  "upload100": {
+    "p50Ms": 107.52200299999822,
+    "p95Ms": 174.48955899999783
+  },
+  "list101Entries50RequestsAfter5Warmups": {
+    "p50Ms": 3.1199689999994007,
+    "p95Ms": 3.6377940000020317
+  },
+  "search100Files30Requests": {
+    "p50Ms": 6.8589370000008785,
+    "p95Ms": 9.58730800000194
+  },
+  "limitations": "Single local process, small synthetic dataset, no concurrency; not LLM performance."
+}

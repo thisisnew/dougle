@@ -67,14 +67,14 @@ describe('Workspace와 자료 탐색기', () => {
     const user = userEvent.setup()
     api.mockImplementation(async path => {
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
-      if (path.includes('parentId=folder') || path.includes('KNOWLEDGE')) return []
+      if (path.includes('parentId=folder') || path.endsWith('/knowledge')) return []
       return [{ ...file, id: 'folder', kind: 'FOLDER', name: '참고 자료' }]
     })
     render(<App />)
     await user.click(await screen.findByRole('button', { name: '참고 자료' }))
     await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/entries?area=ORIGINAL&parentId=folder', expect.anything()))
     await user.click(screen.getByRole('button', { name: '지식 문서' }))
-    expect(await screen.findByText('아직 생성된 지식이 없습니다')).toBeInTheDocument()
+    expect(await screen.findByText('아직 저장된 지식 초안이 없습니다')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '파일 추가' })).not.toBeInTheDocument()
   })
 })

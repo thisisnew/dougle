@@ -1,6 +1,8 @@
-# Phase 1–2 API 명세
+# Phase 1–2 및 Phase 3 기반 API 명세
 
 기본 URL: `http://127.0.0.1:8787/api`
+
+지식 API는 수동 DRAFT 전용입니다. AI 생성·검증·게시 API는 아직 없습니다.
 
 모든 변경 요청은 `X-Forge-Client: 1` 헤더가 필요합니다.
 JSON 요청은 `Content-Type: application/json`을 사용합니다.
@@ -146,3 +148,69 @@ Hit 필드: `entryId, name, sourceId, domain, path, snippet, score`.
 직접 업로드한 파일의 sourceId/domain은 빈 문자열입니다.
 검색어는 1~256자, 도메인은 최대 20개이며 선택하지 않으면 Workspace 전체를 검색합니다.
 결과는 기존 인덱스에서만 조회하며 검색을 위해 네트워크 수집/원문 재분석을 실행하지 않습니다.
+
+## 지식 초안·버전·근거 (Phase 3 P3-1)
+
+접두사: `/workspaces/{workspaceId}/knowledge`. 모든 접근은 Workspace 범위입니다.
+
+| 메서드 | 경로 | 결과 |
+|---|---|---|
+| GET | 접두사 | 카드 요약 배열, 최신 제목/버전 |
+| POST | 접두사 | 수동 초안 생성, 201 Document |
+| GET | `/{id}` | 최신 Document |
+| GET | `/{id}/versions/{number}` | 지정 버전 Document (1부터 시작) |
+| POST | `/{id}/versions` | 새로운 수동 버전, 201 Document |
+| DELETE | `/{id}` | 모든 버전 삭제 및 단독 참조 스냅샷 정리, 204 |
+| GET | `/{id}/evidence/{snapshotId}/content` | 당시 원본 바이트, octet-stream 첨부 파일 |
+
+초안 생성 요청 예:
+
+```json
+{
+  "title": "가상 실험 메모",
+  "markdown": "검토가 필요한 수동 초안입니다.",
+  "citations": [{ "entryId": "원본-file-UUID", "startLine": 1, "endLine": 3 }]
+}
+```
+
+제목은 공백만인 값과 제어문자를 허용하지 않는 1~120자, 본문은 공백만인 값을 제외한 1~100,000자입니다.
+근거는 1~10개, 각 범위는 1~500행, 원본 크기 합계는 50 MiB 이하입니다.
+`startLine/endLine`은 **저장된 추출 텍스트의 1-based 포함 범위**입니다.
+원본 코드 행/PDF 페이지와 같다고 보장하지 않습니다. READY/PARTIAL 분석 텍스트가 필요합니다.
+인용 문구·해시·revision은 클라이언트가 제공하지 않고 서버가 보관 원본에서 가져옵니다.
+
+새 버전 요청 예:
+
+```json
+{ "expectedVersion": 1, "title": "수정한 메모", "markdown": "사람이 수정한 새 초안" }
+```
+
+`expectedVersion`이 최신 버전과 다르면 409이며 기존 버전은 바뀌지 않습니다.
+`citations` 생략/null은 이전 버전의 근거 스냅샷을 그대로 재사용합니다.
+배열을 제공하면 현재 원본에서 새로 캡처합니다. 빈 배열은 400입니다.
+UI에서는 근거 유지 편집만 지원하며 근거 교체는 현재 API로 가능합니다.
+
+Document 응답 구조:
+
+```text
+card: { id, workspaceId, title, latestVersion, createdAt }
+version: { number, title, markdown, status, manuallyEdited, createdAt, evidence: [...] }
+evidence[]: { snapshotId, entryId, sourceId, sourceName, sourceKind, sourceLocation, sourceRevision,
+              path, name, contentHash, startLine, endLine, quote, freshness, capturedAt }
+```
+
+모든 생성/편집은 `status=DRAFT`, `manuallyEdited=true`입니다. 의미적 검증이나 자동 게시는 없습니다.
+이전 버전 조회에서도 `card`는 최신 요약이고 `version`이 요청한 과거 버전입니다.
+직접 업로드한 파일은 sourceId/sourceName/sourceKind/sourceLocation이 null이며 sourceRevision은 원본 SHA-256입니다.
+entryId는 캡처 당시 식별자이므로 동기화/삭제 뒤 존재하지 않을 수 있습니다.
+
+근거 `freshness`는 조회 시 계산합니다:
+- CURRENT: 같은 Source+상대 경로(수동 업로드는 entry ID)의 원본/추출 텍스트 해시가 일치
+- STALE: 현재 파일은 있으나 원본 또는 추출 텍스트가 변경됨
+- MISSING: 현재 파일/Source가 삭제됨. 당시 인용과 바이트는 계속 조회 가능
+
+CURRENT는 마지막 로컬 수집본 기준이며 외부 Source의 실시간 최신성/사실성을 보증하지 않습니다.
+원본을 삭제해도 지식은 남습니다. 지식 삭제는 원본에 영향을 주지 않습니다.
+Workspace 삭제는 해당 지식·버전·근거 복사본을 모두 삭제합니다.
+다른 Workspace의 파일/지식/스냅샷 접근은 404입니다. 유효하지 않은 범위/본문은 400,
+근거 원본 용량 초과는 413입니다. 생성/수정 실패는 스냅샷을 포함해 트랜잭션 전체를 롤백합니다.

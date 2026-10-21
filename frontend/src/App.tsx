@@ -5,6 +5,7 @@ import { Button } from './components/ui/button'
 import { entryPath, request, type Area, type Entry, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
 import AnalysisPanel from './AnalysisPanel'
+import KnowledgePanel from './KnowledgePanel'
 
 type Modal = { kind: 'workspace' | 'folder' } | { kind: 'delete-workspace' } | { kind: 'delete-entry'; entry: Entry }
 const emptySession: Session = { workspaces: [], activeWorkspaceId: null }
@@ -52,7 +53,7 @@ export default function App() {
     setEntries([])
     setSelected(null)
     setPreview(null)
-    if (!activeId) { setLoading(false); return () => controller.abort() }
+    if (!activeId || area === 'KNOWLEDGE') { setLoading(false); return () => controller.abort() }
     setLoading(true)
     const params = new URLSearchParams({ area })
     if (parentId) params.set('parentId', parentId)
@@ -154,7 +155,7 @@ export default function App() {
           <button className={original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('ORIGINAL')}><FolderOpen size={19} /> 원본 자료 <ChevronRight size={15} /></button>
           <button className={!original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button>
         </nav>
-        <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>자료를 연결하고<br />문서와 코드의 근거를 찾아보세요.</p><span>PHASE 02 · 수집과 검색</span></div>
+        <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>자료를 연결하고<br />문서와 코드의 근거를 찾아보세요.</p><span>PHASE 03 · 근거 연결 초안</span></div>
         <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 안전하게 저장<small>외부 AI 전송 없음</small></span></div>
       </aside>
 
@@ -162,7 +163,7 @@ export default function App() {
         <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><span className="local-badge"><i /> LOCAL WORKSPACE</span></header>
         <div className="page-content">
           <div className="page-heading">
-            <div><p className="eyebrow">YOUR KNOWLEDGE, IN ONE PLACE</p><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '지식의 출발점이 되는 파일과 폴더를 한곳에서 관리하세요.' : '원본과 독립적으로 관리되는 검증된 지식의 공간입니다.'}</p></div>
+            <div><p className="eyebrow">YOUR KNOWLEDGE, IN ONE PLACE</p><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '지식의 출발점이 되는 파일과 폴더를 한곳에서 관리하세요.' : '원본과 독립적으로 보존되는 근거 연결 초안입니다. 아직 미검증 상태입니다.'}</p></div>
             {workspace && <Button variant="ghost" size="sm" disabled={busy} onClick={() => openModal({ kind: 'delete-workspace' })}><Trash2 /> Workspace 삭제</Button>}
           </div>
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
@@ -170,7 +171,7 @@ export default function App() {
             <section className="welcome"><div className="empty-icon"><Library size={36} /></div><p className="eyebrow">A SPACE FOR YOUR IDEAS</p><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : (
             <>
-              <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">현재 폴더 · {entries.length}개 항목</span></div>
+              <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">{original ? `현재 폴더 · ${entries.length}개 항목` : '수동 초안 · 버전 보존'}</span></div>
               {original && <SourcePanel key={activeId} workspaceId={activeId!} revision={revision}
                 onChanged={() => setRevision(value => value + 1)}
                 onSelect={id => {
@@ -181,7 +182,7 @@ export default function App() {
                     .then(entry => { if (!controller.signal.aborted) setSelected(entry) })
                     .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
                 }} />}
-              <div className="explorer">
+              {!original ? <KnowledgePanel key={activeId} workspaceId={activeId!} /> : <div className="explorer">
                 <section className="file-pane" aria-label="자료 탐색기">
                   <div className="toolbar">
                     <div className="breadcrumbs" aria-label="폴더 경로"><button disabled={busy} onClick={() => setTrail([])}>{original ? '원본 자료' : '지식 문서'}</button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>
@@ -207,7 +208,7 @@ export default function App() {
                     <AnalysisPanel key={selected.id} workspaceId={activeId!} entryId={selected.id} />
                   </div> : <div className="preview-empty"><FileText size={32} /><strong>자료를 살펴보세요</strong><p>파일을 선택하면 내용과<br />상세 정보를 확인할 수 있습니다.</p></div>}
                 </aside>
-              </div>
+              </div>}
               <p className="phase-note"><ShieldCheck size={15} /> 원본·추출 텍스트·Java 심볼을 로컬에서 검색합니다. AI 지식 생성과 채팅은 후속 단계에서 연결됩니다.</p>
             </>
           )}
