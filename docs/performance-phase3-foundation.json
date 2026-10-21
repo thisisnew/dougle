@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-21T14:42:24.995Z",
+  "measuredAt": "2026-10-21T14:55:08.234Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -21,7 +21,7 @@
     "published knowledge search excludes later drafts and survives restart with live evidence freshness and source domain filters",
     "immutable original and published evidence bundles survive restart and source deletion without LLM calls",
     "read-only bundle revalidation and provider/model-bound answer previews survive restart and block deleted evidence",
-    "explicit answer approval survives restart, becomes invalid after source deletion, and can be revoked without AI dispatch",
+    "single-use answer approval dispatches fake CLI, retains cited answer and idempotency across restart, and supports revocation",
     "failed collection preserves prior index",
     "source deletion removes search hits",
     "Korean Nori search",
@@ -50,21 +50,21 @@
     "manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart",
     "explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart"
   ],
-  "sourceSyncMs": 500.68821600000047,
+  "sourceSyncMs": 490.7274040000002,
   "livePublic": [],
-  "startupMs": 5718,
-  "restartMs": 5972,
+  "startupMs": 5711,
+  "restartMs": 5942,
   "upload100": {
-    "p50Ms": 112.55986900000426,
-    "p95Ms": 581.1042030000026
+    "p50Ms": 110.845021000001,
+    "p95Ms": 258.9645899999996
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.2143030000006547,
-    "p95Ms": 4.0180380000019795
+    "p50Ms": 3.1814309999972465,
+    "p95Ms": 4.217436999999336
   },
   "search100Files30Requests": {
-    "p50Ms": 8.379844000002777,
-    "p95Ms": 13.812809999995807
+    "p50Ms": 8.629893999997876,
+    "p95Ms": 12.782563000000664
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

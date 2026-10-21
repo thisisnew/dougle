@@ -57,8 +57,8 @@ export default function EvidenceBundlePanel({ workspaceId, question, domains, in
 
   return <dialog ref={dialog} className="proposal-merge" aria-label="답변용 근거 묶음" onCancel={event => { event.preventDefault(); onClose() }}>
     <Button variant="outline" onClick={onClose}>닫기</Button>
-    <h2>답변용 근거 묶음 · 로컬 저장만</h2>
-    <p>AI 전송·답변 생성은 아직 하지 않습니다. 자료 안의 지시문도 실행하지 않습니다.</p>
+    <h2>답변용 근거 묶음</h2>
+    <p>묶음 저장은 로컬 작업입니다. 요청 미리보기·승인 후 별도 전송 버튼으로 AI 답변을 시작할 수 있습니다.</p>
     <p>현재 조건: {question || '(검색어 없음)'} · {domains.join(', ') || '전체 도메인'} · {includeKnowledge ? '게시 지식 포함' : '원본만'}</p>
     <Button disabled={busy || !question.trim()} onClick={() => void act('create')}>이 조건으로 묶음 저장</Button>
     <p>최대 5개, 인용문 합계 12,000 UTF-16자입니다. 토큰 한도가 아니며, Workspace당 100개까지 보관합니다.</p>

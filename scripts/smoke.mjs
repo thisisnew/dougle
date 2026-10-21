@@ -142,6 +142,15 @@ try {
     digest: originalAnswerPreview.digest, acknowledged: true, expectedApprovalId: null,
   })
   assert.equal(answerApproval.status, 'APPROVED')
+  const answerRequest = { requestId: crypto.randomUUID(), approvalId: answerApproval.approval.id, digest: originalAnswerPreview.digest, approved: true }
+  const answerSubmitPath = `${bundleBase}/${originalBundle.id}/answer-jobs`
+  const answerJob = await api(answerSubmitPath, 'POST', answerRequest)
+  const answerJobPath = `/workspaces/${workspace.id}/answer-jobs/${answerJob.id}`
+  const completedAnswer = await waitForJob(answerJobPath, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
+  assert.equal(completedAnswer.status, 'SUCCEEDED', completedAnswer.error)
+  assert.equal(completedAnswer.answer, '테스트 전용 가상 답변입니다. [R1]')
+  assert.equal((await api(approvalPath)).status, 'CONSUMED')
+  assert.deepEqual(await api(answerSubmitPath, 'POST', answerRequest), completedAnswer)
   assert.equal((await api(`/workspaces/${workspace.id}/generation-jobs`)).length, 0)
   const analysis = await api(`/workspaces/${workspace.id}/entries/${symbolHits[0].entryId}/analysis`)
   assert.ok(analysis.symbols.some(symbol => symbol.name === 'measureTemperature' && symbol.line === 4))
@@ -333,7 +342,9 @@ try {
   assert.deepEqual(await api(`${bundleBase}/${publishedBundle.id}`), publishedBundle)
   assert.equal((await api(bundleBase)).length, 2)
   assert.equal((await api(`${bundleBase}/${originalBundle.id}/answer-preview`, 'POST', { provider: 'CODEX', requestedModel: 'preview-only-model' })).digest, originalAnswerPreview.digest)
-  assert.deepEqual(await api(approvalPath), answerApproval)
+  assert.deepEqual(await api(approvalPath), { ...answerApproval, status: 'CONSUMED' })
+  assert.deepEqual(await api(answerJobPath), completedAnswer)
+  assert.deepEqual(await api(answerSubmitPath, 'POST', answerRequest), completedAnswer)
   assert.equal((await api(`${bundleBase}/${publishedBundle.id}/answer-preview`, 'POST', { provider: 'CLAUDE', requestedModel: 'preview-only-model' })).digest, publishedAnswerPreview.digest)
   assert.equal((await api(`${jobBase}/${completed.id}`)).resultCardId, completed.resultCardId)
   assert.equal((await api(`${knowledgePath}/generation/jobs`, 'POST', generation)).status, 'SUCCEEDED')
@@ -391,7 +402,8 @@ try {
   assert.deepEqual(await api(`${bundleBase}/${publishedBundle.id}`), publishedBundle)
   const missingBundle = await api(bundleBase, 'POST', { question: '출력', includeKnowledge: true })
   assert.equal(missingBundle.payload.status, 'NO_EVIDENCE')
-  assert.equal((await api(approvalPath)).status, 'INVALIDATED')
+  assert.equal((await api(approvalPath)).status, 'CONSUMED')
+  assert.deepEqual(await api(answerJobPath), completedAnswer)
   const revokedAnswerApproval = await api(`${approvalPath}/${answerApproval.approval.id}`, 'DELETE')
   assert.equal(revokedAnswerApproval.status, 'REVOKED')
   assert.deepEqual(await api(approvalPath), revokedAnswerApproval)
@@ -457,7 +469,7 @@ try {
       'published knowledge search excludes later drafts and survives restart with live evidence freshness and source domain filters',
       'immutable original and published evidence bundles survive restart and source deletion without LLM calls',
       'read-only bundle revalidation and provider/model-bound answer previews survive restart and block deleted evidence',
-      'explicit answer approval survives restart, becomes invalid after source deletion, and can be revoked without AI dispatch',
+      'single-use answer approval dispatches fake CLI, retains cited answer and idempotency across restart, and supports revocation',
       'failed collection preserves prior index', 'source deletion removes search hits', 'Korean Nori search',
       'manual knowledge draft and snapshot', 'knowledge survives restart', 'immutable prior version',
       'optimistic edit conflict', 'source deletion preserves historical evidence bytes',

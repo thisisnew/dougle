@@ -9,7 +9,7 @@
 - 모델 고정·승인 바인딩·CLI 설치 진단은 `docs/cli-settings.md`를 확인한다. 설치 버전 확인을 로그인/원격 연결 성공으로 표시하지 않는다.
 - 건별 모델 선택·브라우저 선택 저장·요청 모델 작업 이력은 `docs/model-selection.md`를 확인한다. v5에서 도입했으며 과거 모델 미기록 값은 null로 보존한다.
 - 후속 CLI 관측 이력은 `docs/cli-observation.md`를 확인한다. CLI 관측은 v6에서 도입했으며 실행 전 관측 버전을 정확한 생성 바이너리 버전으로 단정하지 않는다.
-- 현재 스키마는 v15이다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
+- 현재 스키마는 v16이다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
 - AI 결과 비교는 `docs/generation-comparison.md`를 확인한다. 생성 당시/현재/최초 결과를 읽기 전용 조회한다. 거절·재검토 이력은 `docs/proposal-decisions.md`에 구현했다. 명시적 전체 채택은 `docs/proposal-acceptance.md`에 구현했다. 동일 근거의 수동 부분 반영은 `docs/proposal-merge.md`를 따르며, 현재 수집본과 일치하는 근거의 번호 통합은 `docs/evidence-merge.md`에 구현했다. 오래된 근거를 새 원본으로 교체하는 재연결은 아직 없다.
 - P3-4 출처 탐색 연결은 `docs/evidence-navigation.md`를 확인한다. 원본 해석은 Source ID+경로 또는 업로드 ID이며 독립 지식 폴더·카드 배치는 `docs/knowledge-folders.md`를 확인한다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
@@ -19,7 +19,7 @@
 - 후속 검색은 Lucene 10 + Nori 및 심볼/관계 인덱스를 사용한다. 외부 DB 서버는 추가하지 않는다.
 - 원본 검색 미리보기의 본문 위치/행 범위는 `docs/search-evidence.md`를 따른다. 확정 인용이나 최신성 보증으로 취급하지 않는다. 게시 지식 통합 검색·v13 큐·초안 제외·도메인/최신성 규칙은 `docs/published-search.md`를 따른다.
 - 답변용 근거 묶음의 v14 로컬 보관·불변 인용·해시·제외 규칙·삭제 정책은 `docs/evidence-bundles.md`를 따른다. 저장은 전송 승인이 아니며 후속 AI 전송 전 재검증을 생략하지 않는다.
-- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`를 따른다. 실제 전송 직전 재검증·일회 소비·작업 예약·SSE는 아직 없다.
+- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`, v16 실제 답변 작업·일회 소비·재검증·중단은 `docs/answer-jobs.md`를 따른다. 요청문은 V2이며 오래된 승인은 재확인한다. SSE·다중 대화는 아직 없다. fake CLI 성공을 실제 외부 모델 검증으로 보고하지 않는다.
 - 특정 업무 도메인을 하드코딩하지 않는다. 테스트는 `fixtures`의 가상 자료만 사용한다.
 - 원본과 지식 수명주기를 분리하고, 검증 후 게시와 수동 편집 보호 원칙을 지킨다.
 - 수집은 읽기 전용, 폴링은 Source별 opt-in, 외부 LLM 전송은 명시적 승인으로 제한한다.

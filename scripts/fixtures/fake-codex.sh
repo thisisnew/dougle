@@ -16,9 +16,13 @@ while [ "$#" -gt 0 ]; do
   fi
   shift
 done
-test "$model" = 'synthetic-smoke-model'
+test "$model" = 'synthetic-smoke-model' || test "$model" = 'preview-only-model'
 test "$(basename "$output")" = 'answer.json'
 test "$(cd "$(dirname "$output")" && pwd -P)" = "$(pwd -P)"
 cat >/dev/null
 sleep 2
+if [ "$model" = 'preview-only-model' ]; then
+  printf '%s' '{"title":"TEST FIXTURE 답변","claims":[{"text":"테스트 전용 가상 답변입니다.","evidenceIds":["R1"]}]}' > "$output"
+  exit 0
+fi
 printf '%s' '{"title":"TEST FIXTURE 초안","claims":[{"text":"테스트 전용 가상 출력입니다.","evidenceIds":["E1"]}]}' > "$output"

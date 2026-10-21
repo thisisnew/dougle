@@ -17,11 +17,13 @@ public class AnswerApprovalService {
     private final AnswerApprovalStore store;
     private final EvidenceBundleService bundles;
     private final EvidenceAnswerPreview previews;
+    private final AnswerJobStore jobs;
 
-    public AnswerApprovalService(AnswerApprovalStore store, EvidenceBundleService bundles, EvidenceAnswerPreview previews) {
+    public AnswerApprovalService(AnswerApprovalStore store, EvidenceBundleService bundles, EvidenceAnswerPreview previews, AnswerJobStore jobs) {
         this.store = store;
         this.bundles = bundles;
         this.previews = previews;
+        this.jobs = jobs;
     }
 
     @Transactional(readOnly = true)
@@ -30,6 +32,7 @@ public class AnswerApprovalService {
         var approval = store.find(bundleId).orElse(null);
         if (approval == null) return new State("NONE", null);
         if (approval.revokedAt() != null) return new State("REVOKED", approval);
+        if (jobs.byApproval(approval.id()).isPresent()) return new State("CONSUMED", approval);
         if (!Instant.now().isBefore(Instant.parse(approval.expiresAt()))) return new State("EXPIRED", approval);
         boolean valid = previews.current(workspaceId, bundleId, approval.provider(), approval.requestedModel())
                 .filter(preview -> preview.digest().equals(approval.digest())).isPresent();

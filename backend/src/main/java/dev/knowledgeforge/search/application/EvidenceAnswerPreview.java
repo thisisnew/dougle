@@ -62,10 +62,13 @@ public class EvidenceAnswerPreview {
                 supports and cite the support IDs such as [R2/E1]. IDs are scoped to this request only.
                 If evidence is insufficient or conflicting, state the limitation and abstain from unsupported claims.
                 Do not invent citations or assume that a matching search term proves the answer.
+                Return JSON with title (short string) and claims (array of {text, evidenceIds}).
+                Put citation IDs without brackets only in evidenceIds, not in text. Every claim needs evidence.
+                If no supported answer is possible, return an empty claims array. Do not use title as an answer.
                 QUESTION_AND_EVIDENCE_JSON:
                 """ + data;
         if (prompt.length() > 20000) throw new LibraryException(413, "JSON을 포함한 요청이 20,000자를 초과합니다. 범위를 좁혀 새 묶음을 만드세요.");
-        var binding = json.createObjectNode().put("purpose", "ANSWER_PREVIEW_V1").put("workspaceId", workspaceId)
+        var binding = json.createObjectNode().put("purpose", "ANSWER_PREVIEW_V2").put("workspaceId", workspaceId)
                 .put("bundleId", id).put("bundleDigest", bundle.digest()).put("provider", provider.name())
                 .put("requestedModel", model).put("prompt", prompt);
         return new Preview(id, bundle.digest(), provider.name(), model, ContentDigest.of(binding.toString()),

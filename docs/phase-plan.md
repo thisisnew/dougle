@@ -3,7 +3,7 @@
 실행 가능한 작업 단위와 상세 인수 조건은 [남은 개발 체크리스트](backlog.md)를 따릅니다.
 원본 검색의 [근거 위치 표시](search-evidence.md)는 구현했지만 P4 근거 검색 전체 완료는 아닙니다.
 [원본·게시 지식 통합 검색](published-search.md)도 구현했습니다. 영속 청크·관계 검색·채팅/SSE는 남아 있습니다.
-[답변용 불변 근거 묶음](evidence-bundles.md) 보관, [재검증·요청 미리보기](bundle-validation.md), [건별 승인·철회](answer-approval.md)도 구현했습니다. 의미 기반 청크 선택·실제 전송 직전 재검증/승인 소비·실제 답변은 아직 없습니다.
+[답변용 불변 근거 묶음](evidence-bundles.md), [재검증·미리보기](bundle-validation.md), [승인·철회](answer-approval.md), [답변 작업·재검증·일회 소비·중단](answer-jobs.md)을 구현했습니다. 의미 기반 청크 선택·SSE·다중 대화는 남았습니다.
 새 PC의 실행 절차와 다음 에이전트용 요청은 [HANDOFF](../HANDOFF.md)에 있습니다.
 사용자 체험 시점은 **Mac 설치형 준비 후**입니다. [체험 완료 기준](desktop-preview.md).
 

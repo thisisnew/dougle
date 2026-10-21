@@ -21,11 +21,11 @@ it('상태 확인과 직접 동의 전에는 승인하지 않고 요청 조건�
   await user.click(screen.getByRole('button', { name: '승인 상태 확인' }))
   expect(await screen.findByText('승인 없음')).toBeInTheDocument()
   expect(submit).toBeDisabled()
-  await user.click(screen.getByRole('checkbox'))
+  await user.click(screen.getByRole('checkbox', { name: /요청 전문/ }))
   await user.click(submit)
   expect(await screen.findByText('확인 시점에 승인 유효')).toBeInTheDocument()
   expect(JSON.parse(api.mock.calls[1][1]!.body as string)).toEqual({ ...preview, acknowledged: true, expectedApprovalId: null })
-  expect(screen.getByRole('checkbox')).not.toBeChecked()
+  expect(screen.getByRole('checkbox', { name: /요청 전문/ })).not.toBeChecked()
 })
 
 it('미리보기 없이도 저장된 승인을 확인하고 해당 ID만 철회한다', async () => {
@@ -45,7 +45,7 @@ it('만료·다른 조건을 표시하고 기존 승인 ID로 명시적으로 �
   await userEvent.click(screen.getByRole('button', { name: '승인 상태 확인' }))
   expect(await screen.findByText('승인 만료됨')).toBeInTheDocument()
   expect(screen.getByText(/현재 미리보기와 다른 요청/)).toBeInTheDocument()
-  await userEvent.click(screen.getByRole('checkbox'))
+  await userEvent.click(screen.getByRole('checkbox', { name: /요청 전문/ }))
   await userEvent.click(screen.getByRole('button', { name: '이 요청 승인 저장 (전송 안 함)' }))
   await screen.findByText('확인 시점에 승인 유효')
   expect(JSON.parse(api.mock.calls[1][1]!.body as string).expectedApprovalId).toBe('approval')
@@ -59,7 +59,7 @@ it('충돌 후 이전 성공·동의를 지우고 재조회 전 저장을 막는
   await userEvent.click(screen.getByRole('button', { name: '저장된 승인 철회' }))
   expect(await screen.findByRole('alert')).toHaveTextContent('교체')
   expect(screen.queryByText('확인 시점에 승인 유효')).not.toBeInTheDocument()
-  expect(screen.getByRole('checkbox')).not.toBeChecked()
+  expect(screen.getByRole('checkbox', { name: /요청 전문/ })).not.toBeChecked()
   expect(screen.getByRole('button', { name: '이 요청 승인 저장 (전송 안 함)' })).toBeDisabled()
 })
 

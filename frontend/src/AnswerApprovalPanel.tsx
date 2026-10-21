@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import AnswerJobsPanel from './AnswerJobsPanel'
 
 type Preview = { digest: string; provider: string; requestedModel: string }
 type Approval = Preview & { id: string; bundleId: string; approvedAt: string; expiresAt: string; revokedAt: string | null }
 type State = { status: string; approval: Approval | null }
-const names: Record<string, string> = { NONE: '승인 없음', APPROVED: '확인 시점에 승인 유효', REVOKED: '승인 철회됨', EXPIRED: '승인 만료됨', INVALIDATED: '근거 또는 요청 변경으로 승인 사용 불가' }
+const names: Record<string, string> = { NONE: '승인 없음', APPROVED: '확인 시점에 승인 유효', REVOKED: '승인 철회됨', EXPIRED: '승인 만료됨', INVALIDATED: '근거 또는 요청 변경으로 승인 사용 불가', CONSUMED: '이미 답변 작업에 사용한 승인' }
 
 export default function AnswerApprovalPanel({ workspaceId, bundleId, preview }: {
   workspaceId: string; bundleId: string; preview: Preview | null
@@ -40,7 +41,7 @@ export default function AnswerApprovalPanel({ workspaceId, bundleId, preview }: 
   return <section aria-label="답변 요청 승인" className="answer-approval">
     <h3>이 요청만 승인 · 아직 전송하지 않음</h3>
     <p>Codex/Claude는 외부 서비스입니다. 현재 코딩 대화와 별도 요청이며, 인용문에 민감한 정보가 없는지 확인하세요.</p>
-    <p>승인은 10분간 이 요청에만 해당합니다. 실제 답변 전송 기능은 아직 없습니다. 창을 닫아도 서버가 받은 승인은 저장될 수 있습니다.</p>
+    <p>승인은 10분간 이 요청의 작업 하나에만 해당합니다. 승인 저장과 아래 실제 전송 버튼은 별개입니다. 창을 닫아도 서버가 받은 승인은 저장될 수 있습니다.</p>
     <Button variant="outline" disabled={busy} onClick={() => void act('get')}>승인 상태 확인</Button>
     {state && <p role="status">{names[state.status] || state.status}</p>}
     {state?.approval && <div>
@@ -57,5 +58,7 @@ export default function AnswerApprovalPanel({ workspaceId, bundleId, preview }: 
     </div>}
     {busy && <p role="status">승인 상태 처리 중…</p>}
     {error && <p role="alert">{error} 승인 상태를 다시 확인하세요.</p>}
+    <AnswerJobsPanel key={state?.approval?.id || 'no-approval'} workspaceId={workspaceId} bundleId={bundleId}
+      approval={state?.status === 'APPROVED' && preview?.digest === state.approval?.digest ? state.approval : null} />
   </section>
 }
