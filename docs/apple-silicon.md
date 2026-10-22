@@ -13,6 +13,7 @@ DB v21과 기능은 Intel 0.1.1과 같습니다. 앱 이름·데이터 위치도
 | SQLite JDBC | JAR 내 Mac/aarch64 네이티브 드라이버 포함·arm64 확인 |
 | DMG 무결성·읽기 전용 마운트·설치 복사본·ad-hoc 서명 | 통과 |
 | 아키텍처 오류 방어 테스트·Intel DMG 정적 회귀 | 통과 |
+| Intel에서 ARM 런타임 검증 요청 | 실행하지 않고 명확한 오류로 거부함을 확인 |
 | 기존 네이티브 단위 테스트 | Intel 호스트에서 12개 통과 |
 | 실제 Apple Silicon 실행·성능·Gatekeeper | **미검증 — 실제 ARM Mac 필요** |
 
@@ -20,6 +21,7 @@ DB v21과 기능은 Intel 0.1.1과 같습니다. 앱 이름·데이터 위치도
 SHA-256: `ff03267107138100f0ee7c3cd0ee0a711298978770a1ee27f86d26b31f118816`.
 기존 검증된 UI/JAR를 그대로 사용했으며 백엔드·프런트 기능 코드는 변경하지 않았습니다.
 공증 없이 배포하는 실험적 ARM 미리보기이며 정적 검사를 실행 성공으로 표현하지 않습니다.
+[ARM 설치 파일과 체크섬](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-arm-preview.1) · [Mac별 설치 안내](macos-install.md).
 
 ## 빌드
 

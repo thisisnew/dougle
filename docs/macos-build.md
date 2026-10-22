@@ -38,7 +38,7 @@ bash scripts/package-macos.sh
 
 산출물은 `desktop/src-tauri/target/release/bundle/`, 배포 복사본과 SHA-256은 `release/`입니다.
 빌드 결과는 Git에 넣지 않습니다. `APPLE_SIGNING_IDENTITY=-`의 ad-hoc 서명만 사용하며 공증 자격 증명을 사용하지 않습니다.
-빌드한 호스트와 Java의 아키텍처가 일치해야 합니다. Intel 검증이 Apple Silicon 검증을 대신하지 않습니다.
+패키지의 앱과 Java 아키텍처가 일치해야 합니다. 호스트가 다른 교차 빌드는 대상 JDK를 명시합니다. Intel 실행 검증이 Apple Silicon 실행 검증을 대신하지 않습니다.
 
 ## 동봉 런타임 검증
 
@@ -63,7 +63,7 @@ Tauri DMG의 Finder 창 꾸미기 AppleScript도 실패하여, 앱과 Applicatio
 - 설치 복사본 다운로드·인증 및 네이티브 종료/중복 실행/재시작, 동봉 Java SSE, 종료 상태 백업 복원은 검증했습니다. [0.1.1 보고서](release-0.1.1-report.md).
 - 다른 실물 Mac과 Finder/Gatekeeper 사용자 설치 흐름, 실제 로그인 CLI 호환성은 추가 확인이 필요합니다.
 - CLI 경로는 앱에서 설정할 수 있습니다. 개발 데이터 자동 이관은 제공하지 않습니다.
-- Apple Silicon 빌드/검증, Developer ID 서명·공증. Windows는 후속 지원.
+- ARM 교차 빌드·정적 설치 복사본 검사는 통과했으며 실제 ARM 기기 실행은 남았습니다. Developer ID 서명·공증은 현재 범위에서 제외하고 Windows는 후속 지원입니다.
 
 참고: [Tauri Mac 번들](https://v2.tauri.app/distribute/macos-application-bundle/),
 [공증·서명](https://v2.tauri.app/distribute/sign/macos/).

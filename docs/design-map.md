@@ -12,7 +12,7 @@
 | 지식 | 불변 버전·수동/AI 초안·출처·검토·게시 | 자동 의미 검증 아님 |
 | 질문 | 근거 먼저, 건별 승인, SSE·중단·이력·선택 문맥 | 실제 외부 서비스 호환성 별도 검증 |
 | 갱신 | Source별 OFF 기본 폴링·Git blob 재사용·HTTP 304 | 앱 종료/잠자기 중 실행 안 함 |
-| 설치형 | Tauri·동봉 Java·로컬 토큰·CLI 경로 설정 | Intel Mac 검증, Apple 공증/ARM/Windows 별도 |
+| 설치형 | Tauri·동봉 Java·로컬 토큰·CLI 경로 설정, Intel/ARM 패키지 | Intel 실행·ARM 정적 검사 통과; ARM 실기기 미검증, 공증 제외, Windows 후속 |
 
 현재 개발 소스는 SQLite v21입니다. 공개 릴리스에 포함된 기능은 [설치 안내](macos-install.md)를 확인하세요.
 

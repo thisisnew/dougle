@@ -8,7 +8,7 @@
 | Mac 종류 | 설치 파일 / 검증 상태 |
 |---|---|
 | Intel | [0.1.1 미리보기 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1) · 설치 복사본 실행 검증 완료 |
-| Apple Silicon (M 시리즈) | ARM64 앱 + ARM64 Java 패키징 경로 추가. [빌드·검증 현황](docs/apple-silicon.md) |
+| Apple Silicon (M 시리즈) | [ARM 실험적 미리보기 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-arm-preview.1) · 교차 빌드/정적 검사 통과, **실기기 실행 미검증** |
 
 Java는 앱에 포함됩니다. **Apple 공증은 이번 범위에서 제외**하며, 회사 보안 정책에 따라 설치가 제한될 수 있습니다.
 [설치·백업·삭제 안내](docs/macos-install.md)를 먼저 읽으세요. Windows는 후속 지원입니다.
