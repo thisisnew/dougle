@@ -15,10 +15,16 @@ for binary in Contents/MacOS/knowledge-forge-desktop Contents/Resources/resource
   cp "$temporary/arm64.o" "$app/$binary"
 done
 forge_verify_macos_architecture "$app" arm64
+mkdir -p "$app/Contents/Resources/resources/ai"
+cp "$temporary/arm64.o" "$app/Contents/Resources/resources/ai/codex"
+forge_verify_macos_architecture "$app" arm64
+cp "$temporary/x86_64.o" "$app/Contents/Resources/resources/ai/codex"
+if forge_verify_macos_architecture "$app" arm64 2>/dev/null; then echo 'Mixed Codex architecture accepted' >&2; exit 1; fi
+cp "$temporary/arm64.o" "$app/Contents/Resources/resources/ai/codex"
 if forge_verify_macos_architecture "$app" x86_64 2>/dev/null; then echo 'Wrong app architecture accepted' >&2; exit 1; fi
 cp "$temporary/x86_64.o" "$app/Contents/Resources/resources/runtime/lib/server/libjvm.dylib"
 if forge_verify_macos_architecture "$app" arm64 2>/dev/null; then echo 'Mixed JVM architecture accepted' >&2; exit 1; fi
 /usr/bin/lipo -create "$temporary/arm64.o" "$temporary/x86_64.o" -output "$temporary/universal.o"
 if forge_macos_architecture "$temporary/universal.o" 2>/dev/null; then echo 'Unconfigured universal binary accepted' >&2; exit 1; fi
 if forge_macos_architecture "$temporary/missing" 2>/dev/null; then echo 'Missing binary accepted' >&2; exit 1; fi
-echo 'PASS: ARM/Intel identification, matching app, wrong architecture, mixed JVM, universal and missing binary rejection'
+echo 'PASS: ARM/Intel identification, matching app, wrong architecture, mixed JVM/Codex, universal and missing binary rejection'

@@ -2997,8 +2997,8 @@
     },
     {
       "path": "scripts/macos-architecture-test.sh",
-      "sha256": "f37f9b83c494d697afb270d168ce911feca0b5d47d086797eb7b0e2f78f9aa61",
-      "lines": 24,
+      "sha256": "5e39d0bb76efcc280f56a99e354485ce20657e001ee5c309ab4bff2a4b01b4f0",
+      "lines": 30,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
