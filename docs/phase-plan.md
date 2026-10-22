@@ -1,5 +1,7 @@
 # Phase 완료 기준 및 남은 작업
 
+P4 [관련 자료 탐색](relations.md)을 추가했습니다. 저장된 선언 심볼·인용 출처로 연결하며 의미/호출 그래프·자동 AI 근거 확장은 아닙니다.
+
 P5 Source별 [선택적 자동 갱신](source-polling.md)과 [Git 변경 blob 수집](git-incremental.md)을 추가했습니다. [조건부 HTTP 수집](url-conditional.md)도 추가했으며 영속 Git 캐시는 미완료입니다.
 
 P4 [문맥 고정·승인·다중 턴 실행](context-requests.md)을 구현했습니다. v18 불변 요청과 기존 승인/작업을 결합하며 완료 답변을 보관함에 연결합니다.

@@ -1,12 +1,14 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
+추가: [관련 자료 탐색](docs/relations.md). 저장된 선언 심볼·출처 위치로 원본/최신 게시본을 연결합니다. 의미/함수 호출 그래프나 관계 결과의 자동 AI 근거 편입은 아닙니다. 다음 핵심은 설치형 CLI 설정 UX·최신 Mac 설치 파일·전체 회귀입니다.
+
 최신 스키마는 **v20**입니다. [URL 조건부 재수집](docs/url-conditional.md)을 추가했습니다. Git/URL 변경분 수집 이후 다음 핵심은 관계 검색·설치형 CLI 설정과 전체 설치 회귀입니다. 공개 DMG v0.1.0-preview.1은 v18 빌드이므로 이 변경을 포함하지 않습니다.
 
 후속 추가: [GitHub 변경 blob 수집](docs/git-incremental.md). 같은 SHA는 clone 생략, 다른 SHA는 partial clone tree와 저장 원본을 비교합니다. 가상 로컬 partial clone에서 변경하지 않은 blob이 실제로 missing 상태로 남는 것을 확인했습니다. URL 조건부 요청도 추가했으며 다음은 관계 검색·설치형 CLI 설정입니다.
 
 v19에서 추가: [Source별 자동 갱신](docs/source-polling.md) 구현. 기본 OFF, 60~86400초, 최대 자동 작업 2개, 실패 백오프, 재시작 보존. Git/URL 변경분 수집도 추가했고 설치형 CLI 설정 UX가 남습니다. v0.1.0-preview.1 DMG는 v18 기준이며 현재 소스와 구분합니다.
 
-검증: 최신 백엔드 336 통과 + 실제 AI 1 skip, UI 188 통과. v20 JAR 전체 smoke와 실제 예약 60초/재시작 smoke도 통과했습니다. [Intel Mac 공개 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)는 v18 빌드이며 공증되지 않았습니다.
+검증: 최신 백엔드 342 통과 + 실제 AI 1 skip, UI 192 통과. v20 JAR 전체/관계 API smoke와 실제 예약 60초/재시작 smoke도 통과했습니다. [Intel Mac 공개 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)는 v18 빌드이며 공증되지 않았습니다.
 
 연속 개발 지시: 사용자는 매 기능마다 멈추지 말고 완성까지 진행하도록 요청했습니다. 진행·검증·문서·푸시를 이어가며 실제 외부 AI 전송과 배포 자격 증명 등 명시 승인이 필요한 경우만 확인합니다.
 

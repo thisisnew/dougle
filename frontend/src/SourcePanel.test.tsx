@@ -4,6 +4,7 @@ import { beforeEach, expect, it, vi } from 'vitest'
 import SourcePanel from './SourcePanel'
 vi.mock('./PublishedSearchPreview', () => ({ default: ({ cardId, version }: { cardId: string; version: number }) => <div>게시본 열기 {cardId} v{version}</div> }))
 vi.mock('./AnswerHistoryPanel', () => ({ default: ({ workspaceId, onClose }: { workspaceId: string; onClose: () => void }) => <div>이력 화면 {workspaceId}<button onClick={onClose}>이력 닫기</button></div> }))
+vi.mock('./RelationPanel', () => ({ default: ({ seed }: { seed: { id: string; version: number } }) => <div>관계 대상 {seed.id} v{seed.version}</div> }))
 import { request } from './api'
 
 vi.mock('./api', async original => ({ ...await original<typeof import('./api')>(), request: vi.fn() }))
@@ -15,6 +16,18 @@ const source = {
 }
 
 beforeEach(() => { api.mockReset() })
+
+it('검색된 게시 버전을 관련 자료 화면에 전달한다', async () => {
+  api.mockImplementation(async path => path.includes('/search?') ? [
+    { kind: 'KNOWLEDGE', cardId: 'card', version: 2, entryId: null, name: '게시 문서', domain: '', path: '', snippet: '요약', startLine: 1, endLine: 1, bodyMatch: true, freshness: 'CURRENT' },
+  ] : [])
+  render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await userEvent.type(screen.getByLabelText('자료 검색'), '요약')
+  await userEvent.click(screen.getByRole('button', { name: '검색' }))
+  await userEvent.click(await screen.findByRole('button', { name: '게시 문서 관련 자료' }))
+  expect(await screen.findByText('관계 대상 card v2')).toBeInTheDocument()
+  expect(screen.queryByText('게시본 열기 card v2')).not.toBeInTheDocument()
+})
 
 it('자동 갱신을 명시적으로 저장하고 수집이나 AI를 바로 호출하지 않는다', async () => {
   api.mockResolvedValue([source])
@@ -74,7 +87,7 @@ it('다중 도메인을 함께 검색하고 근거 파일을 선택한다', asyn
   await user.click(screen.getByRole('checkbox', { name: '문헌' }))
   await user.type(screen.getByLabelText('자료 검색'), '관측')
   await user.click(screen.getByRole('button', { name: '검색' }))
-  await user.click(await screen.findByRole('button', { name: /가상.md/ }))
+  await user.click(await screen.findByRole('button', { name: /가상.md.*본문 검색어 주변/ }))
   expect(select).toHaveBeenCalledWith('file')
   expect(screen.getByText('본문 검색어 주변 · 추출 텍스트 100–105행 (일부)')).toBeInTheDocument()
   expect(api.mock.calls.some(([path]) => path.includes('domains=%EC%97%B0%EA%B5%AC&domains=%EB%AC%B8%ED%97%8C'))).toBe(true)
@@ -101,7 +114,7 @@ it('게시본을 원본 선택과 구분해 열고 미게시 초안 검색은 �
   render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={select} />)
   await user.type(screen.getByLabelText('자료 검색'), '요약')
   await user.click(screen.getByRole('button', { name: '검색' }))
-  await user.click(await screen.findByRole('button', { name: /게시 문서/ }))
+  await user.click(await screen.findByRole('button', { name: /게시 문서.*게시 지식 v2/ }))
   expect(screen.getByText('게시본 열기 card v2')).toBeInTheDocument()
   expect(select).not.toHaveBeenCalled()
   expect(screen.getByText(/게시 지식 v2 · 근거 MISSING/)).toBeInTheDocument()

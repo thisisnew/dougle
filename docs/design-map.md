@@ -1,5 +1,7 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
+관계 탐색: **Lucene 결과 → 관련 자료 → 선언 심볼/인용 출처 비교 → 도메인·게시 상태 확인 → 연결 이유 표시**. [코드·한계](relations.md).
+
 URL: **본문 + 서버 확인표 보관 → 다음 조건부 요청 → 304 재사용 / 200 변경 분석 → 함께 저장**. [모델·보안 규칙](url-conditional.md).
 
 GitHub: **commit 확인 → 같으면 clone 생략 / 다르면 tree 확인 → 기존 blob 재사용 + 새 blob 수집 → 변경 분석**. [코드·한계](git-incremental.md).

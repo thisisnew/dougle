@@ -121,7 +121,8 @@ dt { color: #97a28d; }
 .domain-options legend { color: #819178; font-size: 10px; }
 .domain-options label { display: flex; gap: 6px; align-items: center; }
 .search-results > p { font-size: 11px; color: #73846a; }
-.search-results > button { display: flex; flex-direction: column; text-align: left; width: 100%; gap: 7px; border: 1px solid #e0e8da; border-radius: 7px; margin-top: 8px; padding: 13px; background: #f8faf5; font-size: 12px; overflow-wrap: anywhere; }
+.search-hit > button:first-child { display: flex; flex-direction: column; text-align: left; width: 100%; gap: 7px; border: 1px solid #e0e8da; border-radius: 7px; margin-top: 8px; padding: 13px; background: #f8faf5; font-size: 12px; overflow-wrap: anywhere; }
+.search-hit > button:last-child { margin-top: 5px; }
 .search-results small { font-size: 10px; color: #8b9881; }
 .search-results span { white-space: pre-wrap; font-size: 11px; line-height: 1.7; max-height: 100px; overflow: auto; }
 .analysis-section { border-top: 1px solid #e1e8db; margin-top: 18px; padding-top: 1px; }

@@ -1,5 +1,7 @@
 # 아키텍처
 
+`RelationSearch → RelationCatalog → JdbcRelationCatalog`는 Lucene 결과에서 시작하는 읽기 전용 연결 탐색입니다. 심볼 이름/종류와 게시 근거 origin_key를 사용하며 AI·재분석과 분리합니다. [실제 설계](relations.md).
+
 URL Collector는 이전 원본/확인표를 입력받아 `PublicHttpReader`의 조건부 요청으로 연결합니다. 304는 본문 재사용이며 확인표는 원본 반영과 같은 트랜잭션에 저장합니다. [v20 모델·보안 경계](url-conditional.md).
 
 GitHub Collector는 선점 뒤 읽은 이전 원본을 입력받아 같은 commit의 clone을 생략하고 변경 blob만 읽습니다. 새 스키마/영속 Git 캐시는 추가하지 않습니다. [설계·실제 코드](git-incremental.md).

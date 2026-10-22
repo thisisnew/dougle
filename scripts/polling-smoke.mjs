@@ -36,7 +36,7 @@ async function start() {
   throw new Error(`Startup timed out: ${logs}`)
 }
 async function stop() {
-  if (!processHandle || processHandle.exitCode !== null) return
+  if (!processHandle || processHandle.exitCode !== null || processHandle.signalCode !== null) return
   const exited = once(processHandle, 'exit')
   processHandle.kill('SIGTERM')
   const timer = setTimeout(() => processHandle.kill('SIGKILL'), 15000)

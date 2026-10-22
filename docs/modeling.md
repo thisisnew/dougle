@@ -1,5 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+[관련 자료](relations.md)는 새 추론 테이블 없이 저장된 선언 심볼·게시본·근거 origin_key를 읽어 연결합니다. 같은 이름/출처 위치라는 이유를 표시하며 함수 호출·의미 관계로 단정하지 않습니다.
+
 v20 `source_http_cache`는 Source의 마지막 성공 URL·ETag·Last-Modified를 보관합니다. 원본과 같은 트랜잭션으로 갱신하고 Source 삭제 시 함께 지웁니다. [실제 코드 대조](url-conditional.md).
 
 Git 재수집은 기존 `source.revision` + `entry.content`에서 Git blob ID를 계산해 재사용합니다. 별도 Git 캐시 테이블 없이 새 tree의 경로·blob과 대조합니다. [모델과 실제 코드](git-incremental.md).

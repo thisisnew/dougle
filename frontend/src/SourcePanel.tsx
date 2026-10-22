@@ -5,6 +5,8 @@ import { request } from './api'
 import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
 import SourcePollingSettings from './SourcePollingSettings'
+import type { RelationSeed } from './RelationPanel'
+const RelationPanel = lazy(() => import('./RelationPanel'))
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
 
 type Source = {
@@ -35,6 +37,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [includeKnowledge, setIncludeKnowledge] = useState(true)
   const [published, setPublished] = useState<{ cardId: string; version: number } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [related, setRelated] = useState<RelationSeed | null>(null)
   const searchAbort = useRef<AbortController | null>(null)
   const mutationAbort = useRef<AbortController | null>(null)
   const base = `/workspaces/${workspaceId}`
@@ -155,10 +158,15 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     </form>
     <label><input type="checkbox" checked={includeKnowledge} onChange={event => { searchAbort.current?.abort(); setSearching(false); setIncludeKnowledge(event.target.checked); setHits(null) }} />게시 지식도 검색 (미게시 초안 제외)</label>
     {availableDomains.length > 0 && <fieldset className="domain-options"><legend>검색 도메인 · 선택하지 않으면 전체</legend>{availableDomains.map(value => <label key={value}><input type="checkbox" checked={domains.includes(value)} onChange={event => setDomains(event.target.checked ? [...domains, value] : domains.filter(item => item !== value))} />{value}</label>)}</fieldset>}
-    {hits && <div className="search-results" aria-live="polite"><p>검색 결과 {hits.length}개 (최대 30개)</p>{hits.map(hit => <button key={hit.cardId || hit.entryId} onClick={() => {
+    {hits && <div className="search-results" aria-live="polite"><p>검색 결과 {hits.length}개 (최대 30개)</p>{hits.map(hit => <div className="search-hit" key={hit.cardId || hit.entryId}><button onClick={() => {
       if (hit.kind === 'KNOWLEDGE' && hit.cardId && hit.version) setPublished({ cardId: hit.cardId, version: hit.version })
       else if (hit.entryId) onSelect(hit.entryId)
-    }}><strong>{hit.name}</strong><small>{hit.kind === 'KNOWLEDGE' ? `게시 지식 v${hit.version} · 근거 ${hit.freshness}` : '원본'} · {hit.domain || '분류 없음'} · {hit.path}</small><small>{hit.bodyMatch ? '본문 검색어 주변' : '이름·심볼 일치 · 본문 앞부분'}{hit.startLine > 0 ? ` · ${hit.kind === 'KNOWLEDGE' ? '게시 Markdown' : '추출 텍스트'} ${hit.startLine}–${hit.endLine}행 (일부)` : ' · 본문 없음'}</small><span>{hit.snippet}</span></button>)}</div>}
+    }}><strong>{hit.name}</strong><small>{hit.kind === 'KNOWLEDGE' ? `게시 지식 v${hit.version} · 근거 ${hit.freshness}` : '원본'} · {hit.domain || '분류 없음'} · {hit.path}</small><small>{hit.bodyMatch ? '본문 검색어 주변' : '이름·심볼 일치 · 본문 앞부분'}{hit.startLine > 0 ? ` · ${hit.kind === 'KNOWLEDGE' ? '게시 Markdown' : '추출 텍스트'} ${hit.startLine}–${hit.endLine}행 (일부)` : ' · 본문 없음'}</small><span>{hit.snippet}</span></button>
+      <Button size="sm" variant="outline" aria-label={`${hit.name} 관련 자료`} onClick={() => {
+        const id = hit.kind === 'KNOWLEDGE' ? hit.cardId : hit.entryId
+        if (id) setRelated({ kind: hit.kind, id, version: hit.version, title: hit.name })
+      }}>관련 자료</Button></div>)}</div>}
+    {related && <Suspense fallback={<p role="status">관계 화면을 여는 중…</p>}><RelationPanel workspaceId={workspaceId} seed={related} domains={domains} onClose={() => setRelated(null)} onOriginal={onSelect} onKnowledge={(cardId, version) => setPublished({ cardId, version })} /></Suspense>}
     {published && <PublishedSearchPreview workspaceId={workspaceId} cardId={published.cardId} version={published.version} onClose={() => setPublished(null)} />}
     {bundleOpen && <EvidenceBundlePanel workspaceId={workspaceId} question={query} domains={domains} includeKnowledge={includeKnowledge} onClose={() => setBundleOpen(false)} />}
     {historyOpen && <Suspense fallback={<p role="status">답변 이력 화면을 여는 중…</p>}><AnswerHistoryPanel workspaceId={workspaceId} onClose={() => setHistoryOpen(false)} /></Suspense>}

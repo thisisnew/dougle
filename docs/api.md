@@ -1,5 +1,7 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+관련 자료: `GET /api/workspaces/{workspaceId}/relations?kind=ORIGINAL|KNOWLEDGE&id=...&version=...&domains=...`는 저장된 심볼/출처 연결을 읽습니다. [입출력·게시본 제한](relations.md).
+
 동기화 API는 [Git 변경 blob 수집](git-incremental.md)과 [URL 조건부 요청](url-conditional.md)을 내부적으로 적용합니다. 별도 승인/API/요청 필드는 없으며 기존 Source 반환 계약을 유지합니다.
 
 자동 갱신: `PATCH /api/workspaces/{workspaceId}/sources/{id}/polling`, 본문 `{enabled, intervalSeconds, expectedRevision}`. 주기 60~86400초, 기본 OFF, 충돌 409. Source 응답에 `nextPollAt`(epoch ms/null), `consecutiveFailures`, `pollingRevision` 추가. [상세 계약](source-polling.md).

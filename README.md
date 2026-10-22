@@ -11,9 +11,9 @@ PC에 자료와 지식을 독립적으로 보관하는 **로컬 지식 서재**�
 |---|---|
 | 공개 설치 파일 | v0.1.0-preview.1 / DB v18 / Intel Mac |
 | 최신 개발 소스 | DB v20 / 설치 파일보다 최신 |
-| 구현 | Workspace·자료 탐색, 문서/Java 분석·검색, 지식 편집·검토·게시, 승인 기반 AI·SSE·문맥 이어 질문 |
+| 구현 | Workspace·자료 탐색, 문서/Java 분석·검색·[관련 자료](docs/relations.md), 지식 편집·검토·게시, 승인 기반 AI·SSE·문맥 이어 질문 |
 | 이번 추가 | [Source 자동 갱신](docs/source-polling.md), [Git 변경 blob 수집](docs/git-incremental.md), [URL 조건부 수집](docs/url-conditional.md) |
-| 다음 핵심 | 관계 검색, 설치형 CLI 설정 UX, 최신 설치 파일·전체 회귀 |
+| 다음 핵심 | 설치형 CLI 설정 UX, 최신 설치 파일·전체 회귀, 관계 결과의 명시적 답변 근거 선택 |
 | 별도 검증 | 실제 외부 AI 호환성, Apple 공증·Apple Silicon·Windows |
 
 자동 갱신은 기본 OFF입니다. 외부 AI 전송은 건별 승인이 필요하며, 사람이 편집한 지식을 자동으로 덮어쓰지 않습니다.
