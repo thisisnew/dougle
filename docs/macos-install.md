@@ -2,7 +2,7 @@
 
 **Intel과 Apple Silicon용 파일이 다릅니다.** Apple 공증은 사용자 요청으로 제외했습니다.
 Intel은 설치 복사본 실행 검증을 통과했습니다. Apple Silicon은 교차 빌드·정적 검사만 통과했으며 **실제 ARM Mac 실행은 미검증**입니다.
-Windows용 설치 파일은 없습니다. [Intel 검증](release-0.1.1-report.md) · [ARM 검증](apple-silicon.md).
+Windows용 설치 파일은 없습니다. [0.1.2 검증](release-0.1.2-report.md) · [ARM 확인 범위](apple-silicon.md).
 
 ## 설치
 
@@ -10,12 +10,12 @@ Apple 메뉴 → **이 Mac에 관하여**에서 칩/프로세서를 확인하세
 
 | 내 Mac | 받을 파일 | 다운로드 |
 |---|---|---|
-| Intel 프로세서 | `Knowledge.Forge_0.1.1_x86_64.dmg` + `SHA256SUMS` | [Intel 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1) |
-| Apple M 시리즈 칩 | `Knowledge.Forge_0.1.1_arm64.dmg` + `SHA256SUMS-arm64` | [Apple Silicon 실험적 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-arm-preview.1) |
+| Intel 프로세서 | `Knowledge.Forge_0.1.2_x86_64.dmg` + `SHA256SUMS-x86_64` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.2-preview.1) |
+| Apple M 시리즈 칩 | `Knowledge.Forge_0.1.2_arm64.dmg` + `SHA256SUMS-arm64` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.2-preview.1) |
 
 DMG와 해당 체크섬 파일을 같은 폴더에 받습니다.
-Intel은 `shasum -a 256 -c SHA256SUMS`, ARM은 `shasum -a 256 -c SHA256SUMS-arm64`로 확인할 수 있습니다.
-이 설치 파일은 DB v21 기준이며 Source 자동 갱신·조건부 수집·관련 자료·CLI 경로 설정을 포함합니다.
+Intel은 `shasum -a 256 -c SHA256SUMS-x86_64`, ARM은 `shasum -a 256 -c SHA256SUMS-arm64`로 확인할 수 있습니다.
+0.1.2에는 정돈된 픽셀풍 화면, AI 연결 화면과 Codex 실행 도구가 들어 있습니다. 기존 자료의 저장 형식(v21)은 유지됩니다.
 
 1. 제공된 DMG와 SHA-256을 확인합니다. 모르는 사람이 다시 올린 파일은 사용하지 마세요.
 2. DMG를 열고 **Knowledge Forge.app**을 Applications로 복사합니다.
@@ -38,8 +38,10 @@ Intel/ARM 앱은 같은 데이터 위치를 사용하므로 동시에 실행하�
 4. 지식 문서는 초안으로 만들고, 사람이 확인한 뒤 명시적으로 게시합니다.
 5. AI 답변은 **근거 묶음 → 요청 확인 → 승인 → 실제 전송** 순서입니다.
 
-Codex/Claude Code는 따로 설치·로그인해야 합니다. 현재 코딩 세션을 앱이 공유하는 것은 아닙니다.
-Finder에서 CLI를 찾지 못하면 상단 **CLI 경로 설정**에 실행 파일의 절대 경로를 저장하고 앱을 재시작하세요. [설정 안내](cli-launch-settings.md).
+**AI 연결 → Codex → 연결 상태 확인**을 누르고, 로그인이 필요하면 안내에 동의한 뒤 **브라우저에서 로그인**을 누르세요. Codex 실행 도구는 앱에 들어 있습니다.
+Claude 연결은 현재 별도로 설치된 호환 도구가 있어야 합니다. 기존 AI 대화 내용을 앱이 그대로 가져오는 것은 아닙니다.
+로그인 동의와 자료 전송 승인은 별개입니다. 실제 계정의 로그인·답변 성공은 별도 확인이 필요하며 인증 확인만으로 요금제/이용 한도를 보장하지 않습니다. [AI 연결 안내](provider-connection.md).
+이전에 직접 실행 경로를 설정했다면 그 설정이 우선합니다. **AI 연결 → 고급 설정 → 기존 실행 경로 설정**에서 빈값으로 저장하고 앱을 다시 열면 동봉 도구를 사용합니다.
 AI 사용 전까지 파일 보관·수동 지식·검색은 외부 AI가 필요하지 않습니다.
 GitHub 수집에는 Git 실행 환경이 필요합니다. 자동 폴링은 Source별 기본 OFF이며 켠 경우 앱이 실행 중일 때만 동작합니다.
 

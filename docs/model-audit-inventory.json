@@ -2192,8 +2192,8 @@
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "ee44f8d99fe1bfa85d61b61ec28310f580346b9a18e18e46a20186ebd1b06384",
-      "lines": 262,
+      "sha256": "969a2d22281f688da59bf7d2f18ac7dfb474531ef336ff984469a0a4301ed80f",
+      "lines": 261,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
@@ -2838,8 +2838,8 @@
     },
     {
       "path": "frontend/src/retro.css",
-      "sha256": "fbc16e37522a7828e7ca6a11b7811a1b0b7ea047435df25697ea1b287352d91e",
-      "lines": 84,
+      "sha256": "8d340560b9edab15ab6729b681621bbdbd069f6ffeebd3fe193d791e78928f15",
+      "lines": 83,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },

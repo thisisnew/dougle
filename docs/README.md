@@ -10,6 +10,8 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 | 무엇을 어떻게 저장하는지 | [데이터 모델과 실제 코드 대조](modeling.md) |
 | 모델과 구현을 다시 조사한 결과 | [전 파일 조사 범위·규칙별 테스트·미구현 차이](model-audit.md) |
 | 개발자가 알아야 할 구조 | [아키텍처](architecture.md) · [API](api.md) |
+| 개발 실행·수정 후 배포 순서 | [개발 환경과 완료 체크리스트](development.md) |
+| 최신 설치 파일에 들어간 변경 | [0.1.2 배포 기록](release-0.1.2-report.md) |
 | Apple Silicon에서 쓰기/빌드 | [ARM 지원과 검증 범위](apple-silicon.md) |
 | AI 설치·로그인·경로 설정 | [CLI 설정](cli-launch-settings.md) · [AI 전송 정책](cli-ai.md) |
 | 간편 연결 개선 | [제공자 선택·인증 확인·브라우저 로그인](provider-connection.md) — 0.1.2 개발 소스 |

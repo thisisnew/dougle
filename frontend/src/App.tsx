@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, Library, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Area, type Entry, type EvidenceLocation, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
@@ -184,21 +184,20 @@ export default function App() {
           <button className={original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('ORIGINAL')}><FolderOpen size={19} /> 원본 자료 <ChevronRight size={15} /></button>
           <button className={!original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button>
         </nav>
-        <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>자료를 연결하고<br />문서와 코드의 근거를 찾아보세요.</p><span>근거 기반 지식 · 질문</span></div>
         <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 자료 저장<small>AI 전송은 건별 승인</small></span></div>
       </aside>
 
       <main>
-        <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><Button variant="outline" size="sm" disabled={!ready} onClick={() => setCliSettingsOpen(true)}>AI 연결</Button><span className="local-badge"><i /> LOCAL WORKSPACE</span></header>
+        <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><Button variant="outline" size="sm" disabled={!ready} onClick={() => setCliSettingsOpen(true)}>AI 연결</Button></header>
         {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel onClose={() => setCliSettingsOpen(false)} /></Suspense>}
         <div className="page-content">
           <div className="page-heading">
-            <div><p className="eyebrow">YOUR KNOWLEDGE, IN ONE PLACE</p><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '지식의 출발점이 되는 파일과 폴더를 한곳에서 관리하세요.' : '원본과 독립적으로 보존되는 근거 연결 초안입니다. 아직 미검증 상태입니다.'}</p></div>
+            <div><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '파일과 폴더를 보관하고 검색하세요.' : '원본과 독립적으로 보존되는 근거 연결 초안입니다. 아직 미검증 상태입니다.'}</p></div>
             {workspace && <Button variant="ghost" size="sm" disabled={busy} onClick={() => openModal({ kind: 'delete-workspace' })}><Trash2 /> Workspace 삭제</Button>}
           </div>
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
           {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : !workspace ? (
-            <section className="welcome"><PixelLandscape /><p className="eyebrow">A NEW ADVENTURE IN KNOWLEDGE</p><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
+            <section className="welcome"><PixelLandscape /><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : (
             <>
               <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">{original ? `현재 폴더 · ${entries.length}개 항목` : '수동 초안 · 버전 보존'}</span></div>
