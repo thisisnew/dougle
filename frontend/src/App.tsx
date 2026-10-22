@@ -4,6 +4,7 @@ import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderP
 import { Button } from './components/ui/button'
 import { entryPath, request, type Area, type Entry, type EvidenceLocation, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
+import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import KnowledgePanel from './KnowledgePanel'
 
@@ -229,7 +230,7 @@ export default function App() {
                 <aside className="preview-pane" aria-label="미리보기">
                   <div className="preview-heading"><span>자료 미리보기</span>{selected && <Button variant="ghost" size="icon" aria-label="미리보기 닫기" onClick={() => setSelected(null)}><X /></Button>}</div>
                   {selected ? <div className="preview-content"><FileText size={28} /><h2>{selected.name}</h2><div className="tag">보관된 원본</div><dl><dt>파일 크기</dt><dd>{formatSize(selected.size)}</dd><dt>추가한 날짜</dt><dd>{new Date(selected.createdAt).toLocaleString('ko-KR')}</dd></dl>
-                    <Button asChild variant="outline" size="sm"><a href={`/api${entryPath(activeId!, selected.id)}/content`} download><Download /> 원본 다운로드</a></Button>
+                    <Button variant="outline" size="sm" onClick={() => void downloadApi(`${entryPath(activeId!, selected.id)}/content`, selected.name).catch(reason => setError(reason.message))}><Download /> 원본 다운로드</Button>
                     <h3>내용</h3>{!preview ? <p role="status">미리보기를 불러오는 중…</p> : preview.supported ? <pre>{preview.text || '(빈 파일)'}</pre> : <p>{preview.reason}</p>}
                     <AnalysisPanel key={selected.id} workspaceId={activeId!} entryId={selected.id} />
                   </div> : <div className="preview-empty"><FileText size={32} /><strong>자료를 살펴보세요</strong><p>파일을 선택하면 내용과<br />상세 정보를 확인할 수 있습니다.</p></div>}

@@ -81,7 +81,7 @@ class KnowledgeIntegrationTest {
     }
 
     @Test
-    void sourceEntryReplacementDoesNotBreakReferencesAndChangedTextBecomesStale() throws Exception {
+    void sourceIncrementalUpdatePreservesReferencesAndChangedTextBecomesStale() throws Exception {
         Files.writeString(fixture.resolve("source.txt"), "초기 관측");
         var source = sources.sync(workspace, sources.create(workspace, "가상 Source", "LOCAL_FOLDER", fixture.toString(), "실험").id());
         String originalEntry = library.entries(workspace, "ORIGINAL", source.rootEntryId()).getFirst().id();
@@ -89,7 +89,7 @@ class KnowledgeIntegrationTest {
         Files.writeString(fixture.resolve("other.txt"), "무관한 변경");
         sources.sync(workspace, source.id());
         assertThat(knowledge.get(workspace, document.card().id(), null).version().evidence().getFirst().freshness()).isEqualTo("CURRENT");
-        assertThatThrownBy(() -> library.requireEntry(workspace, originalEntry)).isInstanceOf(LibraryException.class);
+        assertThat(library.requireEntry(workspace, originalEntry).id()).isEqualTo(originalEntry);
         Files.writeString(fixture.resolve("source.txt"), "새로운 관측");
         sources.sync(workspace, source.id());
         Evidence changed = knowledge.get(workspace, document.card().id(), null).version().evidence().getFirst();
@@ -235,7 +235,7 @@ class KnowledgeIntegrationTest {
     }
 
     @Test
-    void navigationResolvesReplacedSourceEntryAndReportsChangedContent() throws Exception {
+    void navigationPreservesUnchangedSourceEntryAndReportsChangedContent() throws Exception {
         Files.writeString(fixture.resolve("source.txt"), "가상 첫 근거");
         var source = sources.sync(workspace, sources.create(workspace, "가상 위치", "LOCAL_FOLDER", fixture.toString(), "실험").id());
         String original = library.entries(workspace, "ORIGINAL", source.rootEntryId()).getFirst().id();
@@ -244,7 +244,7 @@ class KnowledgeIntegrationTest {
         Files.writeString(fixture.resolve("other.txt"), "다른 파일");
         sources.sync(workspace, source.id());
         var current = knowledge.locateEvidence(workspace, document.card().id(), 1, snapshot);
-        assertThat(current.entry().id()).isNotEqualTo(original);
+        assertThat(current.entry().id()).isEqualTo(original);
         assertThat(current.entry().name()).isEqualTo("source.txt");
         assertThat(current.freshness()).isEqualTo("CURRENT");
         Files.writeString(fixture.resolve("source.txt"), "가상 바뀐 근거");

@@ -1,3 +1,6 @@
+import { desktopSession } from './desktopTransport'
+import { fetchEventSource } from './fetchEventSource'
+
 export type AnswerJob = { id: string; bundleId: string; approvalId: string; status: string; provider: string; requestedModel: string; answer: string | null; error: string | null }
 export const activeAnswerJob = (job: AnswerJob | null) => !!job && ['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status)
 const statuses = ['QUEUED', 'RUNNING', 'CANCELLING', 'CANCELLED', 'SUCCEEDED', 'FAILED', 'INTERRUPTED']
@@ -17,8 +20,11 @@ export function observeAnswerJob(workspaceId: string, bundleId: string, jobId: s
     if (stopped) return
     callbacks.state('SSE 연결 중 — 근거 확인 대기')
     callbacks.partial?.('')
-    let source: EventSource
-    try { source = new EventSource(`/api/workspaces/${encodeURIComponent(workspaceId)}/answer-jobs/${encodeURIComponent(jobId)}/events`) }
+    let source: EventSource | ReturnType<typeof fetchEventSource>
+    try {
+      const path = `/workspaces/${encodeURIComponent(workspaceId)}/answer-jobs/${encodeURIComponent(jobId)}/events`
+      source = desktopSession() ? fetchEventSource(path) : new EventSource(`/api${path}`)
+    }
     catch { fail('SSE 연결을 시작하지 못했습니다. 작업 목록을 다시 조회하세요.'); return }
     let closed = false
     let evidence = false

@@ -34,6 +34,9 @@ class ConversationIntegrationTest {
     @Autowired ConversationService conversations;
     @Autowired ConversationPreviewService contextPreviews;
     @Autowired AnswerApprovalService approvals;
+    @Autowired ConversationRequestService requests;
+    @Autowired ConversationRequestStore requestStore;
+    @Autowired EvidenceAnswerPreview answerPreviews;
     @Autowired AnswerJobStore jobs;
     @Autowired LibraryService library;
     @Autowired EvidenceBundleService bundles;
@@ -158,6 +161,58 @@ class ConversationIntegrationTest {
         }
         fails(409, () -> conversations.append(workspace, room.id(), "first", 100));
         assertThat(conversations.append(workspace, room.id(), "fixture-0", 0).turns()).hasSize(100);
+    }
+    @Test
+    void freezesFreshBundleIdempotentlyAndEnablesOnlyItsBoundApproval() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "first", 0);
+        String current = bundles.create(workspace, "telescope", List.of(), false).id();
+        var selection = new ConversationPreviewService.Request(current, 1, List.of("first"), "CODEX", "fixture");
+        var preview = contextPreviews.prepare(workspace, room.id(), selection);
+        fails(409, () -> approvals.approve(workspace, current, "CODEX", "fixture", preview.digest(), true, null));
+        var frozen = requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(selection, preview.digest()));
+        assertThat(requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(selection, preview.digest()))).isEqualTo(frozen);
+        assertThat(answerPreviews.prepare(workspace, current, "CODEX", "fixture").contextRequestId()).isEqualTo(frozen.id());
+        assertThat(answerPreviews.prepare(workspace, current, "CODEX", "fixture").prompt()).isEqualTo(preview.prompt());
+        assertThat(approvals.approve(workspace, current, "CODEX", "fixture", preview.digest(), true, null).status()).isEqualTo("APPROVED");
+        fails(409, () -> answerPreviews.prepare(workspace, current, "CLAUDE", "fixture"));
+        fails(409, () -> answerPreviews.prepare(workspace, current, "CODEX", "other"));
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM answer_job", Integer.class)).isEqualTo(2);
+    }
+    @Test
+    void rejectsChangingUsedBundlesAndInvalidatesDeletedRoomWithoutLosingFrozenAudit() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "first", 0);
+        var used = new ConversationPreviewService.Request(bundle, 1, List.of("first"), "CODEX", "fixture");
+        var usedPreview = contextPreviews.prepare(workspace, room.id(), used);
+        fails(409, () -> requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(used, usedPreview.digest())));
+        String current = bundles.create(workspace, "telescope", List.of(), false).id();
+        var selection = new ConversationPreviewService.Request(current, 1, List.of("first"), "CODEX", "fixture");
+        var preview = contextPreviews.prepare(workspace, room.id(), selection);
+        fails(409, () -> requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(selection, "wrong")));
+        var frozen = requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(selection, preview.digest()));
+        approvals.approve(workspace, current, "CODEX", "fixture", preview.digest(), true, null);
+        conversations.delete(workspace, room.id());
+        assertThat(approvals.get(workspace, current).status()).isEqualTo("INVALIDATED");
+        assertThat(requestStore.find(workspace, current)).contains(frozen);
+        jdbc.update("DELETE FROM evidence_bundle WHERE id=?", current);
+        assertThat(requestStore.find(workspace, current)).isEmpty();
+    }
+    @Test
+    void refusesDifferentContextOrPreexistingApprovalForSameBundle() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "first", 0);
+        conversations.append(workspace, room.id(), "second", 1);
+        String current = bundles.create(workspace, "telescope", List.of(), false).id();
+        var first = new ConversationPreviewService.Request(current, 2, List.of("first"), "CODEX", "fixture");
+        requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(first, contextPreviews.prepare(workspace, room.id(), first).digest()));
+        var second = new ConversationPreviewService.Request(current, 2, List.of("second"), "CODEX", "fixture");
+        fails(409, () -> requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(second, contextPreviews.prepare(workspace, room.id(), second).digest())));
+        String approved = bundles.create(workspace, "telescope", List.of(), false).id();
+        var base = answerPreviews.prepare(workspace, approved, "CODEX", "fixture");
+        approvals.approve(workspace, approved, "CODEX", "fixture", base.digest(), true, null);
+        var blocked = new ConversationPreviewService.Request(approved, 2, List.of("first"), "CODEX", "fixture");
+        fails(409, () -> requests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(blocked, contextPreviews.prepare(workspace, room.id(), blocked).digest())));
     }
     @Test
     void contextPreviewUsesExplicitSelectionInShelfOrderWithoutWritesOrApproval() {

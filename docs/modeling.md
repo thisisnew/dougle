@@ -1,6 +1,8 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
-문맥 미리보기는 새 저장 모델이 아닙니다. 보관함과 선택한 완료 작업/근거를 읽어 일시적인 요청문·전용 해시를 반환합니다. 영속 요청/턴별 승인 모델은 다음 작업입니다. [코드 대조](conversation-context.md).
+v18 `conversation_request`는 새 질문에 포함할 이전 답변·모델·요청문을 불변 JSON으로 저장합니다. 별도 승인 후 기존 답변 작업이 실행하고, 성공 답변과 보관함 연결을 같은 트랜잭션으로 저장합니다. [모델·실제 클래스 대조](context-requests.md).
+
+Source는 경로+SHA-256으로 비교해 같은 파일 ID를 유지하고 바뀐 파일만 분석합니다. 과거 지식의 근거 스냅샷은 수정하지 않습니다. [실제 저장 흐름](incremental-snapshots.md).
 
 v17은 `conversation → conversation_turn → answer_job → evidence_bundle`로 완료 답변을 정리합니다. `conversation_turn.position`은 사용자 정리 순서이며 AI에게 전달한 실제 대화 턴이 아닙니다. 답변/근거를 복제하지 않습니다. [실제 코드·삭제 정책 대조](conversations.md).
 

@@ -5,6 +5,7 @@ import { request } from './api'
 import ConversationPreviewPanel from './ConversationPreviewPanel'
 
 vi.mock('./api', () => ({ request: vi.fn() }))
+vi.mock('./AnswerApprovalPanel', () => ({ default: () => <div>전송 전 별도 승인 화면</div> }))
 const api = vi.mocked(request)
 const props = { workspaceId: 'one', conversationId: 'room', revision: 1, turns: [{ jobId: 'job', position: 1 }] }
 const preview = {
@@ -47,6 +48,21 @@ it('모델이나 선택 변경은 이전 미리보기를 지우며 자동 재요
   await userEvent.type(screen.getByLabelText('문맥 요청 모델'), 'new-model')
   expect(screen.queryByLabelText('문맥 미리보기 결과')).not.toBeInTheDocument()
   expect(api).toHaveBeenCalledTimes(2)
+})
+
+it('명시적 고정 저장 뒤에만 별도 승인 화면을 열고 선택을 잠근다', async () => {
+  render(<ConversationPreviewPanel {...props} />); await choose()
+  await userEvent.click(screen.getByRole('button', { name: '선택한 문맥 미리보기' }))
+  await screen.findByLabelText('문맥 미리보기 결과')
+  expect(screen.queryByText('전송 전 별도 승인 화면')).not.toBeInTheDocument()
+  api.mockResolvedValueOnce({ id: 'frozen', workspaceId: 'one', bundleId: 'bundle', digest: preview.digest })
+  await userEvent.click(screen.getByRole('button', { name: '이 문맥 고정 저장 (전송 안 함)' }))
+  expect(await screen.findByText('전송 전 별도 승인 화면')).toBeInTheDocument()
+  expect(screen.getByLabelText('문맥 제공자')).toBeDisabled()
+  expect(api).toHaveBeenCalledWith('/workspaces/one/conversations/room/requests', expect.objectContaining({
+    method: 'POST', body: JSON.stringify({ selection: { bundleId: 'bundle', expectedRevision: 1, jobIds: ['job'], provider: 'CODEX', requestedModel: 'fixture' }, digest: preview.digest }),
+  }))
+  expect(api.mock.calls.some(([path]) => /approval|answer-jobs/.test(path))).toBe(false)
 })
 
 it('서버 범위 불일치를 차단한다', async () => {

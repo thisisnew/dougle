@@ -501,6 +501,27 @@ try {
   await api(`${streamBase}/answer-jobs/${cancelJob.id}/cancel`, 'POST')
   const cancelledCodex = await waitForJob(`${streamBase}/answer-jobs/${cancelJob.id}`, job => job.status === 'CANCELLED')
   assert.equal(cancelledCodex.answer, null)
+  const contextRoom = await api(`${streamBase}/conversations`, 'POST', { title: 'synthetic contextual chat' })
+  const contextRoomPath = `${streamBase}/conversations/${contextRoom.id}`
+  await api(`${contextRoomPath}/turns`, 'POST', { jobId: codexJob.id, expectedRevision: 0 })
+  const followupBundle = await api(`${streamBase}/evidence-bundles`, 'POST', { question: 'telescope', domains: [], includeKnowledge: false })
+  const followupPath = `${streamBase}/evidence-bundles/${followupBundle.id}`
+  const followupSelection = { bundleId: followupBundle.id, expectedRevision: 1, jobIds: [codexJob.id], provider: 'CODEX', requestedModel: 'app-server-fixture-model' }
+  const followupPreview = await api(`${contextRoomPath}/preview`, 'POST', followupSelection)
+  const frozenContext = await api(`${contextRoomPath}/requests`, 'POST', { selection: followupSelection, digest: followupPreview.digest })
+  assert.equal((await api(`${followupPath}/answer-approval`)).status, 'NONE')
+  await stop()
+  await start()
+  const restoredContext = await api(`${followupPath}/answer-preview`, 'POST', { provider: 'CODEX', requestedModel: 'app-server-fixture-model' })
+  assert.equal(restoredContext.contextRequestId, frozenContext.id)
+  assert.equal(restoredContext.prompt, frozenContext.prompt)
+  assert.equal(restoredContext.digest, frozenContext.digest)
+  const followupApproval = await api(`${followupPath}/answer-approval`, 'POST', { provider: 'CODEX', requestedModel: 'app-server-fixture-model', digest: restoredContext.digest, acknowledged: true, expectedApprovalId: null })
+  const followupJob = await api(`${followupPath}/answer-jobs`, 'POST', { requestId: crypto.randomUUID(), approvalId: followupApproval.approval.id, digest: restoredContext.digest, approved: true })
+  const followupEvents = await (await fetch(`${base}/api${streamBase}/answer-jobs/${followupJob.id}/events`, { signal: AbortSignal.timeout(15000) })).text()
+  assert.ok(followupEvents.includes('SUCCEEDED'))
+  assert.ok(followupEvents.indexOf('event:evidence') < followupEvents.indexOf('event:partial'))
+  assert.deepEqual((await api(contextRoomPath)).turns.map(turn => turn.jobId), [codexJob.id, followupJob.id])
   await api(streamBase, 'DELETE')
   const livePublic = []
   if (process.argv.includes('--live-public')) {
@@ -548,6 +569,7 @@ try {
     checks: ['Codex opt-in fake App Server evidence-first partial/final SSE and cancellation',
       'ordered conversation links survive restart, retry idempotently, and delete without removing answers or evidence',
       'read-only selected conversation context preview survives restart with a distinct non-approval digest',
+      'frozen context survives restart, requires separate approval and dispatch, and atomically links the completed follow-up answer',
       'packaged UI', 'upload/download byte equality', 'UTF-8 preview', 'restart persistence',
       'active workspace persistence', 'independent knowledge area', 'cascade deletion', 'deletion persists after restart',
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',

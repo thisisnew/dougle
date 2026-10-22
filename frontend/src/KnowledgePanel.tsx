@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { request, type EvidenceLocation } from './api'
+import { downloadApi } from './download'
 import { Button } from './components/ui/button'
 import GenerationPanel from './GenerationPanel'
 import GenerationJobsPanel from './GenerationJobsPanel'
@@ -182,7 +183,7 @@ export default function KnowledgePanel({ workspaceId, onOpenOriginal }: {
           path={`${base}/${selected}/versions/${document.version.number}/evidence/${item.snapshotId}/location`}
           disabled={busy || editing || confirmDelete} onBusy={setBusy} onOpen={onOpenOriginal} />}
         <p>현재 원본은 인용 당시 복사본과 다를 수 있습니다. 아래 다운로드는 당시 원본입니다.</p>
-        <a href={`/api${base}/${selected}/evidence/${item.snapshotId}/content`} download>당시 근거 원본 다운로드</a>
+        <Button variant="outline" onClick={() => void downloadApi(`${base}/${selected}/evidence/${item.snapshotId}/content`, item.name).catch(reason => setError(reason.message))}>당시 근거 원본 다운로드</Button>
       </section>)}
     </article>}
   </section>

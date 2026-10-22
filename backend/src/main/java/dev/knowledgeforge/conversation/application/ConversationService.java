@@ -33,6 +33,7 @@ public class ConversationService {
         store.create(conversation);
         return conversation;
     }
+    @Transactional(readOnly = true, noRollbackFor = LibraryException.class)
     public Detail get(String workspaceId, String id) {
         requireWorkspace(workspaceId);
         var conversation = store.find(workspaceId, id).orElseThrow(() -> new LibraryException(404, "대화 보관함이 없습니다."));

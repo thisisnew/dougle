@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-22T09:09:47.020Z",
+  "measuredAt": "2026-10-22T09:40:10.051Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -8,6 +8,7 @@
     "Codex opt-in fake App Server evidence-first partial/final SSE and cancellation",
     "ordered conversation links survive restart, retry idempotently, and delete without removing answers or evidence",
     "read-only selected conversation context preview survives restart with a distinct non-approval digest",
+    "frozen context survives restart, requires separate approval and dispatch, and atomically links the completed follow-up answer",
     "packaged UI",
     "upload/download byte equality",
     "UTF-8 preview",
@@ -55,21 +56,21 @@
     "manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart",
     "explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart"
   ],
-  "sourceSyncMs": 814.9519029999992,
+  "sourceSyncMs": 936.6026529999999,
   "livePublic": [],
-  "startupMs": 7730,
-  "restartMs": 7693,
+  "startupMs": 9036,
+  "restartMs": 8776,
   "upload100": {
-    "p50Ms": 144.7313240000003,
-    "p95Ms": 376.3667529999948
+    "p50Ms": 739.1436459999968,
+    "p95Ms": 1078.2952709999954
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.8019990000029793,
-    "p95Ms": 5.628228999994462
+    "p50Ms": 7.0447690000000875,
+    "p95Ms": 10.167499000002863
   },
   "search100Files30Requests": {
-    "p50Ms": 12.046415000004345,
-    "p95Ms": 24.60357600000134
+    "p50Ms": 19.751367999997456,
+    "p95Ms": 31.243260999995982
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

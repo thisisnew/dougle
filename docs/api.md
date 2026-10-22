@@ -1,6 +1,8 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
-문맥 확인: `POST /api/workspaces/{workspaceId}/conversations/{id}/preview`는 저장 없이 선택한 과거 답변과 새 질문을 재검증합니다. 기존 승인 API로 이 해시를 승인할 수 없습니다. [입출력·한도](conversation-context.md).
+문맥 확인: `POST /api/workspaces/{workspaceId}/conversations/{id}/preview`는 읽기 전용입니다. `POST .../conversations/{id}/requests`로 확인한 문맥을 고정한 후에만 기존 묶음의 승인/작업 API가 해당 문맥 해시를 받습니다. 저장과 승인은 별개입니다. [입출력·삭제 정책](context-requests.md).
+
+설치형 모드는 API 요청에 `X-Forge-Session`을 추가합니다. `GET /api/desktop/ready`도 인증이 필요합니다. 개발 모드는 기존 계약을 유지합니다. [인증 계약](desktop-backend.md).
 
 v17 대화 보관함: `/api/workspaces/{workspaceId}/conversations` GET/POST, `/{id}` GET/DELETE, `/{id}/turns` POST. 완료 답변의 로컬 연결만 관리합니다. [입출력·충돌·삭제 계약](conversations.md).
 

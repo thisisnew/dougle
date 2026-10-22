@@ -6,7 +6,7 @@ import AnswerApprovalPanel from './AnswerApprovalPanel'
 type Validation = { bundleId: string; digest: string; checkedAt: string; eligible: boolean; status: string; items: {
   label: string; status: string; currentEntryId: string | null; currentSourceRevision: string | null; supports: { label: string; status: string }[]
 }[] }
-type Preview = { bundleId: string; bundleDigest: string; provider: string; requestedModel: string; digest: string; prompt: string; characters: number; maxCharacters: number; validation: Validation }
+type Preview = { bundleId: string; bundleDigest: string; provider: string; requestedModel: string; digest: string; prompt: string; characters: number; maxCharacters: number; validation: Validation; contextRequestId?: string | null }
 const statuses: Record<string, string> = {
   CURRENT: '현재 수집본과 일치', NO_EVIDENCE: '사용 가능한 근거 없음', BLOCKED: '변경된 근거가 있어 준비 불가',
   MISSING: '자료 삭제·조회 불가', ORIGIN_CHANGED: '원본 이름·연결 변경', ANALYSIS_UNAVAILABLE: '추출 결과 사용 불가',
@@ -73,6 +73,7 @@ export default function EvidenceAnswerPreparation({ workspaceId, bundleId, bundl
       </li>)}</ul>
     </section>}
     {preview && <section aria-label="답변 요청 미리보기">
+      {preview.contextRequestId && <p>선택한 이전 문맥이 고정된 요청입니다. 요청 전문의 이전 질문·답변까지 확인하고 승인하세요.</p>}
       <p>{preview.provider} · 요청 모델: {preview.requestedModel || 'CLI 기본값 (실행 모델 미확인)'}</p>
       <p>전체 요청 {preview.characters}/{preview.maxCharacters} UTF-16자 · 토큰 수가 아닙니다.</p>
       <p>아래에서 이 요청만 승인·철회할 수 있습니다. 승인 저장은 실제 전송이 아닙니다.</p>

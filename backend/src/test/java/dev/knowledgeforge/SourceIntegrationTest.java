@@ -6,6 +6,10 @@ import dev.knowledgeforge.library.application.LibraryService;
 import dev.knowledgeforge.search.application.SearchService;
 import dev.knowledgeforge.sources.application.RemoteReader;
 import dev.knowledgeforge.sources.application.SourceService;
+import dev.knowledgeforge.sources.application.SourceStore;
+import dev.knowledgeforge.sources.application.Collector;
+import dev.knowledgeforge.library.application.LibraryStore;
+import dev.knowledgeforge.ingestion.domain.Analysis;
 import dev.knowledgeforge.sources.domain.Source;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +26,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -45,7 +50,10 @@ class SourceIntegrationTest {
     @Autowired SourceService sources;
     @Autowired LibraryService library;
     @Autowired SearchService search;
-    @Autowired DocumentAnalyzer analyzer;
+    @MockitoSpyBean DocumentAnalyzer analyzer;
+    @Autowired SourceStore sourceStore;
+    @Autowired LibraryStore libraryStore;
+    @Autowired List<Collector> collectors;
     @Autowired JdbcTemplate jdbc;
     @Autowired MockMvc mvc;
     @MockitoBean RemoteReader remote;
@@ -58,6 +66,167 @@ class SourceIntegrationTest {
 
     private Source local(String workspaceId, String name, String domain) {
         return sources.create(workspaceId, name, "LOCAL_FOLDER", fixture.toString(), domain);
+    }
+
+    private String entryId(String sourceId, String path) {
+        return jdbc.queryForObject("SELECT id FROM entry WHERE source_id=? AND relative_path=?", String.class, sourceId, path);
+    }
+
+    @Test
+    void changedRevisionPreservesUnchangedRowsAndAnalyzesOnlyChangedFiles() throws Exception {
+        String workspace = library.createWorkspace("Incremental synthetic").id();
+        Files.createDirectories(fixture.resolve("keep"));
+        Files.writeString(fixture.resolve("keep/Stable.java"), "class Stable { void unchangedSymbol() {} }");
+        Files.writeString(fixture.resolve("edit.txt"), "obsoleteToken");
+        Files.writeString(fixture.resolve("delete.txt"), "deletedToken");
+        Source first = sources.sync(workspace, local(workspace, "Incremental", "").id());
+        String stable = entryId(first.id(), "keep/Stable.java");
+        String folder = entryId(first.id(), "keep");
+        String edited = entryId(first.id(), "edit.txt");
+        var analysis = library.analysis(workspace, stable);
+        var symbols = jdbc.queryForList("SELECT rowid,* FROM symbol WHERE entry_id=?", stable);
+        var document = jdbc.queryForMap("SELECT rowid,* FROM extracted_document WHERE entry_id=?", stable);
+        byte[] bytes = library.content(workspace, stable);
+        clearInvocations(analyzer);
+        Files.writeString(fixture.resolve("edit.txt"), "replacementToken");
+        Files.delete(fixture.resolve("delete.txt"));
+        Files.writeString(fixture.resolve("add.txt"), "addedToken");
+        Source changed = sources.sync(workspace, first.id());
+        assertThat(changed.status()).isEqualTo("READY");
+        assertThat(changed.revision()).isNotEqualTo(first.revision());
+        assertThat(entryId(first.id(), "keep/Stable.java")).isEqualTo(stable);
+        assertThat(entryId(first.id(), "keep")).isEqualTo(folder);
+        assertThat(entryId(first.id(), "edit.txt")).isEqualTo(edited);
+        assertThat(library.content(workspace, stable)).isEqualTo(bytes);
+        assertThat(library.analysis(workspace, stable)).isEqualTo(analysis);
+        assertThat(jdbc.queryForList("SELECT rowid,* FROM symbol WHERE entry_id=?", stable)).isEqualTo(symbols);
+        assertThat(jdbc.queryForMap("SELECT rowid,* FROM extracted_document WHERE entry_id=?", stable)).isEqualTo(document);
+        verify(analyzer).analyze(eq("edit.txt"), any(byte[].class));
+        verify(analyzer).analyze(eq("add.txt"), any(byte[].class));
+        verifyNoMoreInteractions(analyzer);
+        search.refresh();
+        assertThat(search.search(workspace, "obsoleteToken", List.of())).isEmpty();
+        assertThat(search.search(workspace, "deletedToken", List.of())).isEmpty();
+        assertThat(search.search(workspace, "replacementToken", List.of())).hasSize(1);
+        assertThat(search.search(workspace, "unchangedSymbol", List.of())).hasSize(1);
+        clearInvocations(analyzer);
+        assertThat(sources.sync(workspace, first.id()).revision()).isEqualTo(changed.revision());
+        verifyNoInteractions(analyzer);
+    }
+
+    @Test
+    void reconcilesFileFolderTransitionsAndEmptySnapshot() throws Exception {
+        String workspace = library.createWorkspace("Transitions").id();
+        Files.writeString(fixture.resolve("branch"), "fileToken");
+        Files.createDirectories(fixture.resolve("tree/deep"));
+        Files.writeString(fixture.resolve("tree/deep/leaf.txt"), "leafToken");
+        Source first = sources.sync(workspace, local(workspace, "Transitions", "").id());
+        Files.delete(fixture.resolve("branch"));
+        Files.createDirectory(fixture.resolve("branch"));
+        Files.writeString(fixture.resolve("branch/new.txt"), "branchToken");
+        Files.delete(fixture.resolve("tree/deep/leaf.txt"));
+        Files.delete(fixture.resolve("tree/deep"));
+        Files.delete(fixture.resolve("tree"));
+        Files.writeString(fixture.resolve("tree"), "treeToken");
+        assertThat(sources.sync(workspace, first.id()).status()).isEqualTo("READY");
+        assertThat(jdbc.queryForList("SELECT relative_path FROM entry WHERE source_id=? ORDER BY relative_path", String.class, first.id()))
+                .containsExactly("", "branch", "branch/new.txt", "tree");
+        search.refresh();
+        assertThat(search.search(workspace, "leafToken", List.of())).isEmpty();
+        assertThat(search.search(workspace, "branchToken", List.of())).hasSize(1);
+        Files.delete(fixture.resolve("branch/new.txt"));
+        Files.delete(fixture.resolve("tree"));
+        clearInvocations(analyzer);
+        Source empty = sources.sync(workspace, first.id());
+        assertThat(empty.status()).isEqualTo("READY");
+        assertThat(empty.rootEntryId()).isEqualTo(first.rootEntryId());
+        assertThat(library.entries(workspace, "ORIGINAL", empty.rootEntryId())).isEmpty();
+        verifyNoInteractions(analyzer);
+    }
+
+    @Test
+    void analysisAndTransactionalWriteFailuresPreservePriorSnapshot() throws Exception {
+        String workspace = library.createWorkspace("Atomic synthetic").id();
+        Files.writeString(fixture.resolve("keep.txt"), "originalToken");
+        Files.writeString(fixture.resolve("delete.txt"), "deleteToken");
+        Source first = sources.sync(workspace, local(workspace, "Atomic", "").id());
+        String kept = entryId(first.id(), "keep.txt");
+        String deleted = entryId(first.id(), "delete.txt");
+        Files.writeString(fixture.resolve("keep.txt"), "updatedToken");
+        Files.delete(fixture.resolve("delete.txt"));
+        doReturn(new Analysis("", "text/plain", "ERROR", "synthetic failure", List.of()))
+                .when(analyzer).analyze(eq("keep.txt"), any(byte[].class));
+        Source failed = sources.sync(workspace, first.id());
+        assertThat(failed.status()).isEqualTo("ERROR");
+        assertThat(failed.revision()).isEqualTo(first.revision());
+        assertThat(failed.syncedAt()).isEqualTo(first.syncedAt());
+        assertThat(entryId(first.id(), "delete.txt")).isEqualTo(deleted);
+        doCallRealMethod().when(analyzer).analyze(eq("keep.txt"), any(byte[].class));
+        jdbc.execute("CREATE TRIGGER synthetic_reconcile_failure BEFORE UPDATE ON extracted_document BEGIN SELECT RAISE(ABORT,'synthetic failure'); END");
+        try {
+            failed = sources.sync(workspace, first.id());
+            assertThat(failed.status()).isEqualTo("ERROR");
+            assertThat(failed.revision()).isEqualTo(first.revision());
+            assertThat(failed.syncedAt()).isEqualTo(first.syncedAt());
+            assertThat(entryId(first.id(), "delete.txt")).isEqualTo(deleted);
+            assertThat(new String(library.content(workspace, kept), StandardCharsets.UTF_8)).isEqualTo("originalToken");
+            search.refresh();
+            assertThat(search.search(workspace, "originalToken", List.of())).hasSize(1);
+            assertThat(search.search(workspace, "updatedToken", List.of())).isEmpty();
+        } finally {
+            jdbc.execute("DROP TRIGGER synthetic_reconcile_failure");
+        }
+        assertThat(sources.sync(workspace, first.id()).status()).isEqualTo("READY");
+    }
+
+    @Test
+    void readsBaselineAfterClaimEvenWhenInitialSourceReadIsStale() throws Exception {
+        String workspace = library.createWorkspace("Claim baseline").id();
+        Files.writeString(fixture.resolve("stable.txt"), "stableToken");
+        Source stale = local(workspace, "Baseline", "");
+        Source first = sources.sync(workspace, stale.id());
+        SourceStore delayed = mock(SourceStore.class, org.mockito.AdditionalAnswers.delegatesTo(sourceStore));
+        doReturn(java.util.Optional.of(stale)).doAnswer(invocation -> sourceStore.find(workspace, stale.id()))
+                .when(delayed).find(workspace, stale.id());
+        clearInvocations(analyzer);
+        Source result = new SourceService(delayed, libraryStore, collectors, analyzer).sync(workspace, stale.id());
+        assertThat(result.status()).isEqualTo("READY");
+        assertThat(result.revision()).isEqualTo(first.revision());
+        verifyNoInteractions(analyzer);
+        var order = inOrder(delayed);
+        order.verify(delayed).find(workspace, stale.id());
+        order.verify(delayed).begin(workspace, stale.id());
+        order.verify(delayed).find(workspace, stale.id());
+        order.verify(delayed).fileHashes(workspace, stale.id());
+    }
+
+    @Test
+    void revisionOnlyChangeDoesNotRewriteEntriesOrAnalysis() throws Exception {
+        String workspace = library.createWorkspace("Revision only").id();
+        Collector collector = mock(Collector.class);
+        when(collector.kind()).thenReturn("LOCAL_FOLDER");
+        var files = List.of(new dev.knowledgeforge.sources.domain.CollectedSnapshot.File(
+                "Stable.java", "class Stable {}".getBytes(StandardCharsets.UTF_8)));
+        when(collector.collect(fixture.toString())).thenReturn(
+                new dev.knowledgeforge.sources.domain.CollectedSnapshot("synthetic-revision-1", files),
+                new dev.knowledgeforge.sources.domain.CollectedSnapshot("synthetic-revision-2", files));
+        var service = new SourceService(sourceStore, libraryStore, List.of(collector), analyzer);
+        Source first = service.sync(workspace, local(workspace, "Revision", "").id());
+        String stable = entryId(first.id(), "Stable.java");
+        clearInvocations(analyzer);
+        jdbc.execute("CREATE TRIGGER synthetic_no_entry_write BEFORE UPDATE ON entry BEGIN SELECT RAISE(ABORT,'unexpected entry write'); END");
+        jdbc.execute("CREATE TRIGGER synthetic_no_analysis_write BEFORE UPDATE ON extracted_document BEGIN SELECT RAISE(ABORT,'unexpected analysis write'); END");
+        try {
+            Source next = service.sync(workspace, first.id());
+            assertThat(next.status()).isEqualTo("READY");
+            assertThat(next.revision()).isEqualTo("synthetic-revision-2");
+            assertThat(next.rootEntryId()).isEqualTo(first.rootEntryId());
+            assertThat(entryId(first.id(), "Stable.java")).isEqualTo(stable);
+            verifyNoInteractions(analyzer);
+        } finally {
+            jdbc.execute("DROP TRIGGER synthetic_no_entry_write");
+            jdbc.execute("DROP TRIGGER synthetic_no_analysis_write");
+        }
     }
 
     @Test

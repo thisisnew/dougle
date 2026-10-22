@@ -4,6 +4,7 @@ import dev.knowledgeforge.ingestion.application.AnalysisStore;
 import dev.knowledgeforge.ingestion.domain.Analysis;
 import dev.knowledgeforge.library.application.LibraryException;
 import dev.knowledgeforge.sources.application.SourceStore;
+import dev.knowledgeforge.sources.application.SnapshotPlanner;
 import dev.knowledgeforge.sources.domain.CollectedSnapshot;
 import dev.knowledgeforge.sources.domain.Source;
 import java.time.Instant;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -56,23 +58,45 @@ public class JdbcSourceStore implements SourceStore {
         jdbc.update("UPDATE source SET status='ERROR',error=? WHERE id=?", message, id);
     }
 
+    public Map<String, String> fileHashes(String workspaceId, String id) {
+        Map<String, String> hashes = new HashMap<>();
+        jdbc.query("SELECT relative_path,content_hash FROM entry WHERE workspace_id=? AND source_id=? AND kind='FILE'",
+                result -> { hashes.put(result.getString("relative_path"), result.getString("content_hash")); }, workspaceId, id);
+        return hashes;
+    }
+
     @Transactional
     public void publish(Source source, CollectedSnapshot snapshot, Map<String, Analysis> extracted) {
         Source current = find(source.workspaceId(), source.id()).orElseThrow(() -> new LibraryException(404, "삭제된 Source입니다."));
-        if (snapshot.revision().equals(current.revision()) && current.rootEntryId() != null) {
-            jdbc.update("UPDATE source SET status='READY',error=NULL,synced_at=? WHERE id=?", Instant.now().toString(), source.id());
-            return;
+        if (!"SYNCING".equals(current.status()) || !Objects.equals(source.revision(), current.revision())
+                || !Objects.equals(source.rootEntryId(), current.rootEntryId())) {
+            throw new LibraryException(409, "Source 동기화 기준이 변경되었습니다.");
+        }
+        CollectionLimits.snapshot(snapshot.files());
+        var plan = SnapshotPlanner.plan(snapshot, fileHashes(source.workspaceId(), source.id()));
+        for (var file : plan.changed()) {
+            if (extracted.get(file.path()) == null) throw new IllegalStateException("Missing changed file analysis");
         }
         String rootId = current.rootEntryId();
         if (rootId == null) {
             rootId = insert(source, null, source.name(), "", "FOLDER", new byte[0]);
             jdbc.update("UPDATE source SET root_entry_id=? WHERE id=?", rootId, source.id());
         }
-        jdbc.update("DELETE FROM entry WHERE source_id=? AND id!=?", source.id(), rootId);
         Map<String, String> folders = new HashMap<>();
+        Map<String, String> files = new HashMap<>();
+        var entries = jdbc.query("SELECT id,relative_path,kind FROM entry WHERE source_id=? AND id!=? ORDER BY length(relative_path) DESC",
+                (result, row) -> new StoredEntry(result.getString("id"), result.getString("relative_path"), result.getString("kind")),
+                source.id(), rootId);
+        for (var entry : entries) {
+            boolean folder = "FOLDER".equals(entry.kind());
+            if (folder ? plan.folders().contains(entry.path()) : plan.hashes().containsKey(entry.path())) {
+                (folder ? folders : files).put(entry.path(), entry.id());
+            } else {
+                jdbc.update("DELETE FROM entry WHERE id=?", entry.id());
+            }
+        }
         folders.put("", rootId);
-        for (var file : snapshot.files()) {
-            CollectionLimits.path(file.path());
+        for (var file : plan.changed()) {
             String[] parts = file.path().split("/");
             String path = "";
             String parentId = rootId;
@@ -85,12 +109,20 @@ public class JdbcSourceStore implements SourceStore {
                 }
                 parentId = folderId;
             }
-            String id = insert(source, parentId, parts[parts.length - 1], file.path(), "FILE", file.content());
+            String id = files.get(file.path());
+            if (id == null) {
+                id = insert(source, parentId, parts[parts.length - 1], file.path(), "FILE", file.content());
+            } else {
+                jdbc.update("UPDATE entry SET size=?,content=?,content_hash=? WHERE id=?",
+                        file.content().length, file.content(), plan.hashes().get(file.path()), id);
+            }
             analyses.save(id, extracted.get(file.path()));
         }
         jdbc.update("UPDATE source SET status='READY',revision=?,error=NULL,synced_at=? WHERE id=?",
                 snapshot.revision(), Instant.now().toString(), source.id());
     }
+
+    private record StoredEntry(String id, String path, String kind) {}
 
     private String insert(Source source, String parent, String name, String path, String kind, byte[] content) {
         String id = UUID.randomUUID().toString();

@@ -146,7 +146,7 @@ class BundleValidationIntegrationTest {
     }
 
     @Test
-    void remapsUnchangedSourcePathAfterSyncAndChecksDomainAgainstDatabase() throws Exception {
+    void preservesUnchangedSourcePathAfterSyncAndChecksDomainAgainstDatabase() throws Exception {
         Files.writeString(fixture.resolve("note.txt"), "observatory telescope");
         var source = sources.create(workspace, "local", "LOCAL_FOLDER", fixture.toString(), "research");
         sources.sync(workspace, source.id());
@@ -158,7 +158,7 @@ class BundleValidationIntegrationTest {
         sources.sync(workspace, source.id());
         var validation = validator.check(workspace, frozen.id());
         assertThat(validation.eligible()).isTrue();
-        assertThat(validation.items().getFirst().currentEntryId()).isNotEqualTo(oldEntry);
+        assertThat(validation.items().getFirst().currentEntryId()).isEqualTo(oldEntry);
         assertThat(previews.prepare(workspace, frozen.id(), "CODEX", null).digest()).isEqualTo(digest);
         jdbc.update("UPDATE source SET domain='other' WHERE id=?", source.id());
         assertThat(validator.check(workspace, frozen.id()).items().getFirst().status()).isEqualTo("SCOPE_CHANGED");

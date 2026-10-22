@@ -12,16 +12,19 @@ import tools.jackson.databind.json.JsonMapper;
 @Service
 public class EvidenceAnswerPreview {
     public record Preview(String bundleId, String bundleDigest, String provider, String requestedModel,
-                          String digest, String prompt, int characters, int maxCharacters, BundleValidation validation) {}
+                          String digest, String prompt, int characters, int maxCharacters, BundleValidation validation,
+                          String contextRequestId) {}
     private final EvidenceBundleService bundles;
     private final EvidenceBundleValidator validator;
     private final CuratorSettings settings;
+    private final AnswerContextProvider contexts;
     private final JsonMapper json = JsonMapper.builder().build();
 
-    public EvidenceAnswerPreview(EvidenceBundleService bundles, EvidenceBundleValidator validator, CuratorSettings settings) {
+    public EvidenceAnswerPreview(EvidenceBundleService bundles, EvidenceBundleValidator validator, CuratorSettings settings, AnswerContextProvider contexts) {
         this.bundles = bundles;
         this.validator = validator;
         this.settings = settings;
+        this.contexts = contexts;
     }
 
     @Transactional(readOnly = true)
@@ -36,6 +39,20 @@ public class EvidenceAnswerPreview {
 
     @Transactional(readOnly = true)
     public Preview prepare(String workspaceId, String id, String providerName, String selectedModel) {
+        var base = prepareBase(workspaceId, id, providerName, selectedModel);
+        var context = contexts.validated(workspaceId, id).orElse(null);
+        if (context == null) return base;
+        if (!base.provider().equals(context.provider()) || !base.requestedModel().equals(context.requestedModel())) {
+            throw new LibraryException(409, "이 묶음의 문맥은 저장한 제공자·모델로 고정되어 있습니다. 변경하려면 새 묶음을 만드세요.");
+        }
+        String prompt = context.prefix() + base.prompt();
+        String digest = ContextPrompt.digest(workspaceId, context.conversationId(), context.revision(), base.digest(), base.provider(), base.requestedModel(), prompt);
+        if (prompt.length() > 20000 || !digest.equals(context.digest())) throw new LibraryException(409, "고정한 문맥 요청이 변경되었습니다. 새 묶음을 준비하세요.");
+        return new Preview(id, base.bundleDigest(), base.provider(), base.requestedModel(), digest, prompt, prompt.length(), 20000, base.validation(), context.id());
+    }
+
+    @Transactional(readOnly = true)
+    public Preview prepareBase(String workspaceId, String id, String providerName, String selectedModel) {
         Provider provider;
         try { provider = Provider.valueOf(providerName); }
         catch (IllegalArgumentException | NullPointerException exception) { throw new LibraryException(400, "CODEX 또는 CLAUDE 제공자를 선택하세요."); }
@@ -72,6 +89,6 @@ public class EvidenceAnswerPreview {
                 .put("bundleId", id).put("bundleDigest", bundle.digest()).put("provider", provider.name())
                 .put("requestedModel", model).put("prompt", prompt);
         return new Preview(id, bundle.digest(), provider.name(), model, ContentDigest.of(binding.toString()),
-                prompt, prompt.length(), 20000, validation);
+                prompt, prompt.length(), 20000, validation, null);
     }
 }

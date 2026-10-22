@@ -9,12 +9,13 @@
 - 모델 고정·승인 바인딩·CLI 설치 진단은 `docs/cli-settings.md`를 확인한다. 설치 버전 확인을 로그인/원격 연결 성공으로 표시하지 않는다.
 - 건별 모델 선택·브라우저 선택 저장·요청 모델 작업 이력은 `docs/model-selection.md`를 확인한다. v5에서 도입했으며 과거 모델 미기록 값은 null로 보존한다.
 - 후속 CLI 관측 이력은 `docs/cli-observation.md`를 확인한다. CLI 관측은 v6에서 도입했으며 실행 전 관측 버전을 정확한 생성 바이너리 버전으로 단정하지 않는다.
-- 현재 스키마는 v17이다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
+- 현재 스키마는 v18이다. 문맥 고정 요청은 `docs/context-requests.md`를 따른다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
 - AI 결과 비교는 `docs/generation-comparison.md`를 확인한다. 생성 당시/현재/최초 결과를 읽기 전용 조회한다. 거절·재검토 이력은 `docs/proposal-decisions.md`에 구현했다. 명시적 전체 채택은 `docs/proposal-acceptance.md`에 구현했다. 동일 근거의 수동 부분 반영은 `docs/proposal-merge.md`를 따르며, 현재 수집본과 일치하는 근거의 번호 통합은 `docs/evidence-merge.md`에 구현했다. 오래된 근거를 새 원본으로 교체하는 재연결은 아직 없다.
 - P3-4 출처 탐색 연결은 `docs/evidence-navigation.md`를 확인한다. 원본 해석은 Source ID+경로 또는 업로드 ID이며 독립 지식 폴더·카드 배치는 `docs/knowledge-folders.md`를 확인한다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.
 - 사용자는 완성까지 연속 진행하도록 요청했다. 기능마다 멈추지 말고 검증·문서·푸시 후 다음 항목으로 이어간다. 외부 AI 실제 전송과 배포 자격 증명은 별도 승인 경계다.
-- 이전 문맥의 읽기 전용 미리보기는 `docs/conversation-context.md`를 따른다. 기존 단일 질문 승인과 해시를 혼용하지 않는다. 다음은 영속 문맥/전용 승인/실제 턴 실행이다.
+- 이전 문맥의 읽기 전용 미리보기는 `docs/conversation-context.md`, 명시적 고정 저장·승인·실행은 `docs/context-requests.md`를 따른다. 저장 전 문맥 해시로 기존 단일 질문을 승인할 수 없다.
+- Source 파일 ID 보존·변경 분석은 `docs/incremental-snapshots.md`, 설치형 토큰/수명주기는 `docs/desktop-backend.md`를 따른다. 전체 스냅샷 수집을 Git 네트워크 증분으로 보고하지 않는다.
 - 질문별 이력 조회는 `docs/answer-history.md`, v17 완료 답변 보관함은 `docs/conversations.md`를 따른다. 보관함의 정리 순서를 실제 문맥 전송 턴으로 취급하지 않는다. 새 AI 호출·승인·이전 문맥 전송은 하지 않는다. 다음은 불변 문맥 미리보기/턴별 승인 설계다.
 - Codex 스트림은 `docs/codex-streaming.md`의 전용 프로필 opt-in 실행기까지 답변 작업에 연결했다. 기본 exec/지식 생성 경로는 유지하며 실패 시 자동 재전송하지 않는다. 가상 CLI 테스트를 실제 서비스 생성 성공으로 보고하지 않는다. 다중 대화는 후속이다.
 - 지식 Markdown 표시 보안 경계는 `docs/markdown-rendering.md`를 따른다. 링크/이미지 자동 로딩이나 raw HTML 실행을 추가하지 않는다.

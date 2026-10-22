@@ -3,6 +3,9 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { request } from './api'
+import { downloadApi } from './download'
+
+vi.mock('./download', () => ({ downloadApi: vi.fn().mockResolvedValue(undefined) }))
 
 vi.mock('./api', async importOriginal => ({
   ...await importOriginal<typeof import('./api')>(),
@@ -12,7 +15,7 @@ const api = vi.mocked(request)
 const workspace = { id: 'one', name: '가상 연구', createdAt: '2026-10-21T00:00:00Z' }
 const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md', kind: 'FILE', area: 'ORIGINAL', size: 12, createdAt: workspace.createdAt }
 
-beforeEach(() => { api.mockReset() })
+beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
   it.each([false, true])('근거에서 폴더와 파일 미리보기로 이동하며 이동 중 삭제=%s를 처리한다', async missing => {
@@ -45,11 +48,12 @@ describe('Workspace와 자료 탐색기', () => {
     expect(within(await screen.findByLabelText('폴더 경로')).getByRole('button', { name: '가상 원본 폴더' })).toBeInTheDocument()
     if (missing) {
       expect(await screen.findByRole('alert')).toHaveTextContent('이동 중 원본이 변경·삭제')
-      expect(screen.queryByRole('link', { name: '원본 다운로드' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: '원본 다운로드' })).not.toBeInTheDocument()
     } else {
       expect(await screen.findByText('새 원본 내용')).toBeInTheDocument()
       expect(screen.getByText(/현재 원본은 인용 당시 근거와 다릅니다/)).toBeInTheDocument()
-      expect(screen.getByRole('link', { name: '원본 다운로드' })).toHaveAttribute('href', '/api/workspaces/one/entries/new-id/content')
+      await user.click(screen.getByRole('button', { name: '원본 다운로드' }))
+      expect(downloadApi).toHaveBeenCalledWith('/workspaces/one/entries/new-id/content', file.name)
       await user.click(screen.getByRole('button', { name: '미리보기 닫기' }))
       expect(screen.queryByText(/현재 원본은 인용 당시 근거와 다릅니다/)).not.toBeInTheDocument()
     }
@@ -85,7 +89,8 @@ describe('Workspace와 자료 탐색기', () => {
     await user.click(await screen.findByRole('button', { name: 'notes.md' }))
     expect(await screen.findByText('<script>window.injected=true</script>')).toBeInTheDocument()
     expect(document.querySelector('.preview-content script')).toBeNull()
-    expect(screen.getByRole('link', { name: '원본 다운로드' })).toHaveAttribute('href', '/api/workspaces/one/entries/file/content')
+    await user.click(screen.getByRole('button', { name: '원본 다운로드' }))
+    expect(downloadApi).toHaveBeenCalledWith('/workspaces/one/entries/file/content', file.name)
   })
 
   it('삭제 취소는 API를 호출하지 않으며 오류는 모달 안에 남긴다', async () => {

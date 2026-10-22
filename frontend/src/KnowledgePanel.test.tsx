@@ -3,6 +3,9 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, it, vi } from 'vitest'
 import KnowledgePanel, { DraftForm } from './KnowledgePanel'
 import { request } from './api'
+import { downloadApi } from './download'
+
+vi.mock('./download', () => ({ downloadApi: vi.fn().mockResolvedValue(undefined) }))
 
 vi.mock('./api', async importOriginal => ({ ...await importOriginal<typeof import('./api')>(), request: vi.fn() }))
 vi.mock('./PublicationPanel', () => ({ default: () => <section aria-label="사람 검토와 게시" /> }))
@@ -14,7 +17,7 @@ const document = {
     evidence: [{ snapshotId: 'snapshot', path: 'notes.txt', name: 'notes.txt', sourceRevision: 'revision', contentHash: 'hash',
       startLine: 1, endLine: 2, quote: '과거 원문', freshness: 'MISSING' }] },
 }
-beforeEach(() => { api.mockReset() })
+beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 it('선택한 카드를 폴더로 배치하고 목록만 필터링하며 본문은 보존한다', async () => {
   const user = userEvent.setup()
@@ -66,7 +69,8 @@ it('원본이 삭제된 근거와 Markdown을 실행하지 않고 표시한다',
   expect(screen.getByLabelText('지식 Markdown')).toBeVisible()
   expect(container.querySelector('script')).toBeNull()
   expect(screen.getByText('원본 삭제됨 · 근거 복사본 보존')).toBeInTheDocument()
-  expect(screen.getByRole('link', { name: '당시 근거 원본 다운로드' })).toHaveAttribute('href', '/api/workspaces/one/knowledge/card/evidence/snapshot/content')
+  await userEvent.click(screen.getByRole('button', { name: '당시 근거 원본 다운로드' }))
+  expect(downloadApi).toHaveBeenCalledWith('/workspaces/one/knowledge/card/evidence/snapshot/content', 'notes.txt')
 })
 
 it('사람 편집은 기대 버전을 전달하며 이전 근거를 유지한 새 버전으로 저장한다', async () => {

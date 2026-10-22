@@ -54,15 +54,23 @@ public class SourceService {
             throw new LibraryException(409, "이미 동기화 중입니다.");
         }
         try {
+            source = require(workspaceId, id);
+            var baseline = store.fileHashes(workspaceId, id);
             var snapshot = collector(source.kind()).collect(source.location());
             Map<String, Analysis> analyses = new HashMap<>();
-            var changedFiles = snapshot.revision().equals(source.revision()) && source.rootEntryId() != null
-                    ? List.<dev.knowledgeforge.sources.domain.CollectedSnapshot.File>of() : snapshot.files();
-            for (var file : changedFiles) {
+            var plan = SnapshotPlanner.plan(snapshot, baseline);
+            for (var file : plan.changed()) {
                 if (Thread.currentThread().isInterrupted()) {
                     throw new InterruptedException("Synchronization interrupted");
                 }
-                analyses.put(file.path(), analyzer.analyze(file.path(), file.content()));
+                Analysis analysis = analyzer.analyze(file.path(), file.content());
+                if (analysis == null || "ERROR".equals(analysis.status())) {
+                    throw new LibraryException(422, "변경 파일 분석에 실패했습니다. 이전 스냅샷을 유지합니다.");
+                }
+                analyses.put(file.path(), analysis);
+            }
+            if (Thread.currentThread().isInterrupted()) {
+                throw new InterruptedException("Synchronization interrupted");
             }
             store.publish(source, snapshot, analyses);
         } catch (Exception exception) {

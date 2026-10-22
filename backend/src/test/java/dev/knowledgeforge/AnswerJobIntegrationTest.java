@@ -41,6 +41,9 @@ class AnswerJobIntegrationTest {
     static void properties(DynamicPropertyRegistry registry) { registry.add("forge.data-dir", DATA::toString); }
     @Autowired AnswerJobService jobs;
     @Autowired AnswerApprovalService approvals;
+    @Autowired ConversationService conversations;
+    @Autowired ConversationPreviewService contextPreviews;
+    @Autowired ConversationRequestService contextRequests;
     @Autowired EvidenceAnswerPreview previews;
     @Autowired EvidenceBundleService bundles;
     @Autowired LibraryService library;
@@ -91,6 +94,49 @@ class AnswerJobIntegrationTest {
     }
     void fails(int status, Runnable action) {
         assertThatThrownBy(action::run).isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(status));
+    }
+
+    ConversationRequest prepareContext() {
+        jdbc.update("INSERT INTO answer_job VALUES('history',?,?,'history-approval','CODEX','model-one','old-digest','SUCCEEDED','Previous synthetic answer [R9]',NULL,'now','now')", workspace, bundle.id());
+        var room = conversations.create(workspace, "synthetic context");
+        conversations.append(workspace, room.id(), "history", 0);
+        bundle = bundles.create(workspace, "telescope", List.of(), false);
+        var selection = new ConversationPreviewService.Request(bundle.id(), 1, List.of("history"), "CODEX", "model-one");
+        var preview = contextPreviews.prepare(workspace, room.id(), selection);
+        var frozen = contextRequests.freeze(workspace, room.id(), new ConversationRequestService.Freeze(selection, preview.digest()));
+        approval = approvals.approve(workspace, bundle.id(), "CODEX", "model-one", preview.digest(), true, null).approval();
+        return frozen;
+    }
+
+    @Test
+    void approvedContextUsesFrozenPromptAndAtomicallyAppendsCompletedTurn() throws Exception {
+        var frozen = prepareContext();
+        var job = submit(request());
+        assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
+        release.countDown();
+        assertThat(terminal(job.id()).status()).isEqualTo("SUCCEEDED");
+        verify(model).generate("CODEX", frozen.prompt(), "model-one");
+        assertThat(conversations.get(workspace, frozen.conversationId()).turns()).extracting("jobId").containsExactly("history", job.id());
+        assertThat(approvals.get(workspace, bundle.id()).status()).isEqualTo("CONSUMED");
+    }
+
+    @Test
+    void contextDeletionBeforeDispatchRejectsWithoutGeneration() {
+        var frozen = prepareContext();
+        conversations.delete(workspace, frozen.conversationId());
+        fails(409, () -> submit(request()));
+        verifyNoInteractions(model);
+    }
+
+    @Test
+    void contextDeletionDuringGenerationDiscardsLateAnswer() throws Exception {
+        var frozen = prepareContext();
+        var job = submit(request());
+        assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue();
+        conversations.delete(workspace, frozen.conversationId());
+        release.countDown();
+        assertThat(terminal(job.id()).status()).isEqualTo("FAILED");
+        assertThat(jobs.get(workspace, job.id()).answer()).isNull();
     }
 
     @Test

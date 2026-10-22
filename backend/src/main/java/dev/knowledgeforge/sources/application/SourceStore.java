@@ -12,6 +12,7 @@ public interface SourceStore {
     Optional<Source> find(String workspaceId, String id);
     void create(Source source);
     boolean begin(String workspaceId, String id);
+    Map<String, String> fileHashes(String workspaceId, String id);
     void fail(String id, String message);
     void publish(Source source, CollectedSnapshot snapshot, Map<String, Analysis> analyses);
     void delete(String workspaceId, String id);

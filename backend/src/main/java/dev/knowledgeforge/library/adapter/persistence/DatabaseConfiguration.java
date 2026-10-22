@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 17) {
+        if (version > 18) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -407,6 +407,20 @@ public class DatabaseConfiguration {
                                 """);
                         jdbc.execute("CREATE INDEX conversation_turn_job ON conversation_turn(workspace_id,job_id)");
                         jdbc.execute("PRAGMA user_version=17");
+                    });
+        }
+        if (version < 18) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE conversation_request (
+                                  id TEXT PRIMARY KEY, workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  bundle_id TEXT NOT NULL UNIQUE REFERENCES evidence_bundle(id) ON DELETE CASCADE,
+                                  snapshot_json TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=18");
                     });
         }
         jdbc.update("UPDATE answer_job SET status='INTERRUPTED',error='앱 재시작으로 중단되었습니다. 다시 승인해 새 작업을 시작하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

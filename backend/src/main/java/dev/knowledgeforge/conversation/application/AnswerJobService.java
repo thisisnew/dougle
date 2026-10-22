@@ -23,6 +23,7 @@ public class AnswerJobService {
     private final EvidenceBundleService bundles;
     private final LibraryStore library;
     private final AnswerModel model;
+    private final ConversationCompletion completion;
     private final TransactionTemplate transaction;
     private AnswerJob active;
     private Thread worker;
@@ -32,9 +33,11 @@ public class AnswerJobService {
     public record Partial(String workspaceId, String jobId, String bundleId, String text, boolean unverified) {}
 
     public AnswerJobService(AnswerJobStore store, AnswerApprovalStore approvals, EvidenceAnswerPreview previews,
-                            EvidenceBundleService bundles, LibraryStore library, AnswerModel model, PlatformTransactionManager manager) {
+                            EvidenceBundleService bundles, LibraryStore library, AnswerModel model, PlatformTransactionManager manager,
+                            ConversationCompletion completion) {
         this.store = store; this.approvals = approvals; this.previews = previews; this.bundles = bundles;
         this.library = library; this.model = model; this.transaction = new TransactionTemplate(manager);
+        this.completion = completion;
     }
 
     public synchronized AnswerJob submit(String workspaceId, String bundleId, Request request) {
@@ -134,6 +137,7 @@ public class AnswerJobService {
                     if (!preview.digest().equals(job.digest())) throw new LibraryException(409, "생성 중 근거가 변경되어 답변을 저장하지 않았습니다.");
                     String answer = AnswerOutput.validate(raw, bundles.get(job.workspaceId(), job.bundleId()));
                     if (!store.update(job.workspaceId(), job.id(), "SUCCEEDED", answer, null)) throw new CancellationException();
+                    completion.attach(job.workspaceId(), job.bundleId(), job.id());
                 });
             }
         } catch (Exception exception) {
