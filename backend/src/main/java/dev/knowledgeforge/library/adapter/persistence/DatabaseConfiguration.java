@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 16) {
+        if (version > 17) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -382,6 +382,31 @@ public class DatabaseConfiguration {
                                 """);
                         jdbc.execute("CREATE INDEX answer_job_workspace ON answer_job(workspace_id,created_at)");
                         jdbc.execute("PRAGMA user_version=16");
+                    });
+        }
+        if (version < 17) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("CREATE UNIQUE INDEX answer_job_scope ON answer_job(workspace_id,id)");
+                        jdbc.execute("""
+                                CREATE TABLE conversation (
+                                  id TEXT PRIMARY KEY, workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  title TEXT NOT NULL, revision INTEGER NOT NULL DEFAULT 0 CHECK(revision>=0), created_at TEXT NOT NULL,
+                                  UNIQUE(workspace_id,id)
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE conversation_turn (
+                                  workspace_id TEXT NOT NULL, conversation_id TEXT NOT NULL, job_id TEXT NOT NULL,
+                                  position INTEGER NOT NULL CHECK(position>0), added_at TEXT NOT NULL,
+                                  PRIMARY KEY(conversation_id,job_id), UNIQUE(conversation_id,position),
+                                  FOREIGN KEY(workspace_id,conversation_id) REFERENCES conversation(workspace_id,id) ON DELETE CASCADE,
+                                  FOREIGN KEY(workspace_id,job_id) REFERENCES answer_job(workspace_id,id) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX conversation_turn_job ON conversation_turn(workspace_id,job_id)");
+                        jdbc.execute("PRAGMA user_version=17");
                     });
         }
         jdbc.update("UPDATE answer_job SET status='INTERRUPTED',error='앱 재시작으로 중단되었습니다. 다시 승인해 새 작업을 시작하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());

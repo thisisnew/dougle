@@ -152,6 +152,13 @@ try {
   const completedAnswer = await waitForJob(answerJobPath, job => !['QUEUED', 'RUNNING', 'CANCELLING'].includes(job.status))
   assert.equal(completedAnswer.status, 'SUCCEEDED', completedAnswer.error)
   assert.equal(completedAnswer.answer, '테스트 전용 가상 답변입니다. [R1]')
+  const conversationBase = `/workspaces/${workspace.id}/conversations`
+  const conversation = await api(conversationBase, 'POST', { title: '가상 관측 보관함' })
+  const conversationPath = `${conversationBase}/${conversation.id}`
+  const linkedConversation = await api(`${conversationPath}/turns`, 'POST', { jobId: answerJob.id, expectedRevision: 0 })
+  assert.equal(linkedConversation.turns[0].jobId, answerJob.id)
+  assert.equal(linkedConversation.turns[0].position, 1)
+  assert.deepEqual(await api(`${conversationPath}/turns`, 'POST', { jobId: answerJob.id, expectedRevision: 0 }), linkedConversation)
   async function checkAnswerEvents() {
     const response = await fetch(`${base}/api${answerJobPath}/events`, { signal: AbortSignal.timeout(10000) })
     assert.equal(response.status, 200)
@@ -362,6 +369,11 @@ try {
   assert.equal((await api(`${bundleBase}/${originalBundle.id}/answer-preview`, 'POST', { provider: 'CODEX', requestedModel: 'preview-only-model' })).digest, originalAnswerPreview.digest)
   assert.deepEqual(await api(approvalPath), { ...answerApproval, status: 'CONSUMED' })
   assert.deepEqual(await api(answerJobPath), completedAnswer)
+  assert.deepEqual(await api(conversationPath), linkedConversation)
+  await api(conversationPath, 'DELETE')
+  assert.deepEqual(await api(conversationBase), [])
+  assert.deepEqual(await api(answerJobPath), completedAnswer)
+  assert.deepEqual(await api(`${bundleBase}/${originalBundle.id}`), originalBundle)
   await checkAnswerEvents()
   assert.deepEqual(await api(answerSubmitPath, 'POST', answerRequest), completedAnswer)
   assert.equal((await api(`${bundleBase}/${publishedBundle.id}/answer-preview`, 'POST', { provider: 'CLAUDE', requestedModel: 'preview-only-model' })).digest, publishedAnswerPreview.digest)
@@ -528,6 +540,7 @@ try {
     springBoot: '4.1.1',
     dataset: '100 synthetic UTF-8 files (~2.5 KB each) + 1 nested fixture; sequential HTTP requests',
     checks: ['Codex opt-in fake App Server evidence-first partial/final SSE and cancellation',
+      'ordered conversation links survive restart, retry idempotently, and delete without removing answers or evidence',
       'packaged UI', 'upload/download byte equality', 'UTF-8 preview', 'restart persistence',
       'active workspace persistence', 'independent knowledge area', 'cascade deletion', 'deletion persists after restart',
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',

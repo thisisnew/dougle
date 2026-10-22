@@ -1,5 +1,7 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+v17 대화 보관함: `/api/workspaces/{workspaceId}/conversations` GET/POST, `/{id}` GET/DELETE, `/{id}/turns` POST. 완료 답변의 로컬 연결만 관리합니다. [입출력·충돌·삭제 계약](conversations.md).
+
 질문별 이력 화면은 기존 `GET /api/workspaces/{workspaceId}/answer-jobs`, `/evidence-bundles` 목록과 각 `/{id}` 상세를 재사용합니다. 새 API·승인·생성 호출은 없습니다. [조회·삭제 정책](answer-history.md).
 
 Codex 답변에 선택적 App Server 경로를 추가했습니다. 새 HTTP API/DB 스키마는 없으며 시작 옵션 `forge.ai.codex-stream-home`으로 전용 로그인 폴더를 지정합니다. 기존 SSE `partial`을 재사용합니다. 기본값은 빈 값(기존 exec)입니다. [설정·오류·격리](codex-streaming.md).
@@ -39,7 +41,7 @@ P4 준비: `GET /api/workspaces/{workspaceId}/evidence-bundles/{id}/validation`,
 
 지식 API는 수동/승인 기반 CLI AI DRAFT와 사람 검토·명시적 게시를 지원합니다. 자동 의미 검증은 없습니다.
 Markdown 응답은 저장된 원문이며 HTML이 아닙니다. UI만 안전한 미리보기를 제공합니다.
-표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v16이며 답변 작업 테이블이 추가되었습니다. 기존 근거 묶음·게시 색인 큐·FULL/MANUAL 채택 기록도 보존합니다.
+표시 정책은 [렌더링 정책](markdown-rendering.md)을 따릅니다. 현재 DB는 v17이며 답변 작업에 더해 보관함/순서 연결 테이블이 추가되었습니다. 기존 근거 묶음·게시 색인 큐·FULL/MANUAL 채택 기록도 보존합니다.
 
 폴더 이름/부모 변경: `PUT /workspaces/{workspaceId}/knowledge-organization/folders/{id}`.
 요청 `{parentId, name, expectedRevision}` → 변경한 Folder `{id,parentId,name,revision}`.

@@ -98,7 +98,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - [ ] **P4-2: 대화 유스케이스.** `conversation`과 `LlmProvider` 포트, CLI Provider 스트림,
   컨텍스트/토큰 예산, 대화 기록·삭제 정책, 근거 중심 프롬프트를 구현.
   검색 결과의 악성 명령을 지시로 실행하지 않으며 근거 부족 시 답변 유보.
-  후속 구현: [질문별 읽기 전용 이력 화면](answer-history.md). 기존 작업/근거 조회이며 대화방·턴 순서·이전 문맥 전송은 미구현.
+  후속 구현: [질문별 이력](answer-history.md)과 [완료 답변 보관함](conversations.md). 로컬 순서 정리는 구현했으나 실제 문맥 전송 턴·문맥 승인/재검증은 미구현.
 - [ ] **P4-3: SSE UI/API.** 근거 이벤트를 먼저 전송한 뒤 답변 delta, 완료/오류 이벤트 전달.
   후속 완료: [Claude text_delta 기반 미검증 임시 출력](partial-answer.md)과 [선택적 Codex 스트리밍](codex-streaming.md). SSE는 누적 partial 스냅샷이며 완료/실패/중단 때 폐기. 실제 외부 서비스 스트림 검증은 남음.
   완료된 하위 단위: [근거 우선 작업 관측 SSE API](answer-events.md)와 [제한 재연결 UI](answer-events-ui.md). 후속 Claude partial은 누적 스냅샷이며 관측 종료는 생성 취소가 아님.

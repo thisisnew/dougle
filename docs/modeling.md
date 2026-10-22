@@ -1,6 +1,6 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
-질문별 답변 이력은 새 저장 모델이 아닙니다. `answer_job.bundle_id → evidence_bundle`을 읽어 질문·당시 근거·답변을 함께 표시합니다. 대화방과 턴 관계는 아직 없습니다. [코드와 후속 모델 대조](answer-history.md).
+v17은 `conversation → conversation_turn → answer_job → evidence_bundle`로 완료 답변을 정리합니다. `conversation_turn.position`은 사용자 정리 순서이며 AI에게 전달한 실제 대화 턴이 아닙니다. 답변/근거를 복제하지 않습니다. [실제 코드·삭제 정책 대조](conversations.md).
 
 Codex용 `CodexTextStream`은 thread/turn/item에 묶인 **메모리 상태 검증기**입니다. 전용 프로필 옵션이 켜지면 `CodexAppServerSession`에서 호출하고 기존 작업 메모리/SSE로 보냅니다. 새 테이블은 없습니다. [현재/예정 대조](codex-streaming.md).
 
@@ -17,7 +17,7 @@ Workspace·묶음 전환 때 화면/관측만 초기화하며 서버 작업은 �
 답변/오류/상태/요청 모델을 보관하며 재시작 시 진행 중 작업은 INTERRUPTED입니다. 지식 버전과는 독립입니다. [코드 대조·그림](answer-jobs.md).
 
 **한 줄 요약: 원본 자료와 지식 문서를 따로 보관하고, 지식에는 당시 근거를 붙입니다.**
-2026-10-21 코드 대조 기준, SQLite v16. 아래 그림은 현재 구현입니다.
+2026-10-22 코드 대조 기준, SQLite v17. 아래 그림은 기존 지식 모델이며 새 보관함 관계는 위 링크에 있습니다.
 
 `EvidenceBundle → AnswerApproval`은 묶음당 현재 승인 하나입니다. 제공자·모델·요청 해시와 승인/만료/철회 시각을 저장합니다.
 조회 시 근거 변경과 만료를 다시 계산합니다. 전송 이력·답변 작업은 아닙니다. [현재 코드 대조와 설계도](answer-approval.md).

@@ -1,11 +1,12 @@
 {
-  "measuredAt": "2026-10-21T22:31:00.065Z",
+  "measuredAt": "2026-10-22T08:57:48.408Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
   "dataset": "100 synthetic UTF-8 files (~2.5 KB each) + 1 nested fixture; sequential HTTP requests",
   "checks": [
     "Codex opt-in fake App Server evidence-first partial/final SSE and cancellation",
+    "ordered conversation links survive restart, retry idempotently, and delete without removing answers or evidence",
     "packaged UI",
     "upload/download byte equality",
     "UTF-8 preview",
@@ -53,21 +54,21 @@
     "manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart",
     "explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart"
   ],
-  "sourceSyncMs": 804.5404959999996,
+  "sourceSyncMs": 846.182479000001,
   "livePublic": [],
-  "startupMs": 7125,
-  "restartMs": 6868,
+  "startupMs": 7635,
+  "restartMs": 8138,
   "upload100": {
-    "p50Ms": 129.77417600000626,
-    "p95Ms": 691.331600999998
+    "p50Ms": 586.2832159999962,
+    "p95Ms": 888.1087359999947
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.7611830000023474,
-    "p95Ms": 4.410065999996732
+    "p50Ms": 3.6482669999968493,
+    "p95Ms": 4.974199000003864
   },
   "search100Files30Requests": {
-    "p50Ms": 8.497134000004735,
-    "p95Ms": 15.242862999999488
+    "p50Ms": 11.027053000012529,
+    "p95Ms": 16.960771999991266
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance."
 }

@@ -5,7 +5,7 @@
 
 ## 현재 구조
 
-`SourcePanel → AnswerHistoryPanel`은 v16 작업/근거 목록과 선택한 상세를 GET으로만 조회합니다. 당시 근거를 먼저 표시하며 새 생성 경로나 테이블은 없습니다. Workspace 전환 시 조회를 중단하고 늦은 응답을 제외합니다. [이력 화면·후속 대화 설계](answer-history.md).
+`SourcePanel → AnswerHistoryPanel`은 기존 작업/근거를 조회합니다. 명시적으로 여는 `ConversationShelf → ConversationService → ConversationStore → JdbcConversationStore`는 v17 보관함과 순서 연결을 관리합니다. 답변 생성/승인과 독립이며 이전 문맥을 전송하지 않습니다. [모델·경계](conversations.md).
 
 `CliCuratorModel → CodexAppServer → CodexAppServerSession → CodexTextStream`은 전용 프로필 옵션이 켜진 Codex 답변 경로입니다. 설정·thread 검사 후 요청문을 한 번 전송합니다. 기본 exec와 지식 생성 경로는 그대로입니다. [격리·한도·한계](codex-streaming.md).
 
@@ -111,7 +111,7 @@ Phase 2에서도 Source당 50 MiB/500개 제한을 유지해 같은 원자성을
 별도 `ArtifactStore`와 콘텐츠 해시 기반 파일 저장소 전환은 대용량 지원 시 진행합니다.
 
 SQLite는 WAL, 외래 키, 5초 busy timeout을 사용합니다. 연결 풀은 1개로
-로컬 쓰기를 직렬화합니다. `PRAGMA user_version=14`로 스키마를 관리하며 새 스키마를
+로컬 쓰기를 직렬화합니다. `PRAGMA user_version=17`로 스키마를 관리하며 새 스키마를
 구버전 앱으로 열면 실패합니다. 초기 스키마 생성도 트랜잭션입니다.
 
 ## 후속 모듈과 경계
@@ -240,7 +240,7 @@ react-markdown/remark-gfm으로 React 요소에 표시하며 원문은 별도로
 raw HTML 파싱·실행 없이 링크는 비활성 텍스트, 이미지는 대체 설명으로 표시합니다.
 API·불변 버전·승인 digest·검토/게시 상태는 변경하지 않습니다. [표시 설계](markdown-rendering.md).
 
-## 독립 지식 폴더 (v8 도입, 현재 v16)
+## 독립 지식 폴더 (v8 도입, 현재 v17)
 
 v9는 폴더 revision으로 이름/부모 변경 충돌을 막습니다. 변경 후 전체 트리의 순환과 깊이를
 검사한 뒤 같은 트랜잭션에서 저장합니다. 문서·카드 배치 revision은 별개입니다. [설계·검증](folder-update.md).

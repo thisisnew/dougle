@@ -1,6 +1,6 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
-추가 화면: **답변 이력 → 작업/근거 목록 GET → 선택한 당시 근거 → 완료 답변**. 기존 데이터 조회이며 대화방·문맥 재전송은 후속입니다. [설계와 코드 대조](answer-history.md).
+추가 화면: **답변 이력 → 대화 보관함 관리 → 완료 답변을 순서대로 연결 → 당시 근거/답변 열기**. SQLite v17에 로컬 연결만 저장하며 문맥 재전송은 후속입니다. [설계와 코드 대조](conversations.md).
 
 선택적 Codex 경로는 **전용 프로필 검사 → App Server 설정 검사 → 승인 요청 전송 → 알림 검증기 → 기존 임시 출력 SSE**입니다. 기본 Codex는 완료 답변 방식입니다. [코드와 설계 대조](codex-streaming.md).
 
@@ -247,7 +247,7 @@ sequenceDiagram
 | 영역 | 현재 코드 위치 | 다음 확장 |
 |---|---|---|
 | 화면 | `frontend/src/App.tsx`, `GenerationPanel.tsx`, `GenerationJobsPanel.tsx`, `GenerationComparison.tsx`, `PublicationPanel.tsx` | 오래된 근거 교체·줄 단위 충돌 표시, 채팅 |
-| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v16, 향후 데이터/보존 정책 확장 |
+| 원본/DB | `backend/src/main/java/dev/knowledgeforge/library` | 현재 v17, 향후 데이터/보존 정책 확장 |
 | 수집 | `backend/src/main/java/dev/knowledgeforge/sources` | Source 편집, 취소, 비공개 인증 |
 | 분석 | `backend/src/main/java/dev/knowledgeforge/ingestion` | 청크/인용 범위, 파서 격리 |
 | 검색 | `backend/src/main/java/dev/knowledgeforge/search` | 원본/게시 지식·불변 근거 묶음 구현, 의미 청크·관계 검색 후속 |
