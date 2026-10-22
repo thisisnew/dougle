@@ -2,6 +2,7 @@
 
 **재점검 결과:** [전체 파일 조사 범위·규칙별 코드/테스트 대조·차이](model-audit.md).
 현재 CLI 경로 설정과 목표인 제공자 선택형 연결은 다릅니다. 설치 확인을 인증/연결 완료로 간주하지 않습니다.
+감사 후 0.1.2 개발 소스에 [제공자 선택·인증 확인·로그인](provider-connection.md)을 추가했습니다. 0.1.1 배포와 구분합니다.
 
 현재 개발 소스의 DB는 **SQLite v21**입니다. 원본, 지식, AI 요청을 따로 보관합니다.
 Intel/Apple Silicon 패키지에서 같은 모델을 사용합니다. CPU 지원 추가로 스키마를 변경하지 않습니다.
@@ -65,6 +66,8 @@ flowchart LR
 `backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java`.
 
 ## 반드시 구분할 것
+- `ProviderLogin.Status`는 메모리 작업(PENDING → AUTHENTICATED/FAILED/CANCELLED/TIMED_OUT)입니다. 토큰/로그인 이력을 SQLite에 추가하지 않으며 DB v21은 유지합니다.
+- 기본 제공자 선택은 UI 로컬 저장소에만 보관합니다. 이미 승인한 요청이나 진행 작업의 제공자를 바꾸지 않습니다.
 - CURRENT는 현재 **로컬 복사본과 일치**한다는 뜻이지 사실·원격 최신성 검증이 아닙니다.
 - 심볼 이름 일치는 함수 호출 관계가 아닙니다. 관계 탐색 결과를 자동으로 AI 근거에 넣지 않습니다.
 - CLI 경로 식별자는 바이너리 내용/서명 검증이 아닙니다.

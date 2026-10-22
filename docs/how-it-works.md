@@ -50,6 +50,9 @@ GitHub는 같은 commit이면 clone을 생략하고 변경된 blob만 읽습니�
 [Git](git-incremental.md) · [URL](url-conditional.md).
 
 ## 6. CLI를 못 찾는다면
+0.1.2 개발 소스에서는 먼저 상단 **AI 연결 → Codex/Claude 선택 → 연결 상태 확인**을 사용합니다.
+로그인이 필요하면 앱에서 브라우저 로그인을 시작합니다. [사용 순서·현재 배포와 차이](provider-connection.md).
+아래 경로 입력은 0.1.1 또는 고급 사용자를 위한 이전 설정입니다.
 상단 **CLI 경로 설정 → 절대 경로 입력 → 신뢰 확인·저장 → 앱 재시작 → 설치 확인** 순서입니다.
 Codex/Claude Code 설치·로그인은 별도로 합니다. 현재 코딩 대화를 앱이 공유하는 것은 아닙니다.
 `--version` 확인 성공은 로그인·모델 사용 성공을 뜻하지 않습니다.

@@ -67,7 +67,8 @@ impl Backend {
             |_| "앱 데이터 폴더를 만들 수 없습니다. 저장 공간과 폴더 권한을 확인해 주세요.",
         )?;
         let token = session_token()?;
-        let child = Command::new(java)
+        let mut command = Command::new(java);
+        command
             .process_group(0)
             .arg("-jar")
             .arg(jar)
@@ -80,11 +81,13 @@ impl Backend {
             .current_dir(data)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .spawn()
-            .map_err(
-                |_| "내장 Java를 실행할 수 없습니다. Mac 아키텍처와 앱 설치 상태를 확인해 주세요.",
-            )?;
+            .stderr(Stdio::piped());
+        if let Some(codex) = bundled_codex(resources)? {
+            command.arg(format!("--forge.ai.codex-command={}", codex.display()));
+        }
+        let child = command.spawn().map_err(
+            |_| "내장 Java를 실행할 수 없습니다. Mac 아키텍처와 앱 설치 상태를 확인해 주세요.",
+        )?;
         let mut backend = Self {
             child,
             input: None,
@@ -168,6 +171,23 @@ impl Backend {
     }
 }
 
+fn bundled_codex(resources: &Path) -> Result<Option<std::path::PathBuf>, &'static str> {
+    let file = resources.join("resources/ai/codex");
+    if !file.exists() {
+        return Ok(None);
+    }
+    let base = resources
+        .canonicalize()
+        .map_err(|_| "앱 리소스 경로를 확인할 수 없습니다.")?;
+    let binary = file
+        .canonicalize()
+        .map_err(|_| "내장 AI 실행 파일을 확인할 수 없습니다.")?;
+    if !binary.is_file() || !binary.starts_with(&base) {
+        return Err("내장 AI 실행 파일이 앱 밖을 가리킵니다. 앱을 다시 설치해 주세요.");
+    }
+    Ok(Some(binary))
+}
+
 pub fn stop_child(child: &mut Child, input: &mut Option<ChildStdin>, timeout: Duration) {
     drop(input.take());
     let deadline = Instant::now() + timeout;
@@ -201,6 +221,26 @@ impl Drop for Backend {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn bundled_codex_is_optional_but_must_stay_inside_resources() {
+        let root = std::env::temp_dir().join(format!(
+            "forge-bundled-ai-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+        ));
+        std::fs::create_dir_all(root.join("resources/ai")).unwrap();
+        assert!(super::bundled_codex(&root).unwrap().is_none());
+        let binary = root.join("resources/ai/codex");
+        std::fs::write(&binary, b"fixture").unwrap();
+        assert_eq!(
+            super::bundled_codex(&root).unwrap(),
+            Some(binary.canonicalize().unwrap())
+        );
+        std::fs::remove_file(&binary).unwrap();
+        std::os::unix::fs::symlink("/bin/sh", &binary).unwrap();
+        assert!(super::bundled_codex(&root).is_err());
+        std::fs::remove_dir_all(root).unwrap();
+    }
     use super::*;
     use std::io::{BufRead, BufReader};
     use std::net::TcpListener;

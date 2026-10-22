@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { preferredProvider } from './providerPreference'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import AnswerApprovalPanel from './AnswerApprovalPanel'
@@ -17,7 +18,7 @@ const statuses: Record<string, string> = {
 export default function EvidenceAnswerPreparation({ workspaceId, bundleId, bundleDigest }: {
   workspaceId: string; bundleId: string; bundleDigest: string
 }) {
-  const [provider, setProvider] = useState('CODEX')
+  const [provider, setProvider] = useState<string>(preferredProvider)
   const [mode, setMode] = useState('server')
   const [model, setModel] = useState('')
   const [validation, setValidation] = useState<Validation | null>(null)

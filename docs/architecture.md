@@ -1,5 +1,8 @@
 # 아키텍처
 
+0.1.2 연결 개선: `ProviderConnectionPanel → ProviderConnection/ProviderLogin → 프로세스 어댑터`로 인증 조회와 명시적 로그인을 분리합니다.
+인증은 외부 모델 요청 승인이 아닙니다. `stage-codex.sh → Tauri resources/ai → supervisor → CliLaunchConfiguration`으로 동봉 실행 파일을 자동 연결합니다. [계약·제한](provider-connection.md).
+
 쉽게 보기: [문서 목차](README.md) → [설계도](design-map.md) → [모델/코드 대조](modeling.md).
 Mac 패키지는 공통 React/JAR와 CPU별 Tauri/Java 런타임으로 구성합니다.
 `package-macos.sh`의 대상 JDK/타깃 선택 → `macos-architecture.sh`의 앱/JVM 일치 확인 → DMG 생성 순서입니다.

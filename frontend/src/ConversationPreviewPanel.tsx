@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { preferredProvider } from './providerPreference'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import AnswerApprovalPanel from './AnswerApprovalPanel'
@@ -21,7 +22,7 @@ function ScopedPreview({ workspaceId, conversationId, revision, turns }: Props) 
   const [bundles, setBundles] = useState<Bundle[]>([])
   const [bundleId, setBundleId] = useState('')
   const [jobIds, setJobIds] = useState<string[]>([])
-  const [provider, setProvider] = useState('CODEX')
+  const [provider, setProvider] = useState<string>(preferredProvider)
   const [model, setModel] = useState('')
   const [preview, setPreview] = useState<Preview | null>(null)
   const [busy, setBusy] = useState(true)

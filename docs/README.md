@@ -12,6 +12,7 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 | 개발자가 알아야 할 구조 | [아키텍처](architecture.md) · [API](api.md) |
 | Apple Silicon에서 쓰기/빌드 | [ARM 지원과 검증 범위](apple-silicon.md) |
 | AI 설치·로그인·경로 설정 | [CLI 설정](cli-launch-settings.md) · [AI 전송 정책](cli-ai.md) |
+| 간편 연결 개선 | [제공자 선택·인증 확인·브라우저 로그인](provider-connection.md) — 0.1.2 개발 소스 |
 | 실제로 어디까지 테스트했는지 | [0.1.1 검증 보고서](release-0.1.1-report.md) |
 | 다음 컴퓨터에서 개발 이어가기 | [HANDOFF](../HANDOFF.md) · [단계별 현황](phase-plan.md) · [상세 백로그](backlog.md) |
 

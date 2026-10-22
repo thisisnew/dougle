@@ -16,4 +16,6 @@
 /desktop/src-tauri/resources/runtime/
 /desktop/src-tauri/resources/.staging.*/
 /desktop/src-tauri/resources/knowledge-forge.jar
+/desktop/src-tauri/resources/ai/*
+!/desktop/src-tauri/resources/ai/README.txt
 /release/

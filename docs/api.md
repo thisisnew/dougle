@@ -1,5 +1,14 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+## AI 연결 / 로그인 (0.1.2 개발 소스)
+
+- `POST /api/ai/providers/{CODEX|CLAUDE}/connection`: 명시적 인증 상태 확인. `{provider,state,checkedAt,remoteConnection:"NOT_CHECKED"}`. 자료 전송/추론 없음.
+- `POST /api/ai/logins`: `{provider:"CODEX",acknowledged:true}` → `{id,provider,state}`. 이미 인증됐다면 로그인 프로세스를 다시 실행하지 않음.
+- `GET /api/ai/logins/{id}`: 메모리 로그인 작업 관측. 앱 재시작/다음 로그인으로 교체된 요청은 404.
+- `DELETE /api/ai/logins/{id}`: 대기 중 작업만 CANCELLED. 자격 증명 삭제/로그아웃 아님.
+- 상태: PENDING/AUTHENTICATED/FAILED/CANCELLED/TIMED_OUT. 동의 누락 400, 중복 진행/실행 환경 미확인 409.
+- 모든 기존 설치형 세션 인증·변경 헤더 방어 적용. 토큰·이메일·인증 URL·CLI 원문은 응답하지 않음. [모델/한계](provider-connection.md).
+
 CLI 실행 경로: `GET/PUT /api/ai/launch-settings`는 현재/저장된 설정과 재시작 필요 여부를 반환합니다. 저장에 경로·예상 revision·신뢰 확인이 필요합니다. [계약](cli-launch-settings.md).
 
 관련 자료: `GET /api/workspaces/{workspaceId}/relations?kind=ORIGINAL|KNOWLEDGE&id=...&version=...&domains=...`는 저장된 심볼/출처 연결을 읽습니다. [입출력·게시본 제한](relations.md).

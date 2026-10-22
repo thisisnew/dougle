@@ -1,17 +1,16 @@
-import { readdir, readFile, writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import { createHash } from 'node:crypto'
-import { resolve, relative, basename } from 'node:path'
+import { resolve, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
-const roots = ['backend/src', 'frontend/src', 'desktop/src-tauri/src', 'desktop/src-tauri/examples', 'scripts']
-async function walk(directory) {
-  const entries = await readdir(directory, { withFileTypes: true })
-  return (await Promise.all(entries.map(entry => entry.isDirectory() ? walk(resolve(directory, entry.name)) : [resolve(directory, entry.name)]))).flat()
-}
-const paths = (await Promise.all(roots.map(directory => walk(resolve(root, directory))))).flat()
-  .filter(path => /\.(java|ts|tsx|rs|mjs|sh|properties)$/.test(path)).sort()
-const sources = await Promise.all(paths.map(async path => ({ path: relative(root, path), text: await readFile(path, 'utf8') })))
+const roots = ['backend', 'frontend', 'desktop', 'scripts']
+const { stdout } = await promisify(execFile)('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'], { cwd: root })
+const paths = [...new Set(stdout.split('\0').filter(path => roots.some(directory => path.startsWith(directory + '/'))
+  && /\.(java|ts|tsx|rs|mjs|sh|properties|json|toml|xml|html|css)$/.test(path)))].sort()
+const sources = await Promise.all(paths.map(async path => ({ path, text: await readFile(resolve(root, path), 'utf8') })))
 const tests = sources.filter(source => /\/test\/|\.test\.|-test\.sh$|smoke\.mjs$|\/examples\//.test(source.path))
 const inventory = sources.map(source => {
   const symbol = basename(source.path).replace(/\.(java|tsx?|rs|mjs|sh|properties)$/, '')

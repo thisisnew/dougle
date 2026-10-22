@@ -48,6 +48,7 @@ rm -rf "$resources/runtime"
 mv "$staging/runtime" "$resources/runtime"
 mv "$staging/knowledge-forge.jar" "$resources/knowledge-forge.jar"
 if [[ "$mode" == --stage-only ]]; then echo 'Java runtime and JAR staged; no installer built.'; exit 0; fi
+bash "$repo_root/scripts/stage-codex.sh" "$architecture"
 cd "$repo_root/desktop"
 npm ci --cache "$repo_root/.tools/npm-cache" --no-audit --no-fund
 export APPLE_SIGNING_IDENTITY=-

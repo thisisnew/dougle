@@ -5,6 +5,8 @@
 
 ## 설치
 
+**간편 연결 개선(0.1.2 개발 소스):** AI 선택·인증 확인·브라우저 로그인과 Codex 동봉 빌드를 추가했습니다. 아래 0.1.1 공개 파일에는 아직 없습니다. [현재 구현/검증 범위](docs/provider-connection.md) · [모델·코드 점검 결과](docs/model-audit.md).
+
 | Mac 종류 | 설치 파일 / 검증 상태 |
 |---|---|
 | Intel | [0.1.1 미리보기 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1) · 설치 복사본 실행 검증 완료 |

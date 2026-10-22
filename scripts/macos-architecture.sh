@@ -17,4 +17,10 @@ forge_verify_macos_architecture() {
       return 1
     }
   done
+  if [[ -e "$app/Contents/Resources/resources/ai/codex" ]]; then
+    [[ "$(forge_macos_architecture "$app/Contents/Resources/resources/ai/codex")" == "$expected" ]] || {
+      echo 'Bundled Codex architecture mismatch' >&2
+      return 1
+    }
+  fi
 }

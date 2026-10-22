@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { preferredProvider } from './providerPreference'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import type { GenerationJob } from './GenerationJobsPanel'
@@ -18,7 +19,7 @@ function loadChoice(provider: string): ModelChoice {
 export default function GenerationPanel({ base, disabled, onBusy, onQueued }: {
   base: string; disabled: boolean; onBusy: (busy: boolean) => void; onQueued: (id: string) => void
 }) {
-  const [provider, setProvider] = useState('CODEX')
+  const [provider, setProvider] = useState<string>(preferredProvider)
   const [choice, setChoice] = useState<ModelChoice>(() => loadChoice('CODEX'))
   const [saved, setSaved] = useState(false)
   const [preview, setPreview] = useState<Preview | null>(null)

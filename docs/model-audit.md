@@ -4,7 +4,7 @@
 
 ## 어떻게 조사했나
 
-`scripts/model-audit.mjs`는 backend/src, frontend/src, 네이티브 src/examples, scripts의 모든 코드 파일을 열어
+`scripts/model-audit.mjs`는 Git의 추적/미추적(ignored 제외) 목록에서 backend, frontend, desktop, scripts의 코드·빌드 설정 파일을 모두 열어
 경로·SHA-256·줄 수·테스트의 이름 참조를 [파일 목록](model-audit-inventory.json)에 기록합니다.
 초기 목록은 273개(테스트/fixture 79개)입니다. 목록은 변경 후 재생성하므로 현재 수치는 JSON을 따릅니다.
 Java 도메인 전체 의존성·application→adapter 역참조·모든 CREATE TABLE의 모델 문서 등재를 `ArchitectureContractTest`로 검사합니다.
@@ -55,7 +55,8 @@ flowchart LR
   C --> Q[기존 근거 미리보기·건별 승인·질문]
 ```
 
-이 그림은 **개선 목표**입니다. 아직 구현되지 않은 로그인·도구 동봉을 기존 기능으로 간주하지 않습니다.
+감사 후 개발 소스에는 제공자 선택 기억·인증 조회·브라우저 로그인/중단과 Codex 동봉 빌드를 추가했습니다. [실제 개선 범위](provider-connection.md).
+기존 공개 0.1.1에는 없으며 Claude 동봉·실제 계정 인증·ARM 실행까지 완료됐다고 간주하지 않습니다.
 상태는 도구 없음 / 인증 미확인 / 로그인 필요 / 인증 확인으로 구분하고,
 원격 모델 이용 가능 여부는 별도입니다. 연결 확인만으로 문서 전송·추론을 실행하지 않습니다.
 토큰·계정 이메일·CLI 오류 원문을 API/로그/감사 문서에 노출하지 않습니다.
