@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-primary: #245947;
+  --color-primary: #456842;
   --color-primary-foreground: #ffffff;
-  --color-foreground: #273b34;
-  --color-muted: #edf1ec;
-  --color-border: #dfe6df;
+  --color-foreground: #35463d;
+  --color-muted: #e1e6c9;
+  --color-border: #849576;
 }
 
 :root { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color: #273b34; background: #f7f8f4; font-synthesis: none; }

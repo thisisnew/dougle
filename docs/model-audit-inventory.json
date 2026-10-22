@@ -6,7 +6,7 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 305,
+  "totalFiles": 307,
   "testOrFixtureFiles": 84,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
@@ -2192,8 +2192,8 @@
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "142eccfdce354466876cc16fb3813ed740ea5f5f38fa2ba4defd08ef5681616c",
-      "lines": 261,
+      "sha256": "ee44f8d99fe1bfa85d61b61ec28310f580346b9a18e18e46a20186ebd1b06384",
+      "lines": 262,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
@@ -2429,6 +2429,13 @@
       "lexicalTestReferences": [
         "frontend/src/KnowledgePanel.test.tsx"
       ]
+    },
+    {
+      "path": "frontend/src/PixelLandscape.tsx",
+      "sha256": "f3bdfc70ec8f665d4f3386d5facfecb5d6f27f4a76eeb7f6e2458ae9da651066",
+      "lines": 23,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/ProposalAcceptance.test.tsx",
@@ -2699,7 +2706,7 @@
     },
     {
       "path": "frontend/src/components/ui/button.tsx",
-      "sha256": "53c0536a4af5fb13313143e60f0e5ca33487473429877024f6aad1a4a2ee3fce",
+      "sha256": "d73765864bd035a8571bfe55e13e5670dabae880d8b6d6414ae0b3934fa5d65a",
       "lines": 28,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2776,8 +2783,8 @@
     },
     {
       "path": "frontend/src/main.tsx",
-      "sha256": "10ac689b4eb57228d6be39425516819110d59de99ccaff9eba6ab68ae07abcc3",
-      "lines": 6,
+      "sha256": "da7c71c9bada32a7a0369de085a9ef39905c25117b670199aaffdd85b54ba7d9",
+      "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
@@ -2830,8 +2837,15 @@
       ]
     },
     {
+      "path": "frontend/src/retro.css",
+      "sha256": "fbc16e37522a7828e7ca6a11b7811a1b0b7ea047435df25697ea1b287352d91e",
+      "lines": 84,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "frontend/src/styles.css",
-      "sha256": "6218e50e4d0e2e28747c85a7942f1dae368c4384d2642fbec3256ecd631002c8",
+      "sha256": "34dc152742830e8bd238b516a8d0e1642941374dfebade71c987de5b52798763",
       "lines": 181,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -3027,7 +3041,7 @@
     },
     {
       "path": "scripts/native-host-smoke.mjs",
-      "sha256": "eeb46502ad9f66739059dab0c3e3ab61511a985c80af2931d108aa79e9fb2031",
+      "sha256": "595a5a59188bacd9bcc5eea75080d8ec57bdee8a8ececd9f0c9764e3eaaaccc1",
       "lines": 109,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []

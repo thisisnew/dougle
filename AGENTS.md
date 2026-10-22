@@ -1,7 +1,7 @@
 # Knowledge Forge 개발 지침
 
-- 최신 재점검은 `docs/model-audit.md`와 `scripts/model-audit.mjs`를 따른다. 전체 파일 목록·구조 검사와 수동 의미 검토/실행 커버리지는 구분한다. 아래 과거의 '다중 대화는 후속' 표현은 낡았으며 선택 문맥 고정·승인·실행은 이미 구현되어 있다.
-- 사용자는 CLI 설치/경로 입력 없는 제공자 선택·연결 UX를 요청했다. 기존 설치 확인을 인증 완료로 표시하지 말고, 도구 준비·인증·원격 이용 가능성을 분리한다. 로그인·도구 동봉은 실제 구현/검증 전까지 미완료로 표시한다.
+- 최신 재점검은 `docs/model-audit.md`와 `scripts/model-audit.mjs`를 따른다. 전체 파일 목록·구조 검사와 수동 의미 검토/실행 커버리지는 구분한다. 선택 문맥 고정·승인·실행은 이미 구현되어 있다.
+- 사용자는 CLI 설치/경로 입력 없는 제공자 선택·연결 UX를 요청했다. 0.1.2 개발 소스의 선택·인증·로그인과 Codex 동봉 빌드는 `docs/provider-connection.md`를 따른다. 도구 준비·인증·원격 이용 가능성을 분리하며, 실제 계정·Claude 동봉·배포 완료는 각 검증 전까지 미완료로 표시한다.
 
 - Apple 공증은 사용자 요청으로 현재 범위에서 제외한다. ARM64 지원·교차 빌드·실제 기기 검증 상태는 `docs/apple-silicon.md`를 따른다. Intel 호스트에서 ARM 실행 성공으로 보고하지 않는다.
 - `scripts/package-macos.sh`는 `FORGE_MACOS_TARGET`/`FORGE_TARGET_JAVA_HOME`을 지원한다. 공유 `resources/runtime`은 마지막 타깃으로 교체되므로 병렬 패키징하지 않는다. 설치 검증은 명시적 DMG 경로를 사용하며 ARM 정적 검사는 `--static-only`로 구분한다.
@@ -24,8 +24,8 @@
 - 이전 문맥의 읽기 전용 미리보기는 `docs/conversation-context.md`, 명시적 고정 저장·승인·실행은 `docs/context-requests.md`를 따른다. 저장 전 문맥 해시로 기존 단일 질문을 승인할 수 없다.
 - Source 파일 ID 보존·변경 분석은 `docs/incremental-snapshots.md`, Git 변경 blob 재사용은 `docs/git-incremental.md`, 설치형 토큰/수명주기는 `docs/desktop-backend.md`를 따른다. 영속 Git fetch/diff 캐시나 실제 GitHub 성능 검증으로 확대 해석하지 않는다.
 - Intel Mac 미리보기 패키지와 검증은 `docs/desktop-report.md`, 재현은 `docs/macos-build.md`를 따른다. 공증·Apple Silicon·실제 AI 검증으로 확대 해석하지 않는다. 빌드 중인 JAR/앱 번들을 실행 검증과 동시에 덮어쓰지 않는다.
-- 질문별 이력 조회는 `docs/answer-history.md`, v17 완료 답변 보관함은 `docs/conversations.md`를 따른다. 보관함의 정리 순서를 실제 문맥 전송 턴으로 취급하지 않는다. 새 AI 호출·승인·이전 문맥 전송은 하지 않는다. 다음은 불변 문맥 미리보기/턴별 승인 설계다.
-- Codex 스트림은 `docs/codex-streaming.md`의 전용 프로필 opt-in 실행기까지 답변 작업에 연결했다. 기본 exec/지식 생성 경로는 유지하며 실패 시 자동 재전송하지 않는다. 가상 CLI 테스트를 실제 서비스 생성 성공으로 보고하지 않는다. 다중 대화는 후속이다.
+- 질문별 이력 조회는 `docs/answer-history.md`, v17 완료 답변 보관함은 `docs/conversations.md`를 따른다. 보관함의 정리 순서를 실제 문맥 전송 턴으로 취급하지 않는다. 보관함 조회 자체는 새 AI 호출·승인·이전 문맥 전송을 하지 않는다. 이어 질문은 별도 `docs/context-requests.md` 경로다.
+- Codex 스트림은 `docs/codex-streaming.md`의 전용 프로필 opt-in 실행기까지 답변 작업에 연결했다. 기본 exec/지식 생성 경로는 유지하며 실패 시 자동 재전송하지 않는다. 가상 CLI 테스트를 실제 서비스 생성 성공으로 보고하지 않는다. 선택 문맥 기반 다중 대화는 `docs/context-requests.md`에 구현되어 있다.
 - 지식 Markdown 표시 보안 경계는 `docs/markdown-rendering.md`를 따른다. 링크/이미지 자동 로딩이나 raw HTML 실행을 추가하지 않는다.
 - Java 21, Spring Boot 4.1.x, React/TypeScript/Vite, SQLite JDBC를 유지한다.
 - 도메인 모델은 Spring, HTTP, JDBC를 참조하지 않는다.
@@ -33,7 +33,7 @@
 - `docs/relations.md`의 관련 자료는 동일 선언 이름/종류·공통 인용 위치 연결이다. 함수 호출·의미 관계 또는 자동 답변 근거 확장으로 보고하지 않는다.
 - 원본 검색 미리보기의 본문 위치/행 범위는 `docs/search-evidence.md`를 따른다. 확정 인용이나 최신성 보증으로 취급하지 않는다. 게시 지식 통합 검색·v13 큐·초안 제외·도메인/최신성 규칙은 `docs/published-search.md`를 따른다.
 - 답변용 근거 묶음의 v14 로컬 보관·불변 인용·해시·제외 규칙·삭제 정책은 `docs/evidence-bundles.md`를 따른다. 저장은 전송 승인이 아니며 후속 AI 전송 전 재검증을 생략하지 않는다.
-- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`, v16 실제 답변 작업·일회 소비·재검증·중단은 `docs/answer-jobs.md`를 따른다. 요청문은 V2이며 오래된 승인은 재확인한다. 다중 대화는 아직 없다. fake CLI 성공을 실제 외부 모델 검증으로 보고하지 않는다.
+- 읽기 전용 재검증·모델별 답변 요청 미리보기는 `docs/bundle-validation.md`를 따른다. 미리보기 digest는 승인이 아니다. v15 건별 승인·철회·만료는 `docs/answer-approval.md`, v16 실제 답변 작업·일회 소비·재검증·중단은 `docs/answer-jobs.md`를 따른다. 요청문은 V2이며 오래된 승인은 재확인한다. 선택 문맥의 이어 질문은 `docs/context-requests.md`를 따른다. fake CLI 성공을 실제 외부 모델 검증으로 보고하지 않는다.
 - 후속 읽기 전용 작업 관측 SSE API는 `docs/answer-events.md`, 화면은 `docs/answer-events-ui.md`, Claude 미검증 임시 출력은 `docs/partial-answer.md`를 따른다. 임시 글은 메모리만 사용하고 실패·중단 때 폐기한다. 재연결로 생성/전송하지 않으며 관측 종료와 명시적 작업 취소를 구분한다.
 - 특정 업무 도메인을 하드코딩하지 않는다. 테스트는 `fixtures`의 가상 자료만 사용한다.
 - 원본과 지식 수명주기를 분리하고, 검증 후 게시와 수동 편집 보호 원칙을 지킨다.

@@ -7,6 +7,7 @@ import SourcePanel from './SourcePanel'
 import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import KnowledgePanel from './KnowledgePanel'
+import PixelLandscape from './PixelLandscape'
 const ProviderConnectionPanel = lazy(() => import('./ProviderConnectionPanel'))
 
 type Modal = { kind: 'workspace' | 'folder' } | { kind: 'delete-workspace' } | { kind: 'delete-entry'; entry: Entry }
@@ -197,7 +198,7 @@ export default function App() {
           </div>
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
           {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : !workspace ? (
-            <section className="welcome"><div className="empty-icon"><Library size={36} /></div><p className="eyebrow">A SPACE FOR YOUR IDEAS</p><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
+            <section className="welcome"><PixelLandscape /><p className="eyebrow">A NEW ADVENTURE IN KNOWLEDGE</p><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : (
             <>
               <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">{original ? `현재 폴더 · ${entries.length}개 항목` : '수동 초안 · 버전 보존'}</span></div>

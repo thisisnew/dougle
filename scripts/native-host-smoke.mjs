@@ -84,7 +84,7 @@ try {
   while (Date.now() < deadline) {
     const child = (await table()).find(item => item.parent === duplicate.native.pid && item.command.endsWith('/runtime/bin/java'))
     if (child) { observed = true; duplicate.java = child.pid }
-    if (observed && !child) break
+    if (observed && !(await table()).some(item => item.pid === duplicate.java)) break
     await pause()
   }
   const remaining = (await table()).filter(item => item.pid === duplicate.java || item.parent === duplicate.native.pid)
