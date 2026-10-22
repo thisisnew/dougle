@@ -32,6 +32,8 @@ class ConversationIntegrationTest {
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) { registry.add("forge.data-dir", DATA::toString); }
     @Autowired ConversationService conversations;
+    @Autowired ConversationPreviewService contextPreviews;
+    @Autowired AnswerApprovalService approvals;
     @Autowired AnswerJobStore jobs;
     @Autowired LibraryService library;
     @Autowired EvidenceBundleService bundles;
@@ -158,6 +160,75 @@ class ConversationIntegrationTest {
         assertThat(conversations.append(workspace, room.id(), "fixture-0", 0).turns()).hasSize(100);
     }
     @Test
+    void contextPreviewUsesExplicitSelectionInShelfOrderWithoutWritesOrApproval() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "second", 0);
+        conversations.append(workspace, room.id(), "first", 1);
+        var request = new ConversationPreviewService.Request(bundle, 2, List.of("first", "second"), "CODEX", "fixture");
+        var preview = contextPreviews.prepare(workspace, room.id(), request);
+        assertThat(preview.history()).extracting("jobId").containsExactly("second", "first");
+        assertThat(preview.prompt()).contains("UNTRUSTED CONTEXT", "MUST NOT be reused", "CURRENT_REQUEST:", "synthetic answer [R1]");
+        assertThat(preview.digest()).isEqualTo(contextPreviews.prepare(workspace, room.id(), request).digest());
+        assertThat(preview.characters()).isEqualTo(preview.prompt().length()).isLessThanOrEqualTo(preview.maxCharacters());
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM answer_job", Integer.class)).isEqualTo(2);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM answer_approval", Integer.class)).isZero();
+        assertThat(conversations.get(workspace, room.id()).conversation().revision()).isEqualTo(2);
+        fails(409, () -> approvals.approve(workspace, bundle, "CODEX", "fixture", preview.digest(), true, null));
+    }
+    @Test
+    void contextDigestBindsModelSelectionAnswerQuestionAndRoomRevision() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "first", 0);
+        var request = new ConversationPreviewService.Request(bundle, 1, List.of("first"), "CODEX", "fixture");
+        var original = contextPreviews.prepare(workspace, room.id(), request).digest();
+        assertThat(contextPreviews.prepare(workspace, room.id(), new ConversationPreviewService.Request(bundle, 1, List.of("first"), "CLAUDE", "fixture")).digest()).isNotEqualTo(original);
+        assertThat(contextPreviews.prepare(workspace, room.id(), new ConversationPreviewService.Request(bundle, 1, List.of("first"), "CODEX", "different")).digest()).isNotEqualTo(original);
+        String newBundle = bundles.create(workspace, "synthetic", List.of(), false).id();
+        assertThat(contextPreviews.prepare(workspace, room.id(), new ConversationPreviewService.Request(newBundle, 1, List.of("first"), "CODEX", "fixture")).digest()).isNotEqualTo(original);
+        jdbc.update("UPDATE answer_job SET answer='changed synthetic answer [R1]' WHERE id='first'");
+        assertThat(contextPreviews.prepare(workspace, room.id(), request).digest()).isNotEqualTo(original);
+        conversations.append(workspace, room.id(), "second", 1);
+        fails(409, () -> contextPreviews.prepare(workspace, room.id(), request));
+    }
+    @Test
+    void contextRejectsEmptyDuplicateUnlinkedAndCrossWorkspaceSelections() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "first", 0);
+        for (var ids : List.of(List.<String>of(), List.of("first", "first"), List.of("1","2","3","4","5","6"))) {
+            fails(400, () -> contextPreviews.prepare(workspace, room.id(), new ConversationPreviewService.Request(bundle, 1, ids, "CODEX", "fixture")));
+        }
+        fails(400, () -> contextPreviews.prepare(workspace, room.id(), new ConversationPreviewService.Request(bundle, null, List.of("first"), "CODEX", "fixture")));
+        fails(409, () -> contextPreviews.prepare(workspace, room.id(), new ConversationPreviewService.Request(bundle, 1, List.of("second"), "CODEX", "fixture")));
+        String other = library.createWorkspace("other preview").id();
+        fails(404, () -> contextPreviews.prepare(other, room.id(), new ConversationPreviewService.Request(bundle, 1, List.of("first"), "CODEX", "fixture")));
+    }
+    @Test
+    void contextChecksHistoricalEvidenceEvenWhenCurrentEvidenceIsFresh() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "first", 0);
+        library.upload(workspace, null, "new.txt", "independent observatory".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        search.refresh();
+        String current = bundles.create(workspace, "observatory", List.of(), false).id();
+        var request = new ConversationPreviewService.Request(current, 1, List.of("first"), "CODEX", "fixture");
+        assertThat(contextPreviews.prepare(workspace, room.id(), request).history()).hasSize(1);
+        jdbc.update("UPDATE entry SET content=X'616263' WHERE workspace_id=? AND name='fixture.txt'", workspace);
+        assertThatThrownBy(() -> contextPreviews.prepare(workspace, room.id(), request))
+                .isInstanceOf(LibraryException.class).hasMessageContaining("이전 답변의 근거");
+    }
+    @Test
+    void contextRejectsDeletedAndStaleHistoryAndOversizedPrompt() {
+        var room = conversations.create(workspace, "fixture");
+        conversations.append(workspace, room.id(), "first", 0);
+        var request = new ConversationPreviewService.Request(bundle, 1, List.of("first"), "CODEX", "fixture");
+        jdbc.update("UPDATE answer_job SET answer=? WHERE id='first'", "x".repeat(20000));
+        fails(413, () -> contextPreviews.prepare(workspace, room.id(), request));
+        jdbc.update("UPDATE answer_job SET answer='safe [R1]' WHERE id='first'");
+        jdbc.update("UPDATE entry SET content=X'616263' WHERE workspace_id=? AND kind='FILE'", workspace);
+        fails(409, () -> contextPreviews.prepare(workspace, room.id(), request));
+        jdbc.update("DELETE FROM answer_job WHERE id='first'");
+        fails(409, () -> contextPreviews.prepare(workspace, room.id(), request));
+    }
+    @Test
     void httpEndpointsRequireLocalMutationHeaderAndReturnScopedDetails() throws Exception {
         mvc.perform(post("/api/workspaces/" + workspace + "/conversations").contentType("application/json").content("{\"title\":\"fixture\"}"))
                 .andExpect(status().isForbidden());
@@ -168,6 +239,9 @@ class ConversationIntegrationTest {
         mvc.perform(post(path + "/turns").header("X-Forge-Client", "1").contentType("application/json")
                 .content("{\"jobId\":\"first\",\"expectedRevision\":0}")).andExpect(status().isOk()).andExpect(jsonPath("$.turns[0].position").value(1));
         mvc.perform(get(path)).andExpect(status().isOk()).andExpect(jsonPath("$.conversation.revision").value(1));
+        mvc.perform(post(path + "/preview").header("X-Forge-Client", "1").contentType("application/json")
+                .content("{\"bundleId\":\"" + bundle + "\",\"expectedRevision\":1,\"jobIds\":[\"first\"],\"provider\":\"CODEX\",\"requestedModel\":\"fixture\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.history[0].jobId").value("first"));
         mvc.perform(delete(path).header("X-Forge-Client", "1")).andExpect(status().isNoContent());
         mvc.perform(get(path)).andExpect(status().isNotFound());
     }

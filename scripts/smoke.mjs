@@ -159,6 +159,11 @@ try {
   assert.equal(linkedConversation.turns[0].jobId, answerJob.id)
   assert.equal(linkedConversation.turns[0].position, 1)
   assert.deepEqual(await api(`${conversationPath}/turns`, 'POST', { jobId: answerJob.id, expectedRevision: 0 }), linkedConversation)
+  const contextRequest = { bundleId: originalBundle.id, expectedRevision: 1, jobIds: [answerJob.id], provider: 'CODEX', requestedModel: 'preview-only-model' }
+  const contextPreview = await api(`${conversationPath}/preview`, 'POST', contextRequest)
+  assert.equal(contextPreview.history[0].jobId, answerJob.id)
+  assert.ok(contextPreview.prompt.includes('UNTRUSTED CONTEXT'))
+  assert.notEqual(contextPreview.digest, originalAnswerPreview.digest)
   async function checkAnswerEvents() {
     const response = await fetch(`${base}/api${answerJobPath}/events`, { signal: AbortSignal.timeout(10000) })
     assert.equal(response.status, 200)
@@ -370,6 +375,7 @@ try {
   assert.deepEqual(await api(approvalPath), { ...answerApproval, status: 'CONSUMED' })
   assert.deepEqual(await api(answerJobPath), completedAnswer)
   assert.deepEqual(await api(conversationPath), linkedConversation)
+  assert.equal((await api(`${conversationPath}/preview`, 'POST', contextRequest)).digest, contextPreview.digest)
   await api(conversationPath, 'DELETE')
   assert.deepEqual(await api(conversationBase), [])
   assert.deepEqual(await api(answerJobPath), completedAnswer)
@@ -541,6 +547,7 @@ try {
     dataset: '100 synthetic UTF-8 files (~2.5 KB each) + 1 nested fixture; sequential HTTP requests',
     checks: ['Codex opt-in fake App Server evidence-first partial/final SSE and cancellation',
       'ordered conversation links survive restart, retry idempotently, and delete without removing answers or evidence',
+      'read-only selected conversation context preview survives restart with a distinct non-approval digest',
       'packaged UI', 'upload/download byte equality', 'UTF-8 preview', 'restart persistence',
       'active workspace persistence', 'independent knowledge area', 'cascade deletion', 'deletion persists after restart',
       'local folder collection', 'Java symbol line numbers', 'search survives restart', 'unchanged revision preserves entry ids',

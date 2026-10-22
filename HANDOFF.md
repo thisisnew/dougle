@@ -1,5 +1,9 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
+연속 개발 지시: 사용자는 매 기능마다 멈추지 말고 완성까지 진행하도록 요청했습니다. 진행·검증·문서·푸시를 이어가며 실제 외부 AI 전송과 배포 자격 증명 등 명시 승인이 필요한 경우만 확인합니다.
+
+최신 추가: [이전 문맥 미리보기](docs/conversation-context.md). 읽기 전용 재검증이며 영속 문맥/전용 승인/실제 턴은 다음 작업입니다.
+
 > 최신 화면: [대화 보관함](docs/conversations.md). 완료 답변을 순서대로 정리하고 당시 근거와 답변을 읽습니다. 생성/추가/삭제는 로컬 DB 작업이며 새 AI 전송·이전 문맥 재전송은 없습니다. SQLite v17.
 
 > 최신 개발: [전용 Codex 스트리밍 실행기](docs/codex-streaming.md)를 답변 작업에 연결했습니다. 기본값은 기존 완료 답변이며 전용 로그인 폴더 지정 시에만 켭니다. 가상 CLI 검증과 실제 서비스 검증을 구분합니다.
@@ -35,11 +39,11 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 10 MiB 이하 파일 업로드, 원본 바이트 다운로드, 폴더/자료 삭제
 - 1 MiB 이하 UTF-8 텍스트 미리보기, HTML 실행 방지
 - 원본과 지식 영역 분리, 수동/AI 초안 구별, 사람 검토·명시적 게시와 자동 의미 검증의 구분
-- SQLite FK cascade / WAL / 스키마 버전 16 / 중복 이름 보호
+- SQLite FK cascade / WAL / 스키마 버전 17 / 중복 이름 보호
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
-- 최신 검증: 백엔드 285개 통과 + 실제 CLI opt-in 1개 skip / 프런트엔드 155개 통과. 통합 빌드·JAR 재시작 smoke·보관함 브라우저 검증 통과. [보관함 검증 범위와 남은 한계](docs/conversations.md). 가상 CLI 검증이며 실제 서비스 생성 성공과 구분합니다.
+- 최신 검증: 백엔드 290개 통과 + 실제 CLI opt-in 1개 skip / 프런트엔드 160개 통과. 통합 빌드·JAR 재시작 smoke·문맥 미리보기 브라우저 검증 통과. [검증 범위와 남은 한계](docs/conversation-context.md). 가상 CLI 검증이며 실제 서비스 생성 성공과 구분합니다.
 - 실제 JAR 재시작 후 원본·선택 복원, 삭제 영속성, HTTP 성능 측정
 - Source 등록·삭제·수동 동기화: 로컬 폴더 / 공개 HTTPS URL / 공개 GitHub 기본 브랜치
 - 원본 해시·마지막 revision·오류·반영 시각, 실패 시 이전 스냅샷 보존
@@ -167,7 +171,7 @@ Phase 1의 `library` 모듈은 `domain / application / adapter`로 나뉩니다.
 이 저장소의 AGENTS.md, HANDOFF.md, docs/backlog.md, docs/architecture.md,
 docs/api.md, docs/phase3-foundation-report.md를 읽고 현재 코드와 비교해라.
 Phase 1·2와 P3-1 수동 초안/버전/근거 스냅샷은 구현되어 있다. 먼저 빌드와 테스트로
-기준 상태(백엔드 285개 통과 + live opt-in 1개 skip, 프런트엔드 155개)를 확인하고 실패를 숨기지 마라.
+기준 상태(백엔드 290개 통과 + live opt-in 1개 skip, 프런트엔드 160개)를 확인하고 실패를 숨기지 마라.
 UI 기본 병렬 실행에서 시간 초과가 관측되었으므로 자원 제약 환경에서는 npm --prefix frontend test -- --maxWorkers=2로 검증해라.
 사용자는 Ollama 대신 로그인된 Codex/Claude Code CLI 사용을 선택했다. docs/cli-ai.md를 읽어라.
 별도 AI DRAFT·건별 승인·출력 검사·영속 작업·취소·멱등·재시작 상태 복구는 구현되었다.

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import ConversationPreviewPanel from './ConversationPreviewPanel'
 
 type Room = { id: string; workspaceId: string; title: string; revision: number }
 type Detail = { conversation: Room; turns: { jobId: string; position: number }[] }
@@ -13,6 +14,7 @@ export default function ConversationShelf({ workspaceId, selectedJobId, onSelect
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [previewOpen, setPreviewOpen] = useState(false)
   const pending = useRef<AbortController | null>(null)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}/conversations`
 
@@ -20,7 +22,7 @@ export default function ConversationShelf({ workspaceId, selectedJobId, onSelect
     pending.current?.abort()
     const controller = new AbortController()
     pending.current = controller
-    setBusy(true); setError(''); setConfirmDelete(false)
+    setBusy(true); setError(''); setConfirmDelete(false); setPreviewOpen(false)
     try {
       let value: Detail | null = null
       const options = { signal: controller.signal }
@@ -69,6 +71,10 @@ export default function ConversationShelf({ workspaceId, selectedJobId, onSelect
       <ol>{detail.turns.map(turn => <li key={turn.jobId}><Button type="button" variant="outline" disabled={busy}
         onClick={() => onSelectJob(turn.jobId)}>{turn.position}번 답변 · {turn.jobId.slice(0, 8)}</Button></li>)}</ol>
       {detail.turns.length === 0 && <p>연결된 답변이 없습니다.</p>}
+      <Button type="button" variant="outline" disabled={busy || detail.turns.length === 0}
+        onClick={() => setPreviewOpen(value => !value)}>{previewOpen ? '문맥 미리보기 닫기' : '이전 문맥 선택'}</Button>
+      {previewOpen && <ConversationPreviewPanel workspaceId={workspaceId} conversationId={detail.conversation.id}
+        revision={detail.conversation.revision} turns={detail.turns} />}
       <Button type="button" variant="outline" disabled={busy} onClick={() => setConfirmDelete(true)}>보관함 삭제</Button>
       {confirmDelete && <div role="group" aria-label="보관함 삭제 확인">
         <p>보관함과 연결만 삭제합니다. 답변·근거는 남으며 실행 중 작업도 취소하지 않습니다.</p>

@@ -1,5 +1,7 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+문맥 확인: `POST /api/workspaces/{workspaceId}/conversations/{id}/preview`는 저장 없이 선택한 과거 답변과 새 질문을 재검증합니다. 기존 승인 API로 이 해시를 승인할 수 없습니다. [입출력·한도](conversation-context.md).
+
 v17 대화 보관함: `/api/workspaces/{workspaceId}/conversations` GET/POST, `/{id}` GET/DELETE, `/{id}/turns` POST. 완료 답변의 로컬 연결만 관리합니다. [입출력·충돌·삭제 계약](conversations.md).
 
 질문별 이력 화면은 기존 `GET /api/workspaces/{workspaceId}/answer-jobs`, `/evidence-bundles` 목록과 각 `/{id}` 상세를 재사용합니다. 새 API·승인·생성 호출은 없습니다. [조회·삭제 정책](answer-history.md).

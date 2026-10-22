@@ -1,5 +1,7 @@
 # 아키텍처
 
+`ConversationPreviewService`는 보관함·현재 질문·선택한 이전 답변을 읽기 트랜잭션에서 검증하고 전용 요청문/해시를 만듭니다. 기존 승인/작업 경로와 분리하며 저장하지 않습니다. [문맥 미리보기 경계](conversation-context.md).
+
 그림 요약: [현재 구현과 앞으로의 설계도](design-map.md). 구현된 경로와 미구현 계획을 구분합니다.
 쉬운 설명: [데이터 모델과 코드 대조](modeling.md), [작동 원리·사용법](how-it-works.md).
 

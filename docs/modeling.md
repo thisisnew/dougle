@@ -1,5 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+문맥 미리보기는 새 저장 모델이 아닙니다. 보관함과 선택한 완료 작업/근거를 읽어 일시적인 요청문·전용 해시를 반환합니다. 영속 요청/턴별 승인 모델은 다음 작업입니다. [코드 대조](conversation-context.md).
+
 v17은 `conversation → conversation_turn → answer_job → evidence_bundle`로 완료 답변을 정리합니다. `conversation_turn.position`은 사용자 정리 순서이며 AI에게 전달한 실제 대화 턴이 아닙니다. 답변/근거를 복제하지 않습니다. [실제 코드·삭제 정책 대조](conversations.md).
 
 Codex용 `CodexTextStream`은 thread/turn/item에 묶인 **메모리 상태 검증기**입니다. 전용 프로필 옵션이 켜지면 `CodexAppServerSession`에서 호출하고 기존 작업 메모리/SSE로 보냅니다. 새 테이블은 없습니다. [현재/예정 대조](codex-streaming.md).
