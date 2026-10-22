@@ -1,0 +1,20 @@
+[package]
+name = "knowledge-forge-desktop"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99.1"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "=2.7.4", features = [] }
+
+[dependencies]
+tauri = { version = "=2.12.5", features = [] }
+getrandom = "=0.4.3"
+libc = "=0.2.191"
+serde_json = "=1.0.154"
+ureq = { version = "=3.5.0", default-features = false, features = ["json"] }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

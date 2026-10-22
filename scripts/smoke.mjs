@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { performance } from 'node:perf_hooks'
+import { randomBytes } from 'node:crypto'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const directory = await mkdtemp(resolve(tmpdir(), 'forge-smoke-'))
@@ -15,7 +16,14 @@ portServer.listen(0, '127.0.0.1')
 await once(portServer, 'listening')
 const port = portServer.address().port
 await new Promise(resolveClose => portServer.close(resolveClose))
-const base = `http://127.0.0.1:${port}`
+const desktopResources = process.env.FORGE_SMOKE_DESKTOP_RESOURCES
+let base = `http://127.0.0.1:${port}`
+let sessionToken = ''
+const fetch = (url, options = {}) => {
+  const headers = new Headers(options.headers)
+  if (desktopResources && String(url).startsWith(`${base}/api/`)) headers.set('X-Forge-Session', sessionToken)
+  return globalThis.fetch(url, { ...options, headers })
+}
 let child
 let logs = ''
 let configuredModel = 'server-default-fixture'
@@ -25,21 +33,33 @@ let configuredStreamHome = ''
 async function start() {
   logs = ''
   const started = performance.now()
-  child = spawn('bash', ['scripts/run.sh',
+  sessionToken = desktopResources ? randomBytes(32).toString('hex') : ''
+  const command = desktopResources ? resolve(desktopResources, 'runtime/bin/java') : 'bash'
+  const launcher = desktopResources ? ['-jar', resolve(desktopResources, 'knowledge-forge.jar')] : ['scripts/run.sh']
+  child = spawn(command, [...launcher,
     `--forge.ai.codex-command=${configuredCodex}`,
     `--forge.ai.codex-stream-home=${configuredStreamHome}`,
     `--forge.ai.codex-model=${configuredModel}`,
     `--forge.ai.claude-command=${resolve(root, 'scripts/fixtures/fake-claude-stream.sh')}`], {
     cwd: root,
-    env: { ...process.env, PORT: String(port), FORGE_DATA_DIR: directory },
-    stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, PORT: String(port), FORGE_DATA_DIR: directory, FORGE_DESKTOP: desktopResources ? 'true' : 'false' },
+    stdio: [desktopResources ? 'pipe' : 'ignore', 'pipe', 'pipe'],
   })
   child.on('error', error => { logs += error.message })
   child.stdout.on('data', chunk => { logs += chunk.toString() })
   child.stderr.on('data', chunk => { logs += chunk.toString() })
+  if (desktopResources) child.stdin.write(`${sessionToken}\n`)
   for (let attempt = 0; attempt < 200; attempt++) {
     if (child.exitCode !== null) throw new Error(`Server exited: ${logs}`)
     try {
+      if (desktopResources) {
+        const ready = logs.match(/^FORGE_DESKTOP_READY:(\d+)$/m)
+        if (!ready) { await new Promise(resolveWait => setTimeout(resolveWait, 150)); continue }
+        base = `http://127.0.0.1:${ready[1]}`
+        assert.equal((await globalThis.fetch(`${base}/api/session`)).status, 403)
+        assert.equal((await fetch(`${base}/api/desktop/ready`)).status, 200)
+        assert.ok(!logs.includes(sessionToken))
+      }
       const response = await fetch(`${base}/api/session`, { signal: AbortSignal.timeout(1000) })
       if (response.ok) return performance.now() - started
     } catch {}
@@ -51,10 +71,13 @@ async function start() {
 async function stop() {
   if (child && child.exitCode === null) {
     const ended = once(child, 'exit')
-    child.kill('SIGTERM')
-    const timeout = setTimeout(() => child.kill('SIGKILL'), 5000)
+    if (desktopResources) child.stdin.end()
+    else child.kill('SIGTERM')
+    let forced = false
+    const timeout = setTimeout(() => { forced = true; child.kill('SIGKILL') }, 10000)
     await ended
     clearTimeout(timeout)
+    assert.equal(forced, false, 'Server must shut down gracefully')
   }
 }
 
@@ -607,7 +630,8 @@ try {
     search100Files30Requests: { p50Ms: percentile(searchTimes, 0.5), p95Ms: percentile(searchTimes, 0.95) },
     limitations: 'Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance.',
   }
-  await writeFile(resolve(root, 'docs/performance-phase3-foundation.json'), JSON.stringify(result, null, 2) + '\n')
+  result.launchMode = desktopResources ? 'bundled Java / desktop session / stdin lifecycle (not native webview)' : 'development JAR'
+  await writeFile(resolve(root, desktopResources ? 'docs/performance-desktop-runtime.json' : 'docs/performance-phase3-foundation.json'), JSON.stringify(result, null, 2) + '\n')
   console.log(JSON.stringify(result, null, 2))
 } catch (error) {
   console.error(logs.slice(-12000))

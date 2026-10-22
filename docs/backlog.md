@@ -9,7 +9,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 - P4 [문맥 고정·승인·다중 턴 실행](context-requests.md)을 구현했습니다. [전용 Codex 실행기](codex-streaming.md)의 실제 서비스 호환성 검증은 별도 승인이 필요합니다.
 - P5 [파일 단위 증분 분석/반영](incremental-snapshots.md) 완료. 전체 수집 자체는 유지하므로 Git 네트워크 증분·URL 조건부 요청·선택적 폴링은 남았습니다.
-- P6 [설치형 인증·종료 감시와 인증 fetch/SSE/다운로드](desktop-backend.md) 완료. 네이티브 호스트·동봉 런타임·설치 검증은 진행 중입니다.
+- P6 [설치형 인증·종료 감시와 인증 fetch/SSE/다운로드](desktop-backend.md), 네이티브 호스트·동봉 Java·Intel DMG 설치 복사본 검증 완료. [검증 범위](desktop-report.md). CLI 탐색 설정·백업/복구·전체 클릭 회귀·공증은 남았습니다.
 
 - 원본 검색의 단어 주변 미리보기·추출 텍스트 행 범위·본문 일치 구분은 구현했습니다. [검증/제한](search-evidence.md).
 - P4-1의 [게시 지식 통합 검색](published-search.md)과 [불변 근거 묶음](evidence-bundles.md)은 구현했습니다. 의미 기반 청크 선택, 심볼·지식 관계 검색은 여전히 미완료입니다.

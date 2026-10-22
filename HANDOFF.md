@@ -4,6 +4,8 @@
 
 최신 추가: [문맥 고정·승인·실행](docs/context-requests.md), [변경 파일만 분석](docs/incremental-snapshots.md), [설치형 인증 기반](docs/desktop-backend.md). SQLite v18이며 네이티브 호스트/설치 빌드와 Source 선택적 폴링을 이어갑니다.
 
+설치형 추가: Intel Mac DMG/Java 동봉·설치 복사본의 네이티브 UI 검증 통과. [설치·검증 보고서](docs/desktop-report.md). 공증/Apple Silicon/실제 AI 호환성 검증은 아닙니다. 다음은 Source 선택적 폴링·조건부 수집과 설치형 CLI 설정 UX입니다.
+
 > 최신 화면: [대화 보관함](docs/conversations.md). 완료 답변을 순서대로 정리하고 당시 근거와 답변을 읽습니다. 생성/추가/삭제는 로컬 DB 작업이며 새 AI 전송·이전 문맥 재전송은 없습니다. SQLite v17.
 
 > 최신 개발: [전용 Codex 스트리밍 실행기](docs/codex-streaming.md)를 답변 작업에 연결했습니다. 기본값은 기존 완료 답변이며 전용 로그인 폴더 지정 시에만 켭니다. 가상 CLI 검증과 실제 서비스 검증을 구분합니다.

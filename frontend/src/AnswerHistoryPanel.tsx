@@ -74,7 +74,7 @@ function ScopedHistory({ workspaceId, onClose }: Props) {
     <Button variant="outline" onClick={onClose}>닫기</Button>
     <h2>답변 이력</h2>
     <p>이 Workspace의 질문별 답변 작업을 조회합니다. 열기·새로고침은 AI를 호출하지 않습니다.</p>
-    <p>서로 독립된 요청입니다. 보관함에 묶어도 이전 문맥을 이어 보내지는 않습니다.</p>
+    <p>보관함에 정리하는 것만으로 이전 문맥을 전송하지 않습니다. 이전 문맥 선택 → 고정 저장 → 별도 승인으로 질문을 이어갈 수 있습니다.</p>
     <Button type="button" variant="outline" onClick={() => setShelfOpen(value => !value)}>{shelfOpen ? '보관함 관리 닫기' : '대화 보관함 관리'}</Button>
     {shelfOpen && <ConversationShelf workspaceId={workspaceId}
       selectedJobId={!busy && detail?.job.status === 'SUCCEEDED' ? detail.job.id : null}
@@ -110,6 +110,6 @@ function ScopedHistory({ workspaceId, onClose }: Props) {
       {detail.job.error && <p role="alert">{detail.job.error}</p>}
       <details><summary>작업·근거 식별 정보</summary><pre>{detail.job.id}{'\n'}{detail.bundle.id}{'\n'}{detail.bundle.digest}</pre></details>
     </section>}
-    <p>최대 100개 작업을 조회합니다. 근거 묶음을 삭제하면 연결된 답변 작업과 보관함 연결도 삭제됩니다. 개별 이력 삭제·이전 문맥 전송은 후속 기능입니다.</p>
+    <p>최대 100개 작업을 조회합니다. 근거 묶음을 삭제하면 연결된 답변 작업과 보관함 연결도 삭제됩니다. 개별 작업 삭제는 아직 지원하지 않습니다.</p>
   </dialog>
 }

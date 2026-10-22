@@ -1,5 +1,7 @@
 # 아키텍처
 
+`desktop/src-tauri`는 토큰/준비 상태/프로세스 그룹/창을 관리합니다. 백엔드 준비 전에는 로컬 시작 창만 표시합니다. 앱 데이터 위치는 고정 식별자 `dev.knowledgeforge.desktop`로 계산하며 Java는 PATH가 아닌 번들 안 절대 경로로 실행합니다. [계약](../desktop/README.md).
+
 `ConversationPreviewService`는 읽기 전용 문맥 미리보기를 만듭니다. `ConversationRequestService`가 명시적으로 고정 저장하면 `StoredAnswerContext → AnswerContextProvider → EvidenceAnswerPreview`를 통해 기존 승인·작업 경로에 결합합니다. 완료 답변과 `ConversationCompletion`의 보관함 연결은 원자적입니다. [검증 경계](context-requests.md).
 
 `SourceService → SnapshotPlanner → JdbcSourceStore`는 전체 수집본 중 변경 파일만 분석하고 기존 ID를 보존합니다. [증분 반영](incremental-snapshots.md). 선택적 `desktop` 모듈은 Spring 초기화 전 데이터 잠금/세션 인증을 제공하며 프런트엔드의 인증 fetch·SSE·다운로드와 연결합니다. [설치형 기반](desktop-backend.md).

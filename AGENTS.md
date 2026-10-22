@@ -16,6 +16,7 @@
 - 사용자는 완성까지 연속 진행하도록 요청했다. 기능마다 멈추지 말고 검증·문서·푸시 후 다음 항목으로 이어간다. 외부 AI 실제 전송과 배포 자격 증명은 별도 승인 경계다.
 - 이전 문맥의 읽기 전용 미리보기는 `docs/conversation-context.md`, 명시적 고정 저장·승인·실행은 `docs/context-requests.md`를 따른다. 저장 전 문맥 해시로 기존 단일 질문을 승인할 수 없다.
 - Source 파일 ID 보존·변경 분석은 `docs/incremental-snapshots.md`, 설치형 토큰/수명주기는 `docs/desktop-backend.md`를 따른다. 전체 스냅샷 수집을 Git 네트워크 증분으로 보고하지 않는다.
+- Intel Mac 미리보기 패키지와 검증은 `docs/desktop-report.md`, 재현은 `docs/macos-build.md`를 따른다. 공증·Apple Silicon·실제 AI 검증으로 확대 해석하지 않는다. 빌드 중인 JAR/앱 번들을 실행 검증과 동시에 덮어쓰지 않는다.
 - 질문별 이력 조회는 `docs/answer-history.md`, v17 완료 답변 보관함은 `docs/conversations.md`를 따른다. 보관함의 정리 순서를 실제 문맥 전송 턴으로 취급하지 않는다. 새 AI 호출·승인·이전 문맥 전송은 하지 않는다. 다음은 불변 문맥 미리보기/턴별 승인 설계다.
 - Codex 스트림은 `docs/codex-streaming.md`의 전용 프로필 opt-in 실행기까지 답변 작업에 연결했다. 기본 exec/지식 생성 경로는 유지하며 실패 시 자동 재전송하지 않는다. 가상 CLI 테스트를 실제 서비스 생성 성공으로 보고하지 않는다. 다중 대화는 후속이다.
 - 지식 Markdown 표시 보안 경계는 `docs/markdown-rendering.md`를 따른다. 링크/이미지 자동 로딩이나 raw HTML 실행을 추가하지 않는다.

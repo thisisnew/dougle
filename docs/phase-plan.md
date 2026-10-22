@@ -6,7 +6,7 @@ P4 질문별 이력·[완료 답변 보관함](conversations.md)과 명시적 �
 
 Codex 스트림은 [선택적 실행기](codex-streaming.md)까지 연결했습니다. 관계 검색과 실제 서비스 검증이 남아 P4 전체 완료는 아닙니다.
 
-P5 [변경 파일만 분석·반영](incremental-snapshots.md), P6 [설치형 세션 인증·종료 감시](desktop-backend.md)를 구현했습니다. 폴링·네트워크 증분과 설치 패키지는 진행 중입니다.
+P5 [변경 파일만 분석·반영](incremental-snapshots.md), P6 [Intel Mac DMG·동봉 Java·설치 복사본 검증](desktop-report.md)을 구현했습니다. 폴링·네트워크 증분·설치형 전체 회귀는 진행 중입니다.
 
 실행 가능한 작업 단위와 상세 인수 조건은 [남은 개발 체크리스트](backlog.md)를 따릅니다.
 원본 검색의 [근거 위치 표시](search-evidence.md)는 구현했지만 P4 근거 검색 전체 완료는 아닙니다.

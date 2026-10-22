@@ -56,7 +56,7 @@ export default function ConversationShelf({ workspaceId, selectedJobId, onSelect
 
   return <section aria-label="대화 보관함 관리">
     <h3>대화 보관함</h3>
-    <p>완료 답변을 원하는 순서로 묶습니다. AI에게 이전 대화를 전송하지 않습니다.</p>
+    <p>완료 답변을 원하는 순서로 묶습니다. 정리만으로 전송하지 않으며, 질문을 이어가려면 이전 문맥 선택과 별도 승인이 필요합니다.</p>
     <label>새 보관함 이름<input aria-label="새 보관함 이름" maxLength={120} value={title} disabled={busy} onChange={event => setTitle(event.target.value)} /></label>
     <Button type="button" disabled={busy || !title.trim()} onClick={() => void run('create')}>보관함 만들기</Button>
     <Button type="button" variant="outline" disabled={busy} onClick={() => void run('list')}>보관함 새로고침</Button>

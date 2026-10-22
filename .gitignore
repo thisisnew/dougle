@@ -14,5 +14,6 @@
 *.sqlite-shm
 *.sqlite-wal
 /desktop/src-tauri/resources/runtime/
+/desktop/src-tauri/resources/.staging.*/
 /desktop/src-tauri/resources/knowledge-forge.jar
 /release/

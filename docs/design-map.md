@@ -1,5 +1,7 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
+현재 설치형: **Intel Mac DMG → Tauri 창 → 동봉 Java 21 → 인증된 React/API → SQLite·Lucene**. 앱 종료 시 Java를 종료하고 자료는 OS 앱 데이터 폴더에 남깁니다. [검증 결과와 아직 남은 것](desktop-report.md).
+
 추가 경로: **보관함 → 이전 답변 명시 선택 → 근거 재검증 → 미리보기 → 고정 저장 → 별도 승인 → SSE 답변 → 성공 턴 연결**. [모델·코드 대조](context-requests.md).
 
 추가 화면: **답변 이력 → 대화 보관함 관리 → 완료 답변 연결 → 당시 근거/답변 열기**. v17 로컬 보관함과 v18 고정 문맥을 분리하며 자동 전송하지 않습니다. [설계와 코드 대조](conversations.md).

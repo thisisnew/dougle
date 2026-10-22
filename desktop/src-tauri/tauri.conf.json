@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Knowledge Forge",
+  "version": "0.1.0",
+  "identifier": "dev.knowledgeforge.desktop",
+  "build": { "frontendDist": "../host-ui" },
+  "app": {
+    "windows": [],
+    "withGlobalTauri": false,
+    "security": {
+      "capabilities": [],
+      "csp": "default-src 'none'; style-src 'self'; script-src 'none'; img-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns"],
+    "targets": ["app", "dmg"],
+    "resources": ["resources/runtime/**/*", "resources/knowledge-forge.jar"],
+    "macOS": { "minimumSystemVersion": "11.3" }
+  }
+}

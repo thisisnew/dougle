@@ -181,7 +181,7 @@ export default function App() {
           <button className={original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('ORIGINAL')}><FolderOpen size={19} /> 원본 자료 <ChevronRight size={15} /></button>
           <button className={!original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button>
         </nav>
-        <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>자료를 연결하고<br />문서와 코드의 근거를 찾아보세요.</p><span>PHASE 03 · 근거 연결 초안</span></div>
+        <div className="sidebar-note"><Library size={21} /><strong>작은 자료에서, 연결된 지식으로.</strong><p>자료를 연결하고<br />문서와 코드의 근거를 찾아보세요.</p><span>근거 기반 지식 · 질문</span></div>
         <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 자료 저장<small>AI 전송은 건별 승인</small></span></div>
       </aside>
 
@@ -236,7 +236,7 @@ export default function App() {
                   </div> : <div className="preview-empty"><FileText size={32} /><strong>자료를 살펴보세요</strong><p>파일을 선택하면 내용과<br />상세 정보를 확인할 수 있습니다.</p></div>}
                 </aside>
               </div>}
-              <p className="phase-note"><ShieldCheck size={15} /> 원본·추출 텍스트·Java 심볼을 로컬에서 검색합니다. AI 지식 생성과 채팅은 후속 단계에서 연결됩니다.</p>
+              <p className="phase-note"><ShieldCheck size={15} /> 원본·추출 텍스트·Java 심볼을 로컬에서 검색합니다. AI 초안과 답변은 내용을 확인하고 건별 승인한 뒤 생성합니다.</p>
             </>
           )}
         </div>
