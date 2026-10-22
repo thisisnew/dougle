@@ -16,11 +16,12 @@ Tauri 앱
 ```
 
 사용자의 원본 폴더는 읽기 전용입니다. 앱 내부 복사본과 지식은 앱 데이터 폴더에 따로 저장합니다.
-AI는 로그인된 별도 Codex/Claude Code CLI가 필요하며, 시작만으로 호출하지 않습니다.
+Codex 실행 도구는 CPU별로 동봉합니다. Claude는 현재 별도로 설치된 호환 CLI를 연결합니다. 계정 로그인과 건별 자료 전송 승인이 필요하며 시작만으로 추론하지 않습니다.
 
 ## 빌드하는 사람
 
 macOS, Xcode Command Line Tools, Java 21 JDK, Node/npm, 저장소 로컬 Rust 도구가 필요합니다.
+0.1.3부터 기존 업데이트 서명 키도 필요합니다. `~/.config/knowledge-forge/updater.key` 또는 `FORGE_UPDATER_PRIVATE_KEY` 경로를 사용합니다. 새 PC에서 임의로 새 키를 만들지 말고 기존 키를 안전하게 옮기세요. [키 관리·업데이트 배포 순서](automatic-updates.md).
 Rust 버전은 `desktop/rust-toolchain.toml`, Tauri CLI는 `desktop/package-lock.json`에 고정합니다.
 Rust 설치 시 `CARGO_HOME=.tools/cargo`, `RUSTUP_HOME=.tools/rustup`를 사용하며 전역 셸 설정을 바꾸지 않습니다.
 
@@ -38,6 +39,7 @@ bash scripts/package-macos.sh
 
 산출물은 `desktop/src-tauri/target/release/bundle/`, 배포 복사본과 SHA-256은 `release/`입니다.
 빌드 결과는 Git에 넣지 않습니다. `APPLE_SIGNING_IDENTITY=-`의 ad-hoc 서명만 사용하며 공증 자격 증명을 사용하지 않습니다.
+앱 업데이트용 `.app.tar.gz`에는 별도의 업데이트 서명을 만듭니다. DMG와 함께 `.sig`, 체크섬, 검증된 버전 정보를 Release에 올리고 공개 후 피드를 승격합니다.
 패키지의 앱과 Java 아키텍처가 일치해야 합니다. 호스트가 다른 교차 빌드는 대상 JDK를 명시합니다. Intel 실행 검증이 Apple Silicon 실행 검증을 대신하지 않습니다.
 
 ## 동봉 런타임 검증

@@ -1,11 +1,14 @@
 # Knowledge Forge 개발 지침
 
+- 0.1.3부터 네이티브 서명 업데이트를 지원한다. `docs/automatic-updates.md`의 배포 순서와 키 보호를 따른다. `~/.config/knowledge-forge/updater.key`를 Git/앱/로그에 넣거나 임의로 재생성하지 않는다. 공개 자산 해시·서명 검증 뒤에만 `updates/preview.json`을 승격한다. 피드/문서만 바뀌면 실행 파일 재빌드는 불필요하다.
+- 설치 UI 회귀 검사는 실제 React 버튼과 `mode: same-origin`의 WebKit 요청으로 검증한다. `no-referrer` 정책은 변경 요청 Origin을 null로 만들 수 있으므로 보안 헤더/전송 계약을 함께 확인한다. Origin/session 검증을 완화해 해결하지 않는다. 한글 거부 응답의 UTF-8도 검사한다.
+
 - GitHub 소개 페이지(README)는 비개발자 고객 기준의 짧은 소개·실제 화면·설치법·기술 스택·상세 문서 링크만 담는다. '현재 한계'나 긴 내부 설명은 README에서 제외하고 설치 안내/검증 문서에 보존한다. 미완료 기능을 광고하지 않는다. 사용자 요청 순서가 있으면 소개글 작성을 마친 다음 디자인을 변경한다.
 
 - 사용자 상시 요청: 개발·수정 완료 시 설치 파일도 갱신한다. Intel/Apple Silicon별 빌드·해당 검증·GitHub Release 업로드·체크섬 확인까지 완료 기준에 포함한다. README 소개/사용법이 달라지면 함께 수정하고 UI 변경에는 가상 자료로 실제 화면 스크린샷을 제공한다. 소스만 푸시한 상태를 배포 완료라고 보고하지 않는다. 문서만 수정한 경우에는 실행 파일 재빌드가 불필요한지 명시한다. 공증 제외·ARM 실기기 미검증·외부 AI 별도 승인 원칙은 유지한다.
 
 - 최신 재점검은 `docs/model-audit.md`와 `scripts/model-audit.mjs`를 따른다. 전체 파일 목록·구조 검사와 수동 의미 검토/실행 커버리지는 구분한다. 선택 문맥 고정·승인·실행은 이미 구현되어 있다.
-- 사용자는 CLI 설치/경로 입력 없는 제공자 선택·연결 UX를 요청했다. 0.1.2 개발 소스의 선택·인증·로그인과 Codex 동봉 빌드는 `docs/provider-connection.md`를 따른다. 도구 준비·인증·원격 이용 가능성을 분리하며, 실제 계정·Claude 동봉·배포 완료는 각 검증 전까지 미완료로 표시한다.
+- 사용자는 CLI 설치/경로 입력 없는 제공자 선택·연결 UX를 요청했다. 0.1.2부터의 선택·인증·로그인과 Codex 동봉 빌드는 `docs/provider-connection.md`, 0.1.3 요청 오류 수정은 최신 릴리스 보고서를 따른다. 도구 준비·인증·원격 이용 가능성을 분리하며, 실제 계정·Claude 동봉·배포 완료는 각 검증 전까지 미완료로 표시한다.
 
 - Apple 공증은 사용자 요청으로 현재 범위에서 제외한다. ARM64 지원·교차 빌드·실제 기기 검증 상태는 `docs/apple-silicon.md`를 따른다. Intel 호스트에서 ARM 실행 성공으로 보고하지 않는다.
 - `scripts/package-macos.sh`는 `FORGE_MACOS_TARGET`/`FORGE_TARGET_JAVA_HOME`을 지원한다. 공유 `resources/runtime`은 마지막 타깃으로 교체되므로 병렬 패키징하지 않는다. 설치 검증은 명시적 DMG 경로를 사용하며 ARM 정적 검사는 `--static-only`로 구분한다.

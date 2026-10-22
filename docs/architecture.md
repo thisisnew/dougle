@@ -1,5 +1,9 @@
 # 아키텍처
 
+0.1.3 업데이트는 `main.rs → updates.rs → Tauri Updater`의 네이티브 경로입니다. 시작 시 또는 Mac 메뉴에서 공개 버전 정보만 조회하고, 사용자 확인 후 CPU별 서명 패키지를 받습니다. 서명·버전을 검증한 뒤 백엔드 종료를 기다려 앱만 교체합니다. 원본/지식 DB 모델(v21)과 AI 승인 경로는 바꾸지 않으며 WebView IPC 권한도 추가하지 않습니다. [업데이트 설계·배포](automatic-updates.md).
+
+설치형 HTTP 응답의 `Referrer-Policy: same-origin`은 실제 `desktopTransport`의 same-origin 변경 요청과 호환됩니다. 외부 Origin·`Origin: null`·세션 없는 요청은 계속 차단하고, 거부 메시지는 UTF-8로 씁니다. [재현·회귀 검사](release-0.1.3-report.md).
+
 0.1.2 연결 개선: `ProviderConnectionPanel → ProviderConnection/ProviderLogin → 프로세스 어댑터`로 인증 조회와 명시적 로그인을 분리합니다.
 인증은 외부 모델 요청 승인이 아닙니다. `stage-codex.sh → Tauri resources/ai → supervisor → CliLaunchConfiguration`으로 동봉 실행 파일을 자동 연결합니다. [계약·제한](provider-connection.md).
 

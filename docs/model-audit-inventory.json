@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 307,
-  "testOrFixtureFiles": 84,
+  "totalFiles": 313,
+  "testOrFixtureFiles": 87,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -884,7 +884,8 @@
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/native-host-smoke.mjs",
-        "scripts/smoke.mjs"
+        "scripts/smoke.mjs",
+        "scripts/updater-smoke.mjs"
       ]
     },
     {
@@ -975,8 +976,8 @@
     },
     {
       "path": "backend/src/main/java/dev/knowledgeforge/library/adapter/web/LocalRequestFilter.java",
-      "sha256": "2f03a418e91922862e82414db62a10e1e80479635bfad4f6f61baf4e07fb72fd",
-      "lines": 52,
+      "sha256": "2ffa142eca091af82f300be43047ea221bc2fdb60581d21dea1f5356138b33c7",
+      "lines": 54,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
@@ -1552,6 +1553,7 @@
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/native-host-smoke.mjs",
@@ -1559,6 +1561,7 @@
         "scripts/provider-connection-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
+        "scripts/updater-smoke.mjs",
         "scripts/upgrade-smoke.mjs"
       ]
     },
@@ -1767,8 +1770,8 @@
     },
     {
       "path": "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
-      "sha256": "1996e495dc701147d5e2f63885d37a45f036a768213ec8ddef6ded4c5fefd623",
-      "lines": 64,
+      "sha256": "d3b1cb57712f3ad0c147d7e9aef01527234ebdfe5703e2598448ac0994ebc13c",
+      "lines": 85,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -1871,7 +1874,8 @@
       "lines": 5,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java"
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "desktop/src-tauri/examples/updater_smoke.rs"
       ]
     },
     {
@@ -1883,17 +1887,19 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "2e45256b23590ef5421bb7862b2f095b46aabf99a23bb81a4eca9b0d18a55636",
+      "sha256": "b538ee4b4499fc3501398fc7b4d2da3b10dce088920bed3daf7202dbcfffaaac",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "18414be1afdb7f5e6dbcb113b7d1b9d8774053cc0e536b648020ec80a203c852",
+      "sha256": "869174d6168e5005ce29266483a236ffd889402f720c3bd8dfb5a9dc1a580d3c",
       "lines": 7,
       "kind": "production-or-tooling",
-      "lexicalTestReferences": []
+      "lexicalTestReferences": [
+        "scripts/updater-smoke.mjs"
+      ]
     },
     {
       "path": "desktop/rust-toolchain.toml",
@@ -1904,8 +1910,8 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "872e924754ca6255fe8eec164785ce802e92f933cf13e8adbc6c77907ee245bd",
-      "lines": 20,
+      "sha256": "7b7aff578ab2fc60c0ac8573396eaac365ddf50262804352d3a8e66ca0127f54",
+      "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -1927,20 +1933,37 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs"
       ]
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "e287167bcc2281b8196a529fc0e65a89b0d194f251a49117702c62c043e0bcd5",
-      "lines": 177,
+      "sha256": "9b45f700db48ec4fd257538a4447070dfc5755f3358fc49cac13451209e25f13",
+      "lines": 244,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "desktop/src-tauri/examples/updater_smoke.rs",
+      "sha256": "4cc9b74bcd9e7eb3807a0baab3794c52af80d4f72aaa4422d0b338b86c1e2575",
+      "lines": 96,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": [
+        "scripts/updater-smoke.mjs"
+      ]
+    },
+    {
+      "path": "desktop/src-tauri/examples/updater_verify.rs",
+      "sha256": "de6d280b40edf3df431870b96a2bb11ec2b1c1569549c89179e09790644b9bf5",
+      "lines": 40,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/src-tauri/examples/webview_smoke.rs",
-      "sha256": "d02c3f591f526174c8c2886214cc98feb97036cc38038206348099df00be5f97",
-      "lines": 142,
+      "sha256": "5177589474e556b9fcef34a5ae8e0da587a466ae07be741fb58f4328a7952f57",
+      "lines": 170,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -1981,6 +2004,7 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ProviderLoginAdapterTest.java",
         "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
         "frontend/src/AnswerApprovalPanel.test.tsx",
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/AnswerJobsPanel.test.tsx",
@@ -2013,8 +2037,8 @@
     },
     {
       "path": "desktop/src-tauri/src/main.rs",
-      "sha256": "c5209e76a6bcf4088a6c6a44df60f16539967a8839f0d76caff9702a41499c28",
-      "lines": 187,
+      "sha256": "bade4a382237a7bda1fe5b7da27f0bbc0150a0bfa0643a8dfda89e0470e2aeb2",
+      "lines": 272,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
@@ -2045,6 +2069,8 @@
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
+        "desktop/src-tauri/examples/updater_verify.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
@@ -2054,7 +2080,8 @@
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
-        "scripts/smoke.mjs"
+        "scripts/smoke.mjs",
+        "scripts/updater-smoke.mjs"
       ]
     },
     {
@@ -2079,9 +2106,18 @@
       ]
     },
     {
+      "path": "desktop/src-tauri/src/updates.rs",
+      "sha256": "be835d6426a5c9f842215d9c898860af51a58e62406504da3d96acbe8b7f9b60",
+      "lines": 272,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java"
+      ]
+    },
+    {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "c946bc80dae79b45abe8e9bfe43ba7738b586854b9a64f5a912e873c5f96c536",
-      "lines": 22,
+      "sha256": "170d8dad925f4783b12e902bb7102df66feca1b005b5331b2427177cc270c095",
+      "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -2092,8 +2128,10 @@
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
-        "scripts/native-host-smoke.mjs"
+        "scripts/native-host-smoke.mjs",
+        "scripts/updater-smoke.mjs"
       ]
     },
     {
@@ -2109,7 +2147,8 @@
       "lines": 13,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java"
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "desktop/src-tauri/examples/updater_smoke.rs"
       ]
     },
     {
@@ -2124,7 +2163,9 @@
       "sha256": "0cbee01c997c9d9d55180490aa23c491c37bf428b75ae4767c51e2e7f3c8ae93",
       "lines": 38,
       "kind": "production-or-tooling",
-      "lexicalTestReferences": []
+      "lexicalTestReferences": [
+        "scripts/updater-smoke.mjs"
+      ]
     },
     {
       "path": "frontend/src/AnalysisPanel.tsx",
@@ -2211,6 +2252,7 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
         "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
         "frontend/src/AnswerApprovalPanel.test.tsx",
         "frontend/src/App.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
@@ -2495,8 +2537,8 @@
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.tsx",
-      "sha256": "0202b726d164a7617ed8936ffc77780150961d96ec70a15daa4ac86de02f032a",
-      "lines": 115,
+      "sha256": "f53be2f8d80c218d8a5899757830e05a68582a0825d2ccd2e60fa599288000b0",
+      "lines": 114,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/ProviderConnectionPanel.test.tsx"
@@ -2760,6 +2802,7 @@
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/App.test.tsx",
         "frontend/src/KnowledgePanel.test.tsx",
@@ -2815,6 +2858,8 @@
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
+        "desktop/src-tauri/examples/updater_verify.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
@@ -2824,7 +2869,8 @@
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
-        "scripts/smoke.mjs"
+        "scripts/smoke.mjs",
+        "scripts/updater-smoke.mjs"
       ]
     },
     {
@@ -2838,8 +2884,8 @@
     },
     {
       "path": "frontend/src/retro.css",
-      "sha256": "8d340560b9edab15ab6729b681621bbdbd069f6ffeebd3fe193d791e78928f15",
-      "lines": 83,
+      "sha256": "1722661d9df80a7e5b9effe6a7886ce4c6ba76c18ec0ded7e86e05ec744f3fe2",
+      "lines": 110,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -2899,6 +2945,7 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs"
       ]
     },
@@ -2921,7 +2968,9 @@
       "sha256": "b8ca606a196b54f86c104ab98fe1292eb521b70c49fafe0bd06aec690fd48cc2",
       "lines": 11,
       "kind": "production-or-tooling",
-      "lexicalTestReferences": []
+      "lexicalTestReferences": [
+        "scripts/updater-smoke.mjs"
+      ]
     },
     {
       "path": "scripts/dev.sh",
@@ -3048,8 +3097,8 @@
     },
     {
       "path": "scripts/package-macos.sh",
-      "sha256": "824485893468733fd94ea17880e7f32a9ba4f03f6aa519cf8f8eea43faf2a205",
-      "lines": 64,
+      "sha256": "160bd2f9f70705f943450562ef07e46060361fbafbba4e3d1d359c3a764662f9",
+      "lines": 78,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -3094,6 +3143,7 @@
         "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/desktopTransport.test.ts",
@@ -3103,7 +3153,8 @@
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
         "scripts/relations-smoke.mjs",
-        "scripts/smoke.mjs"
+        "scripts/smoke.mjs",
+        "scripts/updater-smoke.mjs"
       ]
     },
     {
@@ -3123,6 +3174,7 @@
         "desktop/src-tauri/examples/webview_smoke.rs",
         "scripts/polling-smoke.mjs",
         "scripts/relations-smoke.mjs",
+        "scripts/updater-smoke.mjs",
         "scripts/upgrade-smoke.mjs"
       ]
     },
@@ -3131,6 +3183,20 @@
       "sha256": "c56fd664744fb377d3aa17eb22cee76d61defd7a264e2744e21cd68ad8ff6c37",
       "lines": 39,
       "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/update-manifest.mjs",
+      "sha256": "3ee996c443ffb28ab3133a9d7386d7609269c7aba7ed6298c28d74aecbb96941",
+      "lines": 47,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/updater-smoke.mjs",
+      "sha256": "bf62c9fba4aa27003345390d442f9fa23f40a575430a1f61fd2b1ce6acec451a",
+      "lines": 64,
+      "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
@@ -3144,6 +3210,13 @@
       "path": "scripts/verify-macos-package.sh",
       "sha256": "094407d98cfda18e681f456f8e5144a78cb4dbbd589b142f82e16fa9ebb9c30e",
       "lines": 46,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/verify-macos-update.sh",
+      "sha256": "216bed12d3a34c92a4a831a474281c8ec07e3cff153eba265b8413676b293ebe",
+      "lines": 18,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     }

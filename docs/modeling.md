@@ -2,7 +2,7 @@
 
 **재점검 결과:** [전체 파일 조사 범위·규칙별 코드/테스트 대조·차이](model-audit.md).
 현재 CLI 경로 설정과 목표인 제공자 선택형 연결은 다릅니다. 설치 확인을 인증/연결 완료로 간주하지 않습니다.
-0.1.2에는 [제공자 선택·인증 확인·로그인](provider-connection.md)이 포함됩니다. [설치 파일과 검증](release-0.1.2-report.md). 0.1.1에는 이 기능이 없습니다.
+0.1.2부터 [제공자 선택·인증 확인·로그인](provider-connection.md)이 포함됩니다. 최신 [0.1.3 설치 파일과 검증](release-0.1.3-report.md)은 실제 버튼 요청 오류도 수정합니다.
 
 현재 개발 소스의 DB는 **SQLite v21**입니다. 원본, 지식, AI 요청을 따로 보관합니다.
 Intel/Apple Silicon 패키지에서 같은 모델을 사용합니다. CPU 지원 추가로 스키마를 변경하지 않습니다.
@@ -61,11 +61,13 @@ flowchart LR
 | 선택한 이전 문맥만 불변 저장 | `ConversationRequestService`, `StoredAnswerContext` | [문맥](context-requests.md) |
 | 경로 설정은 재시작 적용, 새 승인 필요 | `CliLaunchConfiguration`, `CuratorSettings.executionBinding` | [CLI 설정](cli-launch-settings.md) |
 | 설치형 API 보호·부모 종료 시 Java 정리 | `DesktopBootstrap`, `DesktopSession`, Rust `supervisor` | [설치형 보안](desktop-backend.md) |
+| 앱만 서명 확인 후 교체, 자료 폴더 보존 | Rust `updates.rs`, `Lifecycle`, Tauri Updater | [업데이트](automatic-updates.md), 가상 앱 설치·변조/버전 불일치 차단 검사 |
 
 마이그레이션의 실제 테이블과 대조한 파일:
 `backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java`.
 
 ## 반드시 구분할 것
+- 업데이트 정보(`updates/preview.json`)와 공개 키는 앱 배포 모델입니다. SQLite 테이블이나 지식 버전이 아니며 개인 서명 키는 빌드 PC에만 둡니다. 다운로드·설치 확인과 AI 전송 승인은 별개입니다.
 - `ProviderLogin.Status`는 메모리 작업(PENDING → AUTHENTICATED/FAILED/CANCELLED/TIMED_OUT)입니다. 토큰/로그인 이력을 SQLite에 추가하지 않으며 DB v21은 유지합니다.
 - 기본 제공자 선택은 UI 로컬 저장소에만 보관합니다. 이미 승인한 요청이나 진행 작업의 제공자를 바꾸지 않습니다.
 - CURRENT는 현재 **로컬 복사본과 일치**한다는 뜻이지 사실·원격 최신성 검증이 아닙니다.

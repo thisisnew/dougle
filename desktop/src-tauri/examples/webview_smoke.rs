@@ -16,6 +16,8 @@ const SCRIPT: &str = r#"
   const valid = descriptor && !descriptor.writable && !descriptor.configurable && !descriptor.enumerable && descriptor.value === 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
   const response = await fetch(valid ? '/passed' : '/failed', { headers: { 'X-Forge-Session': window.__FORGE_DESKTOP_SESSION__ || '' } });
   if (!response.ok) return;
+  const mutation = await fetch('/mutation', { method: 'POST', mode: 'same-origin', headers: { 'X-Forge-Session': window.__FORGE_DESKTOP_SESSION__, 'X-Forge-Client': '1' } });
+  if (!mutation.ok) return;
   window.open('https://example.invalid/blocked');
   const blob = URL.createObjectURL(new Blob(['Knowledge Forge synthetic download'], { type: 'text/plain' }));
   const anchor = document.createElement('a');
@@ -28,13 +30,19 @@ const SCRIPT: &str = r#"
 "#;
 
 fn main() {
+    let referrer_policy = std::env::args()
+        .nth(1)
+        .unwrap_or_else(|| "same-origin".into());
+    assert!(["same-origin", "no-referrer"].contains(&referrer_policy.as_str()));
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let port = listener.local_addr().unwrap().port();
     let authenticated = Arc::new(AtomicBool::new(false));
+    let mutation_allowed = Arc::new(AtomicBool::new(false));
     let downloaded = Arc::new(AtomicBool::new(false));
     let navigation_denied = Arc::new(AtomicBool::new(false));
     let popup_denied = Arc::new(AtomicBool::new(false));
     let server_authenticated = authenticated.clone();
+    let server_mutation = mutation_allowed.clone();
     thread::spawn(move || {
         for incoming in listener.incoming() {
             let Ok(mut stream) = incoming else { break };
@@ -54,6 +62,11 @@ fn main() {
                 }
             }
             let path = request.split_whitespace().nth(1).unwrap_or("");
+            let origin = request
+                .lines()
+                .filter_map(|line| line.split_once(':'))
+                .find(|(name, _)| name.eq_ignore_ascii_case("Origin"))
+                .map(|(_, value)| value.trim());
             let (status, content_type, body) = match path {
                 "/" => (
                     "200 OK",
@@ -69,10 +82,25 @@ fn main() {
                     server_authenticated.store(true, Ordering::SeqCst);
                     ("200 OK", "application/json", "{}")
                 }
+                "/mutation"
+                    if origin == Some(format!("http://127.0.0.1:{port}").as_str())
+                        && request
+                            .to_ascii_lowercase()
+                            .contains(&format!("x-forge-session: {TOKEN}\r\n")) =>
+                {
+                    server_mutation.store(true, Ordering::SeqCst);
+                    ("200 OK", "application/json", "{}")
+                }
+                "/mutation" => {
+                    eprintln!(
+                        "Rejected same-origin mutation: Origin={origin:?}, Referrer-Policy={referrer_policy}"
+                    );
+                    ("403 Forbidden", "text/plain", "Denied")
+                }
                 _ => ("403 Forbidden", "text/plain", "Denied"),
             };
             let response = format!(
-                "HTTP/1.1 {status}\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nContent-Security-Policy: default-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'\r\nConnection: close\r\n\r\n{body}",
+                "HTTP/1.1 {status}\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nReferrer-Policy: {referrer_policy}\r\nContent-Security-Policy: default-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'\r\nConnection: close\r\n\r\n{body}",
                 body.len()
             );
             let _ = stream.write_all(response.as_bytes());
@@ -119,12 +147,12 @@ fn main() {
             thread::spawn(move || {
                 let deadline = Instant::now() + Duration::from_secs(20);
                 while Instant::now() < deadline {
-                    if authenticated.load(Ordering::SeqCst) && downloaded.load(Ordering::SeqCst)
+                    if authenticated.load(Ordering::SeqCst) && mutation_allowed.load(Ordering::SeqCst) && downloaded.load(Ordering::SeqCst)
                         && navigation_denied.load(Ordering::SeqCst) && popup_denied.load(Ordering::SeqCst)
                         && std::fs::read_to_string(&destination).is_ok_and(|body| body == CONTENT)
                     {
                         let _ = std::fs::remove_file(&destination);
-                        println!("PASS: document-start token under CSP, authenticated fetch, owned blob download, blocked navigation and popup");
+                        println!("PASS: document-start token under CSP, authenticated same-origin mutation, owned blob download, blocked navigation and popup");
                         handle.exit(0);
                         return;
                     }

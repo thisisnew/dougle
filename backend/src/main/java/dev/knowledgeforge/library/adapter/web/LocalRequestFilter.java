@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,7 +27,7 @@ public class LocalRequestFilter extends OncePerRequestFilter {
             response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; "
                     + "style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; "
                     + "connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
-            response.setHeader("Referrer-Policy", "no-referrer");
+            response.setHeader("Referrer-Policy", "same-origin");
         }
         String host = request.getServerName();
         String origin = request.getHeader("Origin");
@@ -43,6 +44,7 @@ public class LocalRequestFilter extends OncePerRequestFilter {
         boolean mutation = !Set.of("GET", "HEAD", "OPTIONS").contains(request.getMethod());
         if (!authenticated || !localHost || !trustedOrigin || (mutation && !"1".equals(request.getHeader("X-Forge-Client")))) {
             response.setStatus(403);
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType("application/problem+json");
             response.getWriter().write("{\"status\":403,\"detail\":\"허용되지 않은 로컬 요청입니다.\"}");
             return;

@@ -1,6 +1,8 @@
-# Phase 1–2 및 Phase 3 기반 API 명세
+# API 명세
 
-## AI 연결 / 로그인 (0.1.2 개발 소스)
+## AI 연결 / 로그인 (0.1.2부터)
+
+0.1.3 앱 업데이트는 네이티브 시작/메뉴 기능으로, 백엔드 REST API나 WebView IPC를 추가하지 않습니다. [업데이트 계약](automatic-updates.md).
 
 - `POST /api/ai/providers/{CODEX|CLAUDE}/connection`: 명시적 인증 상태 확인. `{provider,state,checkedAt,remoteConnection:"NOT_CHECKED"}`. 자료 전송/추론 없음.
 - `POST /api/ai/logins`: `{provider:"CODEX",acknowledged:true}` → `{id,provider,state}`. 이미 인증됐다면 로그인 프로세스를 다시 실행하지 않음.

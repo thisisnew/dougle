@@ -48,6 +48,10 @@ rm -rf "$resources/runtime"
 mv "$staging/runtime" "$resources/runtime"
 mv "$staging/knowledge-forge.jar" "$resources/knowledge-forge.jar"
 if [[ "$mode" == --stage-only ]]; then echo 'Java runtime and JAR staged; no installer built.'; exit 0; fi
+signing_key="${FORGE_UPDATER_PRIVATE_KEY:-${XDG_CONFIG_HOME:-$HOME/.config}/knowledge-forge/updater.key}"
+[[ -f "$signing_key" && ! -L "$signing_key" ]] || { echo 'The updater signing key is required. See docs/automatic-updates.md.' >&2; exit 1; }
+export TAURI_SIGNING_PRIVATE_KEY="$signing_key"
+export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="${TAURI_SIGNING_PRIVATE_KEY_PASSWORD:-}"
 bash "$repo_root/scripts/stage-codex.sh" "$architecture"
 cd "$repo_root/desktop"
 npm ci --cache "$repo_root/.tools/npm-cache" --no-audit --no-fund
@@ -62,3 +66,13 @@ npm run tauri -- build --bundles app ${target_args[@]+"${target_args[@]}"} -- --
 app="$target_directory/release/bundle/macos/Knowledge Forge.app"
 forge_verify_macos_architecture "$app" "$architecture"
 bash "$repo_root/scripts/create-macos-dmg.sh" "$app"
+version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")"
+update_name="Knowledge.Forge_${version}_${architecture}.app.tar.gz"
+update_archive="${app}.tar.gz"
+[[ -f "$update_archive" && -f "$update_archive.sig" ]] || { echo 'Signed update artifacts were not generated.' >&2; exit 1; }
+cp "$update_archive" "$repo_root/release/$update_name"
+cp "$update_archive.sig" "$repo_root/release/$update_name.sig"
+TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=2 bash "$repo_root/scripts/desktop-cargo.sh" run --locked --example updater_verify -- \
+  "$repo_root/desktop/src-tauri/tauri.conf.json" "$repo_root/release/$update_name" "$repo_root/release/$update_name.sig" "$version"
+(cd "$repo_root/release" && shasum -a 256 "Knowledge.Forge_${version}_${architecture}.dmg" "$update_name" "$update_name.sig" > "SHA256SUMS-${architecture}")
+(cd "$repo_root/release" && shasum -a 256 Knowledge.Forge_"${version}"_*.dmg Knowledge.Forge_"${version}"_*.app.tar.gz Knowledge.Forge_"${version}"_*.app.tar.gz.sig > SHA256SUMS)

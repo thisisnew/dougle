@@ -18,15 +18,56 @@ window.addEventListener('DOMContentLoaded', () => {
     const headers = { 'X-Forge-Session': window.__FORGE_DESKTOP_SESSION__, 'X-Forge-Client': '1' };
     async function api(path, method = 'GET', body) {
       const response = await fetch('/api' + path, {
+        mode: 'same-origin', redirect: 'error',
         method, headers: { ...headers, ...(body && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}) },
         body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
       });
       if (!response.ok) throw Error('API ' + response.status);
       return response.json();
     }
+    async function until(ready) {
+      const deadline = Date.now() + 10000;
+      while (Date.now() < deadline) {
+        if (ready()) return;
+        await new Promise(done => setTimeout(done, 50));
+      }
+      throw Error('UI timeout');
+    }
+    let phase = 'workspace button';
     try {
-      if ((await fetch('/api/session')).status !== 403) throw Error('Missing auth protection');
-      const workspace = await api('/workspaces', 'POST', { name: 'Synthetic native runtime QA' });
+      document.querySelector('#root button[aria-label="Workspace 생성"]').click();
+      await until(() => document.querySelector('#item-name'));
+      const input = document.querySelector('#item-name');
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, '가상 데스크톱 검증');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await until(() => !document.querySelector('[role="dialog"] button[type="submit"]').disabled);
+      document.querySelector('[role="dialog"] button[type="submit"]').click();
+      await until(() => document.querySelector('#workspace option:checked')?.textContent === '가상 데스크톱 검증');
+      const session = await api('/session');
+      const workspace = session.workspaces.find(item => item.name === '가상 데스크톱 검증');
+      if (!workspace || session.activeWorkspaceId !== workspace.id) throw Error('Workspace UI mismatch');
+      phase = 'Korean forbidden response';
+      const denied = await fetch('/api/session', { mode: 'same-origin' });
+      if (denied.status !== 403 || (await denied.json()).detail !== '허용되지 않은 로컬 요청입니다.') throw Error('Missing UTF-8 auth protection');
+      phase = 'AI connection button';
+      localStorage.setItem('forge.ai.provider', 'CLAUDE');
+      [...document.querySelectorAll('#root button')].find(button => button.textContent.trim() === 'AI 연결').click();
+      await until(() => document.querySelector('dialog[aria-label="AI 연결"] select'));
+      const dialog = document.querySelector('dialog[aria-label="AI 연결"]');
+      const provider = dialog.querySelector('select');
+      if (provider.value !== 'CLAUDE') throw Error('Provider preference mismatch');
+      phase = 'AI select dimensions and appearance';
+      const selectHeight = provider.getBoundingClientRect().height;
+      const selectAppearance = getComputedStyle(provider).getPropertyValue('appearance');
+      const webkitAppearance = getComputedStyle(provider).getPropertyValue('-webkit-appearance');
+      phase += ': ' + selectHeight + ' / ' + selectAppearance + ' / ' + webkitAppearance;
+      if (selectHeight < 40 || (selectAppearance !== 'none' && webkitAppearance !== 'none')) throw Error('Native select appearance mismatch');
+      phase = 'AI status response';
+      [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결 상태 확인').click();
+      await until(() => dialog.querySelector('[role="status"]') || dialog.querySelector('[role="alert"]'));
+      if (dialog.querySelector('[role="alert"]') || !dialog.textContent.includes('실행 도구를 찾지 못했습니다.')) throw Error('AI connection UI mismatch');
+      [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '닫기').click();
+      phase = 'library operations';
       const base = '/workspaces/' + workspace.id;
       const form = new FormData();
       form.append('file', new Blob(['Synthetic telescope observations.']), 'telescope.txt');
@@ -68,7 +109,8 @@ window.addEventListener('DOMContentLoaded', () => {
       if (saved.restartRequired || saved.saved.revision !== settings.saved.revision + 1) throw Error('CLI settings mismatch');
       await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_PASSED' });
     } catch {
-      await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_FAILED' }).catch(() => {});
+      await fetch('/api/workspaces', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'NATIVE_RUNTIME_QA_FAILED: ' + phase }) }).catch(() => {});
     }
   }, 100);
 }, { once: true });
@@ -98,7 +140,7 @@ fn main() {
                 let passed = run(&handle, &resources, &data);
                 let _ = std::fs::remove_dir_all(&data);
                 if passed {
-                    println!("PASS: bundled Java, authenticated React, upload/download/search, knowledge edit/publication, relations, OFF polling and CLI settings; no AI");
+                    println!("PASS: actual React Workspace/AI buttons, Korean names/errors, same-origin mutations, upload/download/search, publication, relations, OFF polling and CLI settings; no inference");
                 } else {
                     eprintln!("FAIL: native runtime smoke");
                 }
@@ -120,8 +162,12 @@ fn main() {
 
 fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Path) -> bool {
     let cancelled = AtomicBool::new(false);
-    let Ok(mut backend) = supervisor::Backend::launch(resources, data, &cancelled) else {
-        return false;
+    let mut backend = match supervisor::Backend::launch(resources, data, &cancelled) {
+        Ok(backend) => backend,
+        Err(error) => {
+            eprintln!("FAIL: backend startup: {error}");
+            return false;
+        }
     };
     let port = backend.port;
     let origin = format!("http://127.0.0.1:{port}");
@@ -138,7 +184,13 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
     .on_navigation(move |url| protocol::owned_origin(url, port))
     .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
     .build();
-    let Ok(_window) = window else { return false };
+    let _window = match window {
+        Ok(window) => window,
+        Err(error) => {
+            eprintln!("FAIL: test window: {error}");
+            return false;
+        }
+    };
     let agent: ureq::Agent = ureq::Agent::config_builder()
         .proxy(None)
         .max_redirects(0)
@@ -163,14 +215,29 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
                 .iter()
                 .any(|workspace| workspace["name"] == "NATIVE_RUNTIME_QA_PASSED");
             if passed
-                || workspaces
-                    .iter()
-                    .any(|workspace| workspace["name"] == "NATIVE_RUNTIME_QA_FAILED")
+                || workspaces.iter().any(|workspace| {
+                    workspace["name"]
+                        .as_str()
+                        .is_some_and(|name| name.starts_with("NATIVE_RUNTIME_QA_FAILED:"))
+                })
             {
+                if !passed {
+                    for workspace in workspaces {
+                        if let Some(name) = workspace["name"]
+                            .as_str()
+                            .filter(|name| name.starts_with("NATIVE_RUNTIME_QA_FAILED:"))
+                        {
+                            eprintln!("{name}");
+                        }
+                    }
+                }
                 break;
             }
         }
         thread::sleep(Duration::from_millis(200));
+    }
+    if !passed {
+        eprintln!("FAIL: runtime completion marker not received");
     }
     drop(backend);
     passed

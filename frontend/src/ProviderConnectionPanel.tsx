@@ -91,9 +91,8 @@ export default function ProviderConnectionPanel({ onClose }: { onClose: () => vo
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
 
-  return <dialog ref={dialog} className="proposal-merge" aria-label="AI 연결" onCancel={event => { event.preventDefault(); if (!loggingIn && !busy) onClose() }}>
-    <Button variant="outline" disabled={loggingIn || busy} onClick={onClose}>닫기</Button>
-    <h2>어떤 AI를 사용할까요?</h2>
+  return <dialog ref={dialog} className="proposal-merge provider-connection" aria-label="AI 연결" onCancel={event => { event.preventDefault(); if (!loggingIn && !busy) onClose() }}>
+    <div className="provider-connection-header"><h2>어떤 AI를 사용할까요?</h2><Button variant="outline" disabled={loggingIn || busy} onClick={onClose}>닫기</Button></div>
     <p>한 번 고르면 다음 질문과 지식 초안에서 기본으로 사용합니다. 이미 작성 중인 요청이나 승인은 바꾸지 않습니다.</p>
     <label>사용할 AI<select value={provider} disabled={loggingIn || loginBusy} onChange={event => choose(event.target.value as Provider)}><option value="CODEX">Codex</option><option value="CLAUDE">Claude</option></select></label>
     <Button disabled={busy || advanced || loggingIn} onClick={() => void check()}>{busy ? '확인 중…' : '연결 상태 확인'}</Button>

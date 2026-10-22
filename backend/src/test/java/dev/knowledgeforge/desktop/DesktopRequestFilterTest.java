@@ -44,6 +44,26 @@ class DesktopRequestFilterTest {
         assertThat(response.getStatus()).isEqualTo(204);
         assertThat(response.getHeader("Content-Security-Policy")).contains("script-src 'self'", "connect-src 'self'", "object-src 'none'");
         assertThat(response.getHeader("Access-Control-Allow-Origin")).isNull();
+        assertThat(response.getHeader("Referrer-Policy")).isEqualTo("same-origin");
+    }
+
+    @Test
+    void forbiddenResponsePreservesKoreanUtf8Bytes() throws Exception {
+        MockHttpServletResponse response = request(true, "POST", "/api/workspaces", TOKEN, "null", "localhost", true);
+        assertThat(response.getStatus()).isEqualTo(403);
+        assertThat(response.getCharacterEncoding()).isEqualTo("UTF-8");
+        assertThat(response.getContentAsByteArray()).isEqualTo(
+                "{\"status\":403,\"detail\":\"허용되지 않은 로컬 요청입니다.\"}".getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void allowsAuthenticatedSameOriginMutationsWhileRejectingOpaqueAndForeignOrigins() throws Exception {
+        for (String method : new String[]{"POST", "PUT", "PATCH", "DELETE"}) {
+            assertThat(request(true, method, "/api/test", TOKEN, "http://localhost:8787", "localhost", true).getStatus()).isEqualTo(204);
+            for (String origin : new String[]{"null", "https://evil.test", "http://localhost:8788"}) {
+                assertThat(request(true, method, "/api/test", TOKEN, origin, "localhost", true).getStatus()).isEqualTo(403);
+            }
+        }
     }
 
     private MockHttpServletResponse request(boolean enabled, String method, String path, String token,
@@ -58,6 +78,7 @@ class DesktopRequestFilterTest {
         if (client) request.addHeader("X-Forge-Client", "1");
         request.setQueryString("token=" + TOKEN);
         MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setCharacterEncoding(StandardCharsets.ISO_8859_1.name());
         new LocalRequestFilter(session).doFilter(request, response, (incoming, outgoing) -> response.setStatus(204));
         return response;
     }
