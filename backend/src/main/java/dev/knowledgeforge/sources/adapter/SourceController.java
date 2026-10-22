@@ -20,6 +20,12 @@ public class SourceController {
     }
 
     public record Registration(String name, String kind, String location, String domain) {}
+    public record PollingSettings(Boolean enabled, Integer intervalSeconds, Integer expectedRevision) {}
+
+    @PatchMapping("/sources/{id}/polling")
+    public Source polling(@PathVariable String workspaceId, @PathVariable String id, @RequestBody PollingSettings request) {
+        return sources.configurePolling(workspaceId, id, request.enabled(), request.intervalSeconds(), request.expectedRevision());
+    }
 
     @GetMapping("/sources")
     public List<Source> list(@PathVariable String workspaceId) {

@@ -11,10 +11,24 @@ const api = vi.mocked(request)
 const source = {
   id: 'source', name: '가상 연구', kind: 'LOCAL_FOLDER', location: '/synthetic', domain: '연구',
   status: 'NEW', revision: null, error: null, syncedAt: null, rootEntryId: null,
-  pollingEnabled: false, pollIntervalSeconds: 3600,
+  pollingEnabled: false, pollIntervalSeconds: 3600, nextPollAt: null, consecutiveFailures: 0, pollingRevision: 0,
 }
 
 beforeEach(() => { api.mockReset() })
+
+it('자동 갱신을 명시적으로 저장하고 수집이나 AI를 바로 호출하지 않는다', async () => {
+  api.mockResolvedValue([source])
+  const changed = vi.fn()
+  render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
+  await userEvent.click(await screen.findByRole('checkbox', { name: '자동 갱신' }))
+  expect(api.mock.calls.some(([, options]) => options?.method === 'PATCH')).toBe(false)
+  await userEvent.click(screen.getByRole('button', { name: '갱신 설정 저장' }))
+  await waitFor(() => expect(changed).toHaveBeenCalled())
+  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/polling', expect.objectContaining({
+    method: 'PATCH', body: JSON.stringify({ enabled: true, intervalSeconds: 3600, expectedRevision: 0 }),
+  }))
+  expect(api.mock.calls.some(([path]) => /sync|generation|answer/.test(path))).toBe(false)
+})
 
 it('검색어 없이 답변 이력을 명시적으로 열고 닫는다', async () => {
   api.mockResolvedValue([])

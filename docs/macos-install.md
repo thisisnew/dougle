@@ -5,6 +5,12 @@ Apple Silicon/Windows용 설치 파일로 안내하지 않습니다.
 
 ## 설치
 
+[GitHub 설치 파일 받기 — v0.1.0-preview.1](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)
+
+`Knowledge.Forge_0.1.0_x86_64.dmg`와 `SHA256SUMS`를 같은 폴더에 받습니다.
+해당 폴더에서 `shasum -a 256 -c SHA256SUMS`로 확인할 수 있습니다.
+이 설치 파일은 v18 기준이며 이후 v19 Source 자동 갱신은 개발 소스에 먼저 추가되었습니다.
+
 1. 제공된 DMG와 SHA-256을 확인합니다. 모르는 사람이 다시 올린 파일은 사용하지 마세요.
 2. DMG를 열고 **Knowledge Forge.app**을 Applications로 복사합니다.
 3. 복사한 앱을 엽니다. Java는 앱에 들어 있으므로 별도로 설치하지 않습니다.

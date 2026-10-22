@@ -1,5 +1,7 @@
 # 아키텍처
 
+`SourcePolling → SourceStore.beginPoll → SourceService → JdbcSourceStore.publish`는 opt-in 예약 수집 경로입니다. SQLite v19의 예약·설정 revision을 보존하고 자동 작업 2개/Source별 단일 선점을 적용합니다. [실제 코드와 정책](source-polling.md).
+
 `desktop/src-tauri`는 토큰/준비 상태/프로세스 그룹/창을 관리합니다. 백엔드 준비 전에는 로컬 시작 창만 표시합니다. 앱 데이터 위치는 고정 식별자 `dev.knowledgeforge.desktop`로 계산하며 Java는 PATH가 아닌 번들 안 절대 경로로 실행합니다. [계약](../desktop/README.md).
 
 `ConversationPreviewService`는 읽기 전용 문맥 미리보기를 만듭니다. `ConversationRequestService`가 명시적으로 고정 저장하면 `StoredAnswerContext → AnswerContextProvider → EvidenceAnswerPreview`를 통해 기존 승인·작업 경로에 결합합니다. 완료 답변과 `ConversationCompletion`의 보관함 연결은 원자적입니다. [검증 경계](context-requests.md).

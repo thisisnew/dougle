@@ -1,12 +1,14 @@
 # Phase 완료 기준 및 남은 작업
 
+P5 Source별 [선택적 자동 갱신](source-polling.md)을 추가했습니다. 기본 OFF, 예약 영속화·중복 방지·백오프·설정 UI를 포함합니다. Git 네트워크 증분·조건부 HTTP 수집은 별도 미완료입니다.
+
 P4 [문맥 고정·승인·다중 턴 실행](context-requests.md)을 구현했습니다. v18 불변 요청과 기존 승인/작업을 결합하며 완료 답변을 보관함에 연결합니다.
 
 P4 질문별 이력·[완료 답변 보관함](conversations.md)과 명시적 문맥 전송을 지원합니다. 실제 외부 서비스 스트림 호환성 검증은 별도입니다.
 
 Codex 스트림은 [선택적 실행기](codex-streaming.md)까지 연결했습니다. 관계 검색과 실제 서비스 검증이 남아 P4 전체 완료는 아닙니다.
 
-P5 [변경 파일만 분석·반영](incremental-snapshots.md), P6 [Intel Mac DMG·동봉 Java·설치 복사본 검증](desktop-report.md)을 구현했습니다. 폴링·네트워크 증분·설치형 전체 회귀는 진행 중입니다.
+P5 [변경 파일만 분석·반영](incremental-snapshots.md), P6 [Intel Mac DMG·동봉 Java·설치 복사본 검증](desktop-report.md)을 구현했습니다. 폴링은 v19에 추가했으며 네트워크 증분·설치형 전체 회귀는 진행 중입니다.
 
 실행 가능한 작업 단위와 상세 인수 조건은 [남은 개발 체크리스트](backlog.md)를 따릅니다.
 원본 검색의 [근거 위치 표시](search-evidence.md)는 구현했지만 P4 근거 검색 전체 완료는 아닙니다.
@@ -92,7 +94,7 @@ Intel/Apple Silicon 타깃 빌드, 설치·종료·재시작, 업그레이드·�
 - 대규모 디렉터리의 페이지네이션, 트리 가상화, 파일명 정규화/Unicode case folding 없음
 - 파일 최대 10 MiB, 미리보기는 1 MiB UTF-8만 지원
 - 단일 SQLite 연결, BLOB 저장이므로 대량 수집 전 저장소 확장 필요
-- 공개 Source 등록·수동 수집·문서/Java 분석·검색·CLI AI 초안 구현, 채팅·자동 폴링 미구현
+- 공개 Source 등록·수동 수집·문서/Java 분석·검색·CLI AI 초안 구현, 승인 기반 채팅·Source별 자동 폴링 구현
 - Source당 500개/50 MiB, 경로 16단계, 추출 텍스트 500,000자 제한
 - Source는 현재 스냅샷/마지막 revision만 보관. 지식이 인용한 원본은 별도 보존하지만 전체 원본 이력은 미지원
 - 원본 폴더 생성/삭제만 지원하며 이름 변경·이동은 미지원

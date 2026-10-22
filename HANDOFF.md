@@ -1,8 +1,12 @@
 # Knowledge Forge — 구현 현황 및 다음 작업
 
+최신: SQLite v19 [Source별 자동 갱신](docs/source-polling.md) 구현. 기본 OFF, 60~86400초, 최대 자동 작업 2개, 실패 백오프, 재시작 보존. Git 네트워크 증분·조건부 HTTP와 설치형 CLI 설정 UX가 다음입니다. v0.1.0-preview.1 DMG는 v18 기준이며 현재 소스와 구분합니다.
+
+검증: 백엔드 324 통과 + 실제 AI 1 skip, UI 188 통과, JAR/실제 예약 60초/재시작 smoke 통과. [Intel Mac 공개 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)는 v18 빌드이며 공증되지 않았습니다.
+
 연속 개발 지시: 사용자는 매 기능마다 멈추지 말고 완성까지 진행하도록 요청했습니다. 진행·검증·문서·푸시를 이어가며 실제 외부 AI 전송과 배포 자격 증명 등 명시 승인이 필요한 경우만 확인합니다.
 
-최신 추가: [문맥 고정·승인·실행](docs/context-requests.md), [변경 파일만 분석](docs/incremental-snapshots.md), [설치형 인증 기반](docs/desktop-backend.md). SQLite v18이며 네이티브 호스트/설치 빌드와 Source 선택적 폴링을 이어갑니다.
+최신 추가: [문맥 고정·승인·실행](docs/context-requests.md), [변경 파일만 분석](docs/incremental-snapshots.md), [설치형 인증 기반](docs/desktop-backend.md). 현재는 SQLite v19이며 네이티브 Intel 설치 빌드와 Source 선택적 폴링을 구현했습니다.
 
 설치형 추가: Intel Mac DMG/Java 동봉·설치 복사본의 네이티브 UI 검증 통과. [설치·검증 보고서](docs/desktop-report.md). 공증/Apple Silicon/실제 AI 호환성 검증은 아닙니다. 다음은 Source 선택적 폴링·조건부 수집과 설치형 CLI 설정 UX입니다.
 
@@ -29,7 +33,7 @@ Java 21 / Spring Boot 4.1.1 / React / TypeScript / Vite / Tailwind / SQLite JDBC
 사용하는 실제 실행 가능한 로컬 웹 앱입니다. 최종 배포 형태는 Tauri 2 데스크톱 앱입니다.
 
 현재 Source 수동 수집, 문서·Java 분석, 로컬 검색, 근거 연결 수동 지식 초안·버전을 사용할 수 있습니다.
-로그인된 Codex/Claude Code CLI로 승인 기반 별도 AI 초안·근거 기반 질문·문맥 선택·SSE 답변을 지원합니다. Source 자동 폴링은 아직 없습니다.
+로그인된 Codex/Claude Code CLI로 승인 기반 별도 AI 초안·근거 기반 질문·문맥 선택·SSE 답변을 지원합니다. Source별 선택적 자동 폴링도 지원합니다.
 이전 지식 편집 개선은 [근거 번호 통합](docs/evidence-merge.md)입니다. 현재 번호를 유지하고 AI 근거를 뒤에 연결한 뒤 수동 부분 반영할 수 있습니다. 모든 근거가 CURRENT여야 하며 이전 버전·게시본은 보존합니다. 오래된 근거를 새 원본으로 바꾸는 재연결은 아직 없습니다. [폴더 이름·위치 변경](docs/folder-update.md), [안전한 Markdown 표시](docs/markdown-rendering.md), [독립 지식 폴더·카드 배치](docs/knowledge-folders.md), [현재 원본 탐색](docs/evidence-navigation.md)도 구현되어 있습니다. 이전 변경은 [사람 검토와 게시](docs/publication.md), [실행 전 CLI 관측 이력](docs/cli-observation.md), [건별 모델 선택](docs/model-selection.md)을 확인하세요.
 사용자 요청으로 기본 AI 방향을 Ollama에서 로그인된 CLI로 변경했습니다. 이 결정이 이전 계획보다 우선합니다.
 GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
@@ -41,7 +45,7 @@ GitHub Actions Workflow도 생성하거나 수정하지 않았습니다.
 - 10 MiB 이하 파일 업로드, 원본 바이트 다운로드, 폴더/자료 삭제
 - 1 MiB 이하 UTF-8 텍스트 미리보기, HTML 실행 방지
 - 원본과 지식 영역 분리, 수동/AI 초안 구별, 사람 검토·명시적 게시와 자동 의미 검증의 구분
-- SQLite FK cascade / WAL / 스키마 버전 18 / 중복 이름 보호
+- SQLite FK cascade / WAL / 스키마 버전 19 / 중복 이름 보호
 - Workspace 간 자료 접근 격리, 로컬 Host/Origin/변경 헤더 검사
 - React 비동기 취소, 오류 표시, 삭제 확인 대화상자
 - UI를 포함한 실행 JAR 빌드, Maven Wrapper, 개발·빌드·실행 스크립트
@@ -142,7 +146,7 @@ Git clone으로 이전되는 것은 소스·문서·가상 fixture뿐입니다. 
 등록 Source, 원본 복사본, 분석 데이터는 자동 이전되지 않습니다.
 필요하면 기존 앱을 완전히 종료하고 `FORGE_DATA_DIR`(기본 `.data`) 전체를
 조직이 허용한 비공개 수단으로 복사하세요. DB나 회사 자료를 공개 Git에 올리지 마세요.
-현재 스키마는 v18이고 구버전 앱으로 역이동하는 마이그레이션은 없습니다. 실행 전 기존 데이터 백업을 권장합니다.
+현재 스키마는 v19이고 구버전 앱으로 역이동하는 마이그레이션은 없습니다. 실행 전 기존 데이터 백업을 권장합니다.
 근거로 선택한 파일은 별도 복사본이 남습니다. 원본 삭제만으로 이 복사본까지 지워지지 않습니다.
 이전한 로컬 Source의 절대 경로가 새 PC에서 다르면 수집이 실패합니다.
 Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 새 Source로 등록하세요.
@@ -157,7 +161,7 @@ Source 위치 수정 API는 아직 없으므로 원본 경로를 맞추거나 �
 1. `README.md`, `docs/architecture.md`, `docs/api.md`, `docs/test-report.md`를 읽습니다.
 2. 빌드 및 자동 테스트를 실행해 기준 상태를 확인합니다. 최신 결과는 `docs/answer-jobs.md`에 있습니다.
 3. `fixtures/synthetic-project`를 등록·동기화하고 `measureTemperature` / `관측`으로 검색합니다.
-4. **P4 문맥 실행**은 `docs/context-requests.md`의 v18 고정 요청·별도 승인·재검증까지 연결했습니다. 다음은 Source 선택적 폴링과 Mac 설치형 검증입니다. 실제 서비스 호출은 별도 명시 승인이 필요하므로 승인 없이 수행하지 마세요. 미리보기 digest는 승인이 아닙니다. Ollama로 되돌리지 마세요.
+4. **P4 문맥 실행**은 `docs/context-requests.md`의 v18 고정 요청·별도 승인·재검증까지 연결했습니다. 다음은 Git 네트워크 증분과 설치형 CLI 설정 UX입니다. 실제 서비스 호출은 별도 명시 승인이 필요하므로 승인 없이 수행하지 마세요. 미리보기 digest는 승인이 아닙니다. Ollama로 되돌리지 마세요.
 5. `CuratorService`와 `CliCuratorModel`은 이미 별도 AI DRAFT를 생성합니다. 기존 버전을 덮어쓰지 않습니다.
 6. 사람 검토·게시, 현재 출처 탐색, 독립 지식 폴더·카드 배치, 안전한 Markdown 표시와 개발 도구 보안 갱신을 구현했습니다. 폴더 이름 변경/이동과 AI 결과 읽기 전용 비교도 구현했습니다. 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시입니다. 관측 버전은 실행 바이너리 증명이 아니며 실제 실행 모델도 아직 미확인입니다.
 7. 사람 편집 보호와 근거 없는 추론의 게시 차단을 먼저 검증합니다.
@@ -183,7 +187,7 @@ docs/publication.md, docs/evidence-navigation.md, docs/knowledge-folders.md의 �
 docs/markdown-rendering.md의 표시 보안 정책을 유지해라. 개발 도구 보안 갱신, 폴더 이름 변경/이동, AI 결과 읽기 전용 비교는 완료했다. 거절·재검토·전체 채택과 수동 부분 반영과 CURRENT 근거 번호 통합도 구현했다. docs/evidence-merge.md를 읽고 다음은 오래된 근거의 명시적 교체·줄 단위 충돌 표시을 구현해라. 비교 화면에 자동 저장/외부 전송을 추가하지 마라.
 docs/modeling.md와 docs/how-it-works.md도 코드와 맞게 유지해라. 사용자는 설치형 준비 후 체험한다.
 최신 P4 구현은 docs/answer-jobs.md다. 승인 일회 소비·직전 재검증·실제 답변 작업·중단·재시작 복구까지 구현했다. 실제 외부 모델 검증은 아니며 fake CLI 테스트다.
-docs/partial-answer.md의 Claude 임시 출력과 docs/codex-streaming.md의 선택적 Codex 실행기를 구현했다. 전용 프로필이 없으면 기존 exec 경로이며 자동 재전송하지 않는다. docs/answer-history.md의 이력, docs/conversations.md의 v17 보관함, docs/context-requests.md의 v18 불변 문맥·별도 승인·실행을 구현했다. 단순 보관함 정리는 전송이 아니다. 다음은 Source 선택적 폴링과 Mac 설치형 검증이다. 실제 서비스 검증은 별도 승인이 필요하다. 재연결로 AI를 재호출하지 말고 관측 종료와 명시적 작업 취소를 구분해라.
+docs/partial-answer.md의 Claude 임시 출력과 docs/codex-streaming.md의 선택적 Codex 실행기를 구현했다. 전용 프로필이 없으면 기존 exec 경로이며 자동 재전송하지 않는다. docs/answer-history.md의 이력, docs/conversations.md의 v17 보관함, docs/context-requests.md의 v18 불변 문맥·별도 승인·실행을 구현했다. 단순 보관함 정리는 전송이 아니다. 다음은 Git 네트워크 증분과 설치형 CLI 설정 UX이다. 실제 서비스 검증은 별도 승인이 필요하다. 재연결로 AI를 재호출하지 말고 관측 종료와 명시적 작업 취소를 구분해라.
 인증/원격 상태·실제 실행 모델 ID는 미구현 한계로 유지해라.
 현재 대화 세션을 재사용한다고 주장하지 말고, 기존 로그인으로 새 CLI 요청을 생성해라.
 사람 검토를 자동 의미 검증으로 과장하지 마라. 미구현 AI를 가짜 응답으로 완료 처리하지 마라.

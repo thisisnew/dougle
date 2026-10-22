@@ -11,7 +11,40 @@ import static org.assertj.core.api.Assertions.*;
 class MigrationTest {
     @TempDir Path directory;
 
+    @Test
+    void migratesEighteenAndPersistsPollingSettingsAcrossRestart() throws Exception {
+        try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
+            var jdbc = new JdbcTemplate(source);
+            jdbc.update("INSERT INTO workspace VALUES('one','synthetic','now')");
+            jdbc.update("INSERT INTO source(id,workspace_id,name,kind,location,domain) VALUES('source','one','synthetic','URL','https://example.com','')");
+            removePolling(jdbc);
+            jdbc.execute("PRAGMA user_version=18");
+        }
+        try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
+            var jdbc = new JdbcTemplate(source);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
+            assertThat(jdbc.queryForObject("SELECT polling_enabled FROM source", Integer.class)).isZero();
+            assertThat(jdbc.queryForObject("SELECT next_poll_at FROM source", Long.class)).isNull();
+            jdbc.update("UPDATE source SET polling_enabled=1,poll_interval_seconds=120,next_poll_at=1800000120000,polling_revision=1,consecutive_failures=2,status='SYNCING'");
+        }
+        try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
+            var jdbc = new JdbcTemplate(source);
+            assertThat(jdbc.queryForObject("SELECT next_poll_at FROM source", Long.class)).isEqualTo(1800000120000L);
+            assertThat(jdbc.queryForObject("SELECT polling_revision FROM source", Integer.class)).isEqualTo(1);
+            assertThat(jdbc.queryForObject("SELECT consecutive_failures FROM source", Integer.class)).isEqualTo(2);
+            assertThat(jdbc.queryForObject("SELECT status FROM source", String.class)).isEqualTo("ERROR");
+        }
+    }
+
+    private void removePolling(JdbcTemplate jdbc) {
+        jdbc.execute("DROP INDEX source_poll_due");
+        jdbc.execute("ALTER TABLE source DROP COLUMN next_poll_at");
+        jdbc.execute("ALTER TABLE source DROP COLUMN consecutive_failures");
+        jdbc.execute("ALTER TABLE source DROP COLUMN polling_revision");
+    }
+
     private void removeConversations(JdbcTemplate jdbc) {
+        removePolling(jdbc);
         jdbc.execute("DROP TABLE conversation_request");
         jdbc.execute("DROP TABLE conversation_turn");
         jdbc.execute("DROP TABLE conversation");
@@ -26,11 +59,12 @@ class MigrationTest {
             jdbc.update("INSERT INTO evidence_bundle VALUES('bundle','one','question','READY',1,'json','hash','now')");
             jdbc.update("INSERT INTO conversation VALUES('room','one','synthetic',0,'now')");
             jdbc.execute("DROP TABLE conversation_request");
+            removePolling(jdbc);
             jdbc.execute("PRAGMA user_version=17");
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT title FROM conversation", String.class)).isEqualTo("synthetic");
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM conversation_request", Integer.class)).isZero();
             jdbc.update("INSERT INTO conversation_request VALUES('request','one','bundle','synthetic-snapshot')");
@@ -55,7 +89,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM conversation", Integer.class)).isZero();
             assertThat(jdbc.queryForObject("SELECT answer FROM answer_job", String.class)).isEqualTo("answer");
             jdbc.update("INSERT INTO conversation VALUES('room','one','synthetic',1,'now')");
@@ -81,7 +115,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT digest FROM answer_approval", String.class)).isEqualTo("digest");
             for (String status : java.util.List.of("QUEUED", "RUNNING", "CANCELLING", "SUCCEEDED", "CANCELLED", "FAILED")) {
                 jdbc.update("INSERT INTO answer_job VALUES(?,'one','bundle',?,'CODEX','model','digest',?,'answer',NULL,'now','now')", status, status, status);
@@ -110,7 +144,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT payload_json FROM evidence_bundle", String.class)).isEqualTo("synthetic-json");
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM answer_approval", Integer.class)).isZero();
             jdbc.update("INSERT INTO answer_approval VALUES('bundle','approval','CODEX','model','digest','now','later',NULL)");
@@ -142,7 +176,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM evidence_bundle", Integer.class)).isZero();
                 assertThat(jdbc.queryForObject("SELECT version FROM knowledge_publication", Integer.class)).isEqualTo(1);
                 assertThat(jdbc.queryForObject("SELECT markdown FROM knowledge_version", String.class)).isEqualTo("text [E1]");
@@ -166,7 +200,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM search_outbox WHERE entry_id='knowledge:card'", Integer.class)).isEqualTo(1);
                 assertThat(jdbc.queryForObject("SELECT latest_version FROM knowledge_card", Integer.class)).isEqualTo(2);
                 assertThat(jdbc.queryForObject("SELECT version FROM knowledge_publication", Integer.class)).isEqualTo(1);
@@ -200,7 +234,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForObject("SELECT mode FROM proposal_acceptance", String.class)).isEqualTo("FULL");
                 assertThat(jdbc.queryForObject("SELECT applied_version FROM proposal_acceptance", Integer.class)).isEqualTo(2);
                 assertThat(jdbc.queryForObject("SELECT note FROM proposal_acceptance", String.class)).isEqualTo("existing adoption");
@@ -221,7 +255,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM proposal_acceptance", Integer.class)).isZero();
             assertThat(jdbc.queryForObject("SELECT note FROM proposal_decision", String.class)).isEqualTo("existing history");
             jdbc.update("INSERT INTO proposal_acceptance(workspace_id,job_id,source_version,result_version,applied_version,decision_revision,note,accepted_at) VALUES('one','job',1,1,2,1,'accepted fixture','now')");
@@ -246,7 +280,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM proposal_decision", Integer.class)).isZero();
             jdbc.update("INSERT INTO proposal_decision VALUES('one','job',1,'REJECTED',1,1,'synthetic note','now')");
         }
@@ -277,7 +311,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForList("SELECT revision FROM knowledge_folder", Integer.class)).containsOnly(1);
                 assertThat(jdbc.queryForObject("SELECT parent_id FROM knowledge_folder WHERE id='child'", String.class)).isEqualTo("root");
                 assertThat(jdbc.queryForObject("SELECT revision FROM knowledge_placement", Integer.class)).isEqualTo(3);
@@ -302,7 +336,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForObject("SELECT active_workspace_id FROM app_state", String.class)).isEqualTo("one");
                 assertThat(jdbc.queryForObject("SELECT content FROM entry", byte[].class)).isEqualTo(new byte[] {97, 98, 99});
                 assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM source", Integer.class)).isZero();
@@ -336,7 +370,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForObject("SELECT revision FROM source", String.class)).isEqualTo("rev1");
                 assertThat(jdbc.queryForObject("SELECT text FROM extracted_document", String.class)).isEqualTo("abc");
                 assertThat(jdbc.queryForObject("SELECT content FROM entry", byte[].class)).isEqualTo(new byte[] {97, 98, 99});
@@ -366,7 +400,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForList("SELECT manually_edited FROM knowledge_version ORDER BY number", Integer.class)).containsExactly(0, 1);
             assertThat(jdbc.queryForList("SELECT markdown FROM knowledge_version ORDER BY number", String.class)).containsExactly("unverified", "edited");
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM generation_job", Integer.class)).isZero();
@@ -395,7 +429,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForObject("SELECT requested_model FROM generation_job", String.class)).isNull();
                 assertThat(jdbc.queryForObject("SELECT result_card_id FROM generation_job", String.class)).isEqualTo("result");
                 assertThat(jdbc.queryForObject("SELECT digest FROM generation_job", String.class)).isEqualTo("digest");
@@ -425,7 +459,7 @@ class MigrationTest {
         for (int attempt = 0; attempt < 2; attempt++) {
             try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
                 var jdbc = new JdbcTemplate(source);
-                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+                assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
                 assertThat(jdbc.queryForObject("SELECT cli_version FROM generation_job", String.class)).isNull();
                 assertThat(jdbc.queryForObject("SELECT cli_checked_at FROM generation_job", String.class)).isNull();
                 assertThat(jdbc.queryForObject("SELECT cli_version_status FROM generation_job", String.class)).isEqualTo("NOT_CHECKED");
@@ -453,7 +487,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT markdown FROM knowledge_version", String.class)).isEqualTo("edited");
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_review", Integer.class)).isZero();
             jdbc.update("INSERT INTO knowledge_review VALUES('card',1,'synthetic','checked','now')");
@@ -484,7 +518,7 @@ class MigrationTest {
         }
         try (var source = (HikariDataSource) new DatabaseConfiguration().dataSource(directory.toString())) {
             var jdbc = new JdbcTemplate(source);
-            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(18);
+            assertThat(jdbc.queryForObject("PRAGMA user_version", Integer.class)).isEqualTo(19);
             assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_placement", Integer.class)).isZero();
             assertThat(jdbc.queryForObject("SELECT markdown FROM knowledge_version", String.class)).isEqualTo("edited");
             assertThat(jdbc.queryForObject("SELECT version FROM knowledge_publication", Integer.class)).isEqualTo(1);

@@ -43,7 +43,7 @@ public class SourceService {
         }
         collector(kind).validate(location.strip());
         Source source = new Source(UUID.randomUUID().toString(), workspaceId, name.strip(), kind, location.strip(),
-                domain.strip(), "NEW", null, null, null, null, false, 3600);
+                domain.strip(), "NEW", null, null, null, null, false, 3600, null, 0, 0);
         store.create(source);
         return source;
     }
@@ -53,6 +53,30 @@ public class SourceService {
         if (!store.begin(workspaceId, id)) {
             throw new LibraryException(409, "이미 동기화 중입니다.");
         }
+        return synchronizeClaimed(source);
+    }
+
+    public void poll(String workspaceId, String id) {
+        if (store.beginPoll(workspaceId, id)) {
+            store.find(workspaceId, id).ifPresent(this::synchronizeClaimed);
+        }
+    }
+
+    public Source configurePolling(String workspaceId, String id, Boolean enabled, Integer intervalSeconds, Integer expectedRevision) {
+        require(workspaceId, id);
+        if (enabled == null || intervalSeconds == null || intervalSeconds < 60 || intervalSeconds > 86400
+                || expectedRevision == null || expectedRevision < 0) {
+            throw new LibraryException(400, "자동 갱신 설정과 주기(60~86400초)를 확인하세요.");
+        }
+        if (!store.configurePolling(workspaceId, id, enabled, intervalSeconds, expectedRevision)) {
+            throw new LibraryException(409, "자동 갱신 설정이 변경되었습니다. 새로고침 후 다시 시도하세요.");
+        }
+        return require(workspaceId, id);
+    }
+
+    private Source synchronizeClaimed(Source source) {
+        String workspaceId = source.workspaceId();
+        String id = source.id();
         try {
             source = require(workspaceId, id);
             var baseline = store.fileHashes(workspaceId, id);

@@ -4,12 +4,14 @@ import { Button } from './components/ui/button'
 import { request } from './api'
 import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
+import SourcePollingSettings from './SourcePollingSettings'
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
 
 type Source = {
   id: string; name: string; kind: string; location: string; domain: string; status: string
   revision: string | null; error: string | null; syncedAt: string | null; rootEntryId: string | null
   pollingEnabled: boolean; pollIntervalSeconds: number
+  nextPollAt: number | null; consecutiveFailures: number; pollingRevision: number
 }
 type Hit = { entryId: string | null; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean; kind: 'ORIGINAL' | 'KNOWLEDGE'; cardId: string | null; version: number | null; freshness: string }
 type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void }
@@ -36,6 +38,31 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const searchAbort = useRef<AbortController | null>(null)
   const mutationAbort = useRef<AbortController | null>(null)
   const base = `/workspaces/${workspaceId}`
+  const latestSources = useRef(sources)
+  const latestChanged = useRef(onChanged)
+  useEffect(() => { latestSources.current = sources; latestChanged.current = onChanged }, [sources, onChanged])
+  const watching = sources.some(source => source.pollingEnabled || source.status === 'SYNCING')
+
+  useEffect(() => {
+    if (!watching) return
+    const controller = new AbortController()
+    let timer: ReturnType<typeof setTimeout>
+    async function refresh() {
+      try {
+        const next = await request<Source[]>(`${base}/sources`, { signal: controller.signal })
+        if (controller.signal.aborted) return
+        const changed = next.some(source => {
+          const previous = latestSources.current.find(item => item.id === source.id)
+          return previous && (previous.revision !== source.revision || previous.syncedAt !== source.syncedAt)
+        })
+        setSources(next)
+        if (changed) { setHits(null); latestChanged.current() }
+      } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
+      finally { if (!controller.signal.aborted) timer = setTimeout(() => void refresh(), 3000) }
+    }
+    timer = setTimeout(() => void refresh(), 3000)
+    return () => { controller.abort(); clearTimeout(timer) }
+  }, [base, watching])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -96,7 +123,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const availableDomains = [...new Set(sources.map(source => source.domain).filter(Boolean))]
   return <section className="source-panel" aria-label="자료 연결과 검색">
     <div className="source-title"><h2><Link size={17} /> 자료 연결과 검색</h2><Button size="sm" variant="outline" disabled={!!busy} onClick={() => setFormOpen(!formOpen)}><FolderInput /> Source 등록</Button></div>
-    <p className="source-hint">로컬 폴더·공개 HTTPS URL·공개 GitHub 저장소를 읽기 전용으로 수집합니다. 자동 폴링은 꺼져 있습니다.</p>
+    <p className="source-hint">읽기 전용 수집입니다. 자동 갱신은 Source별 기본 OFF이며 앱 실행 중에만 동작합니다. OFF로 바꿔도 이미 시작한 수집은 끝까지 진행합니다. AI는 자동 호출하지 않습니다.</p>
     {error && <p role="alert" className="modal-error">{error}</p>}
     {formOpen && <form onSubmit={register} className="source-form">
       <label>종류<select aria-label="Source 종류" value={kind} onChange={event => setKind(event.target.value)}>
@@ -110,12 +137,13 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     <ul className="source-list">{sources.map(source => <li key={source.id}>
       <div className="source-info"><strong>{source.name}</strong><span>{source.kind} · {source.domain || '분류 없음'} · {states[source.status] || source.status}</span>
         <small title={source.location}>{source.location}</small>
-        <small>{source.revision ? `반영 버전 ${source.revision.slice(0, 12)} · ${source.syncedAt ? new Date(source.syncedAt).toLocaleString('ko-KR') : ''}` : '아직 반영된 버전 없음'} · 자동 폴링 OFF</small>
+        <small>{source.revision ? `반영 버전 ${source.revision.slice(0, 12)} · ${source.syncedAt ? new Date(source.syncedAt).toLocaleString('ko-KR') : ''}` : '아직 반영된 버전 없음'} · 자동 폴링 {source.pollingEnabled ? 'ON' : 'OFF'}</small>
         {source.error && <span role="status" className="modal-error">{source.error}</span>}
       </div>
       <div className="source-actions"><Button size="sm" variant="outline" disabled={!!busy || source.status === 'SYNCING'} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}/sync`, { method: 'POST', signal: mutationAbort.current?.signal }))}><RefreshCw />{busy === source.id ? '수집 중…' : '동기화'}</Button>
         <Button variant="ghost" size="icon" aria-label={`${source.name} Source 삭제`} disabled={!!busy} onClick={() => setDeleting(source.id)}><Trash2 /></Button>
       </div>
+      <SourcePollingSettings source={source} busy={!!busy} onSave={settings => void mutate(source.id, () => request(`${base}/sources/${source.id}/polling`, { method: 'PATCH', body: JSON.stringify(settings), signal: mutationAbort.current?.signal }))} />
       {deleting === source.id && <div className="source-confirm" role="alert"><span>보관한 자료도 삭제합니다. PC 원래 폴더·원격 저장소는 유지됩니다.</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>Source 삭제 확인</Button></div>}
     </li>)}</ul>
     <form className="search-form" onSubmit={event => void search(event)}>

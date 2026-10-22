@@ -23,16 +23,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcSourceStore implements SourceStore {
     private final JdbcTemplate jdbc;
     private final AnalysisStore analyses;
+    private final java.time.Clock clock;
     private static final RowMapper<Source> SOURCE = (result, row) -> new Source(
             result.getString("id"), result.getString("workspace_id"), result.getString("name"),
             result.getString("kind"), result.getString("location"), result.getString("domain"),
             result.getString("status"), result.getString("revision"), result.getString("error"),
             result.getString("synced_at"), result.getString("root_entry_id"),
-            result.getBoolean("polling_enabled"), result.getInt("poll_interval_seconds"));
+            result.getBoolean("polling_enabled"), result.getInt("poll_interval_seconds"),
+            result.getObject("next_poll_at") == null ? null : result.getLong("next_poll_at"),
+            result.getInt("consecutive_failures"), result.getInt("polling_revision"));
 
-    public JdbcSourceStore(JdbcTemplate jdbc, AnalysisStore analyses) {
+    public JdbcSourceStore(JdbcTemplate jdbc, AnalysisStore analyses, java.time.Clock clock) {
         this.jdbc = jdbc;
         this.analyses = analyses;
+        this.clock = clock;
     }
 
     public List<Source> list(String workspaceId) {
@@ -55,7 +59,29 @@ public class JdbcSourceStore implements SourceStore {
     }
 
     public void fail(String id, String message) {
-        jdbc.update("UPDATE source SET status='ERROR',error=? WHERE id=?", message, id);
+        jdbc.update("""
+                UPDATE source SET status='ERROR',error=?,
+                  next_poll_at=CASE WHEN polling_enabled=1 THEN ? + 1000 * min(86400, poll_interval_seconds * (1 << min(consecutive_failures+1,16))) ELSE NULL END,
+                  consecutive_failures=min(consecutive_failures+1,16) WHERE id=?
+                """, message, clock.millis(), id);
+    }
+
+    public List<Source> due(int limit) {
+        return jdbc.query("SELECT * FROM source WHERE polling_enabled=1 AND next_poll_at<=? AND status!='SYNCING' ORDER BY next_poll_at,id LIMIT ?",
+                SOURCE, clock.millis(), limit);
+    }
+
+    public boolean beginPoll(String workspaceId, String id) {
+        return jdbc.update("UPDATE source SET status='SYNCING',error=NULL WHERE workspace_id=? AND id=? AND status!='SYNCING' AND polling_enabled=1 AND next_poll_at<=?",
+                workspaceId, id, clock.millis()) == 1;
+    }
+
+    public boolean configurePolling(String workspaceId, String id, boolean enabled, int intervalSeconds, int expectedRevision) {
+        return jdbc.update("""
+                UPDATE source SET polling_enabled=?,poll_interval_seconds=?,next_poll_at=?,consecutive_failures=0,polling_revision=polling_revision+1
+                WHERE workspace_id=? AND id=? AND polling_revision=?
+                """, enabled, intervalSeconds, enabled ? clock.millis() + intervalSeconds * 1000L : null,
+                workspaceId, id, expectedRevision) == 1;
     }
 
     public Map<String, String> fileHashes(String workspaceId, String id) {
@@ -118,8 +144,10 @@ public class JdbcSourceStore implements SourceStore {
             }
             analyses.save(id, extracted.get(file.path()));
         }
-        jdbc.update("UPDATE source SET status='READY',revision=?,error=NULL,synced_at=? WHERE id=?",
-                snapshot.revision(), Instant.now().toString(), source.id());
+        jdbc.update("""
+                UPDATE source SET status='READY',revision=?,error=NULL,synced_at=?,consecutive_failures=0,
+                  next_poll_at=CASE WHEN polling_enabled=1 THEN ? + poll_interval_seconds * 1000 ELSE NULL END WHERE id=?
+                """, snapshot.revision(), clock.instant().toString(), clock.millis(), source.id());
     }
 
     private record StoredEntry(String id, String path, String kind) {}

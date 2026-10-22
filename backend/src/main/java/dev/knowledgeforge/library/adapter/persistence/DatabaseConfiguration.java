@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 18) {
+        if (version > 19) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -425,6 +425,17 @@ public class DatabaseConfiguration {
         }
         jdbc.update("UPDATE answer_job SET status='INTERRUPTED',error='앱 재시작으로 중단되었습니다. 다시 승인해 새 작업을 시작하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());
         jdbc.update("UPDATE generation_job SET status='INTERRUPTED',error='앱 재시작으로 이전 작업이 중단되었습니다. 새 요청은 다시 승인하세요.',updated_at=? WHERE status IN ('QUEUED','RUNNING','CANCELLING')", java.time.Instant.now().toString());
+        if (version < 19) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("ALTER TABLE source ADD COLUMN next_poll_at INTEGER");
+                        jdbc.execute("ALTER TABLE source ADD COLUMN consecutive_failures INTEGER NOT NULL DEFAULT 0");
+                        jdbc.execute("ALTER TABLE source ADD COLUMN polling_revision INTEGER NOT NULL DEFAULT 0");
+                        jdbc.execute("CREATE INDEX source_poll_due ON source(next_poll_at) WHERE polling_enabled=1");
+                        jdbc.execute("PRAGMA user_version=19");
+                    });
+        }
         jdbc.update("UPDATE source SET status='ERROR',error='이전 동기화가 중단되었습니다. 다시 동기화하세요.' WHERE status='SYNCING'");
         return source;
     }
