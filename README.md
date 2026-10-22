@@ -3,17 +3,17 @@
 PC에 자료와 지식을 독립적으로 보관하는 **로컬 지식 서재**입니다.
 파일·폴더·웹·GitHub를 수집하고, 근거를 확인한 뒤 승인 기반 CLI AI로 질문합니다.
 
-**[Intel Mac 설치 파일 받기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)** — Java 포함, Apple 미공증 미리보기입니다. [설치 안내](docs/macos-install.md)를 먼저 확인하세요.
+**[Intel Mac 설치 파일 받기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1)** — Java 포함, Apple 미공증 미리보기입니다. [설치 안내](docs/macos-install.md)를 먼저 확인하세요.
 
 ## 한눈에 보기
 
 | 구분 | 상태 |
 |---|---|
-| 공개 설치 파일 | v0.1.0-preview.1 / DB v18 / Intel Mac |
-| 최신 개발 소스 | DB v20 / 설치 파일보다 최신 |
+| 공개 설치 파일 | v0.1.1-preview.1 / DB v21 / Intel Mac |
+| 최신 개발 소스 | DB v21 / 공개 설치 파일에 포함 |
 | 구현 | Workspace·자료 탐색, 문서/Java 분석·검색·[관련 자료](docs/relations.md), 지식 편집·검토·게시, 승인 기반 AI·SSE·문맥 이어 질문 |
-| 이번 추가 | [Source 자동 갱신](docs/source-polling.md), [Git 변경 blob 수집](docs/git-incremental.md), [URL 조건부 수집](docs/url-conditional.md) |
-| 다음 핵심 | 설치형 CLI 설정 UX, 최신 설치 파일·전체 회귀, 관계 결과의 명시적 답변 근거 선택 |
+| 이번 추가 | [Source 자동 갱신](docs/source-polling.md), [Git 변경 blob 수집](docs/git-incremental.md), [URL 조건부 수집](docs/url-conditional.md), [CLI 경로 설정](docs/cli-launch-settings.md) |
+| 검증 | 백엔드 350·UI 195·Rust 12 통과, 설치 복사본·업그레이드·백업 복원 확인 |
 | 별도 검증 | 실제 외부 AI 호환성, Apple 공증·Apple Silicon·Windows |
 
 자동 갱신은 기본 OFF입니다. 외부 AI 전송은 건별 승인이 필요하며, 사람이 편집한 지식을 자동으로 덮어쓰지 않습니다.
@@ -42,7 +42,7 @@ PC에 자료와 지식을 독립적으로 보관하는 **로컬 지식 서재**�
 자동 의미 검증과 영속 Git 캐시/브랜치 선택은 후속 범위입니다. 현재는 전체 수집본에서 변경 파일만 분석·반영합니다. 데스크톱은 Intel Mac 미리보기 패키지 단계입니다.
 불변 초안은 DRAFT이며 검토/게시 이력을 별도로 보존합니다. 사람 검토와 명시적 게시를 지원하지만 자동 사실 검증은 아닙니다. [사용법·한계](docs/publication.md).
 
-최신 DB 스키마는 v20입니다. 업데이트 전 앱을 종료하고 데이터 디렉터리를 백업하세요.
+최신 DB 스키마는 v21입니다. 업데이트 전 앱을 종료하고 데이터 디렉터리를 백업하세요.
 
 지식 근거의 **현재 원본에서 보기**로 원본 폴더·미리보기로 이동할 수 있습니다.
 동기화 후 위치 해석과 삭제/변경 경고는 [출처 탐색 가이드](docs/evidence-navigation.md)를 참고하세요. 독립 지식 폴더·카드 배치도 지원합니다. [사용법](docs/knowledge-folders.md).
@@ -182,4 +182,4 @@ AI 작업 검사는 임시 서버에만 테스트 전용 fake CLI를 지정합�
 - [Phase 2 검증 결과와 한계](docs/phase2-report.md)
 - [Phase 3 기반 검증 결과와 한계](docs/phase3-foundation-report.md)
 
-Mac `.app`/`.dmg`는 Phase 6 산출물이며 현재 제공하지 않습니다.
+Intel Mac `.app`/`.dmg`를 제공합니다. [최신 검증 보고서](docs/release-0.1.1-report.md). Apple 공증·Apple Silicon·Windows는 후속입니다.

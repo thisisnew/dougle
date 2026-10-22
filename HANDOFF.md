@@ -30,11 +30,11 @@ AI는 Ollama 대신 로그인된 Codex/Claude Code CLI를 사용합니다. 현�
 - v18 → v21 자료 보존 업그레이드·종료 상태 전체 백업 복원 통과.
 - [최신 보고서](docs/release-0.1.1-report.md), [네이티브 결과](docs/native-host-report.json).
 - 설치 산출물: `release/Knowledge.Forge_0.1.1_x86_64.dmg`와 `release/SHA256SUMS` (Git 제외).
-- 공개 배포 상태는 [GitHub Releases](https://github.com/thisisnew/knowledge-forge/releases)에서 확인합니다. 0.1.0은 DB v18의 이전 빌드입니다.
+- [0.1.1 공개 배포](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1)와 서버 자산 SHA-256을 확인했습니다. 0.1.0은 DB v18의 이전 빌드입니다.
 
 ## 다음 작업 / 한계
 
-1. 최신 0.1.1 릴리스 업로드·체크섬을 확인하고 README/설치 안내와 일치시킵니다.
+1. 0.1.1 공개 배포·체크섬·README/설치 안내 동기화 완료. 다음은 사용자 설치 체험과 아래 별도 검증입니다.
 2. 사용자의 Intel Mac에서 가상 자료로 첫 체험. Finder/Gatekeeper 실제 허용은 별도입니다.
 3. 명시 승인 후 실제 Codex/Claude 계정으로 최종 호환성·스트리밍 확인. 가상 CLI 검증을 실제 AI 성공으로 표현하지 않습니다.
 4. Developer ID·공증 자격 증명을 확보한 뒤 정식 Mac 배포. ARM은 별도 기기 빌드·검증, Windows는 후속입니다.

@@ -1,105 +1,41 @@
-# Phase 완료 기준 및 남은 작업
+# Phase 완료 기준과 현재 상태
 
-P4 [관련 자료 탐색](relations.md)을 추가했습니다. 저장된 선언 심볼·인용 출처로 연결하며 의미/호출 그래프·자동 AI 근거 확장은 아닙니다.
+기준: 2026-10-22, DB v21, **Intel Mac 0.1.1 공개 미리보기**.
+핵심 사용 흐름은 설치형으로 제공하며, 실제 AI 최종 호환성·정식 공증·다른 기기는 별도 검증입니다.
+세부 확장 조건은 [백로그](backlog.md), 실제 결과는 [최신 검증표](release-0.1.1-report.md)를 따릅니다.
 
-P5 Source별 [선택적 자동 갱신](source-polling.md)과 [Git 변경 blob 수집](git-incremental.md)을 추가했습니다. [조건부 HTTP 수집](url-conditional.md)도 추가했으며 영속 Git 캐시는 미완료입니다.
+| 단계 | 구현·검증한 범위 | 남은 확장/검증 |
+|---|---|---|
+| 1. 기반·탐색기 | Java 21/Spring Boot 4.1, React, Workspace·폴더·업로드·재시작 보존 | 대형 트리 가상화·페이지네이션 |
+| 2. 수집·분석 | 로컬·공개 HTTPS/GitHub, Tika·JavaParser·Lucene/Nori, 읽기 전용·SSRF 방어 | 사설 인증·격리 파서·대용량 저장소 |
+| 3. 지식 | 수동/AI 초안, 독립 폴더, 불변 버전·출처, 사람 검토·명시 게시, 편집 보호 | 자동 의미 검증·오래된 근거 재연결 |
+| 4. 질문 | 다중 도메인·심볼·출처 관계, 근거 우선·승인·SSE·중단, 선택 문맥 이어 질문 | 실제 서비스 스트림 최종 호환성·모델별 토큰 예산 |
+| 5. 갱신 | OFF 기본 폴링·주기·백오프, 변경 파일 분석·Git blob 재사용·HTTP 304, 최신성 상태 | 영속 Git 캐시·브랜치 선택·세부 수집 진행률/취소 |
+| 6. 설치·문서 | Intel DMG·Java 동봉·세션 인증·수명주기, 업그레이드·백업 복원, 매뉴얼·API·성능 보고 | Developer ID/공증·다른 실물 Mac·ARM, Windows 후속 |
 
-P4 [문맥 고정·승인·다중 턴 실행](context-requests.md)을 구현했습니다. v18 불변 요청과 기존 승인/작업을 결합하며 완료 답변을 보관함에 연결합니다.
+## 모든 단계의 완료 조건
 
-P4 질문별 이력·[완료 답변 보관함](conversations.md)과 명시적 문맥 전송을 지원합니다. 실제 외부 서비스 스트림 호환성 검증은 별도입니다.
+1. 실제 코드와 사용자 진입 경로가 있어야 합니다. 빈 모듈·가짜 성공 화면은 완료가 아닙니다.
+2. 정상·오류·격리·재시작을 해당 기능 테스트로 확인합니다. 실패는 원인과 해결 여부를 기록합니다.
+3. 원본과 지식은 독립 보관합니다. 기존 지식·사람 편집을 자동으로 덮어쓰지 않습니다.
+4. 검색과 AI를 분리합니다. 질문 때 전체 재분석하지 않으며 외부 전송은 건별 승인합니다.
+5. 실제 코드·모델링·사용법을 대조하고 GitHub에 함께 갱신합니다.
 
-Codex 스트림은 [선택적 실행기](codex-streaming.md)까지 연결했습니다. 관계 검색과 실제 서비스 검증이 남아 P4 전체 완료는 아닙니다.
+## 검증 증거
 
-P5 [변경 파일만 분석·반영](incremental-snapshots.md), P6 [Intel Mac DMG·동봉 Java·설치 복사본 검증](desktop-report.md)을 구현했습니다. 폴링은 v19에 추가했으며 Git blob 재사용과 URL 조건부 수집도 추가했습니다. 설치형 전체 회귀는 진행 중입니다.
+- [Phase 1](test-report.md), [수집/분석](phase2-report.md), [지식 기반](phase3-foundation-report.md): 당시 검사 기록.
+- [현재 0.1.1 통합/설치/업그레이드](release-0.1.1-report.md): 백엔드 350·UI 195·Rust 12 통과.
+- [동봉 Java 측정](performance-desktop-runtime.json), [네이티브 수명주기](native-host-report.json).
+- AI 테스트는 가상 CLI와 실제 서비스 검증을 구별합니다. 이번 릴리스는 실제 외부 AI 테스트 1개를 실행하지 않았습니다.
 
-실행 가능한 작업 단위와 상세 인수 조건은 [남은 개발 체크리스트](backlog.md)를 따릅니다.
-원본 검색의 [근거 위치 표시](search-evidence.md)는 구현했지만 P4 근거 검색 전체 완료는 아닙니다.
-[원본·게시 지식 통합 검색](published-search.md)도 구현했습니다. 영속 청크·관계 검색·채팅 UI는 남아 있습니다.
-[답변용 불변 근거 묶음](evidence-bundles.md), [재검증·미리보기](bundle-validation.md), [승인·철회](answer-approval.md), [답변 작업·재검증·일회 소비·중단](answer-jobs.md), [관측 SSE API](answer-events.md)와 [UI](answer-events-ui.md), [Claude 임시 출력](partial-answer.md), [선택적 Codex 스트리밍](codex-streaming.md)을 구현했습니다. 의미 기반 청크 선택·실제 서비스 스트림 검증·다중 대화는 남았습니다.
-새 PC의 실행 절차와 다음 에이전트용 요청은 [HANDOFF](../HANDOFF.md)에 있습니다.
-사용자 체험 시점은 **Mac 설치형 준비 후**입니다. [체험 완료 기준](desktop-preview.md).
+## 현재 안전 제한
 
-## Phase 1 — 완료
+- 파일당 10 MiB, Source당 500개/50 MiB, 경로 깊이 16단계, 추출 텍스트 500,000자.
+- SQLite BLOB 저장·단일 로컬 사용자용이며 데이터 암호화는 없습니다.
+- 공개 HTTPS(443)·공개 GitHub 기본 브랜치만 지원합니다. SSH·서브모듈·심볼릭 링크는 제외합니다.
+- Source 전체 과거 이력은 보관하지 않습니다. 지식에서 인용한 당시 원본은 별도로 보존합니다.
+- CURRENT는 마지막 로컬 수집본과 일치한다는 뜻이지 원격 최신성·사실 검증이 아닙니다.
+- 앱 종료/잠자기 중 폴링하지 않습니다. 회사 GitHub Actions를 수정하지 않습니다.
+- 미공증 Intel 미리보기이며 다른 아키텍처/운영체제 지원으로 안내하지 않습니다.
 
-- Java 21 / Spring Boot 4.1.x / React 빌드 성공
-- Workspace 생성·삭제·전환, 서버 재시작 후 선택/데이터 보존
-- 폴더 하위 탐색, 경로 복귀, 원본 파일 업로드·미리보기·다운로드
-- Workspace 격리, 중복 이름 거부, 삭제 cascade, 크기/경로 검증
-- 원본과 지식 영역 독립, 미구현 기능을 완료된 것으로 표시하지 않음
-- 자동 API/UI 테스트 및 실제 브라우저 사용자 흐름
-- 실행·아키텍처·API 문서, 실제 측정 보고서
-
-실행 증거와 결과는 `test-report.md`, `performance.json`에 기록합니다.
-
-## Phase 2 — 기본 수집·분석·검색 구현
-
-로컬 폴더/URL/GitHub read-only Collector, Source 모델, Git CLI·REST API,
-Tika·JavaParser, Lucene 10·Nori 및 심볼 인덱스를 구현합니다.
-SSRF, 리다이렉트, 심볼릭 링크, 대용량 파일, 중단/재시도, 자격 증명 보관을 검증합니다.
-가상 Java 프로젝트·문서·로컬 HTTP fixture로 수집 및 한글 검색 결과를 검증합니다.
-수집 후 원본 버전과 해시를 보존하고, 질문은 기존 인덱스만 이용하도록 합니다.
-
-현재 로컬 폴더/공개 HTTPS/공개 GitHub 기본 브랜치의 수동 수집, 원본 해시·마지막 revision,
-Tika 문서 추출, JavaParser 심볼, Lucene/Nori 다중 도메인 검색이 구현되어 있습니다.
-실패 원자성·중복 동기화·읽기 전용 Git·심볼릭 링크·사설 주소·리다이렉트와
-스키마 업그레이드를 테스트합니다. 실제 결과는 `phase2-report.md`에 기록합니다.
-
-운영 확장으로 남은 범위: 비공개 GitHub 자격 증명 보관, 사용자가 누르는 수집 취소,
-격리 프로세스 파서, 대용량 ArtifactStore, 세밀한 재시도 정책.
-현재 수집은 제한된 동기 요청이며 실패 후 수동 재시도할 수 있습니다.
-
-## Phase 3 — P3-1 완료, P3-2 CLI 초안 일부 구현
-
-수동 지식 초안·불변 버전·근거 스냅샷·최신성 조회·편집 충돌 보호를 UI/API로 구현했습니다.
-v3 마이그레이션과 원본/지식 독립 삭제를 검증했습니다. [검증 기록](phase3-foundation-report.md).
-모든 초안은 불변 DRAFT입니다. 로그인된 CLI로 승인 기반 AI 초안과 별도 사람 검토/게시 이력을 추가했습니다. [사람 검토 범위](publication.md).
-Ollama 대신 Codex/Claude Code를 사용합니다. [작업 상태·취소·멱등·재시작 복구](generation-jobs.md)도 구현했습니다.
-시작 설정 모델 고정·승인 바인딩·설치 버전 진단도 구현했습니다. [범위](cli-settings.md).
-건별 모델 선택·브라우저별 선택 저장 UI·요청 모델 영속 이력도 구현했습니다. [범위](model-selection.md).
-실행 전 CLI 관측 버전·시각·확인 실패 이력도 구현했습니다. [범위](cli-observation.md).
-인증·원격 연결 상태·실제 실행 모델/바이너리 증명과 자동 의미 검증은 아직 없습니다. 독립 지식 폴더·카드 배치를 구현했습니다. [범위·검증](knowledge-folders.md).
-안전한 Markdown 표시·원문 보존을 구현했습니다. [정책·검증](markdown-rendering.md). [폴더 이름 변경/이동](folder-update.md)도 구현했습니다. AI 갱신 제안은 남아 있습니다.
-P3-4 중 근거에서 현재 원본 폴더/미리보기로 이동하는 경로를 추가했습니다. [범위·검증](evidence-navigation.md).
-
-Curator, Knowledge Card, Markdown 버전, 출처 위치·revision 연결,
-초안 검증 후 게시를 구현합니다.
-근거 없는 문장 게시 차단, 수동 편집 보호, 검증 실패 시 이전 게시 버전 유지가 완료 기준입니다.
-
-## Phase 4
-
-Claude text_delta와 선택적 Codex 스트림을 미검증 임시 영역으로 보내는 경로를 추가했습니다. fake CLI로 검증하며 실제 서비스 확인·다중 대화는 남았습니다. [현재 범위](codex-streaming.md).
-
-2026-10-22: [근거 우선 작업 관측 SSE API](answer-events.md)와 [UI 연결](answer-events-ui.md) 구현. 후속 Claude 임시 출력을 추가했지만 Codex 스트림과 아래 완료 기준 전체를 충족한 것은 아닙니다.
-
-진입 전 남은 P3-4: AI 결과 읽기 전용 비교는 구현했으며 거절·재검토 이력도 구현했습니다. 충돌 없는 전체 채택도 구현했습니다. 동일 근거의 수동 부분 반영·재조회 후 재확인도 구현했습니다. CURRENT 근거 번호 통합도 구현했습니다. 오래된 근거 교체·줄 단위 충돌 표시는 남았습니다. [번호 통합](evidence-merge.md). [부분 반영](proposal-merge.md). [채택 범위](proposal-acceptance.md). [처리 기록](proposal-decisions.md). [범위](generation-comparison.md).
-
-검색과 LLM 생성 유스케이스를 분리합니다.
-다중 도메인 검색, 근거 우선 SSE, CLI Provider, 중단, Provider 확장 및 외부 전송 승인을 구현합니다.
-SSE 이벤트 순서, 취소의 서버 자원 해제, 검색 실패/모델 미실행, 승인 없는 외부 전송 차단을 검증합니다.
-
-## Phase 5
-
-Source별 기본 OFF 폴링과 주기, 수동 동기화, Git diff, 마지막 반영 revision,
-연관 지식 stale 처리, 새 버전 검증·게시를 구현합니다.
-OFF일 때 호출 없음, 변경 없는 재동기화의 멱등성, 변경/삭제/이름 변경 전파,
-수동 편집 보호 및 crash recovery를 검증합니다. 저장소 Workflow는 수정하지 않습니다.
-
-## Phase 6
-
-Tauri 2 + Java 21 런타임 sidecar, macOS .app/.dmg, 프로세스 수명과 데이터 경로
-마이그레이션, 통합 테스트, 설치/사용 설명서를 완성합니다.
-Intel/Apple Silicon 타깃 빌드, 설치·종료·재시작, 업그레이드·백업 복원을 검증합니다.
-서명·공증에는 사용자의 Apple 배포 자격이 필요합니다. Windows는 후속 지원입니다.
-
-## 현재 한계
-
-- 대규모 디렉터리의 페이지네이션, 트리 가상화, 파일명 정규화/Unicode case folding 없음
-- 파일 최대 10 MiB, 미리보기는 1 MiB UTF-8만 지원
-- 단일 SQLite 연결, BLOB 저장이므로 대량 수집 전 저장소 확장 필요
-- 공개 Source 등록·수동 수집·문서/Java 분석·검색·CLI AI 초안 구현, 승인 기반 채팅·Source별 자동 폴링 구현
-- Source당 500개/50 MiB, 경로 16단계, 추출 텍스트 500,000자 제한
-- Source는 현재 스냅샷/마지막 revision만 보관. 지식이 인용한 원본은 별도 보존하지만 전체 원본 이력은 미지원
-- 원본 폴더 생성/삭제만 지원하며 이름 변경·이동은 미지원
-- OS 사용자 간 인증, 데이터 암호화, 데스크톱 session token은 미구현
-- SQLite cascade의 매우 깊은 트리는 별도 제한/배치 삭제 설계가 필요
-- Phase 1 성능 값은 작은 가상 데이터셋 결과로 대규모 처리 성능을 보장하지 않음
+개발 재개: [HANDOFF](../HANDOFF.md). 체험 시작: [Mac 설치 안내](macos-install.md).

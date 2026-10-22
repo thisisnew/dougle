@@ -1,15 +1,15 @@
 # Mac 설치·사용 — 짧은 안내
 
-미리보기 DMG의 설치 복사본 검증을 통과했습니다. 현재 빌드는 **Intel Mac용**이며 Apple 공증은 아직 없습니다. [검증 범위](desktop-report.md).
+미리보기 DMG의 설치 복사본 검증을 통과했습니다. 현재 빌드는 **Intel Mac용**이며 Apple 공증은 아직 없습니다. [검증 범위](release-0.1.1-report.md).
 Apple Silicon/Windows용 설치 파일로 안내하지 않습니다.
 
 ## 설치
 
-[GitHub 설치 파일 받기 — v0.1.0-preview.1](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)
+[GitHub 설치 파일 받기 — v0.1.1-preview.1](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1)
 
-`Knowledge.Forge_0.1.0_x86_64.dmg`와 `SHA256SUMS`를 같은 폴더에 받습니다.
+`Knowledge.Forge_0.1.1_x86_64.dmg`와 `SHA256SUMS`를 같은 폴더에 받습니다.
 해당 폴더에서 `shasum -a 256 -c SHA256SUMS`로 확인할 수 있습니다.
-이 설치 파일은 v18 기준이며 이후 v19 Source 자동 갱신은 개발 소스에 먼저 추가되었습니다.
+이 설치 파일은 DB v21 기준이며 Source 자동 갱신·조건부 수집·관련 자료·CLI 경로 설정을 포함합니다.
 
 1. 제공된 DMG와 SHA-256을 확인합니다. 모르는 사람이 다시 올린 파일은 사용하지 마세요.
 2. DMG를 열고 **Knowledge Forge.app**을 Applications로 복사합니다.
@@ -30,9 +30,9 @@ Apple Silicon/Windows용 설치 파일로 안내하지 않습니다.
 5. AI 답변은 **근거 묶음 → 요청 확인 → 승인 → 실제 전송** 순서입니다.
 
 Codex/Claude Code는 따로 설치·로그인해야 합니다. 현재 코딩 세션을 앱이 공유하는 것은 아닙니다.
-Finder에서 실행하면 터미널과 CLI 탐색 경로가 다를 수 있습니다. CLI 설정 화면 보강은 남은 작업입니다.
+Finder에서 CLI를 찾지 못하면 상단 **CLI 경로 설정**에 실행 파일의 절대 경로를 저장하고 앱을 재시작하세요. [설정 안내](cli-launch-settings.md).
 AI 사용 전까지 파일 보관·수동 지식·검색은 외부 AI가 필요하지 않습니다.
-GitHub 수집에는 Git 실행 환경이 필요합니다. 자동 폴링은 아직 제공하지 않습니다.
+GitHub 수집에는 Git 실행 환경이 필요합니다. 자동 폴링은 Source별 기본 OFF이며 켠 경우 앱이 실행 중일 때만 동작합니다.
 
 자세한 기능은 [쉬운 사용법](how-it-works.md), 문맥 이어 묻기는 [별도 안내](context-requests.md)를 보세요.
 
@@ -47,7 +47,7 @@ GitHub 수집에는 Git 실행 환경이 필요합니다. 자동 폴링은 아�
 - **앱을 완전히 종료한 뒤** Finder의 이동 → 폴더로 이동에서 위 경로를 엽니다.
 - 폴더 전체를 다른 위치에 복사합니다. DB 파일 하나만 복사하지 마세요.
 - 복구할 때도 앱을 종료합니다. 현재 폴더를 먼저 다른 이름으로 보관한 뒤 백업 폴더를 복사합니다.
-- 새 버전에서 연 데이터를 구버전 앱으로 열지 마세요. 현재 DB는 v18이며 역마이그레이션은 없습니다.
+- 새 버전에서 연 데이터를 구버전 앱으로 열지 마세요. 현재 DB는 v21이며 역마이그레이션은 없습니다.
 - 개발용 저장소의 `.data`는 자동으로 가져오지 않습니다. 실행 중 데이터 이동은 금지합니다.
 
 앱 삭제는 Applications의 앱만 휴지통으로 옮깁니다. 데이터는 남겨 둡니다.
