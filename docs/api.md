@@ -1,5 +1,7 @@
 # Phase 1–2 및 Phase 3 기반 API 명세
 
+CLI 실행 경로: `GET/PUT /api/ai/launch-settings`는 현재/저장된 설정과 재시작 필요 여부를 반환합니다. 저장에 경로·예상 revision·신뢰 확인이 필요합니다. [계약](cli-launch-settings.md).
+
 관련 자료: `GET /api/workspaces/{workspaceId}/relations?kind=ORIGINAL|KNOWLEDGE&id=...&version=...&domains=...`는 저장된 심볼/출처 연결을 읽습니다. [입출력·게시본 제한](relations.md).
 
 동기화 API는 [Git 변경 blob 수집](git-incremental.md)과 [URL 조건부 요청](url-conditional.md)을 내부적으로 적용합니다. 별도 승인/API/요청 필드는 없으며 기존 Source 반환 계약을 유지합니다.

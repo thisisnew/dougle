@@ -58,9 +58,9 @@ Tauri DMG의 Finder 창 꾸미기 AppleScript도 실패하여, 앱과 Applicatio
 
 ## 아직 남은 배포 확인
 
-- 실제 앱 창의 파일 다운로드·인증 SSE·종료·중복 실행·장애 복구.
-- Java/Node 개발 도구가 없는 환경의 실행과 Finder의 CLI 경로 탐색.
-- 앱 종료 상태의 백업/복구 및 기존 개발 데이터 이관 절차.
+- 설치 복사본 다운로드·인증 및 네이티브 종료/중복 실행/재시작, 동봉 Java SSE, 종료 상태 백업 복원은 검증했습니다. [0.1.1 보고서](release-0.1.1-report.md).
+- 다른 실물 Mac과 Finder/Gatekeeper 사용자 설치 흐름, 실제 로그인 CLI 호환성은 추가 확인이 필요합니다.
+- CLI 경로는 앱에서 설정할 수 있습니다. 개발 데이터 자동 이관은 제공하지 않습니다.
 - Apple Silicon 빌드/검증, Developer ID 서명·공증. Windows는 후속 지원.
 
 참고: [Tauri Mac 번들](https://v2.tauri.app/distribute/macos-application-bundle/),

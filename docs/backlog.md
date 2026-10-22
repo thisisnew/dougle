@@ -1,5 +1,7 @@
 # 남은 개발 작업 — 다른 PC 인수인계
 
+추가: v21 [CLI 경로 설정](cli-launch-settings.md). 절대 경로 저장·재시작 적용·활성 경로 승인 binding, 실제 가상 CLI 재시작 smoke와 브라우저 확인 완료. 다음은 최신 설치 파일 검증/배포와 업그레이드·백업 복구 회귀입니다.
+
 추가: [관련 자료 탐색](relations.md) API/UI. 같은 선언 심볼·공통 인용 위치로 최신 게시본/현재 원본을 연결합니다. 의미/호출 그래프·자동 답변 근거 확장은 남습니다.
 
 최신 추가: v19 [Source별 자동 갱신](source-polling.md), [Git 변경 blob 수집](git-incremental.md). [URL 조건부 요청](url-conditional.md)도 v20에 추가했습니다. 영속 Git 캐시/브랜치 선택은 남습니다. v0.1.0-preview.1 DMG는 이 변경 이전의 v18 빌드입니다.

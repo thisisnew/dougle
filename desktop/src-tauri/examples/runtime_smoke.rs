@@ -37,6 +37,35 @@ window.addEventListener('DOMContentLoaded', () => {
       if (await downloaded.text() !== preview.text) throw Error('Download mismatch');
       const hits = await api(base + '/search?query=telescope');
       if (!hits.some(hit => hit.entryId === file.id)) throw Error('Search mismatch');
+      const draft = await api(base + '/knowledge', 'POST', {
+        title: 'Synthetic native publication', markdown: 'Synthetic telescope observations. [E1]',
+        citations: [{ entryId: file.id, startLine: 1, endLine: 1 }],
+      });
+      const card = base + '/knowledge/' + draft.card.id;
+      await api(card + '/review', 'POST', {
+        expectedVersion: 1, reviewer: 'Synthetic native reviewer', note: 'checked fixture',
+        claimsSupported: true, uncertaintyRemoved: true,
+      });
+      await api(card + '/publication', 'POST', { expectedVersion: 1, expectedPublicationRevision: 0 });
+      await api(card + '/versions', 'POST', {
+        expectedVersion: 1, title: 'Synthetic human edit', markdown: 'Human edit retained independently. [E1]',
+      });
+      if ((await api(card + '/versions/1')).version.markdown !== draft.version.markdown) throw Error('Old knowledge version overwritten');
+      if ((await api(card + '/versions/2')).version.title !== 'Synthetic human edit') throw Error('Human edit missing');
+      const relations = await api(base + '/relations?kind=ORIGINAL&id=' + file.id);
+      if (!relations.items.some(item => item.target.id === draft.card.id && item.target.version === 1)) throw Error('Published relation mismatch');
+      const source = await api(base + '/sources', 'POST', {
+        name: 'Synthetic disabled URL', kind: 'URL', location: 'https://example.org/synthetic', domain: '',
+      });
+      const polling = await api(base + '/sources/' + source.id + '/polling', 'PATCH', {
+        enabled: false, intervalSeconds: 60, expectedRevision: 0,
+      });
+      if (polling.pollingEnabled || polling.nextPollAt !== null || polling.status !== 'NEW') throw Error('OFF collected unexpectedly');
+      const settings = await api('/ai/launch-settings');
+      const saved = await api('/ai/launch-settings', 'PUT', {
+        codexPath: '', claudePath: '', expectedRevision: settings.saved.revision, acknowledged: true,
+      });
+      if (saved.restartRequired || saved.saved.revision !== settings.saved.revision + 1) throw Error('CLI settings mismatch');
       await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_PASSED' });
     } catch {
       await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_FAILED' }).catch(() => {});
@@ -69,7 +98,7 @@ fn main() {
                 let passed = run(&handle, &resources, &data);
                 let _ = std::fs::remove_dir_all(&data);
                 if passed {
-                    println!("PASS: bundled Java, authenticated React, upload, preview, download bytes and Lucene search");
+                    println!("PASS: bundled Java, authenticated React, upload/download/search, knowledge edit/publication, relations, OFF polling and CLI settings; no AI");
                 } else {
                     eprintln!("FAIL: native runtime smoke");
                 }

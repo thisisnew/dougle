@@ -9,7 +9,7 @@
 - 모델 고정·승인 바인딩·CLI 설치 진단은 `docs/cli-settings.md`를 확인한다. 설치 버전 확인을 로그인/원격 연결 성공으로 표시하지 않는다.
 - 건별 모델 선택·브라우저 선택 저장·요청 모델 작업 이력은 `docs/model-selection.md`를 확인한다. v5에서 도입했으며 과거 모델 미기록 값은 null로 보존한다.
 - 후속 CLI 관측 이력은 `docs/cli-observation.md`를 확인한다. CLI 관측은 v6에서 도입했으며 실행 전 관측 버전을 정확한 생성 바이너리 버전으로 단정하지 않는다.
-- 현재 스키마는 v20이다. URL 조건부 요청은 `docs/url-conditional.md`, Source opt-in 자동 갱신은 `docs/source-polling.md`를 따른다. v0.1.0-preview.1 DMG는 v18 기준이며 더 최신 DB로 다운그레이드 실행하지 않는다. 문맥 고정 요청은 `docs/context-requests.md`를 따른다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
+- 현재 스키마는 v21이다. CLI 경로 저장·재시작 적용·승인 binding은 `docs/cli-launch-settings.md`를 따른다. URL 조건부 요청은 `docs/url-conditional.md`, Source opt-in 자동 갱신은 `docs/source-polling.md`를 따른다. v0.1.0-preview.1 DMG는 v18 기준이며 더 최신 DB로 다운그레이드 실행하지 않는다. 문맥 고정 요청은 `docs/context-requests.md`를 따른다. 검토/게시 이력은 불변 DRAFT와 별도이며 변경 근거·편집/게시 충돌을 차단한다.
 - AI 결과 비교는 `docs/generation-comparison.md`를 확인한다. 생성 당시/현재/최초 결과를 읽기 전용 조회한다. 거절·재검토 이력은 `docs/proposal-decisions.md`에 구현했다. 명시적 전체 채택은 `docs/proposal-acceptance.md`에 구현했다. 동일 근거의 수동 부분 반영은 `docs/proposal-merge.md`를 따르며, 현재 수집본과 일치하는 근거의 번호 통합은 `docs/evidence-merge.md`에 구현했다. 오래된 근거를 새 원본으로 교체하는 재연결은 아직 없다.
 - P3-4 출처 탐색 연결은 `docs/evidence-navigation.md`를 확인한다. 원본 해석은 Source ID+경로 또는 업로드 ID이며 독립 지식 폴더·카드 배치는 `docs/knowledge-folders.md`를 확인한다.
 - 기능 하나마다 유스케이스·포트·어댑터와 실제 테스트를 완성한다.

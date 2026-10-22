@@ -11,7 +11,6 @@ import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,8 +21,12 @@ public class CliDiagnosticsAdapter implements CliDiagnostics {
     private final CliCuratorModel runner;
     private final Semaphore slot = new Semaphore(1);
 
-    public CliDiagnosticsAdapter(@Value("${forge.ai.codex-command:codex}") String codex,
-                                 @Value("${forge.ai.claude-command:claude}") String claude, CuratorSettings settings) {
+    @org.springframework.beans.factory.annotation.Autowired
+    public CliDiagnosticsAdapter(dev.knowledgeforge.knowledge.application.CliLaunchConfiguration launch, CuratorSettings settings) {
+        this(launch.command(Provider.CODEX), launch.command(Provider.CLAUDE), settings);
+    }
+
+    public CliDiagnosticsAdapter(String codex, String claude, CuratorSettings settings) {
         this.codex = codex;
         this.claude = claude;
         this.settings = settings;

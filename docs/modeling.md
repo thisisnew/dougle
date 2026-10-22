@@ -1,152 +1,67 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
-[관련 자료](relations.md)는 새 추론 테이블 없이 저장된 선언 심볼·게시본·근거 origin_key를 읽어 연결합니다. 같은 이름/출처 위치라는 이유를 표시하며 함수 호출·의미 관계로 단정하지 않습니다.
+현재 개발 소스의 DB는 **SQLite v21**입니다. 원본, 지식, AI 요청을 따로 보관합니다.
 
-v20 `source_http_cache`는 Source의 마지막 성공 URL·ETag·Last-Modified를 보관합니다. 원본과 같은 트랜잭션으로 갱신하고 Source 삭제 시 함께 지웁니다. [실제 코드 대조](url-conditional.md).
+## 핵심 용어와 실제 테이블
 
-Git 재수집은 기존 `source.revision` + `entry.content`에서 Git blob ID를 계산해 재사용합니다. 별도 Git 캐시 테이블 없이 새 tree의 경로·blob과 대조합니다. [모델과 실제 코드](git-incremental.md).
-
-v19 Source는 **자동 갱신 ON/OFF + 주기 + 다음 예약 + 실패 횟수 + 설정 revision**을 보관합니다. 예약 선점은 DB에서, 실행은 최대 2개 작업자로, 결과 반영은 트랜잭션으로 처리합니다. [코드 대조·쉬운 설명](source-polling.md). AI 자동 호출은 없습니다.
-
-설치 앱은 **Tauri 호스트 → 동봉 Java/Spring → SQLite·Lucene** 구조입니다. 호스트는 실행별 토큰을 메모리/파이프로 전달하고 UI는 인증 헤더로 통신합니다. 앱 창에 DB 파일/셸 접근 권한을 주지 않습니다. [실제 코드·수명주기 대조](../desktop/README.md), [검증](desktop-report.md).
-
-v18 `conversation_request`는 새 질문에 포함할 이전 답변·모델·요청문을 불변 JSON으로 저장합니다. 별도 승인 후 기존 답변 작업이 실행하고, 성공 답변과 보관함 연결을 같은 트랜잭션으로 저장합니다. [모델·실제 클래스 대조](context-requests.md).
-
-Source는 경로+SHA-256으로 비교해 같은 파일 ID를 유지하고 바뀐 파일만 분석합니다. 과거 지식의 근거 스냅샷은 수정하지 않습니다. [실제 저장 흐름](incremental-snapshots.md).
-
-v17은 `conversation → conversation_turn → answer_job → evidence_bundle`로 완료 답변을 정리합니다. `conversation_turn.position`은 사용자 정리 순서이며 AI에게 전달한 실제 대화 턴이 아닙니다. 답변/근거를 복제하지 않습니다. [실제 코드·삭제 정책 대조](conversations.md).
-
-Codex용 `CodexTextStream`은 thread/turn/item에 묶인 **메모리 상태 검증기**입니다. 전용 프로필 옵션이 켜지면 `CodexAppServerSession`에서 호출하고 기존 작업 메모리/SSE로 보냅니다. 새 테이블은 없습니다. [현재/예정 대조](codex-streaming.md).
-
-Claude 임시 출력은 **실행 중 메모리 문자열**이며 테이블/지식/답변 이력으로 저장하지 않습니다.
-`AnswerJobService.partial → SSE partial → 미검증 임시 영역`으로 보내고 최종/실패/중단 때 지웁니다. [코드 대조](partial-answer.md).
-
-SSE 화면은 새 데이터를 저장하지 않습니다. `AnswerJobsPanel → observeAnswerJob`이 기존 작업을 읽고 상태를 교체합니다.
-Workspace·묶음 전환 때 화면/관측만 초기화하며 서버 작업은 명시적으로 중단해야 합니다. [UI 코드 대조](answer-events-ui.md).
-
-2026-10-22 대조: 작업 관측 SSE는 저장 테이블 없이 기존 묶음/작업을 읽습니다.
-`AnswerJobEventsController → EvidenceBundleService/AnswerJobService.get` 경로이며 생성/취소 권한을 갖지 않습니다. [그림·코드 대조](answer-events.md).
-
-새 `AnswerJob`은 묶음에 속하는 답변 작업입니다. 승인 ID는 UNIQUE라 작업 하나에만 쓰입니다.
-답변/오류/상태/요청 모델을 보관하며 재시작 시 진행 중 작업은 INTERRUPTED입니다. 지식 버전과는 독립입니다. [코드 대조·그림](answer-jobs.md).
-
-**한 줄 요약: 원본 자료와 지식 문서를 따로 보관하고, 지식에는 당시 근거를 붙입니다.**
-2026-10-22 코드 대조 기준, SQLite v17. 아래 그림은 기존 지식 모델이며 새 보관함 관계는 위 링크에 있습니다.
-
-`EvidenceBundle → AnswerApproval`은 묶음당 현재 승인 하나입니다. 제공자·모델·요청 해시와 승인/만료/철회 시각을 저장합니다.
-조회 시 근거 변경과 만료를 다시 계산합니다. 전송 이력·답변 작업은 아닙니다. [현재 코드 대조와 설계도](answer-approval.md).
-
-`EvidenceBundle → BundleValidation → Preview`도 구현했습니다. 뒤 두 객체는 읽기 전용 응답이며 저장/승인 모델이 아닙니다.
-검사 시각·항목별 상태와 제공자/모델/요청 해시를 반환합니다. [코드 대조·흐름도](bundle-validation.md).
-
-새 `Evidence Bundle`은 답변용 인용문 묶음입니다. Workspace에 속하며 원본/지식 삭제 후에도 보존합니다.
-본문·출처·해시를 생성 당시 값으로 보관하며 전송 승인을 포함하지 않습니다. [모델·코드 대조](evidence-bundles.md).
-
-게시 검색 모델: `최신 Publication → 해당 Version → Lucene → 근거 상태 확인 → 읽기 전용 게시본`.
-v13은 검색 큐 트리거만 추가하며 초안/게시본을 합치지 않습니다. [실제 코드 대조](published-search.md).
-
-검색 결과의 `startLine/endLine/bodyMatch`는 Lucene 본문의 저장 위치에서 계산합니다.
-별도 DB 엔터티나 확정 인용이 아니라 미리보기 정보입니다. [코드 대조·한계](search-evidence.md).
-
-## 1. 용어를 쉽게
-
-| 용어 | 쉬운 뜻 | 예시 |
+| 쉽게 말하면 | 모델/테이블 | 역할 |
 |---|---|---|
-| Workspace | 서로 섞이지 않는 작업 공간 | 개인 연구 |
-| Source | 다시 가져올 자료의 위치 | 로컬 폴더, URL, 공개 GitHub |
-| Entry | 앱 안에 복사한 파일 또는 폴더 | 관측 기록.txt |
-| Analysis | 파일에서 뽑은 글과 코드 이름 | 본문, 메서드 이름·행 번호 |
-| Knowledge Card | 하나의 지식 문서 묶음 | 관측 방법 정리 |
-| Version | 문서를 저장할 때마다 생기는 판본 | v1, v2 |
-| Evidence Snapshot | 근거로 쓴 당시 원본의 복사본 | 작성 당시 기록과 인용 행 |
-| Review / Publication | 사람이 확인한 기록 / 게시한 기록 | v2 검토 후 게시 |
+| 프로젝트 서랍 | `workspace`, `app_state` | 자료 격리, 마지막 선택 |
+| 연결한 자료 위치 | `source`, `source_http_cache` | 폴더/URL/GitHub, revision·오류·예약·HTTP 확인표 |
+| 원본 복사본 | `entry` | 폴더·파일 바이트, Source 경로·해시 |
+| 검색 준비 결과 | `extracted_document`, `symbol`, `search_outbox` | 본문·Java 선언·색인 갱신 큐 |
+| 지식 문서 | `knowledge_card`, `knowledge_version` | 문서 식별자와 불변 Markdown 버전 |
+| 지식 폴더 | `knowledge_folder`, `knowledge_placement` | 원본 폴더와 독립된 문서 배치 |
+| 당시 근거 | `evidence_snapshot`, `knowledge_evidence` | 원본 바이트·글·위치·해시·인용 행 |
+| 검토·게시 | `knowledge_review`, `knowledge_publication` | 사람이 확인한 버전과 실제 게시 이력 |
+| AI 초안·제안 | `generation_job`, `proposal_decision`, `proposal_acceptance` | 생성·취소·거절·채택 이력 |
+| 질문과 답변 | `evidence_bundle`, `answer_approval`, `answer_job` | 불변 근거·건별 승인·답변 작업 |
+| 대화 보관함 | `conversation`, `conversation_turn`, `conversation_request` | 완료 답변 연결과 명시적으로 고정한 문맥 |
+| 실행 경로 설정 | `cli_launch_settings` | 앱 전체 CLI 경로, 설정 충돌 방지 revision |
 
-단일 파일 업로드에는 Source가 없습니다. Source는 폴더·URL·GitHub처럼 다시 수집할 대상을 말합니다.
-
-## 2. 데이터 관계
-
-선은 “소유하거나 연결한다”는 뜻입니다. 세부 열을 모두 나열한 물리 ERD는 아닙니다.
+## 관계를 그림으로
 
 ```mermaid
-flowchart TD
-  W[Workspace] --> S[Source · 수집 위치]
-  W --> E[Entry · 원본 파일/폴더]
-  S --> E
-  E --> A[추출 본문 + 코드 심볼]
-  A --> I[Lucene 검색 색인]
-  W --> K[Knowledge Card]
-  K --> V[Version · v1/v2/...]
-  V --> C[인용 연결 · 행 범위]
-  C --> B[Evidence Snapshot · 당시 복사본]
-  W --> B
+flowchart LR
+  W[Workspace] --> S[Source]
+  W --> F[원본 파일]
+  S --> F
+  F --> A[본문·Java 심볼]
+  A --> L[Lucene 검색]
+  W --> K[지식 Card]
+  K --> V[불변 Version]
+  V --> E[당시 근거 Snapshot]
   V --> R[사람 검토]
-  R --> P[게시 이력]
-  W --> F[지식 폴더]
-  F --> L[카드 배치]
-  K --> L
-  W --> J[AI 생성 작업 이력]
-  J --> D[제안 거절·재검토 이력]
-  J --> ACCEPT[작업별 채택 기록]
-  ACCEPT --> V
+  R --> P[명시적 게시]
+  L --> B[질문용 근거 Bundle]
+  B --> C[건별 승인]
+  C --> J[답변 Job]
+  J --> T[대화 보관함 연결]
 ```
 
-- 원본 폴더와 지식 폴더는 별도입니다. 지식 폴더 이동으로 원본이 이동하지 않습니다.
-- 지식 폴더는 이름·부모 변경마다 자체 revision이 증가합니다. 오래된 편집은 거절하고 하위 카드·문서·게시 이력은 유지합니다. [코드 대조·검증](folder-update.md).
-- 한 카드에는 여러 버전이 있습니다. 편집은 이전 버전을 바꾸지 않고 새 버전을 추가합니다.
-- 한 버전은 여러 근거를 인용할 수 있고, 같은 근거 복사본을 여러 버전이 공유할 수 있습니다.
-- 검토와 게시는 별도 기록입니다. **최신 초안과 현재 게시본이 다를 수 있습니다.**
-- AI 작업의 원본/결과 카드 ID는 추적용입니다. 카드 삭제로 작업 이력을 함께 지우는 DB 외래 키는 없습니다.
+그림은 개념 관계입니다. 원본 삭제가 근거 Snapshot 삭제로 이어지지 않습니다.
+지식의 DRAFT 버전을 덮어써 상태를 바꾸는 대신 별도 검토/게시 이력을 추가합니다.
 
-## 3. 실제 저장소
+## 실제 코드와 크로스체크
 
-| 저장 내용 | 실제 테이블/저장소 |
-|---|---|
-| 작업 공간·선택 | `workspace`, `app_state` |
-| 자료·수집 위치 | `entry`, `source` |
-| 분석·검색 갱신 대기 | `extracted_document`, `symbol`, `search_outbox` |
-| 지식·버전·근거 | `knowledge_card`, `knowledge_version`, `knowledge_evidence`, `evidence_snapshot` |
-| 검토·게시 | `knowledge_review`, `knowledge_publication` |
-| 지식 폴더·배치 | `knowledge_folder`, `knowledge_placement` |
-| AI 작업 | `generation_job` |
-| 제안 거절·재검토 | `proposal_decision` · 작업별 revision/상태/판단 시 문서 버전/이유/시각 |
-| 제안 전체 채택 | `proposal_acceptance` · 기준/결과/반영 버전·처리 revision·이유·시각 |
-| 반영 방식 | `proposal_acceptance.mode` · FULL=전체 채택, MANUAL=수동 부분 반영. 기존 기록은 FULL로 이관 |
-| 검색 색인 | SQLite와 별도인 로컬 Lucene 파일 |
-
-원본 바이트와 근거 복사본은 현재 SQLite BLOB에 저장합니다. Markdown도 DB의 문자열이며,
-디스크에 `.md` 파일을 자동 생성·내보내는 기능은 아직 없습니다. 카드 제목은 최신 버전에서 가져옵니다.
-
-## 4. 코드와 대조한 결과
-
-| 확인한 설명 | 실제 구현 | 근거 코드 |
+| 규칙 | 실제 구현 | 검증/상세 |
 |---|---|---|
-| 원본 삭제 후에도 지식 근거 보존 | 구현됨. 근거의 원본 ID에 삭제 연쇄 FK 없음 | [DB 정의](../backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java), [지식 저장](../backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcKnowledgeStore.java) |
-| 편집 충돌 방지·이전 버전 유지 | 구현됨. 기대 버전이 다르면 409 | [KnowledgeService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/KnowledgeService.java) |
-| 새 지식 검증 후 게시 | 일부 구현. 사람 검토·인용 번호·최신성 검사, 자동 사실 판정은 없음 | [PublicationService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/PublicationService.java) |
-| AI가 사람이 쓴 글을 갱신 | 별도 AI 카드 생성 후 전체 채택 또는 동일 근거의 수동 부분 반영으로 다음 DRAFT 저장. CURRENT 근거 번호 통합도 구현. 오래된 근거의 새 원본 교체는 예정 | [ProposalAcceptanceService](../backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalAcceptanceService.java) |
-| Source 자동 폴링 | 미구현. 설정 열은 있지만 기본 OFF이며 수동 동기화만 제공 | [SourceService](../backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java) |
-| 질문/검색 때 재분석 | 검색은 기존 색인 조회. 채팅 질문 기능은 아직 없음 | [SearchService](../backend/src/main/java/dev/knowledgeforge/search/application/SearchService.java) |
-| Git 변경 파일만 반영 | 미구현. revision이 같으면 생략, 다르면 전체 수집 스냅샷 교체 | [SourceService](../backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java), [JdbcSourceStore](../backend/src/main/java/dev/knowledgeforge/sources/adapter/JdbcSourceStore.java) |
-| AI 작업 재시작 | 미완료 작업은 INTERRUPTED. 자동 재전송하지 않음 | [DB 복구](../backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java), [작업 서비스](../backend/src/main/java/dev/knowledgeforge/knowledge/application/GenerationJobService.java) |
+| 같은 파일 ID 유지, 변경 파일만 분석 | `SourceService → SnapshotPlanner → JdbcSourceStore` | [증분 반영](incremental-snapshots.md) |
+| Source별 기본 OFF·동시 작업 제한·백오프 | `SourcePolling`, `JdbcSourceStore.beginPoll` | [자동 갱신](source-polling.md) |
+| Git/URL 변경 없으면 재사용 | `GithubCollector`, `UrlCollector`, `PublicHttpReader` | [Git](git-incremental.md), [URL](url-conditional.md) |
+| 수동 편집/이전 버전 보존, 검토 후 게시 | `KnowledgeService`, `PublicationService` | [게시](publication.md), [제안 병합](proposal-merge.md) |
+| 검색과 AI 실행 분리 | `SearchService` vs `AnswerJobService`/`CliAnswerModel` | [답변](answer-jobs.md) |
+| 같은 출처/선언 심볼 연결만 표시 | `RelationSearch → JdbcRelationCatalog` | [관계 탐색](relations.md) |
+| 선택한 이전 문맥만 불변 저장 | `ConversationRequestService`, `StoredAnswerContext` | [문맥](context-requests.md) |
+| 경로 설정은 재시작 적용, 새 승인 필요 | `CliLaunchConfiguration`, `CuratorSettings.executionBinding` | [CLI 설정](cli-launch-settings.md) |
+| 설치형 API 보호·부모 종료 시 Java 정리 | `DesktopBootstrap`, `DesktopSession`, Rust `supervisor` | [설치형 보안](desktop-backend.md) |
 
-**주의:** DB 버전 상태 열은 VERIFIED/PUBLISHED도 허용하지만, 현재 본문 버전은 DRAFT로 보존합니다.
-검토/게시 여부는 별도 테이블을 읽어야 합니다. “DRAFT니까 게시되지 않았다”는 해석은 틀립니다.
-검색의 2초 주기 작업도 외부 Source 폴링이 아니라 **로컬 색인 갱신**입니다.
+마이그레이션의 실제 테이블과 대조한 파일:
+`backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java`.
 
-위 보호 규칙은 `KnowledgeIntegrationTest`, `PublicationIntegrationTest`, `SourceIntegrationTest`,
-`GenerationJobIntegrationTest`, `OrganizationIntegrationTest`, `GenerationComparisonIntegrationTest`와 대조했습니다.
-실제 실행 결과는 [최신 검증](evidence-merge.md), 후속 설계는 [전체 설계도](design-map.md)를 참고하세요.
-
-## 5. 앞으로 더할 모델 — 아직 미구현
-
-현재는 작업의 원래 카드/기준 버전/결과 카드 연결로 [읽기 전용 비교](generation-comparison.md)를 제공합니다.
-거절·재검토는 별도 추가 전용 이력으로 구현했습니다. [모델·코드 대조](proposal-decisions.md).
-충돌 없는 전체 채택은 구현했습니다. [새 초안·채택 이력의 원자적 저장](proposal-acceptance.md). 동일 근거의 [수동 부분 반영](proposal-merge.md)도 구현했습니다. CURRENT 근거의 [번호 통합](evidence-merge.md)도 구현했습니다. 오래된 근거의 새 원본 교체는 아직 없습니다.
-
-| 계획 | 목적 |
-|---|---|
-| 대화 → 질문/답변 → 인용 근거 | 답변마다 무엇을 보고 말했는지 보존 |
-| Source → 동기화 작업 → 변경 파일 | 선택한 Source만 주기적으로 확인하고 변경분 반영 |
-| 원본 변경 → 영향 받는 지식 → 갱신 제안 | 오래된 지식을 표시하되 사람 편집은 덮어쓰지 않기 |
-
-이 표는 방향이며 아직 테이블·API 계약이 아닙니다. 기능 구현 시 확정하고 테스트합니다.
+## 반드시 구분할 것
+- CURRENT는 현재 **로컬 복사본과 일치**한다는 뜻이지 사실·원격 최신성 검증이 아닙니다.
+- 심볼 이름 일치는 함수 호출 관계가 아닙니다. 관계 탐색 결과를 자동으로 AI 근거에 넣지 않습니다.
+- CLI 경로 식별자는 바이너리 내용/서명 검증이 아닙니다.
+- 임시 AI 스트림은 메모리에만 두며 최종 검사 전에는 확정 답변으로 저장하지 않습니다.
+- 영속 Git 캐시, 자동 의미 검증, 비공개 저장소·키체인, 대규모 ArtifactStore는 [후속 로드맵](backlog.md)입니다.

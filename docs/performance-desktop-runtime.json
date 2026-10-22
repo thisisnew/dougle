@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-22T09:44:13.819Z",
+  "measuredAt": "2026-10-22T12:45:44.336Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -56,21 +56,21 @@
     "manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart",
     "explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart"
   ],
-  "sourceSyncMs": 672.9417389999999,
+  "sourceSyncMs": 525.2957179999994,
   "livePublic": [],
-  "startupMs": 9541,
-  "restartMs": 8411,
+  "startupMs": 12022,
+  "restartMs": 6684,
   "upload100": {
-    "p50Ms": 136.0785279999982,
-    "p95Ms": 283.101788999993
+    "p50Ms": 109.31272599999647,
+    "p95Ms": 144.2878950000013
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 4.420595000003232,
-    "p95Ms": 5.434273999999277
+    "p50Ms": 3.2671940000000177,
+    "p95Ms": 4.072520000001532
   },
   "search100Files30Requests": {
-    "p50Ms": 11.242173999999068,
-    "p95Ms": 19.095212999993237
+    "p50Ms": 8.068307999987155,
+    "p95Ms": 13.710181000002194
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance.",
   "launchMode": "bundled Java / desktop session / stdin lifecycle (not native webview)"

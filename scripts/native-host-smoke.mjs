@@ -15,9 +15,10 @@ const processes = []
 const pause = () => new Promise(done => setTimeout(done, 100))
 
 async function table() {
-  const { stdout } = await execute('/bin/ps', ['-axo', 'pid,ppid,comm'])
-  return stdout.split('\n').map(line => line.match(/^\s*(\d+)\s+(\d+)\s+(.+)$/)).filter(Boolean)
-    .map(match => ({ pid: Number(match[1]), parent: Number(match[2]), command: match[3] }))
+  const { stdout } = await execute('/bin/ps', ['-axo', 'pid,ppid,stat,comm'])
+  return stdout.split('\n').map(line => line.match(/^\s*(\d+)\s+(\d+)\s+(\S+)\s+(.+)$/)).filter(Boolean)
+    .filter(match => !match[3].startsWith('Z'))
+    .map(match => ({ pid: Number(match[1]), parent: Number(match[2]), command: match[4] }))
 }
 
 function launch() {

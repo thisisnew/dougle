@@ -87,7 +87,7 @@ public class EvidenceAnswerPreview {
         if (prompt.length() > 20000) throw new LibraryException(413, "JSON을 포함한 요청이 20,000자를 초과합니다. 범위를 좁혀 새 묶음을 만드세요.");
         var binding = json.createObjectNode().put("purpose", "ANSWER_PREVIEW_V2").put("workspaceId", workspaceId)
                 .put("bundleId", id).put("bundleDigest", bundle.digest()).put("provider", provider.name())
-                .put("requestedModel", model).put("prompt", prompt);
+                .put("requestedModel", model).put("executionBinding", settings.executionBinding(provider)).put("prompt", prompt);
         return new Preview(id, bundle.digest(), provider.name(), model, ContentDigest.of(binding.toString()),
                 prompt, prompt.length(), 20000, validation, null);
     }

@@ -7,12 +7,19 @@ import org.springframework.stereotype.Component;
 public class CuratorSettings {
     private final String codexModel;
     private final String claudeModel;
+    private final CliLaunchConfiguration launch;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public CuratorSettings(@Value("${forge.ai.codex-model:}") String codexModel,
-                           @Value("${forge.ai.claude-model:}") String claudeModel) {
+                           @Value("${forge.ai.claude-model:}") String claudeModel, CliLaunchConfiguration launch) {
         this.codexModel = validate(codexModel);
         this.claudeModel = validate(claudeModel);
+        this.launch = launch;
     }
+
+    public CuratorSettings(String codexModel, String claudeModel) { this(codexModel, claudeModel, null); }
+
+    public String executionBinding(CuratorModel.Provider provider) { return launch == null ? "" : launch.binding(provider); }
 
     public String requestedModel(CuratorModel.Provider provider) {
         return provider == CuratorModel.Provider.CODEX ? codexModel : claudeModel;

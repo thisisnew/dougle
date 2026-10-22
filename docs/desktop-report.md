@@ -1,5 +1,7 @@
 # Mac 미리보기 검증 기록
 
+이 문서는 **0.1.0 / DB v18 당시 기록**입니다. 최신 0.1.1 / v21 검증은 [새 보고서](release-0.1.1-report.md)를 확인하세요.
+
 검증일: 2026-10-22. 환경: macOS x86_64, Java 21.0.10, Tauri 2.12.5.
 **Intel Mac용 ad-hoc 서명 미리보기**입니다. Apple 공증·Apple Silicon·Windows 검증은 아닙니다.
 

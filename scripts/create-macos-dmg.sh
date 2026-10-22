@@ -19,9 +19,9 @@ if ! codesign --verify --deep --strict "$staging/Knowledge Forge.app"; then
   exit 1
 fi
 ln -s /Applications "$staging/Applications"
-disk_image="$release/Knowledge Forge_${version}_$(uname -m).dmg"
+disk_image="$release/Knowledge.Forge_${version}_$(uname -m).dmg"
 [[ ! -L "$disk_image" ]] || { echo 'Refusing a symlinked output.' >&2; exit 1; }
 hdiutil create -volname 'Knowledge Forge' -srcfolder "$staging" -format UDZO -ov "$disk_image"
 hdiutil verify "$disk_image"
-(cd "$release" && shasum -a 256 ./*.dmg > SHA256SUMS)
+(cd "$release" && shasum -a 256 "$(basename "$disk_image")" > SHA256SUMS)
 echo "Ad-hoc signed preview artifacts: $release (not Apple notarized)"

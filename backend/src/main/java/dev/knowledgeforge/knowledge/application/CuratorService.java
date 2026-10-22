@@ -102,7 +102,8 @@ public class CuratorService {
         if (prompt.length() > 16000) throw new LibraryException(413, "AI 전송 내용은 16,000자 이하여야 합니다. 근거 범위를 줄이세요.");
         String requestedModel = settings.resolve(provider(provider), selectedModel);
         String binding = source.card().workspaceId() + "\n" + source.card().id() + "\n"
-                + source.card().latestVersion() + "\n" + provider + "\n" + requestedModel + "\n" + prompt;
+                + source.card().latestVersion() + "\n" + provider + "\n" + requestedModel + "\n"
+                + settings.executionBinding(provider(provider)) + "\n" + prompt;
         try {
             String digest = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(binding.getBytes(StandardCharsets.UTF_8)));
             return new Preview(provider, source.card().latestVersion(), digest, prompt, requestedModel);

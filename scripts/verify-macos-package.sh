@@ -2,7 +2,12 @@
 set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 [[ "$(uname -s)" == Darwin ]] || { echo 'macOS GUI session required.' >&2; exit 1; }
-disk_image="${1:-$repo_root/release/Knowledge Forge_0.1.0_$(uname -m).dmg}"
+if [[ $# -gt 0 ]]; then
+  disk_image="$1"
+else
+  version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$repo_root/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Info.plist")"
+  disk_image="$repo_root/release/Knowledge.Forge_${version}_$(uname -m).dmg"
+fi
 [[ -f "$disk_image" ]] || { echo 'Build the DMG first.' >&2; exit 1; }
 temporary="$(mktemp -d "${TMPDIR:-/tmp}/forge-package-qa.XXXXXX")"
 mounted=false

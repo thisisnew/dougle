@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, Library, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { Button } from './components/ui/button'
@@ -7,6 +7,7 @@ import SourcePanel from './SourcePanel'
 import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import KnowledgePanel from './KnowledgePanel'
+const CliLaunchPanel = lazy(() => import('./CliLaunchPanel'))
 
 type Modal = { kind: 'workspace' | 'folder' } | { kind: 'delete-workspace' } | { kind: 'delete-entry'; entry: Entry }
 const emptySession: Session = { workspaces: [], activeWorkspaceId: null }
@@ -24,6 +25,7 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [modal, setModal] = useState<Modal | null>(null)
+  const [cliSettingsOpen, setCliSettingsOpen] = useState(false)
   const [name, setName] = useState('')
   const [modalError, setModalError] = useState('')
   const [revision, setRevision] = useState(0)
@@ -186,7 +188,8 @@ export default function App() {
       </aside>
 
       <main>
-        <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><span className="local-badge"><i /> LOCAL WORKSPACE</span></header>
+        <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><Button variant="outline" size="sm" disabled={!ready} onClick={() => setCliSettingsOpen(true)}>CLI 경로 설정</Button><span className="local-badge"><i /> LOCAL WORKSPACE</span></header>
+        {cliSettingsOpen && <Suspense fallback={<p role="status">CLI 설정을 여는 중…</p>}><CliLaunchPanel onClose={() => setCliSettingsOpen(false)} /></Suspense>}
         <div className="page-content">
           <div className="page-heading">
             <div><p className="eyebrow">YOUR KNOWLEDGE, IN ONE PLACE</p><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '지식의 출발점이 되는 파일과 폴더를 한곳에서 관리하세요.' : '원본과 독립적으로 보존되는 근거 연결 초안입니다. 아직 미검증 상태입니다.'}</p></div>

@@ -36,10 +36,9 @@ public class CliCuratorModel implements CuratorModel {
     private final String codexStreamHome;
 
     @Autowired
-    public CliCuratorModel(@Value("${forge.ai.codex-command:codex}") String codex,
-                           @Value("${forge.ai.claude-command:claude}") String claude, CuratorSettings settings,
+    public CliCuratorModel(dev.knowledgeforge.knowledge.application.CliLaunchConfiguration launch, CuratorSettings settings,
                            @Value("${forge.ai.codex-stream-home:}") String codexStreamHome) {
-        this(codex, claude, Duration.ofSeconds(120), settings, codexStreamHome);
+        this(launch.command(Provider.CODEX), launch.command(Provider.CLAUDE), Duration.ofSeconds(120), settings, codexStreamHome);
     }
 
     CliCuratorModel(String codex, String claude) {
@@ -167,6 +166,7 @@ public class CliCuratorModel implements CuratorModel {
         ProcessBuilder builder = new ProcessBuilder(command).directory(directory.toFile());
         builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
                 "SYSTEMROOT", "SystemRoot", "WINDIR", "CODEX_HOME"));
+        CliProcessPath.includeCommandDirectory(builder);
         Process process = builder.start();
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
         var executor = Executors.newVirtualThreadPerTaskExecutor();

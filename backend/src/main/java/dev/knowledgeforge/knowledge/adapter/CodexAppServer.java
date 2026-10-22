@@ -119,6 +119,7 @@ final class CodexAppServer {
     private String run(Path profile, Path directory, String prompt, String model, Consumer<String> text) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(command()).directory(directory.toFile());
         builder.environment().keySet().retainAll(Set.of("PATH", "USER", "LOGNAME", "LANG", "LC_ALL"));
+        CliProcessPath.includeCommandDirectory(builder);
         builder.environment().put("HOME", directory.toString());
         builder.environment().put("XDG_CONFIG_HOME", directory.toString());
         builder.environment().put("TMPDIR", directory.toString());
