@@ -1,32 +1,26 @@
 # Knowledge Forge
 
-**[Intel Mac 설치 파일 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)** — Java 포함, 미공증 미리보기입니다. [설치 안내](docs/macos-install.md)를 먼저 확인하세요.
+PC에 자료와 지식을 독립적으로 보관하는 **로컬 지식 서재**입니다.
+파일·폴더·웹·GitHub를 수집하고, 근거를 확인한 뒤 승인 기반 CLI AI로 질문합니다.
 
-개발 소스 최신: [Source별 선택적 자동 갱신](docs/source-polling.md)(v19). 앱 실행 중 예약 수집·실패 재시도를 지원합니다. 미리보기 v0.1.0-preview.1 설치 파일은 이 기능 이전의 v18 빌드입니다.
+**[Intel Mac 설치 파일 받기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.0-preview.1)** — Java 포함, Apple 미공증 미리보기입니다. [설치 안내](docs/macos-install.md)를 먼저 확인하세요.
 
-**Intel Mac 미리보기 DMG를 빌드하고 설치 복사본을 검증했습니다.** Java가 포함됩니다. 아직 Apple 공증은 없으며 관계 검색 등 제품 기능은 개발 중입니다. [설치 안내](docs/macos-install.md) · [검증 결과·한계](docs/desktop-report.md).
+## 한눈에 보기
 
-최신 추가: [문맥을 이어 질문하기](docs/context-requests.md). 이전 답변을 직접 선택해 고정 저장한 뒤, 별도 승인·전송으로 새 답변을 만듭니다. [변경 파일만 재분석](docs/incremental-snapshots.md)과 [설치형 인증 기반](docs/desktop-backend.md)도 구현했습니다.
+| 구분 | 상태 |
+|---|---|
+| 공개 설치 파일 | v0.1.0-preview.1 / DB v18 / Intel Mac |
+| 최신 개발 소스 | DB v20 / 설치 파일보다 최신 |
+| 구현 | Workspace·자료 탐색, 문서/Java 분석·검색, 지식 편집·검토·게시, 승인 기반 AI·SSE·문맥 이어 질문 |
+| 이번 추가 | [Source 자동 갱신](docs/source-polling.md), [Git 변경 blob 수집](docs/git-incremental.md), [URL 조건부 수집](docs/url-conditional.md) |
+| 다음 핵심 | 관계 검색, 설치형 CLI 설정 UX, 최신 설치 파일·전체 회귀 |
+| 별도 검증 | 실제 외부 AI 호환성, Apple 공증·Apple Silicon·Windows |
 
-PC에 원본 자료와 지식을 독립적으로 보관하는 로컬 지식 서재입니다.
-현재 산출물은 **수집·검색·근거 연결 지식 문서 + 승인 기반 CLI AI 초안·질문·SSE 답변**입니다.
+자동 갱신은 기본 OFF입니다. 외부 AI 전송은 건별 승인이 필요하며, 사람이 편집한 지식을 자동으로 덮어쓰지 않습니다.
+현재 코딩 대화를 앱이 공유하는 것이 아니라 로그인된 Codex/Claude Code CLI에 새 요청을 보냅니다.
 
-### 한눈에 보는 현재와 다음 단계
-
-최신 화면: [대화 보관함](docs/conversations.md). 완료 답변을 정리하고, 별도 문맥 선택·승인을 통해 질문을 이어갑니다. 보관함 조회 자체는 AI를 호출하지 않습니다.
-
-최신 연결: [Codex 선택적 스트리밍](docs/codex-streaming.md). 전용 로그인 폴더를 지정하면 중간 출력을 표시합니다. 기본값은 기존 완료 답변이며 실제 서비스 생성 검증은 별도입니다.
-
-이전 개선: [Claude 생성 중 임시 출력](docs/partial-answer.md). 미검증 텍스트를 표시하고, 검사된 최종 답변만 저장합니다. 실패·중단 때 임시 글을 지웁니다. 다중 대화는 남았습니다. 검증은 fake CLI이며 실제 외부 모델 검증과 구분합니다.
-
-다음 핵심은 **Git 네트워크 증분과 설치형 CLI 설정 UX**입니다. 관계 검색·실제 AI 서비스 호환성 검증도 남아 있습니다. 비공개 저장소·대용량·자동 의미 검증 등 운영 확장은 별도입니다.
-
-**수집 → 분석 → 검색 → 수동/AI 초안 → 사람 검토·명시적 게시, 근거 기반 질문·SSE 답변까지 구현했습니다. 실제 외부 AI 검증과 가상 CLI 테스트는 구분합니다.**
-
-➡️ **[현재 구현과 앞으로의 설계도 보기](docs/design-map.md)** — 전체 구조, 데이터 흐름, 지식 게시 과정, SSE 순서
-
-처음 읽는다면 **[쉬운 작동 원리·사용법](docs/how-it-works.md)** → **[모델링·코드 대조표](docs/modeling.md)** 순서로 보세요.
-설치 파일은 `release/`에 생성합니다. [Mac 설치형 준비 기준](docs/desktop-preview.md)에서 통과한 항목과 남은 검증을 구분합니다.
+처음 읽기: **[쉬운 사용법](docs/how-it-works.md)** → **[그림 설계도](docs/design-map.md)** → **[모델과 실제 코드 대조](docs/modeling.md)**.
+개발 이어가기: [HANDOFF](HANDOFF.md) · [미완료 체크리스트](docs/backlog.md) · [설치 검증 범위](docs/desktop-report.md).
 
 ## 구현 범위
 
@@ -45,10 +39,10 @@ PC에 원본 자료와 지식을 독립적으로 보관하는 로컬 지식 서�
 - Lucene 10 + Nori로 내용·파일명·심볼 검색, 여러 사용자 지정 도메인 동시 검색
 - SQLite 분석 결과/심볼 저장, 내구성 있는 인덱스 갱신 큐, 재시작 시 인덱스 복원
 
-자동 의미 검증과 Git 네트워크 증분 수집은 후속 범위입니다. 현재는 전체 수집본에서 변경 파일만 분석·반영합니다. 데스크톱은 Intel Mac 미리보기 패키지 단계입니다.
+자동 의미 검증과 영속 Git 캐시/브랜치 선택은 후속 범위입니다. 현재는 전체 수집본에서 변경 파일만 분석·반영합니다. 데스크톱은 Intel Mac 미리보기 패키지 단계입니다.
 불변 초안은 DRAFT이며 검토/게시 이력을 별도로 보존합니다. 사람 검토와 명시적 게시를 지원하지만 자동 사실 검증은 아닙니다. [사용법·한계](docs/publication.md).
 
-최신 DB 스키마는 v19입니다. 업데이트 전 앱을 종료하고 데이터 디렉터리를 백업하세요.
+최신 DB 스키마는 v20입니다. 업데이트 전 앱을 종료하고 데이터 디렉터리를 백업하세요.
 
 지식 근거의 **현재 원본에서 보기**로 원본 폴더·미리보기로 이동할 수 있습니다.
 동기화 후 위치 해석과 삭제/변경 경고는 [출처 탐색 가이드](docs/evidence-navigation.md)를 참고하세요. 독립 지식 폴더·카드 배치도 지원합니다. [사용법](docs/knowledge-folders.md).

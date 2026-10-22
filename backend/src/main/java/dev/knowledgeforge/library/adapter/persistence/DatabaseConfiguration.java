@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 19) {
+        if (version > 20) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -434,6 +434,19 @@ public class DatabaseConfiguration {
                         jdbc.execute("ALTER TABLE source ADD COLUMN polling_revision INTEGER NOT NULL DEFAULT 0");
                         jdbc.execute("CREATE INDEX source_poll_due ON source(next_poll_at) WHERE polling_enabled=1");
                         jdbc.execute("PRAGMA user_version=19");
+                    });
+        }
+        if (version < 20) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE source_http_cache (
+                                  source_id TEXT PRIMARY KEY REFERENCES source(id) ON DELETE CASCADE,
+                                  uri TEXT NOT NULL, etag TEXT, last_modified TEXT
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=20");
                     });
         }
         jdbc.update("UPDATE source SET status='ERROR',error='이전 동기화가 중단되었습니다. 다시 동기화하세요.' WHERE status='SYNCING'");

@@ -91,6 +91,18 @@ public class JdbcSourceStore implements SourceStore {
         return hashes;
     }
 
+    @Transactional(readOnly = true)
+    public Optional<CollectedSnapshot> snapshot(String workspaceId, String id) {
+        return find(workspaceId, id).filter(source -> source.revision() != null).map(source -> {
+            var files = jdbc.query("SELECT relative_path,content FROM entry WHERE workspace_id=? AND source_id=? AND kind='FILE' ORDER BY relative_path",
+                    (result, row) -> new CollectedSnapshot.File(result.getString("relative_path"), result.getBytes("content")), workspaceId, id);
+            var validators = jdbc.query("SELECT uri,etag,last_modified FROM source_http_cache WHERE source_id=?",
+                    (result, row) -> new dev.knowledgeforge.sources.domain.HttpValidators(result.getString("uri"),
+                            result.getString("etag"), result.getString("last_modified")), id).stream().findFirst().orElse(null);
+            return new CollectedSnapshot(source.revision(), CollectionLimits.snapshot(files).files(), validators);
+        });
+    }
+
     @Transactional
     public void publish(Source source, CollectedSnapshot snapshot, Map<String, Analysis> extracted) {
         Source current = find(source.workspaceId(), source.id()).orElseThrow(() -> new LibraryException(404, "삭제된 Source입니다."));
@@ -143,6 +155,12 @@ public class JdbcSourceStore implements SourceStore {
                         file.content().length, file.content(), plan.hashes().get(file.path()), id);
             }
             analyses.save(id, extracted.get(file.path()));
+        }
+        jdbc.update("DELETE FROM source_http_cache WHERE source_id=?", source.id());
+        if (snapshot.validators() != null && "URL".equals(source.kind())) {
+            var validators = snapshot.validators();
+            jdbc.update("INSERT INTO source_http_cache(source_id,uri,etag,last_modified) VALUES(?,?,?,?)",
+                    source.id(), validators.uri(), validators.etag(), validators.lastModified());
         }
         jdbc.update("""
                 UPDATE source SET status='READY',revision=?,error=NULL,synced_at=?,consecutive_failures=0,

@@ -1,5 +1,9 @@
 # Knowledge Forge — 한눈에 보는 설계도
 
+URL: **본문 + 서버 확인표 보관 → 다음 조건부 요청 → 304 재사용 / 200 변경 분석 → 함께 저장**. [모델·보안 규칙](url-conditional.md).
+
+GitHub: **commit 확인 → 같으면 clone 생략 / 다르면 tree 확인 → 기존 blob 재사용 + 새 blob 수집 → 변경 분석**. [코드·한계](git-incremental.md).
+
 Source 자동 갱신: **명시적 ON 저장 → 예약(DB) → 최대 2개 수집 → 바뀐 파일 분석 → 원자적 반영 → 검색 갱신**. AI·지식 편집은 자동 실행하지 않습니다. [모델·코드 대조](source-polling.md).
 
 현재 설치형: **Intel Mac DMG → Tauri 창 → 동봉 Java 21 → 인증된 React/API → SQLite·Lucene**. 앱 종료 시 Java를 종료하고 자료는 OS 앱 데이터 폴더에 남깁니다. [검증 결과와 아직 남은 것](desktop-report.md).

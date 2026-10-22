@@ -1,6 +1,6 @@
 # 남은 개발 작업 — 다른 PC 인수인계
 
-최신 추가: v19 [Source별 자동 갱신](source-polling.md). 설정/API/UI·영속 예약·중복 방지·실패 백오프 구현. Git 네트워크 증분·HTTP 조건부 요청은 여전히 남습니다. v0.1.0-preview.1 DMG는 이 변경 이전의 v18 빌드입니다.
+최신 추가: v19 [Source별 자동 갱신](source-polling.md), [Git 변경 blob 수집](git-incremental.md). [URL 조건부 요청](url-conditional.md)도 v20에 추가했습니다. 영속 Git 캐시/브랜치 선택은 남습니다. v0.1.0-preview.1 DMG는 이 변경 이전의 v18 빌드입니다.
 
 기준: 2026-10-22, v18 문맥 실행·변경 파일 분석·설치형 인증 기반 추가. 체크되지 않은 항목은 **미완료 또는 일부 구현**입니다.
 Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 아닙니다.
@@ -10,7 +10,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 ## 권장 순서와 공통 완료 조건
 
 - P4 [문맥 고정·승인·다중 턴 실행](context-requests.md)을 구현했습니다. [전용 Codex 실행기](codex-streaming.md)의 실제 서비스 호환성 검증은 별도 승인이 필요합니다.
-- P5 [파일 단위 증분 분석/반영](incremental-snapshots.md) 완료. 전체 수집 자체는 유지하므로 Git 네트워크 증분·URL 조건부 요청·선택적 폴링은 남았습니다.
+- P5 [파일 단위 증분 분석/반영](incremental-snapshots.md), [선택적 폴링](source-polling.md), [Git blob 재사용](git-incremental.md) 구현. [URL 조건부 요청](url-conditional.md)도 구현했습니다. 영속 Git 캐시는 남았습니다.
 - P6 [설치형 인증·종료 감시와 인증 fetch/SSE/다운로드](desktop-backend.md), 네이티브 호스트·동봉 Java·Intel DMG 설치 복사본 검증 완료. [검증 범위](desktop-report.md). CLI 탐색 설정·백업/복구·전체 클릭 회귀·공증은 남았습니다.
 
 - 원본 검색의 단어 주변 미리보기·추출 텍스트 행 범위·본문 일치 구분은 구현했습니다. [검증/제한](search-evidence.md).
@@ -118,20 +118,22 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ## Phase 5 — 선택적 폴링·증분·무효화
 
-- [ ] **P5-1: Source 설정 API/UI.** 자동 폴링 기본 OFF, Source별 ON/OFF·주기·다음 실행 시각,
-  입력 검증과 재시작 복원. 현재 DB 필드는 있지만 설정 API/UI 및 외부 폴링은 없음.
-  OFF Source에 외부 호출이 전혀 없는지 테스트. 2초 outbox 소비는 Source 폴링이 아님.
+- [x] **P5-1: Source 설정 API/UI.** 자동 폴링 기본 OFF, Source별 ON/OFF·주기·다음 실행 시각,
+  입력 검증과 재시작 복원. v19 [설계·테스트·실제 예약 검증](source-polling.md).
+  OFF는 새 자동 수집을 막고 이미 시작한 작업은 완료할 수 있음. outbox 소비와 Source 폴링은 별도.
 - [ ] **P5-2: 작업 수명주기.** 수동/자동 작업 충돌 방지, 취소/진행률,
   오류 분류·backoff·rate limit·재시도·종료/재시작 복구와 상태 UI.
+  구현: 단일 선점·최대 자동 작업 2개·지수 백오프·재시작 예약 복원·오류 표시. 세부 진행률·사용자 수집 취소·서버 Retry-After 해석은 남음.
 - [ ] **P5-3: Git 증분.** 이전/새 commit 비교, 추가·변경·삭제·이름 변경만 추출/색인,
   branch 변경/force push/불완전한 이력 처리, 변경 없는 경우 멱등성 유지.
-  현재는 얕은 clone의 전체 스냅샷 교체이며 Git diff 구현은 없음.
+  구현: [같은 SHA clone 생략·변경 blob만 읽기](git-incremental.md), 기존 ID 보존·변경 파일 분석.
+  로컬 partial clone에서 재사용 blob이 다운로드되지 않음을 검증. 영속 Git 캐시/명시적 git diff·브랜치 선택은 남음.
 - [ ] **P5-4: 원본 이력·지식 무효화.** 불변 revision 보관/정리 정책,
   변경된 근거에서 관련 지식만 stale 처리, 새 버전 검증 후 게시.
   인간 편집은 자동 덮어쓰기 대신 변경 제안/충돌 해결.
   Source 삭제·재등록, 부분 실패, DB/Lucene 중단 복구 테스트.
-- [ ] **P5-5: URL 조건부 수집.** ETag/Last-Modified, 304 처리, 삭제/이동/실패 정책,
-  리다이렉트마다 기존 SSRF 방어 유지. 저장소 Workflow는 수정하지 않기.
+- [x] **P5-5: URL 조건부 수집.** ETag/Last-Modified, 304 처리, 삭제/이동/실패 정책,
+  리다이렉트마다 기존 SSRF 방어 유지. [v20 모델·검증](url-conditional.md). 저장소 Workflow는 수정하지 않음.
 
 ## Phase 2 운영 확장 / 공통 기술 부채
 

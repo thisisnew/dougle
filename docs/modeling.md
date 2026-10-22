@@ -1,5 +1,9 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+v20 `source_http_cache`는 Source의 마지막 성공 URL·ETag·Last-Modified를 보관합니다. 원본과 같은 트랜잭션으로 갱신하고 Source 삭제 시 함께 지웁니다. [실제 코드 대조](url-conditional.md).
+
+Git 재수집은 기존 `source.revision` + `entry.content`에서 Git blob ID를 계산해 재사용합니다. 별도 Git 캐시 테이블 없이 새 tree의 경로·blob과 대조합니다. [모델과 실제 코드](git-incremental.md).
+
 v19 Source는 **자동 갱신 ON/OFF + 주기 + 다음 예약 + 실패 횟수 + 설정 revision**을 보관합니다. 예약 선점은 DB에서, 실행은 최대 2개 작업자로, 결과 반영은 트랜잭션으로 처리합니다. [코드 대조·쉬운 설명](source-polling.md). AI 자동 호출은 없습니다.
 
 설치 앱은 **Tauri 호스트 → 동봉 Java/Spring → SQLite·Lucene** 구조입니다. 호스트는 실행별 토큰을 메모리/파이프로 전달하고 UI는 인증 헤더로 통신합니다. 앱 창에 DB 파일/셸 접근 권한을 주지 않습니다. [실제 코드·수명주기 대조](../desktop/README.md), [검증](desktop-report.md).

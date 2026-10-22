@@ -73,6 +73,62 @@ class SourceIntegrationTest {
     }
 
     @Test
+    void url304ReusesPersistedBytesAndFailedCollectionPreservesValidators() throws Exception {
+        String workspace = library.createWorkspace("Conditional synthetic URL").id();
+        URI uri = URI.create("https://example.org/synthetic.txt");
+        var validators = new dev.knowledgeforge.sources.domain.HttpValidators(uri.toString(), "\"synthetic\"", null);
+        byte[] content = "synthetic conditional document".getBytes(StandardCharsets.UTF_8);
+        when(remote.read(uri)).thenReturn(new RemoteReader.Response(uri, "text/plain", content, false, validators));
+        Source source = sources.create(workspace, "Conditional", "URL", uri.toString(), "");
+        Source first = sources.sync(workspace, source.id());
+        assertThat(first.status()).isEqualTo("READY");
+        String original = entryId(source.id(), "synthetic.txt");
+        clearInvocations(analyzer);
+        when(remote.read(uri, validators)).thenReturn(new RemoteReader.Response(uri, null, new byte[0], true, validators));
+        Source unchanged = sources.sync(workspace, source.id());
+        assertThat(unchanged.status()).isEqualTo("READY");
+        assertThat(unchanged.revision()).isEqualTo(first.revision());
+        assertThat(entryId(source.id(), "synthetic.txt")).isEqualTo(original);
+        verify(analyzer, never()).analyze(anyString(), any());
+        when(remote.read(uri, validators)).thenThrow(new java.io.IOException("synthetic network failure"));
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("ERROR");
+        assertThat(sourceStore.snapshot(workspace, source.id()).orElseThrow().validators()).isEqualTo(validators);
+        doReturn(new RemoteReader.Response(uri, "text/plain", "new synthetic".getBytes(StandardCharsets.UTF_8))).when(remote).read(uri, validators);
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("READY");
+        assertThat(sourceStore.snapshot(workspace, source.id()).orElseThrow().validators()).isNull();
+        assertThat(entryId(source.id(), "synthetic.txt")).isEqualTo(original);
+        sources.delete(workspace, source.id());
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM source_http_cache", Integer.class)).isZero();
+    }
+
+    @Test
+    void incrementalCollectorReceivesOnlyItsCommittedSnapshotAfterClaim() {
+        String workspace = library.createWorkspace("Synthetic incremental collector").id();
+        var seen = new java.util.concurrent.atomic.AtomicReference<dev.knowledgeforge.sources.domain.CollectedSnapshot>();
+        Collector collector = new Collector() {
+            public String kind() { return "GITHUB"; }
+            public void validate(String location) {}
+            public boolean usesPreviousSnapshot() { return true; }
+            public dev.knowledgeforge.sources.domain.CollectedSnapshot collect(String location) { throw new AssertionError("Baseline required"); }
+            public dev.knowledgeforge.sources.domain.CollectedSnapshot collect(String location, dev.knowledgeforge.sources.domain.CollectedSnapshot previous) {
+                seen.set(previous);
+                return new dev.knowledgeforge.sources.domain.CollectedSnapshot("a".repeat(40), List.of(
+                        new dev.knowledgeforge.sources.domain.CollectedSnapshot.File("synthetic.txt", "synthetic source".getBytes(StandardCharsets.UTF_8))));
+            }
+        };
+        SourceService service = new SourceService(sourceStore, libraryStore, List.of(collector), analyzer);
+        Source source = service.create(workspace, "Incremental", "GITHUB", "https://github.com/example/synthetic", "");
+        assertThat(service.sync(workspace, source.id()).status()).isEqualTo("READY");
+        assertThat(seen.get()).isNull();
+        String original = entryId(source.id(), "synthetic.txt");
+        assertThat(service.sync(workspace, source.id()).status()).isEqualTo("READY");
+        assertThat(seen.get().revision()).isEqualTo("a".repeat(40));
+        assertThat(seen.get().files()).hasSize(1);
+        assertThat(seen.get().files().get(0).content()).isEqualTo("synthetic source".getBytes(StandardCharsets.UTF_8));
+        assertThat(entryId(source.id(), "synthetic.txt")).isEqualTo(original);
+    }
+
+    @Test
     void changedRevisionPreservesUnchangedRowsAndAnalyzesOnlyChangedFiles() throws Exception {
         String workspace = library.createWorkspace("Incremental synthetic").id();
         Files.createDirectories(fixture.resolve("keep"));

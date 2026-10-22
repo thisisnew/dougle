@@ -80,7 +80,10 @@ public class SourceService {
         try {
             source = require(workspaceId, id);
             var baseline = store.fileHashes(workspaceId, id);
-            var snapshot = collector(source.kind()).collect(source.location());
+            var collector = collector(source.kind());
+            var snapshot = collector.usesPreviousSnapshot()
+                    ? collector.collect(source.location(), store.snapshot(workspaceId, id).orElse(null))
+                    : collector.collect(source.location());
             Map<String, Analysis> analyses = new HashMap<>();
             var plan = SnapshotPlanner.plan(snapshot, baseline);
             for (var file : plan.changed()) {

@@ -19,6 +19,19 @@ class CollectorTest {
     @TempDir Path directory;
 
     @Test
+    void urlCannotReuse304WithoutTheMatchingStoredFinalUri() throws Exception {
+        RemoteReader remote = mock(RemoteReader.class);
+        URI uri = URI.create("https://example.org/document");
+        when(remote.read(uri)).thenReturn(new RemoteReader.Response(uri, null, new byte[0], true, null));
+        UrlCollector collector = new UrlCollector(remote);
+        assertThatThrownBy(() -> collector.collect(uri.toString())).isInstanceOf(LibraryException.class).hasMessageContaining("304");
+        var validators = new dev.knowledgeforge.sources.domain.HttpValidators(uri.toString(), "\"synthetic\"", null);
+        var previous = new CollectedSnapshot("previous", List.of(new CollectedSnapshot.File("document", new byte[] {1})), validators);
+        when(remote.read(uri, validators)).thenReturn(new RemoteReader.Response(URI.create("https://example.net/other"), null, new byte[0], true, validators));
+        assertThatThrownBy(() -> collector.collect(uri.toString(), previous)).isInstanceOf(LibraryException.class).hasMessageContaining("304");
+    }
+
+    @Test
     void localCollectorRejectsLinksAndSpecialPaths() throws Exception {
         var collector = new LocalFolderCollector();
         assertThatThrownBy(() -> collector.validate("../relative")).isInstanceOf(LibraryException.class);
@@ -107,5 +120,105 @@ class CollectorTest {
         assertThatThrownBy(() -> collector.collect("https://github.com/example/synthetic"))
                 .isInstanceOf(LibraryException.class).hasMessageContaining("변경");
         verify(remote).read(api);
+    }
+
+    @Test
+    void sameGithubCommitUsesStoredSnapshotWithoutCloning() throws Exception {
+        RemoteReader remote = mock(RemoteReader.class);
+        GitRunner git = mock(GitRunner.class);
+        String revision = "a".repeat(40);
+        URI api = URI.create("https://api.github.com/repos/example/synthetic/commits?per_page=1");
+        when(remote.read(api)).thenReturn(new RemoteReader.Response(api, "application/json",
+                ("[{\"sha\":\"" + revision + "\"}]").getBytes(StandardCharsets.UTF_8)));
+        var previous = new CollectedSnapshot(revision, List.of(new CollectedSnapshot.File("synthetic.txt", new byte[] {1})));
+        assertThat(new GithubCollector(remote, git).collect("https://github.com/example/synthetic", previous)).isSameAs(previous);
+        verifyNoInteractions(git);
+    }
+
+    @Test
+    void changedGitTreeReusesUnchangedAndRenamedBlobsAndDropsDeletedPaths() throws Exception {
+        GitRunner runner = spy(new GitRunner());
+        runner.run(directory, 4096, "init", "--quiet");
+        Files.writeString(directory.resolve("stable.txt"), "stable synthetic");
+        Files.writeString(directory.resolve("rename.txt"), "rename synthetic");
+        Files.writeString(directory.resolve("edit.txt"), "old synthetic");
+        Files.writeString(directory.resolve("delete.txt"), "deleted synthetic");
+        String first = commitFixture(runner);
+        GithubCollector collector = new GithubCollector(mock(RemoteReader.class), runner);
+        var previous = collector.readSnapshot(directory, first);
+        Files.move(directory.resolve("rename.txt"), directory.resolve("renamed.txt"));
+        Files.delete(directory.resolve("delete.txt"));
+        Files.writeString(directory.resolve("edit.txt"), "new synthetic");
+        String second = commitFixture(runner);
+        clearInvocations(runner);
+        var collected = collector.readSnapshot(directory, second, previous);
+        assertThat(collected.revision()).isEqualTo(second);
+        assertThat(collected.files()).extracting(CollectedSnapshot.File::path).containsExactly("edit.txt", "renamed.txt", "stable.txt");
+        assertThat(new String(collected.files().get(0).content(), StandardCharsets.UTF_8)).isEqualTo("new synthetic");
+        verify(runner).run(directory, 1024 * 1024, "ls-tree", "-rz", second);
+        verify(runner, times(2)).run(eq(directory), anyInt(), eq("cat-file"), anyString(), anyString());
+        clearInvocations(runner);
+        collector.readSnapshot(directory, second, collected);
+        verify(runner, never()).run(eq(directory), anyInt(), eq("cat-file"), anyString(), anyString());
+    }
+
+    @Test
+    void gitRejectsMismatchedBlobAndLinksBeforePublishing() throws Exception {
+        GitRunner runner = mock(GitRunner.class);
+        String revision = "a".repeat(40);
+        String blob = "b".repeat(40);
+        when(runner.run(directory, 1024 * 1024, "ls-tree", "-rz", revision))
+                .thenReturn(("100644 blob " + blob + "\tfile.txt\u0000").getBytes(StandardCharsets.UTF_8));
+        when(runner.run(directory, 32, "cat-file", "-s", blob)).thenReturn("1".getBytes(StandardCharsets.UTF_8));
+        when(runner.run(directory, CollectionLimits.MAX_FILE, "cat-file", "blob", blob)).thenReturn(new byte[] {1});
+        GithubCollector collector = new GithubCollector(mock(RemoteReader.class), runner);
+        assertThatThrownBy(() -> collector.readSnapshot(directory, revision)).isInstanceOf(LibraryException.class).hasMessageContaining("해시");
+        when(runner.run(directory, 1024 * 1024, "ls-tree", "-rz", revision))
+                .thenReturn(("120000 blob " + blob + "\tlink\u0000").getBytes(StandardCharsets.UTF_8));
+        assertThatThrownBy(() -> collector.readSnapshot(directory, revision)).isInstanceOf(LibraryException.class).hasMessageContaining("링크");
+    }
+
+    private String commitFixture(GitRunner runner) throws Exception {
+        runner.run(directory, 4096, "add", "--", ".");
+        runner.run(directory, 4096, "-c", "user.name=Synthetic", "-c", "user.email=synthetic@example.test",
+                "-c", "commit.gpgsign=false", "commit", "--quiet", "-m", "Synthetic incremental fixture");
+        return new String(runner.run(directory, 1024, "rev-parse", "HEAD"), StandardCharsets.UTF_8).strip();
+    }
+
+    @Test
+    void partialCloneLeavesUnchangedBlobMissingOnTheWire() throws Exception {
+        GitRunner runner = new GitRunner();
+        runner.run(directory, 4096, "init", "--quiet");
+        runner.run(directory, 4096, "config", "uploadpack.allowFilter", "true");
+        Files.writeString(directory.resolve("stable.txt"), "stable synthetic partial clone");
+        Files.writeString(directory.resolve("edit.txt"), "old synthetic partial clone");
+        String first = commitFixture(runner);
+        var previous = new GithubCollector(mock(RemoteReader.class), runner).readSnapshot(directory, first);
+        String stableBlob = new String(runner.run(directory, 1024, "rev-parse", first + ":stable.txt"), StandardCharsets.UTF_8).strip();
+        Files.writeString(directory.resolve("edit.txt"), "new synthetic partial clone");
+        String second = commitFixture(runner);
+        var missing = new java.util.concurrent.atomic.AtomicReference<String>();
+        GitRunner transportFixture = new GitRunner() {
+            public byte[] run(Path working, int limit, String... arguments) throws Exception {
+                var safeArguments = new java.util.ArrayList<String>(List.of("-c", "protocol.file.allow=always"));
+                for (String argument : arguments) {
+                    safeArguments.add(argument.equals("https://github.com/example/synthetic.git") ? directory.toUri().toString() : argument);
+                }
+                byte[] result = super.run(working, limit, safeArguments.toArray(String[]::new));
+                if (arguments.length > 1 && arguments[0].equals("cat-file") && arguments[1].equals("blob")) {
+                    missing.set(new String(super.run(working, 65536, "rev-list", "--objects", "--all", "--missing=print"), StandardCharsets.UTF_8));
+                }
+                return result;
+            }
+        };
+        RemoteReader remote = mock(RemoteReader.class);
+        URI api = URI.create("https://api.github.com/repos/example/synthetic/commits?per_page=1");
+        when(remote.read(api)).thenReturn(new RemoteReader.Response(api, "application/json",
+                ("[{\"sha\":\"" + second + "\"}]").getBytes(StandardCharsets.UTF_8)));
+        var result = new GithubCollector(remote, transportFixture).collect("https://github.com/example/synthetic", previous);
+        assertThat(result.revision()).isEqualTo(second);
+        assertThat(result.files()).hasSize(2);
+        assertThat(missing.get()).contains("?" + stableBlob);
+        assertThat(new String(result.files().get(0).content(), StandardCharsets.UTF_8)).isEqualTo("new synthetic partial clone");
     }
 }

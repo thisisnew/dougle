@@ -13,6 +13,100 @@ import static org.mockito.Mockito.*;
 class PublicHttpReaderTest {
     @Test
     @SuppressWarnings("unchecked")
+    void redirectNeverForwardsValidatorsToAnotherOrigin() throws Exception {
+        CloseableHttpClient client = mock(CloseableHttpClient.class);
+        URI uri = URI.create("https://example.org/document");
+        var validators = new dev.knowledgeforge.sources.domain.HttpValidators(uri.toString(), "\"synthetic\"", null);
+        when(client.execute(any(ClassicHttpRequest.class), any(HttpClientResponseHandler.class))).thenAnswer(invocation -> {
+            ClassicHttpRequest request = invocation.getArgument(0);
+            boolean first = request.getUri().equals(uri);
+            var response = new BasicClassicHttpResponse(first ? 302 : 304);
+            if (first) {
+                assertThat(request.getFirstHeader("If-None-Match").getValue()).isEqualTo(validators.etag());
+                response.addHeader("Location", "https://example.net/moved");
+            } else {
+                assertThat(request.getFirstHeader("If-None-Match")).isNull();
+                assertThat(request.getFirstHeader("If-Modified-Since")).isNull();
+            }
+            HttpClientResponseHandler<Object> handler = invocation.getArgument(1);
+            return handler.handleResponse(response);
+        });
+        try (var reader = new PublicHttpReader(client)) {
+            assertThatThrownBy(() -> reader.read(uri, validators)).isInstanceOf(LibraryException.class).hasMessageContaining("304");
+        }
+    }
+    @Test
+    @SuppressWarnings("unchecked")
+    void validatorsAreSentOnlyToTheirExactUriAnd304RetainsThem() throws Exception {
+        CloseableHttpClient client = mock(CloseableHttpClient.class);
+        URI original = URI.create("https://example.org/start");
+        URI finalUri = URI.create("https://example.org/document");
+        var validators = new dev.knowledgeforge.sources.domain.HttpValidators(finalUri.toString(), "\"synthetic\"", "Wed, 21 Oct 2026 07:28:00 GMT");
+        when(client.execute(any(ClassicHttpRequest.class), any(HttpClientResponseHandler.class))).thenAnswer(invocation -> {
+            ClassicHttpRequest request = invocation.getArgument(0);
+            boolean redirected = request.getUri().equals(finalUri);
+            if (redirected) {
+                assertThat(request.getFirstHeader("If-None-Match").getValue()).isEqualTo(validators.etag());
+                assertThat(request.getFirstHeader("If-Modified-Since").getValue()).isEqualTo(validators.lastModified());
+            } else {
+                assertThat(request.getFirstHeader("If-None-Match")).isNull();
+                assertThat(request.getFirstHeader("If-Modified-Since")).isNull();
+            }
+            var response = new BasicClassicHttpResponse(redirected ? 304 : 302);
+            if (!redirected) response.addHeader("Location", finalUri.toString());
+            HttpClientResponseHandler<Object> handler = invocation.getArgument(1);
+            return handler.handleResponse(response);
+        });
+        try (var reader = new PublicHttpReader(client)) {
+            var response = reader.read(original, validators);
+            assertThat(response.notModified()).isTrue();
+            assertThat(response.validators()).isEqualTo(validators);
+            assertThat(response.content()).isEmpty();
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void rejectsUnsolicited304AndDropsMalformedValidatorHeaders() throws Exception {
+        CloseableHttpClient client = mock(CloseableHttpClient.class);
+        URI uri = URI.create("https://example.org/document");
+        when(client.execute(any(ClassicHttpRequest.class), any(HttpClientResponseHandler.class))).thenAnswer(invocation -> {
+            ClassicHttpRequest request = invocation.getArgument(0);
+            assertThat(request.getFirstHeader("If-None-Match")).isNull();
+            assertThat(request.getFirstHeader("If-Modified-Since")).isNull();
+            HttpClientResponseHandler<Object> handler = invocation.getArgument(1);
+            return handler.handleResponse(new BasicClassicHttpResponse(304));
+        });
+        try (var reader = new PublicHttpReader(client)) {
+            assertThatThrownBy(() -> reader.read(uri)).isInstanceOf(LibraryException.class).hasMessageContaining("304");
+            var invalid = new dev.knowledgeforge.sources.domain.HttpValidators(uri.toString(), "bad\r\nvalue", "x".repeat(1025));
+            assertThatThrownBy(() -> reader.read(uri, invalid)).isInstanceOf(LibraryException.class).hasMessageContaining("304");
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void capturesSuccessfulValidatorsWithoutTreatingThemAsContent() throws Exception {
+        CloseableHttpClient client = mock(CloseableHttpClient.class);
+        URI uri = URI.create("https://example.org/document");
+        when(client.execute(any(ClassicHttpRequest.class), any(HttpClientResponseHandler.class))).thenAnswer(invocation -> {
+            var response = new BasicClassicHttpResponse(200);
+            response.addHeader("ETag", "W/\"synthetic\"");
+            response.addHeader("Last-Modified", "x".repeat(1025));
+            response.setEntity(new org.apache.hc.core5.http.io.entity.StringEntity("synthetic content"));
+            HttpClientResponseHandler<Object> handler = invocation.getArgument(1);
+            return handler.handleResponse(response);
+        });
+        try (var reader = new PublicHttpReader(client)) {
+            var response = reader.read(uri);
+            assertThat(response.notModified()).isFalse();
+            assertThat(response.validators().etag()).isEqualTo("W/\"synthetic\"");
+            assertThat(response.validators().lastModified()).isNull();
+            assertThat(new String(response.content(), java.nio.charset.StandardCharsets.UTF_8)).isEqualTo("synthetic content");
+        }
+    }
+    @Test
+    @SuppressWarnings("unchecked")
     void redirectCannotBypassPrivateDestinationPolicy() throws Exception {
         CloseableHttpClient client = mock(CloseableHttpClient.class);
         when(client.execute(any(ClassicHttpRequest.class), any(HttpClientResponseHandler.class))).thenAnswer(invocation -> {

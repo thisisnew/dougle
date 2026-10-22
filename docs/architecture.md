@@ -1,5 +1,9 @@
 # 아키텍처
 
+URL Collector는 이전 원본/확인표를 입력받아 `PublicHttpReader`의 조건부 요청으로 연결합니다. 304는 본문 재사용이며 확인표는 원본 반영과 같은 트랜잭션에 저장합니다. [v20 모델·보안 경계](url-conditional.md).
+
+GitHub Collector는 선점 뒤 읽은 이전 원본을 입력받아 같은 commit의 clone을 생략하고 변경 blob만 읽습니다. 새 스키마/영속 Git 캐시는 추가하지 않습니다. [설계·실제 코드](git-incremental.md).
+
 `SourcePolling → SourceStore.beginPoll → SourceService → JdbcSourceStore.publish`는 opt-in 예약 수집 경로입니다. SQLite v19의 예약·설정 revision을 보존하고 자동 작업 2개/Source별 단일 선점을 적용합니다. [실제 코드와 정책](source-polling.md).
 
 `desktop/src-tauri`는 토큰/준비 상태/프로세스 그룹/창을 관리합니다. 백엔드 준비 전에는 로컬 시작 창만 표시합니다. 앱 데이터 위치는 고정 식별자 `dev.knowledgeforge.desktop`로 계산하며 Java는 PATH가 아닌 번들 안 절대 경로로 실행합니다. [계약](../desktop/README.md).

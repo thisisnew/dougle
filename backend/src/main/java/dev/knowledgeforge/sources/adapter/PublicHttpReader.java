@@ -2,6 +2,7 @@ package dev.knowledgeforge.sources.adapter;
 
 import dev.knowledgeforge.library.application.LibraryException;
 import dev.knowledgeforge.sources.application.RemoteReader;
+import dev.knowledgeforge.sources.domain.HttpValidators;
 import jakarta.annotation.PreDestroy;
 import java.net.InetAddress;
 import java.net.URI;
@@ -90,16 +91,31 @@ public class PublicHttpReader implements RemoteReader, AutoCloseable {
     }
 
     public Response read(URI requested) throws Exception {
+        return read(requested, null);
+    }
+
+    public Response read(URI requested, HttpValidators validators) throws Exception {
         URI uri = validate(requested.toString());
         for (int redirects = 0; redirects <= 3; redirects++) {
             HttpGet request = new HttpGet(uri);
             request.setHeader("User-Agent", "KnowledgeForge/0.2");
             request.setHeader("Accept", "*/*");
+            String etag = validators != null && uri.toString().equals(validators.uri()) ? safeHeader(validators.etag()) : null;
+            String modified = validators != null && uri.toString().equals(validators.uri()) ? safeHeader(validators.lastModified()) : null;
+            if (etag != null) request.setHeader("If-None-Match", etag);
+            if (modified != null) request.setHeader("If-Modified-Since", modified);
             URI current = uri;
             var deadline = deadlines.schedule(request::cancel, 25, java.util.concurrent.TimeUnit.SECONDS);
             Response result;
             try {
                 result = client.execute(request, response -> {
+                String responseEtag = header(response, "ETag");
+                String responseModified = header(response, "Last-Modified");
+                if (response.getCode() == 304) {
+                    if (etag == null && modified == null) throw new LibraryException(502, "조건부 요청 없는 304 응답입니다.");
+                    return new Response(current, null, new byte[0], true, new HttpValidators(current.toString(),
+                            responseEtag == null ? etag : responseEtag, responseModified == null ? modified : responseModified));
+                }
                 if (response.getCode() >= 300 && response.getCode() < 400) {
                     var location = response.getFirstHeader("Location");
                     if (location == null) throw new LibraryException(502, "리다이렉트 위치가 없습니다.");
@@ -108,12 +124,14 @@ public class PublicHttpReader implements RemoteReader, AutoCloseable {
                 if (response.getCode() < 200 || response.getCode() >= 300) {
                     throw new LibraryException(502, "원격 서버 HTTP 오류: " + response.getCode());
                 }
-                if (response.getEntity() == null) return new Response(current, "application/octet-stream", new byte[0]);
+                var saved = responseEtag == null && responseModified == null ? null
+                        : new HttpValidators(current.toString(), responseEtag, responseModified);
+                if (response.getEntity() == null) return new Response(current, "application/octet-stream", new byte[0], false, saved);
                 if (response.getEntity().getContentLength() > CollectionLimits.MAX_FILE) {
                     throw new LibraryException(413, "응답이 10 MiB 제한을 초과했습니다.");
                 }
                 try (var input = response.getEntity().getContent()) {
-                    return new Response(current, response.getEntity().getContentType(), CollectionLimits.read(input));
+                    return new Response(current, response.getEntity().getContentType(), CollectionLimits.read(input), false, saved);
                 }
                 });
             } finally {
@@ -123,6 +141,16 @@ public class PublicHttpReader implements RemoteReader, AutoCloseable {
             uri = validate(result.uri().toString());
         }
         throw new LibraryException(502, "리다이렉트 한도(3회)를 초과했습니다.");
+    }
+
+    private static String header(org.apache.hc.core5.http.HttpResponse response, String name) {
+        var header = response.getFirstHeader(name);
+        return header == null ? null : safeHeader(header.getValue());
+    }
+
+    private static String safeHeader(String value) {
+        return value == null || value.isBlank() || value.length() > 1024
+                || value.codePoints().anyMatch(Character::isISOControl) ? null : value;
     }
 
     @PreDestroy
