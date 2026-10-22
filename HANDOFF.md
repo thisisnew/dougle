@@ -1,5 +1,7 @@
 # Knowledge Forge — 이어서 작업하기
 
+최신 작업: [모델링 재점검](docs/model-audit.md). 코드/테스트/도구 파일 전체 목록·해시와 구조 계약 테스트를 추가했습니다. 개선 전 전체 빌드: 백엔드 353 통과 + 실제 AI 1 제외, UI 195 통과. 사용자 목표인 제공자 선택형 연결은 기존 CLI 설치 확인과 다르므로 별도 개선합니다.
+
 기준: 2026-10-22, SQLite **v21**, Intel Mac 앱 **0.1.1**.
 추가 작업: 사용자 요청으로 **공증은 제외**, Apple Silicon용 앱/Java 교차 빌드 경로와 아키텍처 혼합 방지 검사를 추가했습니다. [ARM 검증 현황](docs/apple-silicon.md).
 ARM DMG 생성·설치 복사본 정적 검사 통과. [ARM 공개 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-arm-preview.1). 실제 ARM 기기 실행은 미검증입니다.

@@ -1,0 +1,2848 @@
+{
+  "schema": 1,
+  "scope": [
+    "backend/src",
+    "frontend/src",
+    "desktop/src-tauri/src",
+    "desktop/src-tauri/examples",
+    "scripts"
+  ],
+  "totalFiles": 273,
+  "testOrFixtureFiles": 79,
+  "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
+  "files": [
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/KnowledgeForgeApplication.java",
+      "sha256": "44ce6bd433a3dcb54f425d6be30a575887d0069e1d063d050aa57ffe20740c95",
+      "lines": 14,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/AnswerApprovalController.java",
+      "sha256": "7870eb70ddce78f66a16a8859543a3b782520b651701233f9d5935fcb03b92a4",
+      "lines": 28,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/AnswerJobController.java",
+      "sha256": "438b10866fd10ca44d307131d5697a31e1c6fc190f25f6be207c13c858ff7a86",
+      "lines": 25,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/AnswerJobEventsController.java",
+      "sha256": "587b194ed8009b58ab73c037ffa220dd59fd000f5e1a2604fb702006f457492f",
+      "lines": 101,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/CliAnswerModel.java",
+      "sha256": "5e26faae9e9abe86101a9146aee67cf4f2c06eceed800f56117cb4f6c71ed473",
+      "lines": 17,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/ConversationController.java",
+      "sha256": "ef2bc8470d0ba38b3df4a673675371eb1d510a803f8f48fe23874e3390099f41",
+      "lines": 30,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/ConversationPreviewController.java",
+      "sha256": "17d2a6ddbea552cdfb3bf57a92aea81c3ee9af1cea1b9ffb2a656fe5a00940ac",
+      "lines": 16,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/ConversationRequestController.java",
+      "sha256": "11eb2fa7ed0bd78ebabc16b353416969b6e6d5d23d07ec6f8fa4599e6439102a",
+      "lines": 17,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/JdbcAnswerApprovalStore.java",
+      "sha256": "89d267986a44057147a27a8849bdfa21c11a64a24b31c18bcd9df3bf7073f744",
+      "lines": 33,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/JdbcAnswerJobStore.java",
+      "sha256": "1e39cd122aed9be99fb4e21de5c1ca1b75fde2c89317a1f2fdd368a558c8d603",
+      "lines": 37,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/JdbcConversationRequestStore.java",
+      "sha256": "297367a24dfce4dd330837d64ad853ccc5f9294542caace2411dad9e1e7ce043",
+      "lines": 22,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/JdbcConversationStore.java",
+      "sha256": "2180d9eb8d7ebd452feaa92a4572ac83b50e57d0766b802ff87216d9cb73da8a",
+      "lines": 37,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/adapter/StoredAnswerContext.java",
+      "sha256": "8ae1494dd04cbc7c291407f699f5f88599762dcf7f6da2b125f6801cebff73fc",
+      "lines": 31,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/AnswerApprovalService.java",
+      "sha256": "4514d6b167516104c3f5e50ea1e960fc47be454593c6dd454718a6b6bb48bd42",
+      "lines": 68,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/AnswerApprovalStore.java",
+      "sha256": "68fd38e18deeed4208e28dab93afcb51e44fcb9134e968c49b688672c5fd953a",
+      "lines": 10,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/AnswerJobService.java",
+      "sha256": "b9c719a600bc21c3facfbb761d19bfc751678b3b549d5f8586e19bf928979061",
+      "lines": 184,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/AnswerJobStore.java",
+      "sha256": "15e17846ee48428b344f3fda8503a0906a19d791a96f6b8b6b219b06e951eb0c",
+      "lines": 13,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/AnswerModel.java",
+      "sha256": "5c58c71beb0d0fc2f1b2384dcdcdf3517317e435075d3b8ac81da2124049573c",
+      "lines": 5,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/AnswerOutput.java",
+      "sha256": "5e89607e90d6a2e2e2b33d785c6a5a8510ccef86dea8bd268779d1c10f157d21",
+      "lines": 43,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/ConversationCompletion.java",
+      "sha256": "4bcabc48efdcd9abeebe72f953a916fce2ce97fa11883a54d864dc6bf87a6a64",
+      "lines": 23,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/ConversationHistoryService.java",
+      "sha256": "82866e93f77c5e1acd5a0ee0b6613733255b86395208c4f0955329bf4c49b37b",
+      "lines": 42,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/ConversationPreviewService.java",
+      "sha256": "c015224242b7ab0daacc2d69d68786a0839f6add818f425761a35c54ee808f4f",
+      "lines": 35,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/ConversationRequestService.java",
+      "sha256": "22f04f69cd9e48a7f8d240046aa76a0b8ee7aca3797727a0a9792d169292775c",
+      "lines": 42,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/ConversationRequestStore.java",
+      "sha256": "9ae94be48cfe1f275c4eea3e13b1f107e63904c473e33dc29a0427c20ec9d4a9",
+      "lines": 9,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/ConversationService.java",
+      "sha256": "7f3e0a675282e345c48cd452919b6ce0668002ebd2e7f7a4acb198ff79213f97",
+      "lines": 62,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/ConversationStore.java",
+      "sha256": "d2c9a8183dc7e2c84b21f5098a9946c9fdd26fa81d617648b22996acca67fc3c",
+      "lines": 14,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/application/StreamingAnswerModel.java",
+      "sha256": "01b0cefce8b9594009868f3859ccd2beb015a1800d057889e81636bc51e95a0d",
+      "lines": 7,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/domain/AnswerApproval.java",
+      "sha256": "9bda16b02c1ce12d60592f331719653f55c44b0ae57f7e55e82cc6fd8be34d43",
+      "lines": 4,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "frontend/src/AnswerApprovalPanel.test.tsx",
+        "frontend/src/ConversationPreviewPanel.test.tsx",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/domain/AnswerJob.java",
+      "sha256": "47345cd1f2fd4915f5362ce40cec210b46342458f7f33b2d620f05c7c9ebd134",
+      "lines": 7,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/answerJobEvents.desktop.test.ts",
+        "frontend/src/answerJobEvents.test.ts"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/domain/Conversation.java",
+      "sha256": "c502301ca6ff8086c2891a5aa5a24b84936fbdfb63e60a794685fd556929ade5",
+      "lines": 5,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "frontend/src/ConversationPreviewPanel.test.tsx",
+        "frontend/src/ConversationShelf.test.tsx",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/conversation/domain/ConversationRequest.java",
+      "sha256": "ca24946bc9423c536009c13e20f2dfbcda5b82ae38b6993fc70a5a8eaa6cf6c8",
+      "lines": 9,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/desktop/DesktopBootstrap.java",
+      "sha256": "8edff2f2f8ed49878e97106cb064fe9c8303e1707a58e3ed45925559c6d4b13e",
+      "lines": 51,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/desktop/DesktopConfiguration.java",
+      "sha256": "3070caf4b3c29cfcef2adccf60ce3ff149ee755d2c2af168da497b5f61517b49",
+      "lines": 21,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/desktop/DesktopDataLock.java",
+      "sha256": "b6f0e8df732e1fd6eff959bd5e5d2c34a5147405bf4a5e32880c217ba458c180",
+      "lines": 53,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopDataLockTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/desktop/DesktopReadyController.java",
+      "sha256": "0cdfbad5df354e5d3b2cb8f4d4fea6c91e2fb75e27e9fa415bac809559d115d9",
+      "lines": 21,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/desktop/DesktopSession.java",
+      "sha256": "0ba357f67955115a4ea29c34f3cccdd37038cc31da0adc04fef61646aac36b97",
+      "lines": 89,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopSessionTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/ingestion/adapter/JdbcAnalysisStore.java",
+      "sha256": "17ef4c08e4baa92fd43fdd5d02345a3d1d7a2c975ddcb3c37bd184d78a660541",
+      "lines": 47,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/ingestion/adapter/TikaJavaAnalyzer.java",
+      "sha256": "832b0e573b5a97db5747a87951f1e9ffc29d8ecdcb359c98d93bf01dc22bfb73",
+      "lines": 76,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnalyzerTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/ingestion/application/AnalysisStore.java",
+      "sha256": "afd542556b2f3df6b90af3806202d2dc22190b90185e2af0e1b4c8cf34d91af0",
+      "lines": 9,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/ingestion/application/DocumentAnalyzer.java",
+      "sha256": "aa87fa1d87bf50b8643c2eb8cc368ebb3c56ef216016f468fc44e7441b60ff04",
+      "lines": 7,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/ingestion/domain/Analysis.java",
+      "sha256": "afc97b5050e5198b3392e15113f8e935b7e2bd1dd31cde0e61cb30f0361d331f",
+      "lines": 7,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/ClaudeTextStream.java",
+      "sha256": "16d405669acfce043410a77c0b81d05894024a93217524496870e1c9221a9005",
+      "lines": 57,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ClaudeTextStreamTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModel.java",
+      "sha256": "2a5ef35bad389ae8aafa2bf03ffa67273939086a1b48bb77d73e6a5813f971e0",
+      "lines": 264,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapter.java",
+      "sha256": "71e2538f6c551ef0542bb114606110a1407a98cad7f3e49b77e8c4f51bf8b5bd",
+      "lines": 66,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsController.java",
+      "sha256": "825ea863b15ddc9dcda1a71b5164dbd939bc35939516a00c86b5d9fea248440b",
+      "lines": 22,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CliLaunchController.java",
+      "sha256": "7766c1633ea0df5b3c919eed787fe6e681bd2a30bfc4b01de583f0bb9716e42f",
+      "lines": 20,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CliProcessPath.java",
+      "sha256": "97d1c7827e81ba393d7ca7db23d574e4f6a6d5c47621bd749e3acccfb968eb1a",
+      "lines": 16,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CodexAppServer.java",
+      "sha256": "7d0d26a18ba14fa1e4640be850a95c06f3a5ec500c6f488072b2defbe9ff90c3",
+      "lines": 194,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSession.java",
+      "sha256": "f2440ac515ff8a9276dda65505fedd6a16158c38f586acc7263a5cd2d203cb2b",
+      "lines": 157,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CodexTextStream.java",
+      "sha256": "c312f611e9a03e784ecf2bad1c8ce7230aa0e3aa87469c93a05a832b97c072f8",
+      "lines": 134,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/CuratorController.java",
+      "sha256": "2c6073bfb6f7c40be8adb9d19290a10f3e6c88979f700b35b27b103db2a69f34",
+      "lines": 28,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/GenerationComparisonController.java",
+      "sha256": "ad89403e5f0052b41b3620abc4eefeb233656101b9be827c1b56eddd91df5c01",
+      "lines": 17,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/GenerationJobController.java",
+      "sha256": "54c5dd723a795ffb507568e71d82cee69f04c3a61e68b03c85f4002d72db8e86",
+      "lines": 30,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcCliLaunchStore.java",
+      "sha256": "75908af95ad0d5787673f09914172447d58d7b27a0f053d9fb74c955b96e2821",
+      "lines": 39,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcGenerationJobStore.java",
+      "sha256": "35836522789a6564419fa21d9381eb2fa27fcb10141d48575c272a7a845c3227",
+      "lines": 52,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcKnowledgeStore.java",
+      "sha256": "a253f974ab026a0e1169880194958dee9f758f121378416ddce7be5ed7590080",
+      "lines": 154,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcOrganizationStore.java",
+      "sha256": "dabf6bc89fb7567dc27316227133458161576648fabee1a51057ac8cdff0c237",
+      "lines": 45,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcProposalAcceptanceStore.java",
+      "sha256": "f000e3f154c03c1a76575a35daab176d4876376ddfe028716b43d4369d444fa1",
+      "lines": 27,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcProposalDecisionStore.java",
+      "sha256": "fb575c2890281297dcc7645299049c44562da550e5f410c6b4c851fccbdb15e0",
+      "lines": 30,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/JdbcPublicationStore.java",
+      "sha256": "9cad79999825fb654ae1e1b06ca7fd76765ccf3c28ae8956a4e007a5d52482a1",
+      "lines": 45,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/KnowledgeController.java",
+      "sha256": "b773f71420a8f58ef2088df61f9b174cbe6a988af1455215a2d825b8776820f3",
+      "lines": 68,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/OrganizationController.java",
+      "sha256": "56287344bbc195c047256d4e5ebd54a5687864b47df58a74dfe68aed6fb6af14",
+      "lines": 41,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/ProposalAcceptanceController.java",
+      "sha256": "07526105180652992451c5183863835722d34f5897c1359db2ef9f53ed5d9cff",
+      "lines": 38,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/ProposalDecisionController.java",
+      "sha256": "90115a58da311b2f984ba35277864afc19fe9fd42888a7c9c0d8ae426bb552ce",
+      "lines": 27,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/adapter/PublicationController.java",
+      "sha256": "3b06531e0a97564e62491cbe8bf7f8e48af525325db1ac44780e240006059f38",
+      "lines": 33,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/CliDiagnostics.java",
+      "sha256": "962e521a0570ad1983167956f83cee6e0416c9d425504e50d71591fca3b89488",
+      "lines": 7,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/CliLaunchConfiguration.java",
+      "sha256": "5b1b8aae4d130efcb35b42189d4e2e0ac22119e15d54a4e8e958aa87d16c117b",
+      "lines": 51,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/CliLaunchStore.java",
+      "sha256": "b7093ff62af221e7cb70d9d434d584b8cab6efc354a05d24cebc4410dd4b6241",
+      "lines": 7,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/CuratorModel.java",
+      "sha256": "d82c1c4fbae3c51960e47d7c6d3cb13c072078895acf396a5a246708ce22f1e1",
+      "lines": 9,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/CuratorService.java",
+      "sha256": "03c29fe388afa69e9e5b7fc15fe36264fd4d9faaf3431747557869bed99355e0",
+      "lines": 150,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/CuratorSettings.java",
+      "sha256": "e5fb21fe2b41c26b65cd04c013b186c867448e03d1fbe2805449aaadfdc7c00a",
+      "lines": 48,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/GenerationComparisonService.java",
+      "sha256": "53086e2b85e509781c1d8c3cb429f779e3b1479f9a89cdbafd30b0bcff9a668a",
+      "lines": 32,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/GenerationJobService.java",
+      "sha256": "996e6b12b432a85b777620e38eca2e691d8a394395bad77bafcd25ac2c29b180",
+      "lines": 188,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/GenerationJobStore.java",
+      "sha256": "4f9101d9641243d8186f174a5797ed03bff0d95969b64bf357b97ec1c3c59839",
+      "lines": 13,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/KnowledgeService.java",
+      "sha256": "d34365b11247e8284395fc4a12ed603a07845017acba733b2dd083fe4aadfbcf",
+      "lines": 178,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/KnowledgeStore.java",
+      "sha256": "79b070704ec2c9843afddfc1eda2eb5919d9c0fabeba1720779e4c78b921a949",
+      "lines": 25,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/MergeEvidencePlanner.java",
+      "sha256": "452fa9230b0d3ee25327768e318a991fd82d42cf49cf3f6a0e6746f1af33337a",
+      "lines": 54,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/OrganizationService.java",
+      "sha256": "0b43691b957aa53c07fe320bac8a6ba3de18991c56498717184b0a60bd643240",
+      "lines": 94,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/OrganizationStore.java",
+      "sha256": "ace610fe5afbdff169a9841d6d2a942b12fb943858e3d0db6f9851f71fb10489",
+      "lines": 11,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalAcceptanceService.java",
+      "sha256": "b271bbdcdf2b594fb7a53dc4f838c7d3e4199cdeed4caecf15f183d129ecaa46",
+      "lines": 113,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalAcceptanceStore.java",
+      "sha256": "d481cc512eab69082ef46a2b97af7f36f476bceeeea8f0214974b98f70ada259",
+      "lines": 9,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalDecisionService.java",
+      "sha256": "f034e5b659cc90d8b42062c01fbdaaba310f2ae167aaf4236cd6de5d2248ae70",
+      "lines": 62,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/ProposalDecisionStore.java",
+      "sha256": "d3149f23c7a82aa886a4afc30747ae76c4fa00655d5f4f7f8b1cd0a4f90c120a",
+      "lines": 9,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/PublicationService.java",
+      "sha256": "26c1aaa05cc078d9ad2fcc5f30048359ca67011747127e8d8279afb8442b50a9",
+      "lines": 87,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/application/PublicationStore.java",
+      "sha256": "79d5b28c84ee7254ee0244cbccac9df6f421fd77a4220dcf539700349185cf93",
+      "lines": 11,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/domain/GenerationJob.java",
+      "sha256": "eddba05f05adc2aae1c44fea348e5c5d56794dbf9ca0566e11fc7c06f75fb160",
+      "lines": 10,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "frontend/src/GenerationJobsPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/domain/Knowledge.java",
+      "sha256": "18fe2cf37d468ab56e384c9c0c197927086dd551b2b21b8b7d6f57e47737bb1e",
+      "lines": 16,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/EvidenceBundlePanel.test.tsx",
+        "frontend/src/KnowledgeMarkdown.test.tsx",
+        "frontend/src/KnowledgeOrganization.test.tsx",
+        "frontend/src/KnowledgePanel.test.tsx",
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx",
+        "scripts/cli-settings-smoke.mjs",
+        "scripts/native-host-smoke.mjs",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/domain/Organization.java",
+      "sha256": "67b7206e4a93893c9a56a24d448d80bfca0817ed5572e710ef784fb09804b64b",
+      "lines": 10,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "frontend/src/KnowledgeOrganization.test.tsx",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/domain/ProposalAcceptance.java",
+      "sha256": "ecedcfe0c073b16c47f0c04dd66bccf0d17717edf240344e7a2588c71fbb6e26",
+      "lines": 4,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "frontend/src/ProposalAcceptance.test.tsx"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/domain/ProposalDecision.java",
+      "sha256": "2262897ee9a0140fcf44837af1b11dd43f1f33d7dcf763cb896a375ddf02af93",
+      "lines": 4,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "frontend/src/ProposalDecisions.test.tsx"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/knowledge/domain/Publication.java",
+      "sha256": "19d8dc404aabe75790b2d57f8e9343f1403096fe43a5d998304f240a8b7153c6",
+      "lines": 12,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "frontend/src/KnowledgePanel.test.tsx",
+        "frontend/src/PublicationPanel.test.tsx",
+        "scripts/relations-smoke.mjs",
+        "scripts/smoke.mjs",
+        "scripts/upgrade-smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java",
+      "sha256": "c6a71b6f032486afd44837c332ba78155a1b7ff4cf7d8c2afc61be4ed9df4000",
+      "lines": 464,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/SqliteLibraryStore.java",
+      "sha256": "a7d64008f7e727764f7d824672c9d79344214c4c858dc92bec1546f60eca53bd",
+      "lines": 83,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/adapter/web/ApiErrors.java",
+      "sha256": "87b7099bf9a35abcf16c5c410986d4c7122384ce2fdeaacb0ee500d3787ee987",
+      "lines": 33,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/adapter/web/LibraryController.java",
+      "sha256": "2f50f01ab61a9afbf5e1050c189a4e2eb23ad61d1b9bab6f4fa9235ef0d62bf7",
+      "lines": 114,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/adapter/web/LocalRequestFilter.java",
+      "sha256": "2f03a418e91922862e82414db62a10e1e80479635bfad4f6f61baf4e07fb72fd",
+      "lines": 52,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/application/LibraryException.java",
+      "sha256": "bdbc1d26656b58e248d85e9c55f545c6251a3c9fb26cf0afd1f22c497701e795",
+      "lines": 14,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/application/LibraryService.java",
+      "sha256": "e55a2fc39afc5455166e96562528ad10cb26f62942cea87f16cc4fe1312142f6",
+      "lines": 171,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/application/LibraryStore.java",
+      "sha256": "73783b2694e1c74e97fb18d0d0404b50b43f7fcf3f083b7531b26ff7364e4411",
+      "lines": 21,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/domain/Entry.java",
+      "sha256": "fbb1192e1f9d5d3c9492f29d024ff1f393b5f19a847355617b2d2edd1d65f6e4",
+      "lines": 4,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "frontend/src/EvidenceAnswerPreparation.test.tsx",
+        "frontend/src/SourcePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/library/domain/Workspace.java",
+      "sha256": "246862247624c8d118399e5c763163960fabf21a97cbddc5265b2cd01c7b1755",
+      "lines": 3,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/App.test.tsx",
+        "frontend/src/PublishedSearchPreview.test.tsx",
+        "scripts/smoke.mjs",
+        "scripts/upgrade-smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/adapter/EvidenceBundleController.java",
+      "sha256": "884d7fd272d9cc288d76054379b98eb65e081e3c1aadde527b72d28e475ec226",
+      "lines": 52,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/adapter/JdbcEvidenceBundleStore.java",
+      "sha256": "4ede55f407af3687c0baf968aba8b21337fe3c6e8d47ffbcebb23e8ff37b1c82",
+      "lines": 45,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/adapter/JdbcRelationCatalog.java",
+      "sha256": "570ad3a86734fa39d0180ed971de42add0ad2d23d695f2182db9bb92120091ad",
+      "lines": 86,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/adapter/JdbcSearchCatalog.java",
+      "sha256": "da2819ee384be253ba87d706476d7a88161e765182656dc65fa8d44dc1d0b848",
+      "lines": 87,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/adapter/LuceneSearchIndex.java",
+      "sha256": "11edcf4e68c8c9272771a05454a73b9ce86533a8ab84ac84a485ddda4e8172cb",
+      "lines": 167,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/adapter/RelationController.java",
+      "sha256": "b440819836e653bbe885a6db375db5933627a9d1140d395773746ed817666415",
+      "lines": 19,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/AnswerContextProvider.java",
+      "sha256": "cea5f5b62f9701a29610df0b2cf4ab9e58c0bbc92f519615fb318dfa97e34738",
+      "lines": 9,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/ContextPrompt.java",
+      "sha256": "caebd887b89df0e7549f594481973df8b0e6b2a388d7d79b95d5090c88376098",
+      "lines": 24,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/EvidenceAnswerPreview.java",
+      "sha256": "d4b8530a09a56cb70ca79ece306a6e9abcd944d8385c7fded675395c522b2920",
+      "lines": 94,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/EvidenceBundleService.java",
+      "sha256": "94a6cbdd73f3eef28c3c858e0f4f15e227e216762a5897363f4f1f17ba9725b4",
+      "lines": 44,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/EvidenceBundleStore.java",
+      "sha256": "364d2093320506a15d2f6f1a50d642160eccba4993cbd4f61330f4c7b2c5f0f3",
+      "lines": 12,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/EvidenceBundleValidator.java",
+      "sha256": "b85dd145f5d68f0764c46ab6832252173b8be09eb68fdc6923f54acdb19890a7",
+      "lines": 91,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/EvidenceBundleWriter.java",
+      "sha256": "25d23185d648641ea423d4e664e90c9b07e199554f6c41822c7eb52a3af0fa40",
+      "lines": 83,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/RelationCatalog.java",
+      "sha256": "8cc240cbda85ca75cba7dc287cfedb81d3193a8d5135be35ad44f796bedc6c2c",
+      "lines": 10,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/RelationSearch.java",
+      "sha256": "ee0a7c43ed55fb7b503dc738e33f026421e55d765ef8c0ac8194adb0acf44417",
+      "lines": 44,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/SearchCatalog.java",
+      "sha256": "9bd680c429c25c85239a3ed399c591144a87ea99c2cfa725b9173bf3beb90f92",
+      "lines": 14,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/SearchIndex.java",
+      "sha256": "2ebc99be5041e8654b8c9a05680fba1bbe738d3c22abc86f6f8a18b0ac4d1535",
+      "lines": 30,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/application/SearchService.java",
+      "sha256": "ad6aeff337e4ea17821f1dd6751de636c2004ff603512f1dcaa8c0cb25de0615",
+      "lines": 67,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/domain/BundleValidation.java",
+      "sha256": "5030ef3a0de26115f7b8a00c40fa5abfc1390dac9f64b283ea315c69183b98b2",
+      "lines": 10,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/domain/ContentDigest.java",
+      "sha256": "2b5e8866136fb95e8f4d1e3ca69a409f7e5b8c91be32c072fb4e7faff395fe8d",
+      "lines": 17,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/search/domain/EvidenceBundle.java",
+      "sha256": "74ae70df35d0b4f400fd4afe81edfa764b9d76cfaaa7e14d09c098f31f4f7c2e",
+      "lines": 15,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "frontend/src/EvidenceBundlePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/CollectionLimits.java",
+      "sha256": "895dcfd48bf9ac7d6dec6c64052ff5a7d4a8b47a2f1a7b07147b4f2b60fde338",
+      "lines": 64,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/GitRunner.java",
+      "sha256": "f2fd2d503ffe7a4c78c47a6e025ca02b3c1a5794c661dca769e90f4023869729",
+      "lines": 70,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/GithubCollector.java",
+      "sha256": "4669a6d5c44aadf12a193e57b9540d3fa8daec06cf56a92167d01fc93b3dbacc",
+      "lines": 116,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/JdbcSourceStore.java",
+      "sha256": "de3770dc3657f4fda2695490c5c69fd6f3553790170abff6c2bafda52402705d",
+      "lines": 187,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/LocalFolderCollector.java",
+      "sha256": "83b36795012e9ac47fc45ea9ab0f20777c77f3d6e06d39bdbbdd73e222aa1e37",
+      "lines": 75,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/PollingConfiguration.java",
+      "sha256": "4d1cf171a7115c331748d60811b6d29b5910840704e4337599052ec436dedc98",
+      "lines": 13,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/PublicHttpReader.java",
+      "sha256": "049acd8189386c50448a03a52b29755c23c900535b68e84d4979b65b1db86f49",
+      "lines": 161,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/SourceController.java",
+      "sha256": "d1bd114af614f329306532861c6839379e519f1856a08778d744813807f3c11c",
+      "lines": 62,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/UrlCollector.java",
+      "sha256": "75b4b7a02b03f596d86355fcacb479bb9a2ae184356ea99485424aa1d099f357",
+      "lines": 40,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/application/Collector.java",
+      "sha256": "0054681ed4aacfdad639bafe5960b3ed11c5cad973fc04ac755c25d273bd1149",
+      "lines": 13,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/application/RemoteReader.java",
+      "sha256": "1af6c1f4157b594a6ff0b1cf56f0d1e1301173848a1b58192d43975f9a7a646e",
+      "lines": 12,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/application/SnapshotPlanner.java",
+      "sha256": "d437b044d5169c35bef01d38c057d8e1c9aad1c41af6c8fd51bb5adddcbcca56",
+      "lines": 47,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/application/SourcePolling.java",
+      "sha256": "006acfbe3ce8eb28a6a171259b93ddbd7abad81bfbaa8bb7c5b73bdb493583c1",
+      "lines": 54,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "frontend/src/SourcePollingSettings.test.tsx"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java",
+      "sha256": "c76b18710bfec3389c1c53f4ff737dbc2020c281aa6ffac347b306d544715536",
+      "lines": 133,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/application/SourceStore.java",
+      "sha256": "9f76a6a1cb8c740a12c34d5b1bb8dc3e82e11f86e4d0b614ba9f412185e64b88",
+      "lines": 23,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/domain/CollectedSnapshot.java",
+      "sha256": "ae07ba78132f0e9cc03dbbabb4f02208d363aac8abc3e011a77d7f04bceaaf27",
+      "lines": 8,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/domain/HttpValidators.java",
+      "sha256": "72860616cf99a7f505b0ac0dbaf3be90ef393e5ab38946e4fae8f12104382d08",
+      "lines": 3,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/knowledgeforge/sources/domain/Source.java",
+      "sha256": "ecec7533841a3d971a7d417e2763cd3745b64681453c8ec8b1971b4e99ddbb99",
+      "lines": 6,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/EvidenceAnswerPreparation.test.tsx",
+        "frontend/src/ProposalAcceptance.test.tsx",
+        "frontend/src/ProposalDecisions.test.tsx",
+        "frontend/src/ProposalMerge.test.tsx",
+        "frontend/src/SourcePanel.test.tsx",
+        "frontend/src/SourcePollingSettings.test.tsx",
+        "frontend/src/answerJobEvents.test.ts",
+        "frontend/src/test/FakeEventSource.ts",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/main/resources/application.properties",
+      "sha256": "bf23ae2b03ab22de9433bf36609275e9b390e3028c663380e95c695051089ae3",
+      "lines": 8,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "scripts/cli-settings-smoke.mjs",
+        "scripts/native-host-smoke.mjs",
+        "scripts/polling-smoke.mjs",
+        "scripts/relations-smoke.mjs",
+        "scripts/smoke.mjs",
+        "scripts/upgrade-smoke.mjs"
+      ]
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/AnalyzerTest.java",
+      "sha256": "53e0f9e2cdddd2db5867f71fb5bbfa462a5b6ac6f2b58c0c9338d02b81f1be38",
+      "lines": 58,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+      "sha256": "61881015f7b3b5184c091e8d1cb91d0bc250a48b28e4b5239a6308bac7a3d788",
+      "lines": 174,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+      "sha256": "d8aa9ff76472f3086bf823776e5acbc1738d67fed7f7631f2b47f777a8e30162",
+      "lines": 176,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+      "sha256": "9a609093baeea14eeb91286c2e8711f30c9e64260ab9a7cf6d8eb47c7716848c",
+      "lines": 273,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+      "sha256": "538f9c535e8f958f8391d2b3f5149ee5ff72673d96dbde5ec6432e67f88b12a4",
+      "lines": 122,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+      "sha256": "0ebe3e820d678e0a98b3e46ae84cca0de3dca5d2e7f740b7c9d626a56f460fe0",
+      "lines": 54,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+      "sha256": "6629d9cbba3fb7b88fd59417f1809fdd91a6f8c766833b68aebaa408e288b4e0",
+      "lines": 235,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+      "sha256": "eb753f9ba0aac4f2a217a119106f3576383b11d91e5160265cb9b218f6b2f80c",
+      "lines": 54,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+      "sha256": "20e566e32778dba2d6630bef927120c43d16e12800f3f61d76df47eab2daa378",
+      "lines": 93,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+      "sha256": "a945ab33f59b0c7305761496c83c505eb42343dd1c734b143910a1badce3dd89",
+      "lines": 224,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+      "sha256": "8df5bbbdefa22099b5d2cb76561b52b631358e8f1d02cf857f8cde2affe70d78",
+      "lines": 303,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+      "sha256": "77f6890c7ce5f7f9e34f4260d89f669ed2f9ae954780e56212b8705110deaead",
+      "lines": 211,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+      "sha256": "6cf879869eb8a854b8ac17d7c24ec610fb18d6842cd9f8cf26af1c22d64cbbfb",
+      "lines": 216,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+      "sha256": "d1b2e643ba060d874b6a0f2ad3566511e957fc20b2627eba7eb0c5056b4d8ef2",
+      "lines": 443,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+      "sha256": "78c2e082008a3cf26f3207cb894813db537e89ccab94ac15e603276692357183",
+      "lines": 355,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+      "sha256": "4b6291af43f6d38d6cef36d34b4f4b2926954b5e577651fb666c521a4102f79f",
+      "lines": 331,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+      "sha256": "944b32eb170d84d1c433a95d3ffd5907ad20ad4e459935a99a1272870060b044",
+      "lines": 226,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+      "sha256": "aa0627d83c07708005ee480284577e42fb7319e8c82cbe8dbcbec671f5c6c137",
+      "lines": 45,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+      "sha256": "4e5375a8495f96b0fd7c4b8d7bda896c48041162e1e0707ef2aac9b0211c57f6",
+      "lines": 250,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+      "sha256": "86619892e565868f2968a432c22f6bfed8ab214dc0564e7957063659ea5ac710",
+      "lines": 150,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+      "sha256": "3ddb74ee1aaecb831cb28c61e7334867f16d98e76383d3e2a32ff23366ef45cf",
+      "lines": 188,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+      "sha256": "acd007565fd93ecd29d8a85cfae28186ff251f29afe46e7833e32f5b98eb80d1",
+      "lines": 182,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+      "sha256": "3d1dbe6d5b858bc2e8a58807e60554c55d35faaaf840eaa42ce983365b6b958d",
+      "lines": 144,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+      "sha256": "852a9a5741d38cbd7c40ecf4a8b6f23e7f05d6b85f0d76bba1d2162fa0489f9b",
+      "lines": 101,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java",
+      "sha256": "62526e3ba9f61134defc72ae40e801c4bf34b0dfd226e5a710b964d04788a106",
+      "lines": 50,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+      "sha256": "b9fd109251c312e24801540d8464857012e965a4a544a8d138dd2d554f87362e",
+      "lines": 466,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+      "sha256": "7ed4c905bbd8235e593c191f60a8ab9ec0bf36431424ec51557a235c98a35620",
+      "lines": 124,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/desktop/DesktopDataLockTest.java",
+      "sha256": "0d78d46cb6d8baea35047eff215caa9129c1f3077729a3db6608ce7192063761",
+      "lines": 40,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+      "sha256": "1996e495dc701147d5e2f63885d37a45f036a768213ec8ddef6ded4c5fefd623",
+      "lines": 64,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/desktop/DesktopSessionTest.java",
+      "sha256": "a3475d8b3b2da1d9f57c51f671941b06920414358eca3b6cfa04bd10a1cc1b4e",
+      "lines": 51,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ClaudeTextStreamTest.java",
+      "sha256": "d3779654a1e1beeb8441bb1d87ad1db59a90354db481d9718685b2cf932cb3a6",
+      "lines": 56,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+      "sha256": "1ef833637c3124e5e45a5e489d2a99fb5f3a4fa4706fe8c6de5f373472c1ec9e",
+      "lines": 173,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+      "sha256": "d6a7e170a738f766850921a623e924dd31d54f541be63c8fff3d002cab53f75d",
+      "lines": 59,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java",
+      "sha256": "ed0836bf6b525c8ac3a9aef184bc8bcd0f4f841a1cdaf80eeba52007603dc128",
+      "lines": 37,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
+      "sha256": "6b7c614be49c2f333956047e3abbf7e3a01ffb72f327b61991e1b3ca331a6756",
+      "lines": 94,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+      "sha256": "d3b2d947a37199a68919609202929f142f77832c153d69c91393a4b772e20f46",
+      "lines": 187,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
+      "sha256": "a42d8fac80ba55d091240b1bc2376f0b86d413b565b1d9908bf624f29d1c5029",
+      "lines": 178,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+      "sha256": "3d18a6ac1b9ef397819be5c3b20c0085f92f73a7f960392a58c95159dce3953b",
+      "lines": 603,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+      "sha256": "1efb5812fc21b0898cd682c57a994a5296230ef9d12cc71d644c80597f55125c",
+      "lines": 141,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+      "sha256": "10152609a2e09e6d30156fa7f01037022cbd06bfcc47292cc6861000d0c52fd5",
+      "lines": 39,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "desktop/src-tauri/examples/runtime_smoke.rs",
+      "sha256": "e287167bcc2281b8196a529fc0e65a89b0d194f251a49117702c62c043e0bcd5",
+      "lines": 177,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "desktop/src-tauri/examples/webview_smoke.rs",
+      "sha256": "d02c3f591f526174c8c2886214cc98feb97036cc38038206348099df00be5f97",
+      "lines": 142,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "desktop/src-tauri/src/lib.rs",
+      "sha256": "5c36d88fcb68bc0b46fe20a2a9dd4460cb15c61410c5011122353dd8fffeb513",
+      "lines": 2,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+        "frontend/src/AnswerApprovalPanel.test.tsx",
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/App.test.tsx",
+        "frontend/src/CliLaunchPanel.test.tsx",
+        "frontend/src/CliStatusPanel.test.tsx",
+        "frontend/src/ConversationPreviewPanel.test.tsx",
+        "frontend/src/ConversationShelf.test.tsx",
+        "frontend/src/EvidenceAnswerPreparation.test.tsx",
+        "frontend/src/EvidenceBundlePanel.test.tsx",
+        "frontend/src/EvidenceOriginButton.test.tsx",
+        "frontend/src/GenerationComparison.test.tsx",
+        "frontend/src/GenerationJobsPanel.test.tsx",
+        "frontend/src/GenerationPanel.test.tsx",
+        "frontend/src/KnowledgeMarkdown.test.tsx",
+        "frontend/src/KnowledgeOrganization.test.tsx",
+        "frontend/src/KnowledgePanel.test.tsx",
+        "frontend/src/ProposalAcceptance.test.tsx",
+        "frontend/src/ProposalDecisions.test.tsx",
+        "frontend/src/ProposalMerge.test.tsx",
+        "frontend/src/PublicationPanel.test.tsx",
+        "frontend/src/PublishedSearchPreview.test.tsx",
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx",
+        "frontend/src/SourcePollingSettings.test.tsx",
+        "scripts/macos-architecture-test.sh",
+        "scripts/upgrade-smoke.mjs"
+      ]
+    },
+    {
+      "path": "desktop/src-tauri/src/main.rs",
+      "sha256": "c5209e76a6bcf4088a6c6a44df60f16539967a8839f0d76caff9702a41499c28",
+      "lines": 187,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/EvidenceBundlePanel.test.tsx",
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx",
+        "scripts/cli-settings-smoke.mjs",
+        "scripts/macos-architecture-test.sh",
+        "scripts/native-host-smoke.mjs",
+        "scripts/polling-smoke.mjs",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "desktop/src-tauri/src/protocol.rs",
+      "sha256": "92e604670ae9cdedd891581c2924621f41fbec1147c7006febd6e0e3ba22abc4",
+      "lines": 210,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "frontend/src/answerJobEvents.desktop.test.ts"
+      ]
+    },
+    {
+      "path": "desktop/src-tauri/src/supervisor.rs",
+      "sha256": "7fe644395720f50ac7a4bfc47837c7539a563c73a31616b03a4509948edf3685",
+      "lines": 331,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "desktop/src-tauri/examples/runtime_smoke.rs"
+      ]
+    },
+    {
+      "path": "frontend/src/AnalysisPanel.tsx",
+      "sha256": "e0aa6ee8495aa28844cf3798a2251bd30e035ab962bda13ff778d74a3a80455d",
+      "lines": 35,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/AnswerApprovalPanel.test.tsx",
+      "sha256": "97f3385938370b26f2a47cd97c58a6319e5cdda911106fac78aad121acfc2e80",
+      "lines": 82,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/AnswerApprovalPanel.tsx",
+      "sha256": "658642e359e47419624d221e6f961efe4f152d418c7ee13be8780aade5a589a6",
+      "lines": 64,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/AnswerApprovalPanel.test.tsx",
+        "frontend/src/ConversationPreviewPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/AnswerHistoryPanel.test.tsx",
+      "sha256": "754e38e68f9859e1c48b414d2590dfc21f71deeff7f50f59c4859393847fcfd7",
+      "lines": 119,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/AnswerHistoryPanel.tsx",
+      "sha256": "9e1200d2726860223c9f2bed814bd72a02b694f4de84fc0c099aaccb86193c17",
+      "lines": 115,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/AnswerJobsPanel.test.tsx",
+      "sha256": "746a946cc21a7583a06de9e591c35379696ffbc17af51bc5f75d388c029fbdd5",
+      "lines": 127,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/AnswerJobsPanel.tsx",
+      "sha256": "e2960ee64ceae5b5cfdd058dd30f31182d8737ff6bb2b90f5983e4d8f4306e53",
+      "lines": 81,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/AnswerJobsPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/App.test.tsx",
+      "sha256": "caaceac70433a9fd2d2c31d772a69c0b4cc470939b0cd2453d1eeb8e84886402",
+      "lines": 129,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "sha256": "176968a92746e85d4cc292691086e85d423fcf61866dceb6542e81e6ea7c429f",
+      "lines": 261,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "frontend/src/AnswerApprovalPanel.test.tsx",
+        "frontend/src/App.test.tsx",
+        "frontend/src/ConversationPreviewPanel.test.tsx",
+        "frontend/src/ProposalAcceptance.test.tsx",
+        "scripts/cli-settings-smoke.mjs",
+        "scripts/native-host-smoke.mjs",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "frontend/src/CliLaunchPanel.test.tsx",
+      "sha256": "c11a6fcb75580987bdc9497ddd57562ce0d3ed563228def11cfaa596a0dd3b43",
+      "lines": 53,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/CliLaunchPanel.tsx",
+      "sha256": "f2a19b397fb824a10fc86a1656a97da3ddc5151955ce9f7eb542cf01e86dcdd2",
+      "lines": 78,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/CliLaunchPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/CliStatusPanel.test.tsx",
+      "sha256": "30638b8a436f22fa5205007b581026971f913b328334294287b517de1fc64219",
+      "lines": 42,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/CliStatusPanel.tsx",
+      "sha256": "878b247abffe3fce24cb84e4c5c6bd0d21500484876db9a156f964bec6f1d07f",
+      "lines": 42,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/CliStatusPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/ConversationPreviewPanel.test.tsx",
+      "sha256": "13327499f936dee67720bb91b01d1ffc55c25d08448016e5454bd12b8c6e7069",
+      "lines": 96,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/ConversationPreviewPanel.tsx",
+      "sha256": "2b3a7bd1e63c52e4b80883f05a5400bc396ae52ef1c78a967110cff9d28fa509",
+      "lines": 116,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/ConversationPreviewPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/ConversationShelf.test.tsx",
+      "sha256": "901f67750cf82a5c08b35fb83bc627829a1bc9e6fc508c9e1df65a0f64aa4f80",
+      "lines": 77,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/ConversationShelf.tsx",
+      "sha256": "72f788f21d89a4d8228fbb5af4ab2970f8db3c976d8c22f98343cfe047591859",
+      "lines": 86,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/ConversationShelf.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/EvidenceAnswerPreparation.test.tsx",
+      "sha256": "fe7c43f152e852902b23826d954d41cc21c0472857e0160f586ae0523f418c71",
+      "lines": 101,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/EvidenceAnswerPreparation.tsx",
+      "sha256": "5c3d70d18beffbc1258acecab207c9554dcd30426d64babbacfc07c1cb8c32f1",
+      "lines": 84,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/EvidenceAnswerPreparation.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/EvidenceBundlePanel.test.tsx",
+      "sha256": "b70cd3cb2b9f5a9391e9a5be9e141e2258709568383ee9da59938ab5643d32c0",
+      "lines": 97,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/EvidenceBundlePanel.tsx",
+      "sha256": "d035e91a201386f57f301ad50e0178df95f46a6f512c7caaf7682b18be9b6efa",
+      "lines": 87,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/EvidenceBundlePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/EvidenceOriginButton.test.tsx",
+      "sha256": "867c630f21504f8bdaea288025b753677cd39809bb0afec3033168e1cb919534",
+      "lines": 58,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/EvidenceOriginButton.tsx",
+      "sha256": "d2622a0af3874af240fb7d76c35cde5b228b971ed65fca39b2e4dfb451d680d1",
+      "lines": 33,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/EvidenceOriginButton.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/GenerationComparison.test.tsx",
+      "sha256": "b5b9a1fb95c10cce533141deb5353e4ad0a65ec4fbd187dec5ce4b5a7d495905",
+      "lines": 90,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/GenerationComparison.tsx",
+      "sha256": "e584bb1b03577ff09d056a05b940d3ea0029d9823f0f2f5504285e99ef6d16e6",
+      "lines": 78,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "frontend/src/GenerationComparison.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/GenerationJobsPanel.test.tsx",
+      "sha256": "f09ba40b9c0be8f96e6e4d505335dd876c612c4bf000449dc8fbc54537c1ae67",
+      "lines": 82,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/GenerationJobsPanel.tsx",
+      "sha256": "268601928f6bb642d159984e63ad87b4375bb915f3692b6806077885f3239b72",
+      "lines": 79,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/GenerationJobsPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/GenerationPanel.test.tsx",
+      "sha256": "70f752286caaa41f35a2945b2d168649adeaeed8f4e60b7c2abfdea372723cfc",
+      "lines": 103,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/GenerationPanel.tsx",
+      "sha256": "40d9abdc5e3fc4fd0a3e2dbeb2b180e3bffd9de052b63dba56fa84968d481be2",
+      "lines": 108,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/GenerationPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/KnowledgeMarkdown.test.tsx",
+      "sha256": "915a550ddf49ce07567f786ee821d445f3e71dbbc77bda02d9cfbdebd0ef6148",
+      "lines": 36,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/KnowledgeMarkdown.tsx",
+      "sha256": "9c9cc3a7dcead6955c3d43351b9055ef136d3fbf2457ad703c80e889e981a651",
+      "lines": 16,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/KnowledgeMarkdown.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/KnowledgeOrganization.test.tsx",
+      "sha256": "8f8382f1aea8cc917994a713fd7e0daddeef7c89b792fdec3b249d8d515faa6d",
+      "lines": 122,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/KnowledgeOrganization.tsx",
+      "sha256": "fa09e7ec4d5bfa9dc82c81fb44524a7165ca8f390320b4359c700d24abc9a292",
+      "lines": 138,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/KnowledgeOrganization.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/KnowledgePanel.test.tsx",
+      "sha256": "ecce4b1cba851ad9d02975d6365dfcebaef7035f6cd896439e88167b6aa77bb9",
+      "lines": 148,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/KnowledgePanel.tsx",
+      "sha256": "71568d55ec750dcf3c45398d76284afdde89f4372958025b9724b288d32e4654",
+      "lines": 190,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/KnowledgePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/ProposalAcceptance.test.tsx",
+      "sha256": "cc630d14952cb169b950e33362777a5fa5047d52c1364ecee54fc4ca7cab8812",
+      "lines": 79,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/ProposalAcceptance.tsx",
+      "sha256": "68130ada7dfaccc1a4c1491f6af0f7ecbcbb42285d1ae45928f3dd888595a6b3",
+      "lines": 71,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "frontend/src/ProposalAcceptance.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/ProposalDecisions.test.tsx",
+      "sha256": "31d0629ed62aeacd723bdd6207b24cd1f49fe345ce965aacb2646b6aab393ed9",
+      "lines": 75,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/ProposalDecisions.tsx",
+      "sha256": "c25130033a2b1ef0e214dc95ead36248a369fcafd1affafdbc6696070f4d09fc",
+      "lines": 66,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/ProposalDecisions.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/ProposalMerge.test.tsx",
+      "sha256": "72e22a3202721d490610de566c790d34249d4429c3623f6f0c5b167fea77e4c5",
+      "lines": 180,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/ProposalMerge.tsx",
+      "sha256": "2229d95a4cd726d64041b46022fc5154a58cdb03e25dd86eba1077b8064e8540",
+      "lines": 162,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/ProposalMerge.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/PublicationPanel.test.tsx",
+      "sha256": "9c73818408c31bd0ef029ecee349640b5156fc692161e456bf5b41a82180abfe",
+      "lines": 79,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/PublicationPanel.tsx",
+      "sha256": "ac316848f69f490bae880788dd8b5de013433d7f60e51bc66ce3c274300edc07",
+      "lines": 81,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/KnowledgePanel.test.tsx",
+        "frontend/src/PublicationPanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/PublishedSearchPreview.test.tsx",
+      "sha256": "eb5844f728bca0649227f3f6f658ec449578c6f95be763c186c4b9848f4937e6",
+      "lines": 44,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/PublishedSearchPreview.tsx",
+      "sha256": "6f9ffcdd5ea9fb7ea84a59b769236b7dafcf6b2d3913f2a445c3e5f2f3d6d325",
+      "lines": 45,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/PublishedSearchPreview.test.tsx",
+        "frontend/src/SourcePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/RelationPanel.test.tsx",
+      "sha256": "11687e937865cf4db9ed0567fcbf4e77afe72996db31d88f88978308b75c2e64",
+      "lines": 57,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/RelationPanel.tsx",
+      "sha256": "86c42ab5e3163d63ccceb3de8913b3de7c6b6f158dc67ad8cca0739fdc31896a",
+      "lines": 58,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/SourcePanel.test.tsx",
+      "sha256": "e3e765508843a118b55f8aceb9ac355aefc267825f5203ee53018c41a8ca429d",
+      "lines": 143,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/SourcePanel.tsx",
+      "sha256": "6308a25223a9ccfc4713605990fc7d15710717b2d672605bab8ce96885a33e56",
+      "lines": 174,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/SourcePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/SourcePollingSettings.test.tsx",
+      "sha256": "0807867d6904b3ef9f60ec495f7f9ba0887b5be16ec66fd908528fc5811afe25",
+      "lines": 33,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/SourcePollingSettings.tsx",
+      "sha256": "cfc952683d99abaf64855263745428f4fa6756bdfe1350c5832a48d74a2cc24f",
+      "lines": 30,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/SourcePollingSettings.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/answerJobEvents.desktop.test.ts",
+      "sha256": "92469dddf720321106d950b30f7e68551f54999cd8c76876aea794a36715612d",
+      "lines": 122,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/answerJobEvents.test.ts",
+      "sha256": "98ed264fbb8e7e0fa5021014803346e68f19db92ae70c702f65f5a2c258623cf",
+      "lines": 123,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/answerJobEvents.ts",
+      "sha256": "3d6db08e0958a65ca383fd330d97c6c21fc9e03a1d3ef79f8951d7cc05e6275d",
+      "lines": 86,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/answerJobEvents.desktop.test.ts",
+        "frontend/src/answerJobEvents.test.ts"
+      ]
+    },
+    {
+      "path": "frontend/src/api.test.ts",
+      "sha256": "4d48d165c5d16ac7624d1a0b0a8660bded5a711cd98eba209f7618ad37203aab",
+      "lines": 24,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/api.ts",
+      "sha256": "7fee3bd21078e63c6ee59024cbbbb956a3e20d5b602a7d0cfe8e4883dcd17c88",
+      "lines": 27,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnalyzerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopDataLockTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ClaudeTextStreamTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "frontend/src/AnswerApprovalPanel.test.tsx",
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/App.test.tsx",
+        "frontend/src/CliLaunchPanel.test.tsx",
+        "frontend/src/CliStatusPanel.test.tsx",
+        "frontend/src/ConversationPreviewPanel.test.tsx",
+        "frontend/src/ConversationShelf.test.tsx",
+        "frontend/src/EvidenceAnswerPreparation.test.tsx",
+        "frontend/src/EvidenceBundlePanel.test.tsx",
+        "frontend/src/EvidenceOriginButton.test.tsx",
+        "frontend/src/GenerationComparison.test.tsx",
+        "frontend/src/GenerationJobsPanel.test.tsx",
+        "frontend/src/GenerationPanel.test.tsx",
+        "frontend/src/KnowledgeMarkdown.test.tsx",
+        "frontend/src/KnowledgeOrganization.test.tsx",
+        "frontend/src/KnowledgePanel.test.tsx",
+        "frontend/src/ProposalAcceptance.test.tsx",
+        "frontend/src/ProposalDecisions.test.tsx",
+        "frontend/src/ProposalMerge.test.tsx",
+        "frontend/src/PublicationPanel.test.tsx",
+        "frontend/src/PublishedSearchPreview.test.tsx",
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx",
+        "frontend/src/answerJobEvents.desktop.test.ts",
+        "frontend/src/answerJobEvents.test.ts",
+        "frontend/src/api.test.ts",
+        "frontend/src/desktopTransport.test.ts",
+        "scripts/cli-settings-smoke.mjs",
+        "scripts/native-host-smoke.mjs",
+        "scripts/polling-smoke.mjs",
+        "scripts/relations-smoke.mjs",
+        "scripts/smoke.mjs",
+        "scripts/upgrade-smoke.mjs"
+      ]
+    },
+    {
+      "path": "frontend/src/components/ui/button.tsx",
+      "sha256": "53c0536a4af5fb13313143e60f0e5ca33487473429877024f6aad1a4a2ee3fce",
+      "lines": 28,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "frontend/src/AnswerApprovalPanel.test.tsx",
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/App.test.tsx",
+        "frontend/src/CliLaunchPanel.test.tsx",
+        "frontend/src/CliStatusPanel.test.tsx",
+        "frontend/src/ConversationPreviewPanel.test.tsx",
+        "frontend/src/ConversationShelf.test.tsx",
+        "frontend/src/EvidenceAnswerPreparation.test.tsx",
+        "frontend/src/EvidenceBundlePanel.test.tsx",
+        "frontend/src/EvidenceOriginButton.test.tsx",
+        "frontend/src/GenerationComparison.test.tsx",
+        "frontend/src/GenerationJobsPanel.test.tsx",
+        "frontend/src/GenerationPanel.test.tsx",
+        "frontend/src/KnowledgeOrganization.test.tsx",
+        "frontend/src/KnowledgePanel.test.tsx",
+        "frontend/src/ProposalAcceptance.test.tsx",
+        "frontend/src/ProposalDecisions.test.tsx",
+        "frontend/src/ProposalMerge.test.tsx",
+        "frontend/src/PublicationPanel.test.tsx",
+        "frontend/src/PublishedSearchPreview.test.tsx",
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx",
+        "frontend/src/SourcePollingSettings.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/desktopTransport.test.ts",
+      "sha256": "d57f613b8b9a6f87c2a2ec456f641a8a4602dd11f4200e687feb13763d49279e",
+      "lines": 80,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/desktopTransport.ts",
+      "sha256": "42f357171fe3f7bf0c522fe821fd6a189375e2d1e2735ed58c2f32ad80ab6778",
+      "lines": 27,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/download.ts",
+      "sha256": "7195695bc297880032a508850f3ff6b167c5f03149ced65f01dddda8db7619d0",
+      "lines": 27,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "frontend/src/App.test.tsx",
+        "frontend/src/KnowledgePanel.test.tsx",
+        "frontend/src/desktopTransport.test.ts",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "frontend/src/fetchEventSource.ts",
+      "sha256": "d236898937554a7464f2a585d1db9ab9d271ee121b4c66a9749c99b5b027db22",
+      "lines": 63,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/lib/utils.ts",
+      "sha256": "e46429536f43f5910f5b2b0c50bb2769b510a4558bb4b5d20a3b0a9091dbf7c3",
+      "lines": 6,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "sha256": "10ac689b4eb57228d6be39425516819110d59de99ccaff9eba6ab68ae07abcc3",
+      "lines": 6,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/EvidenceBundlePanel.test.tsx",
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourcePanel.test.tsx",
+        "scripts/cli-settings-smoke.mjs",
+        "scripts/macos-architecture-test.sh",
+        "scripts/native-host-smoke.mjs",
+        "scripts/polling-smoke.mjs",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "frontend/src/test-setup.ts",
+      "sha256": "e20f6c79ce7842f29f0dd93957e8230a5cbb3b5f6ee691fef96d4f393b964cb3",
+      "lines": 5,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/test/FakeEventSource.ts",
+      "sha256": "dee8c5122fe0a6016e60a46a55b3741071f9cc19f183e16f988833d1289295c7",
+      "lines": 10,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": [
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/answerJobEvents.test.ts"
+      ]
+    },
+    {
+      "path": "scripts/build.sh",
+      "sha256": "e9c81a0704a62f934d05e445545737319856549a1c4aa2afe0d62abf26eca9c3",
+      "lines": 8,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs"
+      ]
+    },
+    {
+      "path": "scripts/cli-settings-smoke.mjs",
+      "sha256": "ffa38f0c132500584a115e5141f16c72fbe2e4d601e43b27e195c4e496016330",
+      "lines": 88,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/create-macos-dmg.sh",
+      "sha256": "a85e3d5305c2cdd9a20d5157c12a58cb36b79dfb5166d49d97b77c34adf6d784",
+      "lines": 31,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/desktop-cargo.sh",
+      "sha256": "b8ca606a196b54f86c104ab98fe1292eb521b70c49fafe0bd06aec690fd48cc2",
+      "lines": 11,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/dev.sh",
+      "sha256": "ec83271a0071325b5b696c1a96788150df580625180cd1c96e760e9a07da77dc",
+      "lines": 13,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnalyzerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobEventsIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ArchitectureContractTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliCuratorLiveTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CliLaunchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CuratorIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/KnowledgeIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/LibraryIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/MergeEvidencePlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SnapshotPlannerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopDataLockTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ClaudeTextStreamTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliCuratorModelTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliDiagnosticsAdapterTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CliProcessPathTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
+        "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
+        "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "frontend/src/desktopTransport.test.ts",
+        "scripts/macos-architecture-test.sh",
+        "scripts/native-host-smoke.mjs",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "scripts/fixtures/fake-claude-stream.sh",
+      "sha256": "3d5d659d73ad9d92e6ff6298f34aa2bc04dba78bc0668d0e39ae79462883cae0",
+      "lines": 28,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "scripts/fixtures/fake-codex-app-server.mjs",
+      "sha256": "927313294dc646629ca71d28c8379188e445531fa0059abacae4834d75576279",
+      "lines": 74,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "scripts/fixtures/fake-codex.sh",
+      "sha256": "c29d8ce44e90ba2f59bededbd770d8f0449cac275fa649e01dc34b4c1e6e5ab3",
+      "lines": 28,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "scripts/macos-architecture-test.sh",
+      "sha256": "f37f9b83c494d697afb270d168ce911feca0b5d47d086797eb7b0e2f78f9aa61",
+      "lines": 24,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/macos-architecture.sh",
+      "sha256": "64a8db6802d49afdac938b5c6a912212e9bbb061804b4c6eef665d9c619c96da",
+      "lines": 20,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "scripts/macos-architecture-test.sh"
+      ]
+    },
+    {
+      "path": "scripts/maven.sh",
+      "sha256": "d59588cb942fa91146d7a144eded799cf882680f900284f334a1af986a65479f",
+      "lines": 13,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/model-audit.mjs",
+      "sha256": "3b1ba4129047d3c8fdbd88f3ab3350946b2664732d8f05f0bc9c7d9b8d7d9f2a",
+      "lines": 25,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/native-host-smoke.mjs",
+      "sha256": "eeb46502ad9f66739059dab0c3e3ab61511a985c80af2931d108aa79e9fb2031",
+      "lines": 109,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/package-macos.sh",
+      "sha256": "9c8879b54a66a26d9e8aa7842a9fe86aae5d5b2675478609661b8d5fa148352b",
+      "lines": 63,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/polling-smoke.mjs",
+      "sha256": "7c894c4a0fc99b95678c067d2a1654b606df2944a3753de44fd8f9fc94e4736c",
+      "lines": 77,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/relations-smoke.mjs",
+      "sha256": "02904457a3d84a85310ce7d1e92a1ddacf1c78a16ca2061479b4c249546c0072",
+      "lines": 70,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/run.sh",
+      "sha256": "20e53748441b225ba1050c5e3beea7b5e49860e5be7f7a9717bec57d51ea0743",
+      "lines": 8,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/AnswerJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/CollectorTest.java",
+        "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationComparisonIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/GenerationJobIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/desktopTransport.test.ts",
+        "scripts/cli-settings-smoke.mjs",
+        "scripts/macos-architecture-test.sh",
+        "scripts/native-host-smoke.mjs",
+        "scripts/polling-smoke.mjs",
+        "scripts/relations-smoke.mjs",
+        "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "scripts/setup-desktop-rust.sh",
+      "sha256": "cb7b6dd3fa595ff7e9aa75b2dc77c7e82ba37bb1e81227b0da87494954c8c05b",
+      "lines": 16,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/smoke.mjs",
+      "sha256": "67528216a71061a222c2422c3f63164b842ab95a1c7711f3ad17d1ec6d3201c0",
+      "lines": 642,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": [
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "desktop/src-tauri/examples/webview_smoke.rs",
+        "scripts/polling-smoke.mjs",
+        "scripts/relations-smoke.mjs",
+        "scripts/upgrade-smoke.mjs"
+      ]
+    },
+    {
+      "path": "scripts/upgrade-smoke.mjs",
+      "sha256": "92d34f50e0ebe76a1d9eeba37b1259814d1aa9766d1a57c63ab4466fe84f83cd",
+      "lines": 91,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/verify-macos-package.sh",
+      "sha256": "094407d98cfda18e681f456f8e5144a78cb4dbbd589b142f82e16fa9ebb9c30e",
+      "lines": 46,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    }
+  ]
+}

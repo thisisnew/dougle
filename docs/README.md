@@ -8,6 +8,7 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 | 설치하고 처음 써보기 | [Mac 설치·백업·삭제](macos-install.md) → [5분 사용법](how-it-works.md) |
 | 내부 구조를 한눈에 보기 | [그림 설계도](design-map.md) |
 | 무엇을 어떻게 저장하는지 | [데이터 모델과 실제 코드 대조](modeling.md) |
+| 모델과 구현을 다시 조사한 결과 | [전 파일 조사 범위·규칙별 테스트·미구현 차이](model-audit.md) |
 | 개발자가 알아야 할 구조 | [아키텍처](architecture.md) · [API](api.md) |
 | Apple Silicon에서 쓰기/빌드 | [ARM 지원과 검증 범위](apple-silicon.md) |
 | AI 설치·로그인·경로 설정 | [CLI 설정](cli-launch-settings.md) · [AI 전송 정책](cli-ai.md) |

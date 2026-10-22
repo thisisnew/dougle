@@ -1,5 +1,8 @@
 # Knowledge Forge 개발 지침
 
+- 최신 재점검은 `docs/model-audit.md`와 `scripts/model-audit.mjs`를 따른다. 전체 파일 목록·구조 검사와 수동 의미 검토/실행 커버리지는 구분한다. 아래 과거의 '다중 대화는 후속' 표현은 낡았으며 선택 문맥 고정·승인·실행은 이미 구현되어 있다.
+- 사용자는 CLI 설치/경로 입력 없는 제공자 선택·연결 UX를 요청했다. 기존 설치 확인을 인증 완료로 표시하지 말고, 도구 준비·인증·원격 이용 가능성을 분리한다. 로그인·도구 동봉은 실제 구현/검증 전까지 미완료로 표시한다.
+
 - Apple 공증은 사용자 요청으로 현재 범위에서 제외한다. ARM64 지원·교차 빌드·실제 기기 검증 상태는 `docs/apple-silicon.md`를 따른다. Intel 호스트에서 ARM 실행 성공으로 보고하지 않는다.
 - `scripts/package-macos.sh`는 `FORGE_MACOS_TARGET`/`FORGE_TARGET_JAVA_HOME`을 지원한다. 공유 `resources/runtime`은 마지막 타깃으로 교체되므로 병렬 패키징하지 않는다. 설치 검증은 명시적 DMG 경로를 사용하며 ARM 정적 검사는 `--static-only`로 구분한다.
 - 사용자용 문서 목차는 `docs/README.md`다. 앱 소개·설치·사용·설계·모델·검증 상태를 함께 갱신하며 과거 보고서와 현재 상태를 구별한다.
