@@ -16,6 +16,9 @@
 
 현재 개발 소스는 SQLite v21입니다. 공개 릴리스에 포함된 기능은 [설치 안내](macos-install.md)를 확인하세요.
 
+Intel/Apple Silicon은 UI·서버 JAR·DB 모델을 공유합니다. **Tauri 실행 파일과 동봉 Java만 대상 CPU에 맞춰 함께 빌드**합니다.
+아키텍처 혼합은 패키징 검사에서 거부합니다. 공증은 이번 범위에서 제외합니다. [ARM 빌드·검증 구분](apple-silicon.md).
+
 ## 실행 구조
 
 ```mermaid

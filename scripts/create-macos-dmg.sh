@@ -2,6 +2,9 @@
 set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 app="${1:-$repo_root/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app}"
+source "$repo_root/scripts/macos-architecture.sh"
+architecture="$(forge_macos_architecture "$app/Contents/MacOS/knowledge-forge-desktop")"
+forge_verify_macos_architecture "$app" "$architecture"
 version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")"
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Expected a numeric three-part app version.' >&2; exit 1; }
 release="$repo_root/release"
@@ -19,9 +22,10 @@ if ! codesign --verify --deep --strict "$staging/Knowledge Forge.app"; then
   exit 1
 fi
 ln -s /Applications "$staging/Applications"
-disk_image="$release/Knowledge.Forge_${version}_$(uname -m).dmg"
+disk_image="$release/Knowledge.Forge_${version}_${architecture}.dmg"
 [[ ! -L "$disk_image" ]] || { echo 'Refusing a symlinked output.' >&2; exit 1; }
 hdiutil create -volname 'Knowledge Forge' -srcfolder "$staging" -format UDZO -ov "$disk_image"
 hdiutil verify "$disk_image"
-(cd "$release" && shasum -a 256 "$(basename "$disk_image")" > SHA256SUMS)
+(cd "$release" && shasum -a 256 "$(basename "$disk_image")" > "SHA256SUMS-${architecture}")
+(cd "$release" && shasum -a 256 Knowledge.Forge_"${version}"_*.dmg > SHA256SUMS)
 echo "Ad-hoc signed preview artifacts: $release (not Apple notarized)"

@@ -1,5 +1,10 @@
 # 아키텍처
 
+쉽게 보기: [문서 목차](README.md) → [설계도](design-map.md) → [모델/코드 대조](modeling.md).
+Mac 패키지는 공통 React/JAR와 CPU별 Tauri/Java 런타임으로 구성합니다.
+`package-macos.sh`의 대상 JDK/타깃 선택 → `macos-architecture.sh`의 앱/JVM 일치 확인 → DMG 생성 순서입니다.
+교차 빌드의 정적 검사와 실제 기기 실행 검증은 분리합니다. [Apple Silicon](apple-silicon.md).
+
 `CliLaunchConfiguration → CliLaunchStore → JdbcCliLaunchStore`는 재시작 적용 설정입니다. 생성·진단·Codex 스트림은 같은 활성 명령을 사용하며 `CuratorSettings.executionBinding`이 지식/답변 승인 요청에 결합됩니다. [v21 경계](cli-launch-settings.md).
 
 `RelationSearch → RelationCatalog → JdbcRelationCatalog`는 Lucene 결과에서 시작하는 읽기 전용 연결 탐색입니다. 심볼 이름/종류와 게시 근거 origin_key를 사용하며 AI·재분석과 분리합니다. [실제 설계](relations.md).

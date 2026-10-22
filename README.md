@@ -1,185 +1,77 @@
 # Knowledge Forge
 
-PC에 자료와 지식을 독립적으로 보관하는 **로컬 지식 서재**입니다.
-파일·폴더·웹·GitHub를 수집하고, 근거를 확인한 뒤 승인 기반 CLI AI로 질문합니다.
+**내 자료를 모아 검색하고, 출처가 있는 지식을 만드는 Mac 앱**입니다.
+파일·폴더·웹·GitHub를 로컬에 보관하고, 정리된 지식과 근거 기반 AI 답변을 만듭니다.
 
-**[Intel Mac 설치 파일 받기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1)** — Java 포함, Apple 미공증 미리보기입니다. [설치 안내](docs/macos-install.md)를 먼저 확인하세요.
+## 설치
 
-## 한눈에 보기
-
-| 구분 | 상태 |
+| Mac 종류 | 설치 파일 / 검증 상태 |
 |---|---|
-| 공개 설치 파일 | v0.1.1-preview.1 / DB v21 / Intel Mac |
-| 최신 개발 소스 | DB v21 / 공개 설치 파일에 포함 |
-| 구현 | Workspace·자료 탐색, 문서/Java 분석·검색·[관련 자료](docs/relations.md), 지식 편집·검토·게시, 승인 기반 AI·SSE·문맥 이어 질문 |
-| 이번 추가 | [Source 자동 갱신](docs/source-polling.md), [Git 변경 blob 수집](docs/git-incremental.md), [URL 조건부 수집](docs/url-conditional.md), [CLI 경로 설정](docs/cli-launch-settings.md) |
-| 검증 | 백엔드 350·UI 195·Rust 12 통과, 설치 복사본·업그레이드·백업 복원 확인 |
-| 별도 검증 | 실제 외부 AI 호환성, Apple 공증·Apple Silicon·Windows |
+| Intel | [0.1.1 미리보기 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1) · 설치 복사본 실행 검증 완료 |
+| Apple Silicon (M 시리즈) | ARM64 앱 + ARM64 Java 패키징 경로 추가. [빌드·검증 현황](docs/apple-silicon.md) |
 
-자동 갱신은 기본 OFF입니다. 외부 AI 전송은 건별 승인이 필요하며, 사람이 편집한 지식을 자동으로 덮어쓰지 않습니다.
-현재 코딩 대화를 앱이 공유하는 것이 아니라 로그인된 Codex/Claude Code CLI에 새 요청을 보냅니다.
+Java는 앱에 포함됩니다. **Apple 공증은 이번 범위에서 제외**하며, 회사 보안 정책에 따라 설치가 제한될 수 있습니다.
+[설치·백업·삭제 안내](docs/macos-install.md)를 먼저 읽으세요. Windows는 후속 지원입니다.
 
-처음 읽기: **[쉬운 사용법](docs/how-it-works.md)** → **[그림 설계도](docs/design-map.md)** → **[모델과 실제 코드 대조](docs/modeling.md)**.
-개발 이어가기: [HANDOFF](HANDOFF.md) · [미완료 체크리스트](docs/backlog.md) · [설치 검증 범위](docs/desktop-report.md).
+## 어떤 일을 할 수 있나요?
 
-## 구현 범위
+1. **자료 모으기** — 프로젝트별 Workspace에 파일·폴더·공개 HTTPS·공개 GitHub를 등록합니다.
+2. **찾기** — 원본·게시된 지식을 검색하고 여러 도메인을 함께 선택합니다.
+3. **지식 만들기** — 출처를 연결한 Markdown 초안을 직접 쓰거나 AI로 생성합니다.
+4. **검토·게시** — 사람이 확인한 버전만 게시하며 이전 버전·사람 편집을 보존합니다.
+5. **질문하기** — 근거부터 확인하고 AI 요청을 승인하면 SSE로 답변·상태를 받습니다. 중단과 선택 문맥 이어 질문도 지원합니다.
+6. **갱신하기** — Source별 자동 갱신을 켭니다. Git 변경 blob·웹 조건부 요청을 사용하며 실패하면 이전 자료를 유지합니다.
 
-- Workspace 생성·삭제·전환 및 마지막 선택 복원
-- Workspace별 원본 폴더 생성, 하위 폴더 탐색, 경로 이동
-- 파일 복사본 업로드(10 MiB 이하), 다운로드, 삭제
-- UTF-8 텍스트 미리보기(1 MiB 이하), 바이너리·초과 크기 안내
-- 원본/지식 영역 분리, 수동 Markdown 초안·이전 버전·근거 원문 보존
-- SQLite 영속 저장, Workspace 및 폴더 삭제 시 하위 자료 정리
-- React + Tailwind CSS + shadcn/ui 패턴의 Button, Radix 접근성 Dialog
-- 로컬 요청 방어, 오류 표시, 삭제 확인, 비동기 탐색 취소
-- Source 등록: 로컬 폴더, 공개 HTTPS URL, 공개 GitHub 저장소
-- 수동 동기화, 상태·오류·마지막 반영 버전, SHA-256 원본 해시
-- 성공한 스냅샷만 원자적으로 반영, 실패 시 이전 자료 유지, 변경 없으면 기존 ID 유지
-- Apache Tika 문서 추출, JavaParser 타입·메서드·생성자와 행 번호
-- Lucene 10 + Nori로 내용·파일명·심볼 검색, 여러 사용자 지정 도메인 동시 검색
-- SQLite 분석 결과/심볼 저장, 내구성 있는 인덱스 갱신 큐, 재시작 시 인덱스 복원
+**자료 등록만으로 AI가 자동 호출되지는 않습니다.** AI는 로그인된 Codex/Claude Code CLI에 승인한 내용을 보내는 새 요청입니다.
+현재 코딩 대화를 공유하지 않으며, CLI 설치·로그인은 별도로 필요합니다. Ollama는 요구하지 않습니다.
 
-자동 의미 검증과 영속 Git 캐시/브랜치 선택은 후속 범위입니다. 현재는 전체 수집본에서 변경 파일만 분석·반영합니다. 데스크톱은 Intel Mac 미리보기 패키지 단계입니다.
-불변 초안은 DRAFT이며 검토/게시 이력을 별도로 보존합니다. 사람 검토와 명시적 게시를 지원하지만 자동 사실 검증은 아닙니다. [사용법·한계](docs/publication.md).
+## 구조를 쉽게 보면
 
-최신 DB 스키마는 v21입니다. 업데이트 전 앱을 종료하고 데이터 디렉터리를 백업하세요.
+```text
+Mac 앱 (Tauri)
+  ├─ React 화면
+  └─ 동봉 Java / Spring Boot
+       ├─ 원본 수집 → Tika·JavaParser → Lucene/Nori 검색
+       ├─ SQLite: Workspace·원본·지식·출처·승인·답변 이력
+       └─ 사용자 승인 → Codex/Claude CLI → 별도 초안 또는 답변
+```
 
-지식 근거의 **현재 원본에서 보기**로 원본 폴더·미리보기로 이동할 수 있습니다.
-동기화 후 위치 해석과 삭제/변경 경고는 [출처 탐색 가이드](docs/evidence-navigation.md)를 참고하세요. 독립 지식 폴더·카드 배치도 지원합니다. [사용법](docs/knowledge-folders.md).
+원본과 지식은 독립 보관합니다. 질문할 때 전체 자료를 다시 분석하지 않습니다.
+외부 DB 서버·벡터 DB·Elasticsearch는 필요 없습니다. 회사 GitHub Actions를 수정하지 않습니다.
+Intel/ARM은 화면·JAR·DB를 공유하고 Tauri 실행 파일과 Java 런타임만 CPU에 맞게 묶습니다.
 
-## 개발 환경
+## 문서
 
-- JDK **21** (`JAVA_HOME` 설정, macOS에서는 실행 스크립트가 설치된 Java 21 자동 탐색)
-- Node.js **22.12 이상** 또는 24, npm
-- Git CLI (GitHub 수집에 사용)
-- Maven은 포함된 Maven Wrapper로 내려받습니다. 전역 Maven 설치는 필요 없습니다.
-- 최초 의존성 설치 시 인터넷 연결이 필요합니다. AI 생성은 건별 승인 후 외부 서버를 호출합니다.
-- AI 기능은 로그인된 Codex 또는 Claude Code CLI가 필요합니다. Ollama 설치는 필요 없습니다.
-- 모델 고정·CLI 설치 확인 방법과 남은 범위는 [모델 설정 가이드](docs/cli-settings.md)를 확인하세요.
-- 건별 모델 선택·브라우저 선택 저장·요청 모델 이력과 v5 업그레이드는 [건별 모델 가이드](docs/model-selection.md)를 확인하세요.
-- 실행 전 CLI 관측 이력(v6 도입)은 [CLI 관측 가이드](docs/cli-observation.md)를 확인하세요.
+- **처음 사용:** [5분 사용법](docs/how-it-works.md) · [전체 문서 목차](docs/README.md)
+- **구조 이해:** [그림 설계도](docs/design-map.md) · [모델과 실제 코드 대조](docs/modeling.md)
+- **개발:** [아키텍처](docs/architecture.md) · [API](docs/api.md) · [Mac 빌드](docs/macos-build.md)
+- **현재와 다음:** [인수인계](HANDOFF.md) · [단계별 현황](docs/phase-plan.md) · [상세 백로그](docs/backlog.md)
+- **검증:** [0.1.1 결과](docs/release-0.1.1-report.md) · [ARM 확인 범위](docs/apple-silicon.md)
+
+## 개발 실행
+
+Java 21, Node.js 22.12+ 또는 24, Git이 필요합니다. Maven은 저장소 Wrapper를 사용합니다.
 
 ```bash
-cd knowledge-forge
 bash scripts/build.sh
 bash scripts/run.sh
 ```
 
-브라우저에서 http://127.0.0.1:8787 을 엽니다. 빌드된 UI가 Spring Boot 실행 JAR에 포함됩니다.
-종료는 해당 터미널에서 `Ctrl+C`입니다.
-
-개발용 두 서버 실행:
-
-```bash
-cd frontend
-npm ci
-cd ..
-bash scripts/dev.sh
-```
-
-개발 화면은 http://127.0.0.1:5173, API는 127.0.0.1:8787입니다.
-Vite의 동일 출처 프록시가 API를 연결합니다.
-두 포트 중 하나가 이미 사용 중이면 기존 개발 서버를 종료하세요.
-
-## 사용 방법
-
-완료된 AI 작업에서 **원래 문서와 비교**를 누르면 생성 당시·현재·AI 최초 결과를 함께 확인합니다.
-비교는 읽기 전용이며 자동 덮어쓰기는 없습니다. [비교 안내](docs/generation-comparison.md). 별도 [처리 기록](docs/proposal-decisions.md)에서 거절·재검토 이유를 저장하고, [전체 채택](docs/proposal-acceptance.md)에서 미편집 제안을 새 초안으로 반영할 수 있습니다. 사람 편집을 남기면서 일부만 추가하려면 [부분 반영 편집](docs/proposal-merge.md)을 사용하세요. 현재 수집본과 일치하는 근거끼리는 [번호 통합](docs/evidence-merge.md)도 선택할 수 있습니다.
-
-1. **Workspace 만들기**에서 프로젝트 이름을 입력합니다.
-2. **새 폴더**를 만들고 폴더 이름을 눌러 들어갑니다.
-3. **파일 추가**로 `fixtures/research-notes.md`를 등록합니다.
-4. 파일 이름을 누르면 오른쪽에 원문과 상세 정보가 나옵니다.
-5. **원본 다운로드**로 보관한 바이트 그대로 내려받습니다.
-6. 왼쪽 선택 상자로 Workspace를 전환합니다. 상단 경로로 상위 폴더에 돌아갑니다.
-7. 자료 옆 휴지통이나 **Workspace 삭제**를 누른 뒤 확인하면 내부 복사본이 삭제됩니다.
-8. 분석된 파일에서 **근거로 지식 초안 작성**을 눌러 제목·Markdown·추출 텍스트 행 범위를 입력합니다.
-9. **지식 문서**에서 초안·근거·이전 버전을 열고 **초안 편집**으로 새 버전을 저장합니다.
-10. 근거 원본은 별도 복사본으로 보존합니다. 원본 삭제 후에도 지식과 당시 원문은 남습니다.
-
-11. 지식의 **AI 제공자 → 전송 내용 미리보기 → 동의 → 별도 AI 초안 생성**을 사용합니다.
-    기존 로그인 계정을 이용하는 새 CLI 요청이며 이 코딩 대화 자체를 이어받지 않습니다.
-    계정 요금·한도와 조직의 외부 전송 정책이 적용됩니다. 회사 자료 대신 가상 자료로 먼저 검증하세요.
-12. **AI 생성 작업**에서 상태를 확인하고 **생성 중단** 또는 **생성된 초안 열기**를 사용합니다.
-    화면 이동은 취소가 아니며 다시 열면 작업 이력을 조회합니다. 재시작 시 미완료 작업을 자동 재전송하지 않습니다.
-
-지식 UI는 전체/폴더별 목록, 카드 배치, Markdown 미리보기·원문, 사람 검토·명시적 게시를 제공합니다.
-제목·목록·표·코드를 표시하며 HTML 실행, 링크 이동, 이미지 로딩은 차단합니다.
-카드를 열고 **Markdown 원문 보기**를 펼치면 저장된 원문을 확인할 수 있습니다.
-[표시 정책·검증·남은 한계](docs/markdown-rendering.md). 자동 의미 검증은 아직 없습니다.
-AI 설정·보안 경계·실제 검증 결과는 [CLI 연동 안내](docs/cli-ai.md)를 참고하세요.
-작업 ID/취소/재시작 복구와 최신 검증은 [AI 생성 작업 안내](docs/generation-jobs.md)에 있습니다.
-Codex 실제 생성은 검증했습니다. 이 PC의 Claude 실제 호출은 인증 오류로 미검증이며 별도 로그인이 필요합니다.
-근거의 CURRENT/STALE/MISSING은 마지막 수집된 로컬 복사본과 비교한 결과입니다.
-외부 원본의 실시간 최신성이나 사실 검증 결과가 아닙니다. 근거 행은 추출 텍스트 기준이며 원본 페이지/행과 다를 수 있습니다.
-지식 삭제 시 모든 버전과 다른 지식이 참조하지 않는 근거 복사본이 제거됩니다. 원본 자료는 유지됩니다.
-
-앱에서 자료를 삭제해도 사용자가 업로드했던 PC의 원래 파일은 삭제되지 않습니다.
-업로드 후 원래 파일이 바뀌어도 현재 복사본은 자동 갱신되지 않습니다.
-
-### Source와 검색
-
-1. **Source 등록**에서 종류·이름·위치를 입력합니다. 도메인은 원하는 분류명으로 지정할 수 있습니다.
-2. 로컬 테스트는 `fixtures/synthetic-project`의 **절대 경로**를 입력합니다.
-3. **동기화**를 누르면 원본 영역에 Source 이름의 폴더가 생깁니다.
-4. `measureTemperature`로 검색하면 Java 심볼이 있는 파일을 찾을 수 있습니다.
-5. 파일을 선택하면 원문, 추출된 텍스트, 심볼과 행 번호를 확인할 수 있습니다.
-6. 도메인 체크박스를 여러 개 선택하면 선택한 분류를 함께 검색합니다.
-7. 원본을 변경한 뒤 다시 동기화합니다. 오류가 발생하면 기존 반영 버전이 유지됩니다.
-
-Phase 1에서 등록한 기존 파일은 **다시 분석**을 눌러 검색에 추가합니다.
-Source 소속 자료는 탐색기에서 개별 변경하지 않고 Source 동기화/삭제로 관리합니다.
-새 Source는 등록만으로 외부 통신하지 않으며, 수동 동기화를 눌러야 수집합니다.
-
-현재 공개 HTTPS(443), 공개 GitHub 기본 브랜치만 지원합니다. 비공개 저장소 토큰,
-사내 HTTP 서버, SSH·서브모듈·심볼릭 링크·OCR는 지원하지 않습니다.
-Source당 500개 파일/50 MiB, 파일당 10 MiB, 경로 깊이 16단계 제한이 있습니다.
-`.git`, `.env*`, `.ssh`, `.aws`, `node_modules`, `target`, `dist`, 앱 데이터·캐시는 제외합니다.
-텍스트 추출은 파일당 500,000자 이내입니다.
-
-## 데이터와 실행 설정
-
-- 기본 저장소: 프로젝트의 `.data/knowledge-forge.sqlite`
-- `FORGE_DATA_DIR`: 저장 디렉터리 절대 경로 재정의
-- `PORT`: 단일 실행 JAR의 포트 재정의(기본 8787)
-- `JAVA_HOME`: Java 21 경로
-- 빌드 캐시: `.m2`, `.tools`, `frontend/node_modules`
-- 백업은 앱을 종료한 뒤 `.data` 디렉터리 전체를 복사하세요.
-- 기본 저장소는 암호화되지 않습니다. 현재는 단일 OS 사용자 로컬 개발용입니다.
-
-```bash
-FORGE_DATA_DIR="$HOME/KnowledgeForgeData" PORT=8787 bash scripts/run.sh
-```
-
-## 테스트
+`http://127.0.0.1:8787`에서 엽니다. 개발 데이터는 `.data`에 저장되며 설치 앱 데이터와 다릅니다.
+`FORGE_DATA_DIR`로 저장 위치, `PORT`로 포트를 지정할 수 있습니다. 개발 서버 두 개는 `bash scripts/dev.sh`로 실행합니다.
 
 ```bash
 bash scripts/maven.sh test
-cd frontend
-npm test
-npm run build
-cd ..
+(cd frontend && npm test && npm run build)
 node scripts/smoke.mjs
+bash scripts/desktop-cargo.sh test --locked
 ```
 
-마지막 명령은 빌드된 JAR를 임시 저장소·임시 포트로 실행합니다.
-실제 HTTP, 파일 왕복, 재시작 영속성, 삭제와 작은 합성 데이터셋 성능을 검증하고
-`docs/performance-phase3-foundation.json`을 생성합니다. 지식·근거의 재시작 보존도 검증하며 개발 데이터는 사용하지 않습니다.
-AI 작업 검사는 임시 서버에만 테스트 전용 fake CLI를 지정합니다. 실제 AI 모델의 성공/성능으로 해석하지 마세요.
-`node scripts/smoke.mjs --live-public`은 example.org와 이 공개 프로젝트 저장소의
-읽기 전용 수집까지 검사하므로 인터넷 연결이 필요합니다.
+## 현재 한계
 
-## 산출물
-
-- **다른 PC에서 이어서 개발:** [구현 현황 및 인수인계](HANDOFF.md)
-- **다음 작업 전체 체크리스트:** [남은 개발 작업과 완료 조건](docs/backlog.md)
-- 실행 JAR: `backend/target/knowledge-forge-0.1.0.jar`
-- 프런트엔드 번들: `frontend/dist`
-- [아키텍처](docs/architecture.md)
-- [API 명세](docs/api.md)
-- [Phase 완료 기준과 로드맵](docs/phase-plan.md)
-- [테스트 결과](docs/test-report.md)
-- [Phase 2 검증 결과와 한계](docs/phase2-report.md)
-- [Phase 3 기반 검증 결과와 한계](docs/phase3-foundation-report.md)
-
-Intel Mac `.app`/`.dmg`를 제공합니다. [최신 검증 보고서](docs/release-0.1.1-report.md). Apple 공증·Apple Silicon·Windows는 후속입니다.
+- DB v21. 업데이트 전 앱을 종료하고 데이터 폴더 전체를 백업하세요. 구버전으로 다시 열지 않습니다.
+- 파일당 10 MiB, Source당 500개/50 MiB. 사설 GitHub·SSH·OCR·대규모 저장소 확장은 후속입니다.
+- CURRENT는 마지막 로컬 수집본과 일치한다는 뜻이지 사실·원격 최신성 보증이 아닙니다.
+- 자동 의미 검증, 영속 Git 캐시, 자동 업데이트는 미지원입니다.
+- 최신 통합 검사: 백엔드 350·UI 195·Rust 12 통과. 실제 AI opt-in 테스트 1개는 미실행입니다.
+- ARM 교차 빌드와 실제 ARM 기기 실행 검증을 구분합니다. 첫 체험은 회사 자료가 아닌 가상 자료로 진행하세요.

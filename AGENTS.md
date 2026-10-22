@@ -1,5 +1,9 @@
 # Knowledge Forge 개발 지침
 
+- Apple 공증은 사용자 요청으로 현재 범위에서 제외한다. ARM64 지원·교차 빌드·실제 기기 검증 상태는 `docs/apple-silicon.md`를 따른다. Intel 호스트에서 ARM 실행 성공으로 보고하지 않는다.
+- `scripts/package-macos.sh`는 `FORGE_MACOS_TARGET`/`FORGE_TARGET_JAVA_HOME`을 지원한다. 공유 `resources/runtime`은 마지막 타깃으로 교체되므로 병렬 패키징하지 않는다. 설치 검증은 명시적 DMG 경로를 사용하며 ARM 정적 검사는 `--static-only`로 구분한다.
+- 사용자용 문서 목차는 `docs/README.md`다. 앱 소개·설치·사용·설계·모델·검증 상태를 함께 갱신하며 과거 보고서와 현재 상태를 구별한다.
+
 - 시작할 때 `HANDOFF.md`, `docs/architecture.md`, `docs/phase-plan.md`를 읽는다.
 - 쉬운 모델링/매뉴얼은 `docs/modeling.md`, `docs/how-it-works.md`다. 기능 변경 시 실제 코드와 대조해 구현/예정을 구분한다. 사용자 체험은 `docs/desktop-preview.md`의 Mac 설치형 기준 이후다.
 - 이어서 개발할 때 `docs/backlog.md`의 미완료 항목과 인수 조건을 확인하고 완료 증거와 함께 갱신한다.
