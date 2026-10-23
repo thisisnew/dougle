@@ -42,6 +42,8 @@ describe('Workspace와 자료 탐색기', () => {
     render(<App />)
     await screen.findByText('자료를 담을 준비가 되었어요')
     await user.click(screen.getByRole('button', { name: '지식 문서' }))
+    expect(screen.getByText('원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.')).toBeInTheDocument()
+    expect(screen.queryByText(/아직 미검증 상태입니다/)).not.toBeInTheDocument()
     await user.click(await screen.findByRole('button', { name: '가상 지식 · v1' }))
     await user.click(await screen.findByRole('button', { name: '현재 원본에서 보기' }))
     expect(api).toHaveBeenCalledWith('/workspaces/one/knowledge/card/versions/1/evidence/snapshot/location', expect.anything())

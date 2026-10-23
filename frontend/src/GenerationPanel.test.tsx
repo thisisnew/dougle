@@ -9,6 +9,25 @@ const api = vi.mocked(request)
 const preview = { provider: 'CODEX', expectedVersion: 1, digest: 'hash', prompt: '선택 근거만 전송', requestedModel: 'synthetic-model' }
 beforeEach(() => { api.mockReset(); localStorage.clear() })
 
+it.each([null, { mode: 'custom', model: 'claude-only-model' }])('기본 제공자의 모델 설정만 복원한다: %j', saved => {
+  localStorage.setItem('forge.ai.provider', 'CLAUDE')
+  localStorage.setItem('forge.ai.model.CODEX', JSON.stringify({ mode: 'custom', model: 'codex-only-model' }))
+  if (saved) localStorage.setItem('forge.ai.model.CLAUDE', JSON.stringify(saved))
+  render(<GenerationPanel base="/knowledge/one" disabled={false} onBusy={vi.fn()} onQueued={vi.fn()} />)
+  expect(screen.getByRole('combobox', { name: 'AI 제공자' })).toHaveValue('CLAUDE')
+  expect(screen.getByRole('combobox', { name: '모델 선택 방식' })).toHaveValue(saved ? 'custom' : 'server')
+  if (saved) expect(screen.getByRole('textbox', { name: '모델 ID' })).toHaveValue(saved.model)
+  else expect(screen.queryByRole('textbox', { name: '모델 ID' })).not.toBeInTheDocument()
+  expect(api).not.toHaveBeenCalled()
+})
+
+it('별도 터미널 설치 대신 앱의 AI 연결을 안내한다', () => {
+  render(<GenerationPanel base="/knowledge/one" disabled={false} onBusy={vi.fn()} onQueued={vi.fn()} />)
+  expect(screen.getByText(/상단 AI 연결에서/)).toHaveTextContent('Codex 실행 도구는 앱에 포함')
+  expect(screen.queryByText(/터미널에서 로그인하세요/)).not.toBeInTheDocument()
+  expect(api).not.toHaveBeenCalled()
+})
+
 it('미리보기 후 건별 승인해야 작업 ID와 함께 생성을 요청한다', async () => {
   const user = userEvent.setup()
   const created = vi.fn()

@@ -11,7 +11,7 @@ const { stdout } = await promisify(execFile)('git', ['ls-files', '--cached', '--
 const paths = [...new Set(stdout.split('\0').filter(path => roots.some(directory => path.startsWith(directory + '/'))
   && /\.(java|ts|tsx|rs|mjs|sh|properties|json|toml|xml|html|css)$/.test(path)))].sort()
 const sources = await Promise.all(paths.map(async path => ({ path, text: await readFile(resolve(root, path), 'utf8') })))
-const tests = sources.filter(source => /\/test\/|\.test\.|-test\.sh$|smoke\.mjs$|\/examples\//.test(source.path))
+const tests = sources.filter(source => /\/test\/|\.test\.|-test\.sh$|(?:smoke|e2e)\.mjs$|\/examples\//.test(source.path))
 const inventory = sources.map(source => {
   const symbol = basename(source.path).replace(/\.(java|tsx?|rs|mjs|sh|properties)$/, '')
   return { path: source.path, sha256: createHash('sha256').update(source.text).digest('hex'), lines: source.text.split('\n').length - 1,

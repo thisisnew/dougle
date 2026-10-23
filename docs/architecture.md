@@ -1,5 +1,7 @@
 # 아키텍처
 
+0.1.4의 모델 선택은 `preferredProvider → GenerationPanel의 provider → loadChoice(provider)` 순서로 초기화합니다. Codex 설정을 Claude에 복원하지 않습니다. 브라우저 UI·회귀 검사와 원본/지식/답변 흐름은 [전체 E2E](e2e-report.md)에 대조했습니다. DB v21과 외부 전송 승인 경계는 유지합니다.
+
 0.1.3 업데이트는 `main.rs → updates.rs → Tauri Updater`의 네이티브 경로입니다. 시작 시 또는 Mac 메뉴에서 공개 버전 정보만 조회하고, 사용자 확인 후 CPU별 서명 패키지를 받습니다. 서명·버전을 검증한 뒤 백엔드 종료를 기다려 앱만 교체합니다. 원본/지식 DB 모델(v21)과 AI 승인 경로는 바꾸지 않으며 WebView IPC 권한도 추가하지 않습니다. [업데이트 설계·배포](automatic-updates.md).
 
 설치형 HTTP 응답의 `Referrer-Policy: same-origin`은 실제 `desktopTransport`의 same-origin 변경 요청과 호환됩니다. 외부 Origin·`Origin: null`·세션 없는 요청은 계속 차단하고, 거부 메시지는 UTF-8로 씁니다. [재현·회귀 검사](release-0.1.3-report.md).

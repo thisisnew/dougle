@@ -20,7 +20,7 @@ export default function GenerationPanel({ base, disabled, onBusy, onQueued }: {
   base: string; disabled: boolean; onBusy: (busy: boolean) => void; onQueued: (id: string) => void
 }) {
   const [provider, setProvider] = useState<string>(preferredProvider)
-  const [choice, setChoice] = useState<ModelChoice>(() => loadChoice('CODEX'))
+  const [choice, setChoice] = useState<ModelChoice>(() => loadChoice(provider))
   const [saved, setSaved] = useState(false)
   const [preview, setPreview] = useState<Preview | null>(null)
   const [approved, setApproved] = useState(false)
@@ -73,8 +73,8 @@ export default function GenerationPanel({ base, disabled, onBusy, onQueued }: {
 
   return <section className="draft-section" aria-label="로그인된 CLI로 AI 초안 생성">
     <h3>로그인된 AI로 별도 초안 생성</h3>
-    <p>이 PC의 Codex / Claude Code CLI를 설치하고 터미널에서 로그인하세요. 현재 대화가 아닌 새 요청입니다.
-      Ollama는 필요 없습니다. 선택한 근거는 제공자 서버로 전송되며 계정 한도·요금·조직 정책이 적용됩니다.</p>
+    <p>상단 AI 연결에서 사용할 AI를 고르고 연결 상태를 확인하세요. Codex 실행 도구는 앱에 포함되어 있습니다.
+      현재 코딩 대화가 아닌 새 요청이며, 승인한 근거만 제공자 서버로 전송합니다. 계정 한도·요금·조직 정책이 적용됩니다.</p>
     <label>AI 제공자 <select value={provider} disabled={disabled || busy || !!submission} onChange={event => {
       setProvider(event.target.value); changeChoice(loadChoice(event.target.value))
     }}><option value="CODEX">Codex (OpenAI)</option><option value="CLAUDE">Claude Code (Anthropic)</option></select></label>

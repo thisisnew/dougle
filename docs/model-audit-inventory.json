@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 313,
-  "testOrFixtureFiles": 87,
+  "totalFiles": 314,
+  "testOrFixtureFiles": 88,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -882,6 +882,7 @@
         "frontend/src/KnowledgePanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
+        "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/smoke.mjs",
@@ -1887,14 +1888,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "b538ee4b4499fc3501398fc7b4d2da3b10dce088920bed3daf7202dbcfffaaac",
+      "sha256": "daf40860be4d650a21de5eea934606031758cc18c60c55b5e11e7d9c72b35753",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "869174d6168e5005ce29266483a236ffd889402f720c3bd8dfb5a9dc1a580d3c",
+      "sha256": "10fb3fbb00ac71cfcfc4fc27170bc907456de615df5ce58b2dc1c402b3ed82eb",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -1910,7 +1911,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "7b7aff578ab2fc60c0ac8573396eaac365ddf50262804352d3a8e66ca0127f54",
+      "sha256": "4f2b08f80de26db3b86619bbd2df5b37939d07556a5933a4b291e105b3ed4951",
       "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -1939,8 +1940,8 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "9b45f700db48ec4fd257538a4447070dfc5755f3358fc49cac13451209e25f13",
-      "lines": 244,
+      "sha256": "9c9cebb3dd8323e6dc6bb0883d04037d2431832c19735110cf856ea156aa1de1",
+      "lines": 295,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -2116,7 +2117,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "170d8dad925f4783b12e902bb7102df66feca1b005b5331b2427177cc270c095",
+      "sha256": "4c056e77030f6ab7f25d9ee9c95a2be34bec2a29b668b81584e427db17f7fd4d",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2130,6 +2131,7 @@
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
+        "scripts/browser-e2e.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
@@ -2226,14 +2228,14 @@
     },
     {
       "path": "frontend/src/App.test.tsx",
-      "sha256": "caaceac70433a9fd2d2c31d772a69c0b4cc470939b0cd2453d1eeb8e84886402",
-      "lines": 129,
+      "sha256": "81edcd04edc74d6713b878ce3cd90bd3f115b5a202acac0233a083b27a922f5f",
+      "lines": 131,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "969a2d22281f688da59bf7d2f18ac7dfb474531ef336ff984469a0a4301ed80f",
+      "sha256": "784f4f8c93554a890a8203db83b6c736d2f5d14e551054b4bc93655cf6189d27",
       "lines": 261,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2409,14 +2411,14 @@
     },
     {
       "path": "frontend/src/GenerationPanel.test.tsx",
-      "sha256": "70f752286caaa41f35a2945b2d168649adeaeed8f4e60b7c2abfdea372723cfc",
-      "lines": 103,
+      "sha256": "7187521649195089f6a142fe03c374be083cee22a5d17abca85599c9d363cf29",
+      "lines": 122,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/GenerationPanel.tsx",
-      "sha256": "724a55107ecfcfbbda024dafc270ca3926e11cf08d06158d6a2d4615e50f855f",
+      "sha256": "e05856e600312913c5927261644f4d950049be127ccc947894e3dca928af323f",
       "lines": 109,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2737,6 +2739,7 @@
         "frontend/src/answerJobEvents.test.ts",
         "frontend/src/api.test.ts",
         "frontend/src/desktopTransport.test.ts",
+        "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
@@ -2928,6 +2931,13 @@
       "lexicalTestReferences": []
     },
     {
+      "path": "scripts/browser-e2e.mjs",
+      "sha256": "e0f6273675b3254b1488597e1e77d0cbb6fb8684f3ef42c0396a23bef47271c1",
+      "lines": 94,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "scripts/build.sh",
       "sha256": "e590521d4be8a5b571971b801b3bc274ca1de1fb293a2855aae561db13e91597",
       "lines": 8,
@@ -3054,6 +3064,7 @@
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
+        "scripts/browser-e2e.mjs",
         "scripts/provider-connection-smoke.mjs",
         "scripts/smoke.mjs"
       ]
@@ -3083,7 +3094,7 @@
     },
     {
       "path": "scripts/model-audit.mjs",
-      "sha256": "c2e4bffad617b4d84cad72e04d230328932b0f9f81abe876a74754bf810398b5",
+      "sha256": "16af8db825a53591733ebd2867c548f18fd2f048562d997215e8fd974b7a6092",
       "lines": 24,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -3147,6 +3158,7 @@
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/desktopTransport.test.ts",
+        "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
@@ -3172,6 +3184,7 @@
       "lexicalTestReferences": [
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
+        "scripts/browser-e2e.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/updater-smoke.mjs",

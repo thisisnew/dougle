@@ -192,7 +192,7 @@ export default function App() {
         {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel onClose={() => setCliSettingsOpen(false)} /></Suspense>}
         <div className="page-content">
           <div className="page-heading">
-            <div><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '파일과 폴더를 보관하고 검색하세요.' : '원본과 독립적으로 보존되는 근거 연결 초안입니다. 아직 미검증 상태입니다.'}</p></div>
+            <div><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '파일과 폴더를 보관하고 검색하세요.' : '원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.'}</p></div>
             {workspace && <Button variant="ghost" size="sm" disabled={busy} onClick={() => openModal({ kind: 'delete-workspace' })}><Trash2 /> Workspace 삭제</Button>}
           </div>
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
@@ -200,7 +200,7 @@ export default function App() {
             <section className="welcome"><PixelLandscape /><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : (
             <>
-              <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">{original ? `현재 폴더 · ${entries.length}개 항목` : '수동 초안 · 버전 보존'}</span></div>
+              <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">{original ? `현재 폴더 · ${entries.length}개 항목` : '검토·게시·버전 보존'}</span></div>
               {original && <SourcePanel key={activeId} workspaceId={activeId!} revision={revision}
                 onChanged={() => setRevision(value => value + 1)}
                 onSelect={id => {

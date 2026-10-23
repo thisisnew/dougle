@@ -2,7 +2,7 @@
 
 **Intel과 Apple Silicon용 파일이 다릅니다.** Apple 공증은 사용자 요청으로 제외했습니다.
 Intel은 설치 복사본 실행 검증을 통과했습니다. Apple Silicon은 교차 빌드·정적 검사만 통과했으며 **실제 ARM Mac 실행은 미검증**입니다.
-Windows용 설치 파일은 없습니다. [0.1.3 검증](release-0.1.3-report.md) · [ARM 확인 범위](apple-silicon.md).
+Windows용 설치 파일은 없습니다. [0.1.4 검증](release-0.1.4-report.md) · [ARM 확인 범위](apple-silicon.md).
 
 ## 설치
 
@@ -10,11 +10,11 @@ Apple 메뉴 → **이 Mac에 관하여**에서 칩/프로세서를 확인하세
 
 | 내 Mac | 받을 파일 | 다운로드 |
 |---|---|---|
-| Intel 프로세서 | `Knowledge.Forge_0.1.3_x86_64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.3-preview.1) |
-| Apple M 시리즈 칩 | `Knowledge.Forge_0.1.3_arm64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.3-preview.1) |
+| Intel 프로세서 | `Knowledge.Forge_0.1.4_x86_64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.4-preview.1) |
+| Apple M 시리즈 칩 | `Knowledge.Forge_0.1.4_arm64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.4-preview.1) |
 
 보통은 DMG만 받으면 됩니다. 무결성을 직접 확인하려면 해당 CPU용 `SHA256SUMS` 파일에서 DMG 행의 SHA-256을 `shasum -a 256 받은파일.dmg` 결과와 비교하세요. 체크섬에는 앱이 사용하는 업데이트 파일도 포함됩니다.
-0.1.3은 Workspace 생성·AI 연결 요청 오류와 한글 오류 표시를 고치고 입력창·선택창을 정돈했습니다. 기존 자료의 저장 형식(v21)은 유지됩니다.
+0.1.4는 제공자별 모델 설정이 섞이던 문제와 오래된 설치 안내를 고쳤습니다. 기존 자료의 저장 형식(v21)은 유지됩니다. [전체 E2E 검사](e2e-report.md).
 
 1. 제공된 DMG와 SHA-256을 확인합니다. 모르는 사람이 다시 올린 파일은 사용하지 마세요.
 2. DMG를 열고 **Knowledge Forge.app**을 Applications로 복사합니다.
@@ -26,7 +26,7 @@ Intel/ARM 앱은 같은 데이터 위치를 사용하므로 동시에 실행하�
 
 ## 다음부터 업데이트
 
-0.1.2 이하 사용자는 이번 0.1.3만 직접 설치합니다. 이후에는 앱을 열 때 새 버전을 확인합니다.
+0.1.2 이하 사용자는 최신 설치 파일을 한 번 직접 설치합니다. 0.1.3부터는 앱을 열 때 새 버전을 확인합니다.
 안내에서 **다운로드 → 설치 후 다시 시작**을 선택하세요. 작성 중인 내용은 먼저 저장합니다.
 상단 **Knowledge Forge → 업데이트 확인…**에서도 확인할 수 있습니다. [자세한 업데이트 안내](automatic-updates.md)
 

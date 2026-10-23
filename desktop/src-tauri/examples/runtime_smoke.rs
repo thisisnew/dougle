@@ -7,7 +7,9 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tauri::{WebviewUrl, WebviewWindowBuilder};
 
 const SCRIPT: &str = r#"
+window.__FORGE_QA_PHASE__ = 'initialization';
 window.addEventListener('DOMContentLoaded', () => {
+  window.__FORGE_QA_PHASE__ = 'waiting for React';
   const started = Date.now();
   const timer = setInterval(async () => {
     if (!document.querySelector('#root button[aria-label="Workspace 생성"]')) {
@@ -34,6 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
       throw Error('UI timeout');
     }
     let phase = 'workspace button';
+    Object.defineProperty(window, '__FORGE_QA_PHASE__', { get: () => phase, configurable: true });
     try {
       document.querySelector('#root button[aria-label="Workspace 생성"]').click();
       await until(() => document.querySelector('#item-name'));
@@ -52,7 +55,10 @@ window.addEventListener('DOMContentLoaded', () => {
       phase = 'AI connection button';
       localStorage.setItem('forge.ai.provider', 'CLAUDE');
       [...document.querySelectorAll('#root button')].find(button => button.textContent.trim() === 'AI 연결').click();
-      await until(() => document.querySelector('dialog[aria-label="AI 연결"] select'));
+      await until(() => {
+        const opened = document.querySelector('dialog[aria-label="AI 연결"][open] select');
+        return opened && opened.getBoundingClientRect().height > 0;
+      });
       const dialog = document.querySelector('dialog[aria-label="AI 연결"]');
       const provider = dialog.querySelector('select');
       if (provider.value !== 'CLAUDE') throw Error('Provider preference mismatch');
@@ -60,7 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const selectHeight = provider.getBoundingClientRect().height;
       const selectAppearance = getComputedStyle(provider).getPropertyValue('appearance');
       const webkitAppearance = getComputedStyle(provider).getPropertyValue('-webkit-appearance');
-      phase += ': ' + selectHeight + ' / ' + selectAppearance + ' / ' + webkitAppearance;
+      phase += ': ' + selectHeight + ', ' + selectAppearance + ', ' + webkitAppearance;
       if (selectHeight < 40 || (selectAppearance !== 'none' && webkitAppearance !== 'none')) throw Error('Native select appearance mismatch');
       phase = 'AI status response';
       [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결 상태 확인').click();
@@ -110,7 +116,7 @@ window.addEventListener('DOMContentLoaded', () => {
       await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_PASSED' });
     } catch {
       await fetch('/api/workspaces', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'NATIVE_RUNTIME_QA_FAILED: ' + phase }) }).catch(() => {});
+        body: JSON.stringify({ name: 'NATIVE_RUNTIME_QA_FAILED: ' + phase.replaceAll('/', '-').slice(0, 80) }) }).catch(() => {});
     }
   }, 100);
 }, { once: true });
@@ -138,10 +144,11 @@ fn main() {
             let handle = app.handle().clone();
             thread::spawn(move || {
                 let passed = run(&handle, &resources, &data);
-                let _ = std::fs::remove_dir_all(&data);
                 if passed {
+                    let _ = std::fs::remove_dir_all(&data);
                     println!("PASS: actual React Workspace/AI buttons, Korean names/errors, same-origin mutations, upload/download/search, publication, relations, OFF polling and CLI settings; no inference");
                 } else {
+                    eprintln!("Retained synthetic diagnostics: {}", data.display());
                     eprintln!("FAIL: native runtime smoke");
                 }
                 setup_finished.store(true, Ordering::SeqCst);
@@ -177,6 +184,7 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
         WebviewUrl::External(origin.parse().unwrap()),
     )
     .title("Knowledge Forge · synthetic runtime QA")
+    .inner_size(1280.0, 850.0)
     .incognito(true)
     .devtools(false)
     .initialization_script(protocol::initialization_script(port, &backend.token))
@@ -238,6 +246,49 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
     }
     if !passed {
         eprintln!("FAIL: runtime completion marker not received");
+        eprintln!(
+            "Window visible={:?}, focused={:?}, url={:?}",
+            _window.is_visible(),
+            _window.is_focused(),
+            _window.url()
+        );
+        match agent
+            .get(format!("{origin}/api/session"))
+            .header("X-Forge-Session", &backend.token)
+            .call()
+        {
+            Ok(mut response) => eprintln!(
+                "Session diagnostic: {:?}",
+                response.body_mut().read_json::<serde_json::Value>()
+            ),
+            Err(error) => eprintln!("Session diagnostic: {error}"),
+        }
+        let _ = _window.eval("location.hash = 'forge-qa-' + encodeURIComponent(String(window.__FORGE_QA_PHASE__ || 'script missing')); ");
+        let diagnostic = r#"fetch('/api/workspaces', {
+          method: 'POST', headers: { 'X-Forge-Session': SESSION_VALUE, 'X-Forge-Client': '1', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'NATIVE_RUNTIME_QA_FAILED: timeout - ' + String(window.__FORGE_QA_PHASE__ || 'script missing').replaceAll('/', '-').slice(0, 60) })
+        }).catch(() => {});"#
+            .replace("SESSION_VALUE", &serde_json::to_string(&backend.token).unwrap());
+        let _ = _window.eval(diagnostic);
+        for _ in 0..10 {
+            thread::sleep(Duration::from_millis(200));
+            if let Ok(mut response) = agent
+                .get(format!("{origin}/api/session"))
+                .header("X-Forge-Session", &backend.token)
+                .call()
+                && let Ok(session) = response.body_mut().read_json::<serde_json::Value>()
+                && let Some(workspaces) = session["workspaces"].as_array()
+                && let Some(name) = workspaces.iter().find_map(|workspace| {
+                    workspace["name"]
+                        .as_str()
+                        .filter(|name| name.starts_with("NATIVE_RUNTIME_QA_FAILED: timeout"))
+                })
+            {
+                eprintln!("{name}");
+                break;
+            }
+        }
+        eprintln!("Diagnostic URL: {:?}", _window.url());
     }
     drop(backend);
     passed

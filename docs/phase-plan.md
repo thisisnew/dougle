@@ -1,6 +1,6 @@
 # Phase 완료 기준과 현재 상태
 
-최신 0.1.3: Workspace·AI 연결 요청/한글 오류 수정, 통일된 선택창, 네이티브 서명 업데이트. [현재 설치 파일·검증](release-0.1.3-report.md) · [업데이트 안내](automatic-updates.md). 실제 계정 확인·Claude 동봉·ARM 실기기 검증은 별도입니다. 아래는 이전 0.1.1 기준 Phase 요약입니다.
+최신 0.1.4: [전체 E2E](e2e-report.md)에서 찾은 제공자별 모델 복원 오류와 오래된 안내 수정. 0.1.3부터의 네이티브 서명 업데이트를 유지합니다. [현재 설치 파일·검증](release-0.1.4-report.md) · [업데이트 안내](automatic-updates.md). 실제 계정 확인·Claude 동봉·ARM 실기기 검증은 별도입니다. 아래는 이전 0.1.1 기준 Phase 요약입니다.
 
 기준: 2026-10-22, DB v21, **Intel Mac 0.1.1 공개 미리보기**.
 추가: [Apple Silicon용 패키징](apple-silicon.md). 공증은 사용자 요청으로 현재 작업 범위에서 제외하며 실제 ARM 기기 실행 확인은 별도입니다.
