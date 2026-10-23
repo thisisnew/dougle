@@ -40,6 +40,8 @@ FORGE_LIVE_CLI=CLAUDE FORGE_LIVE_CLAUDE_COMMAND=/absolute/path/to/claude node sc
 
 ## 남은 조건
 
+후속 [공개 앱 교체 검사](published-update-check.md)는 통과했습니다. 실제 0.1.6 설치 복사본에 공개 0.1.7을 적용하고 새 앱을 재실행했습니다. 아래 사용자 설치 위치/메뉴 체험과는 구분합니다.
+
 1. **Claude:** 현재 설치된 2.1.31은 `auth status`를 제공하지 않습니다. 새 호환 도구와 실제 인증이 필요합니다. 앱 포함은 배포 주체의 Commercial Terms 확인 후 진행합니다. [공식 포함·인증 조건](https://code.claude.com/docs/en/legal-and-compliance), [macOS 13 이상 요구사항](https://code.claude.com/docs/en/setup)을 다시 확인했으며 약관에 대신 동의하지 않았습니다.
 2. **ARM:** 사용 가능한 M 시리즈 Mac이 필요합니다. 교차 빌드를 실행 검사로 대체하지 않습니다.
 3. **업데이트:** `/Applications`의 기존 앱은 0.1.2로, 자동 업데이트 도입 전 버전입니다. 최초에는 최신 DMG를 직접 설치해야 합니다. 사용자 앱은 교체하지 않았습니다. 별도 임시 HOME과 0.1.5 앱 복사본으로 실제 업데이트 화면 검사를 준비했지만 화면 제어 도구가 초기 설정 미완료 오류를 반환해 중단했습니다. 검사 앱만 종료했으며 업데이트 성공으로 표시하지 않습니다.

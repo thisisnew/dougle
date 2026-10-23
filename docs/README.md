@@ -5,9 +5,10 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 
 | 궁금한 것 | 읽을 문서 |
 |---|---|
+| 공개 업데이트 파일로 앱 교체가 되는지 | [실제 앱 복사본 교체·재실행 검사](published-update-check.md) |
 | 앱에서 Codex 로그인·스트리밍 연결 | [0.1.7 검증·배포 기록](release-0.1.7-report.md) · [쉬운 사용법](codex-managed-login.md) |
 | 필수 마무리와 실제 AI 검사 결과 | [Codex 실제 검증·남은 조건](essential-verification.md) |
-| 현재 어디까지 됐고 무엇이 남았는지 | [최신 현황·우선 마무리할 네 가지](phase-plan.md) |
+| 현재 어디까지 됐고 무엇이 남았는지 | [최신 현황·필수 마무리 상태](phase-plan.md) |
 | 설치하고 처음 써보기 | [Mac 설치·백업·삭제](macos-install.md) → [5분 사용법](how-it-works.md) |
 | 내부 구조를 한눈에 보기 | [그림 설계도](design-map.md) |
 | 무엇을 어떻게 저장하는지 | [데이터 모델과 실제 코드 대조](modeling.md) |

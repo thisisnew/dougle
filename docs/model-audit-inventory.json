@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 325,
-  "testOrFixtureFiles": 94,
+  "totalFiles": 327,
+  "testOrFixtureFiles": 96,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -894,6 +894,7 @@
         "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/AnswerHistoryPanel.test.tsx",
@@ -908,6 +909,7 @@
         "scripts/crash-recovery-smoke.mjs",
         "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
@@ -1587,6 +1589,7 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ProviderLoginAdapterTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
@@ -1984,10 +1987,12 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
         "desktop/src-tauri/examples/git_smoke.rs",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
-        "scripts/macos-architecture-test.sh"
+        "scripts/macos-architecture-test.sh",
+        "scripts/published-update-smoke.mjs"
       ]
     },
     {
@@ -1996,6 +2001,15 @@
       "lines": 80,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
+    },
+    {
+      "path": "desktop/src-tauri/examples/published_update_smoke.rs",
+      "sha256": "e6be2a87e4e54f20cb7893bba92799223bb316027718c244ae879ad80d919642",
+      "lines": 64,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": [
+        "scripts/published-update-smoke.mjs"
+      ]
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
@@ -2096,6 +2110,7 @@
         "frontend/src/SourcePollingSettings.test.tsx",
         "scripts/crash-recovery-smoke.mjs",
         "scripts/macos-architecture-test.sh",
+        "scripts/published-update-smoke.mjs",
         "scripts/upgrade-smoke.mjs"
       ]
     },
@@ -2133,6 +2148,7 @@
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
         "desktop/src-tauri/examples/git_smoke.rs",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/updater_verify.rs",
@@ -2148,6 +2164,7 @@
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
@@ -2182,7 +2199,8 @@
       "lines": 272,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java"
+        "backend/src/test/java/dev/knowledgeforge/SearchSnippetTest.java",
+        "scripts/published-update-smoke.mjs"
       ]
     },
     {
@@ -2198,12 +2216,14 @@
       "lines": 9,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "scripts/browser-e2e.mjs",
         "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
     },
@@ -2336,6 +2356,7 @@
         "scripts/crash-recovery-smoke.mjs",
         "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs"
       ]
     },
@@ -2840,6 +2861,7 @@
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/upgrade-smoke.mjs"
@@ -2901,6 +2923,7 @@
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/desktop/DesktopRequestFilterTest.java",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
@@ -2958,6 +2981,7 @@
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
         "desktop/src-tauri/examples/git_smoke.rs",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/updater_verify.rs",
@@ -2973,6 +2997,7 @@
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
@@ -3065,10 +3090,12 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexTextStreamTest.java",
         "desktop/src-tauri/examples/git_smoke.rs",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
-        "scripts/macos-architecture-test.sh"
+        "scripts/macos-architecture-test.sh",
+        "scripts/published-update-smoke.mjs"
       ]
     },
     {
@@ -3098,6 +3125,7 @@
       "lines": 11,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
+        "scripts/published-update-smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
     },
@@ -3244,7 +3272,9 @@
       "sha256": "595a5a59188bacd9bcc5eea75080d8ec57bdee8a8ececd9f0c9764e3eaaaccc1",
       "lines": 109,
       "kind": "test-or-fixture",
-      "lexicalTestReferences": []
+      "lexicalTestReferences": [
+        "scripts/published-update-smoke.mjs"
+      ]
     },
     {
       "path": "scripts/package-macos.sh",
@@ -3264,6 +3294,13 @@
       "path": "scripts/provider-connection-smoke.mjs",
       "sha256": "ab13000eaee6507119959bac768b46d4f827963f66cbc74431506c02af8ace6a",
       "lines": 72,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/published-update-smoke.mjs",
+      "sha256": "d7b6a90fd0c3948d7ccb578e8cec87b226a813f6600a5a50a05972d0d3cff98f",
+      "lines": 66,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -3294,6 +3331,7 @@
         "backend/src/test/java/dev/knowledgeforge/desktop/DesktopBootstrapTest.java",
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/GitRunnerTest.java",
+        "desktop/src-tauri/examples/published_update_smoke.rs",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
@@ -3330,6 +3368,7 @@
         "desktop/src-tauri/examples/webview_smoke.rs",
         "scripts/browser-e2e.mjs",
         "scripts/polling-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/updater-smoke.mjs",
         "scripts/upgrade-smoke.mjs"
