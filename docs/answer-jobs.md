@@ -1,12 +1,12 @@
 # 근거로 답변 받기 — 승인 후 별도로 전송
 
-후속 [Claude 미검증 임시 출력](partial-answer.md)을 추가했습니다. 최종 답변 저장 정책은 유지하며 Codex는 완료 답변만 표시합니다.
+후속 [Claude 미검증 임시 출력](partial-answer.md), [선택적 Codex 스트리밍](codex-streaming.md), [선택 문맥 이어 질문](context-requests.md)을 추가했습니다. 최종 답변 저장 정책은 유지합니다. 0.1.5의 [강제 종료 복구](crash-recovery.md)는 중단 이력·소비된 승인 재사용 차단을 실제 JAR로 검사합니다.
 
 ## 이제 되는 것
 
 저장한 근거를 확인하고 승인한 뒤 **실제 Codex/Claude CLI에 별도 요청**을 보낼 수 있습니다.
 답변을 로컬 작업 기록으로 남기며 중단·재조회할 수 있습니다. 지식 문서를 만들거나 게시하지 않습니다.
-최종 답변은 **검사 완료 후 한 번에 표시**합니다. 후속 [작업 관측 SSE API](answer-events.md)와 [화면 연결](answer-events-ui.md), [Claude 임시 출력](partial-answer.md)을 구현했으며 Codex 스트림·여러 차례 이어지는 대화는 아직 없습니다.
+최종 답변은 **검사 완료 후 한 번에 확정 표시**합니다. [작업 관측 SSE API](answer-events.md)와 [화면 연결](answer-events-ui.md)은 최종 답변과 미검증 임시 출력을 구분합니다. 실제 외부 서비스 호환성 검증은 별도입니다.
 
 1. 근거 묶음에서 자료와 요청 미리보기를 읽습니다.
 2. **승인 상태 확인 → 동의 → 이 요청 승인 저장**을 누릅니다. 여기까지는 외부 호출이 없습니다.
@@ -46,7 +46,8 @@ flowchart LR
   Adapter --> Validate[AnswerOutput · 형식 / 인용 검사]
   Validate --> Save[취소 / 현재 근거 검사 후 결과 저장]
   Save --> UI[AnswerJobsPanel · SSE 상태 관측 / 완료 답변]
-  UI -. 미구현 .-> SSE[실시간 delta · 다중 대화]
+  UI --> SSE[근거 우선 SSE · 선택적 임시 출력]
+  UI --> Context[선택 문맥 고정 · 새 승인 후 이어 질문]
 ```
 
 | 코드 | 실제 책임 |

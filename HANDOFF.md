@@ -2,6 +2,7 @@
 
 ## 최신 기준: 0.1.5
 
+- 후속 복구 검사: [강제 종료 복구](docs/crash-recovery.md). 실제 JAR에서 가상 초안·답변 실행 중 SIGKILL → 같은 DB 재시작, 중단 이력·사람 편집·게시본 보존과 자동 재전송 방지를 검사합니다. 테스트 도구만 추가하므로 설치본/피드는 그대로입니다.
 - 후속 문서 점검: [Claude 준비 상태](docs/claude-readiness.md)에 공식 조건·현재 코드·macOS 요구사항 차이·다음 구현 기준을 정리했습니다. 약관 동의나 실제 외부 AI 실행은 대신 진행하지 않았습니다. 앱 변경이 없어 설치본/피드는 0.1.5를 유지합니다.
 - Mac 앱은 공식 Git 2.56.0을 CPU별로 빌드해 포함합니다. 사용자가 Git/Xcode를 설치하지 않아도 공개 GitHub를 수집합니다. [설계·실제 코드 대조](docs/bundled-git.md).
 - `supervisor::bundled_git → --forge.git-home → GitRunner`는 앱 내부 절대 경로와 HTTPS helper를 사용합니다. 상속한 `GIT_*` 설정을 제거하고 읽기 전용 수집 제한을 유지합니다. 누락·경로 탈출 시 시스템 Git으로 돌아가지 않습니다.

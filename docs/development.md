@@ -16,6 +16,7 @@ bash scripts/run.sh
 bash scripts/maven.sh test
 (cd frontend && npm test -- --maxWorkers=2 && npm run build)
 node scripts/smoke.mjs
+node scripts/crash-recovery-smoke.mjs
 bash scripts/desktop-cargo.sh test --locked
 ```
 
@@ -31,4 +32,4 @@ bash scripts/desktop-cargo.sh test --locked
 6. GitHub의 실제 공개 자산/해시와 README 다운로드 링크가 일치하는지 확인한 뒤 배포 완료로 보고한다.
 7. 0.1.3부터 서명된 앱 업데이트 파일도 올린다. 공개 후 `node scripts/update-manifest.mjs --publish`로 검증된 피드를 커밋·푸시한다. [키 관리·정확한 순서](automatic-updates.md).
 
-기존 릴리스 파일을 조용히 덮어쓰지 않는다. 문서만 수정할 때는 기존 실행 파일을 유지할 수 있지만 기능 변경에는 새 설치 파일이 필요하다. 공증은 현재 범위에서 제외한다.
+기존 릴리스 파일을 조용히 덮어쓰지 않는다. 문서나 배포되지 않는 테스트 도구만 수정하고 앱·의존성·패키징 입력이 동일할 때는 기존 실행 파일을 유지할 수 있지만 기능 변경에는 새 설치 파일이 필요하다. 공증은 현재 범위에서 제외한다.

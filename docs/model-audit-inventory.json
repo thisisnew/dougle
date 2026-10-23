@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 318,
-  "testOrFixtureFiles": 90,
+  "totalFiles": 320,
+  "testOrFixtureFiles": 91,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -884,6 +884,7 @@
         "frontend/src/SourcePanel.test.tsx",
         "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/updater-smoke.mjs"
@@ -939,6 +940,7 @@
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "frontend/src/KnowledgePanel.test.tsx",
         "frontend/src/PublicationPanel.test.tsx",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/upgrade-smoke.mjs"
@@ -1107,6 +1109,7 @@
         "frontend/src/AnswerJobsPanel.test.tsx",
         "frontend/src/App.test.tsx",
         "frontend/src/PublishedSearchPreview.test.tsx",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/upgrade-smoke.mjs"
       ]
@@ -1559,6 +1562,7 @@
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "scripts/cli-settings-smoke.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
@@ -2051,6 +2055,7 @@
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/SourcePollingSettings.test.tsx",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/upgrade-smoke.mjs"
       ]
@@ -2098,6 +2103,7 @@
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
@@ -2125,7 +2131,8 @@
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "desktop/src-tauri/examples/git_smoke.rs",
-        "desktop/src-tauri/examples/runtime_smoke.rs"
+        "desktop/src-tauri/examples/runtime_smoke.rs",
+        "scripts/crash-recovery-smoke.mjs"
       ]
     },
     {
@@ -2283,6 +2290,7 @@
         "frontend/src/ConversationPreviewPanel.test.tsx",
         "frontend/src/ProposalAcceptance.test.tsx",
         "scripts/cli-settings-smoke.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/smoke.mjs"
       ]
@@ -2766,6 +2774,7 @@
         "frontend/src/desktopTransport.test.ts",
         "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
@@ -2895,6 +2904,7 @@
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
@@ -3004,6 +3014,13 @@
       "lexicalTestReferences": []
     },
     {
+      "path": "scripts/crash-recovery-smoke.mjs",
+      "sha256": "a6cac644f5c28968401b451492448e4878d9b90568550be2871615b47f13494c",
+      "lines": 196,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "scripts/create-macos-dmg.sh",
       "sha256": "a85e3d5305c2cdd9a20d5157c12a58cb36b79dfb5166d49d97b77c34adf6d784",
       "lines": 31,
@@ -3096,6 +3113,15 @@
       ]
     },
     {
+      "path": "scripts/fixtures/fake-codex-recovery.sh",
+      "sha256": "84b2c601b2fce8e41d47f67241775f222a0b0dada83637c42006f1b0f9bfaf62",
+      "lines": 32,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "scripts/crash-recovery-smoke.mjs"
+      ]
+    },
+    {
       "path": "scripts/fixtures/fake-codex.sh",
       "sha256": "c29d8ce44e90ba2f59bededbd770d8f0449cac275fa649e01dc34b4c1e6e5ab3",
       "lines": 28,
@@ -3103,6 +3129,7 @@
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerTest.java",
         "scripts/browser-e2e.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
         "scripts/smoke.mjs"
       ]
@@ -3199,6 +3226,7 @@
         "frontend/src/desktopTransport.test.ts",
         "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
+        "scripts/crash-recovery-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",

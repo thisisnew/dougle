@@ -14,6 +14,7 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 | 최신 설치 파일에 들어간 변경 | [0.1.5 배포 기록](release-0.1.5-report.md) |
 | GitHub 자료를 별도 설치 없이 가져오기 | [내장 Git 구성과 검증](bundled-git.md) |
 | 전체 사용 흐름 검사와 발견한 문제 | [E2E 점검 결과](e2e-report.md) |
+| 작업 중 강제 종료되어도 안전한지 | [중단 복구 검사](crash-recovery.md) |
 | 앱에서 다음 버전 설치하기 | [자동 업데이트](automatic-updates.md) |
 | Apple Silicon에서 쓰기/빌드 | [ARM 지원과 검증 범위](apple-silicon.md) |
 | AI 설치·로그인·경로 설정 | [CLI 설정](cli-launch-settings.md) · [AI 전송 정책](cli-ai.md) |

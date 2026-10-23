@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "jarSha256": "5fbaadb8cdd7f4fd7bc35815cbcd4f78c72624a560c22e21137d7533146897c3",
+  "checkedAt": "2026-10-23T14:00:40.711Z",
+  "checks": [
+    "SIGKILL while two fake CLI requests are RUNNING",
+    "interrupted jobs recovered without results",
+    "reconnected SSE sends evidence then interrupted job then terminal, without partial answer",
+    "bytes, human versions, publication, evidence and search preserved",
+    "consumed approval cannot dispatch again",
+    "idempotent replay and second restart do not rerun requests",
+    "new explicit approval permits a new fake answer",
+    "new approved generation creates a separate draft without changing human edits or publication"
+  ],
+  "scope": "Real JAR and HTTP API; isolated data and fake CLI only. Not power-loss, UI, native supervisor, or real AI validation.",
+  "runtime": "Intel macOS, Java and JAR from the 0.1.5 app bundle; backend HTTP mode"
+}
