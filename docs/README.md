@@ -5,6 +5,7 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 
 | 궁금한 것 | 읽을 문서 |
 |---|---|
+| 필수 마무리와 실제 AI 검사 결과 | [Codex 실제 검증·남은 조건](essential-verification.md) |
 | 현재 어디까지 됐고 무엇이 남았는지 | [최신 현황·우선 마무리할 네 가지](phase-plan.md) |
 | 설치하고 처음 써보기 | [Mac 설치·백업·삭제](macos-install.md) → [5분 사용법](how-it-works.md) |
 | 내부 구조를 한눈에 보기 | [그림 설계도](design-map.md) |

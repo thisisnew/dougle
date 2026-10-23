@@ -1,5 +1,7 @@
 # Knowledge Forge 개발 지침
 
+- 사용자 최신 범위: 필수 마무리만 진행한다. 실제 AI·Claude 간편 연결·ARM 실기기·설치 앱 업데이트 외의 확장은 사용 피드백 전까지 보류한다. `docs/essential-verification.md`의 실제 Codex 성공/중간 스트림 미검증·Claude 호환성·화면 제어 설정 장애를 구분한다. 외부 AI 검사는 가상 자료만 명시적 opt-in으로 실행한다.
+
 - 0.1.6 Source 이름·분류 편집은 `docs/source-metadata.md`를 따른다. `pollingRevision`은 폴링과 메타데이터 편집의 공통 CAS 버전이다. 수집 중 수정 차단·Source/루트 이름/검색 큐 원자성·기존 불변 근거 보존을 유지한다. 위치/종류 변경은 지원하지 않는다. DB v21 유지.
 
 - 매 작업 종료 시 GitHub 문서를 실제 상태로 갱신·푸시한다. `docs/phase-plan.md`를 현재 상태·우선순위 요약으로 유지하고 HANDOFF·관련 사용/모델/검증 문서를 동기화한다. 기존 전체 테스트와 후속 회귀 재검사 수를 중복 합산하지 않는다.

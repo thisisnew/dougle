@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 322,
-  "testOrFixtureFiles": 92,
+  "totalFiles": 323,
+  "testOrFixtureFiles": 93,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -888,6 +888,7 @@
         "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/updater-smoke.mjs"
@@ -1571,6 +1572,7 @@
         "desktop/src-tauri/examples/webview_smoke.rs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
@@ -2114,6 +2116,7 @@
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
@@ -2171,6 +2174,7 @@
         "desktop/src-tauri/examples/updater_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "scripts/browser-e2e.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
@@ -2301,6 +2305,7 @@
         "frontend/src/ProposalAcceptance.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/smoke.mjs"
       ]
@@ -2801,6 +2806,7 @@
         "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
@@ -2933,6 +2939,7 @@
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
@@ -3163,6 +3170,13 @@
       ]
     },
     {
+      "path": "scripts/live-ai-smoke.mjs",
+      "sha256": "4850f3c16e57a8ddbc0e8f2ba92b91ef3c3a76d29590f91b74d8157d1a21a533",
+      "lines": 124,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "scripts/macos-architecture-test.sh",
       "sha256": "386ac8b4549dd467163fe5cc0d86ff0c424ee0f1d443f663d52546ccc038820d",
       "lines": 55,
@@ -3255,6 +3269,7 @@
         "scripts/browser-e2e.mjs",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/live-ai-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
