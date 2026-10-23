@@ -59,6 +59,8 @@ FORGE_LIVE_CLI=CLAUDE FORGE_LIVE_CLAUDE_COMMAND=/absolute/path/to/claude node sc
 
 후속 [공개 앱 교체 검사](published-update-check.md)는 통과했습니다. 실제 0.1.6 설치 복사본에 공개 0.1.7을 적용하고 새 앱을 재실행했습니다. 아래 사용자 설치 위치/메뉴 체험과는 구분합니다.
 
+추가로 이전 앱에서 자료·지식·게시본·사람 수정본을 만든 **같은 가상 DB**를 새 앱에서 열어 Workspace·선택 상태·원문·수정본·게시본·출처 응답이 보존됨을 확인했습니다. 2026-10-24 08:39 KST 통과. 개인 자료의 전수 조회나 새로운 스키마 마이그레이션 검증은 아닙니다.
+
 1. **Claude:** 현재 설치된 2.1.31은 `auth status`를 제공하지 않습니다. 새 호환 도구와 실제 인증이 필요합니다. 앱 포함은 배포 주체의 Commercial Terms 확인 후 진행합니다. [공식 포함·인증 조건](https://code.claude.com/docs/en/legal-and-compliance), [macOS 13 이상 요구사항](https://code.claude.com/docs/en/setup)을 다시 확인했으며 약관에 대신 동의하지 않았습니다.
 2. **ARM:** 사용 가능한 M 시리즈 Mac이 필요합니다. 교차 빌드를 실행 검사로 대체하지 않습니다.
 3. **업데이트:** `/Applications` 앱은 백업 후 0.1.7로 교체·실행했습니다. 이전 임시 복사본의 자동 업데이트 검사와 실제 설치 위치의 수동 교체를 구별합니다. 다음 공개 버전에서 사용자 메뉴를 통한 업데이트 체험은 아직 남습니다. 화면 제어 초기 설정을 완료해야 합니다.

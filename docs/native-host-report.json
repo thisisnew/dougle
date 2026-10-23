@@ -1,7 +1,7 @@
 {
-  "measuredAt": "2026-10-23T22:52:52.907Z",
+  "measuredAt": "2026-10-23T23:39:16.436Z",
   "platform": "darwin/x64",
-  "startupMs": 13360,
+  "startupMs": 6180,
   "checks": [
     "packaged native executable with isolated HOME and minimal PATH",
     "bundled Java startup and API session protection",

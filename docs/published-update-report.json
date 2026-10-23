@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-23T22:52:53.308Z",
+  "checkedAt": "2026-10-23T23:39:16.695Z",
   "previous": "0.1.6",
   "target": "0.1.7",
   "architecture": "x86_64",
@@ -9,7 +9,8 @@
     "public feed and real signed archive installation with default version comparison",
     "updated version, app signature and current JAR equality",
     "external synthetic file preserved",
+    "same synthetic SQLite database preserves workspace, active selection, file preview, human draft, publication and evidence across versions",
     "updated native app startup, session protection, duplicate protection, shutdown and restart"
   ],
-  "scope": "Real released app copy in temporary installation; updater library harness uses previous bundle version. Not menu clicks, /Applications permissions, existing user database migration, ARM on Intel, or real AI."
+  "scope": "Real released app copy and synthetic SQLite data in temporary installation; updater library harness uses previous bundle version. Not menu clicks, /Applications permissions, private user data inspection, ARM on Intel, or real AI."
 }

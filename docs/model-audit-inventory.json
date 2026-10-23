@@ -965,6 +965,7 @@
         "frontend/src/KnowledgePanel.test.tsx",
         "frontend/src/PublicationPanel.test.tsx",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/upgrade-smoke.mjs"
@@ -1135,6 +1136,7 @@
         "frontend/src/App.test.tsx",
         "frontend/src/PublishedSearchPreview.test.tsx",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/upgrade-smoke.mjs"
       ]
@@ -1599,6 +1601,7 @@
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/updater-smoke.mjs",
@@ -3299,8 +3302,8 @@
     },
     {
       "path": "scripts/published-update-smoke.mjs",
-      "sha256": "d7b6a90fd0c3948d7ccb578e8cec87b226a813f6600a5a50a05972d0d3cff98f",
-      "lines": 66,
+      "sha256": "312fcf9130b32e862b60ea4536466e8deed7f9b8995a857cb6cda80eef79a1df",
+      "lines": 138,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -3345,6 +3348,7 @@
         "scripts/native-host-smoke.mjs",
         "scripts/polling-smoke.mjs",
         "scripts/provider-connection-smoke.mjs",
+        "scripts/published-update-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
         "scripts/updater-smoke.mjs"
