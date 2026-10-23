@@ -91,6 +91,19 @@ public class JdbcSourceStore implements SourceStore {
         return hashes;
     }
 
+    @Transactional
+    public boolean editMetadata(String workspaceId, String id, String name, String domain, int expectedRevision) {
+        if (jdbc.update("""
+                UPDATE source SET name=?,domain=?,polling_revision=polling_revision+1
+                WHERE workspace_id=? AND id=? AND polling_revision=? AND status!='SYNCING'
+                """, name, domain, workspaceId, id, expectedRevision) != 1) return false;
+        jdbc.update("UPDATE entry SET name=? WHERE workspace_id=? AND id=(SELECT root_entry_id FROM source WHERE id=?)",
+                name, workspaceId, id);
+        jdbc.update("INSERT INTO search_outbox(entry_id) SELECT id FROM entry WHERE workspace_id=? AND source_id=? AND kind='FILE'",
+                workspaceId, id);
+        return true;
+    }
+
     @Transactional(readOnly = true)
     public Optional<CollectedSnapshot> snapshot(String workspaceId, String id) {
         return find(workspaceId, id).filter(source -> source.revision() != null).map(source -> {

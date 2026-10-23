@@ -9,8 +9,9 @@ import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const resources = resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources')
+const jar = process.env.FORGE_BROWSER_JAR ? resolve(process.env.FORGE_BROWSER_JAR) : resolve(resources, 'knowledge-forge.jar')
 await access(resolve(resources, 'runtime/bin/java'))
-await access(resolve(resources, 'knowledge-forge.jar'))
+await access(jar)
 const temporary = await mkdtemp(resolve(tmpdir(), 'forge-browser-e2e-'))
 const fixture = resolve(temporary, 'synthetic-project')
 const executable = resolve(temporary, 'fake-codex')
@@ -45,7 +46,7 @@ async function stop() {
 }
 async function start() {
   logs = ''
-  child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', resolve(resources, 'knowledge-forge.jar'),
+  child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', jar,
     '--forge.desktop=false', `--server.port=${port}`, '--server.address=127.0.0.1',
     `--forge.data-dir=${resolve(temporary, 'data')}`, `--forge.ai.codex-command=${executable}`,
     `--forge.ai.claude-command=${resolve(temporary, 'missing-claude')}`, '--forge.ai.codex-model=synthetic-smoke-model'],
@@ -82,7 +83,7 @@ process.on('SIGUSR2', async () => {
 })
 try {
   await start()
-  console.log(JSON.stringify({ url: base, pid: process.pid, sourceFolder: fixture,
+  console.log(JSON.stringify({ url: base, pid: process.pid, sourceFolder: fixture, jar,
     safety: 'Isolated data, packaged Java/JAR, browser web mode, fake CLI only; no real AI or user database' }))
   await finished
   try { console.log('Synthetic inference calls:', (await readFile(calls, 'utf8')).trim().split('\n').length) }

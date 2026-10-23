@@ -1,5 +1,7 @@
 # Knowledge Forge 개발 지침
 
+- 0.1.6 Source 이름·분류 편집은 `docs/source-metadata.md`를 따른다. `pollingRevision`은 폴링과 메타데이터 편집의 공통 CAS 버전이다. 수집 중 수정 차단·Source/루트 이름/검색 큐 원자성·기존 불변 근거 보존을 유지한다. 위치/종류 변경은 지원하지 않는다. DB v21 유지.
+
 - 매 작업 종료 시 GitHub 문서를 실제 상태로 갱신·푸시한다. `docs/phase-plan.md`를 현재 상태·우선순위 요약으로 유지하고 HANDOFF·관련 사용/모델/검증 문서를 동기화한다. 기존 전체 테스트와 후속 회귀 재검사 수를 중복 합산하지 않는다.
 
 - `node scripts/crash-recovery-smoke.mjs`는 자신이 만든 임시 데이터와 POSIX 프로세스 그룹만 SIGKILL합니다. `docs/crash-recovery.md`의 가상 CLI·자동 재전송 방지·수동 편집 보호 검사를 유지합니다. 실제 정전·ARM·외부 AI·네이티브 감독자 검증으로 확대하지 않습니다. 테스트 도구만 바뀌고 앱 입력이 동일하면 검증한 기존 설치본을 유지합니다.

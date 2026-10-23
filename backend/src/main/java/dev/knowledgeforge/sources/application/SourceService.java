@@ -33,11 +33,7 @@ public class SourceService {
 
     public Source create(String workspaceId, String name, String kind, String location, String domain) {
         requireWorkspace(workspaceId);
-        if (name == null || name.isBlank() || name.length() > 120 || name.matches(".*[\\\\/].*")
-                || name.codePoints().anyMatch(Character::isISOControl) || List.of(".", "..").contains(name.strip())
-                || domain == null || domain.length() > 80 || domain.codePoints().anyMatch(Character::isISOControl)) {
-            throw new LibraryException(400, "이름(1~120자)과 도메인(0~80자)을 확인하세요.");
-        }
+        validateMetadata(name, domain);
         if (location == null || location.isBlank() || location.length() > 2048) {
             throw new LibraryException(400, "수집 위치를 입력하세요.");
         }
@@ -46,6 +42,26 @@ public class SourceService {
                 domain.strip(), "NEW", null, null, null, null, false, 3600, null, 0, 0);
         store.create(source);
         return source;
+    }
+
+    public Source editMetadata(String workspaceId, String id, String name, String domain, Integer expectedRevision) {
+        require(workspaceId, id);
+        validateMetadata(name, domain);
+        if (expectedRevision == null || expectedRevision < 0) {
+            throw new LibraryException(400, "현재 자료 설정 버전을 지정하세요.");
+        }
+        if (!store.editMetadata(workspaceId, id, name.strip(), domain.strip(), expectedRevision)) {
+            throw new LibraryException(409, "수집 중이거나 자료 설정이 변경되었습니다. 편집을 닫고 다시 열어 주세요.");
+        }
+        return require(workspaceId, id);
+    }
+
+    private void validateMetadata(String name, String domain) {
+        if (name == null || name.isBlank() || name.length() > 120 || name.matches(".*[\\\\/].*")
+                || name.codePoints().anyMatch(Character::isISOControl) || List.of(".", "..").contains(name.strip())
+                || domain == null || domain.length() > 80 || domain.codePoints().anyMatch(Character::isISOControl)) {
+            throw new LibraryException(400, "이름(1~120자)과 도메인(0~80자)을 확인하세요.");
+        }
     }
 
     public Source sync(String workspaceId, String id) {

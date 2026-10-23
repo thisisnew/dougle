@@ -5,6 +5,7 @@ import { request } from './api'
 import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
 import SourcePollingSettings from './SourcePollingSettings'
+import SourceMetadataEditor from './SourceMetadataEditor'
 import type { RelationSeed } from './RelationPanel'
 const RelationPanel = lazy(() => import('./RelationPanel'))
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
@@ -37,6 +38,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [includeKnowledge, setIncludeKnowledge] = useState(true)
   const [published, setPublished] = useState<{ cardId: string; version: number } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [editing, setEditing] = useState<string | null>(null)
   const [related, setRelated] = useState<RelationSeed | null>(null)
   const searchAbort = useRef<AbortController | null>(null)
   const mutationAbort = useRef<AbortController | null>(null)
@@ -45,6 +47,13 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const latestChanged = useRef(onChanged)
   useEffect(() => { latestSources.current = sources; latestChanged.current = onChanged }, [sources, onChanged])
   const watching = sources.some(source => source.pollingEnabled || source.status === 'SYNCING')
+
+  useEffect(() => {
+    setDomains(previous => {
+      const next = previous.filter(value => sources.some(source => source.domain === value))
+      return next.length === previous.length ? previous : next
+    })
+  }, [sources])
 
   useEffect(() => {
     if (!watching) return
@@ -56,7 +65,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         if (controller.signal.aborted) return
         const changed = next.some(source => {
           const previous = latestSources.current.find(item => item.id === source.id)
-          return previous && (previous.revision !== source.revision || previous.syncedAt !== source.syncedAt)
+          return previous && (previous.revision !== source.revision || previous.syncedAt !== source.syncedAt || previous.pollingRevision !== source.pollingRevision)
         })
         setSources(next)
         if (changed) { setHits(null); latestChanged.current() }
@@ -83,12 +92,17 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     const signal = mutationAbort.current.signal
     try {
       await action()
-      if (signal.aborted) return
-      setSources(await request<Source[]>(`${base}/sources`, { signal }))
+      if (signal.aborted) return false
+      const next = await request<Source[]>(`${base}/sources`, { signal })
+      if (signal.aborted) return false
+      setSources(next)
+      searchAbort.current?.abort()
+      setSearching(false)
       setHits(null)
       onChanged()
       setDeleting(null)
-    } catch (reason) { if (!signal.aborted) setError((reason as Error).message) }
+      return true
+    } catch (reason) { if (!signal.aborted) setError((reason as Error).message); return false }
     finally { if (!signal.aborted) setBusy('') }
   }
 
@@ -144,9 +158,11 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         {source.error && <span role="status" className="modal-error">{source.error}</span>}
       </div>
       <div className="source-actions"><Button size="sm" variant="outline" disabled={!!busy || source.status === 'SYNCING'} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}/sync`, { method: 'POST', signal: mutationAbort.current?.signal }))}><RefreshCw />{busy === source.id ? '수집 중…' : '동기화'}</Button>
+        <Button variant="outline" size="sm" aria-label={`${source.name} 이름과 분류 수정`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setEditing(source.id)}>수정</Button>
         <Button variant="ghost" size="icon" aria-label={`${source.name} Source 삭제`} disabled={!!busy} onClick={() => setDeleting(source.id)}><Trash2 /></Button>
       </div>
       <SourcePollingSettings source={source} busy={!!busy} onSave={settings => void mutate(source.id, () => request(`${base}/sources/${source.id}/polling`, { method: 'PATCH', body: JSON.stringify(settings), signal: mutationAbort.current?.signal }))} />
+      {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
       {deleting === source.id && <div className="source-confirm" role="alert"><span>보관한 자료도 삭제합니다. PC 원래 폴더·원격 저장소는 유지됩니다.</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>Source 삭제 확인</Button></div>}
     </li>)}</ul>
     <form className="search-form" onSubmit={event => void search(event)}>

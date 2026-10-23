@@ -57,6 +57,10 @@ class SourceIntegrationTest {
     @Autowired JdbcTemplate jdbc;
     @Autowired MockMvc mvc;
     @MockitoBean RemoteReader remote;
+    @Autowired dev.knowledgeforge.knowledge.application.KnowledgeService knowledge;
+    @Autowired dev.knowledgeforge.knowledge.application.PublicationService publications;
+    @Autowired dev.knowledgeforge.search.application.EvidenceBundleService bundles;
+    @Autowired dev.knowledgeforge.search.application.EvidenceBundleValidator bundleValidator;
 
     @BeforeEach
     void clean() {
@@ -66,6 +70,100 @@ class SourceIntegrationTest {
 
     private Source local(String workspaceId, String name, String domain) {
         return sources.create(workspaceId, name, "LOCAL_FOLDER", fixture.toString(), domain);
+    }
+
+    @Test
+    void metadataEditPreservesSourceFilesAndPublicationWhileReindexingDomains() throws Exception {
+        Files.writeString(fixture.resolve("notes.txt"), "telescope synthetic evidence");
+        String workspace = library.createWorkspace("Metadata fixture").id();
+        Source original = sources.sync(workspace, local(workspace, "Before", "old-domain").id());
+        String file = entryId(original.id(), "notes.txt");
+        var document = knowledge.create(workspace, "telescope", "telescope [E1]", List.of(
+                new dev.knowledgeforge.knowledge.domain.Knowledge.Citation(file, 1, 1)));
+        publications.review(workspace, document.card().id(), 1, "Fixture", "synthetic", true, true);
+        var publication = publications.publish(workspace, document.card().id(), 1, 0);
+        search.refresh();
+        var bundle = bundles.create(workspace, "telescope", List.of("old-domain"), false);
+        assertThat(bundleValidator.check(workspace, bundle.id()).eligible()).isTrue();
+        clearInvocations(analyzer);
+        mvc.perform(patch("/api/workspaces/{workspace}/sources/{id}", workspace, original.id())
+                        .header("X-Forge-Client", "1").contentType("application/json")
+                        .content("{\"name\":\" 새 이름 \",\"domain\":\"new-domain\",\"expectedRevision\":0}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.name").value("새 이름"))
+                .andExpect(jsonPath("$.pollingRevision").value(1));
+        Source edited = sources.list(workspace).getFirst();
+        assertThat(edited.revision()).isEqualTo(original.revision());
+        assertThat(edited.syncedAt()).isEqualTo(original.syncedAt());
+        assertThat(edited.location()).isEqualTo(original.location());
+        assertThat(edited.pollingEnabled()).isFalse();
+        assertThat(entryId(original.id(), "notes.txt")).isEqualTo(file);
+        assertThat(jdbc.queryForObject("SELECT name FROM entry WHERE id=?", String.class, original.rootEntryId())).isEqualTo("새 이름");
+        assertThat(knowledge.get(workspace, document.card().id(), null).version()).isEqualTo(document.version());
+        assertThat(publications.state(workspace, document.card().id()).publication()).isEqualTo(publication.publication());
+        assertThat(search.search(workspace, "telescope", List.of("old-domain"), true)).isEmpty();
+        assertThat(search.search(workspace, "telescope", List.of("new-domain"), true)).hasSize(2);
+        assertThat(bundles.get(workspace, bundle.id())).isEqualTo(bundle);
+        assertThat(bundleValidator.check(workspace, bundle.id()).eligible()).isFalse();
+        verify(analyzer, never()).analyze(anyString(), any());
+        assertThat(sources.sync(workspace, original.id()).revision()).isEqualTo(original.revision());
+        assertThat(entryId(original.id(), "notes.txt")).isEqualTo(file);
+    }
+
+    @Test
+    void metadataEditRejectsStaleSettingsSyncingAndCrossWorkspace() throws Exception {
+        String workspace = library.createWorkspace("Metadata conflicts").id();
+        Source original = local(workspace, "Before", "");
+        sources.configurePolling(workspace, original.id(), true, 120, 0);
+        assertThatThrownBy(() -> sources.editMetadata(workspace, original.id(), "After", "", 0)).isInstanceOf(LibraryException.class);
+        Source edited = sources.editMetadata(workspace, original.id(), "After", "domain", 1);
+        assertThat(edited.pollingRevision()).isEqualTo(2);
+        assertThat(edited.pollingEnabled()).isTrue();
+        assertThat(edited.pollIntervalSeconds()).isEqualTo(120);
+        assertThatThrownBy(() -> sources.configurePolling(workspace, original.id(), false, 120, 1)).isInstanceOf(LibraryException.class);
+        assertThat(sourceStore.begin(workspace, original.id())).isTrue();
+        mvc.perform(patch("/api/workspaces/{workspace}/sources/{id}", workspace, original.id())
+                        .header("X-Forge-Client", "1").contentType("application/json")
+                        .content("{\"name\":\"Blocked\",\"domain\":\"\",\"expectedRevision\":2}"))
+                .andExpect(status().isConflict());
+        String other = library.createWorkspace("Other metadata workspace").id();
+        mvc.perform(patch("/api/workspaces/{workspace}/sources/{id}", other, original.id())
+                        .header("X-Forge-Client", "1").contentType("application/json")
+                        .content("{\"name\":\"Blocked\",\"domain\":\"\",\"expectedRevision\":2}"))
+                .andExpect(status().isNotFound());
+        assertThat(sources.list(workspace).getFirst().name()).isEqualTo("After");
+    }
+
+    @Test
+    void metadataEditValidatesInputAndRequiresMutationGuard() throws Exception {
+        String workspace = library.createWorkspace("Metadata validation").id();
+        Source original = local(workspace, "Before", "");
+        for (String name : List.of(" ", "../escape", "bad\nname", "x".repeat(121))) {
+            assertThatThrownBy(() -> sources.editMetadata(workspace, original.id(), name, "", 0)).isInstanceOf(LibraryException.class);
+        }
+        assertThatThrownBy(() -> sources.editMetadata(workspace, original.id(), "Valid", null, 0)).isInstanceOf(LibraryException.class);
+        assertThatThrownBy(() -> sources.editMetadata(workspace, original.id(), "Valid", "x".repeat(81), 0)).isInstanceOf(LibraryException.class);
+        assertThatThrownBy(() -> sources.editMetadata(workspace, original.id(), "Valid", "", null)).isInstanceOf(LibraryException.class);
+        mvc.perform(patch("/api/workspaces/{workspace}/sources/{id}", workspace, original.id())
+                        .contentType("application/json").content("{\"name\":\"Blocked\",\"domain\":\"\",\"expectedRevision\":0}"))
+                .andExpect(status().isForbidden());
+        assertThat(sources.list(workspace).getFirst()).isEqualTo(original);
+    }
+
+    @Test
+    void metadataAndIndexQueueRollBackWhenFolderRenameFails() throws Exception {
+        Files.writeString(fixture.resolve("notes.txt"), "telescope rollback fixture");
+        String workspace = library.createWorkspace("Metadata rollback").id();
+        Source original = sources.sync(workspace, local(workspace, "Before", "old-domain").id());
+        search.refresh();
+        jdbc.execute("CREATE TRIGGER fixture_block_rename BEFORE UPDATE OF name ON entry BEGIN SELECT RAISE(ABORT, 'fixture rename failure'); END");
+        try {
+            assertThatThrownBy(() -> sources.editMetadata(workspace, original.id(), "After", "new-domain", 0)).isInstanceOf(RuntimeException.class);
+            assertThat(sources.list(workspace).getFirst()).isEqualTo(original);
+            assertThat(jdbc.queryForObject("SELECT name FROM entry WHERE id=?", String.class, original.rootEntryId())).isEqualTo("Before");
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM search_outbox", Integer.class)).isZero();
+        } finally {
+            jdbc.execute("DROP TRIGGER fixture_block_rename");
+        }
     }
 
     private String entryId(String sourceId, String path) {

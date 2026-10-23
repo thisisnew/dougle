@@ -9,7 +9,7 @@
 
 ## 설치하기
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.5-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.6-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 **Knowledge Forge**를 **Applications(응용 프로그램)**로 옮깁니다.
@@ -20,7 +20,7 @@ Java·Git·Codex 실행 도구는 앱에 포함되어 있습니다. GitHub 자�
 0.1.3부터 새 버전을 앱에서 알려 줍니다. 안내에 따라 설치하고 다시 시작하면 됩니다. [업데이트 안내](docs/automatic-updates.md)
 앱이 열리지 않거나 기존 앱을 업데이트하려면 [자세한 설치 안내](docs/macos-install.md)를 확인하세요.
 
-![자료를 등록하고 검색하는 서재 화면](docs/images/workspace.png)
+![등록한 자료의 이름과 분류를 수정하는 화면](docs/images/source-metadata.png)
 
 ## 기술 스택
 

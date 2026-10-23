@@ -18,6 +18,20 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it('세션 준비 전에는 버튼이 있어도 클릭되지 않고 준비 후에만 Workspace를 연다', async () => {
+    let ready!: (value: { workspaces: never[]; activeWorkspaceId: null }) => void
+    api.mockReturnValue(new Promise(resolve => { ready = resolve }))
+    render(<App />)
+    const button = screen.getByRole('button', { name: 'Workspace 생성' })
+    expect(button).toBeDisabled()
+    button.click()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    ready({ workspaces: [], activeWorkspaceId: null })
+    await waitFor(() => expect(button).toBeEnabled())
+    await userEvent.click(button)
+    expect(await screen.findByRole('dialog', { name: '새 Workspace' })).toBeInTheDocument()
+  })
+
   it.each([false, true])('근거에서 폴더와 파일 미리보기로 이동하며 이동 중 삭제=%s를 처리한다', async missing => {
     const user = userEvent.setup()
     const folder = { ...file, id: 'folder', kind: 'FOLDER', name: '가상 원본 폴더' }

@@ -12,13 +12,15 @@ window.addEventListener('DOMContentLoaded', () => {
   window.__FORGE_QA_PHASE__ = 'waiting for React';
   const started = Date.now();
   const timer = setInterval(async () => {
-    if (!document.querySelector('#root button[aria-label="Workspace 생성"]')) {
+    const workspaceButton = document.querySelector('#root button[aria-label="Workspace 생성"]');
+    if (!workspaceButton || workspaceButton.disabled || workspaceButton.getBoundingClientRect().height === 0) {
       if (Date.now() - started > 20000) clearInterval(timer);
       return;
     }
     clearInterval(timer);
     const headers = { 'X-Forge-Session': window.__FORGE_DESKTOP_SESSION__, 'X-Forge-Client': '1' };
     async function api(path, method = 'GET', body) {
+      phase = method + ' ' + path;
       const response = await fetch('/api' + path, {
         mode: 'same-origin', redirect: 'error',
         method, headers: { ...headers, ...(body && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}) },
@@ -38,13 +40,16 @@ window.addEventListener('DOMContentLoaded', () => {
     let phase = 'workspace button';
     Object.defineProperty(window, '__FORGE_QA_PHASE__', { get: () => phase, configurable: true });
     try {
-      document.querySelector('#root button[aria-label="Workspace 생성"]').click();
+      workspaceButton.click();
+      phase = 'workspace dialog';
       await until(() => document.querySelector('#item-name'));
       const input = document.querySelector('#item-name');
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, '가상 데스크톱 검증');
       input.dispatchEvent(new Event('input', { bubbles: true }));
+      phase = 'workspace input';
       await until(() => !document.querySelector('[role="dialog"] button[type="submit"]').disabled);
       document.querySelector('[role="dialog"] button[type="submit"]').click();
+      phase = 'workspace saved';
       await until(() => document.querySelector('#workspace option:checked')?.textContent === '가상 데스크톱 검증');
       const session = await api('/session');
       const workspace = session.workspaces.find(item => item.name === '가상 데스크톱 검증');
@@ -108,6 +113,14 @@ window.addEventListener('DOMContentLoaded', () => {
         enabled: false, intervalSeconds: 60, expectedRevision: 0,
       });
       if (polling.pollingEnabled || polling.nextPollAt !== null || polling.status !== 'NEW') throw Error('OFF collected unexpectedly');
+      phase = 'Source metadata';
+      const editedSource = await api(base + '/sources/' + source.id, 'PATCH', {
+        name: '가상 자료 이름 수정', domain: '가상 분류', expectedRevision: polling.pollingRevision,
+      });
+      if (editedSource.name !== '가상 자료 이름 수정' || editedSource.domain !== '가상 분류'
+        || editedSource.location !== source.location || editedSource.pollingEnabled
+        || editedSource.nextPollAt !== null || editedSource.status !== 'NEW'
+        || editedSource.pollingRevision !== polling.pollingRevision + 1) throw Error('Source metadata mismatch');
       const settings = await api('/ai/launch-settings');
       const saved = await api('/ai/launch-settings', 'PUT', {
         codexPath: '', claudePath: '', expectedRevision: settings.saved.revision, acknowledged: true,
@@ -146,7 +159,7 @@ fn main() {
                 let passed = run(&handle, &resources, &data);
                 if passed {
                     let _ = std::fs::remove_dir_all(&data);
-                    println!("PASS: actual React Workspace/AI buttons, Korean names/errors, same-origin mutations, upload/download/search, publication, relations, OFF polling and CLI settings; no inference");
+                    println!("PASS: actual React Workspace/AI buttons, Korean names/errors, same-origin mutations, upload/download/search, publication, relations, OFF polling, Source metadata and CLI settings; no inference");
                 } else {
                     eprintln!("Retained synthetic diagnostics: {}", data.display());
                     eprintln!("FAIL: native runtime smoke");
@@ -199,6 +212,9 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
             return false;
         }
     };
+    if let Err(error) = _window.set_focus() {
+        eprintln!("Test window focus request failed: {error}");
+    }
     let agent: ureq::Agent = ureq::Agent::config_builder()
         .proxy(None)
         .max_redirects(0)

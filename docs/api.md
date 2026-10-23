@@ -161,6 +161,7 @@ curl -X POST http://127.0.0.1:8787/api/workspaces/WORKSPACE_ID/files \
 |---|---|---|
 | GET | `/sources` | Source 배열 |
 | POST | `/sources` | name, kind, location, 선택 domain → 201 Source |
+| PATCH | `/sources/{sourceId}` | name, domain, expectedRevision → 200 Source; 이름·분류만 수정, 수집 중/충돌 409 |
 | POST | `/sources/{sourceId}/sync` | 수동 수집 → 200 Source, 상태 READY 또는 ERROR |
 | DELETE | `/sources/{sourceId}` | Source와 보관된 원본만 삭제 → 204 |
 | GET | `/entries/{entryId}` | 단일 Entry 메타데이터 |
@@ -181,6 +182,7 @@ kind는 LOCAL_FOLDER / URL / GITHUB입니다. URL은 공개 HTTPS 443, GITHUB는
 `https://github.com/owner/repository` 형태의 공개 기본 브랜치만 지원합니다.
 Source 이름은 같은 Workspace에서 고유하며 도메인은 0~80자입니다.
 Source 등록은 수집을 시작하지 않습니다.
+이름·분류 편집도 수집을 시작하지 않습니다. `expectedRevision`은 현재 `pollingRevision`이며 폴링 설정과 공통 충돌 버전입니다. 위치·종류는 수정하지 않습니다. [계약·보존 정책](source-metadata.md).
 
 Source 필드: `id, workspaceId, name, kind, location, domain, status, revision,
 error, syncedAt, rootEntryId, pollingEnabled, pollIntervalSeconds`.

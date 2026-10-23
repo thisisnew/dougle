@@ -108,10 +108,10 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 
 ### P3-2 시작 전 반드시 확인할 현재 구조
 
-- `sources/adapter/JdbcSourceStore.java`: 변경된 Source는 현재 자식 entry를 삭제하고 다시 생성합니다.
-  현재 entry ID만 근거 FK로 쓰면 동기화 때 근거를 잃습니다. `evidence_snapshot`은
+- `sources/adapter/JdbcSourceStore.java`: 현재는 경로가 유지되는 파일의 entry ID를 보존하고 변경 파일만 반영합니다.
+  삭제된 entry ID만 근거 FK로 쓰면 근거를 잃으므로 `evidence_snapshot`은
   원본 FK 없이 Source+경로+revision+내용/텍스트 해시와 당시 바이트를 보존합니다.
-- `library/adapter/persistence/DatabaseConfiguration.java`: `user_version=14`, FK cascade,
+- `library/adapter/persistence/DatabaseConfiguration.java`: 현재 `user_version=21`, FK cascade,
   삭제 outbox trigger가 있습니다. 기존 DB/Source 삭제 의미를 유지하며 마이그레이션해야 합니다.
 - `ingestion/adapter/JdbcAnalysisStore.java`: 추출 텍스트/심볼은 현재 원본에 연결됩니다.
   문서 청크/인용 범위 모델은 추가 작업입니다. Java 심볼 행과 일반 문서 위치를 구별하세요.
@@ -174,7 +174,7 @@ Phase 2 기본 기능은 검증했지만 운영 확장까지 완료된 것은 �
 - [ ] **P2-E3: 격리 파서.** 악성 문서의 별도 프로세스·CPU/메모리/시간 제한,
   강제 취소와 재시도. 현재 Tika는 JVM 내부이며 OCR/재귀 임베디드 추출 비활성화.
 - [ ] **P2-E4: Source 편집.** 위치/도메인/이름 변경 정책, 경로 변경 후 안전한 재동기화.
-  현재 Source 위치 수정은 없음. PC 이전 시 로컬 절대 경로 유효성 확인 필요.
+  0.1.6에서 이름·도메인 편집과 검색 갱신·설정 충돌·수집 중 보호를 추가합니다. [설계·검증](source-metadata.md). 위치 수정은 아직 없음. PC 이전 시 로컬 절대 경로 유효성 확인 필요.
 - [ ] **공통 품질:** 동시 수집/전원 장애/대형 저장소 측정, 깊은 트리 삭제 제한,
   Unicode 파일명 충돌, 이동·이름 변경, 접근성/키보드 사용성 검증.
   하위 검사 추가: [실제 JAR의 실행 중 AI 작업 SIGKILL 복구](crash-recovery.md), 자료·사람 편집·게시본 유지, 자동 재전송 방지. 물리적 정전/디스크 손상·수집 중단 전 구간 검증은 아님.

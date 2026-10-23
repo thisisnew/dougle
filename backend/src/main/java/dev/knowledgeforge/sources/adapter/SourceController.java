@@ -21,6 +21,14 @@ public class SourceController {
 
     public record Registration(String name, String kind, String location, String domain) {}
     public record PollingSettings(Boolean enabled, Integer intervalSeconds, Integer expectedRevision) {}
+    public record Metadata(String name, String domain, Integer expectedRevision) {}
+
+    @PatchMapping("/sources/{id}")
+    public Source edit(@PathVariable String workspaceId, @PathVariable String id, @RequestBody Metadata request) {
+        Source source = sources.editMetadata(workspaceId, id, request.name(), request.domain(), request.expectedRevision());
+        search.refresh();
+        return source;
+    }
 
     @PatchMapping("/sources/{id}/polling")
     public Source polling(@PathVariable String workspaceId, @PathVariable String id, @RequestBody PollingSettings request) {

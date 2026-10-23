@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 320,
-  "testOrFixtureFiles": 91,
+  "totalFiles": 322,
+  "testOrFixtureFiles": 92,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -731,7 +731,8 @@
         "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
-        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java"
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
       ]
     },
     {
@@ -833,7 +834,8 @@
         "backend/src/test/java/dev/knowledgeforge/OrganizationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
-        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java"
+        "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
       ]
     },
     {
@@ -873,6 +875,7 @@
         "backend/src/test/java/dev/knowledgeforge/PublicationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/PublishedSearchIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/AnswerHistoryPanel.test.tsx",
@@ -1197,7 +1200,8 @@
         "backend/src/test/java/dev/knowledgeforge/AnswerPartialIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
-        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java"
+        "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
       ]
     },
     {
@@ -1213,7 +1217,8 @@
       "lines": 91,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java"
+        "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java"
       ]
     },
     {
@@ -1305,6 +1310,7 @@
         "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/EvidenceBundleIntegrationTest.java",
+        "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
         "frontend/src/EvidenceBundlePanel.test.tsx"
       ]
     },
@@ -1338,8 +1344,8 @@
     },
     {
       "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/JdbcSourceStore.java",
-      "sha256": "de3770dc3657f4fda2695490c5c69fd6f3553790170abff6c2bafda52402705d",
-      "lines": 187,
+      "sha256": "c05757261dbc0fc70240c11b00604b4a3905900aa372b9503449f7187e9ae280",
+      "lines": 200,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -1371,8 +1377,8 @@
     },
     {
       "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/SourceController.java",
-      "sha256": "d1bd114af614f329306532861c6839379e519f1856a08778d744813807f3c11c",
-      "lines": 62,
+      "sha256": "21931527f0c8fd4194f43b5d30e7e81a01b99b65019f8b4baf3c6ab54abbb1bc",
+      "lines": 70,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -1426,8 +1432,8 @@
     },
     {
       "path": "backend/src/main/java/dev/knowledgeforge/sources/application/SourceService.java",
-      "sha256": "c76b18710bfec3389c1c53f4ff737dbc2020c281aa6ffac347b306d544715536",
-      "lines": 133,
+      "sha256": "274fe527170c49d1a66eec38a566cd1630345ef6464fab7d500de7d410837174",
+      "lines": 149,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/BundleValidationIntegrationTest.java",
@@ -1442,8 +1448,8 @@
     },
     {
       "path": "backend/src/main/java/dev/knowledgeforge/sources/application/SourceStore.java",
-      "sha256": "9f76a6a1cb8c740a12c34d5b1bb8dc3e82e11f86e4d0b614ba9f412185e64b88",
-      "lines": 23,
+      "sha256": "232ce79deb3e30f76ea6fff8d8c6e67d7cea0d6c4a75fe3d63f59b77ab5d5c91",
+      "lines": 24,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/PollingIntegrationTest.java",
@@ -1505,11 +1511,13 @@
         "backend/src/test/java/dev/knowledgeforge/knowledge/adapter/CodexAppServerSessionTest.java",
         "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
+        "desktop/src-tauri/examples/runtime_smoke.rs",
         "frontend/src/AnswerJobsPanel.test.tsx",
         "frontend/src/EvidenceAnswerPreparation.test.tsx",
         "frontend/src/ProposalAcceptance.test.tsx",
         "frontend/src/ProposalDecisions.test.tsx",
         "frontend/src/ProposalMerge.test.tsx",
+        "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/SourcePollingSettings.test.tsx",
         "frontend/src/answerJobEvents.test.ts",
@@ -1756,8 +1764,8 @@
     },
     {
       "path": "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
-      "sha256": "b9fd109251c312e24801540d8464857012e965a4a544a8d138dd2d554f87362e",
-      "lines": 466,
+      "sha256": "cacaf57636c3600fd58f5b1ae5c43fcd02a75e25e076e57493012f51d375a72f",
+      "lines": 564,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -1901,14 +1909,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "a084b5c87070caedc97bce32530b9cd0c132cf1404d41bf7c692c46665dc673a",
+      "sha256": "d0d61b3c645ca22a3b1682caeaa54c43819517fcb0b68393ae8a210aad31a0bd",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "0b95dc02dc6fbcb464749ba3b1ae6c86577a949f8e6fc5076a2ff2f3137ed29d",
+      "sha256": "b0aaba0ba91afc6ec2aa9a0123632c49da44dc39e5e905e13c9dd1afe4ba4162",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -1924,7 +1932,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "c5cbeb21af737860e86de03c0e022c963be14ef1b40af7dfa3bc89e1c5aa82f6",
+      "sha256": "202c51e1ae2772a1876bc9bf9e77978442f789f65092f76716cf607ee35551c9",
       "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -1962,8 +1970,8 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "9c9cebb3dd8323e6dc6bb0883d04037d2431832c19735110cf856ea156aa1de1",
-      "lines": 295,
+      "sha256": "f7fdfb2f7bc317999578bd7241889b988d6f55a8e66643421eded61adeb63b7a",
+      "lines": 311,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -2053,6 +2061,7 @@
         "frontend/src/PublicationPanel.test.tsx",
         "frontend/src/PublishedSearchPreview.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/SourcePollingSettings.test.tsx",
         "scripts/crash-recovery-smoke.mjs",
@@ -2101,6 +2110,7 @@
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
@@ -2146,7 +2156,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "7406816f58aca7caf5a9f7d7c8fff2975064ecc06db030932a0e8ffb1becab29",
+      "sha256": "a682ee8bdeb94e3ee285e5424ffc0f7c12c7115121bbba89f2bd3f504aa97b4f",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2257,8 +2267,8 @@
     },
     {
       "path": "frontend/src/App.test.tsx",
-      "sha256": "81edcd04edc74d6713b878ce3cd90bd3f115b5a202acac0233a083b27a922f5f",
-      "lines": 131,
+      "sha256": "829e8912e3ffaa265da131a48697ca8dae1adcf4b8aca8f8c4f7742ee638b0fa",
+      "lines": 145,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -2629,16 +2639,32 @@
       ]
     },
     {
+      "path": "frontend/src/SourceMetadataEditor.test.tsx",
+      "sha256": "28698bb183974942c58104e9511d5c146c62ad62c6c28c0ffeda6a28484c10f3",
+      "lines": 45,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/SourceMetadataEditor.tsx",
+      "sha256": "a13051dabff4d9486f2697986da7247743f7409fdfffebe444afd530ed0937bd",
+      "lines": 25,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/SourceMetadataEditor.test.tsx"
+      ]
+    },
+    {
       "path": "frontend/src/SourcePanel.test.tsx",
-      "sha256": "e3e765508843a118b55f8aceb9ac355aefc267825f5203ee53018c41a8ca429d",
-      "lines": 143,
+      "sha256": "8e2144e1136e129e70aff003186961c7745e690d2af654f769a7630c2818ef0c",
+      "lines": 183,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/SourcePanel.tsx",
-      "sha256": "6308a25223a9ccfc4713605990fc7d15710717b2d672605bab8ce96885a33e56",
-      "lines": 174,
+      "sha256": "e69e1946514936be627fee7c90488497b3184ab9a706022c629c1eef24b513c0",
+      "lines": 190,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/SourcePanel.test.tsx"
@@ -2813,6 +2839,7 @@
         "frontend/src/PublicationPanel.test.tsx",
         "frontend/src/PublishedSearchPreview.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/SourcePollingSettings.test.tsx"
       ]
@@ -2902,6 +2929,7 @@
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
+        "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
@@ -2968,8 +2996,8 @@
     },
     {
       "path": "scripts/browser-e2e.mjs",
-      "sha256": "e0f6273675b3254b1488597e1e77d0cbb6fb8684f3ef42c0396a23bef47271c1",
-      "lines": 94,
+      "sha256": "5a5a890c9b17cf6667d0d561718f5e9db490ddc5296a0eca4d9bb03ed5a9113a",
+      "lines": 95,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },

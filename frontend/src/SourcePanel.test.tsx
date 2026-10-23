@@ -17,6 +17,46 @@ const source = {
 
 beforeEach(() => { api.mockReset() })
 
+it('자료 목록 갱신으로 사라진 도메인을 숨은 검색 조건으로 남기지 않는다', async () => {
+  let current = source
+  api.mockImplementation(async path => path.includes('/search?') ? [] : [current])
+  const view = render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await userEvent.click(await screen.findByRole('checkbox', { name: '연구' }))
+  current = { ...source, domain: '새 분류', pollingRevision: 1 }
+  view.rerender(<SourcePanel workspaceId="one" revision={1} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  expect(await screen.findByRole('checkbox', { name: '새 분류' })).not.toBeChecked()
+  await userEvent.type(screen.getByLabelText('자료 검색'), '관측')
+  await userEvent.click(screen.getByRole('button', { name: '검색' }))
+  const searchPath = api.mock.calls.find(([path]) => path.includes('/search?'))?.[0]
+  expect(searchPath).toBeDefined()
+  expect(searchPath).not.toContain('domains=')
+})
+
+it('자료 이름과 도메인만 수정하고 수집이나 AI를 실행하지 않는다', async () => {
+  let current = source
+  api.mockImplementation(async (path, options) => {
+    if (options?.method === 'PATCH') {
+      current = { ...source, ...JSON.parse(String(options.body)), pollingRevision: 1 }
+      return current
+    }
+    return [current]
+  })
+  const changed = vi.fn()
+  render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
+  await userEvent.click(await screen.findByRole('button', { name: '가상 연구 이름과 분류 수정' }))
+  await userEvent.clear(screen.getByLabelText('자료 이름 수정'))
+  await userEvent.type(screen.getByLabelText('자료 이름 수정'), '새 연구')
+  await userEvent.clear(screen.getByLabelText('자료 도메인 수정'))
+  await userEvent.type(screen.getByLabelText('자료 도메인 수정'), '새 분류')
+  await userEvent.click(screen.getByRole('button', { name: '변경 저장' }))
+  await waitFor(() => expect(changed).toHaveBeenCalled())
+  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source', expect.objectContaining({ method: 'PATCH',
+    body: JSON.stringify({ name: '새 연구', domain: '새 분류', expectedRevision: 0 }) }))
+  expect(await screen.findByRole('button', { name: '새 연구 이름과 분류 수정' })).toBeInTheDocument()
+  expect(screen.queryByLabelText('자료 이름 수정')).not.toBeInTheDocument()
+  expect(api.mock.calls.some(([path]) => /sync|generation|answer/.test(path))).toBe(false)
+})
+
 it('검색된 게시 버전을 관련 자료 화면에 전달한다', async () => {
   api.mockImplementation(async path => path.includes('/search?') ? [
     { kind: 'KNOWLEDGE', cardId: 'card', version: 2, entryId: null, name: '게시 문서', domain: '', path: '', snippet: '요약', startLine: 1, endLine: 1, bodyMatch: true, freshness: 'CURRENT' },

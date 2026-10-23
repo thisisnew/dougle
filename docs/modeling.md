@@ -1,5 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+0.1.6: 자료 이름·분류는 기존 Source의 설정입니다. `pollingRevision`으로 폴링 설정과 함께 충돌을 막고, Source·원본 루트 폴더·검색 큐를 한 번에 바꿉니다. 원본 반영 버전·지식 내용·과거 근거는 유지합니다. [모델과 실제 코드 대조](source-metadata.md).
+
 0.1.5: Git은 앱 안에 포함된 실행 도구입니다. 자료 모델을 추가하지 않고 기존 Source revision·변경 blob·지식 최신성 모델을 사용합니다. `supervisor → GitRunner → GithubCollector`의 연결과 경로 격리를 [코드·검사에 대조](bundled-git.md)했습니다.
 
 0.1.4: 브라우저의 모델 선택은 제공자별로 분리합니다. 선택된 제공자와 초기 모델 설정이 일치하는지 실제 UI와 회귀 테스트로 대조해 수정했습니다. DB v21과 승인 모델은 변경하지 않습니다. [전체 E2E](e2e-report.md).
@@ -17,7 +19,7 @@ Intel/Apple Silicon 패키지에서 같은 모델을 사용합니다. CPU 지원
 | 쉽게 말하면 | 모델/테이블 | 역할 |
 |---|---|---|
 | 프로젝트 서랍 | `workspace`, `app_state` | 자료 격리, 마지막 선택 |
-| 연결한 자료 위치 | `source`, `source_http_cache` | 폴더/URL/GitHub, revision·오류·예약·HTTP 확인표 |
+| 연결한 자료 위치 | `source`, `source_http_cache` | 폴더/URL/GitHub, revision·오류·예약·HTTP 확인표; 이름·분류 편집은 pollingRevision으로 충돌 검사 |
 | 원본 복사본 | `entry` | 폴더·파일 바이트, Source 경로·해시 |
 | 검색 준비 결과 | `extracted_document`, `symbol`, `search_outbox` | 본문·Java 선언·색인 갱신 큐 |
 | 지식 문서 | `knowledge_card`, `knowledge_version` | 문서 식별자와 불변 Markdown 버전 |
