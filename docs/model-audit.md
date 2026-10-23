@@ -1,5 +1,7 @@
 # 모델링 재점검 — 구현과 약속의 차이
 
+0.1.5 후속 문서 점검: Claude 연결·로그인·실행 경로와 동봉 부재를 실제 코드에 대조했습니다. macOS 최소 설정 11.3과 공식 Claude 요구사항 13 이상을 구분하고, 구현과 약관 확인을 별도로 기록합니다. 연결/구조 Java 13건·UI 6건 재검사 통과, 기존 목록 318개 해시 일치. 앱 변경·새 배포는 없습니다. [결과·다음 조건](claude-readiness.md).
+
 0.1.5 재대조: `supervisor → forge.git-home → GitRunner`의 내장 Git 연결, 경로/환경 격리와 기존 `GithubCollector`의 증분 모델을 대조했습니다. Java 회귀 4건·Rust 경로 검사·시스템 Git 없는 공개 예제 수집으로 확인합니다. 코드/설정 목록은 318개, 테스트/fixture는 90개입니다. [설계·코드·검사](bundled-git.md) · [최신 실행 결과](release-0.1.5-report.md).
 
 0.1.3 재대조: `LocalRequestFilter`의 same-origin/UTF-8 계약을 실제 React/WebKit 변경 요청으로 검사하고, 네이티브 업데이트의 키·버전·종료/교체 경계를 `updates.rs`와 설치 smoke로 대조했습니다. DB v21과 기존 승인 모델은 변경하지 않았습니다. [이번 변경·실제 검사](release-0.1.3-report.md). 아래는 최초 감사 기록이며 파일 목록은 현재 소스에서 재생성합니다.

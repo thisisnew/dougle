@@ -2,6 +2,7 @@
 
 ## 최신 기준: 0.1.5
 
+- 후속 문서 점검: [Claude 준비 상태](docs/claude-readiness.md)에 공식 조건·현재 코드·macOS 요구사항 차이·다음 구현 기준을 정리했습니다. 약관 동의나 실제 외부 AI 실행은 대신 진행하지 않았습니다. 앱 변경이 없어 설치본/피드는 0.1.5를 유지합니다.
 - Mac 앱은 공식 Git 2.56.0을 CPU별로 빌드해 포함합니다. 사용자가 Git/Xcode를 설치하지 않아도 공개 GitHub를 수집합니다. [설계·실제 코드 대조](docs/bundled-git.md).
 - `supervisor::bundled_git → --forge.git-home → GitRunner`는 앱 내부 절대 경로와 HTTPS helper를 사용합니다. 상속한 `GIT_*` 설정을 제거하고 읽기 전용 수집 제한을 유지합니다. 누락·경로 탈출 시 시스템 Git으로 돌아가지 않습니다.
 - GPL·전체 원본 소스 압축·실제 빌드 스크립트를 앱 안에 포함합니다. Git 바이너리는 Git에 커밋하지 않습니다. `stage-git.sh`의 소스 해시와 두 CPU 검사를 유지하세요.
@@ -72,10 +73,12 @@ AI는 Ollama 대신 로그인된 Codex/Claude Code CLI를 사용합니다. 현�
 | 검색 | Tika·JavaParser·Lucene/Nori, 다중 도메인, 동일 선언·공통 출처 관련 자료 |
 | 지식 | 독립 폴더, 불변 초안 버전, 사람 편집 보호, 검토·명시 게시, 출처 최신성 |
 | AI | 근거 우선, 요청 미리보기·건별 승인·작업·취소·SSE, 선택 문맥 고정·이어 질문 |
-| 설치형 | Tauri 2 + Java 21 동봉 Intel DMG, 로컬 인증·프로세스 수명주기 |
+| 설치형 | Tauri 2 + Java·Codex·Git 동봉 Intel/ARM DMG, 서명 업데이트·로컬 인증·프로세스 수명주기; ARM 실행은 별도 검증 |
 | 설정 | CLI 경로 저장·재시작 적용·이전 승인 바인딩 무효화 |
 
-## 검증 증거
+## 0.1.1 검증 이력
+
+아래 수치는 과거 기록입니다. 현재 0.1.5 검증은 이 문서 상단과 [최신 보고서](docs/release-0.1.5-report.md)를 따릅니다.
 
 - 백엔드 **350 통과 + 실제 AI 1 제외**, UI **195 통과**, Rust **12 통과**.
 - 실제 JAR·동봉 Java 통합 검사와 DMG 설치 복사본 네이티브 UI 검사 통과.
@@ -86,7 +89,7 @@ AI는 Ollama 대신 로그인된 Codex/Claude Code CLI를 사용합니다. 현�
 
 ## 다음 작업 / 한계
 
-1. 0.1.1 공개 배포·체크섬·README/설치 안내 동기화 완료. 다음은 사용자 설치 체험과 아래 별도 검증입니다.
+1. 0.1.5 두 CPU 공개 배포·체크섬·업데이트 피드 동기화 완료. 다음은 [Claude 준비 조건](docs/claude-readiness.md) 확인과 아래 별도 검증입니다.
 2. 사용자의 Intel Mac에서 가상 자료로 첫 체험. Finder/Gatekeeper 실제 허용은 별도입니다.
 3. 명시 승인 후 실제 Codex/Claude 계정으로 최종 호환성·스트리밍 확인. 가상 CLI 검증을 실제 AI 성공으로 표현하지 않습니다.
 4. 공증은 사용자 요청으로 제외. ARM 교차 빌드/공개 패키지는 제공하며 실제 Apple Silicon 기기 실행·설치 회귀가 남습니다. Windows는 후속입니다.

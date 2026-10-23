@@ -86,7 +86,7 @@ AI 결과 비교는 `GenerationComparisonService`가 기존 작업/지식 저장
 
 단일 Spring Boot 프로세스의 Modular Monolith를 사용합니다.
 `library`는 Workspace와 원본 보관함을 소유합니다. Phase 2에서 `sources`, `ingestion`,
-`search`를 추가했고 Phase 3에서 `knowledge`와 CLI Curator를 추가했습니다. `conversation`은 승인과 단일 답변 작업을 담당하며 실시간 대화·자동 동기화는 후속 범위입니다.
+`search`를 추가했고 Phase 3에서 `knowledge`와 CLI Curator를 추가했습니다. `conversation`은 근거 묶음·승인·답변 작업·SSE 관측·선택 문맥 이어 질문을 담당합니다. Source별 선택적 자동 동기화는 `sources`에서 구현합니다. 실제 서비스 스트림 호환성 검증과 영속 Git 캐시는 별도입니다.
 
 ```text
 frontend/src

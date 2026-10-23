@@ -18,6 +18,7 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 | Apple Silicon에서 쓰기/빌드 | [ARM 지원과 검증 범위](apple-silicon.md) |
 | AI 설치·로그인·경로 설정 | [CLI 설정](cli-launch-settings.md) · [AI 전송 정책](cli-ai.md) |
 | 간편 연결 개선 | [제공자 선택·인증 확인·브라우저 로그인](provider-connection.md) |
+| Claude가 앱에 포함되지 않은 이유와 다음 작업 | [Claude 간편 연결 준비 상태](claude-readiness.md) |
 | 실제로 어디까지 테스트했는지 | [E2E 점검 결과](e2e-report.md) · [0.1.5 검증 보고서](release-0.1.5-report.md) |
 | 다음 컴퓨터에서 개발 이어가기 | [HANDOFF](../HANDOFF.md) · [단계별 현황](phase-plan.md) · [상세 백로그](backlog.md) |
 
