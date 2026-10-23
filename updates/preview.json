@@ -1,15 +1,15 @@
 {
-  "version": "0.1.3",
+  "version": "0.1.4",
   "notes": "앱 메뉴에서 업데이트를 설치하고 다시 시작할 수 있습니다.",
-  "pub_date": "2026-10-22T21:51:00Z",
+  "pub_date": "2026-10-23T10:07:35Z",
   "platforms": {
     "darwin-x86_64": {
-      "url": "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.3-preview.1/Knowledge.Forge_0.1.3_x86_64.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVURDY1dWlCMmppWUVxZE9palhUQTRzWVI1RXZmTDJiaFJSR1dveUxEQjZmMGFMa0ZPbmljZk8vMG5Xdlh2SnNndzQxVFRpV1VFTEIzRHNwSjk3Mmw0Rko1MHF0VDc3dXdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNzAzNTM0CWZpbGU6S25vd2xlZGdlIEZvcmdlLmFwcC50YXIuZ3oJdmVyc2lvbjowLjEuMwpuak1GS2t5aWFvRE5wdDJrSFFUa01DUXgrcWluL005OXZIK0dIQ0xNc3pBQ0lyb1NwMlZwcCt5NEJaZUFLc0ZOVVB0N2pTT2h0UXl1clFiSGVocGdCUT09Cg=="
+      "url": "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.4-preview.1/Knowledge.Forge_0.1.4_x86_64.app.tar.gz",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVURDY1dWlCMmppWUM0NmNNMjNPRVBObk5jNlZOZHFUd3ZDR2hBNnF3b05kZjFEM2U2aTJOeE1CSm93MlVDbzVPaFU3ME9YZWdlUXFMNEhWVWRWOUZ4U25nTlg0Nlhlc1E4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNzQ4MTc0CWZpbGU6S25vd2xlZGdlIEZvcmdlLmFwcC50YXIuZ3oJdmVyc2lvbjowLjEuNApWVnNyMUZXRGpVNzQzV3lkZU1KWjZSM3hlQ1RCdW5hNG1tWllPRFIyenloQ2ZoWTNxL0ErVzNDVG1KdHlSaGlvNEY3ZUFVYkU0cHBLdXZUekg4WjJCQT09Cg=="
     },
     "darwin-aarch64": {
-      "url": "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.3-preview.1/Knowledge.Forge_0.1.3_arm64.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVURDY1dWlCMmppWU5HS1R6MnlZd2pid3BpME5ZYjhvb0dZcnVLYWhxd1JzdDVVWGhkalp2aUdnRDVwNVg1cXN5cmFyc25WQ21ZTDRPODJDMGNrUG5sdHZYaWdnd2pJbWdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNzAzODc5CWZpbGU6S25vd2xlZGdlIEZvcmdlLmFwcC50YXIuZ3oJdmVyc2lvbjowLjEuMwppSjJsemZxcmxiTW1vQmtRNmU1UUdISStYb08vM204VUM0L1VzaVBJY001U2pxYWZBUU5xd1VVL1gwS3pNeWFiVTY5aXZNenV3SGUzaWtnNjRtNUdDdz09Cg=="
+      "url": "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.4-preview.1/Knowledge.Forge_0.1.4_arm64.app.tar.gz",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVURDY1dWlCMmppWVBZRU4rZG16ck9GOTFHNXhUOHJZMHNjU1JUQ1RGYjMyZ0FTdlV3aWVVRVF3NGdFWUx3VitlUlNTYkVDWVc0ZG9zRmJtbE13Nm1ENWZTbkd5SWpJa3dBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNzQ4Nzg3CWZpbGU6S25vd2xlZGdlIEZvcmdlLmFwcC50YXIuZ3oJdmVyc2lvbjowLjEuNApPQXc2NDVQc3d2YXIwUEhmazBWUXpwd3R3QTRxeHdJeDUzbGpZbDJOOFlZMk4yU1N6cVA1SWlaVjdrTStsWVp5WE04ZWpkcnQ0enVyOWpGUzJObldCZz09Cg=="
     }
   }
 }
