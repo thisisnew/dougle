@@ -9,23 +9,65 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GitRunner {
-    public byte[] run(Path directory, int limit, String... arguments) throws Exception {
-        List<String> command = new ArrayList<>(List.of("git", "-c", "core.hooksPath=" + directory.resolve("disabled-hooks"),
+    private final Path bundledHome;
+
+    public GitRunner() {
+        this("");
+    }
+
+    @Autowired
+    public GitRunner(@Value("${forge.git-home:}") String bundledHome) {
+        this.bundledHome = bundledHome.isBlank() ? null : Path.of(bundledHome);
+        if (this.bundledHome != null && !this.bundledHome.isAbsolute()) {
+            throw new IllegalArgumentException("Bundled Git home must be absolute");
+        }
+    }
+
+    ProcessBuilder command(Path directory, String... arguments) throws IOException {
+        List<String> command = new ArrayList<>();
+        if (bundledHome == null) {
+            command.add("git");
+        } else {
+            Path root = bundledHome.toRealPath();
+            for (String relative : List.of("bin/git", "libexec/git-core/git", "libexec/git-core/git-remote-https")) {
+                Path binary = root.resolve(relative).toRealPath();
+                if (!binary.startsWith(root) || !Files.isRegularFile(binary) || !Files.isExecutable(binary)) {
+                    throw new IOException("내장 Git 실행 파일을 확인할 수 없습니다. 앱을 다시 설치해 주세요.");
+                }
+            }
+            command.add(root.resolve("bin/git").toString());
+            command.add("--exec-path=" + root.resolve("libexec/git-core"));
+        }
+        command.addAll(List.of("-c", "core.hooksPath=" + directory.resolve("disabled-hooks"),
                 "-c", "credential.helper=", "-c", "protocol.file.allow=never", "-c", "protocol.ext.allow=never",
-                "-c", "http.followRedirects=false", "-c", "http.sslVerify=true"));
+                "-c", "http.followRedirects=false", "-c", "http.sslVerify=true", "-c", "core.fsmonitor=false",
+                "-c", "init.templateDir="));
         command.addAll(List.of(arguments));
         ProcessBuilder builder = new ProcessBuilder(command).directory(directory.toFile());
-        builder.environment().put("GIT_TERMINAL_PROMPT", "0");
-        builder.environment().put("GIT_CONFIG_NOSYSTEM", "1");
-        builder.environment().put("GIT_CONFIG_GLOBAL", System.getProperty("os.name").startsWith("Windows") ? "NUL" : "/dev/null");
-        builder.environment().remove("GIT_DIR");
-        builder.environment().remove("GIT_WORK_TREE");
-        builder.environment().remove("GIT_CONFIG_COUNT");
-        Process process = builder.start();
+        restrictEnvironment(builder.environment());
+        if (bundledHome != null) {
+            String inheritedPath = builder.environment().getOrDefault("PATH", "");
+            builder.environment().put("PATH", Path.of(command.getFirst()).getParent()
+                    + (inheritedPath.isBlank() ? "" : java.io.File.pathSeparator + inheritedPath));
+        }
+        return builder;
+    }
+
+    static void restrictEnvironment(java.util.Map<String, String> environment) {
+        environment.keySet().removeIf(key -> key.startsWith("GIT_"));
+        environment.put("GIT_TERMINAL_PROMPT", "0");
+        environment.put("GIT_CONFIG_NOSYSTEM", "1");
+        environment.put("GIT_CONFIG_GLOBAL", System.getProperty("os.name").startsWith("Windows") ? "NUL" : "/dev/null");
+    }
+
+    public byte[] run(Path directory, int limit, String... arguments) throws Exception {
+        Process process = command(directory, arguments).start();
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
             var output = executor.submit(() -> process.getInputStream().readNBytes(limit + 1));
             var errors = executor.submit(() -> process.getErrorStream().readNBytes(64 * 1024));

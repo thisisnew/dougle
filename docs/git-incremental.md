@@ -1,5 +1,7 @@
 # GitHub 재수집 — 바뀐 내용만 가져오기
 
+Mac 0.1.5부터 Git 실행 도구를 앱에 포함합니다. [내장 Git 설계와 검증](bundled-git.md). 아래 증분 수집 규칙과 DB 모델은 그대로입니다.
+
 Source 수동/자동 동기화에 같은 최적화를 적용합니다. **원격 저장소나 Workflow를 수정하지 않습니다.**
 
 1. GitHub REST API로 기본 브랜치의 commit SHA를 읽습니다.

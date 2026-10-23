@@ -53,6 +53,7 @@ signing_key="${FORGE_UPDATER_PRIVATE_KEY:-${XDG_CONFIG_HOME:-$HOME/.config}/know
 export TAURI_SIGNING_PRIVATE_KEY="$signing_key"
 export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="${TAURI_SIGNING_PRIVATE_KEY_PASSWORD:-}"
 bash "$repo_root/scripts/stage-codex.sh" "$architecture"
+bash "$repo_root/scripts/stage-git.sh" "$architecture"
 cd "$repo_root/desktop"
 npm ci --cache "$repo_root/.tools/npm-cache" --no-audit --no-fund
 export APPLE_SIGNING_IDENTITY=-

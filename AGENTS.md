@@ -1,5 +1,7 @@
 # Knowledge Forge 개발 지침
 
+- 0.1.5부터 내장 Git을 사용한다. `docs/bundled-git.md`의 CPU별 빌드·고정 소스 해시·GPL/전체 소스/빌드 스크립트 동봉을 유지한다. `supervisor → forge.git-home → GitRunner`는 누락 시 시스템 Git으로 대체하지 않는다. Git 전용 환경 격리·기존 수집 제한을 유지하며 `FORGE_VERIFY_PUBLIC_GITHUB=true` 설치 복사본 검사로 PATH 없는 실제 공개 예제 수집을 확인한다.
+
 - 전체 E2E 범위·재현·발견한 오류는 `docs/e2e-report.md`를 따른다. `scripts/browser-e2e.mjs`는 동봉 Java/JAR와 가상 CLI·임시 데이터만 쓴다. 실제 AI 테스트로 확대 해석하지 않는다. 네이티브 창 검사는 DOM 존재만 보지 말고 `[open]`과 레이아웃을 기다린 뒤 40px 검사를 유지한다. 실패 진단용 Workspace 이름에도 경로 구분자를 넣지 않는다.
 
 - 0.1.3부터 네이티브 서명 업데이트를 지원한다. `docs/automatic-updates.md`의 배포 순서와 키 보호를 따른다. `~/.config/knowledge-forge/updater.key`를 Git/앱/로그에 넣거나 임의로 재생성하지 않는다. 공개 자산 해시·서명 검증 뒤에만 `updates/preview.json`을 승격한다. 피드/문서만 바뀌면 실행 파일 재빌드는 불필요하다.

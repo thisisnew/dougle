@@ -43,4 +43,10 @@ fi
 env -i PATH=/usr/bin:/bin "$app/Contents/Resources/resources/runtime/bin/java" -version
 PATH=/usr/bin:/bin JAVA_HOME=/nonexistent TAURI_CONFIG='{"bundle":{"resources":[]}}' \
   CARGO_BUILD_JOBS=2 bash "$repo_root/scripts/desktop-cargo.sh" run --locked --example runtime_smoke -- "$app/Contents/Resources"
+if [[ "${FORGE_VERIFY_PUBLIC_GITHUB:-false}" == true ]]; then
+  TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=2 \
+    bash "$repo_root/scripts/desktop-cargo.sh" build --locked --example git_smoke
+  env PATH=/nonexistent GIT_EXEC_PATH=/nonexistent GIT_CONFIG_PARAMETERS=invalid \
+    "$repo_root/desktop/src-tauri/target/debug/examples/git_smoke" "$app/Contents/Resources"
+fi
 echo 'PASS: DMG verification, read-only mount, installed copy, signature and native runtime UI'

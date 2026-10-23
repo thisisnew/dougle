@@ -85,6 +85,10 @@ impl Backend {
         if let Some(codex) = bundled_codex(resources)? {
             command.arg(format!("--forge.ai.codex-command={}", codex.display()));
         }
+        command.arg(format!(
+            "--forge.git-home={}",
+            bundled_git(resources)?.display()
+        ));
         let child = command.spawn().map_err(
             |_| "내장 Java를 실행할 수 없습니다. Mac 아키텍처와 앱 설치 상태를 확인해 주세요.",
         )?;
@@ -171,6 +175,33 @@ impl Backend {
     }
 }
 
+fn bundled_git(resources: &Path) -> Result<std::path::PathBuf, &'static str> {
+    let base = resources
+        .canonicalize()
+        .map_err(|_| "앱 리소스 경로를 확인할 수 없습니다.")?;
+    let root = base
+        .join("resources/git")
+        .canonicalize()
+        .map_err(|_| "내장 Git이 없습니다. 앱을 다시 설치해 주세요.")?;
+    if !root.starts_with(&base) {
+        return Err("내장 Git이 앱 밖을 가리킵니다. 앱을 다시 설치해 주세요.");
+    }
+    for relative in [
+        "bin/git",
+        "libexec/git-core/git",
+        "libexec/git-core/git-remote-https",
+    ] {
+        let binary = root
+            .join(relative)
+            .canonicalize()
+            .map_err(|_| "내장 Git 실행 파일이 없습니다. 앱을 다시 설치해 주세요.")?;
+        if !binary.is_file() || !binary.starts_with(&root) {
+            return Err("내장 Git 실행 파일이 앱 밖을 가리킵니다. 앱을 다시 설치해 주세요.");
+        }
+    }
+    Ok(root)
+}
+
 fn bundled_codex(resources: &Path) -> Result<Option<std::path::PathBuf>, &'static str> {
     let file = resources.join("resources/ai/codex");
     if !file.exists() {
@@ -221,6 +252,36 @@ impl Drop for Backend {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn bundled_git_requires_complete_bundle_and_rejects_escaped_helpers() {
+        let root = std::env::temp_dir().join(format!(
+            "forge-bundled-git-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+        ));
+        std::fs::create_dir_all(&root).unwrap();
+        assert!(super::bundled_git(&root).is_err());
+        let git = root.join("resources/git");
+        for relative in [
+            "bin/git",
+            "libexec/git-core/git",
+            "libexec/git-core/git-remote-https",
+        ] {
+            let binary = git.join(relative);
+            std::fs::create_dir_all(binary.parent().unwrap()).unwrap();
+            std::fs::write(binary, b"fixture").unwrap();
+        }
+        assert_eq!(
+            super::bundled_git(&root).unwrap(),
+            git.canonicalize().unwrap()
+        );
+        let helper = git.join("libexec/git-core/git-remote-https");
+        std::fs::remove_file(&helper).unwrap();
+        std::os::unix::fs::symlink("/bin/sh", &helper).unwrap();
+        assert!(super::bundled_git(&root).is_err());
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
     #[test]
     fn bundled_codex_is_optional_but_must_stay_inside_resources() {
         let root = std::env::temp_dir().join(format!(

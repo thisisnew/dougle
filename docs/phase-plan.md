@@ -1,5 +1,7 @@
 # Phase 완료 기준과 현재 상태
 
+최신 0.1.5: Git을 CPU별로 앱에 포함해 Mac 사용자의 Git 설치 의존을 제거합니다. 기존 Source/검색/지식/승인 모델과 SQLite v21은 유지합니다. [설계](bundled-git.md) · [설치·검증](release-0.1.5-report.md).
+
 최신 0.1.4: [전체 E2E](e2e-report.md)에서 찾은 제공자별 모델 복원 오류와 오래된 안내 수정. 0.1.3부터의 네이티브 서명 업데이트를 유지합니다. [현재 설치 파일·검증](release-0.1.4-report.md) · [업데이트 안내](automatic-updates.md). 실제 계정 확인·Claude 동봉·ARM 실기기 검증은 별도입니다. 아래는 이전 0.1.1 기준 Phase 요약입니다.
 
 기준: 2026-10-22, DB v21, **Intel Mac 0.1.1 공개 미리보기**.

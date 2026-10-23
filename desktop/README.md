@@ -40,9 +40,16 @@ Staging must provide these files, retaining Java executable permissions and the 
 desktop/src-tauri/resources/runtime/bin/java
 desktop/src-tauri/resources/runtime/lib/...
 desktop/src-tauri/resources/knowledge-forge.jar
+desktop/src-tauri/resources/ai/codex
+desktop/src-tauri/resources/git/bin/git
+desktop/src-tauri/resources/git/libexec/git-core/...
+desktop/src-tauri/resources/git/COPYING
+desktop/src-tauri/resources/git/source/...
 ```
 
 The JAR must embed the built UI. Tauri preserves the `resources/` prefix under `app.path().resource_dir()` (in the macOS bundle: `Contents/Resources/resources/`). The host canonicalizes Java and JAR paths before directly spawning Java, without a shell or PATH-based Java lookup. It removes Java option injection environment variables but retains the user's existing CLI environment. It does not install or call AI itself.
+
+From 0.1.5, the host requires bundled Git and passes its canonical root through `--forge.git-home`. Git and HTTPS helper paths must remain in the bundle. `GitRunner` invokes the absolute executable with its own helper path, clears inherited `GIT_*` overrides, and keeps collection limits. Missing bundled Git never falls back to system Git. The complete corresponding source, GPL license and build recipe ship with both CPU packages. [Build and verification](../docs/bundled-git.md).
 
 The stable application identifier is `dev.knowledgeforge.desktop`; `app_data_dir()` is the sole data path (normally `~/Library/Application Support/dev.knowledgeforge.desktop` on macOS). The host passes absolute `FORGE_DATA_DIR`, `FORGE_DESKTOP=true` and uses the data directory as the child working directory. It does not import development data. The backend's data lock rejects another app instance using the same directory.
 
@@ -56,7 +63,7 @@ Each process gets a fresh OS-random 32-byte token encoded as 64 lowercase hexade
 - Startup waits up to 60 seconds plus an in-flight readiness request of at most 2 seconds. The initial page-load watchdog is 20 seconds; an empty UI root gets a friendly message after 15 seconds. A readiness health probe runs every 2 seconds. A failed probe or backend exit ends this session without restarting or replaying work.
 - Stdout/stderr are drained without retaining or printing backend text. Combined startup output is capped at 8 MiB; parsed lines at 4096 bytes; readiness JSON at 1024 bytes. After authenticated readiness, output is discarded in fixed-size buffers without a cumulative lifetime limit.
 - Java starts in a new owned Unix process group. Closing the app drops child stdin and allows 8 seconds for graceful backend shutdown. On timeout, while the owned leader is still unreaped, the host confirms its group identity, kills that group, then reaps Java. No global Java/process-name kill is used. Host crashes close the pipe at the OS level; backend EOF supervision owns that shutdown. Descendants that deliberately detach from the group, or survive an already-exited leader, remain the backend's cleanup responsibility.
-- Finder may omit `/opt/homebrew/bin`, `/usr/local/bin` and `~/.local/bin` from PATH. Existing CLI/Git discovery inherits that environment; the host does not read credentials or expand discovery. Configuration UX is a follow-up.
+- Finder may omit `/opt/homebrew/bin`, `/usr/local/bin` and `~/.local/bin` from PATH. Bundled Git and Codex use absolute app paths. Existing Claude tools can use the persisted CLI path setting; the host does not read credentials or shell profiles.
 - Friendly startup/runtime errors stay in a local host window. Failure messages intentionally omit raw backend output. Native signed updates are available from 0.1.3; see [update flow and signing keys](../docs/automatic-updates.md). Apple Silicon packages are cross-built and statically checked, not runtime-verified on this Intel host. Automatic failure restart, development-data migration, AI replay and Windows packaging remain outside this preview.
 
 API references: [Tauri resource resolution](https://v2.tauri.app/develop/resources/) and [Tauri WebviewWindowBuilder](https://docs.rs/tauri/2.12.5/tauri/webview/struct.WebviewWindowBuilder.html). The resolved Wry source uses `WKUserScriptInjectionTime::AtDocumentStart` and dispatches download actions before navigation checks.

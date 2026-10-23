@@ -1,0 +1,19 @@
+Knowledge Forge bundled Git 2.56.0
+
+Git is a separate program distributed under GNU GPL version 2.
+See ../COPYING. The complete, unmodified corresponding Git source is included
+here as git-2.56.0.tar.xz, together with the script used to build the binaries.
+Original source: https://www.kernel.org/pub/software/scm/git/git-2.56.0.tar.xz
+SHA-256: 26c56c296b38c0695b26fa95f475f1d01704d2d38e73465ca30b0b2f5dc789d3
+
+Rebuild on a Mac with Apple's command-line development tools:
+  tar -xf git-2.56.0.tar.xz
+  bash build-bundled-git.sh "$PWD/git-2.56.0" arm64 "$PWD/rebuilt-git"
+Use x86_64 instead of arm64 for Intel. The output directory must not exist.
+The app includes git and the HTTPS helper; documentation, GUI, Perl/Python
+scripts, optional Rust implementations and third-party libraries are not built. Only the macOS
+system libraries are linked. No Git source patches are applied.
+
+The included source retains its own component licenses and notices.
+Knowledge Forge invokes Git as a separate process to read public repositories.
+Installing or building Git separately is not required to use the Mac app.
