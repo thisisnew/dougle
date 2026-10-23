@@ -24,16 +24,22 @@ public class ProviderLoginAdapter implements ProviderLogin {
     private final CliLaunchConfiguration launch;
     private final ProviderConnection connection;
     private final Duration timeout;
+    private final String codexStreamHome;
     private Status current;
     private Process process;
     private boolean closed;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public ProviderLoginAdapter(CliLaunchConfiguration launch, ProviderConnection connection) {
-        this(launch, connection, Duration.ofMinutes(3));
+    public ProviderLoginAdapter(CliLaunchConfiguration launch, ProviderConnection connection,
+            @org.springframework.beans.factory.annotation.Value("${forge.ai.codex-stream-home:}") String codexStreamHome) {
+        this(launch, connection, Duration.ofMinutes(3), codexStreamHome);
     }
     ProviderLoginAdapter(CliLaunchConfiguration launch, ProviderConnection connection, Duration timeout) {
+        this(launch, connection, timeout, "");
+    }
+    ProviderLoginAdapter(CliLaunchConfiguration launch, ProviderConnection connection, Duration timeout, String codexStreamHome) {
         this.launch = launch; this.connection = connection; this.timeout = timeout;
+        this.codexStreamHome = codexStreamHome;
     }
 
     @Override
@@ -85,11 +91,17 @@ public class ProviderLoginAdapter implements ProviderLogin {
         var descendants = java.util.concurrent.ConcurrentHashMap.<ProcessHandle>newKeySet();
         try {
             directory = Files.createTempDirectory("forge-login-");
-            var command = provider == Provider.CODEX ? List.of(launch.command(provider), "login") : List.of(launch.command(provider), "auth", "login");
+            var command = provider == Provider.CODEX
+                    ? (codexStreamHome.isBlank() ? List.of(launch.command(provider), "login")
+                    : List.of(launch.command(provider), "--config", "cli_auth_credentials_store=\"file\"", "login"))
+                    : List.of(launch.command(provider), "auth", "login");
             var builder = new ProcessBuilder(command).directory(directory.toFile());
             builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
                     "SYSTEMROOT", "SystemRoot", "WINDIR", "CODEX_HOME"));
             CliProcessPath.includeCommandDirectory(builder);
+            if (provider == Provider.CODEX && !codexStreamHome.isBlank()) {
+                CodexProfile.configure(builder, CodexProfile.prepare(codexStreamHome), directory);
+            }
             synchronized (this) {
                 if (closed || !status(started.id()).state().equals("PENDING")) return;
                 owned = builder.start();

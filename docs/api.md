@@ -2,6 +2,8 @@
 
 ## AI 연결 / 로그인 (0.1.2부터)
 
+0.1.7 Mac 앱은 전용 Codex 프로필을 사용합니다. 경로·인증 파일은 API로 노출하지 않으며 기존 로그인 API를 그대로 사용합니다. 인증 조회는 명령당 최대 30초, 로그인은 최대 3분입니다. 전용 프로필 변경은 기존 전송 승인을 무효화합니다. [사용법·구현](codex-managed-login.md).
+
 0.1.3 앱 업데이트는 네이티브 시작/메뉴 기능으로, 백엔드 REST API나 WebView IPC를 추가하지 않습니다. [업데이트 계약](automatic-updates.md).
 
 - `POST /api/ai/providers/{CODEX|CLAUDE}/connection`: 명시적 인증 상태 확인. `{provider,state,checkedAt,remoteConnection:"NOT_CHECKED"}`. 자료 전송/추론 없음.

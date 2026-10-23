@@ -17,8 +17,10 @@ afterEach(() => { localStorage.clear() })
 
 it('선택만 기억하고 실행하지 않으며 새 초안에 기본 제공자를 적용한다', async () => {
   const view = render(<ProviderConnectionPanel onClose={vi.fn()} />)
+  expect(screen.getByText(/전용 로그인을 사용합니다/)).toBeInTheDocument()
   expect(screen.queryByLabelText('Codex 절대 경로')).not.toBeInTheDocument()
   await userEvent.selectOptions(screen.getByLabelText('사용할 AI'), 'CLAUDE')
+  expect(screen.queryByText(/전용 로그인을 사용합니다/)).not.toBeInTheDocument()
   expect(api).not.toHaveBeenCalled()
   expect(preferredProvider()).toBe('CLAUDE')
   view.unmount()

@@ -2,7 +2,7 @@
 
 **Intel과 Apple Silicon용 파일이 다릅니다.** Apple 공증은 사용자 요청으로 제외했습니다.
 Intel은 설치 복사본 실행 검증을 통과했습니다. Apple Silicon은 교차 빌드·정적 검사만 통과했으며 **실제 ARM Mac 실행은 미검증**입니다.
-Windows용 설치 파일은 없습니다. [0.1.6 검증](release-0.1.6-report.md) · [ARM 확인 범위](apple-silicon.md).
+Windows용 설치 파일은 없습니다. [0.1.7 검증](release-0.1.7-report.md) · [ARM 확인 범위](apple-silicon.md).
 
 ## 설치
 
@@ -10,8 +10,8 @@ Apple 메뉴 → **이 Mac에 관하여**에서 칩/프로세서를 확인하세
 
 | 내 Mac | 받을 파일 | 다운로드 |
 |---|---|---|
-| Intel 프로세서 | `Knowledge.Forge_0.1.6_x86_64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.6-preview.1) |
-| Apple M 시리즈 칩 | `Knowledge.Forge_0.1.6_arm64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.6-preview.1) |
+| Intel 프로세서 | `Knowledge.Forge_0.1.7_x86_64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.7-preview.1) |
+| Apple M 시리즈 칩 | `Knowledge.Forge_0.1.7_arm64.dmg` | [Mac 미리보기](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.7-preview.1) |
 
 보통은 DMG만 받으면 됩니다. 무결성을 직접 확인하려면 해당 CPU용 `SHA256SUMS` 파일에서 DMG 행의 SHA-256을 `shasum -a 256 받은파일.dmg` 결과와 비교하세요. 체크섬에는 앱이 사용하는 업데이트 파일도 포함됩니다.
 0.1.5부터 GitHub 수집 도구도 앱에 포함되어 별도 Git 설치가 필요 없습니다. 기존 자료의 저장 형식(v21)은 유지됩니다. [내장 Git](bundled-git.md) · [전체 E2E 검사](e2e-report.md).
@@ -45,6 +45,7 @@ Intel/ARM 앱은 같은 데이터 위치를 사용하므로 동시에 실행하�
 5. AI 답변은 **근거 묶음 → 요청 확인 → 승인 → 실제 전송** 순서입니다.
 
 **AI 연결 → Codex → 연결 상태 확인**을 누르고, 로그인이 필요하면 안내에 동의한 뒤 **브라우저에서 로그인**을 누르세요. Codex 실행 도구는 앱에 들어 있습니다.
+0.1.7은 앱 전용 로그인을 사용합니다. 이전 버전에서 로그인했더라도 한 번 새로 로그인하며 기존 Codex 인증을 복사하거나 변경하지 않습니다. [로그인·스트리밍 안내](codex-managed-login.md).
 Claude 연결은 현재 별도로 설치된 호환 도구가 있어야 합니다. 기존 AI 대화 내용을 앱이 그대로 가져오는 것은 아닙니다.
 로그인 동의와 자료 전송 승인은 별개입니다. 실제 계정의 로그인·답변 성공은 별도 확인이 필요하며 인증 확인만으로 요금제/이용 한도를 보장하지 않습니다. [AI 연결 안내](provider-connection.md).
 이전에 직접 실행 경로를 설정했다면 그 설정이 우선합니다. **AI 연결 → 고급 설정 → 기존 실행 경로 설정**에서 빈값으로 저장하고 앱을 다시 열면 동봉 도구를 사용합니다.
@@ -63,6 +64,7 @@ GitHub 수집용 Git도 앱에 들어 있습니다. 자동 폴링은 Source별 �
 
 - **앱을 완전히 종료한 뒤** Finder의 이동 → 폴더로 이동에서 위 경로를 엽니다.
 - 폴더 전체를 다른 위치에 복사합니다. DB 파일 하나만 복사하지 마세요.
+- 0.1.7부터 전용 로그인 파일도 들어갈 수 있습니다. 백업을 공개하거나 지원 문의에 첨부하지 마세요. 다른 사람에게 인증 파일을 전달하지 않습니다.
 - 복구할 때도 앱을 종료합니다. 현재 폴더를 먼저 다른 이름으로 보관한 뒤 백업 폴더를 복사합니다.
 - 새 버전에서 연 데이터를 구버전 앱으로 열지 마세요. 현재 DB는 v21이며 역마이그레이션은 없습니다.
 - 개발용 저장소의 `.data`는 자동으로 가져오지 않습니다. 실행 중 데이터 이동은 금지합니다.

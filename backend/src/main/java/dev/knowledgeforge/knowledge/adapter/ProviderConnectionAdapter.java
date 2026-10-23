@@ -31,7 +31,7 @@ public class ProviderConnectionAdapter implements ProviderConnection {
     @org.springframework.beans.factory.annotation.Autowired
     public ProviderConnectionAdapter(CliLaunchConfiguration launch,
             @org.springframework.beans.factory.annotation.Value("${forge.ai.codex-stream-home:}") String codexStreamHome) {
-        this(launch, Duration.ofSeconds(5), codexStreamHome);
+        this(launch, Duration.ofSeconds(30), codexStreamHome);
     }
     ProviderConnectionAdapter(CliLaunchConfiguration launch, Duration timeout) { this(launch, timeout, ""); }
     ProviderConnectionAdapter(CliLaunchConfiguration launch, Duration timeout, String codexStreamHome) {
@@ -40,20 +40,21 @@ public class ProviderConnectionAdapter implements ProviderConnection {
 
     @Override
     public Status check(Provider provider) {
-        if (provider == Provider.CODEX && !codexStreamHome.isBlank()) return status(provider, "UNSUPPORTED");
         if (!slot.tryAcquire()) throw new LibraryException(409, "연결 상태를 확인 중입니다. 잠시 후 다시 확인하세요.");
         Path directory = null;
         try {
             directory = Files.createTempDirectory("forge-connection-");
             String executable = launch.command(provider);
             if (provider == Provider.CLAUDE) {
-                var help = run(List.of(executable, "auth", "--help"), directory);
+                var help = run(List.of(executable, "auth", "--help"), directory, false);
                 if (help.exit() != 0 || !java.util.regex.Pattern.compile("(?m)^\\s+status(?:\\s|$)").matcher(help.stdout()).find()) {
                     return status(provider, "UNSUPPORTED");
                 }
-                return status(provider, classify(provider, run(List.of(executable, "auth", "status"), directory)));
+                return status(provider, classify(provider, run(List.of(executable, "auth", "status"), directory, false)));
             }
-            return status(provider, classify(provider, run(List.of(executable, "login", "status"), directory)));
+            List<String> command = codexStreamHome.isBlank() ? List.of(executable, "login", "status")
+                    : List.of(executable, "--config", "cli_auth_credentials_store=\"file\"", "login", "status");
+            return status(provider, classify(provider, run(command, directory, !codexStreamHome.isBlank())));
         } catch (java.io.FileNotFoundException exception) {
             return status(provider, "TOOL_UNAVAILABLE");
         } catch (InterruptedException exception) {
@@ -91,11 +92,14 @@ public class ProviderConnectionAdapter implements ProviderConnection {
         return new Status(provider.name(), state, Instant.now().toString(), "NOT_CHECKED");
     }
 
-    private Result run(List<String> command, Path directory) throws Exception {
+    private Result run(List<String> command, Path directory, boolean privateProfile) throws Exception {
         var builder = new ProcessBuilder(command).directory(directory.toFile());
         builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
                 "SYSTEMROOT", "SystemRoot", "WINDIR", "CODEX_HOME"));
         CliProcessPath.includeCommandDirectory(builder);
+        if (privateProfile) {
+            CodexProfile.configure(builder, CodexProfile.prepare(codexStreamHome), directory);
+        }
         Process process;
         try { process = builder.start(); }
         catch (IOException exception) { throw new java.io.FileNotFoundException("Provider executable unavailable"); }

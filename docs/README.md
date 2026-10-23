@@ -5,6 +5,7 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 
 | 궁금한 것 | 읽을 문서 |
 |---|---|
+| 앱에서 Codex 로그인·스트리밍 연결 | [0.1.7 검증·배포 기록](release-0.1.7-report.md) · [쉬운 사용법](codex-managed-login.md) |
 | 필수 마무리와 실제 AI 검사 결과 | [Codex 실제 검증·남은 조건](essential-verification.md) |
 | 현재 어디까지 됐고 무엇이 남았는지 | [최신 현황·우선 마무리할 네 가지](phase-plan.md) |
 | 설치하고 처음 써보기 | [Mac 설치·백업·삭제](macos-install.md) → [5분 사용법](how-it-works.md) |
@@ -13,7 +14,7 @@ Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식�
 | 모델과 구현을 다시 조사한 결과 | [전 파일 조사 범위·규칙별 테스트·미구현 차이](model-audit.md) |
 | 개발자가 알아야 할 구조 | [아키텍처](architecture.md) · [API](api.md) |
 | 개발 실행·수정 후 배포 순서 | [개발 환경과 완료 체크리스트](development.md) |
-| 최신 설치 파일에 들어간 변경 | [0.1.6 배포 기록](release-0.1.6-report.md) |
+| 최신 설치 파일에 들어간 변경 | [0.1.7 배포 기록](release-0.1.7-report.md) |
 | GitHub 자료를 별도 설치 없이 가져오기 | [내장 Git 구성과 검증](bundled-git.md) |
 | 등록한 자료의 이름·분류 수정 | [자료 설정 편집](source-metadata.md) |
 | 전체 사용 흐름 검사와 발견한 문제 | [E2E 점검 결과](e2e-report.md) |

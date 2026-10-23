@@ -61,6 +61,16 @@ class ProviderConnectionAdapterTest {
     }
 
     @Test
+    void defaultDeadlineAllowsColdProviderStartup() throws Exception {
+        Path executable = directory.resolve("cold-provider");
+        Files.writeString(executable, "#!/bin/sh\nsleep 6\necho 'Logged in using ChatGPT' >&2\n");
+        assertThat(executable.toFile().setExecutable(true)).isTrue();
+        var launch = mock(CliLaunchConfiguration.class);
+        when(launch.command(Provider.CODEX)).thenReturn(executable.toString());
+        assertThat(new ProviderConnectionAdapter(launch, "").check(Provider.CODEX).state()).isEqualTo("AUTHENTICATED");
+    }
+
+    @Test
     void boundedTimeoutOutputAndMissingToolNeverLeakRawErrors() throws Exception {
         var adapter = adapter("sleep 30", Duration.ofMillis(200));
         long started = System.nanoTime();

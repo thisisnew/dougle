@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
 import { once } from 'node:events'
-import { access, cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, cp, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:net'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
@@ -12,7 +12,7 @@ const resources = resolve(root, 'desktop/src-tauri/target/release/bundle/macos/K
 const jar = process.env.FORGE_BROWSER_JAR ? resolve(process.env.FORGE_BROWSER_JAR) : resolve(resources, 'knowledge-forge.jar')
 await access(resolve(resources, 'runtime/bin/java'))
 await access(jar)
-const temporary = await mkdtemp(resolve(tmpdir(), 'forge-browser-e2e-'))
+const temporary = await realpath(await mkdtemp(resolve(tmpdir(), 'forge-browser-e2e-')))
 const fixture = resolve(temporary, 'synthetic-project')
 const executable = resolve(temporary, 'fake-codex')
 const credential = resolve(temporary, 'synthetic-auth')
@@ -21,6 +21,12 @@ await cp(resolve(root, 'fixtures/synthetic-project'), fixture, { recursive: true
 await writeFile(executable, `#!/bin/sh
 set -eu
 case "$*" in
+  '--config cli_auth_credentials_store="file" login status')
+    [ "$CODEX_HOME" = '${resolve(temporary, 'data/codex-profile')}' ] || exit 91
+    if [ -f "$CODEX_HOME/auth.json" ]; then echo 'Logged in using ChatGPT' >&2; else echo 'Not logged in' >&2; exit 1; fi ;;
+  '--config cli_auth_credentials_store="file" login')
+    [ "$CODEX_HOME" = '${resolve(temporary, 'data/codex-profile')}' ] || exit 91
+    umask 077; printf '{"synthetic":true}' > "$CODEX_HOME/auth.json" ;;
   'login status') if [ -f '${credential}' ]; then echo 'Logged in using ChatGPT' >&2; else echo 'Not logged in' >&2; exit 1; fi ;;
   'login') sleep 0.2; touch '${credential}' ;;
   '--version') exec '${resolve(root, 'scripts/fixtures/fake-codex.sh')}' "$@" ;;
@@ -49,7 +55,8 @@ async function start() {
   child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', jar,
     '--forge.desktop=false', `--server.port=${port}`, '--server.address=127.0.0.1',
     `--forge.data-dir=${resolve(temporary, 'data')}`, `--forge.ai.codex-command=${executable}`,
-    `--forge.ai.claude-command=${resolve(temporary, 'missing-claude')}`, '--forge.ai.codex-model=synthetic-smoke-model'],
+    `--forge.ai.claude-command=${resolve(temporary, 'missing-claude')}`, '--forge.ai.codex-model=synthetic-smoke-model',
+    ...(process.env.FORGE_BROWSER_PRIVATE_PROFILE === 'true' ? [`--forge.ai.codex-stream-home=${resolve(temporary, 'data/codex-profile')}`] : [])],
   { cwd: temporary, stdio: ['ignore', 'pipe', 'pipe'] })
   let launchError
   child.once('error', error => { launchError = error })

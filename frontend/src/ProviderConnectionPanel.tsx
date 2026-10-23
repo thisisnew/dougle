@@ -97,6 +97,7 @@ export default function ProviderConnectionPanel({ onClose }: { onClose: () => vo
     <label>사용할 AI<select value={provider} disabled={loggingIn || loginBusy} onChange={event => choose(event.target.value as Provider)}><option value="CODEX">Codex</option><option value="CLAUDE">Claude</option></select></label>
     <Button disabled={busy || advanced || loggingIn} onClick={() => void check()}>{busy ? '확인 중…' : '연결 상태 확인'}</Button>
     <p>확인을 누르면 선택한 도구의 인증 상태만 조회합니다. 자료를 보내거나 AI 답변을 생성하지 않습니다.</p>
+    {provider === 'CODEX' && <p>새 Mac 앱은 답변 스트리밍을 위한 전용 로그인을 사용합니다. 처음 한 번 이 앱에서 로그인하세요. 기존 Codex 로그인은 변경하지 않습니다.</p>}
     {status && <div role="status"><p>{messages[status.state]}</p><small>확인 시각: {status.checkedAt}</small><p>원격 연결·모델 이용 한도는 확인하지 않았습니다. 실제 요청은 별도 전송 승인 후 실행합니다.</p></div>}
     {error && <p role="alert">{error}</p>}
     {status?.state === 'LOGIN_REQUIRED' && !loggingIn && <div>

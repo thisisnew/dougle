@@ -77,6 +77,15 @@ window.addEventListener('DOMContentLoaded', () => {
       [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결 상태 확인').click();
       await until(() => dialog.querySelector('[role="status"]') || dialog.querySelector('[role="alert"]'));
       if (dialog.querySelector('[role="alert"]') || !dialog.textContent.includes('실행 도구를 찾지 못했습니다.')) throw Error('AI connection UI mismatch');
+      provider.value = 'CODEX';
+      provider.dispatchEvent(new Event('change', { bubbles: true }));
+      await until(() => dialog.textContent.includes('전용 로그인을 사용합니다.'));
+      phase = 'Codex private profile readiness';
+      [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결 상태 확인').click();
+      await until(() => dialog.textContent.includes('로그인이 필요합니다.') || dialog.querySelector('[role="alert"]'));
+      if (dialog.querySelector('[role="alert"]') || !dialog.textContent.includes('로그인이 필요합니다.')) throw Error('Private profile login UI mismatch');
+      const loginButton = [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '브라우저에서 로그인');
+      if (!loginButton?.disabled) throw Error('Login must require explicit consent');
       [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '닫기').click();
       phase = 'library operations';
       const base = '/workspaces/' + workspace.id;

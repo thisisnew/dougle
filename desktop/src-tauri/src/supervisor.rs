@@ -84,6 +84,10 @@ impl Backend {
             .stderr(Stdio::piped());
         if let Some(codex) = bundled_codex(resources)? {
             command.arg(format!("--forge.ai.codex-command={}", codex.display()));
+            command.arg(format!(
+                "--forge.ai.codex-stream-home={}",
+                data.join("codex-profile").display()
+            ));
         }
         command.arg(format!(
             "--forge.git-home={}",

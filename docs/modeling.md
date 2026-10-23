@@ -1,5 +1,7 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+0.1.7 전용 Codex 로그인은 제공자 CLI가 관리하는 별도 파일이며 DB 테이블이 아닙니다. 앱은 토큰을 조회·복사·반환하지 않습니다. 실행 프로필을 승인 digest에 결합하고 기존 v21 모델을 유지합니다. [실제 코드 대조](codex-managed-login.md).
+
 0.1.6: 자료 이름·분류는 기존 Source의 설정입니다. `pollingRevision`으로 폴링 설정과 함께 충돌을 막고, Source·원본 루트 폴더·검색 큐를 한 번에 바꿉니다. 원본 반영 버전·지식 내용·과거 근거는 유지합니다. [모델과 실제 코드 대조](source-metadata.md).
 
 0.1.5: Git은 앱 안에 포함된 실행 도구입니다. 자료 모델을 추가하지 않고 기존 Source revision·변경 blob·지식 최신성 모델을 사용합니다. `supervisor → GitRunner → GithubCollector`의 연결과 경로 격리를 [코드·검사에 대조](bundled-git.md)했습니다.

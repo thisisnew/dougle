@@ -141,6 +141,7 @@ public class CliCuratorModel implements CuratorModel {
                 "--enable", "skip_host_skill_discovery",
                 "--output-schema", directory.resolve("schema.json").toString(),
                 "--output-last-message", directory.resolve("answer.json").toString()));
+        if (!codexStreamHome.isBlank()) arguments.addAll(List.of("--config", "cli_auth_credentials_store=\"file\""));
         for (String feature : List.of("shell_tool", "shell_snapshot", "apps", "plugins", "hooks", "multi_agent",
                 "browser_use", "computer_use", "image_generation", "code_mode", "skill_search")) {
             arguments.addAll(List.of("--disable", feature));
@@ -167,6 +168,9 @@ public class CliCuratorModel implements CuratorModel {
         builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
                 "SYSTEMROOT", "SystemRoot", "WINDIR", "CODEX_HOME"));
         CliProcessPath.includeCommandDirectory(builder);
+        if (!codexStreamHome.isBlank() && command.contains("--output-last-message")) {
+            CodexProfile.configure(builder, CodexProfile.validate(Path.of(codexStreamHome), true), directory);
+        }
         Process process = builder.start();
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
         var executor = Executors.newVirtualThreadPerTaskExecutor();

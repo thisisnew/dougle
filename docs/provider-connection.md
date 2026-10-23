@@ -1,6 +1,6 @@
 # AI 연결 — 제공자를 고르고 로그인하기
 
-**0.1.2부터** 포함된 흐름입니다. 현재 설치본은 [0.1.5](release-0.1.5-report.md)이며, 0.1.3에서 실제 앱 연결 버튼의 요청 오류와 한글 표시를 수정했습니다. 0.1.1 DMG에는 이 흐름이 없습니다.
+**0.1.2부터** 포함된 흐름입니다. 0.1.7은 전용 로그인·답변 스트리밍을 연결합니다. [사용법](codex-managed-login.md) · [검증·배포 상태](release-0.1.7-report.md). 0.1.3에서 실제 앱 연결 버튼의 요청 오류와 한글 표시를 수정했습니다.
 
 ![AI 연결과 제공자 선택 화면](images/ai-connection.png)
 
@@ -36,7 +36,7 @@ Claude는 기존 도구가 인증 상태 명령을 지원할 때 연결/로그�
 
 ## 모델과 코드
 
-- `ProviderConnection` 포트 → `ProviderConnectionAdapter`: 활성 실행 경로로 명시적 인증 조회. 5초/출력 제한, 한 번에 하나.
+- `ProviderConnection` 포트 → `ProviderConnectionAdapter`: 활성 실행 경로로 명시적 인증 조회. 명령당 30초/출력 제한, 한 번에 하나. 느린 첫 실행도 확인하되 무한 대기는 하지 않습니다.
 - Codex: `login status`의 알려진 응답만 인정. Claude: `auth --help`로 capability를 확인한 뒤 `auth status`의 JSON/종료 코드를 대조.
 - 전용 Codex 스트림 프로필이 설정됐을 때 일반 프로필 인증으로 잘못 표시하지 않고 UNSUPPORTED로 처리합니다.
 - `ProviderLogin` 포트 → `ProviderLoginAdapter`: 동의·기존 인증 확인 후 단일 로그인 작업. PENDING → AUTHENTICATED/FAILED/CANCELLED/TIMED_OUT.

@@ -14,13 +14,21 @@ public class CliLaunchConfiguration {
     private final CliLaunchStore.Configuration startup;
     private final String codex;
     private final String claude;
+    private final String codexStreamHome;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public CliLaunchConfiguration(CliLaunchStore store, @Value("${forge.ai.codex-command:codex}") String codex,
-                                  @Value("${forge.ai.claude-command:claude}") String claude) {
+                                  @Value("${forge.ai.claude-command:claude}") String claude,
+                                  @Value("${forge.ai.codex-stream-home:}") String codexStreamHome) {
         this.store = store;
         startup = store.current();
         this.codex = startup.codexPath().isEmpty() ? codex : startup.codexPath();
         this.claude = startup.claudePath().isEmpty() ? claude : startup.claudePath();
+        this.codexStreamHome = codexStreamHome;
+    }
+
+    public CliLaunchConfiguration(CliLaunchStore store, String codex, String claude) {
+        this(store, codex, claude, "");
     }
 
     public String command(CuratorModel.Provider provider) { return provider == CuratorModel.Provider.CODEX ? codex : claude; }
@@ -45,7 +53,9 @@ public class CliLaunchConfiguration {
     public String binding(CuratorModel.Provider provider) {
         try {
             return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
-                    .digest((provider.name() + "\n" + command(provider)).getBytes(StandardCharsets.UTF_8)));
+                    .digest((provider.name() + "\n" + command(provider)
+                            + (provider == CuratorModel.Provider.CODEX && !codexStreamHome.isBlank()
+                            ? "\nprivate-stream-profile-v1\n" + codexStreamHome : "")).getBytes(StandardCharsets.UTF_8)));
         } catch (java.security.NoSuchAlgorithmException exception) { throw new IllegalStateException(exception); }
     }
 }

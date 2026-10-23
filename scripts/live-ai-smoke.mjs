@@ -9,8 +9,11 @@ import { fileURLToPath } from 'node:url'
 
 const provider = process.env.FORGE_LIVE_CLI
 assert.ok(['CODEX', 'CLAUDE'].includes(provider), 'Explicit FORGE_LIVE_CLI=CODEX or CLAUDE approval is required; real account usage applies.')
+const profile = process.env.FORGE_LIVE_CODEX_PROFILE
+if (profile) assert.equal(provider, 'CODEX')
 const root = fileURLToPath(new URL('../', import.meta.url))
 const resources = resolve(process.env.FORGE_LIVE_RESOURCES || resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources'))
+const jar = resolve(process.env.FORGE_LIVE_JAR || resolve(resources, 'knowledge-forge.jar'))
 const directory = await mkdtemp(resolve(tmpdir(), 'forge-live-api-'))
 const token = randomBytes(32).toString('hex')
 const report = { provider, checkedAt: new Date().toISOString(), status: 'RUNNING', checks: [], scope: 'Packaged Intel Java/JAR HTTP API, synthetic data only; not GUI login, ARM, or token-by-token Codex streaming.' }
@@ -20,7 +23,7 @@ let logs = ''
 const pause = milliseconds => new Promise(done => setTimeout(done, milliseconds))
 async function api(path, method = 'GET', body) {
   const multipart = body instanceof FormData
-  const response = await fetch(base + '/api' + path, { method, signal: AbortSignal.timeout(15000),
+  const response = await fetch(base + '/api' + path, { method, signal: AbortSignal.timeout(75000),
     headers: { 'X-Forge-Session': token, 'X-Forge-Client': '1', ...(multipart ? {} : { 'Content-Type': 'application/json' }) },
     body: body === undefined ? undefined : multipart ? body : JSON.stringify(body) })
   assert.equal(response.ok, true, `HTTP ${response.status}: ${path}`)
@@ -36,11 +39,13 @@ async function waitJob(path, predicate) {
   throw Error('Job deadline exceeded')
 }
 try {
-  report.jarSha256 = createHash('sha256').update(await readFile(resolve(resources, 'knowledge-forge.jar'))).digest('hex')
-  child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', resolve(resources, 'knowledge-forge.jar'),
+  report.jarSha256 = createHash('sha256').update(await readFile(jar)).digest('hex')
+  report.jarOverride = Boolean(process.env.FORGE_LIVE_JAR)
+  child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', jar,
     '--forge.desktop=true', '--server.address=127.0.0.1', '--server.port=0', `--forge.data-dir=${directory}`,
     `--forge.ai.codex-command=${resolve(resources, 'ai/codex')}`,
-    `--forge.ai.claude-command=${process.env.FORGE_LIVE_CLAUDE_COMMAND || 'claude'}`],
+    `--forge.ai.claude-command=${process.env.FORGE_LIVE_CLAUDE_COMMAND || 'claude'}`,
+    ...(profile ? [`--forge.ai.codex-stream-home=${resolve(profile)}`] : [])],
   { cwd: directory, env: { ...process.env, FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true', JAVA_TOOL_OPTIONS: '', JDK_JAVA_OPTIONS: '', _JAVA_OPTIONS: '' }, stdio: ['pipe', 'pipe', 'pipe'] })
   child.on('error', () => { report.launchFailed = true })
   for (const pipe of [child.stdout, child.stderr]) pipe.on('data', chunk => { logs = (logs + chunk).slice(-16000) })
@@ -55,7 +60,15 @@ try {
   }
   assert.ok(base, 'Backend readiness deadline exceeded')
   assert.equal((await fetch(base + '/api/session')).status, 403)
-  const connection = await api(`/ai/providers/${provider}/connection`, 'POST')
+  let connection = await api(`/ai/providers/${provider}/connection`, 'POST')
+  if (profile && process.env.FORGE_LIVE_LOGIN === 'true' && connection.state === 'LOGIN_REQUIRED') {
+    console.error('Complete the provider browser login. Credentials remain in the explicitly selected dedicated profile.')
+    const login = await api('/ai/logins', 'POST', { provider, acknowledged: true })
+    const finished = await waitJob(`/ai/logins/${login.id}`, value => value.state !== 'PENDING')
+    report.loginState = finished.state
+    assert.equal(finished.state, 'AUTHENTICATED', 'Browser login did not finish')
+    connection = await api(`/ai/providers/${provider}/connection`, 'POST')
+  }
   report.connection = connection
   assert.equal(connection.state, 'AUTHENTICATED', 'Provider must already be authenticated; no automatic login or fallback')
   report.checks.push('existing CLI authentication and protected packaged API')
@@ -96,6 +109,10 @@ try {
   assert.ok(stream.includes('event:evidence') && stream.includes('SUCCEEDED'))
   assert.ok(stream.indexOf('event:evidence') < stream.indexOf('SUCCEEDED'))
   report.partialObserved = stream.includes('event:partial')
+  if (profile) {
+    assert.equal(report.partialObserved, true, 'Dedicated profile must produce real partial text')
+    report.scope = 'Packaged Java/JAR HTTP API with explicit dedicated Codex profile and real partial SSE; not GUI login or ARM.'
+  }
   report.checks.push('real grounded answer; evidence precedes final SSE event')
   const cancellation = await submit(await approve(approval.approval.id))
   const cancelPath = `${workspacePath}/answer-jobs/${cancellation.id}`

@@ -1,5 +1,7 @@
 # 아키텍처
 
+0.1.7: `supervisor → forge.ai.codex-stream-home → CodexProfile`이 앱 전용 인증 위치를 연결합니다. `ProviderConnectionAdapter/ProviderLoginAdapter/CliCuratorModel/CodexAppServer`는 같은 폴더를 사용합니다. 승인 binding에도 실행 프로필을 포함해 변경 전 승인을 재사용하지 않습니다. [코드·모델·검사](codex-managed-login.md).
+
 0.1.6의 자료 이름·분류 수정은 `SourceMetadataEditor → SourceController → SourceService → JdbcSourceStore`로 연결합니다. 기존 `pollingRevision`으로 설정 충돌을 검사하고, 수집 중 편집을 차단합니다. Source·루트 폴더·검색 큐를 같은 트랜잭션으로 반영하며 DB v21과 불변 근거를 유지합니다. [실제 코드·검사](source-metadata.md).
 
 0.1.5의 GitHub 수집은 `stage-git.sh → resources/git → supervisor::bundled_git → --forge.git-home → GitRunner`로 앱 내부 Git을 실행합니다. Git과 HTTPS 도구는 CPU별로 빌드하며 macOS 시스템 라이브러리만 링크합니다. 전체 Git 소스·GPL·빌드 절차도 동봉합니다. Source/검색/지식 모델과 DB v21은 유지합니다. [설계·코드 대조](bundled-git.md).

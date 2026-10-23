@@ -60,46 +60,7 @@ final class CodexAppServer {
     }
 
     Path validateHome() throws IOException {
-        if (!home.isAbsolute() || Files.isSymbolicLink(home) || !Files.isDirectory(home, LinkOption.NOFOLLOW_LINKS)) {
-            throw new IOException("Dedicated absolute profile required");
-        }
-        Path profile = home.toRealPath();
-        for (String normal : List.of(Path.of(System.getProperty("user.home"), ".codex").toString(),
-                System.getenv().getOrDefault("CODEX_HOME", Path.of(System.getProperty("user.home"), ".codex").toString()))) {
-            Path usual = Path.of(normal).toAbsolutePath().normalize();
-            if (Files.exists(usual)) usual = usual.toRealPath();
-            if (profile.startsWith(usual) || usual.startsWith(profile)) throw new IOException("Shared profile forbidden");
-        }
-        if (!PosixFilePermissions.fromString("rwx------").containsAll(Files.getPosixFilePermissions(profile))) {
-            throw new IOException("Private profile required");
-        }
-        Path auth = profile.resolve("auth.json");
-        if (!Files.isRegularFile(auth, LinkOption.NOFOLLOW_LINKS) || !Files.isReadable(auth)
-                || !PosixFilePermissions.fromString("rw-------").containsAll(Files.getPosixFilePermissions(auth))) {
-            throw new IOException("Private file login required");
-        }
-        Set<String> files = Set.of("auth.json", ".forge-stream.lock", "version.json", "models_cache.json", ".last_migration", "installation_id");
-        try (var entries = Files.list(profile)) {
-            for (Path entry : entries.toList()) {
-                String name = entry.getFileName().toString();
-                if (Set.of("tmp", "skills").contains(name) && Files.isDirectory(entry, LinkOption.NOFOLLOW_LINKS)) {
-                    if (name.equals("skills")) {
-                        try (var skills = Files.list(entry)) {
-                            for (Path skill : skills.toList()) {
-                                if (!skill.getFileName().toString().equals(".system")
-                                        || !Files.isDirectory(skill, LinkOption.NOFOLLOW_LINKS)) throw new IOException("Custom skills forbidden");
-                            }
-                        }
-                    }
-                    continue;
-                }
-                if ((!files.contains(name) && !name.matches("(?:state|logs|goals|memories|queue)_[0-9]+\\.sqlite(?:-shm|-wal)?"))
-                        || !Files.isRegularFile(entry, LinkOption.NOFOLLOW_LINKS)) {
-                    throw new IOException("Unexpected profile content");
-                }
-            }
-        }
-        return profile;
+        return CodexProfile.validate(home, true);
     }
 
     List<String> command() {

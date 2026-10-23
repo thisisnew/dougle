@@ -1,5 +1,7 @@
 # Knowledge Forge 개발 지침
 
+- 0.1.7 Mac 실행기는 앱 데이터의 `codex-profile`을 지정한다. `CodexProfile`의 일반 프로필/설정/링크/권한 차단을 유지하고 인증 내용을 읽거나 복사하지 않는다. 연결·로그인·초안·스트리밍이 같은 전용 인증을 사용하며 승인 binding에 프로필을 포함한다. [사용법](docs/codex-managed-login.md). 기본 변경으로 앱에서 한 번 새 로그인이 필요하다.
+
 - 사용자 최신 범위: 필수 마무리만 진행한다. 실제 AI·Claude 간편 연결·ARM 실기기·설치 앱 업데이트 외의 확장은 사용 피드백 전까지 보류한다. `docs/essential-verification.md`의 실제 Codex 성공/중간 스트림 미검증·Claude 호환성·화면 제어 설정 장애를 구분한다. 외부 AI 검사는 가상 자료만 명시적 opt-in으로 실행한다.
 
 - 0.1.6 Source 이름·분류 편집은 `docs/source-metadata.md`를 따른다. `pollingRevision`은 폴링과 메타데이터 편집의 공통 CAS 버전이다. 수집 중 수정 차단·Source/루트 이름/검색 큐 원자성·기존 불변 근거 보존을 유지한다. 위치/종류 변경은 지원하지 않는다. DB v21 유지.
