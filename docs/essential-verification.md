@@ -40,6 +40,16 @@ FORGE_LIVE_CLI=CLAUDE FORGE_LIVE_CLAUDE_COMMAND=/absolute/path/to/claude node sc
 
 ## 남은 조건
 
+### 다음 작업에 필요한 준비
+
+후속 환경 재확인: 현재 호스트는 Intel(`x86_64`), Applications 앱은 **0.1.2**입니다. 화면 제어 도구는 여전히 `Computer Use onboarding is still in progress`로 시작하지 못했습니다. 사용자 앱·자료·보안 설정은 변경하지 않았습니다.
+
+- 실제 설치 체험: cmux의 Computer Use 초기 설정을 완료한 뒤, 기존 자료를 백업하고 0.1.7을 한 번 설치합니다. 0.1.2에는 자동 업데이트가 없습니다. 그다음 공개되는 버전으로 실제 메뉴·설치 위치 업데이트를 확인합니다. 검사용 버전을 불필요하게 공개하지 않습니다.
+- ARM 실기기: 사용 가능한 M 시리즈 Mac이 필요합니다.
+- Claude 간편 연결: 배포 주체의 제품 포함 조건 확인과 지원 macOS 결정이 먼저입니다. [조건](claude-readiness.md).
+
+이 준비 없이 완료된 검사를 반복하거나 추가 기능을 늘리지 않습니다. 이번 재확인은 문서만 변경하므로 설치본·피드는 0.1.7을 유지합니다.
+
 후속 [공개 앱 교체 검사](published-update-check.md)는 통과했습니다. 실제 0.1.6 설치 복사본에 공개 0.1.7을 적용하고 새 앱을 재실행했습니다. 아래 사용자 설치 위치/메뉴 체험과는 구분합니다.
 
 1. **Claude:** 현재 설치된 2.1.31은 `auth status`를 제공하지 않습니다. 새 호환 도구와 실제 인증이 필요합니다. 앱 포함은 배포 주체의 Commercial Terms 확인 후 진행합니다. [공식 포함·인증 조건](https://code.claude.com/docs/en/legal-and-compliance), [macOS 13 이상 요구사항](https://code.claude.com/docs/en/setup)을 다시 확인했으며 약관에 대신 동의하지 않았습니다.
