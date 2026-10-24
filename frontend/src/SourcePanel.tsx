@@ -4,28 +4,28 @@ import { Button } from './components/ui/button'
 import { request } from './api'
 import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
-import SourcePollingSettings from './SourcePollingSettings'
+import { hasFolderPicker, selectFolder } from './folderPicker'
 import SourceMetadataEditor from './SourceMetadataEditor'
 import type { RelationSeed } from './RelationPanel'
 const RelationPanel = lazy(() => import('./RelationPanel'))
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
 
-type Source = {
+export type Source = {
   id: string; name: string; kind: string; location: string; domain: string; status: string
   revision: string | null; error: string | null; syncedAt: string | null; rootEntryId: string | null
   pollingEnabled: boolean; pollIntervalSeconds: number
   nextPollAt: number | null; consecutiveFailures: number; pollingRevision: number
 }
 type Hit = { entryId: string | null; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean; kind: 'ORIGINAL' | 'KNOWLEDGE'; cardId: string | null; version: number | null; freshness: string }
-type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void; manageOnly?: boolean }
+type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void; manageOnly?: boolean; onUpload?: () => void }
 const states: Record<string, string> = { NEW: '수집 전', SYNCING: '수집 중', READY: '반영 완료', ERROR: '오류 · 이전 자료 유지' }
 const sourceKinds: Record<string, string> = { LOCAL_FOLDER: '로컬 폴더', URL: '웹페이지', GITHUB: 'GitHub' }
 
-export default function SourcePanel({ workspaceId, revision, onChanged, onSelect, manageOnly = false }: Props) {
+export default function SourcePanel({ workspaceId, revision, onChanged, onSelect, manageOnly = false, onUpload }: Props) {
   const [sources, setSources] = useState<Source[]>([])
   const [formOpen, setFormOpen] = useState(false)
   const [managing, setManaging] = useState(false)
-  const [kind, setKind] = useState('LOCAL_FOLDER')
+  const [kind, setKind] = useState(onUpload ? 'FILE' : 'LOCAL_FOLDER')
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
   const [domain, setDomain] = useState('')
@@ -44,6 +44,8 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [related, setRelated] = useState<RelationSeed | null>(null)
   const searchAbort = useRef<AbortController | null>(null)
   const mutationAbort = useRef<AbortController | null>(null)
+  const pickerGeneration = useRef(0)
+  const [picking, setPicking] = useState(false)
   const base = `/workspaces/${workspaceId}`
   const latestSources = useRef(sources)
   const latestChanged = useRef(onChanged)
@@ -85,7 +87,19 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     return () => controller.abort()
   }, [base, revision])
 
-  useEffect(() => () => { searchAbort.current?.abort(); mutationAbort.current?.abort() }, [])
+  useEffect(() => () => { pickerGeneration.current++; searchAbort.current?.abort(); mutationAbort.current?.abort() }, [])
+
+  async function chooseFolder() {
+    const generation = ++pickerGeneration.current
+    setPicking(true); setError('')
+    try {
+      const selected = await selectFolder()
+      if (generation !== pickerGeneration.current || !selected) return
+      setLocation(selected)
+      setName(previous => previous || selected.split('/').filter(Boolean).at(-1) || '새 폴더')
+    } catch (reason) { if (generation === pickerGeneration.current) setError((reason as Error).message) }
+    finally { if (generation === pickerGeneration.current) setPicking(false) }
+  }
 
   async function mutate(id: string, action: () => Promise<unknown>) {
     setBusy(id)
@@ -110,6 +124,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
 
   function register(event: FormEvent) {
     event.preventDefault()
+    if (kind === 'FILE' || picking || busy || !location.trim()) return
     void mutate('create', async () => {
       await request(`${base}/sources`, {
         method: 'POST', body: JSON.stringify({ name, kind, location, domain }),
@@ -142,17 +157,19 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
 
   const availableDomains = [...new Set(sources.map(source => source.domain).filter(Boolean))]
   return <section className="source-panel" aria-label="자료 연결과 검색">
-    <div className="source-title"><h2><Link size={17} /> {manageOnly ? '연결한 자료' : '자료 검색'}</h2><Button size="sm" variant="outline" disabled={!!busy} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 연결</Button></div>
-    <p className="source-hint">폴더·웹페이지·GitHub를 추가하세요. 원본은 변경하지 않습니다.</p>
+    <div className="source-title"><h2><Link size={17} /> {manageOnly ? '내 자료' : '자료 검색'}</h2><Button size="sm" variant="outline" disabled={!!busy || picking} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 추가</Button></div>
+    <p className="source-hint">파일·폴더·웹 링크·GitHub를 한곳에 모으세요.</p>
     {error && <p role="alert" className="modal-error">{error}</p>}
     {formOpen && <form onSubmit={register} className="source-form">
-      <label>종류<select aria-label="Source 종류" value={kind} onChange={event => setKind(event.target.value)}>
-        <option value="LOCAL_FOLDER">로컬 폴더</option><option value="URL">웹 URL</option><option value="GITHUB">GitHub 저장소</option>
+      <label>종류<select aria-label="Source 종류" disabled={picking || !!busy} value={kind} onChange={event => { setKind(event.target.value); setLocation('') }}>
+        {onUpload && <option value="FILE">파일</option>}<option value="LOCAL_FOLDER">폴더</option><option value="URL">웹 링크</option><option value="GITHUB">GitHub</option>
       </select></label>
+      {kind === 'FILE' ? <div className="source-location folder-picker"><Button type="button" variant="outline" onClick={onUpload}>파일 선택</Button><small>선택한 파일의 복사본을 보관합니다. 변경 내용을 계속 반영하려면 폴더를 선택하세요.</small></div> : <>
       <label>이름<input required maxLength={120} aria-label="Source 이름" value={name} onChange={event => setName(event.target.value)} placeholder="예: 실험 기록" /></label>
-      <label className="source-location">위치<input required maxLength={2048} aria-label="Source 위치" value={location} onChange={event => setLocation(event.target.value)} placeholder={kind === 'LOCAL_FOLDER' ? '/절대/폴더/경로' : kind === 'GITHUB' ? 'https://github.com/owner/repository' : 'https://example.com/document'} /></label>
+      {kind === 'LOCAL_FOLDER' ? <div className="source-location folder-picker"><span>폴더</span><Button type="button" variant="outline" disabled={picking || !!busy || !hasFolderPicker()} onClick={() => void chooseFolder()}><FolderInput />{picking ? '선택 중…' : '폴더 선택'}</Button><output aria-label="선택한 폴더">{location || '선택한 폴더 없음'}</output><small>{hasFolderPicker() ? '폴더 안의 파일을 동기화합니다. 개별 파일은 종류에서 파일을 선택하세요.' : '폴더 선택은 설치한 CLUE 앱에서 지원합니다.'}</small></div> : <label className="source-location">위치<input required maxLength={2048} aria-label="Source 위치" value={location} onChange={event => setLocation(event.target.value)} placeholder={kind === 'GITHUB' ? 'https://github.com/owner/repository' : 'https://example.com/document'} /></label>}
       <label>분류 (선택)<input maxLength={80} aria-label="Source 도메인" value={domain} onChange={event => setDomain(event.target.value)} placeholder="예: 프로젝트 이름" /></label>
-      <Button type="submit" size="sm" disabled={!!busy}>등록</Button>
+      <Button type="submit" size="sm" disabled={!!busy || picking || !location.trim()}>등록</Button>
+      </>}
     </form>}
     {sources.length > 0 && <details className="secondary-tools" open={managing} onToggle={event => setManaging(event.currentTarget.open)}><summary>연결한 자료 관리 · {sources.length}개{sources.some(source => source.status === 'ERROR') ? ' · 오류 있음' : sources.some(source => source.status === 'SYNCING') ? ' · 수집 중' : sources.some(source => source.status === 'NEW') ? ' · 가져오기 필요' : ''}</summary>
     <ul className="source-list">{sources.map(source => <li key={source.id}>
@@ -165,7 +182,6 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         <Button variant="outline" size="sm" aria-label={`${source.name} 이름과 분류 수정`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setEditing(source.id)}>수정</Button>
         <Button variant="ghost" size="icon" aria-label={`${source.name} Source 삭제`} disabled={!!busy} onClick={() => setDeleting(source.id)}><Trash2 /></Button>
       </div>
-      <details className="source-settings"><summary>자동 갱신 설정</summary><p>기본은 꺼짐입니다. 앱이 실행 중일 때만 갱신하며, 꺼도 이미 시작한 수집은 완료됩니다. AI는 자동 호출하지 않습니다.</p><SourcePollingSettings source={source} busy={!!busy} onSave={settings => void mutate(source.id, () => request(`${base}/sources/${source.id}/polling`, { method: 'PATCH', body: JSON.stringify(settings), signal: mutationAbort.current?.signal }))} /></details>
       {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
       {deleting === source.id && <div className="source-confirm" role="alert"><span>보관한 자료도 삭제합니다. PC 원래 폴더·원격 저장소는 유지됩니다.</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>Source 삭제 확인</Button></div>}
     </li>)}</ul></details>}

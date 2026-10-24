@@ -1,5 +1,7 @@
 # API 명세
 
+0.1.12 네이티브 명령 `select_source_folder()`는 인자를 받지 않고 폴더 경로 또는 취소 시 null을 반환합니다. 현재 앱의 정확한 loopback origin과 main 창만 허용하며 파일 선택/쓰기/임의 실행 권한은 없습니다. `POST .../sources`의 LOCAL_FOLDER는 등록 시 실제 디렉터리를 검증합니다. [설정·자료 추가](folder-settings.md).
+
 질문 전용 파일은 `POST /api/workspaces/{workspaceId}/attachments`(multipart file), `DELETE .../attachments/{id}`로 관리합니다. `POST .../evidence-bundles`에 선택적 `attachmentIds`(최대 4개)를 전달합니다. [입출력·오류·지원 형식](question-attachments.md).
 
 ## AI 연결 / 로그인 (0.1.2부터)

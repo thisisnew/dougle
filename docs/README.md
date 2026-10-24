@@ -1,5 +1,7 @@
 # 문서 안내 — 어디부터 읽으면 되나요?
 
+[자료 추가·폴더 연결·설정·질문 기록](folder-settings.md) · [0.1.12 검증과 배포](release-0.1.12-report.md)
+
 [질문에 이미지·문서 첨부하기](question-attachments.md) · [CLUE 캐릭터·글자 로고](clue-brand.md)
 
 0.1.11: [대화 중심 화면·모델 선택·코드 대조](chat-first.md) · [검증 및 배포 상태](release-0.1.11-report.md).

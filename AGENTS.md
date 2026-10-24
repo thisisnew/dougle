@@ -1,5 +1,7 @@
 # Knowledge Forge 개발 지침
 
+- 0.1.12 UX: 자료 추가는 파일/폴더/웹 링크/GitHub 한 곳, 폴더는 Tauri 폴더 전용 선택기만 사용합니다. 자동 갱신·Workspace 관리는 설정, 질문 기록은 카드 그리드→기존 ChatPanel입니다. 수트 탐정·Condensed 인디고 입체 워드마크가 최신이며 아래 Helvetica Neue 기록은 이전 버전입니다. [설계·제약](docs/folder-settings.md).
+
 - 질문 첨부는 `attachment` 모듈·DB v22이며 전역 자료/색인과 독립적입니다. `docs/question-attachments.md`의 용량·수명주기·승인 해시·Codex 이미지 입력을 유지합니다. 실제 사진은 테스트에 사용하지 않습니다. 아래 v21 유지 기록은 첨부 이전 단계입니다. 모델 선택은 실제 표시 이름만, CLUE 워드마크는 Helvetica Neue입니다.
 
 - 사용자용 브랜드는 CLUE, 돋보기를 든 안경 없는 탐정 캐릭터입니다. [브랜드·호환성](docs/clue-brand.md). 원본 프로필 사진은 커밋/동봉하지 않습니다. 앱 ID·DB·인증·업데이트 URL·기존 번들/배포 파일명은 호환성을 위해 유지합니다.

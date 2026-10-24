@@ -4,7 +4,7 @@
 
 ## 캐릭터
 
-- 안경 없는 꼬마 탐정, 단정한 검은 앞머리·부드러운 얼굴·네이비 옷. 돋보기를 한쪽 눈에 댑니다.
+- 안경 없는 꼬마 탐정, 단정한 검은 앞머리·부드러운 얼굴. 후드 대신 짙은 수트·흰 셔츠·네이비/빨강 줄무늬 넥타이를 입고 돋보기를 한쪽 눈에 댑니다.
 - 프로필 사진은 분위기만 참고했습니다. 실제 초상화를 복제하지 않았습니다.
 - 원본 사진은 앱·저장소·배포 파일에 포함하지 않습니다.
 - 같은 그림을 사이드바, Dock 아이콘, GitHub 소개에 사용합니다.
@@ -13,7 +13,7 @@
 
 ## 글자 로고
 
-CLUE는 장식과 넓은 자간을 줄인 산세리프 워드마크입니다. 본문과 달리 Mac의 Helvetica Neue를 우선 사용하고, 24px·500 굵기·좁은 자간으로 조정했습니다. 캐릭터는 44px 정사각형으로 유지해 글자와 역할을 나눕니다. 외부 폰트 다운로드 없이 오프라인에서도 표시합니다.
+CLUE는 고전 영화 타이틀처럼 굵고 길쭉한 워드마크입니다. Mac 내장 Avenir Next Condensed를 우선 사용하고, 36px·900 굵기·2px 자간에 인디고/보라 그라데이션과 짧고 또렷한 입체 그림자를 적용했습니다. 캐릭터는 44px입니다. 사용자 제공 영화 타이틀 예시는 분위기만 참고했고 원본 이미지·워터마크를 사용하지 않았습니다. 외부 폰트 다운로드 없이 표시하며 고대비 모드에서는 효과 대신 시스템 글자색을 사용합니다.
 
 ## 기존 자료는 그대로
 
@@ -27,6 +27,6 @@ CLUE는 장식과 넓은 자간을 줄인 산세리프 워드마크입니다. �
 
 최종 수정 방향(프롬프트 요약):
 
-> Refine the CLUE detective using the supplied photo loosely: neat rounded black fringe, soft oval face, calm approachable expression, navy jacket. Hold a single magnifying glass directly over one eye. No eyeglasses. Keep polished compact 2D pixel-art styling, pale lavender background and clear small-icon silhouette; no text or extra decorations.
+> Edit the existing CLUE pixel-art detective. Change only the clothing: replace the hoodie with a tailored dark charcoal/navy suit, crisp notch lapels, white collared dress shirt, and navy tie with diagonal red/white stripes inspired by the supplied photo. Preserve face, neat black fringe, friendly expression, hand, magnifying glass over the left eye, framing, pale lavender background and pixel-art style. No hood, drawstrings, eyeglasses, text or new props. Photo is clothing reference only; no photorealism.
 
-검증·실제 설치 및 배포 상태는 [0.1.11 기록](release-0.1.11-report.md)을 확인하세요.
+검증·실제 설치 및 배포 상태는 [0.1.12 기록](release-0.1.12-report.md)을 확인하세요.

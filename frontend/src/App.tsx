@@ -1,19 +1,19 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import { ChevronRight, Download, FileText, Folder, FolderOpen, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, X } from 'lucide-react'
 import clueMascot from './assets/clue-mascot.png'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Entry, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
+import SourceSettings from './SourceSettings'
+import QuestionGrid from './QuestionGrid'
 import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
-import PixelLandscape from './PixelLandscape'
 import { type ConnectionIndicator } from './connectionIndicator'
 import ChatPanel, { QuestionHistory } from './ChatPanel'
 import { preferredProvider } from './providerPreference'
 import { loadModel, requestedModel } from './modelPreference'
 const ProviderConnectionPanel = lazy(() => import('./ProviderConnectionPanel'))
-const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
 
 type Modal = { kind: 'workspace' | 'folder' | 'manage-workspaces' } | { kind: 'delete-workspace'; id: string; name: string } | { kind: 'delete-entry'; entry: Entry }
 const emptySession: Session = { workspaces: [], activeWorkspaceId: null }
@@ -22,7 +22,7 @@ const formatSize = (size: number) => size < 1024 ? `${size} B` : size < 1024 ** 
 export default function App() {
   const [session, setSession] = useState<Session>(emptySession)
   const [ready, setReady] = useState(false)
-  const [view, setView] = useState<'CHAT' | 'LIBRARY'>('CHAT')
+  const [view, setView] = useState<'CHAT' | 'LIBRARY' | 'SETTINGS' | 'HISTORY'>('CHAT')
   const [questionId, setQuestionId] = useState<string | null>(null)
   const [historyRevision, setHistoryRevision] = useState(0)
   const [chatRevision, setChatRevision] = useState(0)
@@ -35,7 +35,6 @@ export default function App() {
   const [error, setError] = useState('')
   const [modal, setModal] = useState<Modal | null>(null)
   const [cliSettingsOpen, setCliSettingsOpen] = useState(false)
-  const [historyOpen, setHistoryOpen] = useState(false)
   const [connection, setConnection] = useState<ConnectionIndicator | null>(null)
   const [name, setName] = useState('')
   const [modalError, setModalError] = useState('')
@@ -120,7 +119,6 @@ export default function App() {
       resetNavigation()
       setQuestionId(null)
       setView('CHAT')
-      setHistoryOpen(false)
     } catch (reason) { setError((reason as Error).message) }
     finally { setBusy(false) }
   }
@@ -151,7 +149,6 @@ export default function App() {
           resetNavigation()
           setQuestionId(null)
           setView('CHAT')
-          setHistoryOpen(false)
         }
       } else if (modal.kind === 'delete-entry' && activeId) {
         await request(entryPath(activeId, modal.entry.id), { method: 'DELETE' })
@@ -184,7 +181,7 @@ export default function App() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand"><img className="brand-mascot" src={clueMascot} alt="돋보기를 든 CLUE 탐정" width={44} height={44} /><span>CLUE</span></div>
-        <div className="workspace-label">WORKSPACE <div className="workspace-actions"><Button variant="ghost" size="icon" aria-label="Workspace 관리" title="Workspace 관리" disabled={busy || !ready} onClick={() => openModal({ kind: 'manage-workspaces' })}><Settings2 /></Button><Button variant="ghost" size="icon" aria-label="Workspace 생성" disabled={busy || !ready} onClick={() => openModal({ kind: 'workspace' })}><Plus /></Button></div></div>
+        <div className="workspace-label">WORKSPACE <div className="workspace-actions"><Button variant="ghost" size="icon" aria-label="Workspace 생성" disabled={busy || !ready} onClick={() => openModal({ kind: 'workspace' })}><Plus /></Button></div></div>
         <label className="sr-only" htmlFor="workspace">Workspace 선택</label>
         <select id="workspace" value={activeId ?? ''} disabled={busy || !ready || !session.workspaces.length} onChange={event => void switchWorkspace(event.target.value)}>
           {!activeId && <option value="">Workspace를 만들어 주세요</option>}
@@ -193,7 +190,8 @@ export default function App() {
         <nav aria-label="자료 영역">
           <button className={view === 'CHAT' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => { setView('CHAT'); setHistoryRevision(value => value + 1) }}><MessageSquare size={19} /> 대화 <ChevronRight size={15} /></button>
           <button className={view === 'LIBRARY' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation()}><FolderOpen size={19} /> 자료 <ChevronRight size={15} /></button>
-          <details className="library-more"><summary>더 보기</summary><button className="nav-item" disabled={busy || !activeId} onClick={() => setHistoryOpen(true)}><MessageSquare size={19} /> 답변 관리</button></details>
+          <button className={view === 'SETTINGS' ? 'nav-item active' : 'nav-item'} disabled={busy || !ready} onClick={() => setView('SETTINGS')}><Settings2 size={19} /> 설정 <ChevronRight size={15} /></button>
+          <button className={view === 'HISTORY' ? 'nav-item active' : 'nav-item'} disabled={busy || !activeId} onClick={() => setView('HISTORY')}><MessageSquare size={19} /> 질문 기록 <ChevronRight size={15} /></button>
         </nav>
         {activeId && <QuestionHistory key={activeId} workspaceId={activeId} revision={historyRevision} selectedId={questionId} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} />}
         <div className="sidebar-bottom sidebar-wordmark">CLUE</div>
@@ -202,18 +200,18 @@ export default function App() {
       <main>
         <header className="topbar"><span>{workspace?.name ?? 'CLUE'}</span><Button className="provider-trigger" variant="outline" size="sm" disabled={!ready || connection?.state === 'CHECKING'} onClick={() => setCliSettingsOpen(true)} title="로그인 확인 결과입니다. 모델 이용 가능 여부는 실제 요청 시 확인됩니다."><i data-connected={connection?.state === 'AUTHENTICATED'} />{connection?.state === 'AUTHENTICATED' ? connection.provider : connection?.state === 'CHECKING' ? '연결 확인 중' : 'AI 연결'}</Button></header>
         {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel initialConnection={connection} onClose={() => setCliSettingsOpen(false)} onConnectionChange={setConnection} /></Suspense>}
-        {historyOpen && activeId && <Suspense fallback={<p role="status">답변을 여는 중…</p>}><AnswerHistoryPanel key={activeId} workspaceId={activeId} onClose={() => setHistoryOpen(false)} /></Suspense>}
         <div className="page-content">
           {view === 'LIBRARY' && <div className="page-heading">
             <div><h1>자료</h1><p className="subtitle">질문에 사용할 파일과 링크를 모아 두세요.</p></div>
           </div>}
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
-          {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : !workspace ? (
-            <section className="welcome"><PixelLandscape /><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
-          ) : view === 'CHAT' ? <ChatPanel key={`${activeId}/${chatRevision}`} workspaceId={activeId!} selectedId={questionId} connection={connection}
+          {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : view === 'SETTINGS' ? <div className="settings-page"><div className="page-heading"><h1>설정</h1></div><section className="settings-card"><h2>Workspace</h2><p>Workspace를 관리하고 필요 없는 서재를 정리하세요.</p><Button variant="outline" onClick={() => openModal({ kind: 'manage-workspaces' })}>Workspace 관리</Button></section>{activeId && <SourceSettings key={activeId} workspaceId={activeId} />}</div> : !workspace ? (
+            <section className="welcome"><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
+          ) : view === 'HISTORY' ? <QuestionGrid key={activeId} workspaceId={activeId!} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} /> : view === 'CHAT' ? <ChatPanel key={`${activeId}/${chatRevision}`} workspaceId={activeId!} selectedId={questionId} connection={connection}
             onCreated={id => { setQuestionId(id); setHistoryRevision(value => value + 1) }} onDeleted={() => { setQuestionId(null); setHistoryRevision(value => value + 1); setChatRevision(value => value + 1) }} onConnect={() => setCliSettingsOpen(true)} onSources={() => resetNavigation()} /> : (
             <>
               <SourcePanel manageOnly key={activeId} workspaceId={activeId!} revision={revision}
+                onUpload={() => uploadRef.current?.click()}
                 onChanged={() => setRevision(value => value + 1)}
                 onSelect={id => {
                   selectionAbort.current?.abort()
@@ -228,11 +226,11 @@ export default function App() {
                   <div className="toolbar">
                     <div className="breadcrumbs" aria-label="폴더 경로"><button disabled={busy} onClick={() => setTrail([])}>원본 자료</button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>
                     <div className="toolbar-actions"><Button variant="ghost" size="icon" aria-label="새로고침" disabled={busy || loading} onClick={() => { setError(''); setRevision(value => value + 1) }}><RefreshCw /></Button>
-                      <Button variant="outline" size="sm" disabled={busy} onClick={() => openModal({ kind: 'folder' })}><FolderPlus /> 새 폴더</Button><Button size="sm" disabled={busy} onClick={() => uploadRef.current?.click()}><Upload /> 파일 추가</Button><input ref={uploadRef} aria-label="파일 업로드" type="file" hidden onChange={event => { void upload(event.target.files?.[0]); event.target.value = '' }} />
+                      <input ref={uploadRef} aria-label="파일 업로드" type="file" hidden disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = '' }} />
                     </div>
                   </div>
                   <div className="table-head"><span>이름</span><span>크기</span><span>추가한 날짜</span><span /></div>
-                  {loading ? <div className="empty-state" role="status">자료를 불러오는 중…</div> : entries.length === 0 ? <div className="empty-state"><div className="empty-icon"><FolderOpen size={31} /></div><h2>자료를 담을 준비가 되었어요</h2><p>새 폴더를 만들거나 첫 번째 파일을 추가하세요.</p><span>파일당 최대 10 MiB · UTF-8 텍스트 미리보기 지원</span></div> : (
+                  {loading ? <div className="empty-state" role="status">자료를 불러오는 중…</div> : entries.length === 0 ? <div className="empty-state"><div className="empty-icon"><FolderOpen size={31} /></div><h2>자료를 담을 준비가 되었어요</h2><p>자료 추가에서 파일·폴더·링크를 선택하세요.</p><span>파일당 최대 10 MiB · UTF-8 텍스트 미리보기 지원</span></div> : (
                     <ul className="file-list">{entries.map(entry => <li key={entry.id} className={selected?.id === entry.id ? 'file-row selected' : 'file-row'}>
                       <button className="file-name" disabled={busy} onClick={() => entry.kind === 'FOLDER' ? setTrail([...trail, entry]) : setSelected(entry)}>{entry.kind === 'FOLDER' ? <Folder className="folder-icon" size={21} /> : <FileText size={21} />}<span>{entry.name}</span></button>
                       <span className="file-meta">{entry.kind === 'FOLDER' ? '—' : formatSize(entry.size)}</span><time className="file-meta">{new Date(entry.createdAt).toLocaleDateString('ko-KR')}</time>

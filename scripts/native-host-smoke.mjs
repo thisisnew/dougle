@@ -86,6 +86,18 @@ try {
   if (startupOnly) {
     const result = await observedWindows
     console.log(result.stdout.trim())
+    if (process.argv.includes('--transient-health')) {
+      assert.ok((await table()).some(item => item.pid === first.java && item.parent === first.native.pid))
+      process.kill(first.java, 'SIGSTOP')
+      try { await new Promise(done => setTimeout(done, 5000)) }
+      finally { process.kill(first.java, 'SIGCONT') }
+      await new Promise(done => setTimeout(done, 5000))
+      assert.equal(first.native.exitCode, null)
+      assert.ok((await table()).some(item => item.pid === first.java && item.parent === first.native.pid))
+      assert.equal((await fetch(base, { signal: AbortSignal.timeout(5000) })).status, 200)
+      assert.equal((await fetch(`${base}/api/session`)).status, 403)
+      console.log('PASS: isolated backend 5-second pause recovers without native exit or AI replay')
+    }
     await stop(first)
     console.log('PASS: isolated native startup, HTTP 200/403 and child shutdown; no real AI or user data used')
   } else {

@@ -19,6 +19,17 @@ class CollectorTest {
     @TempDir Path directory;
 
     @Test
+    void localRegistrationRejectsFilesMissingFoldersAndLinksBeforeSync() throws Exception {
+        var collector = new LocalFolderCollector();
+        Path file = Files.writeString(directory.resolve("synthetic.pdf"), "synthetic");
+        assertThatThrownBy(() -> collector.validate(file.toString())).isInstanceOf(LibraryException.class).hasMessageContaining("자료 추가 → 파일");
+        assertThatThrownBy(() -> collector.validate(directory.resolve("missing").toString())).isInstanceOf(LibraryException.class);
+        Path link = Files.createSymbolicLink(directory.resolve("folder-link"), directory);
+        assertThatThrownBy(() -> collector.validate(link.toString())).isInstanceOf(LibraryException.class);
+        assertThatCode(() -> collector.validate(directory.toString())).doesNotThrowAnyException();
+    }
+
+    @Test
     void urlCannotReuse304WithoutTheMatchingStoredFinalUri() throws Exception {
         RemoteReader remote = mock(RemoteReader.class);
         URI uri = URI.create("https://example.org/document");

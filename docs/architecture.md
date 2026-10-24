@@ -1,5 +1,7 @@
 # 아키텍처
 
+0.1.12는 `App → 설정 → SourceSettings / Workspace 관리`로 설정을 분리합니다. 자료 추가는 파일·폴더·웹 링크·GitHub 한 곳, 기록은 `QuestionGrid → 선택한 bundle ID → ChatPanel`입니다. 목록은 요약 GET만 사용하고 AI/답변 본문을 자동 조회하지 않습니다. 폴더는 `folderPicker.ts → Tauri select_source_folder → 폴더 전용 네이티브 선택기`로 연결하며 현재 앱 origin·main 창에만 명령을 허용합니다. 서버 등록/동기화 모두 실제 폴더를 검증합니다. [코드 대조](folder-settings.md).
+
 질문 첨부는 별도 `attachment` 모듈(Reader/Store 포트, ImageIO·Tika/JDBC 어댑터)입니다. 전역 수집/색인과 분리하며 기존 불변 근거·일회 승인·답변 작업에 연결합니다. 이미지는 Codex `localImage` 입력입니다. [구조·DB v22·제약](question-attachments.md).
 
 최신 사용자 경로는 **자료 → 내부 추출/심볼/색인 → 원본 근거 → 승인 → 답변**입니다. 편집형 Knowledge UI 진입점은 제거했고 새 질문은 `includeKnowledge=false`입니다. 기존 문서/호환 API와 완료 답변은 보존하며 자동 AI 요약을 새로 구현한 것은 아닙니다. [구현·검사 대조](internal-search.md).

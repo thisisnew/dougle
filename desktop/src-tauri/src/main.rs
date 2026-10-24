@@ -8,6 +8,7 @@ use tauri::webview::{DownloadEvent, NewWindowResponse, PageLoadEvent, Permission
 use tauri::{Manager, RunEvent, WebviewUrl, WebviewWindowBuilder, WindowEvent};
 
 mod updates;
+mod folder_picker;
 
 #[derive(Default, PartialEq)]
 enum Shutdown {
@@ -120,6 +121,11 @@ fn supervise(app: tauri::AppHandle, lifecycle: Arc<Lifecycle>) {
     }
 }
 
+fn health_failure_limit(healthy: bool, failures: &mut u8) -> bool {
+    *failures = if healthy { 0 } else { failures.saturating_add(1) };
+    *failures >= 3
+}
+
 fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(), &'static str> {
     let resources = app
         .path()
@@ -138,6 +144,12 @@ fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(),
     let page_loaded = loaded.clone();
     let update_lifecycle = lifecycle.clone();
     let origin = format!("http://127.0.0.1:{port}");
+    app.state::<folder_picker::FolderPicker>().port.store(port, Ordering::SeqCst);
+    app.add_capability(serde_json::json!({
+        "identifier": "source-folder-picker", "local": false,
+        "windows": ["main"], "remote": { "urls": [format!("{origin}/*")] },
+        "permissions": ["allow-select-source-folder"]
+    }).to_string()).map_err(|_| "폴더 선택 권한을 준비하지 못했습니다.")?;
     let downloads = app.path().download_dir().ok();
     let app_window =
         WebviewWindowBuilder::new(app, "main", WebviewUrl::External(origin.parse().unwrap()))
@@ -183,16 +195,17 @@ fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(),
             .map_err(|_| "앱 화면을 만들 수 없습니다. 앱을 종료한 뒤 다시 실행해 주세요.")?;
     let load_deadline = Instant::now() + Duration::from_secs(20);
     let mut next_health = Instant::now() + Duration::from_secs(2);
+    let mut health_failures = 0;
     while !lifecycle.cancelled.load(Ordering::SeqCst) {
         backend.check_process()?;
         if !loaded.load(Ordering::SeqCst) && Instant::now() >= load_deadline {
             return Err("앱 화면을 불러오지 못했습니다. 앱을 종료한 뒤 다시 실행해 주세요.");
         }
         if Instant::now() >= next_health {
-            if !backend.authenticated_ready() {
+            if health_failure_limit(backend.authenticated_ready(), &mut health_failures) {
                 let _ = app_window.hide();
                 return Err(
-                    "로컬 서비스와의 연결이 끊어졌습니다. 앱을 종료한 뒤 다시 실행해 주세요. 작업은 자동 재전송되지 않습니다.",
+                    "로컬 서비스와 연결할 수 없습니다. 앱을 종료한 뒤 다시 실행해 주세요.",
                 );
             }
             next_health = Instant::now() + Duration::from_secs(2);
@@ -212,6 +225,8 @@ fn main() {
     let application = tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
+        .invoke_handler(tauri::generate_handler![folder_picker::select_source_folder])
+        .manage(folder_picker::FolderPicker::default())
         .manage(updates::UpdateState::default())
         .manage(FailureMessage::default())
         .setup(move |app| {
@@ -299,6 +314,18 @@ fn main() {
 
 #[cfg(test)]
 mod startup_tests {
+    #[test]
+    fn transient_health_failures_recover_without_restarting_or_replaying_work() {
+        let mut failures = 0;
+        assert!(!super::health_failure_limit(false, &mut failures));
+        assert!(!super::health_failure_limit(false, &mut failures));
+        assert!(!super::health_failure_limit(true, &mut failures));
+        assert_eq!(failures, 0);
+        assert!(!super::health_failure_limit(false, &mut failures));
+        assert!(!super::health_failure_limit(false, &mut failures));
+        assert!(super::health_failure_limit(false, &mut failures));
+    }
+
     #[test]
     fn status_window_is_reserved_for_errors_without_startup_focus() {
         let config = super::status_window_config();

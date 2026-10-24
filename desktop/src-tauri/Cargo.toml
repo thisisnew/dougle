@@ -1,6 +1,6 @@
 [package]
 name = "knowledge-forge-desktop"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2024"
 rust-version = "1.99.1"
 publish = false

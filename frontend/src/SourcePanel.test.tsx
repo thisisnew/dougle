@@ -2,6 +2,9 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, it, vi } from 'vitest'
 import SourcePanel from './SourcePanel'
+import SourceSettings from './SourceSettings'
+import { selectFolder } from './folderPicker'
+vi.mock('./folderPicker', () => ({ hasFolderPicker: () => true, selectFolder: vi.fn() }))
 vi.mock('./PublishedSearchPreview', () => ({ default: ({ cardId, version }: { cardId: string; version: number }) => <div>게시본 열기 {cardId} v{version}</div> }))
 vi.mock('./AnswerHistoryPanel', () => ({ default: ({ workspaceId, onClose }: { workspaceId: string; onClose: () => void }) => <div>이력 화면 {workspaceId}<button onClick={onClose}>이력 닫기</button></div> }))
 vi.mock('./RelationPanel', () => ({ default: ({ seed }: { seed: { id: string; version: number } }) => <div>관계 대상 {seed.id} v{seed.version}</div> }))
@@ -15,7 +18,24 @@ const source = {
   pollingEnabled: false, pollIntervalSeconds: 3600, nextPollAt: null, consecutiveFailures: 0, pollingRevision: 0,
 }
 
-beforeEach(() => { api.mockReset() })
+beforeEach(() => { api.mockReset(); vi.mocked(selectFolder).mockReset() })
+
+it('통합 자료 추가에서 파일은 업로드만 열고 폴더 등록과 구분한다', async () => {
+  api.mockResolvedValue([])
+  const upload = vi.fn()
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} onUpload={upload} />)
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  expect(screen.getByLabelText('Source 종류')).toHaveValue('FILE')
+  expect(screen.queryByLabelText('Source 위치')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '등록' })).not.toBeInTheDocument()
+  await userEvent.click(screen.getByRole('button', { name: '파일 선택' }))
+  expect(upload).toHaveBeenCalledOnce()
+  expect(selectFolder).not.toHaveBeenCalled()
+  expect(api.mock.calls.some(([, options]) => options?.method)).toBe(false)
+  await userEvent.selectOptions(screen.getByLabelText('Source 종류'), 'LOCAL_FOLDER')
+  expect(screen.getByRole('button', { name: '폴더 선택' })).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '파일 선택' })).not.toBeInTheDocument()
+})
 
 it('자료 목록 갱신으로 사라진 도메인을 숨은 검색 조건으로 남기지 않는다', async () => {
   let current = source
@@ -77,14 +97,11 @@ it('검색된 게시 버전을 관련 자료 화면에 전달한다', async () =
 
 it('자동 갱신을 명시적으로 저장하고 수집이나 AI를 바로 호출하지 않는다', async () => {
   api.mockResolvedValue([source])
-  const changed = vi.fn()
-  render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
-  await userEvent.click(await screen.findByText('연결한 자료 관리 · 1개 · 가져오기 필요'))
-  await userEvent.click(await screen.findByText('자동 갱신 설정'))
+  render(<SourceSettings workspaceId="one" />)
   await userEvent.click(await screen.findByRole('checkbox', { name: '자동 갱신' }))
   expect(api.mock.calls.some(([, options]) => options?.method === 'PATCH')).toBe(false)
   await userEvent.click(screen.getByRole('button', { name: '갱신 설정 저장' }))
-  await waitFor(() => expect(changed).toHaveBeenCalled())
+  await waitFor(() => expect(api.mock.calls.some(([, options]) => options?.method === 'PATCH')).toBe(true))
   expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/polling', expect.objectContaining({
     method: 'PATCH', body: JSON.stringify({ enabled: true, intervalSeconds: 3600, expectedRevision: 0 }),
   }))
@@ -112,9 +129,13 @@ it('Source를 등록하고 별도 수동 동기화로 수집한다', async () =>
     return created ? [source] : []
   })
   render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
-  await user.click(screen.getByRole('button', { name: '자료 연결' }))
+  await user.click(screen.getByRole('button', { name: '자료 추가' }))
   await user.type(screen.getByLabelText('Source 이름'), '가상 연구')
-  await user.type(screen.getByLabelText('Source 위치'), '/synthetic')
+  vi.mocked(selectFolder).mockResolvedValue('/synthetic')
+  expect(screen.queryByLabelText('Source 위치')).not.toBeInTheDocument()
+  expect(screen.getByRole('button', { name: '등록' })).toBeDisabled()
+  await user.click(screen.getByRole('button', { name: '폴더 선택' }))
+  expect(await screen.findByText('/synthetic')).toBeInTheDocument()
   await user.type(screen.getByLabelText('Source 도메인'), '연구')
   await user.click(screen.getByRole('button', { name: '등록' }))
   await screen.findByText('가상 연구')
@@ -123,6 +144,29 @@ it('Source를 등록하고 별도 수동 동기화로 수집한다', async () =>
   await user.click(screen.getByRole('button', { name: '동기화' }))
   await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' })))
   expect(changed).toHaveBeenCalled()
+})
+
+it('폴더 선택 취소는 등록하지 않고 종류 변경 시 이전 경로를 비운다', async () => {
+  api.mockResolvedValue([])
+  vi.mocked(selectFolder).mockResolvedValueOnce(null).mockResolvedValueOnce('/synthetic')
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
+  expect(screen.getByRole('button', { name: '등록' })).toBeDisabled()
+  expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false)
+  await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
+  expect(await screen.findByText('/synthetic')).toBeInTheDocument()
+  await userEvent.selectOptions(screen.getByLabelText('Source 종류'), 'URL')
+  expect(screen.getByLabelText('Source 위치')).toHaveValue('')
+  await userEvent.selectOptions(screen.getByLabelText('Source 종류'), 'LOCAL_FOLDER')
+  expect(screen.getByRole('button', { name: '등록' })).toBeDisabled()
+})
+
+it('자료 화면에는 자동 갱신 설정을 노출하지 않는다', async () => {
+  api.mockResolvedValue([source])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await screen.findByText('가상 연구')
+  expect(screen.queryByText('자동 갱신 설정')).not.toBeInTheDocument()
 })
 
 it('다중 도메인을 함께 검색하고 근거 파일을 선택한다', async () => {

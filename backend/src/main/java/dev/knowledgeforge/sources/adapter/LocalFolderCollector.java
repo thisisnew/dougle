@@ -18,7 +18,11 @@ public class LocalFolderCollector implements Collector {
         try {
             if (!Path.of(location).isAbsolute()) throw new InvalidPathException(location, "absolute path required");
         } catch (InvalidPathException exception) {
-            throw new LibraryException(400, "로컬 폴더의 절대 경로를 입력하세요.");
+            throw new LibraryException(400, "연결할 폴더를 선택하세요.");
+        }
+        Path requested = Path.of(location).normalize();
+        if (Files.isSymbolicLink(requested) || !Files.isDirectory(requested, LinkOption.NOFOLLOW_LINKS)) {
+            throw new LibraryException(400, "폴더를 선택하세요. PDF 등 개별 파일은 ‘자료 추가 → 파일’을 이용하세요. 기존 연결이 잘못됐다면 올바른 폴더로 새로 연결하세요.");
         }
     }
 
