@@ -1,5 +1,7 @@
 # 아키텍처
 
+0.1.14는 `SourcePanel.renderLibrary`로 연결 자료 행과 App의 업로드 탐색기를 통합합니다. 연결 루트는 중복 제거하고 폴더 선택 시 기존 Entry API로 탐색합니다. 전체 동기화는 기존 Source별 POST를 순서대로 호출하며 실패 후에도 다음 자료를 처리합니다. AI/DB/승인 계약은 바꾸지 않습니다. [화면 설계](library-simplification.md).
+
 0.1.13의 사용자 브랜드는 **Dougle · 더글**입니다. `Wordmark`를 대화/사이드바에서 공유하고, 자료·질문·승인·인증 모델은 변경하지 않습니다. [화면·아이콘 설계](dougle-brand.md).
 
 0.1.12는 `App → 설정 → SourceSettings / Workspace 관리`로 설정을 분리합니다. 자료 추가는 파일·폴더·웹 링크·GitHub 한 곳, 기록은 `QuestionGrid → 선택한 bundle ID → ChatPanel`입니다. 목록은 요약 GET만 사용하고 AI/답변 본문을 자동 조회하지 않습니다. 폴더는 `folderPicker.ts → Tauri select_source_folder → 폴더 전용 네이티브 선택기`로 연결하며 현재 앱 origin·main 창에만 명령을 허용합니다. 서버 등록/동기화 모두 실제 폴더를 검증합니다. [코드 대조](folder-settings.md).

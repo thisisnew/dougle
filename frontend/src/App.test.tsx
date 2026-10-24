@@ -18,10 +18,30 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it('연결 자료와 업로드를 한 목록에 표시하고 연결 폴더는 중복하지 않는다', async () => {
+    const folder = { ...file, id: 'source-root', name: '연결 폴더', kind: 'FOLDER' }
+    api.mockImplementation(async path => {
+      if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
+      if (path.endsWith('/sources')) return [{ id: 'source', name: '연결 폴더', kind: 'LOCAL_FOLDER', status: 'READY', rootEntryId: folder.id, location: '/synthetic', pollingEnabled: false }]
+      if (path.endsWith('/entries/source-root')) return folder
+      if (path.includes('parentId=source-root')) return []
+      if (path.includes('/entries?')) return [folder, file]
+      return []
+    })
+    render(<App />)
+    await userEvent.click(await screen.findByRole('button', { name: '자료' }))
+    await screen.findByRole('button', { name: 'notes.md' })
+    await waitFor(() => expect(screen.getAllByRole('button', { name: '연결 폴더' })).toHaveLength(1))
+    expect(within(screen.getByRole('region', { name: '자료 탐색기' })).getByRole('button', { name: '연결 폴더' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: '연결 폴더' }))
+    await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/entries?area=ORIGINAL&parentId=source-root', expect.anything()))
+    expect(screen.queryByRole('button', { name: '연결 폴더 Source 삭제' })).not.toBeInTheDocument()
+  })
+
   it('Dougle와 탐정 캐릭터를 표시하고 이전 브랜드 설명은 숨긴다', async () => {
     api.mockImplementation(async path => path === '/session' ? { workspaces: [], activeWorkspaceId: null } : [])
     render(<App />)
-    expect(await screen.findByRole('img', { name: '돋보기를 든 더글' })).toHaveAttribute('src', expect.stringContaining('clue-mascot'))
+    expect(await screen.findByRole('img', { name: '더글' })).toHaveAttribute('src', expect.stringContaining('clue-mascot'))
     expect(screen.getByRole('img', { name: 'Dougle' })).toBeInTheDocument()
     expect(screen.queryByText('나만의 지식이 쌓이는 곳')).not.toBeInTheDocument()
     expect(screen.queryByText('Knowledge Forge')).not.toBeInTheDocument()
@@ -126,7 +146,7 @@ describe('Workspace와 자료 탐색기', () => {
     await user.click(await screen.findByRole('button', { name: 'Workspace 만들기' }))
     await user.type(screen.getByLabelText('이름'), '가상 연구')
     await user.click(screen.getByRole('button', { name: '만들기' }))
-    await screen.findByText('자료를 담을 준비가 되었어요')
+    await screen.findByText('아직 자료가 없습니다')
     expect(api).toHaveBeenCalledWith('/workspaces', expect.objectContaining({ body: '{"name":"가상 연구"}' }))
     expect(screen.getByLabelText('Workspace 선택')).toHaveValue('one')
   })
@@ -137,6 +157,7 @@ describe('Workspace와 자료 탐색기', () => {
       if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
       if (path.endsWith('/preview')) return { supported: true, text: '<script>window.injected=true</script>', reason: null }
+      if (path.endsWith('/sources')) return []
       return [file]
     })
     render(<App />)
@@ -172,6 +193,7 @@ describe('Workspace와 자료 탐색기', () => {
     api.mockImplementation(async path => {
       if (path.endsWith('/knowledge-organization')) return { folders: [], placements: [] }
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
+      if (path.endsWith('/sources')) return []
       if (path.includes('parentId=folder') || path.endsWith('/knowledge')) return []
       return [{ ...file, id: 'folder', kind: 'FOLDER', name: '참고 자료' }]
     })

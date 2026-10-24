@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { FolderInput, Link, RefreshCw, Search, Trash2 } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { request } from './api'
@@ -17,14 +17,13 @@ export type Source = {
   nextPollAt: number | null; consecutiveFailures: number; pollingRevision: number
 }
 type Hit = { entryId: string | null; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean; kind: 'ORIGINAL' | 'KNOWLEDGE'; cardId: string | null; version: number | null; freshness: string }
-type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void; manageOnly?: boolean; onUpload?: () => void }
+type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void; manageOnly?: boolean; onUpload?: () => void; renderLibrary?: (sources: Source[], rows: ReactNode) => ReactNode }
 const states: Record<string, string> = { NEW: '수집 전', SYNCING: '수집 중', READY: '반영 완료', ERROR: '오류 · 이전 자료 유지' }
 const sourceKinds: Record<string, string> = { LOCAL_FOLDER: '로컬 폴더', URL: '웹페이지', GITHUB: 'GitHub' }
 
-export default function SourcePanel({ workspaceId, revision, onChanged, onSelect, manageOnly = false, onUpload }: Props) {
+export default function SourcePanel({ workspaceId, revision, onChanged, onSelect, manageOnly = false, onUpload, renderLibrary }: Props) {
   const [sources, setSources] = useState<Source[]>([])
   const [formOpen, setFormOpen] = useState(false)
-  const [managing, setManaging] = useState(false)
   const [kind, setKind] = useState(onUpload ? 'FILE' : 'LOCAL_FOLDER')
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
@@ -131,7 +130,6 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         signal: mutationAbort.current?.signal,
       })
       setFormOpen(false)
-      setManaging(true)
       setName('')
       setLocation('')
       setDomain('')
@@ -155,10 +153,44 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     finally { if (!controller.signal.aborted) setSearching(false) }
   }
 
+  async function syncAll() {
+    if (busy || sources.some(source => source.status === 'SYNCING')) return
+    const failures: string[] = []
+    await mutate('sync-all', async () => {
+      const signal = mutationAbort.current!.signal
+      for (const source of sources) {
+        if (signal.aborted) return
+        try { await request(`${base}/sources/${source.id}/sync`, { method: 'POST', signal }) }
+        catch (reason) {
+          if (signal.aborted) return
+          failures.push(`${source.name}: ${(reason as Error).message}`)
+        }
+      }
+    })
+    if (!mutationAbort.current?.signal.aborted && failures.length) setError(failures.join(' · '))
+  }
+
+  const sourceRows = <ul className="source-list compact-source-list">{sources.map(source => <li key={source.id}>
+    <div className="source-info">
+      <button className="source-open" disabled={!source.rootEntryId || !!busy} onClick={() => source.rootEntryId && onSelect(source.rootEntryId)}><Link size={18} /><strong>{source.name}</strong></button>
+      <span>{sourceKinds[source.kind] || source.kind} · {states[source.status] || source.status}</span>
+      <details><summary>상세 정보</summary><small>{source.location}</small>
+        {source.syncedAt && <small>최근 동기화 {new Date(source.syncedAt).toLocaleString('ko-KR')}</small>}
+        {source.revision && <small>반영 버전 {source.revision.slice(0, 12)}</small>}
+      </details>
+      {source.error && <span role="status" className="modal-error">{source.error}</span>}
+    </div>
+    <div className="source-actions">
+      <Button variant="ghost" size="sm" aria-label={`${source.name} 이름과 분류 수정`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setEditing(source.id)}>수정</Button>
+      <Button variant="ghost" size="icon" aria-label={`${source.name} Source 삭제`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setDeleting(source.id)}><Trash2 /></Button>
+    </div>
+    {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
+    {deleting === source.id && <div className="source-confirm" role="alert"><span>삭제하시겠습니까?</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>삭제</Button></div>}
+  </li>)}</ul>
+
   const availableDomains = [...new Set(sources.map(source => source.domain).filter(Boolean))]
   return <section className="source-panel" aria-label="자료 연결과 검색">
-    <div className="source-title"><h2><Link size={17} /> {manageOnly ? '내 자료' : '자료 검색'}</h2><Button size="sm" variant="outline" disabled={!!busy || picking} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 추가</Button></div>
-    <p className="source-hint">파일·폴더·웹 링크·GitHub를 한곳에 모으세요.</p>
+    <div className="source-title"><h2><Link size={17} /> {manageOnly ? '내 자료' : '자료 검색'}</h2><div className="source-actions"><Button size="sm" variant="outline" disabled={!!busy || !sources.length || sources.some(source => source.status === 'SYNCING')} onClick={() => void syncAll()}><RefreshCw />{busy === 'sync-all' ? '동기화 중…' : '전체 동기화'}</Button><Button size="sm" variant="outline" disabled={!!busy || picking} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 추가</Button></div></div>
     {error && <p role="alert" className="modal-error">{error}</p>}
     {formOpen && <form onSubmit={register} className="source-form">
       <label>종류<select aria-label="Source 종류" disabled={picking || !!busy} value={kind} onChange={event => { setKind(event.target.value); setLocation('') }}>
@@ -171,20 +203,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       <Button type="submit" size="sm" disabled={!!busy || picking || !location.trim()}>등록</Button>
       </>}
     </form>}
-    {sources.length > 0 && <details className="secondary-tools" open={managing} onToggle={event => setManaging(event.currentTarget.open)}><summary>연결한 자료 관리 · {sources.length}개{sources.some(source => source.status === 'ERROR') ? ' · 오류 있음' : sources.some(source => source.status === 'SYNCING') ? ' · 수집 중' : sources.some(source => source.status === 'NEW') ? ' · 가져오기 필요' : ''}</summary>
-    <ul className="source-list">{sources.map(source => <li key={source.id}>
-      <div className="source-info"><strong>{source.name}</strong><span>{sourceKinds[source.kind] || source.kind} · {source.domain || '분류 없음'} · {states[source.status] || source.status}</span>
-        <small title={source.location}>{source.location}</small>
-        <small>{source.revision ? `반영 버전 ${source.revision.slice(0, 12)} · ${source.syncedAt ? new Date(source.syncedAt).toLocaleString('ko-KR') : ''}` : '아직 반영된 버전 없음'} · 자동 폴링 {source.pollingEnabled ? 'ON' : 'OFF'}</small>
-        {source.error && <span role="status" className="modal-error">{source.error}</span>}
-      </div>
-      <div className="source-actions"><Button size="sm" variant="outline" disabled={!!busy || source.status === 'SYNCING'} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}/sync`, { method: 'POST', signal: mutationAbort.current?.signal }))}><RefreshCw />{busy === source.id ? '수집 중…' : '동기화'}</Button>
-        <Button variant="outline" size="sm" aria-label={`${source.name} 이름과 분류 수정`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setEditing(source.id)}>수정</Button>
-        <Button variant="ghost" size="icon" aria-label={`${source.name} Source 삭제`} disabled={!!busy} onClick={() => setDeleting(source.id)}><Trash2 /></Button>
-      </div>
-      {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
-      {deleting === source.id && <div className="source-confirm" role="alert"><span>보관한 자료도 삭제합니다. PC 원래 폴더·원격 저장소는 유지됩니다.</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>Source 삭제 확인</Button></div>}
-    </li>)}</ul></details>}
+    {renderLibrary ? renderLibrary(sources, sourceRows) : sourceRows}
     {!manageOnly && <><form className="search-form" onSubmit={event => void search(event)}>
       <label className="sr-only" htmlFor="knowledge-query">자료 검색</label>
       <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="찾고 싶은 내용이나 질문을 입력하세요" />

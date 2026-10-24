@@ -19,8 +19,7 @@ it('제목과 날짜 카드만 표시하고 선택할 때 해당 질문으로 �
   expect(api.mock.calls[0][0]).toBe('/workspaces/one/evidence-bundles')
   expect(screen.queryByText('대화 보관함 관리')).not.toBeInTheDocument()
   expect(screen.queryByText('답변 당시 근거')).not.toBeInTheDocument()
-  await userEvent.click(screen.getByRole('button', { name: '새 질문' }))
-  expect(select).toHaveBeenLastCalledWith(null)
+  expect(screen.queryByRole('button', { name: '새 질문' })).not.toBeInTheDocument()
 })
 
 it('검색은 로컬 필터만 사용하고 AI를 호출하지 않는다', async () => {

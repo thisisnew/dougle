@@ -46,7 +46,7 @@ it('확인 전·진행 중·로그인 확인 결과를 눈에 띄는 상태로 �
   api.mockImplementation(() => new Promise(resolve => { finish = resolve }))
   const changed = vi.fn()
   render(<ProviderConnectionPanel onClose={vi.fn()} onConnectionChange={changed} />)
-  expect(screen.getByText(/Codex · 아직 확인하지 않음/)).toBeInTheDocument()
+  expect(screen.queryByText(/Codex · 아직 확인하지 않음/)).not.toBeInTheDocument()
   await userEvent.click(screen.getByRole('button', { name: '연결' }))
   expect(changed).toHaveBeenLastCalledWith({ provider: 'CODEX', state: 'CHECKING', model: 'gpt-6.1-sol' })
   finish({ provider: 'CODEX', state: 'AUTHENTICATED', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
@@ -67,7 +67,7 @@ it('통신 실패를 로그인 성공과 구별한다', async () => {
 
 it('선택만 기억하고 실행하지 않으며 새 초안에 기본 제공자를 적용한다', async () => {
   const view = render(<ProviderConnectionPanel onClose={vi.fn()} />)
-  expect(screen.getByText(/전용 로그인을 사용합니다/)).toBeInTheDocument()
+  expect(screen.queryByText(/전용 로그인을 사용합니다/)).not.toBeInTheDocument()
   expect(screen.queryByLabelText('Codex 절대 경로')).not.toBeInTheDocument()
   await userEvent.click(screen.getByRole('button', { name: /Claude/ }))
   expect(screen.getByRole('button', { name: /Claude/ })).toHaveAttribute('aria-pressed', 'true')
@@ -84,7 +84,7 @@ it('인증 확인을 원격 모델 성공으로 표시하지 않고 고급 경�
   render(<ProviderConnectionPanel onClose={vi.fn()} />)
   await userEvent.click(screen.getByRole('button', { name: '연결' }))
   expect(await screen.findByText(/Codex · 로그인 확인/)).toBeInTheDocument()
-  expect(screen.getByText(/원격 연결·모델 이용 한도는 확인하지 않았습니다/)).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: '연결됨' })).toBeDisabled()
   expect(api).toHaveBeenCalledTimes(1)
   expect(api).toHaveBeenCalledWith('/ai/providers/CODEX/connection', expect.objectContaining({ method: 'POST' }))
 })
