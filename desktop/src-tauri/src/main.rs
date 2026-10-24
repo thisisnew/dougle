@@ -70,6 +70,19 @@ impl Lifecycle {
 #[derive(Default)]
 struct FailureMessage(Mutex<Option<&'static str>>);
 
+fn status_window_config() -> tauri::utils::config::WindowConfig {
+    tauri::utils::config::WindowConfig {
+        label: "status".into(),
+        title: "Knowledge Forge".into(),
+        url: WebviewUrl::App("index.html".into()),
+        width: 700.0,
+        height: 460.0,
+        visible: false,
+        focus: false,
+        ..Default::default()
+    }
+}
+
 fn render_failure(status: &tauri::WebviewWindow) {
     let state = status.state::<FailureMessage>();
     if let Ok(message) = state.0.lock()
@@ -155,6 +168,9 @@ fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(),
                 {
                     let first_load = !page_loaded.swap(true, Ordering::SeqCst);
                     let _ = window.show();
+                    if first_load {
+                        let _ = window.set_focus();
+                    }
                     if let Some(status) = window.app_handle().get_webview_window("status") {
                         let _ = status.hide();
                     }
@@ -213,9 +229,7 @@ fn main() {
                 application_menu.insert(&check, 1)?;
             }
             app.set_menu(menu)?;
-            WebviewWindowBuilder::new(app, "status", WebviewUrl::App("index.html".into()))
-                .title("Knowledge Forge")
-                .inner_size(700.0, 460.0)
+            WebviewWindowBuilder::from_config(app, &status_window_config())?
                 .devtools(false)
                 .on_navigation(|url| url.scheme() == "tauri" && url.host_str() == Some("localhost"))
                 .on_new_window(|_, _| NewWindowResponse::Deny)
@@ -269,4 +283,17 @@ fn main() {
             }
         }
     });
+}
+
+#[cfg(test)]
+mod startup_tests {
+    #[test]
+    fn status_window_is_reserved_for_errors_without_startup_focus() {
+        let config = super::status_window_config();
+        assert_eq!(config.label, "status");
+        assert_eq!(config.url, tauri::WebviewUrl::App("index.html".into()));
+        assert!(!config.visible);
+        assert!(!config.focus);
+        assert_eq!((config.width, config.height), (700.0, 460.0));
+    }
 }

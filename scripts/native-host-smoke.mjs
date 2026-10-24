@@ -71,38 +71,50 @@ async function stop(process) {
 }
 
 try {
+  const startupOnly = process.argv.includes('--startup-window')
+  const observer = resolve(home, 'startup-window-observer')
+  if (startupOnly) await execute('/usr/bin/xcrun', ['swiftc', resolve(root, 'scripts/startup-window-observer.swift'), '-o', observer])
   const started = Date.now()
   const first = launch()
+  const observedWindows = startupOnly ? execute(observer, [String(first.native.pid)], { timeout: 70000 }) : null
+  observedWindows?.catch(() => {})
   const base = await ready(first)
   const startupMs = Date.now() - started
   const data = resolve(home, 'Library/Application Support/dev.knowledgeforge.desktop')
   assert.equal((await stat(data)).mode & 0o777, 0o700)
   await stat(resolve(data, 'knowledge-forge.sqlite'))
-  const duplicate = launch()
-  const deadline = Date.now() + 65000
-  let observed = false
-  while (Date.now() < deadline) {
-    const child = (await table()).find(item => item.parent === duplicate.native.pid && item.command.endsWith('/runtime/bin/java'))
-    if (child) { observed = true; duplicate.java = child.pid }
-    if (observed && !(await table()).some(item => item.pid === duplicate.java)) break
-    await pause()
+  if (startupOnly) {
+    const result = await observedWindows
+    console.log(result.stdout.trim())
+    await stop(first)
+    console.log('PASS: isolated native startup, HTTP 200/403 and child shutdown; no real AI or user data used')
+  } else {
+    const duplicate = launch()
+    const deadline = Date.now() + 65000
+    let observed = false
+    while (Date.now() < deadline) {
+      const child = (await table()).find(item => item.parent === duplicate.native.pid && item.command.endsWith('/runtime/bin/java'))
+      if (child) { observed = true; duplicate.java = child.pid }
+      if (observed && !(await table()).some(item => item.pid === duplicate.java)) break
+      await pause()
+    }
+    const remaining = (await table()).filter(item => item.pid === duplicate.java || item.parent === duplicate.native.pid)
+    assert.ok(observed && remaining.length === 0,
+      `Second backend must exit without acquiring data lock: ${JSON.stringify({ observed, remaining, nativeExit: duplicate.native.exitCode, logs: duplicate.logs })}`)
+    assert.equal((await fetch(base)).status, 200)
+    await stop(duplicate)
+    await stop(first)
+    const restarted = launch()
+    await ready(restarted)
+    await stop(restarted)
+    const report = { measuredAt: new Date().toISOString(), platform: `${process.platform}/${process.arch}`, startupMs,
+      checks: ['packaged native executable with isolated HOME and minimal PATH', 'bundled Java startup and API session protection',
+        'private stable application data path', 'duplicate backend rejected while original stays available',
+        'parent termination closes Java through stdin EOF', 'native restart uses the same database'],
+      limits: 'Synthetic isolated home; no Finder/Gatekeeper interaction, actual external AI, or Apple Silicon validation.' }
+    await writeFile(resolve(root, 'docs/native-host-report.json'), JSON.stringify(report, null, 2) + '\n')
+    console.log(JSON.stringify(report, null, 2))
   }
-  const remaining = (await table()).filter(item => item.pid === duplicate.java || item.parent === duplicate.native.pid)
-  assert.ok(observed && remaining.length === 0,
-    `Second backend must exit without acquiring data lock: ${JSON.stringify({ observed, remaining, nativeExit: duplicate.native.exitCode, logs: duplicate.logs })}`)
-  assert.equal((await fetch(base)).status, 200)
-  await stop(duplicate)
-  await stop(first)
-  const restarted = launch()
-  await ready(restarted)
-  await stop(restarted)
-  const report = { measuredAt: new Date().toISOString(), platform: `${process.platform}/${process.arch}`, startupMs,
-    checks: ['packaged native executable with isolated HOME and minimal PATH', 'bundled Java startup and API session protection',
-      'private stable application data path', 'duplicate backend rejected while original stays available',
-      'parent termination closes Java through stdin EOF', 'native restart uses the same database'],
-    limits: 'Synthetic isolated home; no Finder/Gatekeeper interaction, actual external AI, or Apple Silicon validation.' }
-  await writeFile(resolve(root, 'docs/native-host-report.json'), JSON.stringify(report, null, 2) + '\n')
-  console.log(JSON.stringify(report, null, 2))
 } finally {
   for (const process of processes.reverse()) await stop(process)
   await rm(home, { recursive: true, force: true })
