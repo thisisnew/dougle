@@ -84,7 +84,8 @@ window.addEventListener('DOMContentLoaded', () => {
       await until(() => dialog.textContent.includes('실행 도구를 찾지 못했습니다.') || dialog.querySelector('[role="alert"]'));
       if (dialog.querySelector('[role="alert"]')) throw Error('AI connection UI mismatch');
       [...dialog.querySelectorAll('.provider-card')].find(button => button.textContent.includes('Codex')).click();
-      await until(() => dialog.textContent.includes('Codex · 아직 확인하지 않음'));
+      phase = 'Codex selected without redundant status';
+      await until(() => [...dialog.querySelectorAll('.provider-card')].some(button => button.textContent.includes('Codex') && button.getAttribute('aria-pressed') === 'true') && !dialog.querySelector('.connection-status') && connect() && !connect().disabled);
       phase = 'Codex private profile readiness';
       connect().click();
       await until(() => dialog.textContent.includes('로그인이 필요합니다.') || dialog.querySelector('[role="alert"]'));
