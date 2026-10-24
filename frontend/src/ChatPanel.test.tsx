@@ -28,6 +28,7 @@ it('시작 화면은 짧은 제목과 입력 안내만 표시한다', () => {
   expect(screen.getByRole('heading', { name: 'Dougle' })).toBeInTheDocument()
   expect(screen.getByPlaceholderText('더글한테 물어보기')).toBeEnabled()
   expect(screen.queryByText('내 자료 기반 · 새 질문')).not.toBeInTheDocument()
+  expect(screen.queryByText('자료 전송은 동의 후에만 진행됩니다.')).not.toBeInTheDocument()
   expect(screen.queryByText('흩어진 자료에서, 필요한 답을.')).not.toBeInTheDocument()
 })
 

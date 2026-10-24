@@ -145,6 +145,6 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || busy || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
     </form>
     {!connected ? <div className="chat-connect"><span>먼저 사용할 AI를 연결해 주세요.</span><Button variant="outline" onClick={onConnect}>AI 연결하기</Button></div>
-      : <p className="chat-footnote">자료 전송은 동의 후에만 진행됩니다.</p>}
+      : null}
   </section>
 }
