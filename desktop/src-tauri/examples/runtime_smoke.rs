@@ -74,7 +74,9 @@ window.addEventListener('DOMContentLoaded', () => {
       phase += ': ' + selectHeight + ', ' + selectAppearance + ', ' + webkitAppearance;
       if (selectHeight < 40 || (selectAppearance !== 'none' && webkitAppearance !== 'none')) throw Error('Native select appearance mismatch');
       phase = 'AI status response';
+      await until(() => dialog.textContent.includes('실행 도구를 찾지 못했습니다.') && ![...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결 상태 확인')?.disabled);
       [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결 상태 확인').click();
+      await until(() => dialog.querySelector('.ai-connection-indicator[data-state="CHECKING"]'));
       await until(() => dialog.textContent.includes('실행 도구를 찾지 못했습니다.') || dialog.querySelector('[role="alert"]'));
       if (dialog.querySelector('[role="alert"]') || !dialog.textContent.includes('실행 도구를 찾지 못했습니다.')) throw Error('AI connection UI mismatch');
       provider.value = 'CODEX';
