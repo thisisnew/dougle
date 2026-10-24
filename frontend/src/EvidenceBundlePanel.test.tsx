@@ -22,10 +22,25 @@ beforeEach(() => {
 })
 afterEach(() => vi.restoreAllMocks())
 
+it('검색 없이 연 화면에서도 질문을 입력하고 자료만 준비한다', async () => {
+  api.mockImplementation(async (_path, options) => options?.method === 'POST' ? bundle : [])
+  render(<EvidenceBundlePanel {...props} question="" />)
+  const prepare = screen.getByRole('button', { name: '참고 자료 찾기' })
+  expect(prepare).toBeDisabled()
+  await waitFor(() => expect(screen.getByLabelText('질문')).toBeEnabled())
+  await userEvent.type(screen.getByLabelText('질문'), '새로운 질문')
+  await waitFor(() => expect(prepare).toBeEnabled())
+  await userEvent.click(prepare)
+  expect(api).toHaveBeenCalledWith('/workspaces/one/evidence-bundles', expect.objectContaining({
+    method: 'POST', body: JSON.stringify({ question: '새로운 질문', domains: props.domains, includeKnowledge: true }),
+  }))
+  expect(api.mock.calls.every(([path]) => path.includes('/evidence-bundles'))).toBe(true)
+})
+
 it('열기만으로 저장하거나 AI에 전송하지 않고 명시적 저장 후 인용과 제외 이유를 표시한다', async () => {
   api.mockImplementation(async (_path, options) => options?.method === 'POST' ? bundle : [summary])
   render(<EvidenceBundlePanel {...props} />)
-  const save = screen.getByRole('button', { name: '이 조건으로 묶음 저장' })
+  const save = screen.getByRole('button', { name: '참고 자료 찾기' })
   await waitFor(() => expect(save).toBeEnabled())
   expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
   await userEvent.click(save)
@@ -41,8 +56,8 @@ it('열기만으로 저장하거나 AI에 전송하지 않고 명시적 저장 �
 it('이전 묶음을 ID로 열고 현재 검색 조건과 저장 당시 조건을 구분한다', async () => {
   api.mockImplementation(async path => path.endsWith('/bundle') ? { ...bundle, payload: { ...bundle.payload, question: '과거 질문' } } : [summary])
   render(<EvidenceBundlePanel {...props} />)
-  await waitFor(() => expect(screen.getByLabelText('저장된 근거 묶음')).toBeEnabled())
-  await userEvent.selectOptions(screen.getByLabelText('저장된 근거 묶음'), 'bundle')
+  await waitFor(() => expect(screen.getByLabelText('저장한 질문')).toBeEnabled())
+  await userEvent.selectOptions(screen.getByLabelText('저장한 질문'), 'bundle')
   expect(await screen.findByRole('heading', { name: '과거 질문' })).toBeInTheDocument()
   expect(api.mock.calls.some(([path]) => path === '/workspaces/one/evidence-bundles/bundle')).toBe(true)
 })
@@ -57,7 +72,7 @@ it('무결과를 답변 가능으로 표시하지 않고 오류 뒤에도 기존
     return [summary]
   })
   render(<EvidenceBundlePanel {...props} />)
-  const save = screen.getByRole('button', { name: '이 조건으로 묶음 저장' })
+  const save = screen.getByRole('button', { name: '참고 자료 찾기' })
   await waitFor(() => expect(save).toBeEnabled())
   await userEvent.click(save)
   expect(await screen.findByText(/사용 가능한 근거 없음/)).toBeInTheDocument()
@@ -72,8 +87,8 @@ it('삭제 취소는 요청하지 않고 확인 후 묶음만 삭제한다', asy
   const confirm = vi.spyOn(window, 'confirm').mockReturnValue(false)
   api.mockImplementation(async (_path, options) => options?.method === 'POST' ? bundle : options?.method === 'DELETE' ? undefined : [summary])
   render(<EvidenceBundlePanel {...props} />)
-  await waitFor(() => expect(screen.getByRole('button', { name: '이 조건으로 묶음 저장' })).toBeEnabled())
-  await userEvent.click(screen.getByRole('button', { name: '이 조건으로 묶음 저장' }))
+  await waitFor(() => expect(screen.getByRole('button', { name: '참고 자료 찾기' })).toBeEnabled())
+  await userEvent.click(screen.getByRole('button', { name: '참고 자료 찾기' }))
   const remove = await screen.findByRole('button', { name: '이 묶음 삭제' })
   await waitFor(() => expect(remove).toBeEnabled())
   await userEvent.click(remove)
@@ -87,7 +102,7 @@ it('삭제 취소는 요청하지 않고 확인 후 묶음만 삭제한다', asy
 it('저장 중 중복 요청을 막고 닫으면 대기 요청을 취소한다', async () => {
   api.mockImplementation((_path, options) => options?.method === 'POST' ? new Promise(() => {}) : Promise.resolve([]))
   const view = render(<EvidenceBundlePanel {...props} />)
-  const save = screen.getByRole('button', { name: '이 조건으로 묶음 저장' })
+  const save = screen.getByRole('button', { name: '참고 자료 찾기' })
   await waitFor(() => expect(save).toBeEnabled())
   await userEvent.click(save)
   expect(save).toBeDisabled()

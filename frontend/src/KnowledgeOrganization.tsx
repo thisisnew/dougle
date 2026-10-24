@@ -79,7 +79,7 @@ export default function KnowledgeOrganization({ workspaceId, cards, selected, di
       visited.add(current.id); names.unshift(current.name)
       current = catalog?.folders.find(candidate => candidate.id === current?.parentId)
     }
-    return `지식 루트 / ${names.join(' / ')}`
+    return `기본 폴더 / ${names.join(' / ')}`
   }
   const trail: Folder[] = []
   let ancestor = folder
@@ -87,24 +87,24 @@ export default function KnowledgeOrganization({ workspaceId, cards, selected, di
     trail.unshift(ancestor)
     ancestor = catalog?.folders.find(item => item.id === ancestor!.parentId)
   }
+  if (catalog && !catalog.folders.length && !cards.length && !error) return null
   return <section className="draft-section" aria-label="지식 폴더">
-    <h3>독립 지식 폴더</h3>
-    <p>새 초안은 루트에 저장됩니다. 카드를 선택한 뒤 이동할 폴더를 열고 배치하세요. 문서 버전·게시본·원본은 바뀌지 않습니다.</p>
+    <h3>폴더로 정리</h3>
     <div className="source-actions">
-      <Button variant="outline" disabled={blocked} onClick={() => navigate(null, true)}>전체 지식</Button>
-      <Button variant="outline" disabled={blocked} onClick={() => navigate(null)}>지식 루트</Button>
-      <Button variant="outline" disabled={blocked} onClick={() => setRefresh(value => value + 1)}>폴더 새로고침</Button>
+      <Button variant="outline" disabled={blocked} onClick={() => navigate(null, true)}>모든 문서</Button>
+      <Button variant="outline" disabled={blocked} onClick={() => navigate(null)}>기본 폴더</Button>
     </div>
-    <nav aria-label="지식 폴더 경로">{all ? '전체 지식' : '지식 루트'}{trail.map(item =>
+    <nav aria-label="지식 폴더 경로">{all ? '모든 문서' : '기본 폴더'}{trail.map(item =>
       <Button key={item.id} variant="ghost" disabled={blocked} onClick={() => navigate(item.id)}> / {item.name}</Button>)}</nav>
-    {error && <p role="alert">{error}</p>}
-    {missing && <p role="alert">이 폴더는 삭제되었습니다. 지식 루트로 이동하세요.</p>}
+    {error && <div role="alert"><p>{error}</p><Button variant="outline" disabled={blocked} onClick={() => setRefresh(value => value + 1)}>폴더 다시 불러오기</Button></div>}
+    {missing && <p role="alert">이 폴더는 삭제되었습니다. 기본 폴더로 이동하세요.</p>}
     {!catalog && !error && <p role="status">폴더를 불러오는 중…</p>}
     {catalog && !missing && <>
       <ul>{catalog.folders.filter(item => item.parentId === folderId).map(item => <li key={item.id}>
         <Button variant="ghost" disabled={blocked} onClick={() => navigate(item.id)}>폴더: {item.name}</Button>
       </li>)}</ul>
       {!all && <>
+        <p>문서를 선택한 뒤 원하는 폴더로 옮길 수 있습니다. 원본 자료는 그대로 유지됩니다.</p>
         <form className="knowledge-form" onSubmit={event => { event.preventDefault(); void mutate('create') }}>
           <label>새 지식 폴더 이름<input required maxLength={120} value={name} disabled={blocked} onChange={event => setName(event.target.value)} /></label>
           <Button type="submit" disabled={blocked || !name.trim()}>지식 폴더 생성</Button>
@@ -120,7 +120,7 @@ export default function KnowledgeOrganization({ workspaceId, cards, selected, di
           <p>하위 폴더와 카드를 함께 옮깁니다. 문서 내용은 바꾸지 않습니다. 충돌하면 입력을 보존하므로 복사한 뒤 취소·새로고침하세요.</p>
           <label>변경할 폴더 이름<input required maxLength={120} value={editName} disabled={blocked} onChange={event => setEditName(event.target.value)} /></label>
           <label>이동할 상위 폴더<select value={editParent} disabled={blocked} onChange={event => setEditParent(event.target.value)}>
-            <option value="">지식 루트</option>
+            <option value="">기본 폴더</option>
             {catalog.folders.filter(item => item.id !== editing.id).map(item => <option key={item.id} value={item.id}>{folderPath(item)}</option>)}
           </select></label>
           <p>자신이나 하위 폴더로 이동하면 서버에서 거절합니다.</p>

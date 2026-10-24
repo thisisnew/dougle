@@ -58,6 +58,15 @@ window.addEventListener('DOMContentLoaded', () => {
       const denied = await fetch('/api/session', { mode: 'same-origin' });
       if (denied.status !== 403 || (await denied.json()).detail !== '허용되지 않은 로컬 요청입니다.') throw Error('Missing UTF-8 auth protection');
       phase = 'AI connection button';
+      const searchOptions = document.querySelector('.search-options');
+      if (!searchOptions || searchOptions.open) throw Error('Search options must start collapsed');
+      searchOptions.querySelector('summary').click();
+      await until(() => document.querySelector('.check-option input').getBoundingClientRect().width > 0);
+      const checkBox = document.querySelector('.check-option input').getBoundingClientRect();
+      const checkText = document.querySelector('.check-option span').getBoundingClientRect();
+      if (checkBox.width < 16 || checkText.left - checkBox.right < 8) throw Error('Checkbox label spacing mismatch');
+      searchOptions.querySelector('summary').click();
+      if ([...document.querySelectorAll('button')].some(button => button.textContent.trim() === '근거 묶음')) throw Error('Internal evidence terminology in primary navigation');
       localStorage.setItem('forge.ai.provider', 'CLAUDE');
       [...document.querySelectorAll('#root button')].find(button => button.textContent.trim() === 'AI 연결').click();
       await until(() => {

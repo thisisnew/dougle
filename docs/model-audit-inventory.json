@@ -1944,14 +1944,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "5fbe799ec9abbd806e19c71e86153edce34a30283284e854faf13f5be7098b58",
+      "sha256": "9e9f2676cf61d7379bc3e85c9b370f7ca04e76aed5b06829c643227cb94a3a73",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "c9d54a8068032345c00e78ea84c184f8593fec6a8c3e3d709dcf26185ad4d464",
+      "sha256": "fdcdc8da8339a6e1e23901388007626ac715dc5fb2126b6e8856904111813de6",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -1967,7 +1967,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "26fa33ccaee6486c1703292ef5db9078fb33c87b70c51389ea38c949385bdf95",
+      "sha256": "986088ac0278504433afcdceb64b4b774e4c9b4ef618eff853828c2990a95b31",
       "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2016,8 +2016,8 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "98e6e68d8deb6b95a2a6ab8c4cf2305d8f09a51f4fee12eec9117af209513120",
-      "lines": 322,
+      "sha256": "d86e5f35630189df510f016feb07eb6ceec4c5637acf0df6544dccad94889d15",
+      "lines": 331,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -2208,7 +2208,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "02ea1973b1f101b003dfa62827d637e9b9e72acfa56dba43e67f25c7ee1322f9",
+      "sha256": "81674ca0d4bf16dc9ba52c6c13298c5d7f458523593f4b52e5f4bfdcd424fa8a",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2296,8 +2296,8 @@
     },
     {
       "path": "frontend/src/AnswerHistoryPanel.tsx",
-      "sha256": "9e1200d2726860223c9f2bed814bd72a02b694f4de84fc0c099aaccb86193c17",
-      "lines": 115,
+      "sha256": "0a87f51329a7ee765e2c9151f539fa082de555775cf8a98dd2a014e301970c65",
+      "lines": 114,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/AnswerHistoryPanel.test.tsx",
@@ -2322,14 +2322,14 @@
     },
     {
       "path": "frontend/src/App.test.tsx",
-      "sha256": "ff7c0045102ca41942071968d5386ad8bc2b0d1afb3beaf4b488a4a0f00c0d9a",
+      "sha256": "d200cb7108d70e5cb24e07f69ffec0cc8d6ebb273d572b98e20dc04c85419899",
       "lines": 162,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "2c3931a741f1d6eeaab4cd32bfc14b3ec0c595292669e764410a638b6d138d5d",
+      "sha256": "4dc6a1d34016aa31fadbad29fbd8b5eeb38fc86784eb90217006a6a1d5630906",
       "lines": 263,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2445,15 +2445,15 @@
     },
     {
       "path": "frontend/src/EvidenceBundlePanel.test.tsx",
-      "sha256": "b70cd3cb2b9f5a9391e9a5be9e141e2258709568383ee9da59938ab5643d32c0",
-      "lines": 97,
+      "sha256": "53ad5b30ca48910fb2475eff5991db8e0adf6a421eb25a9790f2a19f8111c37a",
+      "lines": 112,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/EvidenceBundlePanel.tsx",
-      "sha256": "d035e91a201386f57f301ad50e0178df95f46a6f512c7caaf7682b18be9b6efa",
-      "lines": 87,
+      "sha256": "e8dcc9a6807f815e804fa895b13ffa21beac4c506f7bc8461a777235c4b27223",
+      "lines": 88,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/EvidenceBundlePanel.test.tsx"
@@ -2494,14 +2494,14 @@
     },
     {
       "path": "frontend/src/GenerationJobsPanel.test.tsx",
-      "sha256": "f09ba40b9c0be8f96e6e4d505335dd876c612c4bf000449dc8fbc54537c1ae67",
-      "lines": 82,
+      "sha256": "debd13a46d6c5f3f163c0db65f141cfadf762d681b515f69238f9b14b444d683",
+      "lines": 90,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/GenerationJobsPanel.tsx",
-      "sha256": "268601928f6bb642d159984e63ad87b4375bb915f3692b6806077885f3239b72",
+      "sha256": "5cbb779e52161cee09bf761afda0a18e8ad618088c88c16bb0b95d5f9bb58b7f",
       "lines": 79,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2543,14 +2543,14 @@
     },
     {
       "path": "frontend/src/KnowledgeOrganization.test.tsx",
-      "sha256": "8f8382f1aea8cc917994a713fd7e0daddeef7c89b792fdec3b249d8d515faa6d",
+      "sha256": "29658d01e5fe098a8a195af43904db2d8702e1b3a4219df2f6354a8506d6d4cf",
       "lines": 122,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/KnowledgeOrganization.tsx",
-      "sha256": "fa09e7ec4d5bfa9dc82c81fb44524a7165ca8f390320b4359c700d24abc9a292",
+      "sha256": "03afa455a73044f78941694663dbe218cb419403eb965b4b27283e27d7165839",
       "lines": 138,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2559,14 +2559,14 @@
     },
     {
       "path": "frontend/src/KnowledgePanel.test.tsx",
-      "sha256": "ecce4b1cba851ad9d02975d6365dfcebaef7035f6cd896439e88167b6aa77bb9",
-      "lines": 148,
+      "sha256": "1f05ced822d0e6b759e488da48210b285d6dba4605ab1c79d6ec33653d97fea6",
+      "lines": 159,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/KnowledgePanel.tsx",
-      "sha256": "71568d55ec750dcf3c45398d76284afdde89f4372958025b9724b288d32e4654",
+      "sha256": "d73a9cb4e76c41f563b0f190c59c97c8494922504f13f3d120157f9e40a24114",
       "lines": 190,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2714,15 +2714,15 @@
     },
     {
       "path": "frontend/src/SourcePanel.test.tsx",
-      "sha256": "8e2144e1136e129e70aff003186961c7745e690d2af654f769a7630c2818ef0c",
-      "lines": 183,
+      "sha256": "e6b8729221fef0079844f44adfb3c36d46a8d768cc9b974092db219fe2188ccb",
+      "lines": 187,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/SourcePanel.tsx",
-      "sha256": "e69e1946514936be627fee7c90488497b3184ab9a706022c629c1eef24b513c0",
-      "lines": 190,
+      "sha256": "e87b16c6ba7dbf5fe962a0e26db2e267e52686350a995f792ee1a998870ea773",
+      "lines": 192,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/SourcePanel.test.tsx"
@@ -3023,8 +3023,8 @@
     },
     {
       "path": "frontend/src/retro.css",
-      "sha256": "e1a1bd821e436d51645504fd2057f3c2624a969b70fab3b83d0003f4e57d30f6",
-      "lines": 117,
+      "sha256": "d4acb14594b4a3749bb13633b9f132510d2ea720ce6a1e4c86f27edcf9e1d3a3",
+      "lines": 146,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },

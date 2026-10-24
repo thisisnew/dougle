@@ -70,11 +70,10 @@ function ScopedHistory({ workspaceId, onClose }: Props) {
   const visible = jobs.filter(job => (questions[job.bundleId] || '').toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())
     && (status === 'ALL' || (status === 'ACTIVE' ? activeAnswerJob(job) : job.status === status)))
 
-  return <dialog ref={dialog} className="proposal-merge" aria-label="답변 이력" onCancel={event => { event.preventDefault(); onClose() }}>
-    <Button variant="outline" onClick={onClose}>닫기</Button>
-    <h2>답변 이력</h2>
-    <p>이 Workspace의 질문별 답변 작업을 조회합니다. 열기·새로고침은 AI를 호출하지 않습니다.</p>
-    <p>보관함에 정리하는 것만으로 이전 문맥을 전송하지 않습니다. 이전 문맥 선택 → 고정 저장 → 별도 승인으로 질문을 이어갈 수 있습니다.</p>
+  return <dialog ref={dialog} className="proposal-merge" aria-label="이전 답변 보기" onCancel={event => { event.preventDefault(); onClose() }}>
+    <div className="panel-heading"><h2>이전 답변 보기</h2><Button variant="outline" onClick={onClose}>닫기</Button></div>
+    <p>이 서재에서 질문한 내용과 답변을 다시 읽을 수 있습니다. 조회만으로 AI를 호출하지 않습니다.</p>
+    <details><summary>이어서 질문하려면?</summary><p>대화 보관함에서 이전 문맥을 선택하고 저장한 뒤, 별도 전송 승인으로 질문을 이어갈 수 있습니다.</p></details>
     <Button type="button" variant="outline" onClick={() => setShelfOpen(value => !value)}>{shelfOpen ? '보관함 관리 닫기' : '대화 보관함 관리'}</Button>
     {shelfOpen && <ConversationShelf workspaceId={workspaceId}
       selectedJobId={!busy && detail?.job.status === 'SUCCEEDED' ? detail.job.id : null}

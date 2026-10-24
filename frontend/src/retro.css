@@ -57,6 +57,35 @@ select, input:not([type=checkbox]):not([type=radio]):not([type=file]), textarea,
   border: 1px solid #bcc8b3; border-radius: 2px; background: #fffefb; color: var(--game-ink);
 }
 input[type=checkbox], input[type=radio] { accent-color: #456842; }
+label:has(> input[type=checkbox]), label:has(> input[type=radio]) { display: flex; align-items: flex-start; gap: 10px; line-height: 1.6; cursor: pointer; min-height: 32px; padding-block: 6px; }
+input[type=checkbox], input[type=radio] { flex: 0 0 16px; width: 16px; height: 16px; margin: 3px 0 0; padding: 0; }
+.check-option > span { min-width: 0; }
+.check-option small { display: block; margin-top: 3px; color: var(--game-muted); font-size: 12px; }
+.search-assistant-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 16px 0; }
+.search-assistant-actions p { flex-basis: 100%; margin: 0; font-size: 12px; line-height: 1.6; color: var(--game-muted); }
+.search-options { padding-top: 12px; border-top: 1px solid #e3e8dc; font-size: 13px; }
+.search-options > summary { cursor: pointer; padding: 4px 0; color: var(--game-muted); }
+.search-options[open] > summary { margin-bottom: 10px; }
+.panel-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+.panel-heading h2, .panel-heading h3 { margin: 0; font-size: 18px; font-weight: 700; }
+.panel-heading p { margin: 6px 0 0; color: var(--game-muted); }
+.knowledge-panel > .draft-section { padding: 18px 0; border-top: 1px solid #e3e8dc; }
+.knowledge-panel h3 { font-size: 15px; font-weight: 600; margin: 0 0 12px; }
+.knowledge-panel nav[aria-label="지식 폴더 경로"] { margin: 14px 0; font-size: 13px; }
+.source-actions { flex-wrap: wrap; }
+.source-settings { width: 100%; font-size: 12px; color: var(--game-muted); }
+.source-settings summary { cursor: pointer; padding-block: 6px; }
+.source-settings p { margin: 8px 0; line-height: 1.7; }
+.knowledge-panel p, .draft-section p { margin-block: 10px; }
+.proposal-merge { font-size: 14px; line-height: 1.7; }
+.proposal-merge > :is(p, section, details, label) { margin-block: 16px; }
+.proposal-merge h2 { font-size: 21px; font-weight: 700; }
+.proposal-merge h3 { font-size: 17px; font-weight: 600; margin-block: 16px 8px; }
+.proposal-merge > button:first-child { display: flex; margin: 0 0 12px auto; }
+.proposal-merge .field-label { display: grid; gap: 8px; font-weight: 600; }
+.field-label input { width: 100%; padding: 10px 12px; font-weight: 400; }
+.proposal-merge details summary { cursor: pointer; color: var(--game-muted); }
+.proposal-merge [data-slot=button] + [data-slot=button] { margin-left: 8px; }
 select, .knowledge-form select {
   -webkit-appearance: none;
   appearance: none;

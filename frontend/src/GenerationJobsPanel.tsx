@@ -57,17 +57,17 @@ export default function GenerationJobsPanel({ workspaceId, revision, onOpen, ope
     finally { if (!controller.signal.aborted) setCancelling('') }
   }
 
-  return <section className="draft-section" aria-label="AI 생성 작업">
-    <h3>AI 생성 작업</h3>
-    <p>최근 20개 작업입니다. 화면 이동은 취소가 아닙니다. 중단해도 이미 전송된 자료나 사용량은 회수되지 않습니다.</p>
-    <Button variant="outline" size="sm" onClick={() => setRefresh(value => value + 1)}>작업 새로고침</Button>
+  if (!jobs.length && !error) return null
+  return <section className="draft-section generation-status" aria-label="AI 생성 작업">
+    <div className="panel-heading"><h3>AI 작성 현황</h3><Button variant="ghost" size="sm" onClick={() => setRefresh(value => value + 1)}>작업 새로고침</Button></div>
+    {jobs.some(active) && <p>작성 중에는 자동으로 갱신됩니다. 화면을 이동해도 계속 진행합니다. 중단해도 이미 전송된 자료와 사용량은 회수되지 않습니다.</p>}
     {error && <p role="alert">{error}</p>}
     {jobs.map(job => <div key={job.id} className="evidence-item">
       <p>{job.provider} · {labels[job.status] ?? job.status} · {new Date(job.createdAt).toLocaleString()}</p>
-      <small>작업 ID: {job.id}</small>
+      <details><summary>실행 정보</summary><small>작업 ID: {job.id}</small>
       <p>요청 모델: {job.requestedModel == null ? '기록 없음 (이전 작업)' : job.requestedModel || 'CLI 기본값'} · 실제 실행 모델: 미확인</p>
       <p>실행 전 CLI 관측: {job.cliVersionStatus === 'AVAILABLE' ? job.cliVersion : cliLabels[job.cliVersionStatus] ?? '기록 없음'}
-        {job.cliCheckedAt && ` · ${new Date(job.cliCheckedAt).toLocaleString()}`}</p>
+        {job.cliCheckedAt && ` · ${new Date(job.cliCheckedAt).toLocaleString()}`}</p></details>
       {job.error && <p>{job.error}</p>}
       {active(job) && <Button variant="outline" size="sm" disabled={!!cancelling || job.status === 'CANCELLING'} onClick={() => void cancel(job.id)}>생성 중단</Button>}
       {job.status === 'SUCCEEDED' && job.resultCardId && <Button variant="outline" size="sm" disabled={openDisabled} onClick={() => onOpen(job.resultCardId!)}>생성된 초안 열기</Button>}

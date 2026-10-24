@@ -9,7 +9,7 @@ type Bundle = { id: string; createdAt: string; digest: string; payload: { questi
 type Summary = { id: string; question: string; status: string; createdAt: string }
 const reasons: Record<string, string> = { REMOVED: '자료가 삭제되었거나 조회 불가', SCOPE_CHANGED: '도메인 범위 변경', NO_BODY_MATCH: '이름·심볼만 일치', ITEM_LIMIT: '최대 5개 제한', INDEX_CHANGED: '색인과 현재 본문이 다름', NO_LONGER_PUBLISHED: '게시 버전 변경', NOT_CURRENT: '근거 변경·삭제', CHARACTER_LIMIT: '인용문 12,000자 제한', UNSUPPORTED: '지원하지 않는 자료' }
 
-export default function EvidenceBundlePanel({ workspaceId, question, domains, includeKnowledge, onClose }: {
+export default function EvidenceBundlePanel({ workspaceId, question: initialQuestion, domains, includeKnowledge, onClose }: {
   workspaceId: string; question: string; domains: string[]; includeKnowledge: boolean; onClose: () => void
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
@@ -18,6 +18,7 @@ export default function EvidenceBundlePanel({ workspaceId, question, domains, in
   const [bundle, setBundle] = useState<Bundle | null>(null)
   const [busy, setBusy] = useState(true)
   const [error, setError] = useState('')
+  const [question, setQuestion] = useState(initialQuestion)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}/evidence-bundles`
   useEffect(() => {
     const element = dialog.current!
@@ -55,15 +56,15 @@ export default function EvidenceBundlePanel({ workspaceId, question, domains, in
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
 
-  return <dialog ref={dialog} className="proposal-merge" aria-label="답변용 근거 묶음" onCancel={event => { event.preventDefault(); onClose() }}>
-    <Button variant="outline" onClick={onClose}>닫기</Button>
-    <h2>답변용 근거 묶음</h2>
-    <p>묶음 저장은 로컬 작업입니다. 요청 미리보기·승인 후 별도 전송 버튼으로 AI 답변을 시작할 수 있습니다.</p>
-    <p>현재 조건: {question || '(검색어 없음)'} · {domains.join(', ') || '전체 도메인'} · {includeKnowledge ? '게시 지식 포함' : '원본만'}</p>
-    <Button disabled={busy || !question.trim()} onClick={() => void act('create')}>이 조건으로 묶음 저장</Button>
-    <p>최대 5개, 인용문 합계 12,000 UTF-16자입니다. 토큰 한도가 아니며, Workspace당 100개까지 보관합니다.</p>
-    <label>저장된 근거 묶음<select aria-label="저장된 근거 묶음" disabled={busy} value={bundle?.id || ''} onChange={event => { if (event.target.value) void act('open', event.target.value) }}>
-      <option value="">묶음 선택</option>{bundles.map(value => <option key={value.id} value={value.id}>{value.question} · {new Date(value.createdAt).toLocaleString('ko-KR')}</option>)}
+  return <dialog ref={dialog} className="proposal-merge" aria-label="AI에게 질문하기" onCancel={event => { event.preventDefault(); onClose() }}>
+    <div className="panel-heading"><h2>AI에게 질문하기</h2><Button variant="outline" onClick={onClose}>닫기</Button></div>
+    <p>질문 작성 → 참고 자료 확인 → 전송 승인 순서로 진행합니다. 승인 전에는 자료를 보내지 않습니다.</p>
+    <label className="field-label">질문<input maxLength={256} value={question} disabled={busy} onChange={event => setQuestion(event.target.value)} placeholder="내 자료에 대해 무엇이 궁금한가요?" /></label>
+    <p>{domains.join(', ') || '전체 분류'} · {includeKnowledge ? '게시한 지식 포함' : '원본만'}</p>
+    <Button disabled={busy || !question.trim()} onClick={() => void act('create')}>참고 자료 찾기</Button>
+    <details><summary>자료 선택 기준</summary><p>관련 자료 최대 5개를 이 PC에 보관합니다. 인용문 합계 12,000 UTF-16자, 서재당 100개까지입니다. AI 전송은 별도 승인이 필요합니다.</p></details>
+    <label className="field-label">저장한 질문<select aria-label="저장한 질문" disabled={busy} value={bundle?.id || ''} onChange={event => { if (event.target.value) void act('open', event.target.value) }}>
+      <option value="">이전 질문 불러오기</option>{bundles.map(value => <option key={value.id} value={value.id}>{value.question} · {new Date(value.createdAt).toLocaleString('ko-KR')}</option>)}
     </select></label>
     {busy && <p role="status">처리 중… 닫아도 이미 요청된 저장은 완료될 수 있습니다.</p>}
     {error && <p role="alert">{error}</p>}

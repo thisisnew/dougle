@@ -21,6 +21,7 @@ it('자료 목록 갱신으로 사라진 도메인을 숨은 검색 조건으로
   let current = source
   api.mockImplementation(async path => path.includes('/search?') ? [] : [current])
   const view = render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await userEvent.click(screen.getByText('검색 범위 · 전체 분류'))
   await userEvent.click(await screen.findByRole('checkbox', { name: '연구' }))
   current = { ...source, domain: '새 분류', pollingRevision: 1 }
   view.rerender(<SourcePanel workspaceId="one" revision={1} onChanged={vi.fn()} onSelect={vi.fn()} />)
@@ -73,6 +74,7 @@ it('자동 갱신을 명시적으로 저장하고 수집이나 AI를 바로 호�
   api.mockResolvedValue([source])
   const changed = vi.fn()
   render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
+  await userEvent.click(await screen.findByText('자동 갱신 설정'))
   await userEvent.click(await screen.findByRole('checkbox', { name: '자동 갱신' }))
   expect(api.mock.calls.some(([, options]) => options?.method === 'PATCH')).toBe(false)
   await userEvent.click(screen.getByRole('button', { name: '갱신 설정 저장' }))
@@ -87,7 +89,7 @@ it('검색어 없이 답변 이력을 명시적으로 열고 닫는다', async (
   api.mockResolvedValue([])
   render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   expect(screen.queryByText('이력 화면 one')).not.toBeInTheDocument()
-  await userEvent.click(screen.getByRole('button', { name: '답변 이력' }))
+  await userEvent.click(screen.getByRole('button', { name: '이전 답변 보기' }))
   expect(await screen.findByText('이력 화면 one')).toBeInTheDocument()
   expect(api.mock.calls.some(([path]) => path.includes('/search'))).toBe(false)
   await userEvent.click(screen.getByRole('button', { name: '이력 닫기' }))
@@ -104,7 +106,7 @@ it('Source를 등록하고 별도 수동 동기화로 수집한다', async () =>
     return created ? [source] : []
   })
   render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
-  await user.click(screen.getByRole('button', { name: 'Source 등록' }))
+  await user.click(screen.getByRole('button', { name: '자료 연결' }))
   await user.type(screen.getByLabelText('Source 이름'), '가상 연구')
   await user.type(screen.getByLabelText('Source 위치'), '/synthetic')
   await user.type(screen.getByLabelText('Source 도메인'), '연구')
@@ -123,6 +125,7 @@ it('다중 도메인을 함께 검색하고 근거 파일을 선택한다', asyn
     { entryId: 'file', name: '가상.md', domain: '연구', path: 'notes/가상.md', snippet: '<script>원문</script>', score: 1, startLine: 100, endLine: 105, bodyMatch: true },
   ] : [source, { ...source, id: 'other', name: '다른 자료', domain: '문헌' }])
   render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={select} />)
+  await user.click(screen.getByText('검색 범위 · 전체 분류'))
   await user.click(await screen.findByRole('checkbox', { name: '연구' }))
   await user.click(screen.getByRole('checkbox', { name: '문헌' }))
   await user.type(screen.getByLabelText('자료 검색'), '관측')
@@ -159,7 +162,8 @@ it('게시본을 원본 선택과 구분해 열고 미게시 초안 검색은 �
   expect(select).not.toHaveBeenCalled()
   expect(screen.getByText(/게시 지식 v2 · 근거 MISSING/)).toBeInTheDocument()
   expect(api.mock.calls.some(([path]) => path.includes('includeKnowledge=true'))).toBe(true)
-  await user.click(screen.getByRole('checkbox', { name: '게시 지식도 검색 (미게시 초안 제외)' }))
+  await user.click(screen.getByText('검색 범위 · 전체 분류'))
+  await user.click(screen.getByRole('checkbox', { name: /게시한 지식 문서도 포함/ }))
   await user.click(screen.getByRole('button', { name: '검색' }))
   expect(api.mock.calls.some(([path]) => path.includes('includeKnowledge=false'))).toBe(true)
 })

@@ -214,7 +214,7 @@ export default function App() {
                     .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
                 }} />}
               {original && originNotice && selected?.id === originNotice.entryId && <p role="status">{originNotice.message}</p>}
-              {!original ? <KnowledgePanel key={activeId} workspaceId={activeId!} onOpenOriginal={openEvidenceOriginal} /> : <div className="explorer">
+              {!original ? <KnowledgePanel key={activeId} workspaceId={activeId!} onOpenOriginal={openEvidenceOriginal} onBrowseOriginal={() => setArea('ORIGINAL')} /> : <div className="explorer">
                 <section className="file-pane" aria-label="자료 탐색기">
                   <div className="toolbar">
                     <div className="breadcrumbs" aria-label="폴더 경로"><button disabled={busy} onClick={() => setTrail([])}>{original ? '원본 자료' : '지식 문서'}</button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>

@@ -156,7 +156,7 @@ describe('Workspace와 자료 탐색기', () => {
     await user.click(await screen.findByRole('button', { name: '참고 자료' }))
     await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/entries?area=ORIGINAL&parentId=folder', expect.anything()))
     await user.click(screen.getByRole('button', { name: '지식 문서' }))
-    expect(await screen.findByText('아직 저장된 지식 초안이 없습니다')).toBeInTheDocument()
+    expect(await screen.findByText('첫 지식 문서를 만들어 보세요')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '파일 추가' })).not.toBeInTheDocument()
   })
 })

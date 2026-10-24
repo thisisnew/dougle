@@ -68,8 +68,8 @@ export function DraftForm({ workspaceId, entryId, text }: { workspaceId: string;
   </section>
 }
 
-export default function KnowledgePanel({ workspaceId, onOpenOriginal }: {
-  workspaceId: string; onOpenOriginal?: (location: EvidenceLocation) => void
+export default function KnowledgePanel({ workspaceId, onOpenOriginal, onBrowseOriginal }: {
+  workspaceId: string; onOpenOriginal?: (location: EvidenceLocation) => void; onBrowseOriginal?: () => void
 }) {
   const [cards, setCards] = useState<Card[]>([])
   const [visibleIds, setVisibleIds] = useState<string[] | null>(null)
@@ -131,17 +131,17 @@ export default function KnowledgePanel({ workspaceId, onOpenOriginal }: {
   }
 
   return <section className="knowledge-panel" aria-label="지식 초안 보관함">
-    <p>근거 연결 초안, 승인 기반 AI 생성, 사람 검토 후 명시적 게시를 지원합니다. 자동 사실 검증은 제공하지 않습니다.</p>
+    <div className="panel-heading"><div><h2>내 지식 문서</h2><p>자료를 바탕으로 작성한 문서를 모아 보세요.</p></div><Button variant="ghost" size="sm" disabled={busy || editing} onClick={() => setRevision(value => value + 1)}>새로고침</Button></div>
     <GenerationJobsPanel workspaceId={workspaceId} revision={revision} openDisabled={editing || busy} onOpen={id => {
       if (!editing && !busy) { setSelected(id); setNumber(null); setRevision(value => value + 1) }
     }} />
-    <Button variant="outline" size="sm" disabled={busy || editing} onClick={() => setRevision(value => value + 1)}>지식 새로고침</Button>
     <KnowledgeOrganization workspaceId={workspaceId} cards={cards} selected={selected} revision={revision}
       disabled={busy || editing || confirmDelete} onFilter={setVisibleIds} onBusy={setBusy} />
     {error && <p role="alert" className="error-banner">{error}</p>}
     {!loading && visibleIds !== null && !cards.some(card => visibleIds.includes(card.id)) && <p>현재 지식 폴더에 카드가 없습니다.</p>}
     {loading ? <p role="status">지식 목록을 불러오는 중…</p> : cards.length === 0 ? <div className="empty-state">
-      <h2>아직 저장된 지식 초안이 없습니다</h2><p>원본 파일을 선택하고 분석 영역의 “근거로 지식 초안 작성”을 이용하세요.</p>
+      <h2>첫 지식 문서를 만들어 보세요</h2><p>원본 자료에서 파일을 열고 “근거로 지식 초안 작성”을 선택하세요.<br />작성한 초안은 직접 편집하거나 AI로 다듬을 수 있습니다.</p>
+      {onBrowseOriginal && <Button onClick={onBrowseOriginal}>원본 자료에서 시작하기</Button>}
     </div> : <ul className="source-list">{cards.filter(card => visibleIds === null || visibleIds.includes(card.id)).map(card => <li key={card.id}>
       <Button variant="ghost" disabled={busy || editing} onClick={() => { setSelected(card.id); setNumber(null) }}>{card.title} · v{card.latestVersion}</Button>
     </li>)}</ul>}

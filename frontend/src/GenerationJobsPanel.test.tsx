@@ -69,6 +69,14 @@ it('완료된 작업의 별도 초안을 열고 실패·재시작 중단을 숨�
   expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false)
 })
 
+it('작업이 없으면 빈 관리 패널과 새로고침 버튼을 표시하지 않는다', async () => {
+  api.mockResolvedValue([])
+  render(<GenerationJobsPanel workspaceId="one" revision={0} onOpen={vi.fn()} />)
+  await waitFor(() => expect(api).toHaveBeenCalled())
+  expect(screen.queryByRole('button', { name: '작업 새로고침' })).not.toBeInTheDocument()
+  expect(screen.queryByText('AI 작성 현황')).not.toBeInTheDocument()
+})
+
 it('조회 실패는 새로고침으로 복구하며 화면 종료는 작업 취소가 아니다', async () => {
   const user = userEvent.setup()
   api.mockRejectedValueOnce(new Error('연결 실패')).mockResolvedValue([job])

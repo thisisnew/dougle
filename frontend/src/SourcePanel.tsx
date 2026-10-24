@@ -19,6 +19,7 @@ type Source = {
 type Hit = { entryId: string | null; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean; kind: 'ORIGINAL' | 'KNOWLEDGE'; cardId: string | null; version: number | null; freshness: string }
 type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void }
 const states: Record<string, string> = { NEW: '수집 전', SYNCING: '수집 중', READY: '반영 완료', ERROR: '오류 · 이전 자료 유지' }
+const sourceKinds: Record<string, string> = { LOCAL_FOLDER: '로컬 폴더', URL: '웹페이지', GITHUB: 'GitHub' }
 
 export default function SourcePanel({ workspaceId, revision, onChanged, onSelect }: Props) {
   const [sources, setSources] = useState<Source[]>([])
@@ -139,8 +140,8 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
 
   const availableDomains = [...new Set(sources.map(source => source.domain).filter(Boolean))]
   return <section className="source-panel" aria-label="자료 연결과 검색">
-    <div className="source-title"><h2><Link size={17} /> 자료 연결과 검색</h2><Button size="sm" variant="outline" disabled={!!busy} onClick={() => setFormOpen(!formOpen)}><FolderInput /> Source 등록</Button></div>
-    <p className="source-hint">읽기 전용 수집입니다. 자동 갱신은 Source별 기본 OFF이며 앱 실행 중에만 동작합니다. OFF로 바꿔도 이미 시작한 수집은 끝까지 진행합니다. AI는 자동 호출하지 않습니다.</p>
+    <div className="source-title"><h2><Link size={17} /> 자료 검색</h2><Button size="sm" variant="outline" disabled={!!busy} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 연결</Button></div>
+    <p className="source-hint">폴더·웹페이지·GitHub를 연결해 검색하세요. 원본은 변경하지 않습니다.</p>
     {error && <p role="alert" className="modal-error">{error}</p>}
     {formOpen && <form onSubmit={register} className="source-form">
       <label>종류<select aria-label="Source 종류" value={kind} onChange={event => setKind(event.target.value)}>
@@ -148,11 +149,11 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       </select></label>
       <label>이름<input required maxLength={120} aria-label="Source 이름" value={name} onChange={event => setName(event.target.value)} placeholder="예: 실험 기록" /></label>
       <label className="source-location">위치<input required maxLength={2048} aria-label="Source 위치" value={location} onChange={event => setLocation(event.target.value)} placeholder={kind === 'LOCAL_FOLDER' ? '/절대/폴더/경로' : kind === 'GITHUB' ? 'https://github.com/owner/repository' : 'https://example.com/document'} /></label>
-      <label>도메인 (선택)<input maxLength={80} aria-label="Source 도메인" value={domain} onChange={event => setDomain(event.target.value)} placeholder="사용자 지정 분류" /></label>
+      <label>분류 (선택)<input maxLength={80} aria-label="Source 도메인" value={domain} onChange={event => setDomain(event.target.value)} placeholder="예: 프로젝트 이름" /></label>
       <Button type="submit" size="sm" disabled={!!busy}>등록</Button>
     </form>}
     <ul className="source-list">{sources.map(source => <li key={source.id}>
-      <div className="source-info"><strong>{source.name}</strong><span>{source.kind} · {source.domain || '분류 없음'} · {states[source.status] || source.status}</span>
+      <div className="source-info"><strong>{source.name}</strong><span>{sourceKinds[source.kind] || source.kind} · {source.domain || '분류 없음'} · {states[source.status] || source.status}</span>
         <small title={source.location}>{source.location}</small>
         <small>{source.revision ? `반영 버전 ${source.revision.slice(0, 12)} · ${source.syncedAt ? new Date(source.syncedAt).toLocaleString('ko-KR') : ''}` : '아직 반영된 버전 없음'} · 자동 폴링 {source.pollingEnabled ? 'ON' : 'OFF'}</small>
         {source.error && <span role="status" className="modal-error">{source.error}</span>}
@@ -161,19 +162,20 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         <Button variant="outline" size="sm" aria-label={`${source.name} 이름과 분류 수정`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setEditing(source.id)}>수정</Button>
         <Button variant="ghost" size="icon" aria-label={`${source.name} Source 삭제`} disabled={!!busy} onClick={() => setDeleting(source.id)}><Trash2 /></Button>
       </div>
-      <SourcePollingSettings source={source} busy={!!busy} onSave={settings => void mutate(source.id, () => request(`${base}/sources/${source.id}/polling`, { method: 'PATCH', body: JSON.stringify(settings), signal: mutationAbort.current?.signal }))} />
+      <details className="source-settings"><summary>자동 갱신 설정</summary><p>기본은 꺼짐입니다. 앱이 실행 중일 때만 갱신하며, 꺼도 이미 시작한 수집은 완료됩니다. AI는 자동 호출하지 않습니다.</p><SourcePollingSettings source={source} busy={!!busy} onSave={settings => void mutate(source.id, () => request(`${base}/sources/${source.id}/polling`, { method: 'PATCH', body: JSON.stringify(settings), signal: mutationAbort.current?.signal }))} /></details>
       {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
       {deleting === source.id && <div className="source-confirm" role="alert"><span>보관한 자료도 삭제합니다. PC 원래 폴더·원격 저장소는 유지됩니다.</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>Source 삭제 확인</Button></div>}
     </li>)}</ul>
     <form className="search-form" onSubmit={event => void search(event)}>
       <label className="sr-only" htmlFor="knowledge-query">자료 검색</label>
-      <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="원본·게시 지식·Java 심볼 검색" />
+      <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="찾고 싶은 내용이나 질문을 입력하세요" />
       <Button type="submit" size="sm" disabled={searching || !query.trim()}><Search />{searching ? '검색 중…' : '검색'}</Button>
-      <Button type="button" size="sm" variant="outline" onClick={() => setBundleOpen(true)}>근거 묶음</Button>
-      <Button type="button" size="sm" variant="outline" onClick={() => setHistoryOpen(true)}>답변 이력</Button>
     </form>
-    <label><input type="checkbox" checked={includeKnowledge} onChange={event => { searchAbort.current?.abort(); setSearching(false); setIncludeKnowledge(event.target.checked); setHits(null) }} />게시 지식도 검색 (미게시 초안 제외)</label>
-    {availableDomains.length > 0 && <fieldset className="domain-options"><legend>검색 도메인 · 선택하지 않으면 전체</legend>{availableDomains.map(value => <label key={value}><input type="checkbox" checked={domains.includes(value)} onChange={event => setDomains(event.target.checked ? [...domains, value] : domains.filter(item => item !== value))} />{value}</label>)}</fieldset>}
+    <div className="search-assistant-actions"><Button type="button" size="sm" variant="outline" onClick={() => setBundleOpen(true)}>AI에게 질문하기</Button><Button type="button" size="sm" variant="ghost" onClick={() => setHistoryOpen(true)}>이전 답변 보기</Button><p>AI는 선택한 자료를 확인하고 전송에 동의한 뒤 실행됩니다.</p></div>
+    <details className="search-options"><summary>검색 범위{domains.length ? ` · 분류 ${domains.length}개 선택` : ' · 전체 분류'}{includeKnowledge ? '' : ' · 원본만'}</summary>
+      <label className="check-option"><input type="checkbox" checked={includeKnowledge} onChange={event => { searchAbort.current?.abort(); setSearching(false); setIncludeKnowledge(event.target.checked); setHits(null) }} /><span>게시한 지식 문서도 포함<small>아직 게시하지 않은 초안은 검색하지 않습니다.</small></span></label>
+      {availableDomains.length > 0 && <fieldset className="domain-options"><legend>분류 선택 · 선택하지 않으면 전체 검색</legend>{availableDomains.map(value => <label key={value}><input type="checkbox" checked={domains.includes(value)} onChange={event => setDomains(event.target.checked ? [...domains, value] : domains.filter(item => item !== value))} />{value}</label>)}</fieldset>}
+    </details>
     {hits && <div className="search-results" aria-live="polite"><p>검색 결과 {hits.length}개 (최대 30개)</p>{hits.map(hit => <div className="search-hit" key={hit.cardId || hit.entryId}><button onClick={() => {
       if (hit.kind === 'KNOWLEDGE' && hit.cardId && hit.version) setPublished({ cardId: hit.cardId, version: hit.version })
       else if (hit.entryId) onSelect(hit.entryId)

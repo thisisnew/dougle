@@ -29,7 +29,7 @@ it('폴더 이름과 위치를 기대 revision으로 변경하고 새 경로를 
   await user.click(screen.getByRole('button', { name: '폴더 변경 저장' }))
   expect(api).toHaveBeenCalledWith(`${base}/folders/child`, expect.objectContaining({ method: 'PUT',
     body: JSON.stringify({ parentId: null, name: '변경됨', expectedRevision: 2 }) }))
-  await waitFor(() => expect(screen.getByLabelText('지식 폴더 경로')).toHaveTextContent('지식 루트 / 변경됨'))
+  await waitFor(() => expect(screen.getByLabelText('지식 폴더 경로')).toHaveTextContent('기본 폴더 / 변경됨'))
   expect(screen.queryByLabelText('변경할 폴더 이름')).not.toBeInTheDocument()
 })
 
@@ -65,7 +65,7 @@ it('전체·루트·하위 폴더 탐색은 카드 목록만 필터링한다', a
   render(<KnowledgeOrganization workspaceId="one" cards={cards} selected="" disabled={false} revision={0} onFilter={filter} onBusy={vi.fn()} />)
   await screen.findByRole('button', { name: '폴더: 가상 폴더' })
   expect(filter).toHaveBeenLastCalledWith(null)
-  await user.click(screen.getByRole('button', { name: '지식 루트' }))
+  await user.click(screen.getByRole('button', { name: '기본 폴더' }))
   expect(filter).toHaveBeenLastCalledWith(['root-card'])
   await user.click(screen.getByRole('button', { name: '폴더: 가상 폴더' }))
   expect(filter).toHaveBeenLastCalledWith(['card'])
@@ -92,7 +92,7 @@ it('카드를 루트로 이동할 때 문서 버전 대신 위치 revision을 �
   api.mockResolvedValue(catalog)
   render(<KnowledgeOrganization workspaceId="one" cards={cards} selected="card" disabled={false} revision={0} onFilter={vi.fn()} onBusy={vi.fn()} />)
   await screen.findByRole('button', { name: '폴더: 가상 폴더' })
-  await user.click(screen.getByRole('button', { name: '지식 루트' }))
+  await user.click(screen.getByRole('button', { name: '기본 폴더' }))
   await user.click(screen.getByRole('button', { name: '선택한 카드를 현재 폴더로 이동' }))
   expect(api).toHaveBeenCalledWith(`${base}/cards/card`, expect.objectContaining({ method: 'PUT', body: JSON.stringify({ folderId: null, expectedRevision: 3 }) }))
 })
@@ -114,7 +114,7 @@ it('폴더 삭제는 확인을 요구하며 취소는 요청을 보내지 않는
 it('편집 중에는 이동·폴더 탐색을 차단하고 화면 이탈 시 조회를 중단한다', async () => {
   api.mockReturnValue(new Promise(() => {}))
   const view = render(<KnowledgeOrganization workspaceId="one" cards={cards} selected="card" disabled revision={0} onFilter={vi.fn()} onBusy={vi.fn()} />)
-  expect(screen.getByRole('button', { name: '지식 루트' })).toBeDisabled()
+  expect(screen.getByRole('button', { name: '기본 폴더' })).toBeDisabled()
   await waitFor(() => expect(api).toHaveBeenCalledTimes(1))
   const signal = api.mock.calls[0][1]?.signal
   view.unmount()

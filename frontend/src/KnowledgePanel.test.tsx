@@ -19,6 +19,17 @@ const document = {
 }
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
+it('빈 서재에서는 관리 버튼 대신 원본 자료로 시작하는 경로를 보여 준다', async () => {
+  api.mockImplementation(async path => path.endsWith('/knowledge-organization') ? { folders: [], placements: [] } : [])
+  const browse = vi.fn()
+  render(<KnowledgePanel workspaceId="one" onBrowseOriginal={browse} />)
+  await userEvent.click(await screen.findByRole('button', { name: '원본 자료에서 시작하기' }))
+  expect(browse).toHaveBeenCalledOnce()
+  expect(screen.queryByText('독립 지식 폴더')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '작업 새로고침' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '폴더 새로고침' })).not.toBeInTheDocument()
+})
+
 it('선택한 카드를 폴더로 배치하고 목록만 필터링하며 본문은 보존한다', async () => {
   const user = userEvent.setup()
   let moved = false
@@ -39,7 +50,7 @@ it('선택한 카드를 폴더로 배치하고 목록만 필터링하며 본문�
   expect(api).toHaveBeenCalledWith('/workspaces/one/knowledge-organization/cards/card', expect.objectContaining({ method: 'PUT',
     body: JSON.stringify({ folderId: 'folder', expectedRevision: 0 }) }))
   await user.click(screen.getByRole('button', { name: '초안 편집' }))
-  expect(screen.getByRole('button', { name: '지식 루트' })).toBeDisabled()
+  expect(screen.getByRole('button', { name: '기본 폴더' })).toBeDisabled()
 })
 
 it('추출 텍스트의 선택한 행으로 미검증 수동 초안을 저장한다', async () => {
