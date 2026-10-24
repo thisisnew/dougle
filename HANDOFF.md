@@ -2,7 +2,7 @@
 
 ## 현재 작업: 0.1.14 화면 간소화
 
-0.1.13은 공개 완료. 초기 0.1.14는 로컬 설치됐으나 추가 요청 반영본은 아직 재검증 중입니다. 자료 아이콘/목록·연결 유지·Workspace 자동 갱신 토글(DB v23)·중복 이름 검사·네이티브 다색 로고를 포함합니다. GitHub 저장소는 `thisisnew/dougle`로 변경했습니다. 0.1.14 공개 초안의 이전 자산은 제거했고 최종 재빌드 후 교체합니다. [변경 설계](docs/library-simplification.md), [검증·배포 상태](docs/release-0.1.14-report.md).
+최종 앱 소스 `d56af1a`: 자료 아이콘/목록·연결 유지·Workspace 자동 갱신 토글(DB v23)·중복 이름 검사·네이티브 다색 로고를 포함합니다. GitHub 저장소는 `thisisnew/dougle`. UI 264·Rust 20·가상 브라우저·최종 Intel WebKit/단일 창·두 CPU 서명/정적 검사 통과, 이 Mac 최종 재설치 및 UI 200/API 403 확인 완료. Java 전체에는 기존 종료 관측 타이밍 실패/임시 Lucene 폴더 정리 오류가 있어 완전 통과로 보고하지 않습니다. 변경 대상 검사는 통과했습니다. 공개 자산 업로드·검증·피드 승격은 진행 중입니다. [변경 설계](docs/library-simplification.md), [검증·배포 상태](docs/release-0.1.14-report.md).
 
 ## 진행 중: Dougle 0.1.13
 
