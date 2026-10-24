@@ -13,6 +13,16 @@
 
 저장된 질문·답변·문서는 삭제하지 않습니다. AI 진행 중 표시·중단·오류 복구는 유지합니다. 자료 출처, 전송 동의, 사람 검토와 게시도 그대로입니다. 내부 용어와 상세 정보만 필요한 위치로 옮겼습니다.
 
+## 실제 화면
+
+가상 자료로 촬영한 화면입니다.
+
+![검색 옵션의 체크박스와 글자 간격](images/search-ux-019.png)
+
+![문서가 없을 때 보여 주는 시작 안내](images/knowledge-ux-019.png)
+
+![질문 입력과 참고 자료 확인](images/question-ux-019.png)
+
 ## 코드 대조
 
 `SourcePanel → EvidenceBundlePanel → EvidenceAnswerPreparation → AnswerApprovalPanel`의 기존 자료 보관·미리보기·승인 경로를 사용합니다. 질문 입력을 준비 창 안에서도 할 수 있게 했으며 자동 AI 실행은 추가하지 않았습니다.
