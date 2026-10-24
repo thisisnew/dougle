@@ -1,6 +1,6 @@
 # 문서 안내 — 어디부터 읽으면 되나요?
 
-[통합 자료 목록·전체 동기화·설정](library-simplification.md) · [0.1.15 설정 정리·검증과 배포](release-0.1.15-report.md)
+[통합 자료 목록·전체 동기화·설정](library-simplification.md) · [0.1.16 자료 추가·오류 안내 정리](release-0.1.16-report.md)
 
 [질문에 이미지·문서 첨부하기](question-attachments.md) · [Dougle 로고·디자인](dougle-brand.md)
 
