@@ -90,7 +90,7 @@ fn render_failure(status: &tauri::WebviewWindow) {
         && let Some(message) = *message
     {
         let message = serde_json::to_string(message).unwrap();
-        let _ = status.eval(format!("document.getElementById('heading').textContent = '앱을 열 수 없습니다'; document.getElementById('message').textContent = {message};"));
+        let _ = status.eval(format!("document.getElementById('heading').textContent = '앱 연결에 문제가 생겼습니다'; document.getElementById('message').textContent = {message}; document.getElementById('failure-help').hidden = false;"));
     }
 }
 
@@ -314,6 +314,19 @@ fn main() {
 
 #[cfg(test)]
 mod startup_tests {
+    #[test]
+    fn startup_page_has_multicolor_brand_and_no_failure_message() {
+        let page = include_str!("../../host-ui/index.html");
+        let style = include_str!("../../host-ui/style.css");
+        assert!(page.contains("Dougle을 준비하고 있어요"));
+        assert!(page.contains("id=\"failure-help\" hidden"));
+        assert!(!page.contains("앱을 열 수 없습니다"));
+        assert_eq!(page.matches("<span aria-hidden=\"true\">").count(), 6);
+        for color in ["#3478db", "#dc6454", "#e5ab32", "#36966b"] {
+            assert!(style.contains(color));
+        }
+    }
+
     #[test]
     fn transient_health_failures_recover_without_restarting_or_replaying_work() {
         let mut failures = 0;

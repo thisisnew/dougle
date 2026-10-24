@@ -112,9 +112,12 @@ fn trusted_package(url: &tauri::Url, version: &str) -> bool {
         && url.port().is_none()
         && url.query().is_none()
         && url.fragment().is_none()
-        && url
-            .path()
-            .starts_with("/thisisnew/knowledge-forge/releases/download/")
+        && [
+            "/thisisnew/knowledge-forge/releases/download/",
+            "/thisisnew/dougle/releases/download/",
+        ]
+        .iter()
+        .any(|prefix| url.path().starts_with(prefix))
         && url.path().ends_with(&format!(
             "/Knowledge.Forge_{version}_{architecture}.app.tar.gz"
         ))
@@ -233,10 +236,15 @@ mod tests {
             "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.4-preview.1/Knowledge.Forge_0.1.4_{architecture}.app.tar.gz"
         );
         assert!(trusted_package(&valid.parse().unwrap(), "0.1.4"));
+        assert!(trusted_package(
+            &valid.replace("knowledge-forge", "dougle").parse().unwrap(),
+            "0.1.4"
+        ));
         for invalid in [
             valid.replace("https:", "http:"),
             valid.replace("github.com", "evil.test"),
             valid.replace("thisisnew", "other"),
+            valid.replace("knowledge-forge", "dougle-evil"),
             format!("{valid}?token=untrusted"),
             valid.replace("0.1.4", "0.1.3"),
         ] {

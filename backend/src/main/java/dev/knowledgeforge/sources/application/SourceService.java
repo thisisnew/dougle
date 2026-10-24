@@ -5,6 +5,7 @@ import dev.knowledgeforge.ingestion.domain.Analysis;
 import dev.knowledgeforge.library.application.LibraryException;
 import dev.knowledgeforge.library.application.LibraryStore;
 import dev.knowledgeforge.sources.domain.Source;
+import dev.knowledgeforge.sources.domain.WorkspacePolling;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class SourceService {
         Source source = new Source(UUID.randomUUID().toString(), workspaceId, name.strip(), kind, location.strip(),
                 domain.strip(), "NEW", null, null, null, null, false, 3600, null, 0, 0);
         store.create(source);
-        return source;
+        return require(workspaceId, source.id());
     }
 
     public Source editMetadata(String workspaceId, String id, String name, String domain, Integer expectedRevision) {
@@ -88,6 +89,22 @@ public class SourceService {
             throw new LibraryException(409, "자동 갱신 설정이 변경되었습니다. 새로고침 후 다시 시도하세요.");
         }
         return require(workspaceId, id);
+    }
+
+    public WorkspacePolling workspacePolling(String workspaceId) {
+        requireWorkspace(workspaceId);
+        return store.workspacePolling(workspaceId);
+    }
+
+    public WorkspacePolling configureWorkspacePolling(String workspaceId, Boolean enabled, Integer expectedRevision) {
+        requireWorkspace(workspaceId);
+        if (enabled == null || expectedRevision == null || expectedRevision < 0) {
+            throw new LibraryException(400, "자동 갱신 설정을 확인하세요.");
+        }
+        if (!store.configureWorkspacePolling(workspaceId, enabled, expectedRevision)) {
+            throw new LibraryException(409, "설정이 변경되었습니다. 다시 확인해 주세요.");
+        }
+        return store.workspacePolling(workspaceId);
     }
 
     private Source synchronizeClaimed(Source source) {

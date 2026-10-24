@@ -1,11 +1,10 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { FolderInput, Link, RefreshCw, Search, Trash2 } from 'lucide-react'
+import { FolderInput, Link, Plus, RefreshCw, Search, Trash2 } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { request } from './api'
 import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
 import { hasFolderPicker, selectFolder } from './folderPicker'
-import SourceMetadataEditor from './SourceMetadataEditor'
 import type { RelationSeed } from './RelationPanel'
 const RelationPanel = lazy(() => import('./RelationPanel'))
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
@@ -39,7 +38,6 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [includeKnowledge, setIncludeKnowledge] = useState(true)
   const [published, setPublished] = useState<{ cardId: string; version: number } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
-  const [editing, setEditing] = useState<string | null>(null)
   const [related, setRelated] = useState<RelationSeed | null>(null)
   const searchAbort = useRef<AbortController | null>(null)
   const mutationAbort = useRef<AbortController | null>(null)
@@ -181,16 +179,14 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       {source.error && <span role="status" className="modal-error">{source.error}</span>}
     </div>
     <div className="source-actions">
-      <Button variant="ghost" size="sm" aria-label={`${source.name} 이름과 분류 수정`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setEditing(source.id)}>수정</Button>
       <Button variant="ghost" size="icon" aria-label={`${source.name} Source 삭제`} disabled={!!busy || source.status === 'SYNCING'} onClick={() => setDeleting(source.id)}><Trash2 /></Button>
     </div>
-    {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
     {deleting === source.id && <div className="source-confirm" role="alert"><span>삭제하시겠습니까?</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>삭제</Button></div>}
   </li>)}</ul>
 
   const availableDomains = [...new Set(sources.map(source => source.domain).filter(Boolean))]
   return <section className="source-panel" aria-label="자료 연결과 검색">
-    <div className="source-title"><h2><Link size={17} /> {manageOnly ? '내 자료' : '자료 검색'}</h2><div className="source-actions"><Button size="sm" variant="outline" disabled={!!busy || !sources.length || sources.some(source => source.status === 'SYNCING')} onClick={() => void syncAll()}><RefreshCw />{busy === 'sync-all' ? '동기화 중…' : '전체 동기화'}</Button><Button size="sm" variant="outline" disabled={!!busy || picking} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 추가</Button></div></div>
+    <div className="source-title">{!manageOnly && <h2><Link size={17} /> 자료 검색</h2>}<div className="source-actions"><Button size="icon" variant="ghost" aria-label="동기화" title={busy === 'sync-all' ? '동기화 중…' : '동기화'} aria-busy={busy === 'sync-all'} disabled={!!busy || !sources.length || sources.some(source => source.status === 'SYNCING')} onClick={() => void syncAll()}><RefreshCw /></Button><Button size="icon" variant="ghost" aria-label="자료 추가" title="자료 추가" aria-expanded={formOpen} disabled={!!busy || picking} onClick={() => setFormOpen(!formOpen)}><Plus /></Button></div></div>
     {error && <p role="alert" className="modal-error">{error}</p>}
     {formOpen && <form onSubmit={register} className="source-form">
       <label>종류<select aria-label="Source 종류" disabled={picking || !!busy} value={kind} onChange={event => { setKind(event.target.value); setLocation('') }}>

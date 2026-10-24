@@ -1,5 +1,13 @@
 # Source 자동 갱신 — 쉬운 설명
 
+## 0.1.14 현재 화면
+
+설정 → Workspace 관리에서 **자동 갱신 토글** 하나로 설정합니다. 기존 자료 전체에 적용하고 이후 등록한 자료가 상속합니다. 기본 주기는 1시간이고 기존 개별 주기는 보존합니다. 개별 활성 설정이 서로 다른 기존 Workspace는 혼합 상태로 표시하며 사용자가 변경하기 전에는 자동으로 덮어쓰지 않습니다.
+
+GET/PATCH `/api/workspaces/{id}/source-polling`은 `enabled`, `revision`, `mixed`를 반환합니다. PATCH는 `enabled`, `expectedRevision`으로 CAS를 검사하며 충돌은 409입니다. `workspace_source_polling` 테이블은 DB v23에서 추가되고 Workspace 삭제 시 함께 삭제됩니다. 자동 갱신은 자료 수집만 실행하며 AI 호출/자료 전송 승인을 대신하지 않습니다.
+
+## 이전 개별 Source API와 화면 기록
+
 0.1.6부터 이름·분류 수정도 `pollingRevision`을 증가시킵니다. 폴링 설정과 공통 충돌 버전이며 자동 갱신 주기·예약은 이름 수정으로 바뀌지 않습니다. [자료 수정](source-metadata.md).
 
 등록한 자료를 앱이 주기적으로 다시 읽는 기능입니다. **처음에는 OFF**입니다.

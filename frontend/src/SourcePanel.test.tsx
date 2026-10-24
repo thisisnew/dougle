@@ -53,31 +53,28 @@ it('자료 목록 갱신으로 사라진 도메인을 숨은 검색 조건으로
   expect(searchPath).not.toContain('domains=')
 })
 
-it('자료 이름과 도메인만 수정하고 수집이나 AI를 실행하지 않는다', async () => {
-  let current = source
+it('수정 없이 삭제 확인 후 새 자료를 등록한다', async () => {
+  let removed = false
   api.mockImplementation(async (path, options) => {
-    if (options?.method === 'PATCH') {
-      current = { ...source, ...JSON.parse(String(options.body)), pollingRevision: 1 }
-      return current
-    }
-    return [current]
+    if (options?.method === 'DELETE') { removed = true; return undefined }
+    if (options?.method === 'POST') return { ...source, id: 'new-source' }
+    return removed ? [] : [source]
   })
-  const changed = vi.fn()
-  render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   await screen.findByText('가상 연구')
-  expect(screen.getByRole('button', { name: '전체 동기화' })).toBeVisible()
-  expect(screen.getByRole('button', { name: 'AI에게 질문하기' })).toBeVisible()
-  await userEvent.click(await screen.findByRole('button', { name: '가상 연구 이름과 분류 수정' }))
-  await userEvent.clear(screen.getByLabelText('자료 이름 수정'))
-  await userEvent.type(screen.getByLabelText('자료 이름 수정'), '새 연구')
-  await userEvent.clear(screen.getByLabelText('자료 도메인 수정'))
-  await userEvent.type(screen.getByLabelText('자료 도메인 수정'), '새 분류')
-  await userEvent.click(screen.getByRole('button', { name: '변경 저장' }))
-  await waitFor(() => expect(changed).toHaveBeenCalled())
-  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source', expect.objectContaining({ method: 'PATCH',
-    body: JSON.stringify({ name: '새 연구', domain: '새 분류', expectedRevision: 0 }) }))
-  expect(await screen.findByRole('button', { name: '새 연구 이름과 분류 수정' })).toBeInTheDocument()
-  expect(screen.queryByLabelText('자료 이름 수정')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /수정/ })).not.toBeInTheDocument()
+  expect(screen.queryByText('내 자료')).not.toBeInTheDocument()
+  expect(screen.getByRole('button', { name: '동기화' })).toHaveTextContent('')
+  await userEvent.click(screen.getByRole('button', { name: '가상 연구 Source 삭제' }))
+  await userEvent.click(screen.getByRole('button', { name: '삭제' }))
+  await waitFor(() => expect(screen.queryByText('가상 연구')).not.toBeInTheDocument())
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  await userEvent.selectOptions(screen.getByLabelText('Source 종류'), 'URL')
+  await userEvent.type(screen.getByLabelText('Source 이름'), '새 자료')
+  await userEvent.type(screen.getByLabelText('Source 위치'), 'https://example.invalid/new')
+  await userEvent.click(screen.getByRole('button', { name: '등록' }))
+  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources', expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: '새 자료', kind: 'URL', location: 'https://example.invalid/new', domain: '' }) })))
+  expect(api.mock.calls.some(([, options]) => options?.method === 'PATCH')).toBe(false)
   expect(api.mock.calls.some(([path]) => /sync|generation|answer/.test(path))).toBe(false)
 })
 
@@ -139,8 +136,8 @@ it('Source를 등록하고 별도 수동 동기화로 수집한다', async () =>
   await user.click(screen.getByRole('button', { name: '등록' }))
   await screen.findByText('가상 연구')
   expect(api.mock.calls.some(([path]) => path.endsWith('/sync'))).toBe(false)
-  expect(screen.getByRole('button', { name: '전체 동기화' })).toBeVisible()
-  await user.click(screen.getByRole('button', { name: '전체 동기화' }))
+  expect(screen.getByRole('button', { name: '동기화' })).toBeVisible()
+  await user.click(screen.getByRole('button', { name: '동기화' }))
   await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' })))
   expect(changed).toHaveBeenCalled()
 })
@@ -235,7 +232,7 @@ it('실패한 수집은 오류와 이전 반영 버전을 함께 표시한다', 
   expect(screen.getByText(/반영 버전 abcdef123456/)).toBeInTheDocument()
   expect(screen.getByText(/오류 · 이전 자료 유지/)).toBeInTheDocument()
 })
-it('전체 동기화는 모든 연결 자료를 처리하고 하나가 실패해도 다음 자료를 계속한다', async () => {
+it('동기화는 모든 연결 자료를 처리하고 하나가 실패해도 다음 자료를 계속한다', async () => {
   const other = { ...source, id: 'second', name: '두 번째 자료' }
   api.mockImplementation(async (path) => {
     if (path.endsWith('/source/sync')) throw new Error('연결 실패')
@@ -245,18 +242,17 @@ it('전체 동기화는 모든 연결 자료를 처리하고 하나가 실패해
   const changed = vi.fn()
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
   await screen.findByText('두 번째 자료')
-  expect(screen.getAllByRole('button', { name: '전체 동기화' })).toHaveLength(1)
-  expect(screen.queryByRole('button', { name: '동기화' })).not.toBeInTheDocument()
-  await userEvent.click(screen.getByRole('button', { name: '전체 동기화' }))
+  expect(screen.getAllByRole('button', { name: '동기화' })).toHaveLength(1)
+  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
   expect(await screen.findByRole('alert')).toHaveTextContent('가상 연구: 연결 실패')
   expect(api).toHaveBeenCalledWith('/workspaces/one/sources/second/sync', expect.objectContaining({ method: 'POST' }))
   expect(changed).toHaveBeenCalledOnce()
   expect(api.mock.calls.some(([path]) => /answer|generation/.test(path))).toBe(false)
 })
 
-it('동기화 중인 자료가 있으면 전체 동기화를 중복 실행하지 않는다', async () => {
+it('동기화 중인 자료가 있으면 동기화를 중복 실행하지 않는다', async () => {
   api.mockResolvedValue([{ ...source, status: 'SYNCING' }])
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   await screen.findByText('가상 연구')
-  expect(screen.getByRole('button', { name: '전체 동기화' })).toBeDisabled()
+  expect(screen.getByRole('button', { name: '동기화' })).toBeDisabled()
 })

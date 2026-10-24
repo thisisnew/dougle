@@ -18,7 +18,7 @@ const architecture = process.arch === 'arm64' ? 'arm64' : 'x86_64'
 assert.ok(['arm64', 'x64'].includes(process.arch))
 const name = `Knowledge.Forge_${previous}_${architecture}.app.tar.gz`
 const archive = resolve(root, 'release', name)
-const release = JSON.parse((await execute('gh', ['api', `repos/thisisnew/knowledge-forge/releases/tags/v${previous}-preview.1`])).stdout)
+const release = JSON.parse((await execute('gh', ['api', `repos/thisisnew/dougle/releases/tags/v${previous}-preview.1`])).stdout)
 assert.equal(release.draft, false)
 const asset = release.assets.find(value => value.name === name)
 assert.ok(asset)

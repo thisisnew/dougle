@@ -34,6 +34,7 @@ Intel/Apple Silicon 패키지에서 같은 모델을 사용합니다. CPU 지원
 |---|---|---|
 | 프로젝트 서랍 | `workspace`, `app_state` | 자료 격리, 마지막 선택 |
 | 연결한 자료 위치 | `source`, `source_http_cache` | 폴더/URL/GitHub, revision·오류·예약·HTTP 확인표; 이름·분류 편집은 pollingRevision으로 충돌 검사 |
+| Workspace 자동 갱신 | `workspace_source_polling` | v23. Workspace별 활성 여부와 CAS revision. 토글은 기존 자료에 원자적으로 적용하고 새 자료가 상속하며, 기존 개별 설정은 사용자가 변경하기 전까지 보존합니다. |
 | 원본 복사본 | `entry` | 폴더·파일 바이트, Source 경로·해시 |
 | 검색 준비 결과 | `extracted_document`, `symbol`, `search_outbox` | 본문·Java 선언·색인 갱신 큐 |
 | 지식 문서 | `knowledge_card`, `knowledge_version` | 문서 식별자와 불변 Markdown 버전 |

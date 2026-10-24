@@ -68,6 +68,63 @@ class SourceIntegrationTest {
         search.refresh();
     }
 
+    @Test
+    void workspacePollingToggleIsAtomicAndInheritedByNewSources() throws Exception {
+        String workspace = library.createWorkspace("자동 갱신 가상 테스트").id();
+        String other = library.createWorkspace("분리된 테스트").id();
+        var first = sources.create(workspace, "첫 자료", "URL", "https://example.com/one", "");
+        var isolated = sources.create(other, "별도 자료", "URL", "https://example.com/other", "");
+        assertThat(sources.workspacePolling(workspace).enabled()).isFalse();
+        var enabled = sources.configureWorkspacePolling(workspace, true, 0);
+        assertThat(enabled.enabled()).isTrue();
+        assertThat(enabled.revision()).isEqualTo(1);
+        assertThat(enabled.mixed()).isFalse();
+        assertThat(sources.list(workspace).getFirst().pollingEnabled()).isTrue();
+        assertThat(sources.list(workspace).getFirst().nextPollAt()).isNotNull();
+        var added = sources.create(workspace, "나중 자료", "URL", "https://example.com/two", "");
+        assertThat(added.pollingEnabled()).isTrue();
+        assertThat(added.nextPollAt()).isNotNull();
+        assertThat(sourceStore.find(other, isolated.id()).orElseThrow().pollingEnabled()).isFalse();
+        assertThatThrownBy(() -> sources.configureWorkspacePolling(workspace, false, 0)).hasMessageContaining("설정이 변경");
+        assertThat(sources.list(workspace)).allMatch(source -> source.pollingEnabled());
+        sources.configureWorkspacePolling(workspace, false, 1);
+        assertThat(sources.list(workspace)).allMatch(source -> !source.pollingEnabled() && source.nextPollAt() == null);
+        assertThat(sourceStore.find(workspace, first.id()).orElseThrow().pollingRevision()).isEqualTo(2);
+        assertThat(sources.create(workspace, "끄고 추가", "URL", "https://example.com/off", "").pollingEnabled()).isFalse();
+        assertThatThrownBy(() -> sources.configureWorkspacePolling(workspace, null, 2)).hasMessageContaining("설정");
+        assertThatThrownBy(() -> sources.configureWorkspacePolling("missing", true, 0)).isInstanceOf(dev.knowledgeforge.library.application.LibraryException.class);
+        library.deleteWorkspace(workspace);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM workspace_source_polling WHERE workspace_id=?", Integer.class, workspace)).isZero();
+    }
+
+    @Test
+    void legacyIndividualPollingIsPreservedUntilWorkspaceToggleIsUsed() {
+        String workspace = library.createWorkspace("기존 갱신 설정").id();
+        var first = sources.create(workspace, "첫 자료", "URL", "https://example.com/one", "");
+        sources.create(workspace, "둘째 자료", "URL", "https://example.com/two", "");
+        sources.configurePolling(workspace, first.id(), true, 7200, 0);
+        assertThat(sources.workspacePolling(workspace).mixed()).isTrue();
+        assertThat(sources.list(workspace).stream().filter(source -> source.pollingEnabled()).count()).isEqualTo(1);
+        sources.configureWorkspacePolling(workspace, false, 0);
+        assertThat(sources.workspacePolling(workspace).mixed()).isFalse();
+        assertThat(sources.list(workspace)).allMatch(source -> !source.pollingEnabled());
+        assertThat(sourceStore.find(workspace, first.id()).orElseThrow().pollIntervalSeconds()).isEqualTo(7200);
+    }
+
+    @Test
+    void workspacePollingEndpointValidatesAndConflictsWithoutSendingToAi() throws Exception {
+        String workspace = library.createWorkspace("토글 API").id();
+        String path = "/api/workspaces/" + workspace + "/source-polling";
+        mvc.perform(get(path)).andExpect(status().isOk()).andExpect(jsonPath("$.enabled").value(false));
+        mvc.perform(patch(path).header("X-Forge-Client", "1").contentType("application/json")
+                .content("{\"enabled\":true,\"expectedRevision\":0}")).andExpect(status().isOk()).andExpect(jsonPath("$.revision").value(1));
+        mvc.perform(patch(path).header("X-Forge-Client", "1").contentType("application/json")
+                .content("{\"enabled\":false,\"expectedRevision\":0}")).andExpect(status().isConflict());
+        mvc.perform(patch(path).header("X-Forge-Client", "1").contentType("application/json")
+                .content("{}")).andExpect(status().isBadRequest());
+        assertThat(sources.workspacePolling(workspace).enabled()).isTrue();
+    }
+
     private Source local(String workspaceId, String name, String domain) {
         return sources.create(workspaceId, name, "LOCAL_FOLDER", fixture.toString(), domain);
     }

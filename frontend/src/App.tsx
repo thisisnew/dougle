@@ -1,13 +1,12 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ChevronRight, Download, FileText, Folder, FolderOpen, History, MessageSquare, Plus, Settings2, ShieldCheck, Trash2, X } from 'lucide-react'
+import { ArrowLeft, ChevronRight, Download, FileText, Folder, FolderOpen, History, MessageSquare, Plus, Settings2, Trash2, X } from 'lucide-react'
 import clueMascot from './assets/clue-mascot.png'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Entry, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
-import SourceSettings from './SourceSettings'
+import WorkspacePollingToggle from './WorkspacePollingToggle'
 import QuestionGrid from './QuestionGrid'
-import Wordmark from './Wordmark'
 import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import { type ConnectionIndicator } from './connectionIndicator'
@@ -137,6 +136,7 @@ export default function App() {
     setModalError('')
     try {
       if (modal.kind === 'workspace') {
+        if (session.workspaces.some(workspace => workspace.name.toLocaleLowerCase() === name.trim().toLocaleLowerCase())) throw new Error('같은 이름의 Workspace가 있습니다.')
         await request('/workspaces', { method: 'POST', body: JSON.stringify({ name }) })
         await refreshSession()
         resetNavigation()
@@ -181,7 +181,6 @@ export default function App() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand"><Wordmark /></div>
         <div className="workspace-label">WORKSPACE <div className="workspace-actions"><Button variant="ghost" size="icon" aria-label="Workspace 생성" disabled={busy || !ready} onClick={() => openModal({ kind: 'workspace' })}><Plus /></Button></div></div>
         <label className="sr-only" htmlFor="workspace">Workspace 선택</label>
         <select id="workspace" value={activeId ?? ''} disabled={busy || !ready || !session.workspaces.length} onChange={event => void switchWorkspace(event.target.value)}>
@@ -206,7 +205,7 @@ export default function App() {
             <div><h1>자료</h1><p className="subtitle">질문에 사용할 파일과 링크를 모아 두세요.</p></div>
           </div>}
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
-          {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : view === 'SETTINGS' ? <div className="settings-page"><div className="page-heading"><h1>설정</h1></div><section className="settings-card"><h2>Workspace</h2><p>Workspace를 관리하고 필요 없는 서재를 정리하세요.</p><Button variant="outline" onClick={() => openModal({ kind: 'manage-workspaces' })}>Workspace 관리</Button></section>{activeId && <SourceSettings key={activeId} workspaceId={activeId} />}</div> : !workspace ? (
+          {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : view === 'SETTINGS' ? <div className="settings-page"><div className="page-heading"><h1>설정</h1></div><section className="settings-card"><h2>Workspace</h2><Button variant="outline" onClick={() => openModal({ kind: 'manage-workspaces' })}>Workspace 관리</Button></section></div> : !workspace ? (
             <section className="welcome"><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : view === 'HISTORY' ? <QuestionGrid key={activeId} workspaceId={activeId!} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} /> : view === 'CHAT' ? <ChatPanel key={`${activeId}/${chatRevision}`} workspaceId={activeId!} selectedId={questionId} connection={connection}
             onCreated={id => { setQuestionId(id); setHistoryRevision(value => value + 1) }} onDeleted={() => { setQuestionId(null); setHistoryRevision(value => value + 1); setChatRevision(value => value + 1) }} onConnect={() => setCliSettingsOpen(true)} onSources={() => resetNavigation()} /> : (
@@ -223,14 +222,12 @@ export default function App() {
                     .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
                 }} renderLibrary={(sources, sourceRows) => {
                   const visibleEntries = entries.filter(entry => !sources.some(source => source.rootEntryId === entry.id))
-                  return <div className="explorer">
+                  return <div className={`explorer${selected ? '' : ' without-preview'}`}>
                 <section className="file-pane" aria-label="자료 탐색기">
-                  <div className="toolbar">
-                    <div className="breadcrumbs" aria-label="폴더 경로"><button disabled={busy} onClick={() => setTrail([])}>원본 자료</button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>
-                    <div className="toolbar-actions">
-                      <input ref={uploadRef} aria-label="파일 업로드" type="file" hidden disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = '' }} />
-                    </div>
-                  </div>
+                  <input ref={uploadRef} aria-label="파일 업로드" type="file" hidden disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = '' }} />
+                  {trail.length > 0 && <div className="toolbar">
+                    <div className="breadcrumbs" aria-label="폴더 경로"><button aria-label="자료 목록으로" title="자료 목록으로" disabled={busy} onClick={() => setTrail([])}><ArrowLeft size={18} /></button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>
+                  </div>}
                   <div className="table-head"><span>이름</span><span>크기</span><span>추가한 날짜</span><span /></div>
                   {!trail.length && sourceRows}
                   {loading ? <div className="empty-state" role="status">자료를 불러오는 중…</div> : visibleEntries.length === 0 && (trail.length > 0 || sources.length === 0) ? <div className="empty-state"><div className="empty-icon"><FolderOpen size={31} /></div><h2>아직 자료가 없습니다</h2><p>상단에서 자료를 추가하세요.</p></div> : (
@@ -240,16 +237,15 @@ export default function App() {
                       <Button variant="ghost" size="icon" disabled={busy} aria-label={`${entry.name} 삭제`} onClick={() => openModal({ kind: 'delete-entry', entry })}><Trash2 /></Button>
                     </li>)}</ul>
                   )}
-                  <div className="pane-footer"><ShieldCheck size={14} />{busy ? '변경사항을 저장하는 중…' : '원본 파일의 복사본을 로컬에 보관합니다.'}</div>
                 </section>
-                <aside className="preview-pane" aria-label="미리보기">
+                {selected && <aside className="preview-pane" aria-label="미리보기">
                   <div className="preview-heading"><span>자료 미리보기</span>{selected && <Button variant="ghost" size="icon" aria-label="미리보기 닫기" onClick={() => setSelected(null)}><X /></Button>}</div>
-                  {selected ? <div className="preview-content"><FileText size={28} /><h2>{selected.name}</h2><div className="tag">보관된 원본</div><dl><dt>파일 크기</dt><dd>{formatSize(selected.size)}</dd><dt>추가한 날짜</dt><dd>{new Date(selected.createdAt).toLocaleString('ko-KR')}</dd></dl>
+                  <div className="preview-content"><FileText size={28} /><h2>{selected.name}</h2><div className="tag">보관된 원본</div><dl><dt>파일 크기</dt><dd>{formatSize(selected.size)}</dd><dt>추가한 날짜</dt><dd>{new Date(selected.createdAt).toLocaleString('ko-KR')}</dd></dl>
                     <Button variant="outline" size="sm" onClick={() => void downloadApi(`${entryPath(activeId!, selected.id)}/content`, selected.name).catch(reason => setError(reason.message))}><Download /> 원본 다운로드</Button>
                     <h3>내용</h3>{!preview ? <p role="status">미리보기를 불러오는 중…</p> : preview.supported ? <pre>{preview.text || '(빈 파일)'}</pre> : <p>{preview.reason}</p>}
                     <AnalysisPanel key={selected.id} workspaceId={activeId!} entryId={selected.id} />
-                  </div> : <div className="preview-empty"><FileText size={32} /><strong>자료를 살펴보세요</strong><p>파일을 선택하면 내용과<br />상세 정보를 확인할 수 있습니다.</p></div>}
-                </aside>
+                  </div>
+                </aside>}
               </div>
                 }} />
             </>
@@ -262,7 +258,7 @@ export default function App() {
           <Dialog.Title>{modalTitle}</Dialog.Title>
           <Dialog.Description>{managing ? 'Workspace를 한곳에서 관리하세요.' : deleting ? `“${modal?.kind === 'delete-entry' ? modal.entry.name : modal?.kind === 'delete-workspace' ? modal.name : ''}” 및 내부 자료가 삭제됩니다. 이 작업은 되돌릴 수 없습니다. PC의 원래 파일은 유지됩니다.` : modal?.kind === 'workspace' ? '프로젝트나 관심 주제별로 자료를 분리해 보관하세요.' : '현재 위치에 자료를 정리할 폴더를 만듭니다.'}</Dialog.Description>
           {managing ? <>
-            <ul className="workspace-manager">{session.workspaces.map(item => <li key={item.id}><span>{item.name}{item.id === activeId && <small>사용 중</small>}</span><Button variant="ghost" size="icon" aria-label={`${item.name} Workspace 삭제`} onClick={() => openModal({ kind: 'delete-workspace', id: item.id, name: item.name })}><Trash2 /></Button></li>)}</ul>
+            <ul className="workspace-manager">{session.workspaces.map(item => <li key={item.id}><span>{item.name}{item.id === activeId && <small>사용 중</small>}</span><WorkspacePollingToggle workspaceId={item.id} name={item.name} /><Button variant="ghost" size="icon" aria-label={`${item.name} Workspace 삭제`} onClick={() => openModal({ kind: 'delete-workspace', id: item.id, name: item.name })}><Trash2 /></Button></li>)}</ul>
             {!session.workspaces.length && <p>아직 Workspace가 없습니다.</p>}
             <div className="dialog-actions"><Button variant="outline" onClick={() => setModal(null)}>닫기</Button><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> 새 Workspace</Button></div>
           </> : <form onSubmit={event => void submitModal(event)}>

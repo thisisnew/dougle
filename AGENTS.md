@@ -1,5 +1,9 @@
 # Knowledge Forge 개발 지침
 
+- 0.1.14: GitHub 저장소는 `thisisnew/dougle`입니다. 새 피드는 새 저장소를 사용하지만 업데이트 자산 URL은 구버전 allowlist 호환을 위해 기존 `thisisnew/knowledge-forge` 리디렉션을 유지합니다. 기존 이름을 재사용하지 않습니다. 앱 ID·저장소 폴더·번들 이름은 유지합니다.
+- 현재 DB v23: `workspace_source_polling`의 Workspace별 자동 갱신 토글·CAS·신규 자료 상속. 기존 개별 설정은 토글 변경 전 보존합니다. [화면/정책](docs/library-simplification.md). 아래 DB v22/v21은 과거 단계 기록입니다.
+- 시작 대기 문구와 실제 연결 오류를 구별합니다. 정상 시작 status 창은 계속 숨기고 오류 때만 표시합니다. 네이티브 호스트에도 다색 Dougle 로고를 적용합니다.
+
 - 최신 브랜드는 **Dougle · 더글**입니다. `Wordmark` 공통 컴포넌트·Avenir Next·다색 글자·화이트/블루 톤을 사용합니다. 입력 안내는 ‘더글한테 물어보기’. 아래 CLUE/입체 로고는 과거 기록입니다. 앱 ID·자료·인증·업데이트 호환 이름은 유지합니다. [현재 디자인](docs/dougle-brand.md).
 
 - 0.1.12 UX: 자료 추가는 파일/폴더/웹 링크/GitHub 한 곳, 폴더는 Tauri 폴더 전용 선택기만 사용합니다. 자동 갱신·Workspace 관리는 설정, 질문 기록은 카드 그리드→기존 ChatPanel입니다. 수트 탐정·Condensed 인디고 입체 워드마크가 최신이며 아래 Helvetica Neue 기록은 이전 버전입니다. [설계·제약](docs/folder-settings.md).

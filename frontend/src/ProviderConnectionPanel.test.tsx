@@ -15,6 +15,30 @@ beforeEach(() => {
 })
 afterEach(() => { localStorage.clear() })
 
+it('연결 창을 열고 같은 제공자를 누르거나 모델을 바꿔도 로그인을 해제하지 않는다', async () => {
+  localStorage.setItem('forge.ai.provider', 'CLAUDE')
+  const changed = vi.fn()
+  render(<ProviderConnectionPanel onClose={vi.fn()} onConnectionChange={changed} initialConnection={{provider:'CODEX',state:'AUTHENTICATED',model:'gpt-6.1-sol'}} />)
+  expect(screen.getByRole('button', {name:'연결됨'})).toBeDisabled()
+  await userEvent.click(screen.getByRole('button', {name:/Codex/}))
+  await userEvent.selectOptions(screen.getByRole('combobox'), 'gpt-6-luna')
+  expect(screen.getByRole('button', {name:'연결됨'})).toBeDisabled()
+  expect(changed).toHaveBeenLastCalledWith({provider:'CODEX',state:'AUTHENTICATED',model:'gpt-6-luna'})
+  expect(changed.mock.calls.every(([value]) => value.state === 'AUTHENTICATED')).toBe(true)
+  expect(api).not.toHaveBeenCalled()
+})
+
+it('다른 제공자를 살펴보고 돌아와도 기존 연결을 유지한다', async () => {
+  const changed = vi.fn()
+  render(<ProviderConnectionPanel onClose={vi.fn()} onConnectionChange={changed} initialConnection={{provider:'CODEX',state:'AUTHENTICATED'}} />)
+  await userEvent.click(screen.getByRole('button', {name:/Claude/}))
+  expect(changed.mock.calls.every(([value]) => value.provider === 'CODEX' && value.state === 'AUTHENTICATED')).toBe(true)
+  expect(preferredProvider()).toBe('CODEX')
+  await userEvent.click(screen.getByRole('button', {name:/Codex/}))
+  expect(screen.getByRole('button', {name:'연결됨'})).toBeDisabled()
+  expect(api).not.toHaveBeenCalled()
+})
+
 it('상단에서 열면 자료 전송 없이 로그인 상태만 자동 확인한다', async () => {
   api.mockResolvedValue({ provider: 'CODEX', state: 'AUTHENTICATED', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
   render(<ProviderConnectionPanel checkOnOpen onClose={vi.fn()} />)
@@ -36,8 +60,8 @@ it('모델 선택을 저장하고 연결 성공 버튼은 비활성화한다', a
   expect(changed).toHaveBeenLastCalledWith({ provider: 'CODEX', state: 'AUTHENTICATED', model: 'gpt-6-luna' })
   expect(JSON.parse(localStorage.getItem('forge.ai.model.CODEX')!)).toEqual({ mode: 'custom', model: 'gpt-6-luna' })
   await userEvent.selectOptions(screen.getByLabelText('모델'), 'gpt-6.1-sol')
-  expect(screen.getByRole('button', { name: '연결' })).toBeEnabled()
-  expect(changed).toHaveBeenLastCalledWith({ provider: 'CODEX', state: 'UNCHECKED', model: 'gpt-6.1-sol' })
+  expect(screen.getByRole('button', { name: '연결됨' })).toBeDisabled()
+  expect(changed).toHaveBeenLastCalledWith({ provider: 'CODEX', state: 'AUTHENTICATED', model: 'gpt-6.1-sol' })
   expect(api).toHaveBeenCalledTimes(1)
 })
 

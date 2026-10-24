@@ -23,7 +23,7 @@
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYwRTI2ODA3QTI5QkVCQzMKUldURDY1dWlCMmppWUlsWWlxR1FXR2YzTFIxSmFFMDFwLzUvdFU3eUQ2c1ZDSElNTExORlpKWFkK",
-      "endpoints": ["https://raw.githubusercontent.com/thisisnew/knowledge-forge/main/updates/preview.json"],
+      "endpoints": ["https://raw.githubusercontent.com/thisisnew/dougle/main/updates/preview.json"],
       "requireSignedVersion": true
     }
   }

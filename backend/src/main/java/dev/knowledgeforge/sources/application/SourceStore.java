@@ -3,6 +3,7 @@ package dev.knowledgeforge.sources.application;
 import dev.knowledgeforge.ingestion.domain.Analysis;
 import dev.knowledgeforge.sources.domain.CollectedSnapshot;
 import dev.knowledgeforge.sources.domain.Source;
+import dev.knowledgeforge.sources.domain.WorkspacePolling;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,8 @@ public interface SourceStore {
     List<Source> list(String workspaceId);
     Optional<Source> find(String workspaceId, String id);
     void create(Source source);
+    WorkspacePolling workspacePolling(String workspaceId);
+    boolean configureWorkspacePolling(String workspaceId, boolean enabled, int expectedRevision);
     boolean begin(String workspaceId, String id);
     List<Source> due(int limit);
     boolean beginPoll(String workspaceId, String id);

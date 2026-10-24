@@ -1,14 +1,14 @@
 # 문서 안내 — 어디부터 읽으면 되나요?
 
-[자료 추가·폴더 연결·설정·질문 기록](folder-settings.md) · [0.1.12 검증과 배포](release-0.1.12-report.md)
+[통합 자료 목록·전체 동기화·설정](library-simplification.md) · [0.1.14 검증과 배포](release-0.1.14-report.md)
 
-[질문에 이미지·문서 첨부하기](question-attachments.md) · [CLUE 캐릭터·글자 로고](clue-brand.md)
+[질문에 이미지·문서 첨부하기](question-attachments.md) · [Dougle 로고·디자인](dougle-brand.md)
 
 0.1.11: [대화 중심 화면·모델 선택·코드 대조](chat-first.md) · [검증 및 배포 상태](release-0.1.11-report.md).
 
 최신 변경: [앱이 관리하는 내부 검색](internal-search.md). 이전 0.1.10: [필요한 기능만 먼저 보기](simple-workflow.md) · [설치본 검증](release-0.1.10-report.md).
 
-CLUE는 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하는 Mac 앱**입니다. [새 이름·캐릭터와 기존 자료 호환성](clue-brand.md).
+Dougle은 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하는 Mac 앱**입니다. [새 이름·기존 자료 호환성](dougle-brand.md).
 검색용 추출문·심볼·색인은 앱이 관리합니다. 서버나 벡터 DB를 별도로 설치하지 않습니다.
 
 | 궁금한 것 | 읽을 문서 |

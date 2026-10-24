@@ -39,7 +39,7 @@ it('Workspace 전환 후 이전 응답을 표시하지 않는다', async () => {
   const signal = api.mock.calls[0][1]!.signal!
   view.rerender(<QuestionGrid workspaceId="two" onSelect={vi.fn()} />)
   expect(signal.aborted).toBe(true)
-  await screen.findByText('아직 질문 기록이 없습니다.')
+  await screen.findByText('질문 기록이 없습니다.')
   await act(async () => resolveOld([question]))
   expect(screen.queryByRole('button', { name: question.question })).not.toBeInTheDocument()
 })

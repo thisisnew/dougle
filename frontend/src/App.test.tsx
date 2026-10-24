@@ -18,6 +18,29 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it('이름의 공백과 대소문자 차이는 중복으로 안내하고 생성하지 않는다', async () => {
+    api.mockImplementation(async path => path === '/session'
+      ? { workspaces: [{ ...workspace, name: 'Research' }], activeWorkspaceId: 'one' } : [])
+    render(<App />)
+    await waitFor(() => expect(screen.getByRole('button', {name:'Workspace 생성'})).toBeEnabled())
+    await userEvent.click(screen.getByRole('button', {name:'Workspace 생성'}))
+    await userEvent.type(screen.getByLabelText('이름'), ' research ')
+    await userEvent.click(screen.getByRole('button', {name:'만들기'}))
+    expect(await screen.findByRole('alert')).toHaveTextContent('같은 이름의 Workspace')
+    expect(api.mock.calls.some(([path,options]) => path === '/workspaces' && options?.method === 'POST')).toBe(false)
+  })
+
+  it('자동 갱신은 별도 카드 대신 Workspace 관리 안의 토글로만 표시한다', async () => {
+    api.mockImplementation(async path => path === '/session'
+      ? { workspaces: [workspace], activeWorkspaceId: 'one' }
+      : path.endsWith('/source-polling') ? {enabled:false,revision:0,mixed:false} : [])
+    render(<App />)
+    await userEvent.click(await screen.findByRole('button', {name:'설정'}))
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', {name:'Workspace 관리'}))
+    expect(await screen.findByRole('switch', {name:'가상 연구 자동 갱신'})).toBeInTheDocument()
+    expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument()
+  })
   it('연결 자료와 업로드를 한 목록에 표시하고 연결 폴더는 중복하지 않는다', async () => {
     const folder = { ...file, id: 'source-root', name: '연결 폴더', kind: 'FOLDER' }
     api.mockImplementation(async path => {
@@ -42,7 +65,7 @@ describe('Workspace와 자료 탐색기', () => {
     api.mockImplementation(async path => path === '/session' ? { workspaces: [], activeWorkspaceId: null } : [])
     render(<App />)
     expect(await screen.findByRole('img', { name: '더글' })).toHaveAttribute('src', expect.stringContaining('clue-mascot'))
-    expect(screen.getByRole('img', { name: 'Dougle' })).toBeInTheDocument()
+    expect(screen.queryByRole('img', { name: 'Dougle' })).not.toBeInTheDocument()
     expect(screen.queryByText('나만의 지식이 쌓이는 곳')).not.toBeInTheDocument()
     expect(screen.queryByText('Knowledge Forge')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: '대화' }).querySelector('.lucide-message-square')).not.toBeNull()
@@ -124,6 +147,10 @@ describe('Workspace와 자료 탐색기', () => {
     await user.click(await screen.findByRole('button', { name: '자료' }))
     expect(screen.getByRole('button', { name: '질문 기록' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '지식 문서' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('complementary', { name: '미리보기' })).not.toBeInTheDocument()
+    expect(screen.queryByText('자료를 살펴보세요')).not.toBeInTheDocument()
+    expect(screen.queryByText('원본 자료')).not.toBeInTheDocument()
+    expect(screen.queryByText('원본 파일의 복사본을 로컬에 보관합니다.')).not.toBeInTheDocument()
     await user.click(await screen.findByRole('button', { name: 'notes.md' }))
     await user.click(await screen.findByText('분석 상세'))
     await user.click(await screen.findByText('추출된 텍스트'))
@@ -167,6 +194,8 @@ describe('Workspace와 자료 탐색기', () => {
     expect(document.querySelector('.preview-content script')).toBeNull()
     await user.click(screen.getByRole('button', { name: '원본 다운로드' }))
     expect(downloadApi).toHaveBeenCalledWith('/workspaces/one/entries/file/content', file.name)
+    await user.click(screen.getByRole('button', { name: '미리보기 닫기' }))
+    expect(screen.queryByRole('complementary', { name: '미리보기' })).not.toBeInTheDocument()
   })
 
   it('삭제 취소는 API를 호출하지 않으며 오류는 모달 안에 남긴다', async () => {

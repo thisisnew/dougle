@@ -13,7 +13,7 @@ const version = JSON.parse(await readFile(resolve(root, 'desktop/package.json'),
 assert.match(version, /^\d+\.\d+\.\d+$/)
 const tag = `v${version}-preview.1`
 const publish = process.argv.includes('--publish')
-const release = publish ? JSON.parse((await execute('gh', ['api', `repos/thisisnew/knowledge-forge/releases/tags/${tag}`])).stdout) : null
+const release = publish ? JSON.parse((await execute('gh', ['api', `repos/thisisnew/dougle/releases/tags/${tag}`])).stdout) : null
 if (release) { assert.equal(release.draft, false); assert.equal(release.tag_name, tag) }
 const config = resolve(root, 'desktop/src-tauri/tauri.conf.json')
 const platforms = {}

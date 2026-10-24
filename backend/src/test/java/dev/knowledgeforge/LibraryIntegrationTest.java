@@ -157,6 +157,13 @@ class LibraryIntegrationTest {
     @Test
     void duplicateWorkspaceAndSiblingNamesReturnConflictWithoutOverwriting() throws Exception {
         String workspaceId = workspace("Duplicate");
+        for (String duplicate : new String[]{" Duplicate ", "DUPLICATE", "duplicate"}) {
+            mvc.perform(post("/api/workspaces").header("X-Forge-Client", "1")
+                            .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"" + duplicate + "\"}"))
+                    .andExpect(status().isConflict());
+        }
+        assertThat(service.session().workspaces()).hasSize(1);
+        assertThat(service.session().activeWorkspaceId()).isEqualTo(workspaceId);
         mvc.perform(post("/api/workspaces").header("X-Forge-Client", "1")
                         .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"duplicate\"}"))
                 .andExpect(status().isConflict());

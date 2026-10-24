@@ -36,7 +36,7 @@ export function QuestionHistory({ workspaceId, revision, selectedId, onSelect }:
   </section>
 }
 
-export default function ChatPanel({ workspaceId, selectedId, connection, onCreated, onConnect, onSources, onDeleted }: {
+export default function ChatPanel({ workspaceId, selectedId, connection, onCreated, onSources, onDeleted }: {
   workspaceId: string; selectedId: string | null; connection: ConnectionIndicator | null;
   onCreated: (id: string) => void; onConnect: () => void; onSources: () => void; onDeleted?: () => void
 }) {
@@ -132,7 +132,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     }}>
       <label className="sr-only" htmlFor="chat-question">질문</label>
       <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || busy}
-        placeholder="더글한테 물어보기" onChange={event => setQuestion(event.target.value)}
+        placeholder={connected ? '더글한테 물어보기' : 'AI를 연결해 주세요'} onChange={event => setQuestion(event.target.value)}
         onPaste={event => { if (event.clipboardData.files.length) { event.preventDefault(); void attachments.add(Array.from(event.clipboardData.files)) } }}
         onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.form?.requestSubmit() } }} />
       <input ref={fileInput} type="file" className="sr-only" aria-label="질문에 첨부할 파일" multiple accept={attachmentAccept} disabled={busy || attachments.uploading} onChange={event => { void attachments.add(Array.from(event.target.files ?? [])); event.target.value = '' }} />
@@ -144,7 +144,5 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       {attachments.error && <p role="alert">{attachments.error}</p>}
       <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || busy || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
     </form>
-    {!connected ? <div className="chat-connect"><span>먼저 사용할 AI를 연결해 주세요.</span><Button variant="outline" onClick={onConnect}>AI 연결하기</Button></div>
-      : null}
   </section>
 }

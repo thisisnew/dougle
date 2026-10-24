@@ -7,6 +7,7 @@ import dev.knowledgeforge.sources.application.SourceStore;
 import dev.knowledgeforge.sources.application.SnapshotPlanner;
 import dev.knowledgeforge.sources.domain.CollectedSnapshot;
 import dev.knowledgeforge.sources.domain.Source;
+import dev.knowledgeforge.sources.domain.WorkspacePolling;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -49,8 +50,37 @@ public class JdbcSourceStore implements SourceStore {
     }
 
     public void create(Source source) {
-        jdbc.update("INSERT INTO source(id,workspace_id,name,kind,location,domain) VALUES(?,?,?,?,?,?)",
-                source.id(), source.workspaceId(), source.name(), source.kind(), source.location(), source.domain());
+        jdbc.update("""
+                INSERT INTO source(id,workspace_id,name,kind,location,domain,polling_enabled,next_poll_at)
+                SELECT ?,?,?,?,?,?,COALESCE(policy.enabled,0),
+                  CASE WHEN policy.enabled=1 THEN ? ELSE NULL END
+                FROM workspace LEFT JOIN workspace_source_polling policy ON policy.workspace_id=workspace.id
+                WHERE workspace.id=?
+                """, source.id(), source.workspaceId(), source.name(), source.kind(), source.location(), source.domain(),
+                clock.millis() + 3600000L, source.workspaceId());
+    }
+
+    public WorkspacePolling workspacePolling(String workspaceId) {
+        return jdbc.queryForObject("""
+                SELECT COALESCE(policy.enabled,0) AS enabled,COALESCE(policy.revision,0) AS revision,
+                  EXISTS(SELECT 1 FROM source WHERE source.workspace_id=workspace.id
+                    AND source.polling_enabled!=COALESCE(policy.enabled,0)) AS mixed
+                FROM workspace LEFT JOIN workspace_source_polling policy ON policy.workspace_id=workspace.id
+                WHERE workspace.id=?
+                """, (result, row) -> new WorkspacePolling(result.getBoolean("enabled"),
+                result.getInt("revision"), result.getBoolean("mixed")), workspaceId);
+    }
+
+    @Transactional
+    public boolean configureWorkspacePolling(String workspaceId, boolean enabled, int expectedRevision) {
+        jdbc.update("INSERT OR IGNORE INTO workspace_source_polling(workspace_id,enabled,revision) VALUES(?,0,0)", workspaceId);
+        if (jdbc.update("UPDATE workspace_source_polling SET enabled=?,revision=revision+1 WHERE workspace_id=? AND revision=?",
+                enabled, workspaceId, expectedRevision) != 1) return false;
+        jdbc.update("""
+                UPDATE source SET polling_enabled=?,next_poll_at=CASE WHEN ? THEN ?+poll_interval_seconds*1000 ELSE NULL END,
+                  consecutive_failures=0,polling_revision=polling_revision+1 WHERE workspace_id=?
+                """, enabled, enabled, clock.millis(), workspaceId);
+        return true;
     }
 
     public boolean begin(String workspaceId, String id) {

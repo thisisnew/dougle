@@ -169,7 +169,9 @@ details > summary { cursor: pointer; }
   .provider-card { padding: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { [data-slot=button] { transition: none; } }
+.source-title > .source-actions { margin-left: auto; }
 .source-panel > .explorer { margin-top: 20px; border-radius: 18px; }
+.explorer.without-preview { grid-template-columns: minmax(0, 1fr); }
 .compact-source-list { margin: 0; padding: 0 18px; }
 .compact-source-list > li { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 0; align-items: center; }
 .compact-source-list .source-info { flex: 1; min-width: 0; }
@@ -187,4 +189,14 @@ details > summary { cursor: pointer; }
 .cli-launch-form { display: grid; gap: 18px; }
 .cli-launch-form > label:not(:last-of-type) { display: grid; gap: 8px; }
 .cli-launch-form > label:last-of-type { display: flex; align-items: center; gap: 10px; }
-.sidebar-bottom img { display: block; }
+.sidebar-bottom img { display: block; border-radius: 10px; object-fit: cover; }
+.workspace-polling { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+.workspace-polling small { flex-basis: 100%; color: #a23636; }
+.polling-toggle { width: 38px; height: 24px; padding: 3px; border-radius: 99px; background: #cbd0da; flex-shrink: 0; }
+.polling-toggle i { display: block; width: 18px; height: 18px; border-radius: 50%; background: white; transition: transform .15s ease; }
+.polling-toggle[aria-checked=true] { background: #2868bd; }
+.polling-toggle[aria-checked=true] i { transform: translateX(14px); }
+.polling-toggle[data-mixed=true] { background: #96773d; }
+.polling-toggle[data-mixed=true] i { transform: translateX(7px); }
+.polling-toggle:disabled { opacity: .5; cursor: wait; }
+.workspace-manager li > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }

@@ -4,6 +4,7 @@ import dev.knowledgeforge.search.application.SearchIndex;
 import dev.knowledgeforge.search.application.SearchService;
 import dev.knowledgeforge.sources.application.SourceService;
 import dev.knowledgeforge.sources.domain.Source;
+import dev.knowledgeforge.sources.domain.WorkspacePolling;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,17 @@ public class SourceController {
     public record Registration(String name, String kind, String location, String domain) {}
     public record PollingSettings(Boolean enabled, Integer intervalSeconds, Integer expectedRevision) {}
     public record Metadata(String name, String domain, Integer expectedRevision) {}
+    public record WorkspacePollingSettings(Boolean enabled, Integer expectedRevision) {}
+
+    @GetMapping("/source-polling")
+    public WorkspacePolling workspacePolling(@PathVariable String workspaceId) {
+        return sources.workspacePolling(workspaceId);
+    }
+
+    @PatchMapping("/source-polling")
+    public WorkspacePolling workspacePolling(@PathVariable String workspaceId, @RequestBody WorkspacePollingSettings request) {
+        return sources.configureWorkspacePolling(workspaceId, request.enabled(), request.expectedRevision());
+    }
 
     @PatchMapping("/sources/{id}")
     public Source edit(@PathVariable String workspaceId, @PathVariable String id, @RequestBody Metadata request) {

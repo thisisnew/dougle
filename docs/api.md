@@ -1,4 +1,7 @@
-# API 명세
+# API
+
+0.1.14: `GET /api/workspaces/{id}/source-polling` → `{enabled,revision,mixed}`. 같은 경로 PATCH `{enabled,expectedRevision}`는 Workspace 정책과 기존 Source 활성 여부를 원자적으로 갱신합니다. 신규 Source는 저장한 정책을 상속합니다. 누락/잘못된 입력 400, 없는 Workspace 404, revision 충돌 409. 기존 개별 폴링 API는 호환 유지합니다.
+ 명세
 
 0.1.12 네이티브 명령 `select_source_folder()`는 인자를 받지 않고 폴더 경로 또는 취소 시 null을 반환합니다. 현재 앱의 정확한 loopback origin과 main 창만 허용하며 파일 선택/쓰기/임의 실행 권한은 없습니다. `POST .../sources`의 LOCAL_FOLDER는 등록 시 실제 디렉터리를 검증합니다. [설정·자료 추가](folder-settings.md).
 
