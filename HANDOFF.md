@@ -1,8 +1,8 @@
 # Knowledge Forge — 이어서 작업하기
 
-## 현재 작업: 0.1.14 화면 간소화
+## 최신: 0.1.14 화면 간소화 · DB v23
 
-최종 앱 소스 `d56af1a`: 자료 아이콘/목록·연결 유지·Workspace 자동 갱신 토글(DB v23)·중복 이름 검사·네이티브 다색 로고를 포함합니다. GitHub 저장소는 `thisisnew/dougle`. UI 264·Rust 20·가상 브라우저·최종 Intel WebKit/단일 창·두 CPU 서명/정적 검사 통과, 이 Mac 최종 재설치 및 UI 200/API 403 확인 완료. Java 전체에는 기존 종료 관측 타이밍 실패/임시 Lucene 폴더 정리 오류가 있어 완전 통과로 보고하지 않습니다. 변경 대상 검사는 통과했습니다. 공개 자산 업로드·검증·피드 승격은 진행 중입니다. [변경 설계](docs/library-simplification.md), [검증·배포 상태](docs/release-0.1.14-report.md).
+최종 앱 소스 `d56af1a`: 자료 아이콘/목록·연결 유지·Workspace 자동 갱신 토글(DB v23)·중복 이름 검사·네이티브 다색 로고를 포함합니다. GitHub 저장소는 `thisisnew/dougle`. UI 264·Rust 20·가상 브라우저·최종 Intel WebKit/단일 창·두 CPU 서명/정적 검사 통과, 이 Mac 최종 재설치 및 UI 200/API 403 확인 완료. Java 전체에는 기존 종료 관측 타이밍 실패/임시 Lucene 폴더 정리 오류가 있어 완전 통과로 보고하지 않습니다. 변경 대상 검사는 통과했습니다. 새 저장소의 `v0.1.14-preview.1`에 자산 10개를 해시 검증 후 공개했습니다. 공개 자산의 서명·해시 재검증 후 0.1.14 업데이트 피드를 승격했습니다. [변경 설계](docs/library-simplification.md), [검증·배포 상태](docs/release-0.1.14-report.md).
 
 ## 진행 중: Dougle 0.1.13
 

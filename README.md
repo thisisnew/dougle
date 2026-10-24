@@ -11,12 +11,12 @@ Dougle은 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI�
 
 ## 설치하기
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.13-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.14-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
 3. 앱을 열고 **Workspace 만들기**로 첫 서재를 만듭니다.
-4. **자료 → 자료 추가**에서 파일·폴더·웹 링크·GitHub를 고릅니다. **AI 연결**에서 AI와 모델을 선택하고 로그인합니다.
+4. **자료 → +**에서 파일·폴더·웹 링크·GitHub를 고릅니다. **AI 연결**에서 AI와 모델을 선택하고 로그인합니다.
 5. **대화**에서 질문하세요. 참고 자료를 확인하고 전송에 동의하면 답변을 받습니다. **질문 기록**의 카드를 누르면 지난 대화를 다시 볼 수 있습니다.
 
 연결한 자료는 **동기화 아이콘**으로 한 번에 갱신합니다. 자동 갱신은 **설정 → Workspace 관리**에서 켜고 끕니다. [자료·설정 안내](docs/library-simplification.md)
