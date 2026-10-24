@@ -73,7 +73,19 @@
 .empty-icon { background: #f1f0fc; color: #7771c8; border-color: #e5e3f6; }
 .empty-state, .empty-state h2, .empty-state p, .empty-state > span, .preview-empty, .preview-empty strong, .preview-empty p,
 .pane-footer, .file-meta, .source-hint, .source-info span, .source-info small, .source-polling small, dt { color: #737b8e; }
-.source-form, .knowledge-panel pre, .draft-section pre { border-radius: 12px; background: #f6f7fb; }
+.knowledge-panel pre, .draft-section pre { border-radius: 12px; background: #f6f7fb; }
+.source-form { display: grid; gap: 20px; padding: 20px; border: 1px solid #e3e8f0; border-radius: 18px; background: #fff; }
+.source-kind-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.source-kind-options button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 9px 16px; border: 1px solid transparent; border-radius: 12px; background: transparent; color: #687486; font: inherit; font-size: 13px; cursor: pointer; }
+.source-kind-options button:hover { background: #f4f7fb; }
+.source-kind-options button[aria-pressed=true] { background: #edf4ff; color: #2868bd; border-color: #d6e5fa; }
+.source-kind-options button:disabled { cursor: default; opacity: .5; }
+.source-add-target { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.source-add-target > input { flex: 1; width: 0; }
+.source-add-target > button, .source-picker-button { min-height: 44px; flex-shrink: 0; }
+.source-folder-target { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.source-folder-target output { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #5b6778; font-size: 13px; }
+@media (max-width: 600px) { .source-form { padding: 14px; gap: 16px; } .source-kind-options { display: grid; grid-template-columns: repeat(2, 1fr); } .source-kind-options button { padding-inline: 10px; } .source-folder-target { align-items: flex-start; flex-direction: column; gap: 8px; } .source-folder-target output { max-width: 100%; } }
 .tag, .evidence-item, .answer-preparation, .answer-approval, .comparison-grid > section, .search-hit > button:first-child,
 .source-confirm, .preview-content pre { border-radius: 12px; border-color: #e0e3ed; }
 .tag { background: #edf4fc; color: #6761ae; }

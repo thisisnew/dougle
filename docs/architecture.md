@@ -1,5 +1,7 @@
 # 아키텍처
 
+0.1.16의 자료 등록은 `SourcePanel → sourceName → 기존 Source API`로 이름을 자동 생성하고 신규 domain을 빈 문자열로 보냅니다. 이름/분류 입력은 없으며 기존 데이터와 API 계약은 유지합니다. [검증·범위](release-0.1.16-report.md).
+
 0.1.14는 `SourcePanel.renderLibrary`로 연결 자료 행과 App의 업로드 탐색기를 통합합니다. 연결 루트는 중복 제거하고 폴더 선택 시 기존 Entry API로 탐색합니다. 전체 동기화는 기존 Source별 POST를 순서대로 호출하며 실패 후에도 다음 자료를 처리합니다. 자동 갱신은 `WorkspacePollingToggle → SourceController → SourceService → JdbcSourceStore`를 통해 DB v23의 Workspace 정책을 저장하며 새 Source가 이를 상속합니다. AI/승인 계약은 바꾸지 않습니다. [화면 설계](library-simplification.md).
 
 0.1.13의 사용자 브랜드는 **Dougle · 더글**입니다. `Wordmark`를 대화/사이드바에서 공유하고, 자료·질문·승인·인증 모델은 변경하지 않습니다. [화면·아이콘 설계](dougle-brand.md).

@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { FolderInput, Link, Plus, RefreshCw, Search, Trash2 } from 'lucide-react'
+import { File, FolderInput, Github, Link, Plus, RefreshCw, Search, Trash2 } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { request } from './api'
 import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
 import { hasFolderPicker, selectFolder } from './folderPicker'
+import { sourceName } from './sourceName'
 import type { RelationSeed } from './RelationPanel'
 const RelationPanel = lazy(() => import('./RelationPanel'))
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
@@ -24,9 +25,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [sources, setSources] = useState<Source[]>([])
   const [formOpen, setFormOpen] = useState(false)
   const [kind, setKind] = useState(onUpload ? 'FILE' : 'LOCAL_FOLDER')
-  const [name, setName] = useState('')
   const [location, setLocation] = useState('')
-  const [domain, setDomain] = useState('')
   const [busy, setBusy] = useState('')
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
@@ -93,7 +92,6 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       const selected = await selectFolder()
       if (generation !== pickerGeneration.current || !selected) return
       setLocation(selected)
-      setName(previous => previous || selected.split('/').filter(Boolean).at(-1) || '새 폴더')
     } catch (reason) { if (generation === pickerGeneration.current) setError((reason as Error).message) }
     finally { if (generation === pickerGeneration.current) setPicking(false) }
   }
@@ -122,15 +120,16 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   function register(event: FormEvent) {
     event.preventDefault()
     if (kind === 'FILE' || picking || busy || !location.trim()) return
+    let name: string
+    try { name = sourceName(kind, location) }
+    catch { setError('올바른 주소를 입력해 주세요.'); return }
     void mutate('create', async () => {
       await request(`${base}/sources`, {
-        method: 'POST', body: JSON.stringify({ name, kind, location, domain }),
+        method: 'POST', body: JSON.stringify({ name, kind, location: location.trim(), domain: '' }),
         signal: mutationAbort.current?.signal,
       })
       setFormOpen(false)
-      setName('')
       setLocation('')
-      setDomain('')
     })
   }
 
@@ -189,15 +188,20 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     <div className="source-title">{!manageOnly && <h2><Link size={17} /> 자료 검색</h2>}<div className="source-actions"><Button size="icon" variant="ghost" aria-label="동기화" title={busy === 'sync-all' ? '동기화 중…' : '동기화'} aria-busy={busy === 'sync-all'} disabled={!!busy || !sources.length || sources.some(source => source.status === 'SYNCING')} onClick={() => void syncAll()}><RefreshCw /></Button><Button size="icon" variant="ghost" aria-label="자료 추가" title="자료 추가" aria-expanded={formOpen} disabled={!!busy || picking} onClick={() => setFormOpen(!formOpen)}><Plus /></Button></div></div>
     {error && <p role="alert" className="modal-error">{error}</p>}
     {formOpen && <form onSubmit={register} className="source-form">
-      <label>종류<select aria-label="Source 종류" disabled={picking || !!busy} value={kind} onChange={event => { setKind(event.target.value); setLocation('') }}>
-        {onUpload && <option value="FILE">파일</option>}<option value="LOCAL_FOLDER">폴더</option><option value="URL">웹 링크</option><option value="GITHUB">GitHub</option>
-      </select></label>
-      {kind === 'FILE' ? <div className="source-location folder-picker"><Button type="button" variant="outline" onClick={onUpload}>파일 선택</Button><small>선택한 파일의 복사본을 보관합니다. 변경 내용을 계속 반영하려면 폴더를 선택하세요.</small></div> : <>
-      <label>이름<input required maxLength={120} aria-label="Source 이름" value={name} onChange={event => setName(event.target.value)} placeholder="예: 실험 기록" /></label>
-      {kind === 'LOCAL_FOLDER' ? <div className="source-location folder-picker"><span>폴더</span><Button type="button" variant="outline" disabled={picking || !!busy || !hasFolderPicker()} onClick={() => void chooseFolder()}><FolderInput />{picking ? '선택 중…' : '폴더 선택'}</Button><output aria-label="선택한 폴더">{location || '선택한 폴더 없음'}</output><small>{hasFolderPicker() ? '폴더 안의 파일을 동기화합니다. 개별 파일은 종류에서 파일을 선택하세요.' : '폴더 선택은 설치한 Dougle 앱에서 지원합니다.'}</small></div> : <label className="source-location">위치<input required maxLength={2048} aria-label="Source 위치" value={location} onChange={event => setLocation(event.target.value)} placeholder={kind === 'GITHUB' ? 'https://github.com/owner/repository' : 'https://example.com/document'} /></label>}
-      <label>분류 (선택)<input maxLength={80} aria-label="Source 도메인" value={domain} onChange={event => setDomain(event.target.value)} placeholder="예: 프로젝트 이름" /></label>
-      <Button type="submit" size="sm" disabled={!!busy || picking || !location.trim()}>등록</Button>
-      </>}
+      <div className="source-kind-options" role="group" aria-label="자료 종류">
+        {[
+          ...(onUpload ? [{ value: 'FILE', label: '파일', icon: File }] : []),
+          { value: 'LOCAL_FOLDER', label: '폴더', icon: FolderInput },
+          { value: 'URL', label: '웹 링크', icon: Link },
+          { value: 'GITHUB', label: 'GitHub', icon: Github },
+        ].map(({ value, label, icon: Icon }) => <button key={value} type="button" aria-pressed={kind === value} disabled={picking || !!busy} onClick={() => { setKind(value); setLocation(''); setError('') }}><Icon size={17} aria-hidden="true" />{label}</button>)}
+      </div>
+      <div className="source-add-target">
+        {kind === 'FILE' ? <Button type="button" variant="outline" className="source-picker-button" onClick={onUpload}><File aria-hidden="true" />파일 선택</Button> : <>
+          {kind === 'LOCAL_FOLDER' ? <div className="source-folder-target"><Button type="button" variant="outline" className="source-picker-button" disabled={picking || !!busy || !hasFolderPicker()} title={!hasFolderPicker() ? '설치한 앱에서 선택할 수 있습니다' : undefined} onClick={() => void chooseFolder()}><FolderInput aria-hidden="true" />{picking ? '선택 중…' : '폴더 선택'}</Button>{location && <output aria-label="선택한 폴더" title={location}>{sourceName(kind, location)}</output>}</div> : <input type="url" required maxLength={2048} aria-label={kind === 'GITHUB' ? 'GitHub 주소' : '웹 링크 주소'} disabled={!!busy} value={location} onChange={event => setLocation(event.target.value)} placeholder={kind === 'GITHUB' ? 'GitHub 저장소 주소 붙여넣기' : '링크 붙여넣기'} />}
+          <Button type="submit" disabled={!!busy || picking || !location.trim()}>{busy === 'create' ? '추가 중…' : '추가'}</Button>
+        </>}
+      </div>
     </form>}
     {renderLibrary ? renderLibrary(sources, sourceRows) : sourceRows}
     {!manageOnly && <><form className="search-form" onSubmit={event => void search(event)}>
