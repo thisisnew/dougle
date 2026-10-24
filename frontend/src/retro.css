@@ -12,6 +12,13 @@
 .library-more > summary { padding: 8px 13px; font-size: 12px; color: #777e8f; cursor: pointer; }
 .sidebar-bottom { margin-top: auto; border-color: #e0e4ed; color: #687083; padding-top: 16px; }
 .sidebar-bottom small { color: #7c8391; }
+.sidebar-wordmark { border: 0; font-size: 10px; font-weight: 600; letter-spacing: 1.6px; color: #858b9b; }
+.workspace-actions { display: flex; align-items: center; gap: 2px; }
+.workspace-manager { list-style: none; padding: 0; margin: 20px 0; max-height: 45vh; overflow-y: auto; }
+.workspace-manager li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid #eceef4; }
+.workspace-manager li > span { min-width: 0; overflow-wrap: anywhere; }
+.workspace-manager small { display: block; margin-top: 4px; font-size: 11px; color: #737b8e; }
+.workspace-manager button { flex-shrink: 0; }
 .topbar { height: 72px; background: #fafbfe; border-bottom: 0; color: #747b8b; padding-inline: 36px; }
 .provider-trigger { border-radius: 999px !important; padding-inline: 15px; gap: 8px; letter-spacing: .4px; }
 .provider-trigger i { width: 6px; height: 6px; border-radius: 50%; background: #a2a8b5; }

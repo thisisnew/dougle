@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, MessageSquare, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Area, type Entry, type EvidenceLocation, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
@@ -15,7 +15,7 @@ import { loadModel, requestedModel } from './modelPreference'
 const ProviderConnectionPanel = lazy(() => import('./ProviderConnectionPanel'))
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
 
-type Modal = { kind: 'workspace' | 'folder' } | { kind: 'delete-workspace' } | { kind: 'delete-entry'; entry: Entry }
+type Modal = { kind: 'workspace' | 'folder' | 'manage-workspaces' } | { kind: 'delete-workspace'; id: string; name: string } | { kind: 'delete-entry'; entry: Entry }
 const emptySession: Session = { workspaces: [], activeWorkspaceId: null }
 const formatSize = (size: number) => size < 1024 ? `${size} B` : size < 1024 ** 2 ? `${(size / 1024).toFixed(1)} KB` : `${(size / 1024 ** 2).toFixed(1)} MB`
 
@@ -170,16 +170,20 @@ export default function App() {
         setQuestionId(null)
       } else if (modal.kind === 'folder' && activeId) {
         await request(`/workspaces/${activeId}/folders`, { method: 'POST', body: JSON.stringify({ name, parentId }) })
-      } else if (modal.kind === 'delete-workspace' && activeId) {
-        await request(`/workspaces/${activeId}`, { method: 'DELETE' })
+      } else if (modal.kind === 'delete-workspace') {
+        await request(`/workspaces/${modal.id}`, { method: 'DELETE' })
         await refreshSession()
-        resetNavigation()
-        setQuestionId(null)
+        if (modal.id === activeId) {
+          resetNavigation()
+          setQuestionId(null)
+          setView('CHAT')
+          setHistoryOpen(false)
+        }
       } else if (modal.kind === 'delete-entry' && activeId) {
         await request(entryPath(activeId, modal.entry.id), { method: 'DELETE' })
       }
       setRevision(value => value + 1)
-      setModal(null)
+      setModal(modal.kind === 'delete-workspace' ? { kind: 'manage-workspaces' } : null)
     } catch (reason) { setModalError((reason as Error).message) }
     finally { setBusy(false) }
   }
@@ -200,12 +204,13 @@ export default function App() {
   }
 
   const deleting = modal?.kind === 'delete-entry' || modal?.kind === 'delete-workspace'
-  const modalTitle = modal?.kind === 'workspace' ? '새 Workspace' : modal?.kind === 'folder' ? '새 폴더' : '삭제 확인'
+  const managing = modal?.kind === 'manage-workspaces'
+  const modalTitle = managing ? 'Workspace 관리' : modal?.kind === 'workspace' ? '새 Workspace' : modal?.kind === 'folder' ? '새 폴더' : '삭제 확인'
   return (
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand"><div className="brand-icon"><Layers3 size={23} /></div><div>Knowledge Forge<small>나만의 지식이 쌓이는 곳</small></div></div>
-        <div className="workspace-label">WORKSPACE <Button variant="ghost" size="icon" aria-label="Workspace 생성" disabled={busy || !ready} onClick={() => openModal({ kind: 'workspace' })}><Plus /></Button></div>
+        <div className="workspace-label">WORKSPACE <div className="workspace-actions"><Button variant="ghost" size="icon" aria-label="Workspace 관리" title="Workspace 관리" disabled={busy || !ready} onClick={() => openModal({ kind: 'manage-workspaces' })}><Settings2 /></Button><Button variant="ghost" size="icon" aria-label="Workspace 생성" disabled={busy || !ready} onClick={() => openModal({ kind: 'workspace' })}><Plus /></Button></div></div>
         <label className="sr-only" htmlFor="workspace">Workspace 선택</label>
         <select id="workspace" value={activeId ?? ''} disabled={busy || !ready || !session.workspaces.length} onChange={event => void switchWorkspace(event.target.value)}>
           {!activeId && <option value="">Workspace를 만들어 주세요</option>}
@@ -217,7 +222,7 @@ export default function App() {
           <details className="library-more"><summary>더 보기</summary><button className={view === 'LIBRARY' && !original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button><button className="nav-item" disabled={busy || !activeId} onClick={() => setHistoryOpen(true)}><MessageSquare size={19} /> 답변 관리</button></details>
         </nav>
         {activeId && <QuestionHistory key={activeId} workspaceId={activeId} revision={historyRevision} selectedId={questionId} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} />}
-        <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 자료 저장<small>AI 전송은 건별 승인</small></span></div>
+        <div className="sidebar-bottom sidebar-wordmark">KNOWLEDGE FORGE</div>
       </aside>
 
       <main>
@@ -227,7 +232,6 @@ export default function App() {
         <div className="page-content">
           {view === 'LIBRARY' && <div className="page-heading">
             <div><h1>{original ? '자료' : '지식 문서'}</h1><p className="subtitle">{original ? '질문에 사용할 파일과 링크를 모아 두세요.' : '원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.'}</p></div>
-            {workspace && <details className="secondary-tools"><summary>서재 관리</summary><Button variant="ghost" size="sm" disabled={busy} onClick={() => openModal({ kind: 'delete-workspace' })}><Trash2 /> Workspace 삭제</Button></details>}
           </div>}
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
           {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : !workspace ? (
@@ -281,12 +285,16 @@ export default function App() {
       <Dialog.Root open={!!modal} onOpenChange={open => { if (!open && !busy) setModal(null) }}>
         <Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="dialog-content" onEscapeKeyDown={event => { if (busy) event.preventDefault() }} onPointerDownOutside={event => { if (busy) event.preventDefault() }}>
           <Dialog.Title>{modalTitle}</Dialog.Title>
-          <Dialog.Description>{deleting ? `“${modal?.kind === 'delete-entry' ? modal.entry.name : workspace?.name}” 및 내부 자료가 삭제됩니다. 이 작업은 되돌릴 수 없습니다. PC의 원래 파일은 유지됩니다.` : modal?.kind === 'workspace' ? '프로젝트나 관심 주제별로 자료를 분리해 보관하세요.' : '현재 위치에 자료를 정리할 폴더를 만듭니다.'}</Dialog.Description>
-          <form onSubmit={event => void submitModal(event)}>
+          <Dialog.Description>{managing ? 'Workspace를 한곳에서 관리하세요.' : deleting ? `“${modal?.kind === 'delete-entry' ? modal.entry.name : modal?.kind === 'delete-workspace' ? modal.name : ''}” 및 내부 자료가 삭제됩니다. 이 작업은 되돌릴 수 없습니다. PC의 원래 파일은 유지됩니다.` : modal?.kind === 'workspace' ? '프로젝트나 관심 주제별로 자료를 분리해 보관하세요.' : '현재 위치에 자료를 정리할 폴더를 만듭니다.'}</Dialog.Description>
+          {managing ? <>
+            <ul className="workspace-manager">{session.workspaces.map(item => <li key={item.id}><span>{item.name}{item.id === activeId && <small>사용 중</small>}</span><Button variant="ghost" size="icon" aria-label={`${item.name} Workspace 삭제`} onClick={() => openModal({ kind: 'delete-workspace', id: item.id, name: item.name })}><Trash2 /></Button></li>)}</ul>
+            {!session.workspaces.length && <p>아직 Workspace가 없습니다.</p>}
+            <div className="dialog-actions"><Button variant="outline" onClick={() => setModal(null)}>닫기</Button><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> 새 Workspace</Button></div>
+          </> : <form onSubmit={event => void submitModal(event)}>
             {!deleting && <><label htmlFor="item-name">이름</label><input id="item-name" autoFocus required maxLength={120} value={name} onChange={event => setName(event.target.value)} placeholder={modal?.kind === 'workspace' ? '예: 나의 연구 노트' : '예: 참고 자료'} disabled={busy} /></>}
             {modalError && <p role="alert" className="modal-error">{modalError}</p>}
-            <div className="dialog-actions"><Button type="button" variant="outline" disabled={busy} onClick={() => setModal(null)}>취소</Button><Button type="submit" variant={deleting ? 'destructive' : 'default'} disabled={busy || (!deleting && !name.trim())}>{busy ? '저장 중…' : deleting ? '삭제' : '만들기'}</Button></div>
-          </form>
+            <div className="dialog-actions"><Button type="button" variant="outline" disabled={busy} onClick={() => setModal(modal?.kind === 'delete-workspace' ? { kind: 'manage-workspaces' } : null)}>취소</Button><Button type="submit" variant={deleting ? 'destructive' : 'default'} disabled={busy || (!deleting && !name.trim())}>{busy ? '저장 중…' : deleting ? '삭제' : '만들기'}</Button></div>
+          </form>}
         </Dialog.Content></Dialog.Portal>
       </Dialog.Root>
     </div>

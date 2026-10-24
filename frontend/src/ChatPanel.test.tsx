@@ -22,6 +22,13 @@ it('미연결 상태에서는 질문 전송만 잠그고 자료와 연결을 열
   expect(api).not.toHaveBeenCalled()
 })
 
+it('시작 화면은 짧은 제목과 입력 안내만 표시한다', () => {
+  render(<ChatPanel {...props} />)
+  expect(screen.getByRole('heading', { name: '무엇이 궁금하세요?' })).toBeInTheDocument()
+  expect(screen.getByPlaceholderText('궁금한 점을 물어보세요')).toBeEnabled()
+  expect(screen.queryByText('흩어진 자료에서, 필요한 답을.')).not.toBeInTheDocument()
+})
+
 it('질문 한 번으로 로컬 근거를 만들고 모델을 미리보기에 고정하되 자동 전송하지 않는다', async () => {
   api.mockResolvedValueOnce(bundle).mockResolvedValueOnce({ bundleId: 'bundle', bundleDigest: 'digest', provider: 'CODEX', requestedModel: 'fixture-model', digest: 'preview', prompt: '가상 전송문', validation: { eligible: true } })
   render(<ChatPanel {...props} />)

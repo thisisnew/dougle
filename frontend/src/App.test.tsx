@@ -18,6 +18,35 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it.each([false, true])('별도 관리 창에서 선택한 Workspace만 확인 후 삭제한다: 활성=%s', async active => {
+    const user = userEvent.setup()
+    const other = { ...workspace, id: 'two', name: '별도 연구' }
+    const target = active ? workspace : other
+    let removed = false
+    api.mockImplementation(async (path, options) => {
+      if (path === '/session') return { workspaces: [workspace, other].filter(item => !removed || item.id !== target.id), activeWorkspaceId: removed && active ? 'two' : 'one' }
+      if (options?.method === 'DELETE') { removed = true; return undefined }
+      return []
+    })
+    render(<App />)
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Workspace 관리' })).toBeEnabled())
+    expect(screen.queryByText('이 PC에 자료 저장')).not.toBeInTheDocument()
+    expect(screen.queryByText('서재 관리')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Workspace 삭제/ })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Workspace 관리' }))
+    await user.click(screen.getByRole('button', { name: `${target.name} Workspace 삭제` }))
+    expect(screen.getByRole('dialog')).toHaveTextContent(`“${target.name}”`)
+    await user.click(screen.getByRole('button', { name: '취소' }))
+    expect(api.mock.calls.some(([, options]) => options?.method === 'DELETE')).toBe(false)
+    await user.click(screen.getByRole('button', { name: `${target.name} Workspace 삭제` }))
+    await user.click(screen.getByRole('button', { name: '삭제' }))
+    await screen.findByRole('dialog', { name: 'Workspace 관리' })
+    expect(api).toHaveBeenCalledWith(`/workspaces/${target.id}`, { method: 'DELETE' })
+    expect(screen.queryByRole('button', { name: `${target.name} Workspace 삭제` })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '닫기' }))
+    expect(screen.getByLabelText('Workspace 선택')).toHaveValue(active ? 'two' : 'one')
+  })
+
   it('AI 창을 닫아도 상단에 마지막 로그인 확인 결과를 표시한다', async () => {
     localStorage.clear()
     Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable: true, value: function (this: HTMLDialogElement) { this.setAttribute('open', '') } })
