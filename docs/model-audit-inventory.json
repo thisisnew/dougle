@@ -6,7 +6,7 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 327,
+  "totalFiles": 328,
   "testOrFixtureFiles": 96,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
@@ -1944,14 +1944,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "28b0fd4f74fb01b320dd69e5dca3f9278227b2a3bed8e51848b8a99adc226be5",
+      "sha256": "5fbe799ec9abbd806e19c71e86153edce34a30283284e854faf13f5be7098b58",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "3c37fec46b7109b9c7a0a088ee5f80e9cd3c9d1aca2a28dbcbfa5521be0f9571",
+      "sha256": "c9d54a8068032345c00e78ea84c184f8593fec6a8c3e3d709dcf26185ad4d464",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -1967,7 +1967,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "bc400a12d985c5bfa45dd347330b8e50cc48de692bc815c89cc74ac3f8833854",
+      "sha256": "26fa33ccaee6486c1703292ef5db9078fb33c87b70c51389ea38c949385bdf95",
       "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2016,7 +2016,7 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "de23287c06551fb2ae2309da9b749e07056a2fc7c1463831b9e66cb90dc90e88",
+      "sha256": "cb223c92ced3f640b64764bfc4926351baed57da005b04e990f212600823828e",
       "lines": 320,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
@@ -2208,7 +2208,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "5a0a93ff72ea0e9af8e27ff0fd6dc9ead4acd444b7506d1b47727cb2bb51c894",
+      "sha256": "02ea1973b1f101b003dfa62827d637e9b9e72acfa56dba43e67f25c7ee1322f9",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2322,15 +2322,15 @@
     },
     {
       "path": "frontend/src/App.test.tsx",
-      "sha256": "829e8912e3ffaa265da131a48697ca8dae1adcf4b8aca8f8c4f7742ee638b0fa",
-      "lines": 145,
+      "sha256": "ff7c0045102ca41942071968d5386ad8bc2b0d1afb3beaf4b488a4a0f00c0d9a",
+      "lines": 162,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "784f4f8c93554a890a8203db83b6c736d2f5d14e551054b4bc93655cf6189d27",
-      "lines": 261,
+      "sha256": "2c3931a741f1d6eeaab4cd32bfc14b3ec0c595292669e764410a638b6d138d5d",
+      "lines": 263,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
@@ -2631,15 +2631,15 @@
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.test.tsx",
-      "sha256": "a8f1714843745d492d20c917eaac1242a4194a2ddae9c567a897bc3ffd6510ec",
-      "lines": 89,
+      "sha256": "4295b3a30404689499cf9f0317d0cb0d1da90e105d102db1ca937a26446eca02",
+      "lines": 121,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.tsx",
-      "sha256": "ec92a68a560f4f749e436756ac46e594816611ff852906e92274be481cd038e0",
-      "lines": 115,
+      "sha256": "bbdf254565ab49c9a4dc0baf42bf6975c855d459330f3c765fddaf33d4dc2fc2",
+      "lines": 125,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/ProviderConnectionPanel.test.tsx"
@@ -2906,6 +2906,13 @@
       ]
     },
     {
+      "path": "frontend/src/connectionIndicator.ts",
+      "sha256": "a4a5259715376f133181f306a53b88f54b217c5f9e2cad5168f88faac8814a1c",
+      "lines": 7,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "frontend/src/desktopTransport.test.ts",
       "sha256": "d57f613b8b9a6f87c2a2ec456f641a8a4602dd11f4200e687feb13763d49279e",
       "lines": 80,
@@ -3016,8 +3023,8 @@
     },
     {
       "path": "frontend/src/retro.css",
-      "sha256": "1722661d9df80a7e5b9effe6a7886ce4c6ba76c18ec0ded7e86e05ec744f3fe2",
-      "lines": 110,
+      "sha256": "e1a1bd821e436d51645504fd2057f3c2624a969b70fab3b83d0003f4e57d30f6",
+      "lines": 117,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },

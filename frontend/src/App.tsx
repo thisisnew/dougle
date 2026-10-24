@@ -8,6 +8,7 @@ import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import KnowledgePanel from './KnowledgePanel'
 import PixelLandscape from './PixelLandscape'
+import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
 const ProviderConnectionPanel = lazy(() => import('./ProviderConnectionPanel'))
 
 type Modal = { kind: 'workspace' | 'folder' } | { kind: 'delete-workspace' } | { kind: 'delete-entry'; entry: Entry }
@@ -27,6 +28,7 @@ export default function App() {
   const [error, setError] = useState('')
   const [modal, setModal] = useState<Modal | null>(null)
   const [cliSettingsOpen, setCliSettingsOpen] = useState(false)
+  const [connection, setConnection] = useState<ConnectionIndicator | null>(null)
   const [name, setName] = useState('')
   const [modalError, setModalError] = useState('')
   const [revision, setRevision] = useState(0)
@@ -188,8 +190,8 @@ export default function App() {
       </aside>
 
       <main>
-        <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><Button variant="outline" size="sm" disabled={!ready} onClick={() => setCliSettingsOpen(true)}>AI 연결</Button></header>
-        {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel onClose={() => setCliSettingsOpen(false)} /></Suspense>}
+        <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><Button variant="outline" size="sm" disabled={!ready} onClick={() => setCliSettingsOpen(true)} title="마지막 로그인 확인 결과입니다. 원격 연결이나 이용 한도를 보장하지 않습니다.">AI 연결{connection && <span className="ai-connection-badge" data-state={connection.state}>{connection.provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[connection.state]}</span>}</Button></header>
+        {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel checkOnOpen onClose={() => setCliSettingsOpen(false)} onConnectionChange={setConnection} /></Suspense>}
         <div className="page-content">
           <div className="page-heading">
             <div><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '파일과 폴더를 보관하고 검색하세요.' : '원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.'}</p></div>

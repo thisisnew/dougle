@@ -15,6 +15,38 @@ beforeEach(() => {
 })
 afterEach(() => { localStorage.clear() })
 
+it('상단에서 열면 자료 전송 없이 로그인 상태만 자동 확인한다', async () => {
+  api.mockResolvedValue({ provider: 'CODEX', state: 'AUTHENTICATED', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
+  render(<ProviderConnectionPanel checkOnOpen onClose={vi.fn()} />)
+  expect(await screen.findByText(/Codex · 로그인 확인/)).toBeInTheDocument()
+  expect(api).toHaveBeenCalledTimes(1)
+  expect(api).toHaveBeenCalledWith('/ai/providers/CODEX/connection', expect.objectContaining({ method: 'POST' }))
+})
+
+it('확인 전·진행 중·로그인 확인 결과를 눈에 띄는 상태로 전달한다', async () => {
+  let finish!: (value: unknown) => void
+  api.mockImplementation(() => new Promise(resolve => { finish = resolve }))
+  const changed = vi.fn()
+  render(<ProviderConnectionPanel onClose={vi.fn()} onConnectionChange={changed} />)
+  expect(screen.getByText(/Codex · 아직 확인하지 않음/)).toBeInTheDocument()
+  await userEvent.click(screen.getByRole('button', { name: '연결 상태 확인' }))
+  expect(changed).toHaveBeenLastCalledWith({ provider: 'CODEX', state: 'CHECKING' })
+  finish({ provider: 'CODEX', state: 'AUTHENTICATED', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
+  expect(await screen.findByText(/Codex · 로그인 확인/)).toBeInTheDocument()
+  expect(changed).toHaveBeenLastCalledWith({ provider: 'CODEX', state: 'AUTHENTICATED' })
+  await userEvent.selectOptions(screen.getByLabelText('사용할 AI'), 'CLAUDE')
+  expect(changed).toHaveBeenLastCalledWith({ provider: 'CLAUDE', state: 'UNCHECKED' })
+})
+
+it('통신 실패를 로그인 성공과 구별한다', async () => {
+  api.mockRejectedValue(new Error('가상 연결 오류'))
+  const changed = vi.fn()
+  render(<ProviderConnectionPanel onClose={vi.fn()} onConnectionChange={changed} />)
+  await userEvent.click(screen.getByRole('button', { name: '연결 상태 확인' }))
+  expect(await screen.findByText(/Codex · 확인 실패/)).toBeInTheDocument()
+  expect(changed).toHaveBeenLastCalledWith({ provider: 'CODEX', state: 'CHECK_FAILED' })
+})
+
 it('선택만 기억하고 실행하지 않으며 새 초안에 기본 제공자를 적용한다', async () => {
   const view = render(<ProviderConnectionPanel onClose={vi.fn()} />)
   expect(screen.getByText(/전용 로그인을 사용합니다/)).toBeInTheDocument()

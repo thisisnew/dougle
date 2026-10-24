@@ -18,6 +18,23 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it('AI 창을 닫아도 상단에 마지막 로그인 확인 결과를 표시한다', async () => {
+    localStorage.clear()
+    Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable: true, value: function (this: HTMLDialogElement) { this.setAttribute('open', '') } })
+    Object.defineProperty(HTMLDialogElement.prototype, 'close', { configurable: true, value: function (this: HTMLDialogElement) { this.removeAttribute('open') } })
+    api.mockImplementation(async path => path === '/session'
+      ? { workspaces: [], activeWorkspaceId: null }
+      : { provider: 'CODEX', state: 'AUTHENTICATED', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
+    render(<App />)
+    await waitFor(() => expect(screen.getByRole('button', { name: 'AI 연결' })).toBeEnabled())
+    await userEvent.click(screen.getByRole('button', { name: 'AI 연결' }))
+    const dialog = await screen.findByRole('dialog', { name: 'AI 연결' })
+    expect(await within(dialog).findByText(/Codex · 로그인 확인/)).toBeInTheDocument()
+    await userEvent.click(within(dialog).getByRole('button', { name: '닫기' }))
+    expect(screen.getByRole('button', { name: /AI 연결.*Codex · 로그인 확인/ })).toBeInTheDocument()
+    expect(screen.queryByRole('dialog', { name: 'AI 연결' })).not.toBeInTheDocument()
+  })
+
   it('세션 준비 전에는 버튼이 있어도 클릭되지 않고 준비 후에만 Workspace를 연다', async () => {
     let ready!: (value: { workspaces: never[]; activeWorkspaceId: null }) => void
     api.mockReturnValue(new Promise(resolve => { ready = resolve }))

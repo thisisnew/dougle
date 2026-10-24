@@ -1,5 +1,7 @@
 # Knowledge Forge
 
+<img src="desktop/src-tauri/icons/128x128.png" alt="안경 쓴 꼬마 탐정 아이콘" width="80" />
+
 **흩어진 자료를 나만의 지식 서재로.**
 
 파일·폴더·웹페이지를 모아 검색하고, 자료를 바탕으로 AI에게 질문하는 Mac 앱입니다.

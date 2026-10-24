@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import { preferredProvider, rememberProvider, type Provider } from './providerPreference'
+import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
 
 const AdvancedSettings = lazy(() => import('./CliLaunchPanel'))
 type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string }
@@ -14,7 +15,7 @@ const messages: Record<string, string> = {
   CHECK_FAILED: '연결 상태를 확인하지 못했습니다. 잠시 후 다시 확인해 주세요.',
 }
 
-export default function ProviderConnectionPanel({ onClose }: { onClose: () => void }) {
+export default function ProviderConnectionPanel({ onClose, onConnectionChange, checkOnOpen = false }: { onClose: () => void; onConnectionChange?: (value: ConnectionIndicator) => void; checkOnOpen?: boolean }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const pending = useRef<AbortController | null>(null)
   const [provider, setProvider] = useState<Provider>(preferredProvider)
@@ -26,9 +27,14 @@ export default function ProviderConnectionPanel({ onClose }: { onClose: () => vo
   const [acknowledged, setAcknowledged] = useState(false)
   const [loginBusy, setLoginBusy] = useState(false)
   const loggingIn = login?.state === 'PENDING'
+  const indicatorState = error ? 'CHECK_FAILED' : busy ? 'CHECKING' : status?.state ?? 'UNCHECKED'
+  useEffect(() => {
+    onConnectionChange?.({ provider, state: indicatorState })
+  }, [provider, indicatorState, onConnectionChange])
   useEffect(() => {
     const element = dialog.current!
     element.showModal()
+    if (checkOnOpen) void check()
     return () => { pending.current?.abort(); element.close() }
   }, [])
 
@@ -95,6 +101,10 @@ export default function ProviderConnectionPanel({ onClose }: { onClose: () => vo
     <div className="provider-connection-header"><h2>어떤 AI를 사용할까요?</h2><Button variant="outline" disabled={loggingIn || busy} onClick={onClose}>닫기</Button></div>
     <p>한 번 고르면 다음 질문과 지식 초안에서 기본으로 사용합니다. 이미 작성 중인 요청이나 승인은 바꾸지 않습니다.</p>
     <label>사용할 AI<select value={provider} disabled={loggingIn || loginBusy} onChange={event => choose(event.target.value as Provider)}><option value="CODEX">Codex</option><option value="CLAUDE">Claude</option></select></label>
+    <div className="ai-connection-indicator" data-state={indicatorState} role="status" aria-live="polite">
+      <strong><span aria-hidden="true">{indicatorState === 'AUTHENTICATED' ? '✓' : indicatorState === 'CHECKING' ? '◌' : '!'}</span> {provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</strong>
+      <p>{indicatorState === 'UNCHECKED' ? '아래 버튼으로 로그인 상태를 확인하세요.' : indicatorState === 'AUTHENTICATED' ? '로그인을 확인했습니다. 실제 AI 요청은 자료 전송 승인 후 진행합니다.' : indicatorState === 'CHECKING' ? '잠시만 기다려 주세요. 자료는 전송하지 않습니다.' : '아래 안내를 확인한 뒤 다시 확인해 주세요.'}</p>
+    </div>
     <Button disabled={busy || advanced || loggingIn} onClick={() => void check()}>{busy ? '확인 중…' : '연결 상태 확인'}</Button>
     <p>확인을 누르면 선택한 도구의 인증 상태만 조회합니다. 자료를 보내거나 AI 답변을 생성하지 않습니다.</p>
     {provider === 'CODEX' && <p>새 Mac 앱은 답변 스트리밍을 위한 전용 로그인을 사용합니다. 처음 한 번 이 앱에서 로그인하세요. 기존 Codex 로그인은 변경하지 않습니다.</p>}

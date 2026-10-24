@@ -1784,7 +1784,7 @@ dependencies = [
 
 [[package]]
 name = "knowledge-forge-desktop"
-version = "0.1.7"
+version = "0.1.8"
 dependencies = [
  "base64 0.22.1",
  "getrandom 0.4.3",
