@@ -321,6 +321,8 @@ mod startup_tests {
         assert!(page.contains("Dougle을 준비하고 있어요"));
         assert!(page.contains("id=\"failure-help\" hidden"));
         assert!(!page.contains("앱을 열 수 없습니다"));
+        assert!(!page.contains("앱을 종료한 뒤 다시 실행해 주세요."));
+        assert_eq!(page.matches("진행하던 AI 요청은 자동으로 다시 보내지 않습니다.").count(), 1);
         assert_eq!(page.matches("<span aria-hidden=\"true\">").count(), 6);
         for color in ["#3478db", "#dc6454", "#e5ab32", "#36966b"] {
             assert!(style.contains(color));
