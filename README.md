@@ -11,7 +11,7 @@ Dougle은 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI�
 
 ## 설치하기
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.14-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.15-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
