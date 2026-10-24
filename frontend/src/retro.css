@@ -8,7 +8,14 @@
 .dougle-wordmark > span:nth-child(3) { color: #e5ab32; }
 .dougle-wordmark > span:nth-child(4) { color: #36966b; }
 @media (forced-colors: active) { .dougle-wordmark > span:nth-child(n) { color: CanvasText; } }
-.settings-page { display: grid; gap: 20px; max-width: 900px; }
+.settings-page { display: grid; gap: 20px; max-width: 720px; }
+.settings-page > .page-heading { margin-bottom: 8px; }
+.settings-row { appearance: none; display: grid; grid-template-columns: 44px minmax(0, 1fr) 19px; align-items: center; gap: 16px; width: 100%; padding: 20px 24px; border: 1px solid #e3e8f0; border-radius: 20px; background: #fff; color: #303746; font: inherit; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer; transition: background-color .15s, border-color .15s; }
+.settings-row:hover { background: #f8fbff; border-color: #bfd1ec; }
+.settings-row:focus-visible { outline: 3px solid #3478db; outline-offset: 3px; }
+.settings-row-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: #edf3fc; color: #3478db; }
+.settings-row > svg { color: #8b97ac; }
+@media (max-width: 600px) { .settings-row { padding: 16px; gap: 12px; } }
 .settings-card { background: #fff; border: 1px solid #e3e6ee; border-radius: 20px; padding: 24px; }
 .settings-card h2 { font-size: 17px; margin: 0 0 10px; }
 .settings-card p { color: #73798a; margin-bottom: 16px; }

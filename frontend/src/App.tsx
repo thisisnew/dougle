@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ArrowLeft, ChevronRight, Download, FileText, Folder, FolderOpen, History, MessageSquare, Plus, Settings2, Trash2, X } from 'lucide-react'
+import { ArrowLeft, ChevronRight, Download, FileText, Folder, FolderOpen, History, MessageSquare, PanelsTopLeft, Plus, Settings2, Trash2, X } from 'lucide-react'
 import clueMascot from './assets/clue-mascot.png'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Entry, type Preview, type Session } from './api'
@@ -205,7 +205,7 @@ export default function App() {
             <div><h1>자료</h1><p className="subtitle">질문에 사용할 파일과 링크를 모아 두세요.</p></div>
           </div>}
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
-          {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : view === 'SETTINGS' ? <div className="settings-page"><div className="page-heading"><h1>설정</h1></div><section className="settings-card"><h2>Workspace</h2><Button variant="outline" onClick={() => openModal({ kind: 'manage-workspaces' })}>Workspace 관리</Button></section></div> : !workspace ? (
+          {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : view === 'SETTINGS' ? <div className="settings-page"><div className="page-heading"><h1>설정</h1></div><button type="button" className="settings-row" onClick={() => openModal({ kind: 'manage-workspaces' })}><span className="settings-row-icon" aria-hidden="true"><PanelsTopLeft size={22} /></span><span>Workspace 관리</span><ChevronRight size={19} aria-hidden="true" /></button></div> : !workspace ? (
             <section className="welcome"><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : view === 'HISTORY' ? <QuestionGrid key={activeId} workspaceId={activeId!} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} /> : view === 'CHAT' ? <ChatPanel key={`${activeId}/${chatRevision}`} workspaceId={activeId!} selectedId={questionId} connection={connection}
             onCreated={id => { setQuestionId(id); setHistoryRevision(value => value + 1) }} onDeleted={() => { setQuestionId(null); setHistoryRevision(value => value + 1); setChatRevision(value => value + 1) }} onConnect={() => setCliSettingsOpen(true)} onSources={() => resetNavigation()} /> : (
@@ -254,13 +254,13 @@ export default function App() {
       </main>
 
       <Dialog.Root open={!!modal} onOpenChange={open => { if (!open && !busy) setModal(null) }}>
-        <Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="dialog-content" onEscapeKeyDown={event => { if (busy) event.preventDefault() }} onPointerDownOutside={event => { if (busy) event.preventDefault() }}>
+        <Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content {...(managing ? { 'aria-describedby': undefined } : {})} className="dialog-content" onEscapeKeyDown={event => { if (busy) event.preventDefault() }} onPointerDownOutside={event => { if (busy) event.preventDefault() }}>
           <Dialog.Title>{modalTitle}</Dialog.Title>
-          <Dialog.Description>{managing ? 'Workspace를 한곳에서 관리하세요.' : deleting ? `“${modal?.kind === 'delete-entry' ? modal.entry.name : modal?.kind === 'delete-workspace' ? modal.name : ''}” 및 내부 자료가 삭제됩니다. 이 작업은 되돌릴 수 없습니다. PC의 원래 파일은 유지됩니다.` : modal?.kind === 'workspace' ? '프로젝트나 관심 주제별로 자료를 분리해 보관하세요.' : '현재 위치에 자료를 정리할 폴더를 만듭니다.'}</Dialog.Description>
+          {!managing && <Dialog.Description>{deleting ? `“${modal?.kind === 'delete-entry' ? modal.entry.name : modal?.kind === 'delete-workspace' ? modal.name : ''}” 및 내부 자료가 삭제됩니다. 이 작업은 되돌릴 수 없습니다. PC의 원래 파일은 유지됩니다.` : modal?.kind === 'workspace' ? '프로젝트나 관심 주제별로 자료를 분리해 보관하세요.' : '현재 위치에 자료를 정리할 폴더를 만듭니다.'}</Dialog.Description>}
           {managing ? <>
-            <ul className="workspace-manager">{session.workspaces.map(item => <li key={item.id}><span>{item.name}{item.id === activeId && <small>사용 중</small>}</span><WorkspacePollingToggle workspaceId={item.id} name={item.name} /><Button variant="ghost" size="icon" aria-label={`${item.name} Workspace 삭제`} onClick={() => openModal({ kind: 'delete-workspace', id: item.id, name: item.name })}><Trash2 /></Button></li>)}</ul>
+            <ul className="workspace-manager">{session.workspaces.map(item => <li key={item.id}><span>{item.name}</span><WorkspacePollingToggle workspaceId={item.id} name={item.name} /><Button variant="ghost" size="icon" aria-label={`${item.name} Workspace 삭제`} onClick={() => openModal({ kind: 'delete-workspace', id: item.id, name: item.name })}><Trash2 /></Button></li>)}</ul>
             {!session.workspaces.length && <p>아직 Workspace가 없습니다.</p>}
-            <div className="dialog-actions"><Button variant="outline" onClick={() => setModal(null)}>닫기</Button><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> 새 Workspace</Button></div>
+            <div className="dialog-actions"><Button variant="outline" onClick={() => setModal(null)}>닫기</Button></div>
           </> : <form onSubmit={event => void submitModal(event)}>
             {!deleting && <><label htmlFor="item-name">이름</label><input id="item-name" autoFocus required maxLength={120} value={name} onChange={event => setName(event.target.value)} placeholder={modal?.kind === 'workspace' ? '예: 나의 연구 노트' : '예: 참고 자료'} disabled={busy} /></>}
             {modalError && <p role="alert" className="modal-error">{modalError}</p>}
