@@ -2016,7 +2016,7 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "aa7d46e504869f11dd9ebca0376fea0462748c36cb58b5f6215f7de167ab6297",
+      "sha256": "98e6e68d8deb6b95a2a6ab8c4cf2305d8f09a51f4fee12eec9117af209513120",
       "lines": 322,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
