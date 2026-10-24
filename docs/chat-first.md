@@ -67,4 +67,6 @@ DB v21과 백엔드 API는 그대로입니다. `ChatPanel`은 전체 분류의 �
 
 Workspace 선택 위의 **관리 아이콘**에서 전체 목록을 확인하고 삭제할 수 있습니다. 삭제할 Workspace 이름과 경고를 확인한 뒤 한 번 더 삭제를 눌러야 합니다. 취소하면 자료는 그대로입니다. 사용하지 않는 Workspace를 삭제해도 현재 선택은 유지합니다. 자료 화면에는 Workspace 삭제 버튼을 두지 않습니다.
 
+![별도 Workspace 관리 창](images/workspace-management.png)
+
 구현: `App.tsx`의 관리 대화상자와 ID가 고정된 삭제 대상 → 기존 Workspace 삭제 API. `App.test.tsx`는 활성/비활성 Workspace 삭제 대상·취소·선택 보존을 검사합니다. DB/API 변경은 없습니다.
