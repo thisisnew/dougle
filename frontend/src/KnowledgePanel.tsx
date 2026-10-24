@@ -135,12 +135,12 @@ export default function KnowledgePanel({ workspaceId, onOpenOriginal, onBrowseOr
     <GenerationJobsPanel workspaceId={workspaceId} revision={revision} openDisabled={editing || busy} onOpen={id => {
       if (!editing && !busy) { setSelected(id); setNumber(null); setRevision(value => value + 1) }
     }} />
-    <KnowledgeOrganization workspaceId={workspaceId} cards={cards} selected={selected} revision={revision}
+    <KnowledgeOrganization workspaceId={workspaceId} cards={cards} selected={selected} revision={revision} compact
       disabled={busy || editing || confirmDelete} onFilter={setVisibleIds} onBusy={setBusy} />
     {error && <p role="alert" className="error-banner">{error}</p>}
     {!loading && visibleIds !== null && !cards.some(card => visibleIds.includes(card.id)) && <p>현재 지식 폴더에 카드가 없습니다.</p>}
     {loading ? <p role="status">지식 목록을 불러오는 중…</p> : cards.length === 0 ? <div className="empty-state">
-      <h2>첫 지식 문서를 만들어 보세요</h2><p>원본 자료에서 파일을 열고 “근거로 지식 초안 작성”을 선택하세요.<br />작성한 초안은 직접 편집하거나 AI로 다듬을 수 있습니다.</p>
+      <h2>첫 지식 문서를 만들어 보세요</h2><p>원본 자료에서 파일을 열고 “이 자료로 지식 문서 만들기”를 펼치세요.<br />작성한 초안은 직접 편집하거나 AI로 다듬을 수 있습니다.</p>
       {onBrowseOriginal && <Button onClick={onBrowseOriginal}>원본 자료에서 시작하기</Button>}
     </div> : <ul className="source-list">{cards.filter(card => visibleIds === null || visibleIds.includes(card.id)).map(card => <li key={card.id}>
       <Button variant="ghost" disabled={busy || editing} onClick={() => { setSelected(card.id); setNumber(null) }}>{card.title} · v{card.latestVersion}</Button>
@@ -167,17 +167,17 @@ export default function KnowledgePanel({ workspaceId, onOpenOriginal, onBrowseOr
         <div className="source-actions"><Button disabled={busy} type="submit">새 버전 저장</Button>
           <Button type="button" variant="outline" disabled={busy} onClick={() => { setEditing(false); setTitle(document.version.title); setMarkdown(document.version.markdown) }}>편집 취소</Button></div>
       </form> : <KnowledgeMarkdown key={`markdown-${selected}-${document.version.number}`} markdown={document.version.markdown} />}
-      {!editing && document.version.number === document.card.latestVersion && <GenerationPanel
+      {!editing && document.version.number === document.card.latestVersion && <details className="secondary-tools"><summary>AI로 문서 다듬기</summary><GenerationPanel
         key={`${selected}-${document.version.number}`} base={`${base}/${selected}`} disabled={busy || confirmDelete}
-        onBusy={setBusy} onQueued={() => { setBusy(false); setRevision(value => value + 1) }} />}
+        onBusy={setBusy} onQueued={() => { setBusy(false); setRevision(value => value + 1) }} /></details>}
       {!editing && <PublicationPanel key={`publication-${selected}-${document.version.number}-${revision}`}
-        base={`${base}/${selected}`} version={document.version.number} disabled={busy || confirmDelete}
+        base={`${base}/${selected}`} version={document.version.number} disabled={busy || confirmDelete} compact
         onBusy={setBusy} onOpen={setNumber} />}
       <h3>보존된 근거</h3><p>최신성은 마지막으로 수집한 로컬 복사본과 비교합니다. 외부 원본의 실시간 상태나 사실 검증 결과가 아닙니다.</p>
       {document.version.evidence.map((item, index) => <section className="evidence-item" key={`${item.snapshotId}-${index}`}>
         <strong>[E{index + 1}] {item.path} · 추출 텍스트 {item.startLine}~{item.endLine}행</strong>
         {item.sourceLocation && <p>{item.sourceKind} · {item.sourceLocation}</p>}
-        <p>{freshness[item.freshness]}</p><small>revision {item.sourceRevision}<br />SHA-256 {item.contentHash}</small>
+        <p>{freshness[item.freshness]}</p><details><summary>원본 버전 정보</summary><small>revision {item.sourceRevision}<br />SHA-256 {item.contentHash}</small></details>
         <pre>{item.quote}</pre>
         {onOpenOriginal && <EvidenceOriginButton key={`${document.version.number}-${item.snapshotId}`}
           path={`${base}/${selected}/versions/${document.version.number}/evidence/${item.snapshotId}/location`}

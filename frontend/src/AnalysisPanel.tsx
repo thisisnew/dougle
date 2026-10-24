@@ -22,7 +22,7 @@ export default function AnalysisPanel({ workspaceId, entryId }: { workspaceId: s
     return () => controller.abort()
   }, [workspaceId, entryId, revision])
   return <section className="analysis-section" aria-label="추출 및 심볼">
-    <h3>텍스트·코드 분석</h3>
+    <details><summary>분석 상세</summary>
     <div className="tag">{busy ? '분석 중…' : analysis?.status || 'PENDING'}</div>
     {error && <p role="alert">{error}</p>}
     {analysis?.error && <p>{analysis.error}</p>}
@@ -30,6 +30,7 @@ export default function AnalysisPanel({ workspaceId, entryId }: { workspaceId: s
     <Button variant="outline" size="sm" disabled={busy} onClick={() => setRevision(value => value + 1)}>다시 분석</Button>
     {!!analysis?.symbols?.length && <ul className="symbol-list">{analysis.symbols.map((symbol, index) => <li key={`${symbol.line}-${index}`}><strong>{symbol.signature}</strong><span>{symbol.kind} · {symbol.line}행</span></li>)}</ul>}
     {analysis?.text && <details><summary>추출된 텍스트</summary><pre>{analysis.text}</pre></details>}
-    {!busy && analysis?.text && ['READY', 'PARTIAL'].includes(analysis.status) && <DraftForm workspaceId={workspaceId} entryId={entryId} text={analysis.text} />}
+    </details>
+    {!busy && analysis?.text && ['READY', 'PARTIAL'].includes(analysis.status) && <details><summary>이 자료로 지식 문서 만들기</summary><DraftForm workspaceId={workspaceId} entryId={entryId} text={analysis.text} /></details>}
   </section>
 }

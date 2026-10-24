@@ -42,6 +42,7 @@ it('선택한 카드를 폴더로 배치하고 목록만 필터링하며 본문�
   })
   render(<KnowledgePanel workspaceId="one" />)
   await user.click(await screen.findByRole('button', { name: '관측 초안 · v1' }))
+  await user.click(screen.getByText('폴더로 정리'))
   await user.click(await screen.findByRole('button', { name: '폴더: 분류' }))
   expect(screen.queryByRole('button', { name: '관측 초안 · v1' })).not.toBeInTheDocument()
   expect(screen.getByLabelText('지식 Markdown')).toHaveTextContent(document.version.markdown)

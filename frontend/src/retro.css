@@ -144,3 +144,8 @@ button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-
   .source-actions { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { [data-slot=button] { transition: none; } }
+.secondary-tools { margin-block: 12px; color: var(--game-muted); font-size: 13px; }
+.secondary-tools > summary, .analysis-section > details > summary { cursor: pointer; padding-block: 8px; }
+.quick-answer { margin-block: 24px; padding-top: 20px; border-top: 1px solid #d9dfd1; }
+.quick-answer > .field-label { max-width: 320px; }
+.quick-answer > details { margin-block: 16px; }

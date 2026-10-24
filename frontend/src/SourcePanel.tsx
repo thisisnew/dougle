@@ -24,6 +24,7 @@ const sourceKinds: Record<string, string> = { LOCAL_FOLDER: '로컬 폴더', URL
 export default function SourcePanel({ workspaceId, revision, onChanged, onSelect }: Props) {
   const [sources, setSources] = useState<Source[]>([])
   const [formOpen, setFormOpen] = useState(false)
+  const [managing, setManaging] = useState(false)
   const [kind, setKind] = useState('LOCAL_FOLDER')
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
@@ -115,6 +116,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         signal: mutationAbort.current?.signal,
       })
       setFormOpen(false)
+      setManaging(true)
       setName('')
       setLocation('')
       setDomain('')
@@ -152,6 +154,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       <label>분류 (선택)<input maxLength={80} aria-label="Source 도메인" value={domain} onChange={event => setDomain(event.target.value)} placeholder="예: 프로젝트 이름" /></label>
       <Button type="submit" size="sm" disabled={!!busy}>등록</Button>
     </form>}
+    {sources.length > 0 && <details className="secondary-tools" open={managing} onToggle={event => setManaging(event.currentTarget.open)}><summary>연결한 자료 관리 · {sources.length}개{sources.some(source => source.status === 'ERROR') ? ' · 오류 있음' : sources.some(source => source.status === 'SYNCING') ? ' · 수집 중' : sources.some(source => source.status === 'NEW') ? ' · 가져오기 필요' : ''}</summary>
     <ul className="source-list">{sources.map(source => <li key={source.id}>
       <div className="source-info"><strong>{source.name}</strong><span>{sourceKinds[source.kind] || source.kind} · {source.domain || '분류 없음'} · {states[source.status] || source.status}</span>
         <small title={source.location}>{source.location}</small>
@@ -165,7 +168,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       <details className="source-settings"><summary>자동 갱신 설정</summary><p>기본은 꺼짐입니다. 앱이 실행 중일 때만 갱신하며, 꺼도 이미 시작한 수집은 완료됩니다. AI는 자동 호출하지 않습니다.</p><SourcePollingSettings source={source} busy={!!busy} onSave={settings => void mutate(source.id, () => request(`${base}/sources/${source.id}/polling`, { method: 'PATCH', body: JSON.stringify(settings), signal: mutationAbort.current?.signal }))} /></details>
       {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
       {deleting === source.id && <div className="source-confirm" role="alert"><span>보관한 자료도 삭제합니다. PC 원래 폴더·원격 저장소는 유지됩니다.</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>Source 삭제 확인</Button></div>}
-    </li>)}</ul>
+    </li>)}</ul></details>}
     <form className="search-form" onSubmit={event => void search(event)}>
       <label className="sr-only" htmlFor="knowledge-query">자료 검색</label>
       <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="찾고 싶은 내용이나 질문을 입력하세요" />
@@ -180,10 +183,10 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       if (hit.kind === 'KNOWLEDGE' && hit.cardId && hit.version) setPublished({ cardId: hit.cardId, version: hit.version })
       else if (hit.entryId) onSelect(hit.entryId)
     }}><strong>{hit.name}</strong><small>{hit.kind === 'KNOWLEDGE' ? `게시 지식 v${hit.version} · 근거 ${hit.freshness}` : '원본'} · {hit.domain || '분류 없음'} · {hit.path}</small><small>{hit.bodyMatch ? '본문 검색어 주변' : '이름·심볼 일치 · 본문 앞부분'}{hit.startLine > 0 ? ` · ${hit.kind === 'KNOWLEDGE' ? '게시 Markdown' : '추출 텍스트'} ${hit.startLine}–${hit.endLine}행 (일부)` : ' · 본문 없음'}</small><span>{hit.snippet}</span></button>
-      <Button size="sm" variant="outline" aria-label={`${hit.name} 관련 자료`} onClick={() => {
+      <details className="secondary-tools"><summary>관련 자료 더 보기</summary><Button size="sm" variant="outline" aria-label={`${hit.name} 관련 자료`} onClick={() => {
         const id = hit.kind === 'KNOWLEDGE' ? hit.cardId : hit.entryId
         if (id) setRelated({ kind: hit.kind, id, version: hit.version, title: hit.name })
-      }}>관련 자료</Button></div>)}</div>}
+      }}>관련 자료</Button></details></div>)}</div>}
     {related && <Suspense fallback={<p role="status">관계 화면을 여는 중…</p>}><RelationPanel workspaceId={workspaceId} seed={related} domains={domains} onClose={() => setRelated(null)} onOriginal={onSelect} onKnowledge={(cardId, version) => setPublished({ cardId, version })} /></Suspense>}
     {published && <PublishedSearchPreview workspaceId={workspaceId} cardId={published.cardId} version={published.version} onClose={() => setPublished(null)} />}
     {bundleOpen && <EvidenceBundlePanel workspaceId={workspaceId} question={query} domains={domains} includeKnowledge={includeKnowledge} onClose={() => setBundleOpen(false)} />}

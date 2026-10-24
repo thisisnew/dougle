@@ -195,14 +195,13 @@ export default function App() {
         <div className="page-content">
           <div className="page-heading">
             <div><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '파일과 폴더를 보관하고 검색하세요.' : '원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.'}</p></div>
-            {workspace && <Button variant="ghost" size="sm" disabled={busy} onClick={() => openModal({ kind: 'delete-workspace' })}><Trash2 /> Workspace 삭제</Button>}
+            {workspace && <details className="secondary-tools"><summary>서재 관리</summary><Button variant="ghost" size="sm" disabled={busy} onClick={() => openModal({ kind: 'delete-workspace' })}><Trash2 /> Workspace 삭제</Button></details>}
           </div>
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
           {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : !workspace ? (
             <section className="welcome"><PixelLandscape /><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : (
             <>
-              <div className="summary-strip"><span><FolderOpen size={18} />{workspace.name}</span><span>{original ? '원본 자료 보관함' : '독립 지식 보관함'}</span><span className="summary-end">{original ? `현재 폴더 · ${entries.length}개 항목` : '검토·게시·버전 보존'}</span></div>
               {original && <SourcePanel key={activeId} workspaceId={activeId!} revision={revision}
                 onChanged={() => setRevision(value => value + 1)}
                 onSelect={id => {
@@ -241,7 +240,6 @@ export default function App() {
                   </div> : <div className="preview-empty"><FileText size={32} /><strong>자료를 살펴보세요</strong><p>파일을 선택하면 내용과<br />상세 정보를 확인할 수 있습니다.</p></div>}
                 </aside>
               </div>}
-              <p className="phase-note"><ShieldCheck size={15} /> 원본·추출 텍스트·Java 심볼을 로컬에서 검색합니다. AI 초안과 답변은 내용을 확인하고 건별 승인한 뒤 생성합니다.</p>
             </>
           )}
         </div>

@@ -55,7 +55,7 @@ async function start() {
   child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', jar,
     '--forge.desktop=false', `--server.port=${port}`, '--server.address=127.0.0.1',
     `--forge.data-dir=${resolve(temporary, 'data')}`, `--forge.ai.codex-command=${executable}`,
-    `--forge.ai.claude-command=${resolve(temporary, 'missing-claude')}`, '--forge.ai.codex-model=synthetic-smoke-model',
+    `--forge.ai.claude-command=${resolve(temporary, 'missing-claude')}`, `--forge.ai.codex-model=${process.env.FORGE_BROWSER_ANSWER_TEST === 'true' ? 'preview-only-model' : 'synthetic-smoke-model'}`,
     ...(process.env.FORGE_BROWSER_PRIVATE_PROFILE === 'true' ? [`--forge.ai.codex-stream-home=${resolve(temporary, 'data/codex-profile')}`] : [])],
   { cwd: temporary, stdio: ['ignore', 'pipe', 'pipe'] })
   let launchError

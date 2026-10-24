@@ -12,6 +12,19 @@ const done = { id: 'job', bundleId: 'bundle', approvalId: 'approval', status: 'S
 beforeEach(() => { api.mockReset(); FakeEventSource.instances = []; vi.stubGlobal('EventSource', FakeEventSource) })
 afterEach(() => vi.unstubAllGlobals())
 
+it('간편 질문은 접수된 작업을 바로 관측하고 중단하며 다시 전송하지 않는다', async () => {
+  api.mockResolvedValue({ ...done, status: 'CANCELLED', answer: null })
+  render(<AnswerJobsPanel {...props} approval={null} compact initialJob={{ ...done, status: 'RUNNING', answer: null }} />)
+  expect(api).not.toHaveBeenCalled()
+  const source = FakeEventSource.instances[0]
+  expect(source).toBeDefined()
+  expect(screen.queryByRole('button', { name: '답변 작업 조회·새로고침' })).not.toBeInTheDocument()
+  await userEvent.click(screen.getByRole('button', { name: '답변 중단' }))
+  expect(await screen.findByText('중단됨')).toBeInTheDocument()
+  expect(source.closed).toBe(true)
+  expect(api.mock.calls[0][0]).toMatch(/answer-jobs\/job\/cancel$/)
+})
+
 it('명시적 전송 확인 없이는 호출하지 않고 답변을 안전하게 표시한다', async () => {
   api.mockResolvedValue(done)
   render(<AnswerJobsPanel {...props} />)

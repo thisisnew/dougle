@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
-import EvidenceAnswerPreparation from './EvidenceAnswerPreparation'
+import QuickAnswerPanel from './QuickAnswerPanel'
 
 type Support = { label: string; name: string; startLine: number; endLine: number; quote: string }
 type Item = { label: string; kind: string; title: string; version: number | null; path: string | null; sourceRevision: string | null; contentHash: string | null; textHash: string; startLine: number; endLine: number; quote: string; supports: Support[] }
@@ -32,7 +32,7 @@ export default function EvidenceBundlePanel({ workspaceId, question: initialQues
 
   async function act(action: 'create' | 'open' | 'delete', id?: string) {
     if (busy) return
-    if (action === 'delete' && !window.confirm('이 근거 묶음만 삭제할까요? 원본과 지식 문서는 유지됩니다.')) return
+    if (action === 'delete' && !window.confirm('저장한 질문과 연결된 답변을 삭제할까요? 원본과 지식 문서는 유지됩니다.')) return
     const controller = new AbortController()
     pending.current = controller
     setBusy(true); setError('')
@@ -62,18 +62,14 @@ export default function EvidenceBundlePanel({ workspaceId, question: initialQues
     <label className="field-label">질문<input maxLength={256} value={question} disabled={busy} onChange={event => setQuestion(event.target.value)} placeholder="내 자료에 대해 무엇이 궁금한가요?" /></label>
     <p>{domains.join(', ') || '전체 분류'} · {includeKnowledge ? '게시한 지식 포함' : '원본만'}</p>
     <Button disabled={busy || !question.trim()} onClick={() => void act('create')}>참고 자료 찾기</Button>
-    <details><summary>자료 선택 기준</summary><p>관련 자료 최대 5개를 이 PC에 보관합니다. 인용문 합계 12,000 UTF-16자, 서재당 100개까지입니다. AI 전송은 별도 승인이 필요합니다.</p></details>
-    <label className="field-label">저장한 질문<select aria-label="저장한 질문" disabled={busy} value={bundle?.id || ''} onChange={event => { if (event.target.value) void act('open', event.target.value) }}>
+    {bundles.length > 0 && <details><summary>저장한 질문 불러오기</summary><label className="field-label">저장한 질문<select aria-label="저장한 질문" disabled={busy} value={bundle?.id || ''} onChange={event => { if (event.target.value) void act('open', event.target.value) }}>
       <option value="">이전 질문 불러오기</option>{bundles.map(value => <option key={value.id} value={value.id}>{value.question} · {new Date(value.createdAt).toLocaleString('ko-KR')}</option>)}
-    </select></label>
+    </select></label></details>}
     {busy && <p role="status">처리 중… 닫아도 이미 요청된 저장은 완료될 수 있습니다.</p>}
     {error && <p role="alert">{error}</p>}
     {bundle && <section aria-label="저장된 근거 내용">
       <h3>{bundle.payload.question}</h3>
-      <p>{bundle.payload.domains.join(', ') || '전체 도메인'} · {bundle.payload.includeKnowledge ? '게시 지식 포함' : '원본만'} · {bundle.payload.usedCharacters}/{bundle.payload.maxCharacters}자</p>
-      <p role="status">{bundle.payload.status === 'NO_EVIDENCE' ? '사용 가능한 근거 없음 · 답변을 생성하면 안 됩니다.' : '근거를 저장했습니다. 질문에 충분한 근거인지는 별도 확인이 필요합니다.'}</p>
-      <p>생성 당시 복사본입니다. 이후 변경은 반영하지 않으므로 실제 답변 전 재확인이 필요합니다. 원본·지식 삭제 후에도 묶음은 남습니다.</p>
-      <details><summary>묶음 ID·해시</summary><pre>{bundle.id}{'\n'}{bundle.digest}</pre><p>해시는 내용 식별용이며 AI 전송 승인이나 암호화가 아닙니다.</p></details>
+      <p role="status">{bundle.payload.status === 'NO_EVIDENCE' ? '사용 가능한 근거 없음 · 자료를 추가하거나 질문을 바꿔 주세요.' : '참고 자료를 찾았습니다. 질문에 맞는 내용인지 확인해 주세요.'}</p>
       {bundle.payload.items.map(item => <section key={item.label}>
         <h4>[{item.label}] {item.title} · {item.kind === 'KNOWLEDGE' ? `게시 v${item.version} Markdown` : '원본 추출 텍스트'} {item.startLine}–{item.endLine}행 (일부)</h4>
         <pre>{item.quote}</pre>
@@ -81,8 +77,12 @@ export default function EvidenceBundlePanel({ workspaceId, question: initialQues
         {item.supports.map(support => <details key={support.label}><summary>[{item.label}/{support.label}] {support.name} · {support.startLine}–{support.endLine}행</summary><pre>{support.quote}</pre></details>)}
       </section>)}
       {bundle.payload.excluded.length > 0 && <details><summary>제외한 검색 후보 {bundle.payload.excluded.length}개</summary><ul>{bundle.payload.excluded.map((value, index) => <li key={index}>{value.kind} · {value.entryId || value.cardId} · {reasons[value.reason] || value.reason}</li>)}</ul></details>}
-      <EvidenceAnswerPreparation key={bundle.id} workspaceId={workspaceId} bundleId={bundle.id} bundleDigest={bundle.digest} />
-      <Button variant="destructive" disabled={busy} onClick={() => void act('delete', bundle.id)}>이 묶음 삭제</Button>
+      {bundle.payload.status !== 'NO_EVIDENCE' && bundle.payload.items.length > 0 && <QuickAnswerPanel key={bundle.id} workspaceId={workspaceId} bundleId={bundle.id} bundleDigest={bundle.digest} />}
+      <details className="secondary-tools"><summary>질문 관리</summary>
+        <p>당시 참고 자료와 질문을 이 PC에 보관합니다. 전송 전 현재 자료와 다시 대조합니다. 최대 5개 자료·12,000자, 서재당 질문 100개까지 보관합니다.</p>
+        <p>{bundle.payload.domains.join(', ') || '전체 분류'} · {bundle.payload.usedCharacters}/{bundle.payload.maxCharacters}자</p>
+        <Button variant="destructive" disabled={busy} onClick={() => void act('delete', bundle.id)}>질문과 답변 삭제</Button>
+      </details>
     </section>}
   </dialog>
 }

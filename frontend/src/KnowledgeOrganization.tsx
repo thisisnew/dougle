@@ -5,9 +5,9 @@ import { Button } from './components/ui/button'
 type Folder = { id: string; parentId: string | null; name: string; revision: number }
 type Catalog = { folders: Folder[]; placements: { cardId: string; folderId: string | null; revision: number }[] }
 
-export default function KnowledgeOrganization({ workspaceId, cards, selected, disabled, revision, onFilter, onBusy }: {
+export default function KnowledgeOrganization({ workspaceId, cards, selected, disabled, revision, onFilter, onBusy, compact = false }: {
   workspaceId: string; cards: { id: string; title: string }[]; selected: string; disabled: boolean; revision: number
-  onFilter: (ids: string[] | null) => void; onBusy: (busy: boolean) => void
+  onFilter: (ids: string[] | null) => void; onBusy: (busy: boolean) => void; compact?: boolean
 }) {
   const [catalog, setCatalog] = useState<Catalog | null>(null)
   const [folderId, setFolderId] = useState<string | null>(null)
@@ -89,14 +89,15 @@ export default function KnowledgeOrganization({ workspaceId, cards, selected, di
   }
   if (catalog && !catalog.folders.length && !cards.length && !error) return null
   return <section className="draft-section" aria-label="지식 폴더">
-    <h3>폴더로 정리</h3>
+    {compact && error && <p role="alert">{error} 폴더 정리를 펼쳐 다시 불러오세요.</p>}
+    <details open={compact ? undefined : true}><summary>폴더로 정리{!all ? ` · ${folder?.name || '기본 폴더'} 선택 중` : ''}</summary>
     <div className="source-actions">
       <Button variant="outline" disabled={blocked} onClick={() => navigate(null, true)}>모든 문서</Button>
       <Button variant="outline" disabled={blocked} onClick={() => navigate(null)}>기본 폴더</Button>
     </div>
     <nav aria-label="지식 폴더 경로">{all ? '모든 문서' : '기본 폴더'}{trail.map(item =>
       <Button key={item.id} variant="ghost" disabled={blocked} onClick={() => navigate(item.id)}> / {item.name}</Button>)}</nav>
-    {error && <div role="alert"><p>{error}</p><Button variant="outline" disabled={blocked} onClick={() => setRefresh(value => value + 1)}>폴더 다시 불러오기</Button></div>}
+    {error && <div role={compact ? undefined : 'alert'}><p>{error}</p><Button variant="outline" disabled={blocked} onClick={() => setRefresh(value => value + 1)}>폴더 다시 불러오기</Button></div>}
     {missing && <p role="alert">이 폴더는 삭제되었습니다. 기본 폴더로 이동하세요.</p>}
     {!catalog && !error && <p role="status">폴더를 불러오는 중…</p>}
     {catalog && !missing && <>
@@ -133,6 +134,6 @@ export default function KnowledgeOrganization({ workspaceId, cards, selected, di
           <Button variant="outline" disabled={blocked} onClick={() => setConfirmDelete(false)}>폴더 삭제 취소</Button>
         </div>}
       </>}
-    </>}
+    </>}</details>
   </section>
 }

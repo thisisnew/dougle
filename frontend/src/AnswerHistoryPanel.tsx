@@ -73,11 +73,11 @@ function ScopedHistory({ workspaceId, onClose }: Props) {
   return <dialog ref={dialog} className="proposal-merge" aria-label="이전 답변 보기" onCancel={event => { event.preventDefault(); onClose() }}>
     <div className="panel-heading"><h2>이전 답변 보기</h2><Button variant="outline" onClick={onClose}>닫기</Button></div>
     <p>이 서재에서 질문한 내용과 답변을 다시 읽을 수 있습니다. 조회만으로 AI를 호출하지 않습니다.</p>
-    <details><summary>이어서 질문하려면?</summary><p>대화 보관함에서 이전 문맥을 선택하고 저장한 뒤, 별도 전송 승인으로 질문을 이어갈 수 있습니다.</p></details>
+    <details className="secondary-tools"><summary>대화 정리·이어서 질문하기</summary><p>필요할 때만 이전 답변을 묶어 문맥으로 선택하세요. 새 질문에는 별도 전송 승인이 필요합니다.</p>
     <Button type="button" variant="outline" onClick={() => setShelfOpen(value => !value)}>{shelfOpen ? '보관함 관리 닫기' : '대화 보관함 관리'}</Button>
     {shelfOpen && <ConversationShelf workspaceId={workspaceId}
       selectedJobId={!busy && detail?.job.status === 'SUCCEEDED' ? detail.job.id : null}
-      onSelectJob={id => void load(id)} />}
+      onSelectJob={id => void load(id)} />}</details>
     <Button variant="outline" disabled={busy} onClick={() => void load()}>이력 새로고침</Button>
     <label>이력 질문 검색<input aria-label="이력 질문 검색" maxLength={256} disabled={busy} value={query} onChange={event => { setQuery(event.target.value); setDetail(null) }} /></label>
     <label>이력 상태<select aria-label="이력 상태" disabled={busy} value={status} onChange={event => { setStatus(event.target.value); setDetail(null) }}>

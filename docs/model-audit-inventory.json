@@ -1099,7 +1099,6 @@
         "backend/src/test/java/dev/knowledgeforge/RelationSearchIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/SourceIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/sources/adapter/GitRunnerTest.java",
-        "frontend/src/EvidenceAnswerPreparation.test.tsx",
         "frontend/src/SourcePanel.test.tsx"
       ]
     },
@@ -1537,7 +1536,6 @@
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "frontend/src/AnswerJobsPanel.test.tsx",
-        "frontend/src/EvidenceAnswerPreparation.test.tsx",
         "frontend/src/ProposalAcceptance.test.tsx",
         "frontend/src/ProposalDecisions.test.tsx",
         "frontend/src/ProposalMerge.test.tsx",
@@ -1944,14 +1942,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "9e9f2676cf61d7379bc3e85c9b370f7ca04e76aed5b06829c643227cb94a3a73",
+      "sha256": "b7fe5ec1d9322bc452253cbfde60cb4ad706657de8fa7e778d2694d3539eb0fa",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "fdcdc8da8339a6e1e23901388007626ac715dc5fb2126b6e8856904111813de6",
+      "sha256": "19a173283c087765d70749de4d3f8b95571af8a6efa58c95f0dd41e1408574ae",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -1967,7 +1965,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "986088ac0278504433afcdceb64b4b774e4c9b4ef618eff853828c2990a95b31",
+      "sha256": "40bbe3f34991407f45192301bedb96a0287f3bb9e59f827c5a1d669db1125d9e",
       "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2092,7 +2090,6 @@
         "frontend/src/CliStatusPanel.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
         "frontend/src/ConversationShelf.test.tsx",
-        "frontend/src/EvidenceAnswerPreparation.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/EvidenceOriginButton.test.tsx",
         "frontend/src/GenerationComparison.test.tsx",
@@ -2107,6 +2104,7 @@
         "frontend/src/ProviderConnectionPanel.test.tsx",
         "frontend/src/PublicationPanel.test.tsx",
         "frontend/src/PublishedSearchPreview.test.tsx",
+        "frontend/src/QuickAnswerPanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
@@ -2208,7 +2206,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "81674ca0d4bf16dc9ba52c6c13298c5d7f458523593f4b52e5f4bfdcd424fa8a",
+      "sha256": "36108a5bff788fd9f10ee5a26337918262f11a0b065ce8e529193191958902f5",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2265,8 +2263,8 @@
     },
     {
       "path": "frontend/src/AnalysisPanel.tsx",
-      "sha256": "e0aa6ee8495aa28844cf3798a2251bd30e035ab962bda13ff778d74a3a80455d",
-      "lines": 35,
+      "sha256": "134751fa3c7c49df05d0d4ae111ce0fe646b76573bf2d866ac498bfb4494bf61",
+      "lines": 36,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -2296,7 +2294,7 @@
     },
     {
       "path": "frontend/src/AnswerHistoryPanel.tsx",
-      "sha256": "0a87f51329a7ee765e2c9151f539fa082de555775cf8a98dd2a014e301970c65",
+      "sha256": "1af45cd6c067cc485ba35738a2b6a6a92fe97309fa9a8d788d19b1807a0af43b",
       "lines": 114,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2306,15 +2304,15 @@
     },
     {
       "path": "frontend/src/AnswerJobsPanel.test.tsx",
-      "sha256": "746a946cc21a7583a06de9e591c35379696ffbc17af51bc5f75d388c029fbdd5",
-      "lines": 127,
+      "sha256": "28e64ba1e0ac3e4dc6e2a5156584ee00d45daa25bf0147a348580363e625b27c",
+      "lines": 140,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/AnswerJobsPanel.tsx",
-      "sha256": "e2960ee64ceae5b5cfdd058dd30f31182d8737ff6bb2b90f5983e4d8f4306e53",
-      "lines": 81,
+      "sha256": "54dc2933073a2a869c6441edf23422c2d6defbc46d93258b56b11470b041b05e",
+      "lines": 82,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/AnswerJobsPanel.test.tsx"
@@ -2329,8 +2327,8 @@
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "4dc6a1d34016aa31fadbad29fbd8b5eeb38fc86784eb90217006a6a1d5630906",
-      "lines": 263,
+      "sha256": "d2a3aaa2ee60c80641f09137bbbc61b2f376cdde7aefdc993ae8b277cad67bf0",
+      "lines": 261,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
@@ -2355,6 +2353,7 @@
         "frontend/src/App.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
         "frontend/src/ProposalAcceptance.test.tsx",
+        "frontend/src/QuickAnswerPanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
         "scripts/live-ai-smoke.mjs",
@@ -2428,31 +2427,15 @@
       ]
     },
     {
-      "path": "frontend/src/EvidenceAnswerPreparation.test.tsx",
-      "sha256": "fe7c43f152e852902b23826d954d41cc21c0472857e0160f586ae0523f418c71",
-      "lines": 101,
-      "kind": "test-or-fixture",
-      "lexicalTestReferences": []
-    },
-    {
-      "path": "frontend/src/EvidenceAnswerPreparation.tsx",
-      "sha256": "a758865d64e8a8fe22ac5f2d10a2b51614937af2b51d36a664655852c80e5e5a",
-      "lines": 85,
-      "kind": "production-or-tooling",
-      "lexicalTestReferences": [
-        "frontend/src/EvidenceAnswerPreparation.test.tsx"
-      ]
-    },
-    {
       "path": "frontend/src/EvidenceBundlePanel.test.tsx",
-      "sha256": "53ad5b30ca48910fb2475eff5991db8e0adf6a421eb25a9790f2a19f8111c37a",
-      "lines": 112,
+      "sha256": "7eb3d4191f12b6b305f93987f04f37fb8594a80dc18a721302afff23eb0737da",
+      "lines": 114,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/EvidenceBundlePanel.tsx",
-      "sha256": "e8dcc9a6807f815e804fa895b13ffa21beac4c506f7bc8461a777235c4b27223",
+      "sha256": "bb44de385c70cc167883228f928104d4e8a33417b230fef55b3c63661c8b3779",
       "lines": 88,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2550,8 +2533,8 @@
     },
     {
       "path": "frontend/src/KnowledgeOrganization.tsx",
-      "sha256": "03afa455a73044f78941694663dbe218cb419403eb965b4b27283e27d7165839",
-      "lines": 138,
+      "sha256": "825b2b693452c15c072d23a2a5b6df9a037e7e37d424007fbab5c2acaee39a6b",
+      "lines": 139,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/KnowledgeOrganization.test.tsx"
@@ -2559,14 +2542,14 @@
     },
     {
       "path": "frontend/src/KnowledgePanel.test.tsx",
-      "sha256": "1f05ced822d0e6b759e488da48210b285d6dba4605ab1c79d6ec33653d97fea6",
-      "lines": 159,
+      "sha256": "1ee7af41ce263729f9fb57ed51df266d67e116955cb8aabeeae8810b9e691e1d",
+      "lines": 160,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/KnowledgePanel.tsx",
-      "sha256": "d73a9cb4e76c41f563b0f190c59c97c8494922504f13f3d120157f9e40a24114",
+      "sha256": "1e8e13db84dd96cac9a985f452f98ab59ce2d06225fdce7e70d02caf077de699",
       "lines": 190,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2654,8 +2637,8 @@
     },
     {
       "path": "frontend/src/PublicationPanel.tsx",
-      "sha256": "ac316848f69f490bae880788dd8b5de013433d7f60e51bc66ce3c274300edc07",
-      "lines": 81,
+      "sha256": "62d6aa01da9d5938159ab4f1d48bbf67e4d6a1c63328c0e592c1f589e4b202b6",
+      "lines": 82,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/KnowledgePanel.test.tsx",
@@ -2677,6 +2660,22 @@
       "lexicalTestReferences": [
         "frontend/src/PublishedSearchPreview.test.tsx",
         "frontend/src/SourcePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/QuickAnswerPanel.test.tsx",
+      "sha256": "7f90b294c7205bbe823a3e6f5ecf5d7c37e4b5f10f3cfa2e1d0b63f326fe2a09",
+      "lines": 109,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/QuickAnswerPanel.tsx",
+      "sha256": "4f4fc7b8891e0a313df55b44829cfe2020e06e7cca991a4f69fbce5a610cdd66",
+      "lines": 97,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/QuickAnswerPanel.test.tsx"
       ]
     },
     {
@@ -2714,15 +2713,15 @@
     },
     {
       "path": "frontend/src/SourcePanel.test.tsx",
-      "sha256": "e6b8729221fef0079844f44adfb3c36d46a8d768cc9b974092db219fe2188ccb",
-      "lines": 187,
+      "sha256": "a6cba6a00ba8001359f317a0cda5a9f356dbf08b30f79ddc197c410212160f83",
+      "lines": 195,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/SourcePanel.tsx",
-      "sha256": "e87b16c6ba7dbf5fe962a0e26db2e267e52686350a995f792ee1a998870ea773",
-      "lines": 192,
+      "sha256": "03b50d8c5e124fe9f14b650df15308ae57190b51b46d67ca8a6a8ccdaca74180",
+      "lines": 195,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/SourcePanel.test.tsx"
@@ -2836,7 +2835,6 @@
         "frontend/src/CliStatusPanel.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
         "frontend/src/ConversationShelf.test.tsx",
-        "frontend/src/EvidenceAnswerPreparation.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/EvidenceOriginButton.test.tsx",
         "frontend/src/GenerationComparison.test.tsx",
@@ -2851,6 +2849,7 @@
         "frontend/src/ProviderConnectionPanel.test.tsx",
         "frontend/src/PublicationPanel.test.tsx",
         "frontend/src/PublishedSearchPreview.test.tsx",
+        "frontend/src/QuickAnswerPanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/answerJobEvents.desktop.test.ts",
@@ -2885,7 +2884,6 @@
         "frontend/src/CliStatusPanel.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
         "frontend/src/ConversationShelf.test.tsx",
-        "frontend/src/EvidenceAnswerPreparation.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/EvidenceOriginButton.test.tsx",
         "frontend/src/GenerationComparison.test.tsx",
@@ -2899,6 +2897,7 @@
         "frontend/src/ProviderConnectionPanel.test.tsx",
         "frontend/src/PublicationPanel.test.tsx",
         "frontend/src/PublishedSearchPreview.test.tsx",
+        "frontend/src/QuickAnswerPanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
@@ -3023,8 +3022,8 @@
     },
     {
       "path": "frontend/src/retro.css",
-      "sha256": "d4acb14594b4a3749bb13633b9f132510d2ea720ce6a1e4c86f27edcf9e1d3a3",
-      "lines": 146,
+      "sha256": "c53cfde68d452bda71bb97f1a6de216873518d99a0468d7a558c6e8cec03c8f8",
+      "lines": 151,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -3068,7 +3067,7 @@
     },
     {
       "path": "scripts/browser-e2e.mjs",
-      "sha256": "30b72dcbdf39aba6d23c29ccd4c6f2124d41ef30256dae181afd0eb182588d39",
+      "sha256": "56cc083c28e027ece9d356d98b49af29c24b20e78d5d4420f638dea468539aea",
       "lines": 102,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
