@@ -230,7 +230,7 @@ export default function App() {
                   </div>}
                   <div className="table-head"><span>이름</span><span>크기</span><span>추가한 날짜</span><span /></div>
                   {!trail.length && sourceRows}
-                  {loading ? <div className="empty-state" role="status">자료를 불러오는 중…</div> : visibleEntries.length === 0 && (trail.length > 0 || sources.length === 0) ? <div className="empty-state"><div className="empty-icon"><FolderOpen size={31} /></div><h2>아직 자료가 없습니다</h2><p>상단에서 자료를 추가하세요.</p></div> : (
+                  {loading ? <div className="empty-state" role="status">자료를 불러오는 중…</div> : visibleEntries.length === 0 && (trail.length > 0 || sources.length === 0) ? <div className="empty-state"><div className="empty-icon"><FolderOpen size={31} /></div><h2>자료를 추가해 보세요</h2></div> : (
                     <ul className="file-list">{visibleEntries.map(entry => <li key={entry.id} className={selected?.id === entry.id ? 'file-row selected' : 'file-row'}>
                       <button className="file-name" disabled={busy} onClick={() => entry.kind === 'FOLDER' ? setTrail([...trail, entry]) : setSelected(entry)}>{entry.kind === 'FOLDER' ? <Folder className="folder-icon" size={21} /> : <FileText size={21} />}<span>{entry.name}</span></button>
                       <span className="file-meta">{entry.kind === 'FOLDER' ? '—' : formatSize(entry.size)}</span><time className="file-meta">{new Date(entry.createdAt).toLocaleDateString('ko-KR')}</time>
