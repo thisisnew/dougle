@@ -118,6 +118,16 @@ it('최근 질문 클릭과 새 질문은 목록 조회 이외의 API를 부르�
   await userEvent.click(screen.getByRole('button', { name: '새 질문' }))
   expect(select.mock.calls).toEqual([['bundle'], [null]])
   expect(api).toHaveBeenCalledTimes(1)
+  expect(screen.queryByText('최근 질문')).not.toBeInTheDocument()
+})
+
+it('질문이 없으면 사이드바 제목과 시작 안내를 표시하지 않는다', async () => {
+  api.mockResolvedValue([])
+  render(<QuestionHistory workspaceId="one" revision={0} selectedId={null} onSelect={vi.fn()} />)
+  await waitFor(() => expect(api).toHaveBeenCalledOnce())
+  expect(screen.queryByText('최근 질문')).not.toBeInTheDocument()
+  expect(screen.queryByText('첫 질문을 시작해 보세요.')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '새 질문' })).not.toBeInTheDocument()
 })
 
 it('질문 삭제는 확인 후 해당 질문만 삭제하며 원본 API를 호출하지 않는다', async () => {

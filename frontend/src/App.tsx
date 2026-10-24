@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ChevronRight, Download, FileText, Folder, FolderOpen, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, X } from 'lucide-react'
+import { ChevronRight, Download, FileText, Folder, FolderOpen, History, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, X } from 'lucide-react'
 import clueMascot from './assets/clue-mascot.png'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Entry, type Preview, type Session } from './api'
@@ -192,7 +192,7 @@ export default function App() {
           <button className={view === 'CHAT' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => { setView('CHAT'); setHistoryRevision(value => value + 1) }}><MessageSquare size={19} /> 대화 <ChevronRight size={15} /></button>
           <button className={view === 'LIBRARY' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation()}><FolderOpen size={19} /> 자료 <ChevronRight size={15} /></button>
           <button className={view === 'SETTINGS' ? 'nav-item active' : 'nav-item'} disabled={busy || !ready} onClick={() => setView('SETTINGS')}><Settings2 size={19} /> 설정 <ChevronRight size={15} /></button>
-          <button className={view === 'HISTORY' ? 'nav-item active' : 'nav-item'} disabled={busy || !activeId} onClick={() => setView('HISTORY')}><MessageSquare size={19} /> 질문 기록 <ChevronRight size={15} /></button>
+          <button className={view === 'HISTORY' ? 'nav-item active' : 'nav-item'} disabled={busy || !activeId} onClick={() => setView('HISTORY')}><History size={19} /> 질문 기록 <ChevronRight size={15} /></button>
         </nav>
         {activeId && <QuestionHistory key={activeId} workspaceId={activeId} revision={historyRevision} selectedId={questionId} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} />}
         <div className="sidebar-bottom sidebar-wordmark">Dougle</div>

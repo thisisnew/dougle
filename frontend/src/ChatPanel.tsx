@@ -28,9 +28,9 @@ export function QuestionHistory({ workspaceId, revision, selectedId, onSelect }:
     return () => controller.abort()
   }, [workspaceId, revision, retry])
   return <section className="question-history" aria-label="최근 질문">
-    <div className="history-heading">최근 질문<Button variant="ghost" size="icon" aria-label="새 질문" onClick={() => onSelect(null)}><Plus /></Button></div>
+    {items.length > 0 && <div className="history-heading"><Button variant="ghost" size="icon" aria-label="새 질문" onClick={() => onSelect(null)}><Plus /></Button></div>}
     {error ? <Button variant="ghost" size="sm" onClick={() => setRetry(value => value + 1)}>목록 다시 불러오기</Button>
-      : items.length === 0 ? <p>첫 질문을 시작해 보세요.</p> : <ul>{items.map(item => <li key={item.id}>
+      : items.length === 0 ? null : <ul>{items.map(item => <li key={item.id}>
         <button aria-current={selectedId === item.id ? 'page' : undefined} title={item.question} onClick={() => onSelect(item.id)}><MessageSquare size={15} /><span>{item.question}</span></button>
       </li>)}</ul>}
   </section>

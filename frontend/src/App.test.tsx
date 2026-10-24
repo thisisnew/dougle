@@ -25,6 +25,8 @@ describe('Workspace와 자료 탐색기', () => {
     expect(screen.getByRole('img', { name: 'Dougle' })).toBeInTheDocument()
     expect(screen.queryByText('나만의 지식이 쌓이는 곳')).not.toBeInTheDocument()
     expect(screen.queryByText('Knowledge Forge')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '대화' }).querySelector('.lucide-message-square')).not.toBeNull()
+    expect(screen.getByRole('button', { name: '질문 기록' }).querySelector('.lucide-history')).not.toBeNull()
     expect(document.querySelector('.welcome .pixel-landscape')).not.toBeInTheDocument()
   })
   it.each([false, true])('별도 관리 창에서 선택한 Workspace만 확인 후 삭제한다: 활성=%s', async active => {
