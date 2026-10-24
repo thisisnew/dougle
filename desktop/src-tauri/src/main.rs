@@ -74,7 +74,7 @@ struct FailureMessage(Mutex<Option<&'static str>>);
 fn status_window_config() -> tauri::utils::config::WindowConfig {
     tauri::utils::config::WindowConfig {
         label: "status".into(),
-        title: "CLUE".into(),
+        title: "Dougle".into(),
         url: WebviewUrl::App("index.html".into()),
         width: 700.0,
         height: 460.0,
@@ -153,7 +153,7 @@ fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(),
     let downloads = app.path().download_dir().ok();
     let app_window =
         WebviewWindowBuilder::new(app, "main", WebviewUrl::External(origin.parse().unwrap()))
-            .title("CLUE")
+            .title("Dougle")
             .inner_size(1280.0, 850.0)
             .min_inner_size(900.0, 600.0)
             .visible(false)
@@ -217,7 +217,7 @@ fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(),
 
 fn main() {
     std::panic::set_hook(Box::new(|_| {
-        eprintln!("CLUE encountered an internal error.")
+        eprintln!("Dougle encountered an internal error.")
     }));
     let lifecycle = Arc::new(Lifecycle::default());
     let setup_lifecycle = lifecycle.clone();
@@ -241,13 +241,13 @@ fn main() {
             if let Some(tauri::menu::MenuItemKind::Submenu(application_menu)) =
                 menu.items()?.first()
             {
-                application_menu.set_text("CLUE")?;
+                application_menu.set_text("Dougle")?;
                 application_menu.remove_at(0)?;
                 let about = tauri::menu::PredefinedMenuItem::about(
                     app,
-                    Some("CLUE 정보"),
+                    Some("Dougle 정보"),
                     Some(tauri::menu::AboutMetadata {
-                        name: Some("CLUE".into()),
+                        name: Some("Dougle".into()),
                         version: Some(app.package_info().version.to_string()),
                         ..Default::default()
                     }),
@@ -299,7 +299,7 @@ fn main() {
             }
         })
         .build(tauri::generate_context!())
-        .expect("CLUE could not initialize its native window");
+        .expect("Dougle could not initialize its native window");
     application.run(move |_, event| {
         if let RunEvent::ExitRequested { api, .. } = event {
             if lifecycle.updating() {
@@ -330,7 +330,7 @@ mod startup_tests {
     fn status_window_is_reserved_for_errors_without_startup_focus() {
         let config = super::status_window_config();
         assert_eq!(config.label, "status");
-        assert_eq!(config.title, "CLUE");
+        assert_eq!(config.title, "Dougle");
         assert_eq!(config.url, tauri::WebviewUrl::App("index.html".into()));
         assert!(!config.visible);
         assert!(!config.focus);

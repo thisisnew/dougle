@@ -1,13 +1,13 @@
-# CLUE
+# Dougle · 더글
 
 <img src="desktop/src-tauri/icons/128x128.png" alt="꼬마 탐정 아이콘" width="80" />
 
-**흩어진 자료에서, 필요한 답을.**
+**물어보면 함께 풀어주는 똑똑한 동료.**
 
-CLUE는 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI에게 질문하는 Mac 앱입니다.
+Dougle은 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI에게 질문하는 Mac 앱입니다.
 검색 준비는 앱이 맡고, 사용자는 질문하고 답변의 출처를 확인하면 됩니다.
 
-![CLUE 대화 화면](docs/images/chat-home.png)
+![Dougle 대화 화면](docs/images/chat-home.png)
 
 ## 설치하기
 

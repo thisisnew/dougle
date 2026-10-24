@@ -1,5 +1,7 @@
 # Phase 완료 기준과 현재 상태
 
+**최신 작업: Dougle 0.1.13.** CLUE에서 Dougle · 더글로 이름과 화면을 바꿉니다. [디자인](dougle-brand.md), [실제 검증·배포 상태](release-0.1.13-report.md). 0.1.12는 로컬 설치 완료·공개 초안이며, 현재 공개 피드는 아직 0.1.11입니다.
+
 **0.1.12 검증·배포 진행 중:** 자료 추가 통합, 네이티브 폴더 선택, 자동 갱신/Workspace 설정 분리, 질문 카드 그리드, 수트 탐정과 영화 타이틀풍 CLUE. [사용법·설계](folder-settings.md), [실제 검사·배포 상태](release-0.1.12-report.md).
 
 **현재 공개본: CLUE 0.1.11 · DB v22.** [질문 전용 파일 첨부](question-attachments.md), 모델 이름만 표시하는 선택창, 눈에 돋보기를 댄 캐릭터·Helvetica Neue 로고를 적용했습니다. Java 390·UI 243·Rust 18, 브라우저/통합/Intel 실행/ARM 정적/양 CPU 서명 검사 통과. 공개 자산 10개의 크기·해시와 이 Mac 재설치를 확인했습니다. 실제 AI 자동 검사 1건은 제외했습니다. [배포 기록](release-0.1.11-report.md).

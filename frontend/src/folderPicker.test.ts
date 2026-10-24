@@ -5,7 +5,7 @@ afterEach(() => { Reflect.deleteProperty(window, '__TAURI_INTERNALS__') })
 
 it('브라우저에서는 경로 직접 입력이나 파일 선택으로 우회하지 않는다', async () => {
   expect(hasFolderPicker()).toBe(false)
-  await expect(selectFolder()).rejects.toThrow('설치한 CLUE 앱')
+  await expect(selectFolder()).rejects.toThrow('설치한 Dougle 앱')
 })
 
 it('인자 없는 폴더 전용 명령만 호출하고 취소를 보존한다', async () => {

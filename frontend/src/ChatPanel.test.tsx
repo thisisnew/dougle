@@ -14,6 +14,7 @@ beforeEach(() => { api.mockReset(); vi.clearAllMocks() })
 it('미연결 상태에서는 질문 전송만 잠그고 자료와 연결을 열 수 있다', async () => {
   render(<ChatPanel {...props} connection={null} />)
   expect(screen.getByRole('textbox', { name: '질문' })).toBeDisabled()
+  expect(screen.getByPlaceholderText('더글한테 물어보기')).toBeDisabled()
   expect(screen.getByRole('button', { name: '질문 보내기' })).toBeDisabled()
   expect(screen.getByRole('button', { name: '파일 첨부' })).toBeEnabled()
   await userEvent.click(screen.getByRole('button', { name: 'AI 연결하기' }))
@@ -24,8 +25,9 @@ it('미연결 상태에서는 질문 전송만 잠그고 자료와 연결을 열
 
 it('시작 화면은 짧은 제목과 입력 안내만 표시한다', () => {
   render(<ChatPanel {...props} />)
-  expect(screen.getByRole('heading', { name: '무엇이 궁금하세요?' })).toBeInTheDocument()
-  expect(screen.getByPlaceholderText('궁금한 점을 물어보세요')).toBeEnabled()
+  expect(screen.getByRole('heading', { name: 'Dougle' })).toBeInTheDocument()
+  expect(screen.getByPlaceholderText('더글한테 물어보기')).toBeEnabled()
+  expect(screen.queryByText('내 자료 기반 · 새 질문')).not.toBeInTheDocument()
   expect(screen.queryByText('흩어진 자료에서, 필요한 답을.')).not.toBeInTheDocument()
 })
 

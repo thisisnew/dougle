@@ -1,5 +1,7 @@
 # Knowledge Forge 개발 지침
 
+- 최신 브랜드는 **Dougle · 더글**입니다. `Wordmark` 공통 컴포넌트·Avenir Next·다색 글자·화이트/블루 톤을 사용합니다. 입력 안내는 ‘더글한테 물어보기’. 아래 CLUE/입체 로고는 과거 기록입니다. 앱 ID·자료·인증·업데이트 호환 이름은 유지합니다. [현재 디자인](docs/dougle-brand.md).
+
 - 0.1.12 UX: 자료 추가는 파일/폴더/웹 링크/GitHub 한 곳, 폴더는 Tauri 폴더 전용 선택기만 사용합니다. 자동 갱신·Workspace 관리는 설정, 질문 기록은 카드 그리드→기존 ChatPanel입니다. 수트 탐정·Condensed 인디고 입체 워드마크가 최신이며 아래 Helvetica Neue 기록은 이전 버전입니다. [설계·제약](docs/folder-settings.md).
 
 - 질문 첨부는 `attachment` 모듈·DB v22이며 전역 자료/색인과 독립적입니다. `docs/question-attachments.md`의 용량·수명주기·승인 해시·Codex 이미지 입력을 유지합니다. 실제 사진은 테스트에 사용하지 않습니다. 아래 v21 유지 기록은 첨부 이전 단계입니다. 모델 선택은 실제 표시 이름만, CLUE 워드마크는 Helvetica Neue입니다.

@@ -6,6 +6,6 @@ export function hasFolderPicker() {
 
 export async function selectFolder(): Promise<string | null> {
   const desktop = (window as DesktopWindow).__TAURI_INTERNALS__
-  if (!desktop) throw new Error('폴더 연결은 설치한 CLUE 앱에서 사용할 수 있습니다. 개별 파일은 파일 추가를 이용하세요.')
+  if (!desktop) throw new Error('폴더 연결은 설치한 Dougle 앱에서 사용할 수 있습니다. 개별 파일은 파일 추가를 이용하세요.')
   return desktop.invoke<string | null>('select_source_folder')
 }

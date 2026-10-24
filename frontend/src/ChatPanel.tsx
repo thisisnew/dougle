@@ -7,6 +7,7 @@ import type { AnswerJob } from './answerJobEvents'
 import QuickAnswerPanel from './QuickAnswerPanel'
 import AnswerJobsPanel from './AnswerJobsPanel'
 import { attachmentAccept, useQuestionAttachments } from './useQuestionAttachments'
+import Wordmark from './Wordmark'
 
 type Summary = { id: string; question: string }
 type Bundle = { id: string; workspaceId: string; digest: string; payload: { question: string; status: string;
@@ -109,7 +110,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
   }
 
   return <section className={`chat-panel ${bundle ? 'has-question' : ''}`} aria-label="AI 대화">
-    {!bundle && !busy && <div className="chat-welcome"><span className="pixel-spark" aria-hidden="true">✦</span><h1>무엇이 궁금하세요?</h1></div>}
+    {!bundle && !busy && <div className="chat-welcome"><h1 aria-label="Dougle"><Wordmark /></h1></div>}
     {busy && <p role="status">참고 자료를 확인하고 있습니다…</p>}
     {error && <p role="alert">{error}</p>}
     {bundle && <div className="chat-thread">
@@ -131,7 +132,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     }}>
       <label className="sr-only" htmlFor="chat-question">질문</label>
       <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || busy}
-        placeholder={connected ? '궁금한 점을 물어보세요' : 'AI를 먼저 연결해 주세요'} onChange={event => setQuestion(event.target.value)}
+        placeholder="더글한테 물어보기" onChange={event => setQuestion(event.target.value)}
         onPaste={event => { if (event.clipboardData.files.length) { event.preventDefault(); void attachments.add(Array.from(event.clipboardData.files)) } }}
         onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.form?.requestSubmit() } }} />
       <input ref={fileInput} type="file" className="sr-only" aria-label="질문에 첨부할 파일" multiple accept={attachmentAccept} disabled={busy || attachments.uploading} onChange={event => { void attachments.add(Array.from(event.target.files ?? [])); event.target.value = '' }} />
@@ -141,7 +142,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       </li>)}</ul>}
       {attachments.uploading && <p role="status">첨부 파일을 읽고 있어요.<Button type="button" variant="ghost" onClick={attachments.cancel}>첨부 중단</Button></p>}
       {attachments.error && <p role="alert">{attachments.error}</p>}
-      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><span>내 자료 기반 · 새 질문</span><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || busy || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
+      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || busy || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
     </form>
     {!connected ? <div className="chat-connect"><span>먼저 사용할 AI를 연결해 주세요.</span><Button variant="outline" onClick={onConnect}>AI 연결하기</Button></div>
       : <p className="chat-footnote">자료 전송은 동의 후에만 진행됩니다.</p>}

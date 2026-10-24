@@ -7,6 +7,7 @@ import { entryPath, request, type Entry, type Preview, type Session } from './ap
 import SourcePanel from './SourcePanel'
 import SourceSettings from './SourceSettings'
 import QuestionGrid from './QuestionGrid'
+import Wordmark from './Wordmark'
 import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import { type ConnectionIndicator } from './connectionIndicator'
@@ -180,7 +181,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand"><img className="brand-mascot" src={clueMascot} alt="돋보기를 든 CLUE 탐정" width={44} height={44} /><span>CLUE</span></div>
+        <div className="brand"><img className="brand-mascot" src={clueMascot} alt="돋보기를 든 더글" width={44} height={44} /><Wordmark /></div>
         <div className="workspace-label">WORKSPACE <div className="workspace-actions"><Button variant="ghost" size="icon" aria-label="Workspace 생성" disabled={busy || !ready} onClick={() => openModal({ kind: 'workspace' })}><Plus /></Button></div></div>
         <label className="sr-only" htmlFor="workspace">Workspace 선택</label>
         <select id="workspace" value={activeId ?? ''} disabled={busy || !ready || !session.workspaces.length} onChange={event => void switchWorkspace(event.target.value)}>
@@ -194,11 +195,11 @@ export default function App() {
           <button className={view === 'HISTORY' ? 'nav-item active' : 'nav-item'} disabled={busy || !activeId} onClick={() => setView('HISTORY')}><MessageSquare size={19} /> 질문 기록 <ChevronRight size={15} /></button>
         </nav>
         {activeId && <QuestionHistory key={activeId} workspaceId={activeId} revision={historyRevision} selectedId={questionId} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} />}
-        <div className="sidebar-bottom sidebar-wordmark">CLUE</div>
+        <div className="sidebar-bottom sidebar-wordmark">Dougle</div>
       </aside>
 
       <main>
-        <header className="topbar"><span>{workspace?.name ?? 'CLUE'}</span><Button className="provider-trigger" variant="outline" size="sm" disabled={!ready || connection?.state === 'CHECKING'} onClick={() => setCliSettingsOpen(true)} title="로그인 확인 결과입니다. 모델 이용 가능 여부는 실제 요청 시 확인됩니다."><i data-connected={connection?.state === 'AUTHENTICATED'} />{connection?.state === 'AUTHENTICATED' ? connection.provider : connection?.state === 'CHECKING' ? '연결 확인 중' : 'AI 연결'}</Button></header>
+        <header className="topbar"><span>{workspace?.name ?? 'Dougle'}</span><Button className="provider-trigger" variant="outline" size="sm" disabled={!ready || connection?.state === 'CHECKING'} onClick={() => setCliSettingsOpen(true)} title="로그인 확인 결과입니다. 모델 이용 가능 여부는 실제 요청 시 확인됩니다."><i data-connected={connection?.state === 'AUTHENTICATED'} />{connection?.state === 'AUTHENTICATED' ? connection.provider : connection?.state === 'CHECKING' ? '연결 확인 중' : 'AI 연결'}</Button></header>
         {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel initialConnection={connection} onClose={() => setCliSettingsOpen(false)} onConnectionChange={setConnection} /></Suspense>}
         <div className="page-content">
           {view === 'LIBRARY' && <div className="page-heading">
