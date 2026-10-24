@@ -19,22 +19,37 @@ public class EvidenceBundleWriter {
     private final LibraryStore library;
     private final EvidenceBundleStore bundles;
     private final SearchCatalog catalog;
+    private final dev.knowledgeforge.attachment.application.AttachmentService attachments;
 
-    public EvidenceBundleWriter(KnowledgeStore knowledge, PublicationStore publications, LibraryStore library, EvidenceBundleStore bundles, SearchCatalog catalog) {
+    public EvidenceBundleWriter(KnowledgeStore knowledge, PublicationStore publications, LibraryStore library, EvidenceBundleStore bundles, SearchCatalog catalog,
+                                dev.knowledgeforge.attachment.application.AttachmentService attachments) {
         this.knowledge = knowledge;
         this.publications = publications;
         this.library = library;
         this.bundles = bundles;
         this.catalog = catalog;
+        this.attachments = attachments;
     }
 
     @Transactional
     public EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge, List<SearchIndex.Hit> hits) {
+        return capture(workspaceId, question, domains, includeKnowledge, hits, List.of());
+    }
+
+    @Transactional
+    public EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge, List<SearchIndex.Hit> hits, List<String> attachmentIds) {
         if (library.workspace(workspaceId).isEmpty()) throw new LibraryException(404, "Workspace를 찾을 수 없습니다.");
         if (bundles.list(workspaceId).size() >= 100) throw new LibraryException(409, "근거 묶음은 Workspace당 최대 100개입니다. 불필요한 묶음을 삭제하세요.");
         List<Item> items = new ArrayList<>();
         List<Excluded> excluded = new ArrayList<>();
         int used = 0;
+        for (var attached : attachments.pending(workspaceId, attachmentIds)) {
+            items.add(new Item("R" + (items.size() + 1), attached.image() ? "ATTACHMENT_IMAGE" : "ATTACHMENT_TEXT",
+                    attached.id(), null, null, attached.name(), null, null, attached.truncated() ? "TRUNCATED" : null,
+                    attached.contentHash(), ContentDigest.of(attached.text()), attached.image() ? 0 : 1,
+                    attached.image() ? 0 : attached.text().split("\n", -1).length, attached.text(), List.of()));
+            used += attached.text().length();
+        }
         for (var hit : hits) {
             String reason = null;
             Item item = null;
@@ -77,7 +92,9 @@ public class EvidenceBundleWriter {
             }
             if (reason != null) excluded.add(new Excluded(hit.kind(), hit.entryId(), hit.cardId(), reason));
         }
-        return bundles.save(workspaceId, new Payload(question, List.copyOf(domains), includeKnowledge,
+        var bundle = bundles.save(workspaceId, new Payload(question, List.copyOf(domains), includeKnowledge,
                 items.isEmpty() ? "NO_EVIDENCE" : "READY", used, 12000, List.copyOf(items), List.copyOf(excluded)));
+        attachments.bind(workspaceId, attachmentIds, bundle.id());
+        return bundle;
     }
 }

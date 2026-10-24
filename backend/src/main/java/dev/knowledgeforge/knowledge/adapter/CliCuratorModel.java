@@ -83,6 +83,17 @@ public class CliCuratorModel implements CuratorModel {
         return generateInternal(provider, prompt, requestedModel, provider == Provider.CLAUDE ? text : null);
     }
 
+    @Override
+    public String generateWithImages(Provider provider, String prompt, String requestedModel,
+                                    List<dev.knowledgeforge.knowledge.application.ModelImage> images, java.util.function.Consumer<String> text) {
+        if (images.isEmpty()) return generateWithText(provider, prompt, requestedModel, text);
+        if (provider != Provider.CODEX || codexStreamHome.isBlank()) {
+            throw new LibraryException(400, "이미지 질문은 앱에 포함된 Codex 연결을 사용해 주세요.");
+        }
+        return new CodexAppServer(codex, Path.of(codexStreamHome), timeout)
+                .generate(prompt, CuratorSettings.normalize(requestedModel), text, images);
+    }
+
     private String generateInternal(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
         String selectedModel = CuratorSettings.normalize(requestedModel);
         Path directory = null;

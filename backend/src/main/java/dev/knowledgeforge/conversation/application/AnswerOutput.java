@@ -16,7 +16,7 @@ public class AnswerOutput {
                     || root.path("title").asString().length() > 120 || !claims.isArray() || claims.size() > 30) throw new IllegalArgumentException();
             var allowed = new HashSet<String>();
             for (var item : bundle.payload().items()) {
-                if (item.kind().equals("ORIGINAL")) allowed.add(item.label());
+                if (java.util.Set.of("ORIGINAL", "ATTACHMENT_IMAGE", "ATTACHMENT_TEXT").contains(item.kind())) allowed.add(item.label());
                 else for (var support : item.supports()) allowed.add(item.label() + "/" + support.label());
             }
             var lines = new ArrayList<String>();

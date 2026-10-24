@@ -18,13 +18,15 @@ public class EvidenceBundleValidator {
     private final KnowledgeStore knowledge;
     private final PublicationStore publications;
     private final SearchCatalog catalog;
+    private final dev.knowledgeforge.attachment.application.AttachmentService attachments;
 
     public EvidenceBundleValidator(EvidenceBundleService bundles, KnowledgeStore knowledge,
-                                   PublicationStore publications, SearchCatalog catalog) {
+                                   PublicationStore publications, SearchCatalog catalog, dev.knowledgeforge.attachment.application.AttachmentService attachments) {
         this.bundles = bundles;
         this.knowledge = knowledge;
         this.publications = publications;
         this.catalog = catalog;
+        this.attachments = attachments;
     }
 
     @Transactional(readOnly = true)
@@ -35,6 +37,7 @@ public class EvidenceBundleValidator {
             results.add(switch (item.kind()) {
                 case "ORIGINAL" -> original(workspaceId, bundle, item);
                 case "KNOWLEDGE" -> published(workspaceId, bundle, item);
+                case "ATTACHMENT_IMAGE", "ATTACHMENT_TEXT" -> attached(workspaceId, bundle, item);
                 default -> result(item, "INVALID_BUNDLE");
             });
         }
@@ -56,6 +59,18 @@ public class EvidenceBundleValidator {
         else if (!inScope(workspaceId, material.entryId(), bundle.payload().domains())) status = "SCOPE_CHANGED";
         else status = "CURRENT";
         return new BundleValidation.Item(item.label(), status, material.entryId(), material.revision(), List.of());
+    }
+
+    private BundleValidation.Item attached(String workspaceId, EvidenceBundle bundle, EvidenceBundle.Item item) {
+        try {
+            var current = attachments.get(workspaceId, item.entryId());
+            boolean same = bundle.id().equals(current.bundleId()) && current.name().equals(item.title())
+                    && current.contentHash().equals(item.contentHash()) && ContentDigest.of(current.text()).equals(item.textHash())
+                    && current.text().equals(item.quote()) && current.image() == item.kind().equals("ATTACHMENT_IMAGE");
+            return result(item, same ? "CURRENT" : "CONTENT_CHANGED");
+        } catch (dev.knowledgeforge.library.application.LibraryException exception) {
+            return result(item, exception.status() == 404 ? "MISSING" : "CONTENT_CHANGED");
+        }
     }
 
     private BundleValidation.Item published(String workspaceId, EvidenceBundle bundle, EvidenceBundle.Item item) {

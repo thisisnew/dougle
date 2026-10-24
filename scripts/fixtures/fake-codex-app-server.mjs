@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict'
-import { appendFileSync } from 'node:fs'
+import { appendFileSync, readFileSync, statSync } from 'node:fs'
 import { spawn } from 'node:child_process'
 import { createInterface } from 'node:readline'
 
@@ -58,6 +58,15 @@ createInterface({ input: process.stdin }).on('line', line => {
       modelProvider: 'openai', approvalPolicy: 'never', instructionSources: [],
       sandbox: { type: mode === 'unsafe-thread' ? 'dangerFullAccess' : 'readOnly', networkAccess: false } })
   } else if (request.method === 'turn/start') {
+    if (mode === 'image') {
+      const images = request.params.input.filter(value => value.type === 'localImage')
+      assert.equal(images.length, 1)
+      assert.ok(request.params.input.some(value => value.text === 'Image evidence [R1]'))
+      assert.ok(images[0].path.startsWith(process.cwd() + '/'))
+      assert.equal(statSync(images[0].path).mode & 0o777, 0o600)
+      assert.equal(readFileSync(images[0].path).toString(), 'synthetic-image-bytes')
+      record({ verifiedImage: images[0].path })
+    }
     assert.ok(request.params.input[0].text.length > 0)
     assert.equal(request.params.outputSchema.type, 'object')
     if (mode === 'early') partial()

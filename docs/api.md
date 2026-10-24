@@ -1,5 +1,7 @@
 # API 명세
 
+질문 전용 파일은 `POST /api/workspaces/{workspaceId}/attachments`(multipart file), `DELETE .../attachments/{id}`로 관리합니다. `POST .../evidence-bundles`에 선택적 `attachmentIds`(최대 4개)를 전달합니다. [입출력·오류·지원 형식](question-attachments.md).
+
 ## AI 연결 / 로그인 (0.1.2부터)
 
 0.1.7 Mac 앱은 전용 Codex 프로필을 사용합니다. 경로·인증 파일은 API로 노출하지 않으며 기존 로그인 API를 그대로 사용합니다. 인증 조회는 명령당 최대 30초, 로그인은 최대 3분입니다. 전용 프로필 변경은 기존 전송 승인을 무효화합니다. [사용법·구현](codex-managed-login.md).

@@ -15,9 +15,9 @@ it('미연결 상태에서는 질문 전송만 잠그고 자료와 연결을 열
   render(<ChatPanel {...props} connection={null} />)
   expect(screen.getByRole('textbox', { name: '질문' })).toBeDisabled()
   expect(screen.getByRole('button', { name: '질문 보내기' })).toBeDisabled()
-  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  expect(screen.getByRole('button', { name: '파일 첨부' })).toBeEnabled()
   await userEvent.click(screen.getByRole('button', { name: 'AI 연결하기' }))
-  expect(props.onSources).toHaveBeenCalledOnce()
+  expect(props.onSources).not.toHaveBeenCalled()
   expect(props.onConnect).toHaveBeenCalledOnce()
   expect(api).not.toHaveBeenCalled()
 })
@@ -50,6 +50,33 @@ it('한글 조합 중 Enter는 전송하지 않는다', async () => {
   await userEvent.type(input, '가상')
   fireEvent.keyDown(input, { key: 'Enter', isComposing: true })
   expect(api).not.toHaveBeenCalled()
+})
+
+it('질문 첨부를 근거에 연결하고 라이브러리 등록이나 AI 자동 전송은 하지 않는다', async () => {
+  const attached = { id: 'image', name: 'synthetic.png', mediaType: 'image/png', size: 8, characters: 8, truncated: false }
+  api.mockResolvedValueOnce(attached).mockResolvedValueOnce({ ...bundle, payload: { ...bundle.payload, items: [{ ...bundle.payload.items[0], kind: 'ATTACHMENT_IMAGE', title: 'synthetic.png' }] } })
+  render(<ChatPanel {...props} />)
+  await userEvent.upload(screen.getByLabelText('질문에 첨부할 파일'), new File(['synthetic'], 'synthetic.png', { type: 'image/png' }))
+  expect(await screen.findByText('synthetic.png')).toBeInTheDocument()
+  await userEvent.type(screen.getByRole('textbox'), '이미지를 확인해 주세요')
+  await userEvent.click(screen.getByRole('button', { name: '질문 보내기' }))
+  expect(await screen.findByText('[R1] synthetic.png · 첨부 이미지')).toBeInTheDocument()
+  expect(api).toHaveBeenCalledTimes(2)
+  expect(api).toHaveBeenLastCalledWith('/workspaces/one/evidence-bundles', expect.objectContaining({ body: JSON.stringify({ question: '이미지를 확인해 주세요', domains: [], includeKnowledge: false, attachmentIds: ['image'] }) }))
+  expect(screen.getByRole('button', { name: '이 자료로 답변 준비' })).toBeEnabled()
+  expect(props.onSources).not.toHaveBeenCalled()
+})
+
+it('Claude 이미지 질문은 전송 전에 안내하며 첨부와 질문을 보존한다', async () => {
+  api.mockResolvedValue({ id: 'image', name: 'synthetic.png', mediaType: 'image/png', size: 8, characters: 8, truncated: false })
+  render(<ChatPanel {...props} connection={{ ...props.connection, provider: 'CLAUDE' }} />)
+  await userEvent.upload(screen.getByLabelText('질문에 첨부할 파일'), new File(['synthetic'], 'synthetic.png', { type: 'image/png' }))
+  await screen.findByText('synthetic.png')
+  await userEvent.type(screen.getByRole('textbox'), '이미지 질문')
+  await userEvent.click(screen.getByRole('button', { name: '질문 보내기' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('Codex')
+  expect(screen.getByRole('textbox')).toHaveValue('이미지 질문')
+  expect(api).toHaveBeenCalledTimes(1)
 })
 
 it('다른 질문 선택 후 늦은 이전 응답을 무시한다', async () => {

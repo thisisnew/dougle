@@ -18,6 +18,7 @@ final class CodexAppServerSession {
     private final String prompt;
     private final String model;
     private final Consumer<String> text;
+    private final List<Path> images;
     private final List<String> early = new ArrayList<>();
     private int awaiting = 1;
     private String threadId;
@@ -25,11 +26,16 @@ final class CodexAppServerSession {
     private String result;
 
     CodexAppServerSession(Writer output, Path directory, String prompt, String model, Consumer<String> text) {
+        this(output, directory, prompt, model, text, List.of());
+    }
+
+    CodexAppServerSession(Writer output, Path directory, String prompt, String model, Consumer<String> text, List<Path> images) {
         this.output = output;
         this.directory = directory;
         this.prompt = prompt;
         this.model = model;
         this.text = text;
+        this.images = List.copyOf(images);
     }
 
     void initialize() throws IOException {
@@ -65,9 +71,15 @@ final class CodexAppServerSession {
                     validateThread(response);
                     threadId = identifier(response.path("thread").path("id"));
                     awaiting = 4;
+                    var input = new ArrayList<Map<String, Object>>();
+                    input.add(Map.of("type", "text", "text", prompt, "text_elements", List.of()));
+                    for (Path image : images) {
+                        input.add(Map.of("type", "text", "text", "Image evidence [" + image.getFileName().toString().replace(".png", "") + "]", "text_elements", List.of()));
+                        input.add(Map.of("type", "localImage", "path", image.toString()));
+                    }
                     request("turn/start", Map.of("threadId", threadId, "approvalPolicy", "never",
                             "sandboxPolicy", Map.of("type", "readOnly", "networkAccess", false),
-                            "input", List.of(Map.of("type", "text", "text", prompt, "text_elements", List.of())),
+                            "input", input,
                             "outputSchema", mapper.readTree(CliCuratorModel.SCHEMA)));
                 }
                 case 4 -> {

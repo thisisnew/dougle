@@ -1,5 +1,7 @@
 # 아키텍처
 
+질문 첨부는 별도 `attachment` 모듈(Reader/Store 포트, ImageIO·Tika/JDBC 어댑터)입니다. 전역 수집/색인과 분리하며 기존 불변 근거·일회 승인·답변 작업에 연결합니다. 이미지는 Codex `localImage` 입력입니다. [구조·DB v22·제약](question-attachments.md).
+
 최신 사용자 경로는 **자료 → 내부 추출/심볼/색인 → 원본 근거 → 승인 → 답변**입니다. 편집형 Knowledge UI 진입점은 제거했고 새 질문은 `includeKnowledge=false`입니다. 기존 문서/호환 API와 완료 답변은 보존하며 자동 AI 요약을 새로 구현한 것은 아닙니다. [구현·검사 대조](internal-search.md).
 
 0.1.11 대화 중심 화면은 `App → ChatPanel / QuestionHistory → QuickAnswerPanel → AnswerJobsPanel`입니다. 자료 탭은 `SourcePanel(manageOnly)`와 기존 탐색기를 사용합니다. 모델 선택은 `ProviderConnectionPanel → modelPreference → QuickAnswerPanel`로 연결하며 DB/API는 그대로입니다. [사용 흐름·모델 대조](chat-first.md).

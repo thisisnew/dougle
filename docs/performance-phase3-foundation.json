@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-24T10:13:27.688Z",
+  "measuredAt": "2026-10-24T10:37:23.226Z",
   "platform": "darwin/x64",
   "java": "21",
   "springBoot": "4.1.1",
@@ -56,21 +56,21 @@
     "manual proposal merge preserves human version and publication with persisted MANUAL acceptance after restart",
     "explicit evidence union preserves human E1 and remaps AI E1 to E2 with persisted snapshots after restart"
   ],
-  "sourceSyncMs": 600.3004310000015,
+  "sourceSyncMs": 1236.8792179999982,
   "livePublic": [],
-  "startupMs": 6760,
-  "restartMs": 6386,
+  "startupMs": 18407,
+  "restartMs": 10233,
   "upload100": {
-    "p50Ms": 115.83666199999425,
-    "p95Ms": 155.61937000000034
+    "p50Ms": 113.70987099999911,
+    "p95Ms": 146.2104260000051
   },
   "list101Entries50RequestsAfter5Warmups": {
-    "p50Ms": 3.746185999996669,
-    "p95Ms": 4.535002999997232
+    "p50Ms": 3.3033920000016224,
+    "p95Ms": 3.9975629999971716
   },
   "search100Files30Requests": {
-    "p50Ms": 9.579217999998946,
-    "p95Ms": 15.365535999997519
+    "p50Ms": 8.208918999996968,
+    "p95Ms": 34.98889999999665
   },
   "limitations": "Single local process, small synthetic dataset, no concurrency; AI jobs use an explicit fake CLI fixture, not real LLM performance.",
   "launchMode": "development JAR"

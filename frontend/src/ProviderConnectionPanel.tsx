@@ -31,7 +31,6 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   const [loginBusy, setLoginBusy] = useState(false)
   const loggingIn = login?.state === 'PENDING'
   const indicatorState = error ? 'CHECK_FAILED' : busy ? 'CHECKING' : status?.state ?? 'UNCHECKED'
-  const preset = choice.mode === 'custom' && modelPresets[provider].some(item => item.id === choice.model)
   useEffect(() => {
     onConnectionChange?.({ provider, state: indicatorState, model: requestedModel(choice) })
   }, [provider, indicatorState, choice, onConnectionChange])
@@ -111,11 +110,11 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
         <span className="provider-monogram">{value === 'CODEX' ? 'C' : '✳'}</span><strong>{value === 'CODEX' ? 'Codex' : 'Claude'}</strong><small>{value === 'CODEX' ? 'OpenAI · 앱에 포함' : 'Anthropic · 별도 도구 필요'}</small>
       </button>)}
     </div>
-    <label className="field-label">모델<select value={preset ? choice.model : choice.mode} disabled={busy || loggingIn} onChange={event => {
+    <label className="field-label">모델<select value={choice.model} disabled={busy || loggingIn} onChange={event => {
       const value = event.target.value
-      setChoice(modelPresets[provider].some(item => item.id === value) ? { mode: 'custom', model: value } : { mode: value as ModelChoice['mode'], model: '' }); setStatus(null); setError('')
-    }}><option value="server">앱 기본 모델 — 권장</option>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="cli">제공자가 선택하는 기본 모델</option><option value="custom">모델 ID 직접 지정</option></select></label>
-    {choice.mode === 'custom' && !preset && <label className="field-label">모델 ID<input value={choice.model} maxLength={128} disabled={busy || loggingIn} placeholder="계정에서 이용 가능한 모델 ID" onChange={event => { setChoice({ ...choice, model: event.target.value }); setStatus(null); setError('') }} /></label>}
+      if (!modelPresets[provider].some(item => item.id === value)) return
+      setChoice({ mode: 'custom', model: value }); setStatus(null); setError('')
+    }}>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
     <p className="model-note">모델 이용 가능 여부는 계정에 따라 다릅니다.</p>
     <Button className="connect-button" disabled={busy || advanced || loggingIn || status?.state === 'AUTHENTICATED'} onClick={() => void check()}>{busy ? '확인 중…' : status?.state === 'AUTHENTICATED' ? '연결됨' : '연결'}</Button>
     <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>

@@ -20,7 +20,7 @@ public class EvidenceBundleController {
         this.validator = validator;
         this.preview = preview;
     }
-    public record Create(String question, List<String> domains, Boolean includeKnowledge) {}
+    public record Create(String question, List<String> domains, Boolean includeKnowledge, List<String> attachmentIds) {}
     public record PreviewRequest(String provider, String requestedModel) {}
 
     @GetMapping("/{id}/validation")
@@ -37,7 +37,7 @@ public class EvidenceBundleController {
     @ResponseStatus(HttpStatus.CREATED)
     public EvidenceBundle create(@PathVariable String workspaceId, @RequestBody Create request) {
         return service.create(workspaceId, request.question(), request.domains() == null ? List.of() : request.domains(),
-                !Boolean.FALSE.equals(request.includeKnowledge()));
+                !Boolean.FALSE.equals(request.includeKnowledge()), request.attachmentIds() == null ? List.of() : request.attachmentIds());
     }
 
     @GetMapping

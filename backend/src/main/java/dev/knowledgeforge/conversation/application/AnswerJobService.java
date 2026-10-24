@@ -116,20 +116,23 @@ public class AnswerJobService {
 
     private void run(AnswerJob job) {
         try {
-            String prompt;
+            record Prepared(String prompt, java.util.List<dev.knowledgeforge.knowledge.application.ModelImage> images) {}
+            Prepared prepared;
             synchronized (this) {
-                prompt = transaction.execute(status -> {
+                prepared = transaction.execute(status -> {
                     checkActive(job, true);
                     var preview = previews.prepare(job.workspaceId(), job.bundleId(), job.provider(), job.requestedModel());
                     if (!preview.digest().equals(job.digest())) throw new LibraryException(409, "전송 직전 요청 내용이 변경되었습니다.");
                     if (!store.update(job.workspaceId(), job.id(), "RUNNING", null, null)) throw new CancellationException();
-                    return preview.prompt();
+                    return new Prepared(preview.prompt(), bundles.images(job.workspaceId(), job.bundleId()));
                 });
             }
             if (Thread.currentThread().isInterrupted()) throw new CancellationException();
-            String raw = model instanceof StreamingAnswerModel streaming
-                    ? streaming.generateWithText(job.provider(), prompt, job.requestedModel(), text -> receiveText(job, text))
-                    : model.generate(job.provider(), prompt, job.requestedModel());
+            String raw = !prepared.images().isEmpty()
+                    ? model.generateWithImages(job.provider(), prepared.prompt(), job.requestedModel(), prepared.images(), text -> receiveText(job, text))
+                    : model instanceof StreamingAnswerModel streaming
+                        ? streaming.generateWithText(job.provider(), prepared.prompt(), job.requestedModel(), text -> receiveText(job, text))
+                        : model.generate(job.provider(), prepared.prompt(), job.requestedModel());
             synchronized (this) {
                 transaction.executeWithoutResult(status -> {
                     checkActive(job, false);

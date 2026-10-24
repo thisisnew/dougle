@@ -30,6 +30,7 @@ case "$*" in
   'login status') if [ -f '${credential}' ]; then echo 'Logged in using ChatGPT' >&2; else echo 'Not logged in' >&2; exit 1; fi ;;
   'login') sleep 0.2; touch '${credential}' ;;
   '--version') exec '${resolve(root, 'scripts/fixtures/fake-codex.sh')}' "$@" ;;
+  *'app-server'*) printf 'fixture-call\\n' >> '${calls}'; exec '${process.execPath}' '${resolve(root, 'scripts/fixtures/fake-codex-app-server.mjs')}' "$@" ;;
   *) printf 'fixture-call\\n' >> '${calls}'; sleep 3; exec '${resolve(root, 'scripts/fixtures/fake-codex.sh')}' "$@" ;;
 esac
 `, { mode: 0o700 })

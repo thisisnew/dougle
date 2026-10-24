@@ -14,4 +14,7 @@ public class CliAnswerModel implements StreamingAnswerModel {
     public String generateWithText(String provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
         return transport.generateWithText(CuratorModel.Provider.valueOf(provider), prompt, requestedModel, text);
     }
+    public String generateWithImages(String provider, String prompt, String requestedModel, java.util.List<dev.knowledgeforge.knowledge.application.ModelImage> images, java.util.function.Consumer<String> text) {
+        return transport.generateWithImages(CuratorModel.Provider.valueOf(provider), prompt, requestedModel, images, text);
+    }
 }

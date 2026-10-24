@@ -37,6 +37,13 @@ final class CodexAppServer {
     }
 
     String generate(String prompt, String model, Consumer<String> text) {
+        return generate(prompt, model, text, List.of());
+    }
+
+    String generate(String prompt, String model, Consumer<String> text, List<dev.knowledgeforge.knowledge.application.ModelImage> images) {
+        if (images.size() > 4 || images.stream().mapToLong(image -> image.content().length).sum() > 10L * 1024 * 1024) {
+            throw new LibraryException(413, "이미지 입력 한도를 초과했습니다.");
+        }
         Path directory = null;
         try {
             Path profile = validateHome();
@@ -44,7 +51,14 @@ final class CodexAppServer {
                     StandardOpenOption.WRITE, LinkOption.NOFOLLOW_LINKS); var lock = channel.tryLock()) {
                 if (lock == null) throw new LibraryException(409, "Codex 전용 로그인 폴더가 사용 중입니다.");
                 directory = Files.createTempDirectory("forge-app-server-").toRealPath();
-                return run(profile, directory, prompt, model, text);
+                var paths = new ArrayList<Path>();
+                for (var image : images) {
+                    Path path = directory.resolve(image.label() + ".png");
+                    Files.createFile(path, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-------")));
+                    Files.write(path, image.content());
+                    paths.add(path);
+                }
+                return run(profile, directory, prompt, model, text, List.copyOf(paths));
             }
         } catch (LibraryException exception) {
             throw exception;
@@ -77,7 +91,7 @@ final class CodexAppServer {
         return arguments;
     }
 
-    private String run(Path profile, Path directory, String prompt, String model, Consumer<String> text) throws IOException {
+    private String run(Path profile, Path directory, String prompt, String model, Consumer<String> text, List<Path> images) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(command()).directory(directory.toFile());
         builder.environment().keySet().retainAll(Set.of("PATH", "USER", "LOGNAME", "LANG", "LC_ALL"));
         CliProcessPath.includeCommandDirectory(builder);
@@ -89,7 +103,7 @@ final class CodexAppServer {
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
         var executor = Executors.newVirtualThreadPerTaskExecutor();
         try {
-            var stdout = executor.submit(() -> exchange(process, directory, prompt, model, text));
+            var stdout = executor.submit(() -> exchange(process, directory, prompt, model, text, images));
             var stderr = executor.submit(() -> {
                 byte[] buffer = new byte[4096];
                 int total = 0;
@@ -131,9 +145,9 @@ final class CodexAppServer {
         }
     }
 
-    private String exchange(Process process, Path directory, String prompt, String model, Consumer<String> text) throws IOException {
+    private String exchange(Process process, Path directory, String prompt, String model, Consumer<String> text, List<Path> images) throws IOException {
         var session = new CodexAppServerSession(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8),
-                directory, prompt, model, text);
+                directory, prompt, model, text, images);
         session.initialize();
         var input = new BufferedInputStream(process.getInputStream());
         var line = new ByteArrayOutputStream();

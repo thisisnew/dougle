@@ -66,6 +66,17 @@ class CodexAppServerTest {
     }
 
     @Test
+    void sendsRealImageInputWithPrivatePermissionsAndRemovesTemporaryFile() throws Exception {
+        var server = fixture("image", Duration.ofSeconds(8));
+        var image = new dev.knowledgeforge.knowledge.application.ModelImage("R1", "synthetic-image-bytes".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        assertThat(server.generate("synthetic", "fixture-model", text -> {}, List.of(image))).contains("claims");
+        String line = Files.readAllLines(trace).stream().filter(value -> value.contains("verifiedImage")).findFirst().orElseThrow();
+        Path path = Path.of(JsonMapper.builder().build().readTree(line).path("verifiedImage").asString());
+        assertThat(Files.exists(path)).isFalse();
+        assertThat(Files.exists(path.getParent())).isFalse();
+    }
+
+    @Test
     void buffersNotificationsBeforeTurnResponse() throws Exception {
         var server = fixture("early", Duration.ofSeconds(8));
         var texts = new java.util.ArrayList<String>();
@@ -104,7 +115,7 @@ class CodexAppServerTest {
         var server = fixture("hang", Duration.ofSeconds(30));
         var finished = new CompletableFuture<Throwable>();
         Thread worker = Thread.ofVirtual().start(() -> {
-            try { server.generate("synthetic", "", text -> {}); finished.complete(null); }
+            try { server.generate("synthetic", "", text -> {}, List.of(new dev.knowledgeforge.knowledge.application.ModelImage("R1", new byte[]{1, 2, 3}))); finished.complete(null); }
             catch (Throwable error) { finished.complete(error); }
         });
         try {
@@ -116,6 +127,7 @@ class CodexAppServerTest {
             assertThat(finished.get(5, TimeUnit.SECONDS)).isInstanceOf(LibraryException.class);
             for (String line : Files.readAllLines(trace)) {
                 var value = JsonMapper.builder().build().readTree(line);
+                if (value.has("cwd")) assertThat(Files.exists(Path.of(value.path("cwd").asString()))).isFalse();
                 for (String key : List.of("pid", "childPid")) if (value.has(key)) {
                     assertThat(ProcessHandle.of(value.path(key).asLong()).map(ProcessHandle::isAlive).orElse(false)).isFalse();
                 }

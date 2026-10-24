@@ -1,8 +1,13 @@
 :root { --game-ink: #252936; --game-paper: #fff; --game-muted: #626979; color: var(--game-ink); background: #fafbfe; font-size: 14px; }
 .app-shell { background: #fafbfe; }
 .sidebar { position: sticky; top: 0; height: 100vh; width: 248px; padding: 28px 18px 20px; background: #f1f3f8; border-right: 1px solid #e4e7ef; }
-.brand { font-size: 20px; letter-spacing: 1.6px; }
+.brand { font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 24px; font-weight: 500; line-height: 1; letter-spacing: -.8px; color: #252936; -webkit-font-smoothing: antialiased; }
 .brand-mascot { display: block; width: 44px; height: 44px; flex-shrink: 0; object-fit: cover; border-radius: 13px; }
+.question-attachments { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0 0 12px; padding: 0; }
+.question-attachments li { display: flex; align-items: center; gap: 8px; max-width: 100%; padding: 5px 6px 5px 12px; background: #f1f3fa; border: 1px solid #e4e7ef; border-radius: 12px; }
+.question-attachments li > svg { width: 18px; height: 18px; flex-shrink: 0; color: #6864c9; }
+.question-attachments li > span { min-width: 0; max-width: 240px; overflow-wrap: anywhere; font-size: 12px; }
+.question-attachments small { display: block; color: #747b8d; font-size: 10px; }
 .workspace-label { margin-top: 32px; color: #747b8d; letter-spacing: 1.3px; }
 .sidebar nav { margin-top: 20px; }
 .nav-item { border-radius: 12px; color: #616879; padding: 12px; }
