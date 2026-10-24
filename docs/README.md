@@ -4,7 +4,7 @@
 
 최신 변경: [앱이 관리하는 내부 검색](internal-search.md). 이전 0.1.10: [필요한 기능만 먼저 보기](simple-workflow.md) · [설치본 검증](release-0.1.10-report.md).
 
-Knowledge Forge는 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하는 Mac 앱**입니다.
+CLUE는 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하는 Mac 앱**입니다. [새 이름·캐릭터와 기존 자료 호환성](clue-brand.md).
 검색용 추출문·심볼·색인은 앱이 관리합니다. 서버나 벡터 DB를 별도로 설치하지 않습니다.
 
 | 궁금한 것 | 읽을 문서 |
@@ -19,7 +19,7 @@ Knowledge Forge는 **내 자료를 모으고, AI에게 질문하고, 출처를 �
 | 모델과 구현을 다시 조사한 결과 | [전 파일 조사 범위·규칙별 테스트·미구현 차이](model-audit.md) |
 | 개발자가 알아야 할 구조 | [아키텍처](architecture.md) · [API](api.md) |
 | 개발 실행·수정 후 배포 순서 | [개발 환경과 완료 체크리스트](development.md) |
-| 최신 설치 파일에 들어간 변경 | [0.1.7 배포 기록](release-0.1.7-report.md) |
+| 최신 변경과 설치 파일 배포 상태 | [0.1.11 배포 기록](release-0.1.11-report.md) |
 | GitHub 자료를 별도 설치 없이 가져오기 | [내장 Git 구성과 검증](bundled-git.md) |
 | 등록한 자료의 이름·분류 수정 | [자료 설정 편집](source-metadata.md) |
 | 전체 사용 흐름 검사와 발견한 문제 | [E2E 점검 결과](e2e-report.md) |
@@ -29,7 +29,7 @@ Knowledge Forge는 **내 자료를 모으고, AI에게 질문하고, 출처를 �
 | AI 설치·로그인·경로 설정 | [CLI 설정](cli-launch-settings.md) · [AI 전송 정책](cli-ai.md) |
 | 간편 연결 개선 | [제공자 선택·인증 확인·브라우저 로그인](provider-connection.md) |
 | Claude가 앱에 포함되지 않은 이유와 다음 작업 | [Claude 간편 연결 준비 상태](claude-readiness.md) |
-| 실제로 어디까지 테스트했는지 | [E2E 점검 결과](e2e-report.md) · [0.1.6 검증 보고서](release-0.1.6-report.md) |
+| 실제로 어디까지 테스트했는지 | [E2E 점검 결과](e2e-report.md) · [0.1.11 검증 보고서](release-0.1.11-report.md) |
 | 다음 컴퓨터에서 개발 이어가기 | [HANDOFF](../HANDOFF.md) · [단계별 현황](phase-plan.md) · [상세 백로그](backlog.md) |
 
 ## 알아두면 좋은 세 가지

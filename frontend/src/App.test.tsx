@@ -18,6 +18,14 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it('CLUE와 탐정 캐릭터를 표시하고 이전 브랜드 설명은 숨긴다', async () => {
+    api.mockImplementation(async path => path === '/session' ? { workspaces: [], activeWorkspaceId: null } : [])
+    render(<App />)
+    expect(await screen.findByRole('img', { name: '돋보기를 든 CLUE 탐정' })).toHaveAttribute('src', expect.stringContaining('clue-mascot'))
+    expect(screen.getAllByText('CLUE').length).toBeGreaterThan(0)
+    expect(screen.queryByText('나만의 지식이 쌓이는 곳')).not.toBeInTheDocument()
+    expect(screen.queryByText('Knowledge Forge')).not.toBeInTheDocument()
+  })
   it.each([false, true])('별도 관리 창에서 선택한 Workspace만 확인 후 삭제한다: 활성=%s', async active => {
     const user = userEvent.setup()
     const other = { ...workspace, id: 'two', name: '별도 연구' }

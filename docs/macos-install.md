@@ -1,5 +1,7 @@
 # Mac 설치·사용 — 짧은 안내
 
+앱 표시 이름은 **CLUE**입니다. 기존 설치·자동 업데이트와의 호환을 위해 파일명은 `Knowledge Forge.app`을 유지합니다. 자료와 로그인은 그대로 사용할 수 있습니다. [변경 안내](clue-brand.md).
+
 **Intel과 Apple Silicon용 파일이 다릅니다.** Apple 공증은 사용자 요청으로 제외했습니다.
 Intel은 설치 복사본 실행 검증을 통과했습니다. Apple Silicon은 교차 빌드·정적 검사만 통과했으며 **실제 ARM Mac 실행은 미검증**입니다.
 Windows용 설치 파일은 없습니다. [0.1.11 검증](release-0.1.11-report.md) · [ARM 확인 범위](apple-silicon.md).

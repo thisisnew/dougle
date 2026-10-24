@@ -30,7 +30,7 @@ impl Drop for Reset {
             .busy
             .store(false, Ordering::SeqCst);
         menu(&self.0, "업데이트 확인…", true);
-        title(&self.0, "Knowledge Forge");
+        title(&self.0, "CLUE");
     }
 }
 
@@ -59,14 +59,14 @@ fn title(app: &tauri::AppHandle, text: &str) {
 fn message(app: &tauri::AppHandle, text: &str) {
     app.dialog()
         .message(text)
-        .title("Knowledge Forge 업데이트")
+        .title("CLUE 업데이트")
         .blocking_show();
 }
 
 fn confirm(app: &tauri::AppHandle, text: String, action: &str) -> bool {
     app.dialog()
         .message(text)
-        .title("Knowledge Forge 업데이트")
+        .title("CLUE 업데이트")
         .buttons(MessageDialogButtons::OkCancelCustom(
             action.into(),
             "나중에".into(),
@@ -155,7 +155,7 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
         return Ok(());
     }
     menu(app, "업데이트 다운로드 중…", false);
-    title(app, "Knowledge Forge — 업데이트 다운로드 중…");
+    title(app, "CLUE — 업데이트 다운로드 중…");
     update.timeout = Some(Duration::from_secs(1800));
     let mut previous = 0;
     let mut downloaded = 0u64;
@@ -173,7 +173,7 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
                         previous = percent;
                         title(
                             app,
-                            &format!("Knowledge Forge — 업데이트 다운로드 {percent}%"),
+                            &format!("CLUE — 업데이트 다운로드 {percent}%"),
                         );
                     }
                 }
@@ -182,7 +182,7 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
         )
         .await
         .map_err(|_| ())?;
-    title(app, "Knowledge Forge");
+    title(app, "CLUE");
     if lifecycle.cancelled.load(Ordering::SeqCst) {
         return Ok(());
     }
@@ -193,7 +193,7 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
         return Ok(());
     }
     let _install_guard = InstallGuard(lifecycle);
-    title(app, "Knowledge Forge — 업데이트 설치 준비 중…");
+    title(app, "CLUE — 업데이트 설치 준비 중…");
     let deadline = Instant::now() + Duration::from_secs(15);
     while !lifecycle.stopped.load(Ordering::SeqCst) {
         if Instant::now() >= deadline {

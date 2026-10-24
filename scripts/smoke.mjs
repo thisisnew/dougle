@@ -119,7 +119,7 @@ try {
   assert.equal(cliStatus.remoteConnection, 'NOT_CHECKED')
   const page = await fetch(base)
   assert.equal(page.status, 200)
-  assert.match(await page.text(), /Knowledge Forge/)
+  assert.match(await page.text(), /<title>CLUE<\/title>/)
   const workspace = await api('/workspaces', 'POST', { name: '가상 온실 연구' })
   const folder = await api(`/workspaces/${workspace.id}/folders`, 'POST', { name: '가상 자료' })
   const bytes = await readFile(resolve(root, 'fixtures/research-notes.md'))

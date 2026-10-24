@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import { ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import clueMascot from './assets/clue-mascot.png'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Entry, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
@@ -182,7 +183,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand"><div className="brand-icon"><Layers3 size={23} /></div><div>Knowledge Forge<small>나만의 지식이 쌓이는 곳</small></div></div>
+        <div className="brand"><img className="brand-mascot" src={clueMascot} alt="돋보기를 든 CLUE 탐정" width={44} height={44} /><span>CLUE</span></div>
         <div className="workspace-label">WORKSPACE <div className="workspace-actions"><Button variant="ghost" size="icon" aria-label="Workspace 관리" title="Workspace 관리" disabled={busy || !ready} onClick={() => openModal({ kind: 'manage-workspaces' })}><Settings2 /></Button><Button variant="ghost" size="icon" aria-label="Workspace 생성" disabled={busy || !ready} onClick={() => openModal({ kind: 'workspace' })}><Plus /></Button></div></div>
         <label className="sr-only" htmlFor="workspace">Workspace 선택</label>
         <select id="workspace" value={activeId ?? ''} disabled={busy || !ready || !session.workspaces.length} onChange={event => void switchWorkspace(event.target.value)}>
@@ -195,11 +196,11 @@ export default function App() {
           <details className="library-more"><summary>더 보기</summary><button className="nav-item" disabled={busy || !activeId} onClick={() => setHistoryOpen(true)}><MessageSquare size={19} /> 답변 관리</button></details>
         </nav>
         {activeId && <QuestionHistory key={activeId} workspaceId={activeId} revision={historyRevision} selectedId={questionId} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} />}
-        <div className="sidebar-bottom sidebar-wordmark">KNOWLEDGE FORGE</div>
+        <div className="sidebar-bottom sidebar-wordmark">CLUE</div>
       </aside>
 
       <main>
-        <header className="topbar"><span>{workspace?.name ?? 'Knowledge Forge'}</span><Button className="provider-trigger" variant="outline" size="sm" disabled={!ready || connection?.state === 'CHECKING'} onClick={() => setCliSettingsOpen(true)} title="로그인 확인 결과입니다. 모델 이용 가능 여부는 실제 요청 시 확인됩니다."><i data-connected={connection?.state === 'AUTHENTICATED'} />{connection?.state === 'AUTHENTICATED' ? connection.provider : connection?.state === 'CHECKING' ? '연결 확인 중' : 'AI 연결'}</Button></header>
+        <header className="topbar"><span>{workspace?.name ?? 'CLUE'}</span><Button className="provider-trigger" variant="outline" size="sm" disabled={!ready || connection?.state === 'CHECKING'} onClick={() => setCliSettingsOpen(true)} title="로그인 확인 결과입니다. 모델 이용 가능 여부는 실제 요청 시 확인됩니다."><i data-connected={connection?.state === 'AUTHENTICATED'} />{connection?.state === 'AUTHENTICATED' ? connection.provider : connection?.state === 'CHECKING' ? '연결 확인 중' : 'AI 연결'}</Button></header>
         {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel initialConnection={connection} onClose={() => setCliSettingsOpen(false)} onConnectionChange={setConnection} /></Suspense>}
         {historyOpen && activeId && <Suspense fallback={<p role="status">답변을 여는 중…</p>}><AnswerHistoryPanel key={activeId} workspaceId={activeId} onClose={() => setHistoryOpen(false)} /></Suspense>}
         <div className="page-content">
