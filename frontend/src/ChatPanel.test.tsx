@@ -8,7 +8,7 @@ vi.mock('./api', () => ({ request: vi.fn() }))
 vi.mock('./AnswerJobsPanel', () => ({ default: ({ initialJob }: { initialJob: { answer: string } }) => <p>{initialJob.answer}</p> }))
 const api = vi.mocked(request)
 const props = { workspaceId: 'one', selectedId: null, connection: { provider: 'CODEX' as const, state: 'AUTHENTICATED', model: 'fixture-model' }, onCreated: vi.fn(), onConnect: vi.fn(), onSources: vi.fn() }
-const bundle = { id: 'bundle', workspaceId: 'one', digest: 'digest', payload: { question: '가상 질문', status: 'READY', items: [{ label: 'R1', title: '가상 자료', quote: '근거', startLine: 1, endLine: 2 }] } }
+const bundle = { id: 'bundle', workspaceId: 'one', digest: 'digest', payload: { question: '가상 질문', status: 'READY', items: [{ kind: 'ORIGINAL', label: 'R1', title: '가상 자료', quote: '근거', startLine: 1, endLine: 2 }] } }
 beforeEach(() => { api.mockReset(); vi.clearAllMocks() })
 
 it('미연결 상태에서는 질문 전송만 잠그고 자료와 연결을 열 수 있다', async () => {
@@ -37,7 +37,7 @@ it('질문 한 번으로 로컬 근거를 만들고 모델을 미리보기에 �
   expect(await screen.findByText('[R1] 가상 자료')).toBeInTheDocument()
   expect(props.onCreated).toHaveBeenCalledWith('bundle')
   expect(api).toHaveBeenCalledTimes(1)
-  expect(api).toHaveBeenCalledWith('/workspaces/one/evidence-bundles', expect.objectContaining({ body: JSON.stringify({ question: '가상 질문', domains: [], includeKnowledge: true }) }))
+  expect(api).toHaveBeenCalledWith('/workspaces/one/evidence-bundles', expect.objectContaining({ body: JSON.stringify({ question: '가상 질문', domains: [], includeKnowledge: false }) }))
   await userEvent.click(screen.getByRole('button', { name: '이 자료로 답변 준비' }))
   expect(await screen.findByRole('button', { name: '동의하고 답변 받기' })).toBeDisabled()
   expect(api).toHaveBeenLastCalledWith('/workspaces/one/evidence-bundles/bundle/answer-preview', expect.objectContaining({ body: JSON.stringify({ provider: 'CODEX', requestedModel: 'fixture-model' }) }))
@@ -67,6 +67,18 @@ it('연결 없이도 이전 답변을 읽으며 새 AI 호출을 하지 않는�
   render(<ChatPanel {...props} selectedId="bundle" connection={null} />)
   expect(await screen.findByText('보존한 답변')).toBeInTheDocument()
   expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
+})
+
+it('이전 편집형 지식이 포함된 미완료 질문은 그대로 전송하지 않고 원본으로 다시 질문한다', async () => {
+  const legacy = { ...bundle, payload: { ...bundle.payload, items: [{ ...bundle.payload.items[0], kind: 'KNOWLEDGE' }] } }
+  api.mockImplementation(async (path, options) => path.endsWith('/answer-jobs') ? [] : options?.method === 'POST' ? bundle : legacy)
+  render(<ChatPanel {...props} selectedId="bundle" />)
+  await userEvent.click(await screen.findByRole('button', { name: '원본으로 다시 질문' }))
+  expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
+  expect(screen.queryByRole('button', { name: '이 자료로 답변 준비' })).not.toBeInTheDocument()
+  expect(screen.getByRole('textbox', { name: '질문' })).toHaveValue('가상 질문')
+  await userEvent.click(screen.getByRole('button', { name: '질문 보내기' }))
+  expect(api).toHaveBeenCalledWith('/workspaces/one/evidence-bundles', expect.objectContaining({ body: JSON.stringify({ question: '가상 질문', domains: [], includeKnowledge: false }) }))
 })
 
 it('최근 질문 클릭과 새 질문은 목록 조회 이외의 API를 부르지 않는다', async () => {

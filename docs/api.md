@@ -216,7 +216,7 @@ ERROR(추출 실패/크기 초과), PENDING(Phase 1 기존 파일).
 
 Hit 필드: `entryId, name, sourceId, domain, path, snippet, score, startLine, endLine, bodyMatch, kind, cardId, version, domains, freshness, textHash`.
 `textHash`는 색인 본문 UTF-8 SHA-256입니다. [답변용 근거 묶음 API](evidence-bundles.md)는 이 값으로 현재 본문과 다시 대조한 뒤 로컬에 인용문을 보관합니다. AI 전송은 없습니다.
-`includeKnowledge=true`이면 원본과 최신 게시 지식을 함께 검색합니다. 기본 false(원본만), UI 기본 true입니다.
+`includeKnowledge=true`이면 원본과 최신 게시 지식을 함께 검색합니다. 검색 API 기본 false(원본만)입니다. 0.1.11 기본 대화 UI는 편집형 지식 문서를 제외하도록 근거 생성에 `includeKnowledge=false`를 명시합니다. 기존 API의 명시적 지식 검색은 호환용으로 유지합니다. [사용자 경로](internal-search.md).
 `kind=ORIGINAL`은 entryId를, `kind=KNOWLEDGE`는 cardId/version을 사용하며 나머지 ID는 null입니다.
 게시 지식의 도메인은 현재 근거 Source 도메인들의 합집합이며 sourceId/path는 빈 문자열입니다.
 `freshness`는 게시 지식에서 CURRENT/STALE/MISSING, 원본에서는 UNCHECKED입니다. [정책·제한](published-search.md).

@@ -1,12 +1,11 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import { ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, MessageSquare, Plus, RefreshCw, Settings2, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { Button } from './components/ui/button'
-import { entryPath, request, type Area, type Entry, type EvidenceLocation, type Preview, type Session } from './api'
+import { entryPath, request, type Entry, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
 import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
-import KnowledgePanel from './KnowledgePanel'
 import PixelLandscape from './PixelLandscape'
 import { type ConnectionIndicator } from './connectionIndicator'
 import ChatPanel, { QuestionHistory } from './ChatPanel'
@@ -22,7 +21,6 @@ const formatSize = (size: number) => size < 1024 ? `${size} B` : size < 1024 ** 
 export default function App() {
   const [session, setSession] = useState<Session>(emptySession)
   const [ready, setReady] = useState(false)
-  const [area, setArea] = useState<Area>('ORIGINAL')
   const [view, setView] = useState<'CHAT' | 'LIBRARY'>('CHAT')
   const [questionId, setQuestionId] = useState<string | null>(null)
   const [historyRevision, setHistoryRevision] = useState(0)
@@ -43,12 +41,9 @@ export default function App() {
   const [revision, setRevision] = useState(0)
   const uploadRef = useRef<HTMLInputElement>(null)
   const selectionAbort = useRef<AbortController | null>(null)
-  const pendingOriginal = useRef<Entry | null>(null)
-  const [originNotice, setOriginNotice] = useState<{ entryId: string; message: string } | null>(null)
   const activeId = session.activeWorkspaceId
   const workspace = session.workspaces.find(item => item.id === activeId)
   const parentId = trail.at(-1)?.id
-  const original = area === 'ORIGINAL'
 
   useEffect(() => {
     if (!ready) return
@@ -83,26 +78,19 @@ export default function App() {
     setEntries([])
     setSelected(null)
     setPreview(null)
-    const target = pendingOriginal.current
-    pendingOriginal.current = null
-    if (!activeId || area === 'KNOWLEDGE') { setLoading(false); return () => controller.abort() }
+    if (!activeId) { setLoading(false); return () => controller.abort() }
     setLoading(true)
-    const params = new URLSearchParams({ area })
+    const params = new URLSearchParams({ area: 'ORIGINAL' })
     if (parentId) params.set('parentId', parentId)
     request<Entry[]>(`${entryPath(activeId)}?${params}`, { signal: controller.signal })
       .then(value => {
         if (controller.signal.aborted) return
         setEntries(value)
-        if (target) {
-          const current = value.find(item => item.id === target.id)
-          if (current) setSelected(current)
-          else setError('이동 중 원본이 변경·삭제되었습니다. 지식 문서에서 현재 원본을 다시 확인하세요.')
-        }
       })
       .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
       .finally(() => { if (!controller.signal.aborted) setLoading(false) })
     return () => controller.abort()
-  }, [activeId, area, parentId, revision])
+  }, [activeId, parentId, revision])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -115,26 +103,11 @@ export default function App() {
     return () => controller.abort()
   }, [activeId, selected])
 
-  function resetNavigation(nextArea: Area = area) {
+  function resetNavigation() {
     setView('LIBRARY')
-    pendingOriginal.current = null
-    setOriginNotice(null)
-    setArea(nextArea)
     setTrail([])
     setSelected(null)
     setError('')
-  }
-
-  function openEvidenceOriginal(location: EvidenceLocation) {
-    setView('LIBRARY')
-    pendingOriginal.current = location.entry
-    setOriginNotice({ entryId: location.entry.id, message: location.freshness === 'STALE'
-      ? '현재 원본은 인용 당시 근거와 다릅니다. 인용 행 번호를 현재 파일에 그대로 적용하지 마세요.'
-      : '지식 근거에서 이동했습니다. 이동 확인 시 마지막 로컬 수집본과 일치했습니다.' })
-    setError('')
-    setTrail(location.ancestors)
-    setArea('ORIGINAL')
-    setRevision(value => value + 1)
   }
 
   async function switchWorkspace(id: string) {
@@ -166,7 +139,7 @@ export default function App() {
       if (modal.kind === 'workspace') {
         await request('/workspaces', { method: 'POST', body: JSON.stringify({ name }) })
         await refreshSession()
-        resetNavigation('ORIGINAL')
+        resetNavigation()
         setQuestionId(null)
       } else if (modal.kind === 'folder' && activeId) {
         await request(`/workspaces/${activeId}/folders`, { method: 'POST', body: JSON.stringify({ name, parentId }) })
@@ -218,8 +191,8 @@ export default function App() {
         </select>
         <nav aria-label="자료 영역">
           <button className={view === 'CHAT' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => { setView('CHAT'); setHistoryRevision(value => value + 1) }}><MessageSquare size={19} /> 대화 <ChevronRight size={15} /></button>
-          <button className={view === 'LIBRARY' && original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('ORIGINAL')}><FolderOpen size={19} /> 자료 <ChevronRight size={15} /></button>
-          <details className="library-more"><summary>더 보기</summary><button className={view === 'LIBRARY' && !original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button><button className="nav-item" disabled={busy || !activeId} onClick={() => setHistoryOpen(true)}><MessageSquare size={19} /> 답변 관리</button></details>
+          <button className={view === 'LIBRARY' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation()}><FolderOpen size={19} /> 자료 <ChevronRight size={15} /></button>
+          <details className="library-more"><summary>더 보기</summary><button className="nav-item" disabled={busy || !activeId} onClick={() => setHistoryOpen(true)}><MessageSquare size={19} /> 답변 관리</button></details>
         </nav>
         {activeId && <QuestionHistory key={activeId} workspaceId={activeId} revision={historyRevision} selectedId={questionId} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} />}
         <div className="sidebar-bottom sidebar-wordmark">KNOWLEDGE FORGE</div>
@@ -231,15 +204,15 @@ export default function App() {
         {historyOpen && activeId && <Suspense fallback={<p role="status">답변을 여는 중…</p>}><AnswerHistoryPanel key={activeId} workspaceId={activeId} onClose={() => setHistoryOpen(false)} /></Suspense>}
         <div className="page-content">
           {view === 'LIBRARY' && <div className="page-heading">
-            <div><h1>{original ? '자료' : '지식 문서'}</h1><p className="subtitle">{original ? '질문에 사용할 파일과 링크를 모아 두세요.' : '원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.'}</p></div>
+            <div><h1>자료</h1><p className="subtitle">질문에 사용할 파일과 링크를 모아 두세요.</p></div>
           </div>}
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
           {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : !workspace ? (
             <section className="welcome"><PixelLandscape /><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
           ) : view === 'CHAT' ? <ChatPanel key={`${activeId}/${chatRevision}`} workspaceId={activeId!} selectedId={questionId} connection={connection}
-            onCreated={id => { setQuestionId(id); setHistoryRevision(value => value + 1) }} onDeleted={() => { setQuestionId(null); setHistoryRevision(value => value + 1); setChatRevision(value => value + 1) }} onConnect={() => setCliSettingsOpen(true)} onSources={() => resetNavigation('ORIGINAL')} /> : (
+            onCreated={id => { setQuestionId(id); setHistoryRevision(value => value + 1) }} onDeleted={() => { setQuestionId(null); setHistoryRevision(value => value + 1); setChatRevision(value => value + 1) }} onConnect={() => setCliSettingsOpen(true)} onSources={() => resetNavigation()} /> : (
             <>
-              {original && <SourcePanel manageOnly key={activeId} workspaceId={activeId!} revision={revision}
+              <SourcePanel manageOnly key={activeId} workspaceId={activeId!} revision={revision}
                 onChanged={() => setRevision(value => value + 1)}
                 onSelect={id => {
                   selectionAbort.current?.abort()
@@ -248,18 +221,17 @@ export default function App() {
                   void request<Entry>(entryPath(activeId!, id), { signal: controller.signal })
                     .then(entry => { if (!controller.signal.aborted) setSelected(entry) })
                     .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
-                }} />}
-              {original && originNotice && selected?.id === originNotice.entryId && <p role="status">{originNotice.message}</p>}
-              {!original ? <KnowledgePanel key={activeId} workspaceId={activeId!} onOpenOriginal={openEvidenceOriginal} onBrowseOriginal={() => setArea('ORIGINAL')} /> : <div className="explorer">
+                }} />
+              <div className="explorer">
                 <section className="file-pane" aria-label="자료 탐색기">
                   <div className="toolbar">
-                    <div className="breadcrumbs" aria-label="폴더 경로"><button disabled={busy} onClick={() => setTrail([])}>{original ? '원본 자료' : '지식 문서'}</button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>
+                    <div className="breadcrumbs" aria-label="폴더 경로"><button disabled={busy} onClick={() => setTrail([])}>원본 자료</button>{trail.map((folder, index) => <span key={folder.id}><ChevronRight size={13} /><button disabled={busy} onClick={() => setTrail(trail.slice(0, index + 1))}>{folder.name}</button></span>)}</div>
                     <div className="toolbar-actions"><Button variant="ghost" size="icon" aria-label="새로고침" disabled={busy || loading} onClick={() => { setError(''); setRevision(value => value + 1) }}><RefreshCw /></Button>
-                      {original && <><Button variant="outline" size="sm" disabled={busy} onClick={() => openModal({ kind: 'folder' })}><FolderPlus /> 새 폴더</Button><Button size="sm" disabled={busy} onClick={() => uploadRef.current?.click()}><Upload /> 파일 추가</Button><input ref={uploadRef} aria-label="파일 업로드" type="file" hidden onChange={event => { void upload(event.target.files?.[0]); event.target.value = '' }} /></>}
+                      <Button variant="outline" size="sm" disabled={busy} onClick={() => openModal({ kind: 'folder' })}><FolderPlus /> 새 폴더</Button><Button size="sm" disabled={busy} onClick={() => uploadRef.current?.click()}><Upload /> 파일 추가</Button><input ref={uploadRef} aria-label="파일 업로드" type="file" hidden onChange={event => { void upload(event.target.files?.[0]); event.target.value = '' }} />
                     </div>
                   </div>
                   <div className="table-head"><span>이름</span><span>크기</span><span>추가한 날짜</span><span /></div>
-                  {loading ? <div className="empty-state" role="status">자료를 불러오는 중…</div> : entries.length === 0 ? <div className="empty-state"><div className="empty-icon">{original ? <FolderOpen size={31} /> : <BookOpen size={31} />}</div><h2>{original ? '자료를 담을 준비가 되었어요' : '아직 생성된 지식이 없습니다'}</h2><p>{original ? '새 폴더를 만들거나 첫 번째 파일을 추가하세요.' : 'AI 지식 생성은 Phase 3에서 제공됩니다.'}</p>{original && <span>파일당 최대 10 MiB · UTF-8 텍스트 미리보기 지원</span>}</div> : (
+                  {loading ? <div className="empty-state" role="status">자료를 불러오는 중…</div> : entries.length === 0 ? <div className="empty-state"><div className="empty-icon"><FolderOpen size={31} /></div><h2>자료를 담을 준비가 되었어요</h2><p>새 폴더를 만들거나 첫 번째 파일을 추가하세요.</p><span>파일당 최대 10 MiB · UTF-8 텍스트 미리보기 지원</span></div> : (
                     <ul className="file-list">{entries.map(entry => <li key={entry.id} className={selected?.id === entry.id ? 'file-row selected' : 'file-row'}>
                       <button className="file-name" disabled={busy} onClick={() => entry.kind === 'FOLDER' ? setTrail([...trail, entry]) : setSelected(entry)}>{entry.kind === 'FOLDER' ? <Folder className="folder-icon" size={21} /> : <FileText size={21} />}<span>{entry.name}</span></button>
                       <span className="file-meta">{entry.kind === 'FOLDER' ? '—' : formatSize(entry.size)}</span><time className="file-meta">{new Date(entry.createdAt).toLocaleDateString('ko-KR')}</time>
@@ -276,7 +248,7 @@ export default function App() {
                     <AnalysisPanel key={selected.id} workspaceId={activeId!} entryId={selected.id} />
                   </div> : <div className="preview-empty"><FileText size={32} /><strong>자료를 살펴보세요</strong><p>파일을 선택하면 내용과<br />상세 정보를 확인할 수 있습니다.</p></div>}
                 </aside>
-              </div>}
+              </div>
             </>
           )}
         </div>

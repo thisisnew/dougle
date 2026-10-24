@@ -1,5 +1,7 @@
 # 아키텍처
 
+최신 사용자 경로는 **자료 → 내부 추출/심볼/색인 → 원본 근거 → 승인 → 답변**입니다. 편집형 Knowledge UI 진입점은 제거했고 새 질문은 `includeKnowledge=false`입니다. 기존 문서/호환 API와 완료 답변은 보존하며 자동 AI 요약을 새로 구현한 것은 아닙니다. [구현·검사 대조](internal-search.md).
+
 0.1.11 대화 중심 화면은 `App → ChatPanel / QuestionHistory → QuickAnswerPanel → AnswerJobsPanel`입니다. 자료 탭은 `SourcePanel(manageOnly)`와 기존 탐색기를 사용합니다. 모델 선택은 `ProviderConnectionPanel → modelPreference → QuickAnswerPanel`로 연결하며 DB/API는 그대로입니다. [사용 흐름·모델 대조](chat-first.md).
 
 0.1.10 기본 질문은 `EvidenceBundlePanel → QuickAnswerPanel → AnswerJobsPanel`입니다. 명시적 전송 동의 후 기존 CAS 승인 저장과 답변 접수를 순서대로 수행합니다. API·DB v21은 그대로이며 응답 유실 재확인은 같은 요청 ID를 씁니다. 고급 이전 문맥 경로는 별도 유지합니다. [흐름·안전 경계·테스트 대조](simple-workflow.md).

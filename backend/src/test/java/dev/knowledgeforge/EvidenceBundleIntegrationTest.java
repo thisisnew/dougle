@@ -194,6 +194,21 @@ class EvidenceBundleIntegrationTest {
     }
 
     @Test
+    void originalOnlyQuestionsIgnoreEditableKnowledgeButPreserveTheDocuments() throws Exception {
+        String card = publish(entry, "telescope fabricated claim [E1]");
+        assertThat(bundles.create(workspace, "telescope", List.of(), true).payload().items())
+                .anyMatch(item -> item.kind().equals("KNOWLEDGE"));
+        mvc.perform(post("/api/workspaces/{workspace}/evidence-bundles", workspace)
+                        .header("X-Forge-Client", "1").contentType("application/json")
+                        .content("{\"question\":\"telescope\",\"includeKnowledge\":false}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.payload.includeKnowledge").value(false))
+                .andExpect(jsonPath("$.payload.items.length()").value(1))
+                .andExpect(jsonPath("$.payload.items[0].kind").value("ORIGINAL"));
+        assertThat(knowledge.get(workspace, card, null).version().markdown()).contains("fabricated claim");
+    }
+
+    @Test
     void validatesHttpRequestsAndRequiresLocalMutationHeader() throws Exception {
         String path = "/api/workspaces/" + workspace + "/evidence-bundles";
         mvc.perform(post(path).contentType("application/json").content("{\"question\":\"telescope\"}"))

@@ -2,10 +2,10 @@
 
 0.1.11: [대화 중심 화면·모델 선택·코드 대조](chat-first.md) · [검증 및 배포 상태](release-0.1.11-report.md).
 
-최신 변경: [필요한 기능만 먼저 보기](simple-workflow.md) · [0.1.10 설치본 검증](release-0.1.10-report.md). [AI 연결 상태](ai-connection-indicator.md)도 확인하세요.
+최신 변경: [앱이 관리하는 내부 검색](internal-search.md). 이전 0.1.10: [필요한 기능만 먼저 보기](simple-workflow.md) · [설치본 검증](release-0.1.10-report.md).
 
-Knowledge Forge는 **내 자료를 모아 검색하고, 출처가 있는 지식을 만드는 Mac 앱**입니다.
-원본 자료·정리된 지식·AI 답변을 따로 보관합니다. 서버나 벡터 DB를 별도로 설치하지 않습니다.
+Knowledge Forge는 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하는 Mac 앱**입니다.
+검색용 추출문·심볼·색인은 앱이 관리합니다. 서버나 벡터 DB를 별도로 설치하지 않습니다.
 
 | 궁금한 것 | 읽을 문서 |
 |---|---|

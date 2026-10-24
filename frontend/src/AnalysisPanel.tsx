@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { request, entryPath } from './api'
 import { Button } from './components/ui/button'
-import { DraftForm } from './KnowledgePanel'
 
 type Analysis = { text: string; mediaType: string; status: string; error: string | null; symbols: { name: string; kind: string; line: number; signature: string }[] }
 
@@ -31,6 +30,5 @@ export default function AnalysisPanel({ workspaceId, entryId }: { workspaceId: s
     {!!analysis?.symbols?.length && <ul className="symbol-list">{analysis.symbols.map((symbol, index) => <li key={`${symbol.line}-${index}`}><strong>{symbol.signature}</strong><span>{symbol.kind} · {symbol.line}행</span></li>)}</ul>}
     {analysis?.text && <details><summary>추출된 텍스트</summary><pre>{analysis.text}</pre></details>}
     </details>
-    {!busy && analysis?.text && ['READY', 'PARTIAL'].includes(analysis.status) && <details><summary>이 자료로 지식 문서 만들기</summary><DraftForm workspaceId={workspaceId} entryId={entryId} text={analysis.text} /></details>}
   </section>
 }

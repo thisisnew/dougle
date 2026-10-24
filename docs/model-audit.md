@@ -1,5 +1,7 @@
 # 모델링 재점검 — 구현과 약속의 차이
 
+최신 후속: `App`의 KnowledgePanel 경로와 `AnalysisPanel`의 DraftForm을 제거했습니다. `ChatPanel`은 새 근거에 `includeKnowledge=false`를 명시하며 예전 지식 포함 미완료 질문은 다시 검색합니다. UI 경로와 Java 원본 전용 근거 캡처/기존 문서 보존을 대조합니다. 기존 편집형 문서 API를 내부 전용 보안 경계로 바꾼 것은 아닙니다. [정확한 모델](internal-search.md).
+
 0.1.11: `ChatPanel`의 질문·근거 저장·Workspace 일치 확인, `QuestionHistory`의 읽기 전용 목록, 연결 전 입력 잠금, 선택 모델을 `QuickAnswerPanel` 미리보기·승인에 고정하는 경로를 대조했습니다. 명시 모델 불일치를 거부하고 응답 유실의 기존 요청 ID를 유지합니다. 새 질문은 과거 문맥을 자동 전송하지 않습니다. 전체 UI 228·Java 378·Rust 17과 가상 CLI 브라우저 답변·이력 검사를 통과했습니다. 목록 331개·테스트/fixture 97개는 실행 커버리지가 아닙니다. [대조표](chat-first.md) · [검증·배포 상태](release-0.1.11-report.md).
 
 0.1.10: 기본 질문 UI를 `QuickAnswerPanel`로 교체했습니다. 미리보기의 묶음/해시/제공자/유효성과 승인 결과의 묶음/해시/제공자/모델을 확인한 뒤 기존 작업 API로 넘깁니다. 서버의 CAS·만료·일회 소비·실행 직전 재검증은 변경하지 않았습니다. UI의 동의 전 비전송·조건 변경·응답 유실·화면 종료와 간편 SSE/중단 회귀를 추가했고 가상 CLI 브라우저에서도 완료 답변·이력 보존을 확인했습니다. 전체 목록 328개·테스트/fixture 96개이며 실행 커버리지가 아닙니다. [흐름](simple-workflow.md) · [검증 범위](release-0.1.10-report.md).

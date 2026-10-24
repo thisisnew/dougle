@@ -9,7 +9,7 @@ import AnswerJobsPanel from './AnswerJobsPanel'
 
 type Summary = { id: string; question: string }
 type Bundle = { id: string; workspaceId: string; digest: string; payload: { question: string; status: string;
-  items: { label: string; title: string; quote: string; startLine: number; endLine: number }[] } }
+  items: { kind: string; label: string; title: string; quote: string; startLine: number; endLine: number }[] } }
 
 export function QuestionHistory({ workspaceId, revision, selectedId, onSelect }: {
   workspaceId: string; revision: number; selectedId: string | null; onSelect: (id: string | null) => void
@@ -80,7 +80,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     setBusy(true); setError(''); setBundle(null); setJob(null)
     try {
       const value = await request<Bundle>(`${base}/evidence-bundles`, { method: 'POST', signal: controller.signal,
-        body: JSON.stringify({ question: question.trim(), domains: [], includeKnowledge: true }) })
+        body: JSON.stringify({ question: question.trim(), domains: [], includeKnowledge: false }) })
       if (controller.signal.aborted) return
       if (value.workspaceId !== workspaceId) throw new Error('질문의 서재가 다릅니다.')
       setBundle(value); setQuestion(''); created.current = value.id; onCreated(value.id)
@@ -112,6 +112,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
         {!bundle.payload.items.length && <p>답변의 근거가 될 자료가 없어요. 자료를 추가하거나 질문을 바꿔 주세요.<Button variant="ghost" onClick={onSources}>자료 추가하기</Button></p>}
       </section>
       {job ? <AnswerJobsPanel key={job.id} workspaceId={workspaceId} bundleId={bundle.id} approval={null} initialJob={job} compact />
+        : bundle.payload.items.some(item => item.kind !== 'ORIGINAL') ? <p>이전 지식 문서가 포함된 질문입니다. 원본에서 다시 확인해 주세요.<Button variant="outline" onClick={() => { setQuestion(bundle.payload.question); setBundle(null) }}>원본으로 다시 질문</Button></p>
         : bundle.payload.items.length > 0 && bundle.payload.status !== 'NO_EVIDENCE' && <QuickAnswerPanel key={JSON.stringify([bundle.id, connection?.provider, connection?.model])} workspaceId={workspaceId} bundleId={bundle.id} bundleDigest={bundle.digest}
           connectedProvider={connected ? connection!.provider : null} connectedModel={connection?.model} requireConnection />}
       <details className="secondary-tools"><summary>질문 관리</summary><Button variant="destructive" disabled={busy} onClick={() => void remove()}>질문과 답변 삭제</Button></details>

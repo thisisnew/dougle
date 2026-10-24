@@ -5,7 +5,7 @@
 **흩어진 자료에서, 필요한 답을.**
 
 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI에게 질문하는 Mac 앱입니다.
-답변의 출처를 확인하고, 필요한 내용을 문서로 정리해 보관할 수 있습니다.
+검색 준비는 앱이 맡고, 사용자는 질문하고 답변의 출처를 확인하면 됩니다.
 
 ![Knowledge Forge 대화 화면](docs/images/chat-home.png)
 
@@ -38,4 +38,4 @@ Java·Git·Codex 실행 도구는 앱에 포함되어 있습니다. GitHub 자�
 
 ## 더 알아보기
 
-[사용 방법](docs/how-it-works.md) · [설계도](docs/design-map.md) · [개발 환경](docs/development.md) · [전체 문서](docs/README.md)
+[사용 방법](docs/chat-first.md) · [검색 원리](docs/internal-search.md) · [설계도](docs/design-map.md) · [개발 환경](docs/development.md) · [전체 문서](docs/README.md)
