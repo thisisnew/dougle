@@ -26,12 +26,12 @@ describe('Workspace와 자료 탐색기', () => {
       ? { workspaces: [], activeWorkspaceId: null }
       : { provider: 'CODEX', state: 'AUTHENTICATED', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
     render(<App />)
-    await waitFor(() => expect(screen.getByRole('button', { name: 'AI 연결' })).toBeEnabled())
-    await userEvent.click(screen.getByRole('button', { name: 'AI 연결' }))
+    await waitFor(() => expect(screen.getByRole('button', { name: 'CODEX' })).toBeEnabled(), { timeout: 5000 })
+    await userEvent.click(screen.getByRole('button', { name: 'CODEX' }))
     const dialog = await screen.findByRole('dialog', { name: 'AI 연결' })
     expect(await within(dialog).findByText(/Codex · 로그인 확인/)).toBeInTheDocument()
     await userEvent.click(within(dialog).getByRole('button', { name: '닫기' }))
-    expect(screen.getByRole('button', { name: /AI 연결.*Codex · 로그인 확인/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'CODEX' })).toBeInTheDocument()
     expect(screen.queryByRole('dialog', { name: 'AI 연결' })).not.toBeInTheDocument()
   })
 
@@ -71,7 +71,9 @@ describe('Workspace와 자료 탐색기', () => {
       return []
     })
     render(<App />)
+    await user.click(await screen.findByRole('button', { name: '자료' }))
     await screen.findByText('자료를 담을 준비가 되었어요')
+    await user.click(screen.getByText('더 보기'))
     await user.click(screen.getByRole('button', { name: '지식 문서' }))
     expect(screen.getByText('원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.')).toBeInTheDocument()
     expect(screen.queryByText(/아직 미검증 상태입니다/)).not.toBeInTheDocument()
@@ -119,6 +121,7 @@ describe('Workspace와 자료 탐색기', () => {
       return [file]
     })
     render(<App />)
+    await user.click(await screen.findByRole('button', { name: '자료' }))
     await user.click(await screen.findByRole('button', { name: 'notes.md' }))
     expect(await screen.findByText('<script>window.injected=true</script>')).toBeInTheDocument()
     expect(document.querySelector('.preview-content script')).toBeNull()
@@ -135,6 +138,7 @@ describe('Workspace와 자료 탐색기', () => {
       return [file]
     })
     render(<App />)
+    await user.click(await screen.findByRole('button', { name: '자료' }))
     await user.click(await screen.findByRole('button', { name: 'notes.md 삭제' }))
     await user.click(screen.getByRole('button', { name: '취소' }))
     expect(api.mock.calls.some(([, options]) => options?.method === 'DELETE')).toBe(false)
@@ -153,8 +157,10 @@ describe('Workspace와 자료 탐색기', () => {
       return [{ ...file, id: 'folder', kind: 'FOLDER', name: '참고 자료' }]
     })
     render(<App />)
+    await user.click(await screen.findByRole('button', { name: '자료' }))
     await user.click(await screen.findByRole('button', { name: '참고 자료' }))
     await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/entries?area=ORIGINAL&parentId=folder', expect.anything()))
+    await user.click(screen.getByText('더 보기'))
     await user.click(screen.getByRole('button', { name: '지식 문서' }))
     expect(await screen.findByText('첫 지식 문서를 만들어 보세요')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '파일 추가' })).not.toBeInTheDocument()

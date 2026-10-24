@@ -17,11 +17,11 @@ type Source = {
   nextPollAt: number | null; consecutiveFailures: number; pollingRevision: number
 }
 type Hit = { entryId: string | null; name: string; sourceId: string; domain: string; path: string; snippet: string; score: number; startLine: number; endLine: number; bodyMatch: boolean; kind: 'ORIGINAL' | 'KNOWLEDGE'; cardId: string | null; version: number | null; freshness: string }
-type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void }
+type Props = { workspaceId: string; revision: number; onChanged: () => void; onSelect: (id: string) => void; manageOnly?: boolean }
 const states: Record<string, string> = { NEW: '수집 전', SYNCING: '수집 중', READY: '반영 완료', ERROR: '오류 · 이전 자료 유지' }
 const sourceKinds: Record<string, string> = { LOCAL_FOLDER: '로컬 폴더', URL: '웹페이지', GITHUB: 'GitHub' }
 
-export default function SourcePanel({ workspaceId, revision, onChanged, onSelect }: Props) {
+export default function SourcePanel({ workspaceId, revision, onChanged, onSelect, manageOnly = false }: Props) {
   const [sources, setSources] = useState<Source[]>([])
   const [formOpen, setFormOpen] = useState(false)
   const [managing, setManaging] = useState(false)
@@ -142,8 +142,8 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
 
   const availableDomains = [...new Set(sources.map(source => source.domain).filter(Boolean))]
   return <section className="source-panel" aria-label="자료 연결과 검색">
-    <div className="source-title"><h2><Link size={17} /> 자료 검색</h2><Button size="sm" variant="outline" disabled={!!busy} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 연결</Button></div>
-    <p className="source-hint">폴더·웹페이지·GitHub를 연결해 검색하세요. 원본은 변경하지 않습니다.</p>
+    <div className="source-title"><h2><Link size={17} /> {manageOnly ? '연결한 자료' : '자료 검색'}</h2><Button size="sm" variant="outline" disabled={!!busy} onClick={() => setFormOpen(!formOpen)}><FolderInput /> 자료 연결</Button></div>
+    <p className="source-hint">폴더·웹페이지·GitHub를 추가하세요. 원본은 변경하지 않습니다.</p>
     {error && <p role="alert" className="modal-error">{error}</p>}
     {formOpen && <form onSubmit={register} className="source-form">
       <label>종류<select aria-label="Source 종류" value={kind} onChange={event => setKind(event.target.value)}>
@@ -169,7 +169,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       {editing === source.id && <SourceMetadataEditor source={source} busy={!!busy} onClose={() => setEditing(null)} onSave={metadata => mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'PATCH', body: JSON.stringify(metadata), signal: mutationAbort.current?.signal }))} />}
       {deleting === source.id && <div className="source-confirm" role="alert"><span>보관한 자료도 삭제합니다. PC 원래 폴더·원격 저장소는 유지됩니다.</span><Button variant="ghost" size="sm" disabled={!!busy} onClick={() => setDeleting(null)}>취소</Button><Button variant="destructive" size="sm" disabled={!!busy} onClick={() => void mutate(source.id, () => request(`${base}/sources/${source.id}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))}>Source 삭제 확인</Button></div>}
     </li>)}</ul></details>}
-    <form className="search-form" onSubmit={event => void search(event)}>
+    {!manageOnly && <><form className="search-form" onSubmit={event => void search(event)}>
       <label className="sr-only" htmlFor="knowledge-query">자료 검색</label>
       <input id="knowledge-query" required maxLength={256} value={query} onChange={event => setQuery(event.target.value)} placeholder="찾고 싶은 내용이나 질문을 입력하세요" />
       <Button type="submit" size="sm" disabled={searching || !query.trim()}><Search />{searching ? '검색 중…' : '검색'}</Button>
@@ -187,6 +187,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         const id = hit.kind === 'KNOWLEDGE' ? hit.cardId : hit.entryId
         if (id) setRelated({ kind: hit.kind, id, version: hit.version, title: hit.name })
       }}>관련 자료</Button></details></div>)}</div>}
+    </>}
     {related && <Suspense fallback={<p role="status">관계 화면을 여는 중…</p>}><RelationPanel workspaceId={workspaceId} seed={related} domains={domains} onClose={() => setRelated(null)} onOriginal={onSelect} onKnowledge={(cardId, version) => setPublished({ cardId, version })} /></Suspense>}
     {published && <PublishedSearchPreview workspaceId={workspaceId} cardId={published.cardId} version={published.version} onClose={() => setPublished(null)} />}
     {bundleOpen && <EvidenceBundlePanel workspaceId={workspaceId} question={query} domains={domains} includeKnowledge={includeKnowledge} onClose={() => setBundleOpen(false)} />}

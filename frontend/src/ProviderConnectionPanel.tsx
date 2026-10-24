@@ -3,6 +3,7 @@ import { request } from './api'
 import { Button } from './components/ui/button'
 import { preferredProvider, rememberProvider, type Provider } from './providerPreference'
 import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
+import { loadModel, saveModel, requestedModel, modelPresets, type ModelChoice } from './modelPreference'
 
 const AdvancedSettings = lazy(() => import('./CliLaunchPanel'))
 type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string }
@@ -15,11 +16,13 @@ const messages: Record<string, string> = {
   CHECK_FAILED: '연결 상태를 확인하지 못했습니다. 잠시 후 다시 확인해 주세요.',
 }
 
-export default function ProviderConnectionPanel({ onClose, onConnectionChange, checkOnOpen = false }: { onClose: () => void; onConnectionChange?: (value: ConnectionIndicator) => void; checkOnOpen?: boolean }) {
+export default function ProviderConnectionPanel({ onClose, onConnectionChange, checkOnOpen = false, initialConnection }: { onClose: () => void; onConnectionChange?: (value: ConnectionIndicator) => void; checkOnOpen?: boolean; initialConnection?: ConnectionIndicator | null }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const pending = useRef<AbortController | null>(null)
   const [provider, setProvider] = useState<Provider>(preferredProvider)
-  const [status, setStatus] = useState<Status | null>(null)
+  const [choice, setChoice] = useState<ModelChoice>(() => loadModel(provider))
+  const [status, setStatus] = useState<Status | null>(() => initialConnection?.provider === provider && initialConnection.state === 'AUTHENTICATED'
+    ? { provider, state: 'AUTHENTICATED', checkedAt: '', remoteConnection: 'NOT_CHECKED' } : null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [advanced, setAdvanced] = useState(false)
@@ -28,9 +31,10 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   const [loginBusy, setLoginBusy] = useState(false)
   const loggingIn = login?.state === 'PENDING'
   const indicatorState = error ? 'CHECK_FAILED' : busy ? 'CHECKING' : status?.state ?? 'UNCHECKED'
+  const preset = choice.mode === 'custom' && modelPresets[provider].some(item => item.id === choice.model)
   useEffect(() => {
-    onConnectionChange?.({ provider, state: indicatorState })
-  }, [provider, indicatorState, onConnectionChange])
+    onConnectionChange?.({ provider, state: indicatorState, model: requestedModel(choice) })
+  }, [provider, indicatorState, choice, onConnectionChange])
   useEffect(() => {
     const element = dialog.current!
     element.showModal()
@@ -77,13 +81,16 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   }
 
   function choose(next: Provider) {
+    if (next === provider) return
     pending.current?.abort()
-    setProvider(next); setStatus(null); setBusy(false); setLogin(null); setAcknowledged(false)
+    setProvider(next); setChoice(loadModel(next)); setStatus(null); setBusy(false); setLogin(null); setAcknowledged(false)
     setError(rememberProvider(next) ? '' : '이 환경에서는 선택을 기억할 수 없습니다. 현재 화면에서는 사용할 수 있습니다.')
   }
 
   async function check() {
     if (busy) return
+    if (choice.mode === 'custom' && !/^[a-zA-Z0-9][a-zA-Z0-9._:/-]{0,127}$/.test(choice.model)) { setError('유효한 모델 ID를 입력해 주세요.'); return }
+    if (!saveModel(provider, choice)) { setError('모델 선택을 저장하지 못했습니다. 다시 시도해 주세요.'); return }
     const controller = new AbortController()
     pending.current = controller
     setBusy(true); setError(''); setStatus(null)
@@ -98,26 +105,33 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   }
 
   return <dialog ref={dialog} className="proposal-merge provider-connection" aria-label="AI 연결" onCancel={event => { event.preventDefault(); if (!loggingIn && !busy) onClose() }}>
-    <div className="provider-connection-header"><h2>어떤 AI를 사용할까요?</h2><Button variant="outline" disabled={loggingIn || busy} onClick={onClose}>닫기</Button></div>
-    <p>한 번 고르면 다음 질문과 지식 초안에서 기본으로 사용합니다. 이미 작성 중인 요청이나 승인은 바꾸지 않습니다.</p>
-    <label>사용할 AI<select value={provider} disabled={loggingIn || loginBusy} onChange={event => choose(event.target.value as Provider)}><option value="CODEX">Codex</option><option value="CLAUDE">Claude</option></select></label>
-    <div className="ai-connection-indicator" data-state={indicatorState} role="status" aria-live="polite">
-      <strong><span aria-hidden="true">{indicatorState === 'AUTHENTICATED' ? '✓' : indicatorState === 'CHECKING' ? '◌' : '!'}</span> {provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</strong>
-      <p>{indicatorState === 'UNCHECKED' ? '아래 버튼으로 로그인 상태를 확인하세요.' : indicatorState === 'AUTHENTICATED' ? '로그인을 확인했습니다. 실제 AI 요청은 자료 전송 승인 후 진행합니다.' : indicatorState === 'CHECKING' ? '잠시만 기다려 주세요. 자료는 전송하지 않습니다.' : '아래 안내를 확인한 뒤 다시 확인해 주세요.'}</p>
+    <div className="provider-connection-header"><div><h2>AI 연결</h2><p>함께 사용할 AI를 골라 주세요.</p></div><Button variant="ghost" disabled={loggingIn || busy} onClick={onClose}>닫기</Button></div>
+    <div className="provider-cards" role="group" aria-label="사용할 AI">
+      {(['CODEX', 'CLAUDE'] as const).map(value => <button key={value} className="provider-card" aria-pressed={provider === value} disabled={loggingIn || loginBusy} onClick={() => choose(value)}>
+        <span className="provider-monogram">{value === 'CODEX' ? 'C' : '✳'}</span><strong>{value === 'CODEX' ? 'Codex' : 'Claude'}</strong><small>{value === 'CODEX' ? 'OpenAI · 앱에 포함' : 'Anthropic · 별도 도구 필요'}</small>
+      </button>)}
     </div>
-    <Button disabled={busy || advanced || loggingIn} onClick={() => void check()}>{busy ? '확인 중…' : '연결 상태 확인'}</Button>
-    <p>확인을 누르면 선택한 도구의 인증 상태만 조회합니다. 자료를 보내거나 AI 답변을 생성하지 않습니다.</p>
-    {provider === 'CODEX' && <p>새 Mac 앱은 답변 스트리밍을 위한 전용 로그인을 사용합니다. 처음 한 번 이 앱에서 로그인하세요. 기존 Codex 로그인은 변경하지 않습니다.</p>}
-    {status && <div role="status"><p>{messages[status.state]}</p><small>확인 시각: {status.checkedAt}</small><p>원격 연결·모델 이용 한도는 확인하지 않았습니다. 실제 요청은 별도 전송 승인 후 실행합니다.</p></div>}
+    <label className="field-label">모델<select value={preset ? choice.model : choice.mode} disabled={busy || loggingIn} onChange={event => {
+      const value = event.target.value
+      setChoice(modelPresets[provider].some(item => item.id === value) ? { mode: 'custom', model: value } : { mode: value as ModelChoice['mode'], model: '' }); setStatus(null); setError('')
+    }}><option value="server">앱 기본 모델 — 권장</option>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="cli">제공자가 선택하는 기본 모델</option><option value="custom">모델 ID 직접 지정</option></select></label>
+    {choice.mode === 'custom' && !preset && <label className="field-label">모델 ID<input value={choice.model} maxLength={128} disabled={busy || loggingIn} placeholder="계정에서 이용 가능한 모델 ID" onChange={event => { setChoice({ ...choice, model: event.target.value }); setStatus(null); setError('') }} /></label>}
+    <p className="model-note">모델 이용 가능 여부는 계정에 따라 다릅니다.</p>
+    <Button className="connect-button" disabled={busy || advanced || loggingIn || status?.state === 'AUTHENTICATED'} onClick={() => void check()}>{busy ? '확인 중…' : status?.state === 'AUTHENTICATED' ? '연결됨' : '연결'}</Button>
+    <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>
+    {status && status.state !== 'AUTHENTICATED' && <p>{messages[status.state]}</p>}
+    <p className="connection-note">로그인 확인만 진행합니다. 자료 전송은 질문마다 동의가 필요합니다.</p>
     {error && <p role="alert">{error}</p>}
     {status?.state === 'LOGIN_REQUIRED' && !loggingIn && <div>
-      <label><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => setAcknowledged(event.target.checked)} />기본 브라우저 로그인과 제공자 도구의 자격 증명 저장에 동의합니다. 자료는 전송하지 않습니다.</label>
+      <label className="check-option"><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => setAcknowledged(event.target.checked)} /><span>브라우저 로그인과 인증 정보 저장에 동의합니다.</span></label>
       <Button disabled={busy || !acknowledged} onClick={() => void loginAction(false)}>브라우저에서 로그인</Button>
     </div>}
     {loggingIn && <div role="status"><p>브라우저에서 로그인을 완료해 주세요. 최대 3분 동안 기다립니다. 중단은 이미 저장된 로그인을 취소하거나 로그아웃하지 않습니다.</p><Button disabled={busy} onClick={() => void loginAction(true)}>로그인 중단</Button></div>}
     {login && ['FAILED', 'CANCELLED', 'TIMED_OUT'].includes(login.state) && <p role="status">{login.state === 'TIMED_OUT' ? '로그인 대기 시간이 지났습니다.' : login.state === 'CANCELLED' ? '로그인 대기를 중단했습니다.' : '로그인 완료를 확인하지 못했습니다.'} 연결 상태를 다시 확인해 주세요.</p>}
-    <details><summary>고급 설정 / 현재 제한</summary>
-      <p>새 빌드는 Codex 실행 도구 동봉을 지원합니다. 이전 0.1.1 설치 파일에는 포함되지 않습니다. Claude 동봉·실제 계정 로그인 확인은 별도입니다. 자료 검색·수동 지식 작성은 AI 없이 사용할 수 있습니다.</p>
+    <details><summary>연결 도움말</summary>
+      <p>원격 연결·모델 이용 한도는 확인하지 않았습니다. 실제 요청은 별도 전송 승인 후 실행합니다.</p>
+      <p>목록은 공식 문서 기준의 선택 예시이며 계정 조회 결과가 아닙니다. Claude 이름은 제공자가 버전을 선택하는 별칭입니다.</p>
+      <p>Codex는 앱 전용 로그인을 사용합니다. Claude는 호환되는 실행 도구가 별도로 필요합니다. 기존 요청의 모델과 승인은 변경하지 않습니다.</p>
       <Button variant="outline" disabled={busy || loggingIn} onClick={() => setAdvanced(true)}>기존 실행 경로 설정</Button>
     </details>
     {advanced && <Suspense fallback={<p>고급 설정을 여는 중…</p>}><AdvancedSettings onClose={() => { setAdvanced(false); setStatus(null) }} /></Suspense>}

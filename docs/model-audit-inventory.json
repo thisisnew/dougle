@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 328,
-  "testOrFixtureFiles": 96,
+  "totalFiles": 331,
+  "testOrFixtureFiles": 97,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -271,6 +271,7 @@
         "backend/src/test/java/dev/knowledgeforge/ConversationIntegrationTest.java",
         "backend/src/test/java/dev/knowledgeforge/library/adapter/persistence/MigrationTest.java",
         "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/answerJobEvents.desktop.test.ts",
         "frontend/src/answerJobEvents.test.ts"
       ]
@@ -898,6 +899,7 @@
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/KnowledgeMarkdown.test.tsx",
         "frontend/src/KnowledgeOrganization.test.tsx",
@@ -1536,6 +1538,7 @@
         "backend/src/test/java/dev/knowledgeforge/sources/application/SourcePollingTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
         "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/ProposalAcceptance.test.tsx",
         "frontend/src/ProposalDecisions.test.tsx",
         "frontend/src/ProposalMerge.test.tsx",
@@ -1942,14 +1945,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "b7fe5ec1d9322bc452253cbfde60cb4ad706657de8fa7e778d2694d3539eb0fa",
+      "sha256": "0ae52d64141699db83b40fa6b7c005b32374aa15500a32bd89a18e66e3981808",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "19a173283c087765d70749de4d3f8b95571af8a6efa58c95f0dd41e1408574ae",
+      "sha256": "ca86423ac58d691c46539993ff00c1ae622094b863df15bb4a5807e4e9647021",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -1965,7 +1968,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "40bbe3f34991407f45192301bedb96a0287f3bb9e59f827c5a1d669db1125d9e",
+      "sha256": "f32d5f09b6dccf05270c43f4b767afb6c20bb66a0308a4b3975a7d280c5a5052",
       "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2014,8 +2017,8 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "d86e5f35630189df510f016feb07eb6ceec4c5637acf0df6544dccad94889d15",
-      "lines": 331,
+      "sha256": "4bac556a6174c6d605461a2396b55ab31cf99d304a6870b164c255ed737ebb20",
+      "lines": 324,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -2086,6 +2089,7 @@
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/AnswerJobsPanel.test.tsx",
         "frontend/src/App.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/CliLaunchPanel.test.tsx",
         "frontend/src/CliStatusPanel.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
@@ -2155,6 +2159,7 @@
         "desktop/src-tauri/examples/updater_verify.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourceMetadataEditor.test.tsx",
@@ -2206,7 +2211,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "36108a5bff788fd9f10ee5a26337918262f11a0b065ce8e529193191958902f5",
+      "sha256": "083da6b54fb245b408121905dcfc1262792d4d7b93786a9abde7208fd339d3fb",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2311,24 +2316,25 @@
     },
     {
       "path": "frontend/src/AnswerJobsPanel.tsx",
-      "sha256": "54dc2933073a2a869c6441edf23422c2d6defbc46d93258b56b11470b041b05e",
+      "sha256": "fe8646f8c8563e3fc1bd84423bdbc808d36f63107986b9350a464b8dbd8cd54c",
       "lines": 82,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "frontend/src/AnswerJobsPanel.test.tsx"
+        "frontend/src/AnswerJobsPanel.test.tsx",
+        "frontend/src/ChatPanel.test.tsx"
       ]
     },
     {
       "path": "frontend/src/App.test.tsx",
-      "sha256": "d200cb7108d70e5cb24e07f69ffec0cc8d6ebb273d572b98e20dc04c85419899",
-      "lines": 162,
+      "sha256": "77e4bd7f9668e7085011eeaec92f23149ff61b10d17be38b098d0f8b9629a334",
+      "lines": 168,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "d2a3aaa2ee60c80641f09137bbbc61b2f376cdde7aefdc993ae8b277cad67bf0",
-      "lines": 261,
+      "sha256": "d9b2094fb7959e965ae6a562c4ff29c3f60a861b10230d03eeb4309088359776",
+      "lines": 294,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/knowledgeforge/AnswerApprovalIntegrationTest.java",
@@ -2360,6 +2366,22 @@
         "scripts/native-host-smoke.mjs",
         "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs"
+      ]
+    },
+    {
+      "path": "frontend/src/ChatPanel.test.tsx",
+      "sha256": "17d361432c62f364ee9c44f07dec26c2e14d959302f8606d2667bf0867ec673f",
+      "lines": 89,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/ChatPanel.tsx",
+      "sha256": "36fb5a8289560298f55cbd363e4adc4f4ab2a5cd6be2eb0c2f681ead8012afd8",
+      "lines": 129,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/ChatPanel.test.tsx"
       ]
     },
     {
@@ -2614,15 +2636,15 @@
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.test.tsx",
-      "sha256": "4295b3a30404689499cf9f0317d0cb0d1da90e105d102db1ca937a26446eca02",
-      "lines": 121,
+      "sha256": "7bd8c12376fc5f09f0bb60b691210cada82052ace306784afbcf0935dc607a1d",
+      "lines": 137,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.tsx",
-      "sha256": "bbdf254565ab49c9a4dc0baf42bf6975c855d459330f3c765fddaf33d4dc2fc2",
-      "lines": 125,
+      "sha256": "61849685308a1bdecc2ef6d5ba8b49670d92f8bde05046ca1b3fd6e10c30b8ad",
+      "lines": 139,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/ProviderConnectionPanel.test.tsx"
@@ -2664,15 +2686,15 @@
     },
     {
       "path": "frontend/src/QuickAnswerPanel.test.tsx",
-      "sha256": "7f90b294c7205bbe823a3e6f5ecf5d7c37e4b5f10f3cfa2e1d0b63f326fe2a09",
-      "lines": 109,
+      "sha256": "2afb5c455bc9f343f2cceeb3481c0a839da03e1eac57a1f4f0854ff3fc5ec93f",
+      "lines": 118,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/QuickAnswerPanel.tsx",
-      "sha256": "4f4fc7b8891e0a313df55b44829cfe2020e06e7cca991a4f69fbce5a610cdd66",
-      "lines": 97,
+      "sha256": "a3826d89215953c1613c02355e890aafc7aed5b7210aad421ac4ddf177f397d4",
+      "lines": 98,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/QuickAnswerPanel.test.tsx"
@@ -2720,8 +2742,8 @@
     },
     {
       "path": "frontend/src/SourcePanel.tsx",
-      "sha256": "03b50d8c5e124fe9f14b650df15308ae57190b51b46d67ca8a6a8ccdaca74180",
-      "lines": 195,
+      "sha256": "9e47a55e1d5309ac16da9ec9971aa5f3a6bbb03c42b22cbaad3c35a49ba6c0bd",
+      "lines": 196,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/SourcePanel.test.tsx"
@@ -2831,6 +2853,7 @@
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/AnswerJobsPanel.test.tsx",
         "frontend/src/App.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/CliLaunchPanel.test.tsx",
         "frontend/src/CliStatusPanel.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
@@ -2880,6 +2903,7 @@
         "frontend/src/AnswerHistoryPanel.test.tsx",
         "frontend/src/AnswerJobsPanel.test.tsx",
         "frontend/src/App.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/CliLaunchPanel.test.tsx",
         "frontend/src/CliStatusPanel.test.tsx",
         "frontend/src/ConversationPreviewPanel.test.tsx",
@@ -2906,7 +2930,7 @@
     },
     {
       "path": "frontend/src/connectionIndicator.ts",
-      "sha256": "a4a5259715376f133181f306a53b88f54b217c5f9e2cad5168f88faac8814a1c",
+      "sha256": "6a360483bb8834a84b47dc2bc8475dfed7db469bea8b84f1de936826b3933eff",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2996,6 +3020,7 @@
         "desktop/src-tauri/examples/updater_verify.rs",
         "desktop/src-tauri/examples/webview_smoke.rs",
         "frontend/src/AnswerHistoryPanel.test.tsx",
+        "frontend/src/ChatPanel.test.tsx",
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourceMetadataEditor.test.tsx",
@@ -3012,6 +3037,13 @@
       ]
     },
     {
+      "path": "frontend/src/modelPreference.ts",
+      "sha256": "baea574777fabbcb5e48d7f547fa4a4fa7d07dd1aa94338d04d9c0ad959d3fb2",
+      "lines": 29,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "frontend/src/providerPreference.ts",
       "sha256": "e02e020208646ccbccaf4c5549fa70434c63debe8cbf732b78c2ab8988378d20",
       "lines": 12,
@@ -3022,14 +3054,14 @@
     },
     {
       "path": "frontend/src/retro.css",
-      "sha256": "c53cfde68d452bda71bb97f1a6de216873518d99a0468d7a558c6e8cec03c8f8",
-      "lines": 151,
+      "sha256": "9aabc8bcc6a4774b1b4a53cd0d630f46fe2cdff6b5f2fce6ebff47afee343380",
+      "lines": 139,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/styles.css",
-      "sha256": "34dc152742830e8bd238b516a8d0e1642941374dfebade71c987de5b52798763",
+      "sha256": "c1db2cda9a7f3bb36f124697bdd108fb9b7800f92fe4159d179f3fdcbfd10567",
       "lines": 181,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []

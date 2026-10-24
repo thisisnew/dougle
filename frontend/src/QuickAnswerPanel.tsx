@@ -10,10 +10,10 @@ type Approval = { id: string; bundleId: string; digest: string; provider: string
 type ApprovalState = { status: string; approval: Approval | null }
 type Submission = { requestId: string; approvalId: string; digest: string; approved: true }
 
-export default function QuickAnswerPanel({ workspaceId, bundleId, bundleDigest }: {
-  workspaceId: string; bundleId: string; bundleDigest: string
+export default function QuickAnswerPanel({ workspaceId, bundleId, bundleDigest, connectedProvider, connectedModel, requireConnection = false }: {
+  workspaceId: string; bundleId: string; bundleDigest: string; connectedProvider?: string | null; connectedModel?: string | null; requireConnection?: boolean
 }) {
-  const [provider, setProvider] = useState<string>(preferredProvider)
+  const [provider, setProvider] = useState<string>(() => connectedProvider ?? preferredProvider())
   const [preview, setPreview] = useState<Preview | null>(null)
   const [agreed, setAgreed] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -26,16 +26,17 @@ export default function QuickAnswerPanel({ workspaceId, bundleId, bundleDigest }
   useEffect(() => () => pending.current?.abort(), [])
 
   async function prepare() {
-    if (locked.current || submission || job) return
+    if (locked.current || submission || job || (requireConnection && !connectedProvider)) return
     locked.current = true
     const controller = new AbortController()
     pending.current = controller
     setBusy(true); setError(''); setAgreed(false); setPreview(null)
     try {
       const value = await request<Preview>(`${base}/answer-preview`, { method: 'POST', signal: controller.signal,
-        body: JSON.stringify({ provider, requestedModel: null }) })
+        body: JSON.stringify({ provider, requestedModel: connectedModel ?? null }) })
       if (controller.signal.aborted) return
-      if (value.bundleId !== bundleId || value.bundleDigest !== bundleDigest || value.provider !== provider || !value.validation.eligible) {
+      if (value.bundleId !== bundleId || value.bundleDigest !== bundleDigest || value.provider !== provider || !value.validation.eligible
+        || (connectedModel != null && value.requestedModel !== connectedModel)) {
         throw new Error('참고 자료가 변경되었거나 사용할 수 없습니다. 자료를 다시 찾아 주세요.')
       }
       setPreview(value)
@@ -44,7 +45,7 @@ export default function QuickAnswerPanel({ workspaceId, bundleId, bundleDigest }
   }
 
   async function send() {
-    if (locked.current || job || (!submission && (!preview || !agreed))) return
+    if (locked.current || job || (requireConnection && !connectedProvider) || (!submission && (!preview || !agreed))) return
     locked.current = true
     const controller = new AbortController()
     pending.current = controller
@@ -77,15 +78,15 @@ export default function QuickAnswerPanel({ workspaceId, bundleId, bundleDigest }
 
   return <section className="quick-answer" aria-label="AI 답변 받기">
     {!job && <>
-      <label className="field-label">사용할 AI<select value={provider} disabled={busy || !!submission} onChange={event => {
+      {!requireConnection && <label className="field-label">사용할 AI<select value={provider} disabled={busy || !!submission} onChange={event => {
         setProvider(event.target.value); setPreview(null); setAgreed(false); setError('')
-      }}><option value="CODEX">Codex</option><option value="CLAUDE">Claude</option></select></label>
-      {!preview && <Button disabled={busy} onClick={() => void prepare()}>이 자료로 답변 준비</Button>}
+      }}><option value="CODEX">Codex</option><option value="CLAUDE">Claude</option></select></label>}
+      {!preview && <Button disabled={busy || (requireConnection && !connectedProvider)} onClick={() => void prepare()}>이 자료로 답변 준비</Button>}
       {preview && <>
         <p>{preview.provider === 'CODEX' ? 'Codex' : 'Claude'}에 질문과 위 참고 자료를 보냅니다. 계정의 요금·이용 한도가 적용됩니다. 전송 후 창을 닫아도 작업은 계속됩니다.</p>
         <details><summary>보낼 내용 확인</summary><pre>{preview.prompt}</pre><p>모델: {preview.requestedModel || 'AI 기본값'}</p></details>
         {!submission && <><label className="check-option"><input type="checkbox" checked={agreed} disabled={busy} onChange={event => setAgreed(event.target.checked)} /><span>자료를 외부 AI에 보내는 데 동의합니다.</span></label>
-          <Button disabled={busy || !agreed} onClick={() => void send()}>동의하고 답변 받기</Button></>}
+          <Button disabled={busy || !agreed || (requireConnection && !connectedProvider)} onClick={() => void send()}>동의하고 답변 받기</Button></>}
       </>}
       {submission && !busy && <><p>접수 여부를 확인하지 못했습니다. 아래 버튼은 같은 요청을 확인하며 새 답변을 중복 요청하지 않습니다.</p>
         <Button onClick={() => void send()}>접수 상태 다시 확인</Button></>}

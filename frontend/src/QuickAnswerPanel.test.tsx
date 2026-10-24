@@ -70,6 +70,15 @@ it('변경된 근거나 다른 묶음 미리보기로는 동의 버튼을 열지
   expect(await screen.findByRole('alert')).toHaveTextContent('참고 자료가 변경')
 })
 
+it('명시적으로 선택한 모델과 다른 미리보기는 전송하지 않는다', async () => {
+  api.mockResolvedValue(preview)
+  render(<QuickAnswerPanel {...props} connectedProvider="CODEX" connectedModel="different-model" requireConnection />)
+  await userEvent.click(screen.getByRole('button', { name: '이 자료로 답변 준비' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('참고 자료가 변경')
+  expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+  expect(api).toHaveBeenCalledOnce()
+})
+
 it('제공자 변경은 준비한 요청과 동의를 폐기한다', async () => {
   api.mockResolvedValue(preview)
   render(<QuickAnswerPanel {...props} />)

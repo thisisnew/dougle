@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
+import { BookOpen, ChevronRight, Download, FileText, Folder, FolderOpen, FolderPlus, Layers3, MessageSquare, Plus, RefreshCw, ShieldCheck, Trash2, Upload, X } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { entryPath, request, type Area, type Entry, type EvidenceLocation, type Preview, type Session } from './api'
 import SourcePanel from './SourcePanel'
@@ -8,8 +8,12 @@ import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import KnowledgePanel from './KnowledgePanel'
 import PixelLandscape from './PixelLandscape'
-import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
+import { type ConnectionIndicator } from './connectionIndicator'
+import ChatPanel, { QuestionHistory } from './ChatPanel'
+import { preferredProvider } from './providerPreference'
+import { loadModel, requestedModel } from './modelPreference'
 const ProviderConnectionPanel = lazy(() => import('./ProviderConnectionPanel'))
+const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
 
 type Modal = { kind: 'workspace' | 'folder' } | { kind: 'delete-workspace' } | { kind: 'delete-entry'; entry: Entry }
 const emptySession: Session = { workspaces: [], activeWorkspaceId: null }
@@ -19,6 +23,10 @@ export default function App() {
   const [session, setSession] = useState<Session>(emptySession)
   const [ready, setReady] = useState(false)
   const [area, setArea] = useState<Area>('ORIGINAL')
+  const [view, setView] = useState<'CHAT' | 'LIBRARY'>('CHAT')
+  const [questionId, setQuestionId] = useState<string | null>(null)
+  const [historyRevision, setHistoryRevision] = useState(0)
+  const [chatRevision, setChatRevision] = useState(0)
   const [trail, setTrail] = useState<Entry[]>([])
   const [entries, setEntries] = useState<Entry[]>([])
   const [selected, setSelected] = useState<Entry | null>(null)
@@ -28,6 +36,7 @@ export default function App() {
   const [error, setError] = useState('')
   const [modal, setModal] = useState<Modal | null>(null)
   const [cliSettingsOpen, setCliSettingsOpen] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(false)
   const [connection, setConnection] = useState<ConnectionIndicator | null>(null)
   const [name, setName] = useState('')
   const [modalError, setModalError] = useState('')
@@ -40,6 +49,19 @@ export default function App() {
   const workspace = session.workspaces.find(item => item.id === activeId)
   const parentId = trail.at(-1)?.id
   const original = area === 'ORIGINAL'
+
+  useEffect(() => {
+    if (!ready) return
+    const controller = new AbortController()
+    const provider = preferredProvider()
+    setConnection({ provider, state: 'CHECKING', model: requestedModel(loadModel(provider)) })
+    request<{ provider: string; state: string; remoteConnection: string }>(`/ai/providers/${provider}/connection`, { method: 'POST', signal: controller.signal })
+      .then(value => {
+        if (controller.signal.aborted) return
+        setConnection({ provider, state: value.provider === provider && value.remoteConnection === 'NOT_CHECKED' ? value.state : 'CHECK_FAILED', model: requestedModel(loadModel(provider)) })
+      }).catch(() => { if (!controller.signal.aborted) setConnection({ provider, state: 'CHECK_FAILED' }) })
+    return () => controller.abort()
+  }, [ready])
 
   async function refreshSession() {
     const next = await request<Session>('/session')
@@ -94,6 +116,7 @@ export default function App() {
   }, [activeId, selected])
 
   function resetNavigation(nextArea: Area = area) {
+    setView('LIBRARY')
     pendingOriginal.current = null
     setOriginNotice(null)
     setArea(nextArea)
@@ -103,6 +126,7 @@ export default function App() {
   }
 
   function openEvidenceOriginal(location: EvidenceLocation) {
+    setView('LIBRARY')
     pendingOriginal.current = location.entry
     setOriginNotice({ entryId: location.entry.id, message: location.freshness === 'STALE'
       ? '현재 원본은 인용 당시 근거와 다릅니다. 인용 행 번호를 현재 파일에 그대로 적용하지 마세요.'
@@ -120,6 +144,9 @@ export default function App() {
       await request(`/workspaces/${id}/active`, { method: 'PUT' })
       await refreshSession()
       resetNavigation()
+      setQuestionId(null)
+      setView('CHAT')
+      setHistoryOpen(false)
     } catch (reason) { setError((reason as Error).message) }
     finally { setBusy(false) }
   }
@@ -140,12 +167,14 @@ export default function App() {
         await request('/workspaces', { method: 'POST', body: JSON.stringify({ name }) })
         await refreshSession()
         resetNavigation('ORIGINAL')
+        setQuestionId(null)
       } else if (modal.kind === 'folder' && activeId) {
         await request(`/workspaces/${activeId}/folders`, { method: 'POST', body: JSON.stringify({ name, parentId }) })
       } else if (modal.kind === 'delete-workspace' && activeId) {
         await request(`/workspaces/${activeId}`, { method: 'DELETE' })
         await refreshSession()
         resetNavigation()
+        setQuestionId(null)
       } else if (modal.kind === 'delete-entry' && activeId) {
         await request(entryPath(activeId, modal.entry.id), { method: 'DELETE' })
       }
@@ -183,26 +212,30 @@ export default function App() {
           {session.workspaces.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
         </select>
         <nav aria-label="자료 영역">
-          <button className={original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('ORIGINAL')}><FolderOpen size={19} /> 원본 자료 <ChevronRight size={15} /></button>
-          <button className={!original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button>
+          <button className={view === 'CHAT' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => { setView('CHAT'); setHistoryRevision(value => value + 1) }}><MessageSquare size={19} /> 대화 <ChevronRight size={15} /></button>
+          <button className={view === 'LIBRARY' && original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('ORIGINAL')}><FolderOpen size={19} /> 자료 <ChevronRight size={15} /></button>
+          <details className="library-more"><summary>더 보기</summary><button className={view === 'LIBRARY' && !original ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation('KNOWLEDGE')}><BookOpen size={19} /> 지식 문서 <ChevronRight size={15} /></button><button className="nav-item" disabled={busy || !activeId} onClick={() => setHistoryOpen(true)}><MessageSquare size={19} /> 답변 관리</button></details>
         </nav>
+        {activeId && <QuestionHistory key={activeId} workspaceId={activeId} revision={historyRevision} selectedId={questionId} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} />}
         <div className="sidebar-bottom"><ShieldCheck size={17} /><span>이 PC에 자료 저장<small>AI 전송은 건별 승인</small></span></div>
       </aside>
 
       <main>
-        <header className="topbar"><span>내 지식 서재 <ChevronRight size={14} /> {workspace?.name ?? '시작하기'}</span><Button variant="outline" size="sm" disabled={!ready} onClick={() => setCliSettingsOpen(true)} title="마지막 로그인 확인 결과입니다. 원격 연결이나 이용 한도를 보장하지 않습니다.">AI 연결{connection && <span className="ai-connection-badge" data-state={connection.state}>{connection.provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[connection.state]}</span>}</Button></header>
-        {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel checkOnOpen onClose={() => setCliSettingsOpen(false)} onConnectionChange={setConnection} /></Suspense>}
+        <header className="topbar"><span>{workspace?.name ?? 'Knowledge Forge'}</span><Button className="provider-trigger" variant="outline" size="sm" disabled={!ready || connection?.state === 'CHECKING'} onClick={() => setCliSettingsOpen(true)} title="로그인 확인 결과입니다. 모델 이용 가능 여부는 실제 요청 시 확인됩니다."><i data-connected={connection?.state === 'AUTHENTICATED'} />{connection?.state === 'AUTHENTICATED' ? connection.provider : connection?.state === 'CHECKING' ? '연결 확인 중' : 'AI 연결'}</Button></header>
+        {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel initialConnection={connection} onClose={() => setCliSettingsOpen(false)} onConnectionChange={setConnection} /></Suspense>}
+        {historyOpen && activeId && <Suspense fallback={<p role="status">답변을 여는 중…</p>}><AnswerHistoryPanel key={activeId} workspaceId={activeId} onClose={() => setHistoryOpen(false)} /></Suspense>}
         <div className="page-content">
-          <div className="page-heading">
-            <div><h1>{original ? '원본 자료' : '지식 문서'}</h1><p className="subtitle">{original ? '파일과 폴더를 보관하고 검색하세요.' : '원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.'}</p></div>
+          {view === 'LIBRARY' && <div className="page-heading">
+            <div><h1>{original ? '자료' : '지식 문서'}</h1><p className="subtitle">{original ? '질문에 사용할 파일과 링크를 모아 두세요.' : '원본과 따로 보관하며, 문서별 검토·게시 상태를 확인할 수 있습니다.'}</p></div>
             {workspace && <details className="secondary-tools"><summary>서재 관리</summary><Button variant="ghost" size="sm" disabled={busy} onClick={() => openModal({ kind: 'delete-workspace' })}><Trash2 /> Workspace 삭제</Button></details>}
-          </div>
+          </div>}
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
           {!ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : !workspace ? (
             <section className="welcome"><PixelLandscape /><h2>첫 번째 지식 서재를 만들어 보세요</h2><p>프로젝트별로 Workspace를 나누고,<br />원본 자료를 폴더로 정리할 수 있습니다.</p><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button><small>파일은 이 PC에 저장되며, 원래 파일은 변경되지 않습니다.</small></section>
-          ) : (
+          ) : view === 'CHAT' ? <ChatPanel key={`${activeId}/${chatRevision}`} workspaceId={activeId!} selectedId={questionId} connection={connection}
+            onCreated={id => { setQuestionId(id); setHistoryRevision(value => value + 1) }} onDeleted={() => { setQuestionId(null); setHistoryRevision(value => value + 1); setChatRevision(value => value + 1) }} onConnect={() => setCliSettingsOpen(true)} onSources={() => resetNavigation('ORIGINAL')} /> : (
             <>
-              {original && <SourcePanel key={activeId} workspaceId={activeId!} revision={revision}
+              {original && <SourcePanel manageOnly key={activeId} workspaceId={activeId!} revision={revision}
                 onChanged={() => setRevision(value => value + 1)}
                 onSelect={id => {
                   selectionAbort.current?.abort()

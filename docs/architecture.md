@@ -1,5 +1,7 @@
 # 아키텍처
 
+0.1.11 대화 중심 화면은 `App → ChatPanel / QuestionHistory → QuickAnswerPanel → AnswerJobsPanel`입니다. 자료 탭은 `SourcePanel(manageOnly)`와 기존 탐색기를 사용합니다. 모델 선택은 `ProviderConnectionPanel → modelPreference → QuickAnswerPanel`로 연결하며 DB/API는 그대로입니다. [사용 흐름·모델 대조](chat-first.md).
+
 0.1.10 기본 질문은 `EvidenceBundlePanel → QuickAnswerPanel → AnswerJobsPanel`입니다. 명시적 전송 동의 후 기존 CAS 승인 저장과 답변 접수를 순서대로 수행합니다. API·DB v21은 그대로이며 응답 유실 재확인은 같은 요청 ID를 씁니다. 고급 이전 문맥 경로는 별도 유지합니다. [흐름·안전 경계·테스트 대조](simple-workflow.md).
 
 0.1.7: `supervisor → forge.ai.codex-stream-home → CodexProfile`이 앱 전용 인증 위치를 연결합니다. `ProviderConnectionAdapter/ProviderLoginAdapter/CliCuratorModel/CodexAppServer`는 같은 폴더를 사용합니다. 승인 binding에도 실행 프로필을 포함해 변경 전 승인을 재사용하지 않습니다. [코드·모델·검사](codex-managed-login.md).
