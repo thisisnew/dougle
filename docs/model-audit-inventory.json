@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 351,
-  "testOrFixtureFiles": 103,
+  "totalFiles": 353,
+  "testOrFixtureFiles": 104,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -2025,7 +2025,7 @@
     },
     {
       "path": "desktop/host-ui/index.html",
-      "sha256": "2c4077c2fdc589f106f808708f00307f288e3102b121de833d9d808cacab7f4d",
+      "sha256": "25d47b024cf74875322e9b7d2c06d10128e83e4d676b2bf9f3870f03741125a8",
       "lines": 5,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2035,21 +2035,21 @@
     },
     {
       "path": "desktop/host-ui/style.css",
-      "sha256": "83383a27e307a9cc3a2c15f262eb64fe797f848d7339939b5d9d590d4c94480f",
+      "sha256": "64601ad2bda30b6a5d68ace08d7cf08696f331d1de4e1a98f18cec9e3f929eb9",
       "lines": 12,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "0716c4f28915c7ad20ebc2fdfa28554788e85aba6232226555e555c296cca5ef",
+      "sha256": "d8fbc3da9e08130ed86ee8dfbdb8169e334d89fa301779f79afb3d68510a8d3e",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "a547fd493a5561a9920b018af8c2370fbcb0a1b5d975607eea2a5b7696e4e4f3",
+      "sha256": "7b70bb7480172a9ab13f0aef4c6699b0ccc81a7736cc580bfd0cd9cee3a053ef",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2065,7 +2065,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "eb97977f471b724a6eaaef9de22e7dc6b29d587b583303d4062ed162cdf97925",
+      "sha256": "0b9b9127662a94fa7a6d5148b7324c868a4215367a210322ac67def794b888b3",
       "lines": 26,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2114,8 +2114,8 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "4bac556a6174c6d605461a2396b55ab31cf99d304a6870b164c255ed737ebb20",
-      "lines": 324,
+      "sha256": "fc8161e9e7a1170e65348db1cd6026a5139396b141725086e859929abac2eb46",
+      "lines": 333,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -2227,6 +2227,7 @@
         "frontend/src/SourceMetadataEditor.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/SourcePollingSettings.test.tsx",
+        "frontend/src/Wordmark.test.tsx",
         "frontend/src/useQuestionAttachments.test.tsx",
         "scripts/crash-recovery-smoke.mjs",
         "scripts/macos-architecture-test.sh",
@@ -2236,7 +2237,7 @@
     },
     {
       "path": "desktop/src-tauri/src/main.rs",
-      "sha256": "7cee8b10efc49f5d8130c4cd8a852d5354e999ed7f7e0c77f22ccef5c3098797",
+      "sha256": "f0308345c10417513ba29f2da5029c63a07a97732a1c789c33f3db07715db2d0",
       "lines": 339,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2306,7 +2307,7 @@
     },
     {
       "path": "desktop/src-tauri/src/supervisor.rs",
-      "sha256": "0354b1336cbe6536e8a54f8137e5fa88ae5429cf1a5cc57bae4363c918ccd48b",
+      "sha256": "477519f9fcddc7bd5cb42b50b5cd00f4248f7e10d7e05ad8384ac1a8531aa788",
       "lines": 436,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2317,7 +2318,7 @@
     },
     {
       "path": "desktop/src-tauri/src/updates.rs",
-      "sha256": "3ffc447b7b7b99f96ee18be53cb34e41c4ae1816106ccaf694c88c92c314d1b4",
+      "sha256": "54457ae42a168614f13a1248adf114d233f10997d8b3a8616c65dbb857993790",
       "lines": 272,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2327,7 +2328,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "f63120cc2b35d34882e3c5d330e122116d1f100a84052abf0ec176d87d503c24",
+      "sha256": "d9ddf766bd20490661e0d6b62b842892da4468a4b322de9873240030b429ee90",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -2358,7 +2359,7 @@
     },
     {
       "path": "frontend/index.html",
-      "sha256": "ba393e1bda08d6fc0ea03f13e663f086d41e4e9dd84cb1b6d3db68298280e62e",
+      "sha256": "16c8f8c5e1d73467158702c451242a1baa51df2bfd68d1aa0f2b62c0d8dd516c",
       "lines": 13,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2442,14 +2443,14 @@
     },
     {
       "path": "frontend/src/App.test.tsx",
-      "sha256": "30a7bff10c6b60e0bb050001465521c9fd53e37762f5cac8892d7ad8caae9c59",
-      "lines": 186,
+      "sha256": "b8af93775c12323d4b7843c43f3bed5bc52a4d013f1cda14abc8131c15a1e0c2",
+      "lines": 189,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/App.tsx",
-      "sha256": "8edd18d33c1160685acf16fde82e71eb7242f94d6d4c2a11e3345d98e17ca489",
+      "sha256": "68373f1d6dafc4dd899410a5a472a6526e92d5831922982b93545afebe2baa86",
       "lines": 274,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2487,15 +2488,15 @@
     },
     {
       "path": "frontend/src/ChatPanel.test.tsx",
-      "sha256": "5b94f7ef4bd7634ac83c4c63168fa84c598af553fef7667857fd216e82491d56",
-      "lines": 135,
+      "sha256": "fb0dfa3bb08a4cd5a56612cd145f0855b881ecac783ee2761b20ab8ed313c7bc",
+      "lines": 148,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/ChatPanel.tsx",
-      "sha256": "49f02f374ae8175f9d004f385803334fab607d81d355216f78f5e67339d15c83",
-      "lines": 149,
+      "sha256": "8b528f61a104d1cd9891e1d4a5063aca8549eee333cd5c5efee7ff8b73158c9c",
+      "lines": 150,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/ChatPanel.test.tsx"
@@ -2810,7 +2811,7 @@
     },
     {
       "path": "frontend/src/QuestionGrid.tsx",
-      "sha256": "43041bec0f9438f32d478b0f8f8ef1e8c801d5d9844f87db8ca5025e36acf875",
+      "sha256": "a6b858f8a9436d83875698e41bbf0301b1208e535d50ebb1f934a59752a25c6e",
       "lines": 29,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2875,7 +2876,7 @@
     },
     {
       "path": "frontend/src/SourcePanel.tsx",
-      "sha256": "c74c870a7071a29e4aa629d3d35359ae1c0290fbaee6b76c0488f57016a13e7b",
+      "sha256": "39606bf01a90f56d81fb342c37f5e7f2825db2f21316eb1d057fc4b1f90bbfef",
       "lines": 212,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2905,6 +2906,22 @@
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/SourcePanel.test.tsx"
+      ]
+    },
+    {
+      "path": "frontend/src/Wordmark.test.tsx",
+      "sha256": "844b3e27f323071e0b78b50cfce65b29ba807722ee6f5f682d37e6f9d06f417e",
+      "lines": 10,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/Wordmark.tsx",
+      "sha256": "93549f4b0d1e772dbd4df06aa9254e588a486d76451fa8a49889b8f8cfe2917b",
+      "lines": 5,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/Wordmark.test.tsx"
       ]
     },
     {
@@ -3122,14 +3139,14 @@
     },
     {
       "path": "frontend/src/folderPicker.test.ts",
-      "sha256": "88061d79d3cbdc78a5fb12667e6f4e3818527c1aeb4fd6f1488b303f825f3618",
+      "sha256": "2e37098f6cb77e20b640158c451b8d73cf7b88e81422834588a139825404630e",
       "lines": 18,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/folderPicker.ts",
-      "sha256": "f3561fd51fb635f165671119b99003f98c5e9027cb512ea457eea74faaee7fcb",
+      "sha256": "a2addba4c742413b1a99b83570962e22b067419dd34494f66f558e271a3201dd",
       "lines": 11,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -3228,14 +3245,14 @@
     },
     {
       "path": "frontend/src/retro.css",
-      "sha256": "543070cd97b61008ed3eab52e01429beb344fe5430b5fde56237aca46e06cde6",
-      "lines": 170,
+      "sha256": "ac2e6c0f406b24c2e33fd6b7b81a47078166fd8d4634cddc32c020846bd82d55",
+      "lines": 171,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/styles.css",
-      "sha256": "c1db2cda9a7f3bb36f124697bdd108fb9b7800f92fe4159d179f3fdcbfd10567",
+      "sha256": "7907319bba763948c5470f7bebe9411362a4b702065dc2b44be0963160003bf7",
       "lines": 181,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -3503,8 +3520,8 @@
     },
     {
       "path": "scripts/native-host-smoke.mjs",
-      "sha256": "99e4b2b37a945fd062325f976120c4a88d1afec8b35983b57b2a389f631d794a",
-      "lines": 121,
+      "sha256": "90d12b73af4b678a42738f29061ac7733456f83fed6774e3f0882b5525efadae",
+      "lines": 133,
       "kind": "test-or-fixture",
       "lexicalTestReferences": [
         "scripts/published-update-smoke.mjs"

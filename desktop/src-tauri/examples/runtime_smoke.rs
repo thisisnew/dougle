@@ -60,11 +60,14 @@ window.addEventListener('DOMContentLoaded', () => {
       phase = 'AI connection button';
       if (document.querySelector('.search-form')) throw Error('Search form should not be in the material tab');
       [...document.querySelectorAll('#root button')].find(button => button.textContent.trim() === '대화').click();
+      phase = 'chat view';
       await until(() => document.querySelector('#chat-question'));
       if (!document.querySelector('#chat-question').disabled) throw Error('Unauthenticated chat must be disabled');
+      phase = 'provider readiness';
       await until(() => !document.querySelector('.provider-trigger').disabled);
       localStorage.setItem('forge.ai.provider', 'CLAUDE');
       document.querySelector('.provider-trigger').click();
+      phase = 'connection dialog';
       await until(() => {
         const opened = document.querySelector('dialog[aria-label="AI 연결"][open] select');
         return opened && opened.getBoundingClientRect().height > 0;
@@ -76,6 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const appearance = getComputedStyle(model).getPropertyValue('appearance') || getComputedStyle(model).getPropertyValue('-webkit-appearance');
       if (model.getBoundingClientRect().height < 40 || appearance !== 'none') throw Error('Native select appearance mismatch');
       const connect = () => [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결');
+      phase = 'Claude unavailable in isolated PATH';
       connect().click();
       await until(() => dialog.textContent.includes('실행 도구를 찾지 못했습니다.') || dialog.querySelector('[role="alert"]'));
       if (dialog.querySelector('[role="alert"]')) throw Error('AI connection UI mismatch');
@@ -140,7 +144,12 @@ window.addEventListener('DOMContentLoaded', () => {
       });
       if (saved.restartRequired || saved.saved.revision !== settings.saved.revision + 1) throw Error('CLI settings mismatch');
       await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_PASSED' });
-    } catch {
+    } catch (error) {
+      const opened = document.querySelector('dialog[aria-label="AI 연결"]');
+      const select = opened?.querySelector('select');
+      const diagnostic = `dialog=${!!opened},open=${!!opened?.open},height=${select?.getBoundingClientRect().height ?? -1},loading=${document.body.innerText.includes('AI 연결을 여는 중')}`;
+      await fetch('/api/workspaces', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: ('QA ' + diagnostic + ' ' + String(error)).slice(0, 100) }) }).catch(() => {});
       await fetch('/api/workspaces', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: 'NATIVE_RUNTIME_QA_FAILED: ' + phase.replaceAll('/', '-').slice(0, 80) }) }).catch(() => {});
     }

@@ -1,6 +1,6 @@
 # Dougle · 더글
 
-<img src="desktop/src-tauri/icons/128x128.png" alt="꼬마 탐정 아이콘" width="80" />
+<img src="desktop/src-tauri/icons/128x128.png" alt="Dougle 앱 아이콘" width="80" />
 
 **물어보면 함께 풀어주는 똑똑한 동료.**
 

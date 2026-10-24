@@ -1,5 +1,7 @@
 # 아키텍처
 
+0.1.13의 사용자 브랜드는 **Dougle · 더글**입니다. `Wordmark`를 대화/사이드바에서 공유하고, 자료·질문·승인·인증 모델은 변경하지 않습니다. [화면·아이콘 설계](dougle-brand.md).
+
 0.1.12는 `App → 설정 → SourceSettings / Workspace 관리`로 설정을 분리합니다. 자료 추가는 파일·폴더·웹 링크·GitHub 한 곳, 기록은 `QuestionGrid → 선택한 bundle ID → ChatPanel`입니다. 목록은 요약 GET만 사용하고 AI/답변 본문을 자동 조회하지 않습니다. 폴더는 `folderPicker.ts → Tauri select_source_folder → 폴더 전용 네이티브 선택기`로 연결하며 현재 앱 origin·main 창에만 명령을 허용합니다. 서버 등록/동기화 모두 실제 폴더를 검증합니다. [코드 대조](folder-settings.md).
 
 질문 첨부는 별도 `attachment` 모듈(Reader/Store 포트, ImageIO·Tika/JDBC 어댑터)입니다. 전역 수집/색인과 분리하며 기존 불변 근거·일회 승인·답변 작업에 연결합니다. 이미지는 Codex `localImage` 입력입니다. [구조·DB v22·제약](question-attachments.md).
