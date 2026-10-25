@@ -2,7 +2,7 @@
 
 상단 **AI 연결**을 누르면 선택된 AI의 로그인 상태를 자동으로 확인합니다. 자료나 질문은 전송하지 않습니다.
 
-![로그인 상태 카드와 상단 표시](images/ai-connection-status.png)
+![로그인 상태 카드와 상단 표시](screenshots/dougle-ai-connection.png)
 
 가상 인증 도구로 촬영한 실제 UI입니다. 실제 계정이나 원격 AI 성공을 보여 주는 화면은 아닙니다.
 

@@ -1,6 +1,6 @@
 # 0.1.9 — 검색·질문·문서 화면 정리
 
-소스 `0050cdd`의 Intel/Apple Silicon 설치 파일과 서명 업데이트를 [0.1.9 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.9-preview.1)에 공개했습니다. 자산 10개의 크기·SHA-256을 로컬과 대조했으며 이 Mac의 설치 앱도 0.1.9로 교체했습니다.
+소스 `0050cdd`의 Intel/Apple Silicon 설치 파일과 서명 업데이트를 [0.1.9 릴리스](https://github.com/thisisnew/dougle/releases/tag/v0.1.9-preview.1)에 공개했습니다. 자산 10개의 크기·SHA-256을 로컬과 대조했으며 이 Mac의 설치 앱도 0.1.9로 교체했습니다.
 
 두 DMG 공개 다운로드 HTTP 200을 확인했습니다. 공개 업데이트 자산의 해시·서명 재검증 후 피드를 0.1.9로 갱신합니다. GitHub 캐시에 따라 앱의 새 버전 알림에는 지연이 있을 수 있습니다.
 

@@ -1,5 +1,7 @@
 # 필요한 기능만 먼저 보기
 
+> 이전 기능/검증 기록입니다. 현재 Dougle 사용법과 화면은 [5분 안내](how-it-works.md)와 [현재 검색](internal-search.md)을 따릅니다. 아래 링크의 화면은 당시 상태를 보존합니다.
+
 이 문서는 0.1.10 화면 기록입니다. 최신 화면은 [대화 중심 사용법](chat-first.md)을 보세요.
 
 ## 평소에는 이것만 쓰세요
@@ -25,9 +27,9 @@
 
 가상 자료와 테스트용 답변으로 확인한 화면입니다.
 
-![자료 검색과 질문 중심의 기본 화면](images/simple-library.png)
+[당시 화면 — 자료 검색과 질문 중심의 기본 화면](images/simple-library.png)
 
-![참고 자료와 AI 답변](images/simple-question.png)
+[당시 화면 — 참고 자료와 AI 답변](images/simple-question.png)
 
 ## 내부 작동과 코드 대조
 

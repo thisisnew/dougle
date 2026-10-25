@@ -143,7 +143,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const saved = await api('/ai/launch-settings', 'PUT', {
         codexPath: '', claudePath: '', expectedRevision: settings.saved.revision, acknowledged: true,
       });
-      if (saved.restartRequired || saved.saved.revision !== settings.saved.revision + 1) throw Error('CLI settings mismatch');
+      if (!saved.restartRequired || saved.saved.revision !== settings.saved.revision + 1) throw Error('CLI settings mismatch');
       await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_PASSED' });
     } catch (error) {
       const opened = document.querySelector('dialog[aria-label="AI 연결"]');
@@ -209,6 +209,39 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
         Ok(backend) => backend,
         Err(error) => {
             eprintln!("FAIL: backend startup: {error}");
+            return false;
+        }
+    };
+    let missing_claude = data.join("unavailable-synthetic-claude");
+    let isolated = (|| -> Result<(), Box<dyn std::error::Error>> {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::write(&missing_claude, "#!/bin/sh\nexit 1\n")?;
+        std::fs::set_permissions(&missing_claude, std::fs::Permissions::from_mode(0o700))?;
+        let agent: ureq::Agent = ureq::Agent::config_builder()
+            .proxy(None)
+            .max_redirects(0)
+            .timeout_global(Some(Duration::from_secs(5)))
+            .build()
+            .into();
+        agent.put(format!("http://127.0.0.1:{}/api/ai/launch-settings", backend.port))
+            .header("X-Forge-Session", &backend.token)
+            .header("X-Forge-Client", "1")
+            .send_json(serde_json::json!({
+                "codexPath": "", "claudePath": missing_claude.to_str().unwrap(),
+                "expectedRevision": 0, "acknowledged": true
+            }))?;
+        std::fs::remove_file(&missing_claude)?;
+        Ok(())
+    })();
+    if isolated.is_err() {
+        eprintln!("FAIL: isolate synthetic Claude command");
+        return false;
+    }
+    drop(backend);
+    backend = match supervisor::Backend::launch(resources, data, &cancelled) {
+        Ok(backend) => backend,
+        Err(error) => {
+            eprintln!("FAIL: isolated backend restart: {error}");
             return false;
         }
     };

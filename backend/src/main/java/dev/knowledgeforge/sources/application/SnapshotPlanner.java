@@ -1,11 +1,8 @@
 package dev.knowledgeforge.sources.application;
 
 import dev.knowledgeforge.sources.domain.CollectedSnapshot;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +19,7 @@ public final class SnapshotPlanner {
         Set<String> folders = new HashSet<>();
         List<CollectedSnapshot.File> changed = new ArrayList<>();
         for (var file : snapshot.files()) {
-            String hash = hash(file.content());
+            String hash = file.hash();
             if (hashes.putIfAbsent(file.path(), hash) != null) {
                 throw new IllegalArgumentException("Duplicate snapshot path");
             }
@@ -37,11 +34,4 @@ public final class SnapshotPlanner {
         return new Plan(Map.copyOf(hashes), Set.copyOf(folders), List.copyOf(changed));
     }
 
-    private static String hash(byte[] content) {
-        try {
-            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(content));
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException(exception);
-        }
-    }
 }

@@ -47,6 +47,7 @@ cp "$jar" "$staging/knowledge-forge.jar"
 rm -rf "$resources/runtime"
 mv "$staging/runtime" "$resources/runtime"
 mv "$staging/knowledge-forge.jar" "$resources/knowledge-forge.jar"
+node "$repo_root/scripts/stage-search-model.mjs" "$architecture"
 if [[ "$mode" == --stage-only ]]; then echo 'Java runtime and JAR staged; no installer built.'; exit 0; fi
 signing_key="${FORGE_UPDATER_PRIVATE_KEY:-${XDG_CONFIG_HOME:-$HOME/.config}/knowledge-forge/updater.key}"
 [[ -f "$signing_key" && ! -L "$signing_key" ]] || { echo 'The updater signing key is required. See docs/automatic-updates.md.' >&2; exit 1; }

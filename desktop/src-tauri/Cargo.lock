@@ -1784,12 +1784,13 @@ dependencies = [
 
 [[package]]
 name = "knowledge-forge-desktop"
-version = "0.1.16"
+version = "0.1.20"
 dependencies = [
  "base64 0.22.1",
  "getrandom 0.4.3",
  "libc",
  "minisign-verify",
+ "reqwest",
  "serde_json",
  "tauri",
  "tauri-build",

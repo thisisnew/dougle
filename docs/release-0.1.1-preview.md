@@ -1,4 +1,4 @@
-# Knowledge Forge 0.1.1 — Intel Mac 미리보기
+# Dougle 0.1.1 — Intel Mac 미리보기
 
 자료 수집 → 검색 → 지식 검토·게시 → 근거 기반 질문을 로컬 앱에서 사용합니다.
 
@@ -16,7 +16,7 @@ Intel Mac용 `Knowledge.Forge_0.1.1_x86_64.dmg`와 `SHA256SUMS`를 함께 받으
 SHA-256: `2d8b07bcad252e061137c83ee01d1a9d9cf81235d334daae80a9c18b59d6fb19`
 
 Java 21 포함. 기존 앱을 종료하고 데이터 폴더 전체를 백업한 다음 교체하세요.
-새 DB를 구버전 앱으로 열지 마세요. [설치 설명서](https://github.com/thisisnew/knowledge-forge/blob/main/docs/macos-install.md).
+새 DB를 구버전 앱으로 열지 마세요. [설치 설명서](https://github.com/thisisnew/dougle/blob/main/docs/macos-install.md).
 
 ## 검증과 한계
 
@@ -28,4 +28,4 @@ Java 21 포함. 기존 앱을 종료하고 데이터 폴더 전체를 백업한 
 - AI는 현재 코딩 대화가 아닌 별도 CLI 요청입니다. 별도 설치·로그인 및 건별 전송 승인이 필요합니다.
 - 자동 의미/사실 검증, 사설 GitHub 인증, 영속 Git 캐시, 자동 업데이트는 후속입니다.
 
-세부 증거는 [검증 보고서](https://github.com/thisisnew/knowledge-forge/blob/main/docs/release-0.1.1-report.md), 사용법은 [쉬운 매뉴얼](https://github.com/thisisnew/knowledge-forge/blob/main/docs/how-it-works.md)을 확인하세요.
+세부 증거는 [검증 보고서](https://github.com/thisisnew/dougle/blob/main/docs/release-0.1.1-report.md), 사용법은 [쉬운 매뉴얼](https://github.com/thisisnew/dougle/blob/main/docs/how-it-works.md)을 확인하세요.

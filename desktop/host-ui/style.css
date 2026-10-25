@@ -7,6 +7,8 @@ h1 > span:nth-child(1), h1 > span:nth-child(5) { color: #3478db; }
 h1 > span:nth-child(2), h1 > span:nth-child(6) { color: #dc6454; }
 h1 > span:nth-child(3) { color: #e5ab32; }
 h1 > span:nth-child(4) { color: #36966b; }
+h1 > span:nth-child(2) { display: inline-block; position: relative; overflow: hidden; vertical-align: baseline; width: .6em; height: .6em; border: 1px solid #dc6454; border-radius: 50%; background: white; }
+.wordmark-face { position: absolute; width: 140%; height: 140%; left: -20%; top: -8%; object-fit: contain; }
 @media (forced-colors: active) { h1 > span:nth-child(n) { color: CanvasText; } }
 section { margin: 24px 0; }
 h2 { margin: 0 0 12px; font-size: 22px; font-weight: 650; line-height: 1.45; letter-spacing: -.5px; }

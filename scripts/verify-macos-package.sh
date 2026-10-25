@@ -31,6 +31,7 @@ mounted=false
 app="$temporary/installed/Knowledge Forge.app"
 architecture="$(forge_macos_architecture "$app/Contents/MacOS/knowledge-forge-desktop")"
 forge_verify_macos_architecture "$app" "$architecture"
+node "$repo_root/scripts/stage-search-model.mjs" "$architecture" "$app/Contents/Resources/resources/search-model-e5-v1" --verify-only
 if ! codesign --verify --deep --strict "$app"; then
   xattr -lr "$app" | sed -n '/com.apple.FinderInfo/p;/com.apple.ResourceFork/p'
   exit 1

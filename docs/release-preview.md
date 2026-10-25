@@ -1,4 +1,4 @@
-# Knowledge Forge 0.1.0 — Intel Mac 미리보기
+# Dougle 0.1.0 — Intel Mac 미리보기
 
 Java 21을 포함한 Intel(x86_64) Mac 설치 파일입니다. DMG를 열고 앱을 Applications로 복사합니다.
 
@@ -19,6 +19,6 @@ Java 21을 포함한 Intel(x86_64) Mac 설치 파일입니다. DMG를 열고 앱
 ## 남은 것
 Source 자동 폴링, Git 네트워크 증분, 관계 검색, Finder의 CLI 설정 UX, 전체 설치형 회귀, 공증과 다른 Mac 검증은 진행 중입니다. 전체 제품 완료 버전은 아닙니다.
 
-[설치·백업 안내](https://github.com/thisisnew/knowledge-forge/blob/main/docs/macos-install.md) · [검증 보고서](https://github.com/thisisnew/knowledge-forge/blob/main/docs/desktop-report.md) · [남은 작업](https://github.com/thisisnew/knowledge-forge/blob/main/docs/backlog.md)
+[설치·백업 안내](https://github.com/thisisnew/dougle/blob/main/docs/macos-install.md) · [검증 보고서](https://github.com/thisisnew/dougle/blob/main/docs/desktop-report.md) · [남은 작업](https://github.com/thisisnew/dougle/blob/main/docs/backlog.md)
 
 첨부한 `SHA256SUMS`와 파일 해시를 확인하세요. 출처가 불분명한 재배포본을 실행하거나 macOS 보안을 전체 해제하지 마세요.

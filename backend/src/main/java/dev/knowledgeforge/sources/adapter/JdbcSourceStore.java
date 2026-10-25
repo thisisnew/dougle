@@ -32,7 +32,7 @@ public class JdbcSourceStore implements SourceStore {
             result.getString("synced_at"), result.getString("root_entry_id"),
             result.getBoolean("polling_enabled"), result.getInt("poll_interval_seconds"),
             result.getObject("next_poll_at") == null ? null : result.getLong("next_poll_at"),
-            result.getInt("consecutive_failures"), result.getInt("polling_revision"));
+            result.getInt("consecutive_failures"), result.getInt("polling_revision"), result.getString("created_at"));
 
     public JdbcSourceStore(JdbcTemplate jdbc, AnalysisStore analyses, java.time.Clock clock) {
         this.jdbc = jdbc;
@@ -51,35 +51,38 @@ public class JdbcSourceStore implements SourceStore {
 
     public void create(Source source) {
         jdbc.update("""
-                INSERT INTO source(id,workspace_id,name,kind,location,domain,polling_enabled,next_poll_at)
+                INSERT INTO source(id,workspace_id,name,kind,location,domain,polling_enabled,poll_interval_seconds,next_poll_at,created_at)
                 SELECT ?,?,?,?,?,?,COALESCE(policy.enabled,0),
-                  CASE WHEN policy.enabled=1 THEN ? ELSE NULL END
+                  COALESCE(policy.interval_seconds,3600),
+                  CASE WHEN policy.enabled=1 THEN ?+policy.interval_seconds*1000 ELSE NULL END,?
                 FROM workspace LEFT JOIN workspace_source_polling policy ON policy.workspace_id=workspace.id
                 WHERE workspace.id=?
                 """, source.id(), source.workspaceId(), source.name(), source.kind(), source.location(), source.domain(),
-                clock.millis() + 3600000L, source.workspaceId());
+                clock.millis(), clock.instant().toString(), source.workspaceId());
     }
 
     public WorkspacePolling workspacePolling(String workspaceId) {
         return jdbc.queryForObject("""
                 SELECT COALESCE(policy.enabled,0) AS enabled,COALESCE(policy.revision,0) AS revision,
+                  COALESCE(policy.interval_seconds,3600) AS interval_seconds,
                   EXISTS(SELECT 1 FROM source WHERE source.workspace_id=workspace.id
                     AND source.polling_enabled!=COALESCE(policy.enabled,0)) AS mixed
                 FROM workspace LEFT JOIN workspace_source_polling policy ON policy.workspace_id=workspace.id
                 WHERE workspace.id=?
                 """, (result, row) -> new WorkspacePolling(result.getBoolean("enabled"),
-                result.getInt("revision"), result.getBoolean("mixed")), workspaceId);
+                result.getInt("revision"), result.getBoolean("mixed"), result.getInt("interval_seconds")), workspaceId);
     }
 
     @Transactional
-    public boolean configureWorkspacePolling(String workspaceId, boolean enabled, int expectedRevision) {
+    public boolean configureWorkspacePolling(String workspaceId, boolean enabled, Integer intervalSeconds, int expectedRevision) {
         jdbc.update("INSERT OR IGNORE INTO workspace_source_polling(workspace_id,enabled,revision) VALUES(?,0,0)", workspaceId);
-        if (jdbc.update("UPDATE workspace_source_polling SET enabled=?,revision=revision+1 WHERE workspace_id=? AND revision=?",
-                enabled, workspaceId, expectedRevision) != 1) return false;
+        if (jdbc.update("UPDATE workspace_source_polling SET enabled=?,interval_seconds=COALESCE(?,interval_seconds),revision=revision+1 WHERE workspace_id=? AND revision=?",
+                enabled, intervalSeconds, workspaceId, expectedRevision) != 1) return false;
         jdbc.update("""
-                UPDATE source SET polling_enabled=?,next_poll_at=CASE WHEN ? THEN ?+poll_interval_seconds*1000 ELSE NULL END,
+                UPDATE source SET polling_enabled=?,poll_interval_seconds=COALESCE(?,poll_interval_seconds),
+                  next_poll_at=CASE WHEN ? THEN ?+COALESCE(?,poll_interval_seconds)*1000 ELSE NULL END,
                   consecutive_failures=0,polling_revision=polling_revision+1 WHERE workspace_id=?
-                """, enabled, enabled, clock.millis(), workspaceId);
+                """, enabled, intervalSeconds, enabled, clock.millis(), intervalSeconds, workspaceId);
         return true;
     }
 
@@ -137,13 +140,43 @@ public class JdbcSourceStore implements SourceStore {
     @Transactional(readOnly = true)
     public Optional<CollectedSnapshot> snapshot(String workspaceId, String id) {
         return find(workspaceId, id).filter(source -> source.revision() != null).map(source -> {
-            var files = jdbc.query("SELECT relative_path,content FROM entry WHERE workspace_id=? AND source_id=? AND kind='FILE' ORDER BY relative_path",
-                    (result, row) -> new CollectedSnapshot.File(result.getString("relative_path"), result.getBytes("content")), workspaceId, id);
+            var files = new java.util.ArrayList<CollectedSnapshot.File>();
+            try {
+            jdbc.query("SELECT relative_path,content FROM entry WHERE workspace_id=? AND source_id=? AND kind='FILE' ORDER BY relative_path",
+                    (org.springframework.jdbc.core.RowCallbackHandler) result -> {
+                        try (var input = result.getBinaryStream("content")) {
+                            files.add(CollectedSnapshot.File.copy(result.getString("relative_path"), input, CollectionLimits.MAX_DOCUMENT));
+                        } catch (java.io.IOException exception) {
+                            throw new java.sql.SQLException("Cannot stage stored document", exception);
+                        }
+                    }, workspaceId, id);
             var validators = jdbc.query("SELECT uri,etag,last_modified FROM source_http_cache WHERE source_id=?",
                     (result, row) -> new dev.knowledgeforge.sources.domain.HttpValidators(result.getString("uri"),
                             result.getString("etag"), result.getString("last_modified")), id).stream().findFirst().orElse(null);
-            return new CollectedSnapshot(source.revision(), CollectionLimits.snapshot(files).files(), validators);
+            Map<String, String> failures = new HashMap<>();
+            jdbc.query("SELECT path,reason FROM source_file_failure WHERE source_id=?",
+                    result -> { failures.put(result.getString("path"), result.getString("reason")); }, id);
+            return new CollectedSnapshot(source.revision(), CollectionLimits.snapshot(files).files(), validators, failures);
+            } catch (RuntimeException exception) {
+                files.forEach(CollectedSnapshot.File::close);
+                throw exception;
+            }
         });
+    }
+
+    public Optional<Analysis> checkpoint(String sourceId, String path, String hash) {
+        return jdbc.query("SELECT analysis_json FROM source_analysis_checkpoint WHERE source_id=? AND path=? AND content_hash=?",
+                (result, row) -> tools.jackson.databind.json.JsonMapper.builder().build()
+                        .readValue(result.getString(1), Analysis.class), sourceId, path, hash).stream().findFirst();
+    }
+
+    public boolean persistentCheckpoints() { return true; }
+
+    public void checkpoint(String sourceId, String path, String hash, Analysis analysis) {
+        jdbc.update("""
+                INSERT INTO source_analysis_checkpoint(source_id,path,content_hash,analysis_json) VALUES(?,?,?,?)
+                ON CONFLICT(source_id,path) DO UPDATE SET content_hash=excluded.content_hash,analysis_json=excluded.analysis_json
+                """, sourceId, path, hash, tools.jackson.databind.json.JsonMapper.builder().build().writeValueAsString(analysis));
     }
 
     @Transactional
@@ -170,7 +203,10 @@ public class JdbcSourceStore implements SourceStore {
                 source.id(), rootId);
         for (var entry : entries) {
             boolean folder = "FOLDER".equals(entry.kind());
-            if (folder ? plan.folders().contains(entry.path()) : plan.hashes().containsKey(entry.path())) {
+            boolean preserve = snapshot.failures().keySet().stream().anyMatch(path -> path.equals(entry.path())
+                    || entry.path().startsWith(path + "/")
+                    || folder && path.startsWith(entry.path() + "/"));
+            if (preserve || (folder ? plan.folders().contains(entry.path()) : plan.hashes().containsKey(entry.path()))) {
                 (folder ? folders : files).put(entry.path(), entry.id());
             } else {
                 jdbc.update("DELETE FROM entry WHERE id=?", entry.id());
@@ -191,11 +227,12 @@ public class JdbcSourceStore implements SourceStore {
                 parentId = folderId;
             }
             String id = files.get(file.path());
+            byte[] content = file.content();
             if (id == null) {
-                id = insert(source, parentId, parts[parts.length - 1], file.path(), "FILE", file.content());
+                id = insert(source, parentId, parts[parts.length - 1], file.path(), "FILE", content);
             } else {
                 jdbc.update("UPDATE entry SET size=?,content=?,content_hash=? WHERE id=?",
-                        file.content().length, file.content(), plan.hashes().get(file.path()), id);
+                        file.size(), content, plan.hashes().get(file.path()), id);
             }
             analyses.save(id, extracted.get(file.path()));
         }
@@ -205,10 +242,29 @@ public class JdbcSourceStore implements SourceStore {
             jdbc.update("INSERT INTO source_http_cache(source_id,uri,etag,last_modified) VALUES(?,?,?,?)",
                     source.id(), validators.uri(), validators.etag(), validators.lastModified());
         }
+        Map<String, String> failures = new HashMap<>(snapshot.failures());
+        jdbc.query("""
+                SELECT e.relative_path,d.error FROM entry e JOIN extracted_document d ON d.entry_id=e.id
+                WHERE e.source_id=? AND d.status IN ('ERROR','UNSUPPORTED','PARTIAL')
+                """, result -> { failures.putIfAbsent(result.getString("relative_path"),
+                        Objects.requireNonNullElse(result.getString("error"), "텍스트를 읽을 수 없습니다.")); }, source.id());
+        jdbc.update("DELETE FROM source_file_failure WHERE source_id=?", source.id());
+        failures.forEach((path, reason) -> jdbc.update(
+                "INSERT INTO source_file_failure(source_id,path,reason) VALUES(?,?,?)", source.id(), path, reason));
         jdbc.update("""
-                UPDATE source SET status='READY',revision=?,error=NULL,synced_at=?,consecutive_failures=0,
+                UPDATE source SET status=?,revision=?,error=?,synced_at=?,consecutive_failures=0,
                   next_poll_at=CASE WHEN polling_enabled=1 THEN ? + poll_interval_seconds * 1000 ELSE NULL END WHERE id=?
-                """, snapshot.revision(), clock.instant().toString(), clock.millis(), source.id());
+                """, failures.isEmpty() ? "READY" : "PARTIAL", snapshot.revision(),
+                failures.isEmpty() ? null : failures.size() + "개 파일 확인이 필요합니다. "
+                        + failures.entrySet().stream().sorted(Map.Entry.comparingByKey()).limit(3)
+                        .map(item -> item.getKey() + ": " + item.getValue()).collect(java.util.stream.Collectors.joining(" · ")),
+                clock.instant().toString(), clock.millis(), source.id());
+        for (var file : snapshot.files()) {
+            jdbc.update("DELETE FROM source_analysis_checkpoint WHERE source_id=? AND path=?", source.id(), file.path());
+        }
+        for (String path : jdbc.queryForList("SELECT path FROM source_analysis_checkpoint WHERE source_id=?", String.class, source.id())) {
+            if (!failures.containsKey(path)) jdbc.update("DELETE FROM source_analysis_checkpoint WHERE source_id=? AND path=?", source.id(), path);
+        }
     }
 
     private record StoredEntry(String id, String path, String kind) {}

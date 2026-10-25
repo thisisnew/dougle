@@ -39,7 +39,7 @@
 
 ## 설치 파일과 공개 확인
 
-[0.1.3 설치 파일](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.3-preview.1). 보통은 내 Mac에 맞는 DMG 하나만 받습니다. `.app.tar.gz`·`.sig`·`latest.json`은 앱 업데이트용입니다.
+[0.1.3 설치 파일](https://github.com/thisisnew/dougle/releases/tag/v0.1.3-preview.1). 보통은 내 Mac에 맞는 DMG 하나만 받습니다. `.app.tar.gz`·`.sig`·`latest.json`은 앱 업데이트용입니다.
 
 | 파일 | 크기(bytes) | SHA-256 |
 |---|---:|---|

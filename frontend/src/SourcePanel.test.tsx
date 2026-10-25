@@ -15,10 +15,249 @@ const api = vi.mocked(request)
 const source = {
   id: 'source', name: '가상 연구', kind: 'LOCAL_FOLDER', location: '/synthetic', domain: '연구',
   status: 'NEW', revision: null, error: null, syncedAt: null, rootEntryId: null,
-  pollingEnabled: false, pollIntervalSeconds: 3600, nextPollAt: null, consecutiveFailures: 0, pollingRevision: 0,
+  pollingEnabled: false, pollIntervalSeconds: 3600, nextPollAt: null, consecutiveFailures: 0, pollingRevision: 0, createdAt: '2026-10-25T00:00:00Z',
 }
 
-beforeEach(() => { api.mockReset(); vi.mocked(selectFolder).mockReset() })
+beforeEach(() => { api.mockReset(); vi.mocked(selectFolder).mockReset(); localStorage.removeItem('dougle.material-sync.one') })
+
+it('Notion 연결 필요 오류에 연결 안내와 플러그인 이동을 제공한다', async () => {
+  api.mockResolvedValue([{ ...source, kind: 'URL', location: 'https://app.notion.com/p/synthetic', status: 'ERROR', error: 'Notion 연결이 필요합니다.' }])
+  const connect = vi.fn()
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} onPluginConnect={connect} />)
+  const warning = await screen.findByRole('button', { name: '가상 연구 연결 필요: Notion 연결이 필요합니다.' })
+  await userEvent.hover(warning)
+  expect(screen.getByRole('tooltip')).toHaveTextContent('플러그인에서 Notion을 연결해 주세요.')
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  await userEvent.click(warning)
+  expect(connect).toHaveBeenCalledWith('NOTION')
+})
+
+it('Notion 페이지 권한 오류를 토큰 연결 오류로 덮어쓰지 않는다', async () => {
+  api.mockResolvedValue([{ ...source, kind: 'URL', location: 'https://app.notion.com/p/synthetic', status: 'ERROR', error: 'Notion 페이지 접근 권한이 없습니다. 페이지의 연결 메뉴에서 접근을 허용하세요.' }])
+  const connect = vi.fn()
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} onPluginConnect={connect} />)
+  const warning = await screen.findByRole('button', { name: /가상 연구 동기화 실패:/ })
+  await userEvent.hover(warning)
+  expect(screen.getByRole('tooltip')).toHaveTextContent('페이지 접근 권한')
+  await userEvent.click(warning)
+  expect(connect).not.toHaveBeenCalled()
+})
+
+it('자료 추가 영역의 열림 상태에 따라 더하기와 빼기 아이콘을 전환한다', async () => {
+  api.mockResolvedValue([])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  const toggle = screen.getByRole('button', { name: '자료 추가' })
+  expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  expect(toggle.querySelector('svg')).toHaveClass('lucide-plus')
+  await userEvent.click(toggle)
+  expect(screen.getByRole('button', { name: '자료 추가 닫기' })).toBe(toggle)
+  expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  expect(toggle.querySelector('svg')).toHaveClass('lucide-minus')
+  await userEvent.click(toggle)
+  expect(toggle).toHaveAccessibleName('자료 추가')
+  expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  expect(toggle.querySelector('svg')).toHaveClass('lucide-plus')
+  expect(screen.queryByRole('button', { name: '폴더' })).not.toBeInTheDocument()
+})
+
+it('동기화 중 느낌표로도 플러그인 화면으로 이동할 수 없다', async () => {
+  let finish!: () => void
+  const pending = new Promise<void>(resolve => { finish = resolve })
+  const notion = { ...source, kind: 'URL', location: 'https://app.notion.com/p/synthetic', status: 'ERROR', error: 'Notion 연결이 필요합니다.' }
+  api.mockImplementation(async path => {
+    if (path.endsWith('/sync')) { await pending; return notion }
+    return [notion]
+  })
+  const connect = vi.fn()
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} onPluginConnect={connect} />)
+  const warning = await screen.findByRole('button', { name: '가상 연구 연결 필요: Notion 연결이 필요합니다.' })
+  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
+  await userEvent.click(warning)
+  expect(connect).not.toHaveBeenCalled()
+  finish()
+  await waitFor(() => expect(screen.getByRole('button', { name: '동기화' })).toBeEnabled())
+  await userEvent.click(warning)
+  expect(connect).toHaveBeenCalledWith('NOTION')
+})
+
+it.each([
+  ['LOCAL_FOLDER', '폴더', 'lucide-folder-input'],
+  ['URL', '웹 링크', 'lucide-link'],
+  ['GITHUB', 'GitHub', 'lucide-github'],
+])('%s 목록과 추가 선택지에 같은 아이콘을 사용한다', async (kind, label, icon) => {
+  api.mockResolvedValue([{ ...source, kind }])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  const row = await screen.findByRole('button', { name: '가상 연구' })
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  expect(row.querySelector('svg')).toHaveClass(icon)
+  expect(screen.getByRole('button', { name: label }).querySelector('svg')).toHaveClass(icon)
+})
+
+it('최근 성공 시간을 Workspace별로 표시하고 실패 시 갱신하지 않는다', async () => {
+  const previous = '2026-10-20T00:00:00Z'
+  localStorage.setItem('dougle.material-sync.one', previous)
+  let fail = true
+  api.mockImplementation(async path => path.endsWith('/files/sync')
+    ? { processed: 1, failures: fail ? [{ name: 'note.txt', error: '읽기 실패' }] : [] } : [])
+  const props = { manageOnly: true, syncUploads: true, hasMaterials: true, workspaceId: 'one', revision: 0, onChanged: vi.fn(), onSelect: vi.fn() }
+  const view = render(<SourcePanel {...props} />)
+  expect(document.querySelector('.source-last-sync')).toHaveAttribute('datetime', previous)
+  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
+  await screen.findByRole('button', { name: /파일 동기화 동기화 실패/ })
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  expect(document.querySelector('.source-last-sync')).toHaveAttribute('datetime', previous)
+  expect(localStorage.getItem('dougle.material-sync.one')).toBe(previous)
+  fail = false
+  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
+  await waitFor(() => expect(localStorage.getItem('dougle.material-sync.one')).not.toBe(previous))
+  const saved = localStorage.getItem('dougle.material-sync.one')
+  expect(document.querySelector('.source-last-sync')).toHaveAttribute('datetime', saved)
+  view.rerender(<SourcePanel {...props} workspaceId="two" />)
+  await waitFor(() => expect(document.querySelector('.source-last-sync')).toBeNull())
+  view.rerender(<SourcePanel {...props} />)
+  await waitFor(() => expect(document.querySelector('.source-last-sync')).toHaveAttribute('datetime', saved))
+})
+
+it('서버가 ERROR 상태를 반환한 동기화도 실패로 처리한다', async () => {
+  api.mockImplementation(async path => path.endsWith('/sync') ? { ...source, status: 'ERROR', error: '수집 실패' } : [source])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await screen.findByText('가상 연구')
+  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
+  expect(await screen.findByRole('button', { name: /가상 연구 동기화 실패/ })).toBeInTheDocument()
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  expect(localStorage.getItem('dougle.material-sync.one')).toBeNull()
+})
+
+it('현재 처리 대상과 실제 완료 내역을 순서대로 표시한다', async () => {
+  let finish!: () => void
+  const pending = new Promise<void>(resolve => { finish = resolve })
+  api.mockImplementation(async path => {
+    if (path.endsWith('/source/sync')) return { ...source, status: 'READY' }
+    if (path.endsWith('/second/sync')) { await pending; return { ...source, id: 'second', status: 'READY' } }
+    if (path.endsWith('/progress')) return { stage: 'EXTRACTING', file: 'example.txt', completed: 2, total: 5, cancellable: true }
+    return [source, { ...source, id: 'second', name: '두 번째 자료' }]
+  })
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await screen.findByText('가상 연구')
+  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
+  expect(await screen.findByText('완료 · 가상 연구')).toBeVisible()
+  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('example.txt'))
+  expect(screen.getByRole('progressbar')).toHaveAttribute('value', '2')
+  expect(screen.queryByText('완료 · 두 번째 자료')).not.toBeInTheDocument()
+  finish()
+  await waitFor(() => expect(screen.queryByRole('region', { name: '동기화 진행 상황' })).not.toBeInTheDocument())
+})
+
+it('첫 동기화가 끝날 때까지 진행 표시를 유지하고 실패해도 등록한 자료를 보여 준다', async () => {
+  let finish!: () => void
+  const sync = new Promise<void>(resolve => { finish = resolve })
+  let created = false
+  api.mockImplementation(async (path, options) => {
+    if (options?.method === 'POST') { created = true; await sync; return { ...source, status: 'ERROR', error: '폴더를 찾을 수 없습니다.' } }
+    return created ? [{ ...source, status: 'ERROR', error: '폴더를 찾을 수 없습니다.' }] : []
+  })
+  vi.mocked(selectFolder).mockResolvedValue('/synthetic')
+  const changed = vi.fn()
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
+  const progress = await screen.findByRole('button', { name: '추가 중…' })
+  expect(progress).toBeDisabled()
+  expect(progress).toHaveAttribute('aria-busy', 'true')
+  finish()
+  await screen.findByText('가상 연구')
+  await userEvent.hover(await screen.findByRole('button', { name: /가상 연구 동기화 실패/ }))
+  expect(screen.getByRole('tooltip')).toHaveTextContent('자료를 찾을 수 없습니다.')
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  expect(screen.getByRole('button', { name: '동기화' })).toBeEnabled()
+  expect(screen.getByRole('button', { name: '폴더 선택' })).toBeVisible()
+  expect(changed).toHaveBeenCalledOnce()
+  expect(api.mock.calls.filter(([path, options]) => path.endsWith('/sources') && options?.method === 'POST')).toHaveLength(1)
+})
+
+it('등록에 실패하면 자동 동기화하지 않는다', async () => {
+  api.mockImplementation(async (_path, options) => {
+    if (options?.method === 'POST') throw new Error('등록 실패')
+    return []
+  })
+  vi.mocked(selectFolder).mockResolvedValue('/synthetic')
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('등록 실패')
+  expect(api.mock.calls.some(([path]) => path.endsWith('/sync'))).toBe(false)
+})
+
+it('연결 Source 없이 업로드 파일도 동기화하고 처리 중 버튼을 잠근다', async () => {
+  let finish!: (value: unknown) => void
+  const pending = new Promise(resolve => { finish = resolve })
+  api.mockImplementation(async path => path.endsWith('/files/sync') ? pending : [])
+  const changed = vi.fn()
+  render(<SourcePanel manageOnly syncUploads hasMaterials workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
+  const button = screen.getByRole('button', { name: '동기화' })
+  expect(screen.getByRole('region', { name: '자료 연결과 검색' })).toHaveClass('source-library')
+  expect(button).toBeEnabled()
+  await userEvent.click(button)
+  expect(button).toBeDisabled()
+  expect(button).toHaveAttribute('aria-busy', 'true')
+  expect(button.querySelector('.sync-spinner')).not.toBeNull()
+  await userEvent.click(button)
+  expect(api.mock.calls.filter(([path]) => path.endsWith('/files/sync'))).toHaveLength(1)
+  finish({ processed: 1, failures: [] })
+  await waitFor(() => expect(button).toBeEnabled())
+  expect(changed).toHaveBeenCalledOnce()
+})
+
+it('자료가 없으면 잠그고 추가 및 마지막 삭제에 따라 동기화 상태를 바꾼다', async () => {
+  api.mockResolvedValue([])
+  const props = { manageOnly: true, syncUploads: true, workspaceId: 'one', revision: 0, onChanged: vi.fn(), onSelect: vi.fn() }
+  const view = render(<SourcePanel {...props} />)
+  const button = screen.getByRole('button', { name: '동기화' })
+  expect(button).toBeDisabled()
+  await userEvent.click(button)
+  expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false)
+  view.rerender(<SourcePanel {...props} hasMaterials />)
+  expect(button).toBeEnabled()
+  view.rerender(<SourcePanel {...props} hasMaterials={false} />)
+  expect(button).toBeDisabled()
+})
+
+it('파일 분석 실패를 알리고 연결 자료 동기화는 계속한다', async () => {
+  api.mockImplementation(async path => {
+    if (path.endsWith('/files/sync')) return { processed: 1, failures: [{ name: 'scan.pdf', error: '텍스트를 읽을 수 없습니다.' }] }
+    if (path.endsWith('/source/sync')) return source
+    return [source]
+  })
+  render(<SourcePanel manageOnly syncUploads workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await screen.findByText('가상 연구')
+  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
+  expect(await screen.findByRole('button', { name: /파일 동기화 동기화 실패/ })).toBeInTheDocument()
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' }))
+})
+
+it.each(['웹 링크', 'GitHub'])('%s는 Enter로 연속 등록하고 추가 영역을 유지한다', async kind => {
+  api.mockImplementation(async (_path, options) => options?.method === 'POST' ? source : [])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  await userEvent.click(screen.getByRole('button', { name: kind }))
+  const address = screen.getByLabelText(`${kind} 주소`)
+  await userEvent.type(address, 'https://github.com/example/one{Enter}')
+  await waitFor(() => expect(address).toHaveValue(''))
+  await userEvent.type(address, 'https://github.com/example/two{Enter}')
+  await waitFor(() => expect(address).toHaveValue(''))
+  expect(api.mock.calls.filter(([path, options]) => path.endsWith('/sources') && options?.method === 'POST')).toHaveLength(2)
+  expect(api.mock.calls.filter(([path, options]) => path.endsWith('/sync') && options?.method === 'POST')).toHaveLength(2)
+  expect(address).toBeVisible()
+})
+
+it('등록 날짜를 표시하고 과거 자료의 날짜는 추측하지 않는다', async () => {
+  api.mockResolvedValue([source, { ...source, id: 'legacy', name: '이전 자료', createdAt: null }])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await screen.findByText('이전 자료')
+  expect(document.querySelector('time[datetime="2026-10-25T00:00:00Z"]')).toHaveTextContent(new Date(source.createdAt).toLocaleDateString('ko-KR'))
+  expect(screen.getByTitle('이전 버전에서 등록 날짜를 기록하지 않았습니다.')).toHaveTextContent('—')
+})
 
 it('GitHub 등록 실패 시 입력을 보존하고 저장소 이름으로 재시도한다', async () => {
   let attempts = 0
@@ -37,7 +276,7 @@ it('GitHub 등록 실패 시 입력을 보존하고 저장소 이름으로 재�
   expect(await screen.findByRole('alert')).toHaveTextContent('등록 실패')
   expect(screen.getByLabelText('GitHub 주소')).toHaveValue('https://github.com/example/project.git')
   await userEvent.click(screen.getByRole('button', { name: '추가' }))
-  await waitFor(() => expect(screen.queryByLabelText('GitHub 주소')).not.toBeInTheDocument())
+  await waitFor(() => expect(screen.getByLabelText('GitHub 주소')).toHaveValue(''))
   expect(api).toHaveBeenCalledWith('/workspaces/one/sources', expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'project', kind: 'GITHUB', location: 'https://github.com/example/project.git', domain: '' }) }))
 })
 
@@ -110,7 +349,7 @@ it('수정 없이 삭제 확인 후 새 자료를 등록한다', async () => {
   await userEvent.click(screen.getByRole('button', { name: '추가' }))
   await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources', expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'new', kind: 'URL', location: 'https://example.invalid/new', domain: '' }) })))
   expect(api.mock.calls.some(([, options]) => options?.method === 'PATCH')).toBe(false)
-  expect(api.mock.calls.some(([path]) => /sync|generation|answer/.test(path))).toBe(false)
+  expect(api.mock.calls.some(([path]) => /generation|answer/.test(path))).toBe(false)
 })
 
 it('검색된 게시 버전을 관련 자료 화면에 전달한다', async () => {
@@ -150,7 +389,7 @@ it('검색어 없이 답변 이력을 명시적으로 열고 닫는다', async (
   expect(screen.queryByText('이력 화면 one')).not.toBeInTheDocument()
 })
 
-it('Source를 등록하고 별도 수동 동기화로 수집한다', async () => {
+it('폴더를 선택하면 등록 직후 자동 동기화하고 목록을 갱신한다', async () => {
   const user = userEvent.setup()
   const changed = vi.fn()
   let created = false
@@ -163,13 +402,12 @@ it('Source를 등록하고 별도 수동 동기화로 수집한다', async () =>
   await user.click(screen.getByRole('button', { name: '자료 추가' }))
   vi.mocked(selectFolder).mockResolvedValue('/synthetic')
   expect(screen.queryByLabelText('Source 위치')).not.toBeInTheDocument()
-  expect(screen.getByRole('button', { name: '추가' })).toBeDisabled()
+  expect(screen.queryByRole('button', { name: '추가' })).not.toBeInTheDocument()
   await user.click(screen.getByRole('button', { name: '폴더 선택' }))
-  expect(await screen.findByLabelText('선택한 폴더')).toBeInTheDocument()
-  await user.click(screen.getByRole('button', { name: '추가' }))
+  await waitFor(() => expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(true))
   await screen.findByText('가상 연구')
   expect(api).toHaveBeenCalledWith('/workspaces/one/sources', expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'synthetic', kind: 'LOCAL_FOLDER', location: '/synthetic', domain: '' }) }))
-  expect(api.mock.calls.some(([path]) => path.endsWith('/sync'))).toBe(false)
+  expect(api.mock.calls.filter(([path]) => path.endsWith('/sync'))).toHaveLength(1)
   expect(screen.getByRole('button', { name: '동기화' })).toBeVisible()
   await user.click(screen.getByRole('button', { name: '동기화' }))
   await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' })))
@@ -177,19 +415,19 @@ it('Source를 등록하고 별도 수동 동기화로 수집한다', async () =>
 })
 
 it('폴더 선택 취소는 등록하지 않고 종류 변경 시 이전 경로를 비운다', async () => {
-  api.mockResolvedValue([])
+  api.mockImplementation(async (_path, options) => options?.method === 'POST' ? source : [])
   vi.mocked(selectFolder).mockResolvedValueOnce(null).mockResolvedValueOnce('/synthetic')
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
   await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
-  expect(screen.getByRole('button', { name: '추가' })).toBeDisabled()
+  expect(screen.queryByRole('button', { name: '추가' })).not.toBeInTheDocument()
   expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false)
   await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
-  expect(await screen.findByLabelText('선택한 폴더')).toBeInTheDocument()
+  await waitFor(() => expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(true))
   await userEvent.click(screen.getByRole('button', { name: '웹 링크' }))
   expect(screen.getByLabelText('웹 링크 주소')).toHaveValue('')
   await userEvent.click(screen.getByRole('button', { name: '폴더' }))
-  expect(screen.getByRole('button', { name: '추가' })).toBeDisabled()
+  expect(screen.queryByRole('button', { name: '추가' })).not.toBeInTheDocument()
 })
 
 it('자료 화면에는 자동 갱신 설정을 노출하지 않는다', async () => {
@@ -254,7 +492,7 @@ it('삭제 확인을 취소하면 Source와 원본이 유지된다', async () =>
   api.mockResolvedValue([source])
   render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   await user.click(await screen.findByRole('button', { name: '가상 연구 Source 삭제' }))
-  expect(screen.getByRole('alert')).toHaveTextContent('삭제하시겠습니까?')
+  expect(screen.getByRole('dialog', { name: '삭제하시겠습니까?' })).toBeInTheDocument()
   await user.click(screen.getByRole('button', { name: '취소' }))
   expect(api.mock.calls.some(([, options]) => options?.method === 'DELETE')).toBe(false)
 })
@@ -262,7 +500,8 @@ it('삭제 확인을 취소하면 Source와 원본이 유지된다', async () =>
 it('실패한 수집은 오류와 이전 반영 버전을 함께 표시한다', async () => {
   api.mockResolvedValue([{ ...source, status: 'ERROR', revision: 'abcdef1234567890', error: '네트워크 연결 실패' }])
   render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  expect(await screen.findByText('네트워크 연결 실패')).toBeInTheDocument()
+  await userEvent.hover(await screen.findByRole('button', { name: /동기화 실패: 네트워크 연결을 확인해 주세요/ }))
+  expect(screen.getByRole('tooltip')).toHaveTextContent('네트워크 연결을 확인해 주세요.')
   expect(screen.getByText(/반영 버전 abcdef123456/)).toBeInTheDocument()
   expect(screen.getByText(/오류 · 이전 자료 유지/)).toBeInTheDocument()
 })
@@ -278,7 +517,9 @@ it('동기화는 모든 연결 자료를 처리하고 하나가 실패해도 다
   await screen.findByText('두 번째 자료')
   expect(screen.getAllByRole('button', { name: '동기화' })).toHaveLength(1)
   await userEvent.click(screen.getByRole('button', { name: '동기화' }))
-  expect(await screen.findByRole('alert')).toHaveTextContent('가상 연구: 연결 실패')
+  await userEvent.hover(await screen.findByRole('button', { name: /가상 연구 동기화 실패/ }))
+  expect(screen.getByRole('tooltip')).toHaveTextContent('네트워크 연결을 확인해 주세요.')
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   expect(api).toHaveBeenCalledWith('/workspaces/one/sources/second/sync', expect.objectContaining({ method: 'POST' }))
   expect(changed).toHaveBeenCalledOnce()
   expect(api.mock.calls.some(([path]) => /answer|generation/.test(path))).toBe(false)
@@ -289,4 +530,18 @@ it('동기화 중인 자료가 있으면 동기화를 중복 실행하지 않는
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   await screen.findByText('가상 연구')
   expect(screen.getByRole('button', { name: '동기화' })).toBeDisabled()
+})
+
+it('서버 자동 갱신 중에도 전역 잠금을 요청하고 완료 후 해제한다', async () => {
+  let status = 'SYNCING'
+  const onBusyChange = vi.fn()
+  api.mockImplementation(async () => [{ ...source, status }])
+  const props = { manageOnly: true, workspaceId: 'one', revision: 0, onChanged: vi.fn(), onSelect: vi.fn(), onBusyChange }
+  const view = render(<SourcePanel {...props} />)
+  await waitFor(() => expect(onBusyChange).toHaveBeenLastCalledWith(true))
+  expect(screen.getByRole('button', { name: '동기화' })).toHaveAttribute('aria-busy', 'true')
+  expect(screen.getByRole('status')).toHaveTextContent('동기화 중')
+  status = 'READY'
+  view.rerender(<SourcePanel {...props} revision={1} />)
+  await waitFor(() => expect(onBusyChange).toHaveBeenLastCalledWith(false))
 })

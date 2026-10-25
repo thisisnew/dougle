@@ -31,7 +31,7 @@ public class EvidenceBundleService {
         if (domains.size() > 20 || domains.stream().anyMatch(value -> value == null || value.length() > 80 || value.codePoints().anyMatch(Character::isISOControl))) {
             throw new LibraryException(400, "도메인은 최대 20개, 각각 80자 이하로 입력하세요.");
         }
-        var hits = search.search(workspaceId, question, domains, includeKnowledge);
+        var hits = search.searchQuestion(workspaceId, question, domains, includeKnowledge);
         return writer.capture(workspaceId, question.strip(), domains, includeKnowledge, hits, attachmentIds);
     }
 

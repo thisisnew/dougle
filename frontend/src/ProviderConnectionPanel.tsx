@@ -1,17 +1,16 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
 import { preferredProvider, rememberProvider, type Provider } from './providerPreference'
 import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
 import { loadModel, saveModel, requestedModel, modelPresets, type ModelChoice } from './modelPreference'
 
-const AdvancedSettings = lazy(() => import('./CliLaunchPanel'))
 type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string }
 type Login = { id: string; provider: Provider; state: 'PENDING' | 'AUTHENTICATED' | 'FAILED' | 'CANCELLED' | 'TIMED_OUT' }
 const messages: Record<string, string> = {
   AUTHENTICATED: '로그인 상태를 확인했습니다. 근거를 선택하고 질문할 수 있습니다.',
   LOGIN_REQUIRED: '로그인이 필요합니다. 아래 버튼을 누르면 기본 브라우저에서 로그인합니다.',
-  TOOL_UNAVAILABLE: '이 앱에서 AI 실행 도구를 찾지 못했습니다. 실행 도구가 포함된 배포가 아직 필요합니다.',
+  TOOL_UNAVAILABLE: 'AI 실행 도구를 찾지 못했습니다.',
   UNSUPPORTED: '현재 실행 도구는 안전한 인증 확인을 지원하지 않습니다. 연결 완료로 표시하지 않습니다.',
   CHECK_FAILED: '연결 상태를 확인하지 못했습니다. 잠시 후 다시 확인해 주세요.',
 }
@@ -24,20 +23,22 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   const [status, setStatus] = useState<Status | null>(() => initialConnection?.provider === provider && initialConnection.state === 'AUTHENTICATED'
     ? { provider, state: 'AUTHENTICATED', checkedAt: '', remoteConnection: 'NOT_CHECKED' } : null)
   const verified = useRef<Partial<Record<Provider, Status>>>(status ? { [provider]: status } : {})
+  const verifiedModels = useRef<Partial<Record<Provider, string | null>>>(status ? { [provider]: initialConnection?.model ?? requestedModel(choice) } : {})
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [advanced, setAdvanced] = useState(false)
   const [login, setLogin] = useState<Login | null>(null)
   const [acknowledged, setAcknowledged] = useState(false)
   const [loginBusy, setLoginBusy] = useState(false)
   const loggingIn = login?.state === 'PENDING'
   const indicatorState = error ? 'CHECK_FAILED' : busy ? 'CHECKING' : status?.state ?? 'UNCHECKED'
+  const connected = status?.state === 'AUTHENTICATED' && verifiedModels.current[provider] === requestedModel(choice)
   useEffect(() => {
     if (status?.state === 'AUTHENTICATED') verified.current[provider] = status
+    if (indicatorState === 'AUTHENTICATED' && !connected) return
     if (initialConnection?.state === 'AUTHENTICATED' && (indicatorState === 'UNCHECKED' || (provider !== initialConnection.provider && indicatorState !== 'AUTHENTICATED'))) return
     if (indicatorState === 'AUTHENTICATED') rememberProvider(provider)
     onConnectionChange?.({ provider, state: indicatorState, model: requestedModel(choice) })
-  }, [provider, indicatorState, choice, onConnectionChange, initialConnection?.provider, initialConnection?.state])
+  }, [provider, indicatorState, choice, connected, onConnectionChange, initialConnection?.provider, initialConnection?.state])
   useEffect(() => {
     const element = dialog.current!
     element.showModal()
@@ -55,7 +56,7 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
         if (controller.signal.aborted) return
         if (value.id !== login!.id || value.provider !== provider) throw new Error('로그인 응답이 다릅니다.')
         setLogin(value)
-        if (value.state === 'AUTHENTICATED') setStatus({ provider, state: 'AUTHENTICATED', checkedAt: new Date().toISOString(), remoteConnection: 'NOT_CHECKED' })
+        if (value.state === 'AUTHENTICATED') { verifiedModels.current[provider] = requestedModel(choice); setStatus({ provider, state: 'AUTHENTICATED', checkedAt: new Date().toISOString(), remoteConnection: 'NOT_CHECKED' }) }
         if (value.state !== 'PENDING') return
       } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
       if (!controller.signal.aborted) timer = setTimeout(() => void poll(), 1500)
@@ -77,7 +78,7 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
       if (!controller.signal.aborted) {
         if (value.provider !== provider) throw new Error('로그인 제공자가 다릅니다.')
         setLogin(value)
-        if (value.state === 'AUTHENTICATED') setStatus({ provider, state: 'AUTHENTICATED', checkedAt: new Date().toISOString(), remoteConnection: 'NOT_CHECKED' })
+        if (value.state === 'AUTHENTICATED') { verifiedModels.current[provider] = requestedModel(choice); setStatus({ provider, state: 'AUTHENTICATED', checkedAt: new Date().toISOString(), remoteConnection: 'NOT_CHECKED' }) }
       }
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) { setBusy(false); setLoginBusy(false) } }
@@ -101,6 +102,7 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
       const value = await request<Status>(`/ai/providers/${provider}/connection`, { method: 'POST', signal: controller.signal })
       if (!controller.signal.aborted) {
         if (value.provider !== provider || !messages[value.state] || value.remoteConnection !== 'NOT_CHECKED') throw new Error('확인 결과가 예상과 다릅니다. 다시 확인하세요.')
+        if (value.state === 'AUTHENTICATED') verifiedModels.current[provider] = requestedModel(choice)
         setStatus(value)
       }
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
@@ -111,19 +113,18 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
     <div className="provider-connection-header"><div><h2>AI 연결</h2></div><Button variant="ghost" disabled={loggingIn || busy} onClick={onClose}>닫기</Button></div>
     <div className="provider-cards" role="group" aria-label="사용할 AI">
       {(['CODEX', 'CLAUDE'] as const).map(value => <button key={value} className="provider-card" aria-pressed={provider === value} disabled={loggingIn || loginBusy} onClick={() => choose(value)}>
-        <span className="provider-monogram">{value === 'CODEX' ? 'C' : '✳'}</span><strong>{value === 'CODEX' ? 'Codex' : 'Claude'}</strong><small>{value === 'CODEX' ? 'OpenAI · 앱에 포함' : 'Anthropic · 별도 도구 필요'}</small>
+        <span className="provider-monogram">{value === 'CODEX' ? 'C' : '✳'}</span><strong>{value === 'CODEX' ? 'Codex' : 'Claude'}</strong><small>{value === 'CODEX' ? 'OpenAI' : 'Anthropic'}</small>
       </button>)}
     </div>
     <label className="field-label">모델<select value={choice.model} disabled={busy || loggingIn} onChange={event => {
       const value = event.target.value
       if (!modelPresets[provider].some(item => item.id === value)) return
       const next: ModelChoice = { mode: 'custom', model: value }
-      if (!saveModel(provider, next)) { setError('모델 선택을 저장하지 못했습니다. 다시 시도해 주세요.'); return }
       setChoice(next); setError('')
     }}>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
-    <Button className="connect-button" disabled={busy || advanced || loggingIn || status?.state === 'AUTHENTICATED'} onClick={() => void check()}>{busy ? '확인 중…' : status?.state === 'AUTHENTICATED' ? '연결됨' : '연결'}</Button>
-    {indicatorState !== 'UNCHECKED' && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
-    {status && status.state !== 'AUTHENTICATED' && <p>{messages[status.state]}</p>}
+    <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected} onClick={() => void check()}>{busy ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
+    {indicatorState !== 'UNCHECKED' && indicatorState !== 'AUTHENTICATED' && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
+    {status && status.state !== 'AUTHENTICATED' && <p>{messages[status.state]}{status.state === 'TOOL_UNAVAILABLE' && (provider === 'CLAUDE' ? ' Claude Code를 설치한 뒤 앱을 다시 열어 주세요.' : '앱을 다시 설치해 주세요.')}</p>}
     {error && <p role="alert">{error}</p>}
     {status?.state === 'LOGIN_REQUIRED' && !loggingIn && <div>
       <label className="check-option"><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => setAcknowledged(event.target.checked)} /><span>브라우저 로그인과 인증 정보 저장에 동의합니다.</span></label>
@@ -131,7 +132,5 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
     </div>}
     {loggingIn && <div role="status"><p>브라우저에서 로그인을 완료해 주세요. 최대 3분 동안 기다립니다. 중단은 이미 저장된 로그인을 취소하거나 로그아웃하지 않습니다.</p><Button disabled={busy} onClick={() => void loginAction(true)}>로그인 중단</Button></div>}
     {login && ['FAILED', 'CANCELLED', 'TIMED_OUT'].includes(login.state) && <p role="status">{login.state === 'TIMED_OUT' ? '로그인 대기 시간이 지났습니다.' : login.state === 'CANCELLED' ? '로그인 대기를 중단했습니다.' : '로그인 완료를 확인하지 못했습니다.'} 연결 상태를 다시 확인해 주세요.</p>}
-    <Button variant="ghost" disabled={busy || loggingIn} onClick={() => setAdvanced(true)}>실행 경로 설정</Button>
-    {advanced && <Suspense fallback={<p>고급 설정을 여는 중…</p>}><AdvancedSettings onClose={() => setAdvanced(false)} /></Suspense>}
   </dialog>
 }

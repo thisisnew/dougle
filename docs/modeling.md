@@ -1,5 +1,12 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+## 수집 복구 (DB v25)
+
+`source_analysis_checkpoint`는 source/path/content hash별 완료 분석을 보관합니다. 중단 뒤 같은 파일의 분석을 재사용하며 변경된 파일에는 적용하지 않습니다. `source_file_failure`는 경로별 제외 원인을 저장합니다. 실패 경로의 이전 원본을 보존하고 정상 파일만 발행합니다. 두 테이블은 Source 삭제 시 함께 삭제됩니다. [수집·검색 변경](ingestion-retrieval-upgrade.md).
+
+## 플러그인 연결 (0.1.20 후속)
+Notion/MySQL 연결 정보는 DB 테이블 대신 앱 데이터의 암호화된 PluginVault에 앱 전체 연결로 보관합니다. Notion은 기존 URL Source, MySQL은 MYSQL Source의 비밀 없는 host:port/database 위치로 식별합니다. 수집 결과는 기존 Source 원본/분석/검색 모델을 따릅니다. MySQL 연결 대상 변경 후 다른 DB의 기존 Source를 임의의 새 DB로 대체하지 않으며 연결 필요 오류를 표시합니다. [보호 범위·API](plugins.md).
+
 ## 질문 첨부 (0.1.11 후속, DB v22)
 
 `question_attachment`는 **질문에만 쓰는 파일**입니다. Workspace 1:N 첨부, 질문(`evidence_bundle`) 1:N 첨부이며 질문 전에는 bundle_id가 비어 있습니다. ID·파일명·MIME·바이트·SHA-256·추출문·잘림 여부를 저장합니다. 질문 생성과 연결은 하나의 트랜잭션이며 연결 뒤 수정하지 않습니다. 질문/서재를 지우면 함께 삭제합니다. 자료 탐색기·검색 색인과 독립적입니다. [제한·승인·코드·API](question-attachments.md).

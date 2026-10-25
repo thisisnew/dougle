@@ -28,13 +28,45 @@ public class LibraryService {
 
     public record Session(List<Workspace> workspaces, String activeWorkspaceId) {}
     public record Preview(String text, boolean supported, String reason) {}
+    public record SyncFailure(String entryId, String name, String error) {}
+    public record SyncResult(int processed, List<SyncFailure> failures) {}
+
+    public SyncResult syncFiles(String workspaceId) {
+        requireWorkspace(workspaceId);
+        var pending = new java.util.ArrayDeque<Entry>(store.entries(workspaceId, "ORIGINAL", null));
+        var failures = new java.util.ArrayList<SyncFailure>();
+        int processed = 0;
+        while (!pending.isEmpty()) {
+            Entry entry = pending.removeFirst();
+            if (store.managed(entry.id())) continue;
+            if (entry.kind().equals("FOLDER")) {
+                pending.addAll(store.entries(workspaceId, "ORIGINAL", entry.id()));
+                continue;
+            }
+            var result = analyze(workspaceId, entry.id());
+            processed++;
+            if (!List.of("READY", "PARTIAL").contains(result.status())) {
+                failures.add(new SyncFailure(entry.id(), entry.name(), result.error()));
+            }
+        }
+        return new SyncResult(processed, List.copyOf(failures));
+    }
 
     public Session session() {
         return new Session(store.workspaces(), store.activeWorkspace());
     }
 
+    public List<dev.knowledgeforge.ingestion.application.AnalysisStore.Failure> analysisFailures(String workspaceId) {
+        requireWorkspace(workspaceId);
+        return analyses.failures(workspaceId);
+    }
+
     public Workspace createWorkspace(String name) {
-        Workspace workspace = new Workspace(UUID.randomUUID().toString(), validName(name), Instant.now().toString());
+        String workspaceName = validName(name);
+        if (workspaceName.length() > 20) {
+            throw new LibraryException(400, "Workspace 이름은 20자 이내로 입력하세요.");
+        }
+        Workspace workspace = new Workspace(UUID.randomUUID().toString(), workspaceName, Instant.now().toString());
         store.createWorkspace(workspace);
         store.activate(workspace.id());
         return workspace;
@@ -68,10 +100,32 @@ public class LibraryService {
     }
 
     public Entry upload(String workspaceId, String parentId, String name, byte[] content) {
-        if (content.length > 10 * 1024 * 1024) {
-            throw new LibraryException(413, "파일은 10 MiB 이하여야 합니다.");
+        if (content.length > dev.knowledgeforge.sources.domain.CollectedSnapshot.MAX_FILE_BYTES) {
+            throw new LibraryException(413, "256 MiB가 넘는 파일은 나눠 등록하세요.");
         }
         return createEntry(workspaceId, parentId, name, "FILE", content);
+    }
+
+    public Entry uploadStream(String workspaceId, String parentId, String name, java.io.InputStream input, long size)
+            throws java.io.IOException {
+        requireWorkspace(workspaceId);
+        requireParent(workspaceId, "ORIGINAL", parentId);
+        name = validName(name);
+        if (parentId != null && store.managed(parentId)) throw new LibraryException(409, "Source가 관리하는 폴더입니다.");
+        if (size < 0 || size > dev.knowledgeforge.sources.domain.CollectedSnapshot.MAX_FILE_BYTES) {
+            throw new LibraryException(413, "256 MiB가 넘는 파일은 나눠 등록하세요.");
+        }
+        try (var file = dev.knowledgeforge.sources.domain.CollectedSnapshot.File.copy(name, input,
+                dev.knowledgeforge.sources.domain.CollectedSnapshot.MAX_FILE_BYTES)) {
+            if (size != file.size()) throw new LibraryException(400, "파일 크기가 변경되었습니다. 다시 선택하세요.");
+            Entry entry = new Entry(UUID.randomUUID().toString(), workspaceId, parentId, name,
+                    "FILE", "ORIGINAL", size, Instant.now().toString());
+            store.createEntry(entry, file.content());
+            try (var content = file.open()) {
+                analyses.save(entry.id(), analyzer.analyzeStream(name, content));
+            }
+            return entry;
+        }
     }
 
     private Entry createEntry(String workspaceId, String parentId, String name, String kind, byte[] content) {
@@ -97,6 +151,12 @@ public class LibraryService {
         Entry entry = requireEntry(workspaceId, id);
         if (!entry.kind().equals("FILE")) {
             throw new LibraryException(400, "폴더는 미리 볼 수 없습니다.");
+        }
+        var extracted = analyses.find(workspaceId, id);
+        if (extracted.isPresent() && "application/pdf".equals(extracted.get().mediaType())) {
+            var document = extracted.get();
+            if (!document.text().isBlank()) return new Preview(document.text(), true, null);
+            return new Preview(null, false, "PDF에서 읽을 수 있는 텍스트가 없습니다. 스캔된 문서는 텍스트 인식이 필요합니다.");
         }
         if (entry.size() > 1024 * 1024) {
             return new Preview(null, false, "미리보기는 1 MiB 이하의 UTF-8 텍스트만 지원합니다.");

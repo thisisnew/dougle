@@ -1,6 +1,6 @@
 [package]
 name = "knowledge-forge-desktop"
-version = "0.1.16"
+version = "0.1.20"
 edition = "2024"
 rust-version = "1.99.1"
 publish = false
@@ -13,6 +13,7 @@ tauri = { version = "=2.12.5", features = [] }
 getrandom = "=0.4.3"
 libc = "=0.2.191"
 serde_json = "=1.0.154"
+reqwest = { version = "=0.13.5", default-features = false, features = ["json"] }
 ureq = { version = "=3.5.0", default-features = false, features = ["json"] }
 tauri-plugin-updater = "=2.14.0"
 tauri-plugin-dialog = { version = "=2.8.3", default-features = false }

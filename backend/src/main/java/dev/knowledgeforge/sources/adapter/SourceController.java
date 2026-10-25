@@ -20,10 +20,10 @@ public class SourceController {
         this.search = search;
     }
 
-    public record Registration(String name, String kind, String location, String domain) {}
+    public record Registration(String name, String kind, String location, String domain, Boolean sync) {}
     public record PollingSettings(Boolean enabled, Integer intervalSeconds, Integer expectedRevision) {}
     public record Metadata(String name, String domain, Integer expectedRevision) {}
-    public record WorkspacePollingSettings(Boolean enabled, Integer expectedRevision) {}
+    public record WorkspacePollingSettings(Boolean enabled, Integer intervalSeconds, Integer expectedRevision) {}
 
     @GetMapping("/source-polling")
     public WorkspacePolling workspacePolling(@PathVariable String workspaceId) {
@@ -32,7 +32,7 @@ public class SourceController {
 
     @PatchMapping("/source-polling")
     public WorkspacePolling workspacePolling(@PathVariable String workspaceId, @RequestBody WorkspacePollingSettings request) {
-        return sources.configureWorkspacePolling(workspaceId, request.enabled(), request.expectedRevision());
+        return sources.configureWorkspacePolling(workspaceId, request.enabled(), request.intervalSeconds(), request.expectedRevision());
     }
 
     @PatchMapping("/sources/{id}")
@@ -55,15 +55,29 @@ public class SourceController {
     @PostMapping("/sources")
     @ResponseStatus(HttpStatus.CREATED)
     public Source create(@PathVariable String workspaceId, @RequestBody Registration request) {
-        return sources.create(workspaceId, request.name(), request.kind(), request.location(),
+        Source source = sources.create(workspaceId, request.name(), request.kind(), request.location(),
                 request.domain() == null ? "" : request.domain());
+        if (Boolean.TRUE.equals(request.sync())) {
+            source = sources.sync(workspaceId, source.id(), search::refresh);
+        }
+        return source;
     }
 
     @PostMapping("/sources/{id}/sync")
     public Source sync(@PathVariable String workspaceId, @PathVariable String id) {
-        Source source = sources.sync(workspaceId, id);
-        search.refresh();
+        Source source = sources.sync(workspaceId, id, search::refresh);
         return source;
+    }
+
+    @GetMapping("/sources/{id}/progress")
+    public SourceService.Progress progress(@PathVariable String workspaceId, @PathVariable String id) {
+        return sources.progress(workspaceId, id);
+    }
+
+    @PostMapping("/sources/{id}/cancel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancel(@PathVariable String workspaceId, @PathVariable String id) {
+        sources.cancel(workspaceId, id);
     }
 
     @DeleteMapping("/sources/{id}")

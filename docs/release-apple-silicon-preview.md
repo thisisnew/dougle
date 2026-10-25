@@ -1,4 +1,4 @@
-# Knowledge Forge 0.1.1 — Apple Silicon 미리보기
+# Dougle 0.1.1 — Apple Silicon 미리보기
 
 M 시리즈 Mac을 위한 **ARM64 앱 + ARM64 Java 21** 패키지입니다. Rosetta용 Intel 패키지가 아닙니다.
 기능과 DB v21은 Intel 0.1.1과 같고, 공증은 사용자 요청에 따라 제외했습니다.
@@ -22,6 +22,6 @@ ARM 대상 컴파일·앱 번들·DMG 무결성·설치 복사본 서명·앱/JV
 - 새 DB를 구버전 앱으로 열지 마세요. Intel/ARM 앱은 같은 데이터 위치를 사용하므로 동시 실행하지 않습니다.
 - 첫 체험은 가상 파일로 시작하세요. 실제 회사 자료·외부 AI 전송은 회사 정책을 먼저 확인하세요.
 
-[설치 안내](https://github.com/thisisnew/knowledge-forge/blob/main/docs/macos-install.md) · [쉬운 사용법](https://github.com/thisisnew/knowledge-forge/blob/main/docs/how-it-works.md) · [ARM 빌드와 검증](https://github.com/thisisnew/knowledge-forge/blob/main/docs/apple-silicon.md) · [구조도](https://github.com/thisisnew/knowledge-forge/blob/main/docs/design-map.md)
+[설치 안내](https://github.com/thisisnew/dougle/blob/main/docs/macos-install.md) · [쉬운 사용법](https://github.com/thisisnew/dougle/blob/main/docs/how-it-works.md) · [ARM 빌드와 검증](https://github.com/thisisnew/dougle/blob/main/docs/apple-silicon.md) · [구조도](https://github.com/thisisnew/dougle/blob/main/docs/design-map.md)
 
-Intel Mac은 [기존 Intel 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1)를 사용하세요.
+Intel Mac은 [기존 Intel 릴리스](https://github.com/thisisnew/dougle/releases/tag/v0.1.1-preview.1)를 사용하세요.

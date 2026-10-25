@@ -22,13 +22,17 @@ public class JdbcSearchCatalog implements SearchCatalog {
     private static final String SELECT = """
             SELECT e.id,e.workspace_id,e.name,e.source_id,COALESCE(e.relative_path,e.name) AS path,
             COALESCE(s.domain,'') AS domain,d.text,
-            COALESCE((SELECT group_concat(name,' ') FROM symbol WHERE entry_id=e.id),'') AS symbols
+            COALESCE((SELECT group_concat(name,' ') FROM symbol WHERE entry_id=e.id),'') AS symbols,
+            COALESCE((SELECT group_concat(line,',') FROM symbol WHERE entry_id=e.id),'') AS boundaries
             FROM entry e JOIN extracted_document d ON d.entry_id=e.id LEFT JOIN source s ON s.id=e.source_id
             WHERE d.status IN ('READY','PARTIAL')
             """;
     private static final RowMapper<SearchIndex.Document> DOCUMENT = (result, row) -> new SearchIndex.Document(
             result.getString("id"), result.getString("workspace_id"), result.getString("name"), result.getString("text"),
-            result.getString("symbols"), result.getString("source_id"), result.getString("domain"), result.getString("path"));
+            result.getString("symbols"), result.getString("source_id"), result.getString("domain"), result.getString("path"),
+            "ORIGINAL", null, null, List.of(result.getString("domain")),
+            java.util.Arrays.stream(result.getString("boundaries").split(",")).filter(value -> !value.isBlank())
+                    .map(Integer::valueOf).distinct().sorted().toList());
     private final JdbcTemplate jdbc;
 
     public JdbcSearchCatalog(JdbcTemplate jdbc) {

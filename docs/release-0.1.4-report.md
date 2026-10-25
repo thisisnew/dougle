@@ -23,7 +23,7 @@
 - 실제 수정본 브라우저에서 Claude 기본값/저장한 모델과 Codex 저장한 모델을 각각 확인했습니다. 가상 AI는 별도 미게시 초안으로 생성되고 원래 문서는 남았습니다. 390px 폭에서 가로 넘침과 수집된 미처리 오류가 없었습니다.
 - 코드/빌드 설정 **314개, 테스트·fixture 88개**의 목록·해시를 재생성했습니다. 파일 열거는 모든 실행 경로 커버리지가 아닙니다.
 
-[0.1.4 설치 파일](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.4-preview.1).
+[0.1.4 설치 파일](https://github.com/thisisnew/dougle/releases/tag/v0.1.4-preview.1).
 
 | 파일 | 크기(bytes) | SHA-256 |
 |---|---:|---|

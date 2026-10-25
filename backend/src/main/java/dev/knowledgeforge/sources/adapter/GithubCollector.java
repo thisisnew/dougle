@@ -46,7 +46,7 @@ public class GithubCollector implements Collector {
         if (!commits.isArray() || commits.isEmpty()) throw new LibraryException(502, "GitHub commit을 확인할 수 없습니다.");
         String revision = commits.get(0).path("sha").asText();
         if (!revision.matches("[a-f0-9]{40}")) throw new LibraryException(502, "GitHub commit SHA가 올바르지 않습니다.");
-        if (previous != null && revision.equals(previous.revision())) return previous;
+        if (previous != null && previous.failures().isEmpty() && revision.equals(previous.revision())) return previous;
         Path temporary = Files.createTempDirectory("forge-git-");
         try {
             git.run(temporary, 64 * 1024, "clone", "--quiet", "--no-checkout", "--filter=blob:none", "--depth=1",
@@ -68,14 +68,16 @@ public class GithubCollector implements Collector {
 
     public CollectedSnapshot readSnapshot(Path repository, String revision, CollectedSnapshot previous) throws Exception {
         if (!revision.matches("[a-f0-9]{40}")) throw new LibraryException(400, "Git revision이 올바르지 않습니다.");
-        var cached = new java.util.HashMap<String, byte[]>();
+        var cached = new java.util.HashMap<String, CollectedSnapshot.File>();
         if (previous != null) {
-            for (var file : CollectionLimits.snapshot(previous.files()).files()) cached.put(blobHash(file.content()), file.content());
+            for (var file : CollectionLimits.snapshot(previous.files()).files()) cached.put(blobHash(file), file);
         }
         String listing = StandardCharsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(
-                git.run(repository, 1024 * 1024, "ls-tree", "-rz", revision))).toString();
+                git.run(repository, 8 * 1024 * 1024, "ls-tree", "-rz", revision))).toString();
         List<CollectedSnapshot.File> files = new ArrayList<>();
+        var failures = new java.util.HashMap<String, String>();
         long total = 0;
+        try {
         for (String item : listing.split("\u0000")) {
             if (item.isEmpty()) continue;
             String[] parts = item.split("\t", 2);
@@ -88,29 +90,56 @@ public class GithubCollector implements Collector {
                     || !metadata[2].matches("[a-f0-9]{40}")) {
                 throw new LibraryException(400, "Git 심볼릭 링크·서브모듈은 수집하지 않습니다.");
             }
-            byte[] content = cached.get(metadata[2]);
+            dev.knowledgeforge.ingestion.application.ProcessingProgress.report("READING", path, files.size(), 0);
+            var content = cached.get(metadata[2]);
             long size = content == null ? Long.parseLong(new String(git.run(repository, 32, "cat-file", "-s", metadata[2]),
-                    StandardCharsets.UTF_8).strip()) : content.length;
+                    StandardCharsets.UTF_8).strip()) : content.size();
+            if (size < 0 || size > CollectionLimits.MAX_DOCUMENT) {
+                failures.put(path, "256 MiB가 넘는 파일은 나눠 등록하세요.");
+                continue;
+            }
             total += size;
-            if (size < 0 || size > CollectionLimits.MAX_FILE || total > CollectionLimits.MAX_TOTAL || files.size() >= CollectionLimits.MAX_FILES) {
-                throw new LibraryException(413, "Git 파일 크기·총량·개수 제한을 초과했습니다.");
+            if (total > CollectionLimits.MAX_SNAPSHOT || files.size() >= CollectionLimits.MAX_SNAPSHOT_FILES) {
+                throw new LibraryException(413, "저장소를 나눠 등록하세요. 한 자료당 20,000개 파일·8 GiB까지 처리합니다.");
             }
             if (content == null) {
-                content = git.run(repository, CollectionLimits.MAX_FILE, "cat-file", "blob", metadata[2]);
-                if (content.length != size || !blobHash(content).equals(metadata[2])) {
+                try {
+                    content = git.readBlob(repository, path, metadata[2], size);
+                } catch (java.io.InterruptedIOException exception) {
+                    throw exception;
+                } catch (java.io.IOException exception) {
+                    failures.put(path, "파일 수집 실패 · 저장소 접근 권한과 네트워크를 확인하고 다시 동기화하세요.");
+                    continue;
+                }
+                if (content.size() != size || !blobHash(content).equals(metadata[2])) {
+                    content.close();
                     throw new LibraryException(502, "Git blob 크기 또는 해시가 일치하지 않습니다.");
                 }
                 cached.put(metadata[2], content);
             }
-            files.add(new CollectedSnapshot.File(path, content));
+            if (!content.path().equals(path)) {
+                try (var input = content.open()) {
+                    content = CollectedSnapshot.File.copy(path, input, CollectionLimits.MAX_DOCUMENT);
+                }
+            }
+            files.add(content);
         }
         var snapshot = CollectionLimits.snapshot(files);
-        return new CollectedSnapshot(revision, snapshot.files());
+        return new CollectedSnapshot(revision, snapshot.files(), null, failures);
+        } catch (Exception exception) {
+            files.stream().filter(file -> previous == null || !previous.files().contains(file)).forEach(CollectedSnapshot.File::close);
+            throw exception;
+        }
     }
 
-    private static String blobHash(byte[] content) throws java.security.NoSuchAlgorithmException {
+    private static String blobHash(CollectedSnapshot.File file) throws java.security.NoSuchAlgorithmException, java.io.IOException {
         var digest = java.security.MessageDigest.getInstance("SHA-1");
-        digest.update(("blob " + content.length + "\u0000").getBytes(StandardCharsets.US_ASCII));
-        return java.util.HexFormat.of().formatHex(digest.digest(content));
+        digest.update(("blob " + file.size() + "\u0000").getBytes(StandardCharsets.US_ASCII));
+        try (var input = file.open()) {
+            byte[] buffer = new byte[64 * 1024];
+            for (int count; (count = input.read(buffer)) != -1;) digest.update(buffer, 0, count);
+        }
+        return java.util.HexFormat.of().formatHex(digest.digest());
     }
+
 }

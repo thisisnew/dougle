@@ -1,18 +1,21 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Square } from 'lucide-react'
 import { request } from './api'
 import { Button } from './components/ui/button'
+import StreamingAnswer from './StreamingAnswer'
 import { observeAnswerJob, activeAnswerJob as active, type AnswerJob as Job } from './answerJobEvents'
 
 const names: Record<string, string> = { QUEUED: '대기', RUNNING: '답변 생성 중', CANCELLING: '중단 중', CANCELLED: '중단됨', SUCCEEDED: '답변 생성 완료', FAILED: '실패', INTERRUPTED: '앱 재시작으로 중단됨' }
 
 type Props = {
   workspaceId: string; bundleId: string; approval: { id: string; digest: string } | null
-  initialJob?: Job; compact?: boolean
+  initialJob?: Job; compact?: boolean; animate?: boolean
+  references?: ReactNode | ((answer: string) => ReactNode)
 }
 export default function AnswerJobsPanel(props: Props) {
   return <ScopedAnswerJobsPanel key={`${props.workspaceId}/${props.bundleId}`} {...props} />
 }
-function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval, initialJob, compact = false }: Props) {
+function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval, initialJob, compact = false, animate = false, references }: Props) {
   const [jobs, setJobs] = useState<Job[]>(initialJob ? [initialJob] : [])
   const [job, setJob] = useState<Job | null>(initialJob ?? null)
   const [agreed, setAgreed] = useState(false)
@@ -59,6 +62,15 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval, initialJob, co
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
+
+  if (compact) return <section aria-label="답변 작업" className="chat-answer">
+    {active(job) && !partial && <p role="status" className="chat-thinking">{job?.status === 'CANCELLING' ? '중단하고 있습니다…' : '확인해보겠습니다…'}</p>}
+    {(job?.answer || (active(job) && partial)) && <StreamingAnswer text={job?.answer || partial} animate={animate || active(job)}>{job?.status === 'SUCCEEDED' && (typeof references === 'function' ? references(job.answer || '') : references)}</StreamingAnswer>}
+    {active(job) && <Button disabled={busy || job?.status === 'CANCELLING'} variant="ghost" size="icon" aria-label="답변 중단" onClick={() => void act('cancel')}><Square size={14} fill="currentColor" aria-hidden="true" /></Button>}
+    {job && ['CANCELLED', 'INTERRUPTED'].includes(job.status) && <p role="status">답변이 중단되었습니다.</p>}
+    {job?.error && <p role="alert">{job.error}</p>}
+    {error && <div role="alert"><p>답변을 불러오지 못했습니다.</p><Button disabled={busy} variant="outline" onClick={() => void act('list')}>다시 확인</Button></div>}
+  </section>
 
   return <section aria-label="답변 작업" className="answer-approval">
     <h3>{compact ? 'AI 답변' : '실제 답변 요청'}</h3>

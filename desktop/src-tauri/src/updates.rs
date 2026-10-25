@@ -1,6 +1,6 @@
 use crate::Lifecycle;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use tauri::Manager;
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons};
@@ -11,6 +11,69 @@ pub const MENU_ID: &str = "forge-check-update";
 #[derive(Default)]
 pub struct UpdateState {
     busy: AtomicBool,
+    status: Mutex<serde_json::Value>,
+    checked: Mutex<Option<Instant>>,
+}
+
+fn update_status_value(
+    app: &tauri::AppHandle,
+    phase: &str,
+    version: Option<&str>,
+    progress: Option<u64>,
+) {
+    let state = app.state::<UpdateState>();
+    let mut status = state.status.lock().unwrap();
+    let version = version
+        .map(str::to_owned)
+        .or_else(|| status["version"].as_str().map(str::to_owned));
+    *status = serde_json::json!({ "phase": phase, "version": version, "progress": progress });
+}
+
+fn validate_window(window: &tauri::WebviewWindow) -> Result<(), String> {
+    let port = window
+        .state::<crate::folder_picker::FolderPicker>()
+        .port
+        .load(Ordering::SeqCst);
+    let url = window.url().map_err(|_| "앱 창을 확인할 수 없습니다.")?;
+    if window.label() != "main" || !knowledge_forge_desktop::protocol::owned_origin(&url, port) {
+        return Err("앱에서 업데이트를 확인해 주세요.".into());
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub fn update_status(window: tauri::WebviewWindow) -> Result<serde_json::Value, String> {
+    validate_window(&window)?;
+    let state = window.state::<UpdateState>();
+    let due = state
+        .checked
+        .lock()
+        .unwrap()
+        .is_none_or(|time| time.elapsed() >= Duration::from_secs(3600));
+    if due {
+        check(
+            window.app_handle().clone(),
+            window.state::<Arc<Lifecycle>>().inner().clone(),
+            false,
+        );
+    }
+    let status = state.status.lock().unwrap().clone();
+    Ok(if status.is_null() {
+        serde_json::json!({"phase":"idle"})
+    } else {
+        status
+    })
+}
+
+#[tauri::command]
+pub async fn install_update(window: tauri::WebviewWindow) -> Result<(), String> {
+    validate_window(&window)?;
+    check(
+        window.app_handle().clone(),
+        window.state::<Arc<Lifecycle>>().inner().clone(),
+        true,
+    );
+    Ok(())
 }
 
 struct Reset(tauri::AppHandle);
@@ -31,6 +94,16 @@ impl Drop for Reset {
             .store(false, Ordering::SeqCst);
         menu(&self.0, "업데이트 확인…", true);
         title(&self.0, "Dougle");
+        let state = self.0.state::<UpdateState>();
+        let mut status = state.status.lock().unwrap();
+        if status["phase"] != "error" && status["phase"] != "current" {
+            status["phase"] = if status["version"].is_string() {
+                "available"
+            } else {
+                "idle"
+            }
+            .into();
+        }
     }
 }
 
@@ -75,6 +148,10 @@ fn confirm(app: &tauri::AppHandle, text: String, action: &str) -> bool {
 }
 
 pub fn check(app: tauri::AppHandle, lifecycle: Arc<Lifecycle>, manual: bool) {
+    tauri::async_runtime::spawn(run_check(app, lifecycle, manual));
+}
+
+async fn run_check(app: tauri::AppHandle, lifecycle: Arc<Lifecycle>, manual: bool) {
     if lifecycle.cancelled.load(Ordering::SeqCst) || app.get_webview_window("main").is_none() {
         return;
     }
@@ -87,16 +164,13 @@ pub fn check(app: tauri::AppHandle, lifecycle: Arc<Lifecycle>, manual: bool) {
         return;
     }
     menu(&app, "업데이트 확인 중…", false);
-    tauri::async_runtime::spawn(async move {
-        let _reset = Reset(app.clone());
-        let outcome = apply(&app, &lifecycle, manual).await;
-        if outcome.is_err() && !lifecycle.cancelled.load(Ordering::SeqCst) {
-            message(
-                &app,
-                "업데이트를 완료하지 못했습니다. 인터넷 연결을 확인한 뒤 메뉴에서 다시 시도해 주세요.",
-            );
-        }
-    });
+    update_status_value(&app, "checking", None, None);
+    *app.state::<UpdateState>().checked.lock().unwrap() = Some(Instant::now());
+    let _reset = Reset(app.clone());
+    let outcome = apply(&app, &lifecycle, manual).await;
+    if outcome.is_err() && !lifecycle.cancelled.load(Ordering::SeqCst) {
+        update_status_value(&app, "error", None, None);
+    }
 }
 
 fn trusted_package(url: &tauri::Url, version: &str) -> bool {
@@ -123,22 +197,83 @@ fn trusted_package(url: &tauri::Url, version: &str) -> bool {
         ))
 }
 
-async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> Result<(), ()> {
-    let updater = app
-        .updater_builder()
-        .timeout(Duration::from_secs(15))
+fn release_manifest(releases: &serde_json::Value) -> Option<tauri::Url> {
+    releases
+        .as_array()?
+        .iter()
+        .filter(|release| release["draft"] == false)
+        .filter_map(|release| {
+            let tag = release["tag_name"].as_str()?;
+            let version = tag.strip_prefix('v')?.split('-').next()?;
+            let parts: Vec<u64> = version
+                .split('.')
+                .map(str::parse)
+                .collect::<Result<_, _>>()
+                .ok()?;
+            if parts.len() != 3 {
+                return None;
+            }
+            let expected =
+                format!("https://github.com/thisisnew/dougle/releases/download/{tag}/latest.json");
+            let asset = release["assets"].as_array()?.iter().find(|asset| {
+                asset["name"] == "latest.json"
+                    && asset["state"] == "uploaded"
+                    && asset["browser_download_url"] == expected
+            })?;
+            let url = asset["browser_download_url"]
+                .as_str()?
+                .parse::<tauri::Url>()
+                .ok()?;
+            Some((parts, url))
+        })
+        .max_by(|left, right| left.0.cmp(&right.0))
+        .map(|(_, url)| url)
+}
+
+async fn discover_manifest() -> Option<tauri::Url> {
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(10))
+        .user_agent("Dougle-Updater")
         .build()
-        .map_err(|_| ())?;
+        .ok()?;
+    let mut response = client
+        .get("https://api.github.com/repos/thisisnew/dougle/releases?per_page=20")
+        .send()
+        .await
+        .ok()?
+        .error_for_status()
+        .ok()?;
+    let mut bytes = Vec::new();
+    while let Some(chunk) = response.chunk().await.ok()? {
+        if bytes.len() + chunk.len() > 2_000_000 {
+            return None;
+        }
+        bytes.extend_from_slice(&chunk);
+    }
+    release_manifest(&serde_json::from_slice(&bytes).ok()?)
+}
+
+async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> Result<(), ()> {
+    let mut builder = app.updater_builder().timeout(Duration::from_secs(15));
+    if let Some(manifest) = discover_manifest().await {
+        builder = builder
+            .endpoints(vec![
+                manifest,
+                "https://raw.githubusercontent.com/thisisnew/dougle/main/updates/preview.json"
+                    .parse()
+                    .map_err(|_| ())?,
+            ])
+            .map_err(|_| ())?;
+    }
+    let updater = builder.build().map_err(|_| ())?;
     let checked = updater.check().await;
     let mut update = match checked {
         Ok(Some(update)) => update,
         Ok(None) => {
-            if manual {
-                message(app, "최신 버전을 사용 중입니다.");
-            }
+            *app.state::<UpdateState>().status.lock().unwrap() =
+                serde_json::json!({"phase":"current"});
             return Ok(());
         }
-        Err(_) if !manual => return Ok(()),
         Err(_) => return Err(()),
     };
     if lifecycle.cancelled.load(Ordering::SeqCst) {
@@ -146,6 +281,10 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
     }
     if !trusted_package(&update.download_url, &update.version) {
         return Err(());
+    }
+    update_status_value(app, "available", Some(&update.version), None);
+    if !manual {
+        return Ok(());
     }
     if !confirm(
         app,
@@ -158,6 +297,7 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
         return Ok(());
     }
     menu(app, "업데이트 다운로드 중…", false);
+    update_status_value(app, "downloading", None, Some(0));
     title(app, "Dougle — 업데이트 다운로드 중…");
     update.timeout = Some(Duration::from_secs(1800));
     let mut previous = 0;
@@ -174,10 +314,8 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
                         .min(100);
                     if percent != previous {
                         previous = percent;
-                        title(
-                            app,
-                            &format!("Dougle — 업데이트 다운로드 {percent}%"),
-                        );
+                        update_status_value(app, "downloading", None, Some(percent));
+                        title(app, &format!("Dougle — 업데이트 다운로드 {percent}%"));
                     }
                 }
             },
@@ -197,6 +335,7 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
     }
     let _install_guard = InstallGuard(lifecycle);
     title(app, "Dougle — 업데이트 설치 준비 중…");
+    update_status_value(app, "installing", None, None);
     let deadline = Instant::now() + Duration::from_secs(15);
     while !lifecycle.stopped.load(Ordering::SeqCst) {
         if Instant::now() >= deadline {
@@ -224,6 +363,33 @@ async fn apply(app: &tauri::AppHandle, lifecycle: &Lifecycle, manual: bool) -> R
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn finds_newest_published_release_with_owned_manifest_not_a_draft_or_external_asset() {
+        let release = |tag: &str, draft: bool, url: String| {
+            serde_json::json!({
+                "tag_name": tag, "draft": draft, "assets": [{ "name": "latest.json", "state": "uploaded", "browser_download_url": url }]
+            })
+        };
+        let url = |tag: &str| {
+            format!("https://github.com/thisisnew/dougle/releases/download/{tag}/latest.json")
+        };
+        let releases = serde_json::json!([
+            release("v0.1.18-preview.1", false, url("v0.1.18-preview.1")),
+            release("v0.1.20-preview.1", true, url("v0.1.20-preview.1")),
+            release(
+                "v0.1.19-preview.1",
+                false,
+                "https://evil.test/latest.json".into()
+            ),
+            release("v0.1.17-preview.1", false, url("v0.1.17-preview.1"))
+        ]);
+        assert_eq!(
+            release_manifest(&releases).unwrap().as_str(),
+            url("v0.1.18-preview.1")
+        );
+        assert!(release_manifest(&serde_json::json!([])).is_none());
+    }
 
     #[test]
     fn accepts_only_owned_https_packages_for_this_architecture_and_version() {

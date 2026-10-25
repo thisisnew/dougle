@@ -9,6 +9,71 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SearchSnippetTest {
+    @Test
+    void preservesSemanticFormatAfterAsynchronousModelRestart() throws Exception {
+        var ready = new java.util.concurrent.atomic.AtomicBoolean(true);
+        var model = new dev.knowledgeforge.search.application.TextEmbedding() {
+            public boolean ready() { return ready.get(); }
+            public float[] encode(String text, boolean question) { return new float[] { 1, 0 }; }
+        };
+        try (var index = new LuceneSearchIndex(data.toString(), model)) {
+            put(index, "one", "workspace", "", "문서", "기존 내용", "");
+        }
+        ready.set(false);
+        try (var index = new LuceneSearchIndex(data.toString(), model)) {
+            ready.set(true);
+            assertThat(index.initialized()).isTrue();
+            put(index, "two", "workspace", "", "문서", "새 내용", "");
+            assertThat(index.initialized()).isTrue();
+        }
+    }
+
+    @Test
+    void ranksPassagesBeforeRemovingDuplicateDocuments() throws Exception {
+        var model = new dev.knowledgeforge.search.application.TextEmbedding() {
+            public boolean ready() { return true; }
+            public float[] encode(String text, boolean question) { return new float[] { 1, 0 }; }
+            public float relevance(String question, String text) { return text.contains("실제 단서") ? 0.9f : 0.01f; }
+        };
+        try (var index = new LuceneSearchIndex(data.toString(), model)) {
+            put(index, "one", "workspace", "", "가상 문서", "앞부분 설명\n".repeat(180) + "실제 단서: 정답은 나중 문단\n", "");
+            var hits = index.searchQuestion("workspace", "나중 문단의 단서", List.of(), false);
+            assertThat(hits).hasSize(1);
+            assertThat(hits.getFirst().snippet()).contains("실제 단서");
+            assertThat(hits.getFirst().startLine()).isGreaterThan(1);
+        }
+    }
+
+    @Test
+    void interruptedRebuildIsNotMistakenForCompleteIndexAfterRestart() throws Exception {
+        try (var index = new LuceneSearchIndex(data.toString())) {
+            put(index, "one", "workspace", "", "note", "synthetic observations", "");
+            assertThat(index.initialized()).isTrue();
+            index.reset();
+            index.put(new SearchIndex.Document("partial", "workspace", "partial", "partial observations", "", "", "", "partial"));
+        }
+        try (var reopened = new LuceneSearchIndex(data.toString())) {
+            assertThat(reopened.initialized()).isFalse();
+            reopened.reset();
+            put(reopened, "one", "workspace", "", "note", "synthetic observations", "");
+            assertThat(reopened.initialized()).isTrue();
+        }
+    }
+
+    @Test
+    void naturalQuestionFindsEvidenceWithoutRequiringEveryQuestionWord() throws Exception {
+        try (var index = new LuceneSearchIndex(data.toString())) {
+            put(index, "answer", "workspace", "", "가상 운영 기록", "입하보정 수기 처리: 월평균 12건", "");
+            put(index, "unrelated", "workspace", "", "가상 관측", "망원경 렌즈 점검", "");
+            put(index, "private", "other", "", "가상 운영 기록", "입하보정 수기 처리: 월평균 99건", "");
+            assertThat(index.searchQuestion("workspace", "입하보정이 월평균 몇건정도 수기로 보정하나?", List.of(), false))
+                    .extracting(SearchIndex.Hit::entryId).containsExactly("answer");
+            assertThat(index.searchQuestion("workspace", "!!!", List.of(), false)).isEmpty();
+            assertThat(index.searchQuestion("workspace", "unmatchedword", List.of(), false)).isEmpty();
+            assertThat(index.searchQuestion("workspace", "입하보정", List.of("excluded"), false)).isEmpty();
+        }
+    }
+
     @TempDir Path data;
 
     private void put(LuceneSearchIndex index, String id, String workspace, String domain,

@@ -22,7 +22,7 @@
 - 이 Mac은 종료한 DB/앱 백업 후 최종본으로 교체하고 UI 200·미인증 API 403을 확인했습니다. 인증 내용은 읽거나 바꾸지 않았습니다. DB v23을 구버전 앱으로 열지 마세요.
 - 실제 외부 AI 호출·ARM 실기기·Apple 공증은 검증 범위가 아닙니다.
 
-![준비 페이지](images/startup-ready.png)
-![질문 화면](images/chat-home.png)
-![자료 화면](images/library-simple.png)
-![Workspace 관리](images/settings-simple.png)
+[당시 화면 — 준비 페이지](images/startup-ready.png)
+[당시 화면 — 질문 화면](images/chat-home.png)
+[당시 화면 — 자료 화면](images/library-simple.png)
+[당시 화면 — Workspace 관리](images/settings-simple.png)

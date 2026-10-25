@@ -5,7 +5,12 @@ import java.util.List;
 public interface SearchIndex extends AutoCloseable {
     record Document(String id, String workspaceId, String name, String text, String symbols,
                     String sourceId, String domain, String path, String kind, String cardId,
-                    Integer version, List<String> domains) {
+                    Integer version, List<String> domains, List<Integer> boundaries) {
+        public Document(String id, String workspaceId, String name, String text, String symbols,
+                        String sourceId, String domain, String path, String kind, String cardId,
+                        Integer version, List<String> domains) {
+            this(id, workspaceId, name, text, symbols, sourceId, domain, path, kind, cardId, version, domains, List.of());
+        }
         public Document(String id, String workspaceId, String name, String text, String symbols,
                         String sourceId, String domain, String path) {
             this(id, workspaceId, name, text, symbols, sourceId, domain, path, "ORIGINAL", null, null, List.of(domain));
@@ -20,6 +25,8 @@ public interface SearchIndex extends AutoCloseable {
         }
     }
     void reset();
+    default boolean initialized() { return false; }
+    default boolean questionReady() { return true; }
     void put(Document document);
     void remove(String id);
     void commit();
@@ -27,4 +34,5 @@ public interface SearchIndex extends AutoCloseable {
         return search(workspaceId, question, domains, false);
     }
     List<Hit> search(String workspaceId, String question, List<String> domains, boolean includeKnowledge);
+    List<Hit> searchQuestion(String workspaceId, String question, List<String> domains, boolean includeKnowledge);
 }

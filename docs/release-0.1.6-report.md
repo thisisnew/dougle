@@ -61,7 +61,7 @@
 
 ## 최종 설치 파일
 
-[0.1.6 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.6-preview.1). 초기 초안 파일은 공개 전에 최종 수정본으로 교체했으며 이전 공개 0.1.5 파일은 유지합니다.
+[0.1.6 릴리스](https://github.com/thisisnew/dougle/releases/tag/v0.1.6-preview.1). 초기 초안 파일은 공개 전에 최종 수정본으로 교체했으며 이전 공개 0.1.5 파일은 유지합니다.
 
 | 파일 | 크기(bytes) | SHA-256 |
 |---|---:|---|

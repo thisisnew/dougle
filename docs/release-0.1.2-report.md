@@ -20,7 +20,7 @@
 
 ## 설치 파일
 
-[0.1.2 다운로드](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.2-preview.1). 각 CPU의 DMG와 해당 `SHA256SUMS` 파일을 제공합니다.
+[0.1.2 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.2-preview.1). 각 CPU의 DMG와 해당 `SHA256SUMS` 파일을 제공합니다.
 
 | 파일 | 크기(bytes) | SHA-256 |
 |---|---:|---|

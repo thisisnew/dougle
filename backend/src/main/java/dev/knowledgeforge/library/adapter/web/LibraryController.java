@@ -59,6 +59,11 @@ public class LibraryController {
         return service.entries(workspaceId, area, parentId);
     }
 
+    @GetMapping("/workspaces/{workspaceId}/analysis-failures")
+    public List<dev.knowledgeforge.ingestion.application.AnalysisStore.Failure> analysisFailures(@PathVariable String workspaceId) {
+        return service.analysisFailures(workspaceId);
+    }
+
     @PostMapping("/workspaces/{workspaceId}/folders")
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Entry createFolder(@PathVariable String workspaceId, @Valid @RequestBody NameRequest request) {
@@ -69,9 +74,19 @@ public class LibraryController {
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Entry upload(@PathVariable String workspaceId, @RequestParam(required = false) String parentId,
                         @RequestParam MultipartFile file) throws IOException {
-        Entry entry = service.upload(workspaceId, parentId, file.getOriginalFilename(), file.getBytes());
+        Entry entry;
+        try (var input = file.getInputStream()) {
+            entry = service.uploadStream(workspaceId, parentId, file.getOriginalFilename(), input, file.getSize());
+        }
         search.refresh();
         return entry;
+    }
+
+    @PostMapping("/workspaces/{workspaceId}/files/sync")
+    public LibraryService.SyncResult syncFiles(@PathVariable String workspaceId) {
+        var result = service.syncFiles(workspaceId);
+        search.refresh();
+        return result;
     }
 
     @GetMapping("/workspaces/{workspaceId}/entries/{id}/preview")

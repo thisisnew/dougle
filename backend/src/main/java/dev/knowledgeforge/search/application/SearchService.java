@@ -23,6 +23,16 @@ public class SearchService {
     }
 
     @PostConstruct
+    public synchronized void initialize() {
+        if (!index.questionReady()) return;
+        initializeIndex();
+    }
+
+    public synchronized void initializeIndex() {
+        if (index.initialized()) refresh();
+        else rebuild();
+    }
+
     public synchronized void rebuild() {
         index.reset();
         catalog.each(index::put);
@@ -32,6 +42,7 @@ public class SearchService {
 
     @Scheduled(fixedDelay = 2000, initialDelay = 2000)
     public synchronized void refresh() {
+        if (!index.questionReady()) return;
         var changes = catalog.changes();
         while (!changes.isEmpty()) {
             for (var change : changes) {
@@ -48,11 +59,25 @@ public class SearchService {
     }
 
     public synchronized List<SearchIndex.Hit> search(String workspaceId, String query, List<String> domains, boolean includeKnowledge) {
+        return find(workspaceId, query, domains, includeKnowledge, false);
+    }
+
+    public List<SearchIndex.Hit> searchQuestion(String workspaceId, String query, List<String> domains, boolean includeKnowledge) {
+        if (!index.questionReady()) throw new LibraryException(503, "자료 검색을 준비하고 있습니다. 잠시 후 다시 질문해 주세요.");
+        synchronized (this) {
+            if (!index.questionReady()) throw new LibraryException(503, "자료 검색을 준비하고 있습니다. 잠시 후 다시 질문해 주세요.");
+            return find(workspaceId, query, domains, includeKnowledge, true);
+        }
+    }
+
+    private List<SearchIndex.Hit> find(String workspaceId, String query, List<String> domains, boolean includeKnowledge, boolean naturalQuestion) {
         if (library.workspace(workspaceId).isEmpty()) throw new LibraryException(404, "Workspace를 찾을 수 없습니다.");
         if (query == null || query.isBlank() || query.length() > 256 || domains.size() > 20) {
             throw new LibraryException(400, "검색어는 1~256자, 도메인은 최대 20개입니다.");
         }
-        return index.search(workspaceId, query.strip(), domains, includeKnowledge).stream()
+        var hits = naturalQuestion ? index.searchQuestion(workspaceId, query.strip(), domains, includeKnowledge)
+                : index.search(workspaceId, query.strip(), domains, includeKnowledge);
+        return hits.stream()
                 .filter(hit -> catalog.exists(workspaceId, hit))
                 .map(hit -> {
                     if (!"KNOWLEDGE".equals(hit.kind())) return hit;

@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 23) {
+        if (version > 25) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -488,7 +488,40 @@ public class DatabaseConfiguration {
                         jdbc.execute("PRAGMA user_version=23");
                     });
         }
-        jdbc.update("UPDATE source SET status='ERROR',error='이전 동기화가 중단되었습니다. 다시 동기화하세요.' WHERE status='SYNCING'");
+        if (version < 24) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        if (jdbc.queryForList("PRAGMA table_info(source)").stream().noneMatch(column -> "created_at".equals(column.get("name")))) {
+                            jdbc.execute("ALTER TABLE source ADD COLUMN created_at TEXT");
+                        }
+                        jdbc.execute("PRAGMA user_version=24");
+                        if (jdbc.queryForList("PRAGMA table_info(workspace_source_polling)").stream().noneMatch(column -> "interval_seconds".equals(column.get("name")))) {
+                            jdbc.execute("ALTER TABLE workspace_source_polling ADD COLUMN interval_seconds INTEGER NOT NULL DEFAULT 3600 CHECK(interval_seconds BETWEEN 60 AND 86400)");
+                        }
+                    });
+        }
+        if (version < 25) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS source_analysis_checkpoint (
+                                  source_id TEXT NOT NULL REFERENCES source(id) ON DELETE CASCADE,
+                                  path TEXT NOT NULL, content_hash TEXT NOT NULL, analysis_json TEXT NOT NULL,
+                                  PRIMARY KEY(source_id,path)
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS source_file_failure (
+                                  source_id TEXT NOT NULL REFERENCES source(id) ON DELETE CASCADE,
+                                  path TEXT NOT NULL, reason TEXT NOT NULL, PRIMARY KEY(source_id,path)
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=25");
+                    });
+        }
+        jdbc.update("UPDATE source SET status='ERROR',error='동기화가 중단되었습니다. 다시 누르면 완료된 분석부터 이어갑니다.' WHERE status='SYNCING'");
         return source;
     }
 }

@@ -24,10 +24,117 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class LibraryIntegrationTest {
+    @Test
+    void partialExtractionIsVisibleInMaterialWarnings() throws Exception {
+        String workspaceId = workspace("부분 추출 자료");
+        String entryId = upload(workspaceId, null, "note.txt", "Synthetic notes".getBytes(StandardCharsets.UTF_8));
+        jdbc.update("UPDATE extracted_document SET status='PARTIAL',error='텍스트가 길어 앞부분만 검색합니다.' WHERE entry_id=?", entryId);
+        mvc.perform(get("/api/workspaces/" + workspaceId + "/analysis-failures"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].entryId").value(entryId))
+                .andExpect(jsonPath("$[0].error").value("텍스트가 길어 앞부분만 검색합니다."));
+    }
+
+    @Test
+    void uploadAboveTenMiBStoresAndIndexesTheLastParagraph() throws Exception {
+        String workspaceId = workspace("큰 가상 문서");
+        byte[] content = ("Synthetic greenhouse observation.\n".repeat(400_000)
+                + "\nFINALUPLOADMARKER").getBytes(StandardCharsets.UTF_8);
+        assertThat(content.length).isGreaterThan(10 * 1024 * 1024);
+        String entryId = upload(workspaceId, null, "large.txt", content);
+        assertThat(jdbc.queryForObject("SELECT length(content) FROM entry WHERE id=?", Long.class, entryId))
+                .isEqualTo((long) content.length);
+        assertThat(jdbc.queryForObject("SELECT text FROM extracted_document WHERE entry_id=?", String.class, entryId))
+                .endsWith("FINALUPLOADMARKER");
+        mvc.perform(get("/api/workspaces/" + workspaceId + "/search").param("query", "FINALUPLOADMARKER"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].entryId").value(entryId));
+    }
+
+    @Test
+    void analysisFailureMetadataIncludesAncestorsAndClearsAfterSync() throws Exception {
+        String workspaceId = workspace("오류 자료 검사");
+        String parent = folder(workspaceId, null, "상위");
+        String child = folder(workspaceId, parent, "하위");
+        String entry = upload(workspaceId, child, "note.txt", "가상 정상 자료".getBytes(StandardCharsets.UTF_8));
+        jdbc.update("UPDATE extracted_document SET status='ERROR', error='가상 오류' WHERE entry_id=?", entry);
+        mvc.perform(get("/api/workspaces/" + workspaceId + "/analysis-failures"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$[*].entryId", org.hamcrest.Matchers.containsInAnyOrder(parent, child, entry)));
+        String other = workspace("다른 오류 검사");
+        mvc.perform(get("/api/workspaces/" + other + "/analysis-failures"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$").isEmpty());
+        mvc.perform(post("/api/workspaces/" + workspaceId + "/files/sync").header("X-Forge-Client", "1"))
+                .andExpect(status().isOk());
+        mvc.perform(get("/api/workspaces/" + workspaceId + "/analysis-failures"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$").isEmpty());
+        mvc.perform(get("/api/workspaces/missing/analysis-failures")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void uploadedPdfCanBePreviewedAndUsedForNaturalQuestion() throws Exception {
+        String workspaceId = workspace("가상 PDF 연구");
+        byte[] bytes;
+        try (var pdf = new org.apache.pdfbox.pdmodel.PDDocument(); var output = new java.io.ByteArrayOutputStream()) {
+            var page = new org.apache.pdfbox.pdmodel.PDPage();
+            pdf.addPage(page);
+            try (var content = new org.apache.pdfbox.pdmodel.PDPageContentStream(pdf, page)) {
+                content.beginText();
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 12);
+                content.newLineAtOffset(50, 700);
+                content.showText("Synthetic greenhouse corrections: monthly average 12 cases.");
+                content.endText();
+            }
+            pdf.save(output);
+            bytes = output.toByteArray();
+        }
+        String entryId = upload(workspaceId, null, "synthetic.pdf", bytes);
+        mvc.perform(get("/api/workspaces/" + workspaceId + "/entries/" + entryId + "/preview"))
+                .andExpect(jsonPath("$.supported").value(true))
+                .andExpect(jsonPath("$.text").value(org.hamcrest.Matchers.containsString("12 cases")));
+        mvc.perform(post("/api/workspaces/" + workspaceId + "/evidence-bundles").header("X-Forge-Client", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"question\":\"How many greenhouse corrections happen each month?\",\"domains\":[],\"includeKnowledge\":false}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.payload.items[0].quote").value(org.hamcrest.Matchers.containsString("12 cases")));
+    }
+
+    @Test
+    void fileSyncRebuildsNestedUploadAnalysisAndKeepsWorkspaceIsolation() throws Exception {
+        String workspaceId = workspace("가상 동기화");
+        String nested = folder(workspaceId, null, "기록");
+        String entryId = upload(workspaceId, nested, "note.txt", "가상 관측 기록".getBytes(StandardCharsets.UTF_8));
+        String other = workspace("다른 서재");
+        String otherEntry = upload(other, null, "other.txt", "다른 관측 기록".getBytes(StandardCharsets.UTF_8));
+        jdbc.update("DELETE FROM extracted_document WHERE entry_id IN (?,?)", entryId, otherEntry);
+        mvc.perform(post("/api/workspaces/" + workspaceId + "/files/sync").header("X-Forge-Client", "1"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.processed").value(1))
+                .andExpect(jsonPath("$.failures").isEmpty());
+        assertThat(service.analysis(workspaceId, entryId).status()).isEqualTo("READY");
+        assertThat(service.analysis(other, otherEntry).status()).isEqualTo("PENDING");
+    }
+
     private static final Path DATA = temporaryDirectory();
     @Autowired MockMvc mvc;
     @Autowired JdbcTemplate jdbc;
     @Autowired LibraryService service;
+    @Autowired dev.knowledgeforge.sources.application.SourceService sources;
+
+    @Test
+    void fileSyncReportsUnreadableUploadsAndDoesNotReprocessManagedSources() throws Exception {
+        String workspaceId = workspace("가상 혼합 자료");
+        var folder = Files.createTempDirectory(DATA, "linked-");
+        Files.writeString(folder.resolve("linked.txt"), "가상 연결 자료");
+        var source = sources.create(workspaceId, "연결 폴더", "LOCAL_FOLDER", folder.toString(), "");
+        sources.sync(workspaceId, source.id());
+        upload(workspaceId, null, "empty.txt", new byte[0]);
+        upload(workspaceId, null, "ready.txt", "가상 정상 자료".getBytes(StandardCharsets.UTF_8));
+        mvc.perform(post("/api/workspaces/" + workspaceId + "/files/sync").header("X-Forge-Client", "1"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.processed").value(2))
+                .andExpect(jsonPath("$.failures.length()").value(1))
+                .andExpect(jsonPath("$.failures[0].name").value("empty.txt"));
+        mvc.perform(post("/api/workspaces/missing/files/sync").header("X-Forge-Client", "1"))
+                .andExpect(status().isNotFound());
+        mvc.perform(post("/api/workspaces/" + workspaceId + "/files/sync"))
+                .andExpect(status().isForbidden());
+    }
 
     private static Path temporaryDirectory() {
         try {
@@ -188,6 +295,15 @@ class LibraryIntegrationTest {
     }
 
     @Test
+    void workspaceNameAllowsTwentyCharactersButRejectsTwentyOne() throws Exception {
+        workspace("가".repeat(20));
+        mvc.perform(post("/api/workspaces").header("X-Forge-Client", "1")
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"" + "가".repeat(21) + "\"}"))
+                .andExpect(status().isBadRequest());
+        assertThat(service.session().workspaces()).hasSize(1);
+    }
+
+    @Test
     void fileCannotBeUsedAsFolderAndInvalidAreaIsRejected() throws Exception {
         String workspaceId = workspace("타입");
         String file = upload(workspaceId, null, "empty.txt", new byte[0]);
@@ -204,7 +320,9 @@ class LibraryIntegrationTest {
         String workspaceId = workspace("제한");
         mvc.perform(multipart("/api/workspaces/" + workspaceId + "/files")
                         .file(new MockMultipartFile("file", "too-big.bin", "application/octet-stream",
-                                new byte[10 * 1024 * 1024 + 1])).header("X-Forge-Client", "1"))
+                                new byte[0]) {
+                            @Override public long getSize() { return dev.knowledgeforge.sources.adapter.CollectionLimits.MAX_DOCUMENT + 1; }
+                        }).header("X-Forge-Client", "1"))
                 .andExpect(status().isPayloadTooLarge());
         assertThat(service.entries(workspaceId, "ORIGINAL", null)).isEmpty();
     }

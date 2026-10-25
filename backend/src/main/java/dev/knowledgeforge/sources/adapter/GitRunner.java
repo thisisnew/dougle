@@ -72,10 +72,11 @@ public class GitRunner {
             var output = executor.submit(() -> process.getInputStream().readNBytes(limit + 1));
             var errors = executor.submit(() -> process.getErrorStream().readNBytes(64 * 1024));
             try {
-                long deadline = System.nanoTime() + Duration.ofSeconds(60).toNanos();
+                long deadline = System.nanoTime() + Duration.ofMinutes(10).toNanos();
                 while (!process.waitFor(200, TimeUnit.MILLISECONDS)) {
-                    if (System.nanoTime() > deadline || diskUsage(directory) > 100L * 1024 * 1024) {
-                        throw new LibraryException(413, "Git 수집 시간(60초) 또는 임시 저장소(100 MiB) 제한을 초과했습니다.");
+                    dev.knowledgeforge.ingestion.application.ProcessingProgress.report("READING", "GitHub", 0, 0);
+                    if (System.nanoTime() > deadline || diskUsage(directory) > CollectionLimits.MAX_SNAPSHOT) {
+                        throw new LibraryException(413, "Git 수집 시간(10분) 또는 임시 저장소(8 GiB) 한도를 초과했습니다.");
                     }
                 }
                 byte[] bytes = output.get();
@@ -89,6 +90,30 @@ public class GitRunner {
         }
     }
 
+    public dev.knowledgeforge.sources.domain.CollectedSnapshot.File readBlob(Path directory, String path,
+                                                                            String object, long size) throws Exception {
+        Path output = Files.createTempFile("dougle-git-blob-", ".bin");
+        Process process = null;
+        try {
+            process = command(directory, "cat-file", "blob", object)
+                    .redirectOutput(output.toFile()).redirectError(ProcessBuilder.Redirect.DISCARD).start();
+            long deadline = System.nanoTime() + Duration.ofMinutes(10).toNanos();
+            while (!process.waitFor(200, TimeUnit.MILLISECONDS)) {
+                dev.knowledgeforge.ingestion.application.ProcessingProgress.report("READING", path, 0, 0);
+                if (System.nanoTime() > deadline || Files.size(output) > size) {
+                    throw new IOException("Git blob size or time limit exceeded");
+                }
+            }
+            if (process.exitValue() != 0 || Files.size(output) != size) throw new IOException("Git blob read failed");
+            try (var input = Files.newInputStream(output)) {
+                return dev.knowledgeforge.sources.domain.CollectedSnapshot.File.copy(path, input, CollectionLimits.MAX_DOCUMENT);
+            }
+        } finally {
+            if (process != null && process.isAlive()) process.destroyForcibly().waitFor();
+            Files.deleteIfExists(output);
+        }
+    }
+
     private long diskUsage(Path directory) throws IOException {
         long[] size = {0};
         int[] count = {0};
@@ -96,8 +121,8 @@ public class GitRunner {
             @Override
             public java.nio.file.FileVisitResult visitFile(Path file, java.nio.file.attribute.BasicFileAttributes attributes) {
                 size[0] += attributes.size();
-                if (++count[0] > 10000) size[0] = Long.MAX_VALUE;
-                return size[0] > 100L * 1024 * 1024 ? java.nio.file.FileVisitResult.TERMINATE
+                if (++count[0] > 100000) size[0] = Long.MAX_VALUE;
+                return size[0] > CollectionLimits.MAX_SNAPSHOT ? java.nio.file.FileVisitResult.TERMINATE
                         : java.nio.file.FileVisitResult.CONTINUE;
             }
 

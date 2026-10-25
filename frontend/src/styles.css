@@ -179,3 +179,7 @@ dt { color: #97a28d; }
 .answer-preparation > label > input { padding: 10px; border: 1px solid #cedac8; border-radius: 6px; width: 100%; }
 .answer-approval > div { display: grid; gap: 10px; }
 .answer-approval label { display: flex; gap: 8px; align-items: flex-start; }
+.source-sync-detail { margin: 12px 0; padding: 14px 16px; border-radius: 12px; background: #f5f7fc; }
+.source-sync-detail > div { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 12px; }
+.source-sync-file { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #707b94; }
+.source-sync-detail progress { display: block; width: 100%; height: 5px; margin-top: 10px; accent-color: #3678d4; }

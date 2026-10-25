@@ -4,7 +4,7 @@
 
 ## 사용하는 방법
 
-![앱의 Codex 로그인 화면 — 가상 인증으로 촬영](images/codex-managed-login.png)
+![앱의 Codex 로그인 화면 — 가상 인증으로 촬영](screenshots/dougle-ai-connection.png)
 
 1. **AI 연결 → Codex → 연결 상태 확인**을 누릅니다.
 2. 처음에는 로그인 동의를 체크하고 **브라우저에서 로그인**을 누릅니다.

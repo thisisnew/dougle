@@ -1,6 +1,6 @@
 # 0.1.8 — AI 연결 상태와 꼬마 탐정 아이콘
 
-두 CPU 설치 파일 빌드·검증과 실제 Intel 앱 교체를 마쳤습니다. [0.1.8 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.8-preview.1)의 자산 10개를 로컬 크기·SHA-256과 대조한 뒤 공개했습니다. 서명된 업데이트 피드도 0.1.8로 승격합니다.
+두 CPU 설치 파일 빌드·검증과 실제 Intel 앱 교체를 마쳤습니다. [0.1.8 릴리스](https://github.com/thisisnew/dougle/releases/tag/v0.1.8-preview.1)의 자산 10개를 로컬 크기·SHA-256과 대조한 뒤 공개했습니다. 서명된 업데이트 피드도 0.1.8로 승격합니다.
 
 배포 직후 GitHub Contents API에서는 피드 0.1.8을 확인했고 두 DMG 공개 다운로드는 HTTP 200입니다. Raw 다운로드 경로는 캐시로 아직 0.1.7을 반환했으므로 앱의 업데이트 알림 반영에는 지연이 있을 수 있습니다. 이 Mac은 0.1.8을 직접 설치했습니다.
 

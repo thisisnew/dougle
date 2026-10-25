@@ -15,7 +15,7 @@
 | 종료 상태 전체 백업 복원 | 별도 임시 폴더에서 복원 후 동일 자료 확인 |
 | 네이티브 중복 실행·부모 종료·재시작 | 최종 재검증 통과, 기동 8.350초 |
 
-공개 릴리스: [v0.1.1-preview.1](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-preview.1), 빌드 코드 `d4aa1bced05b641490b429836b43ec803e0c3cc9`.
+공개 릴리스: [v0.1.1-preview.1](https://github.com/thisisnew/dougle/releases/tag/v0.1.1-preview.1), 빌드 코드 `d4aa1bced05b641490b429836b43ec803e0c3cc9`.
 DMG 166,793,851바이트, 공개 자산 SHA-256 `2d8b07bcad252e061137c83ee01d1a9d9cf81235d334daae80a9c18b59d6fb19`가 로컬 파일과 일치합니다.
 
 ## 성능

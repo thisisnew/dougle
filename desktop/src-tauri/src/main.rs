@@ -9,6 +9,7 @@ use tauri::{Manager, RunEvent, WebviewUrl, WebviewWindowBuilder, WindowEvent};
 
 mod updates;
 mod folder_picker;
+mod notion_browser;
 
 #[derive(Default, PartialEq)]
 enum Shutdown {
@@ -90,7 +91,7 @@ fn render_failure(status: &tauri::WebviewWindow) {
         && let Some(message) = *message
     {
         let message = serde_json::to_string(message).unwrap();
-        let _ = status.eval(format!("document.getElementById('heading').textContent = '앱 연결에 문제가 생겼습니다'; document.getElementById('message').textContent = {message}; document.getElementById('failure-help').hidden = false;"));
+        let _ = status.eval(format!("document.getElementById('heading').textContent = '앱 연결에 문제가 생겼습니다'; document.getElementById('message').textContent = {message};"));
     }
 }
 
@@ -148,7 +149,7 @@ fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(),
     app.add_capability(serde_json::json!({
         "identifier": "source-folder-picker", "local": false,
         "windows": ["main"], "remote": { "urls": [format!("{origin}/*")] },
-        "permissions": ["allow-select-source-folder"]
+        "permissions": ["allow-select-source-folder", "allow-update-status", "allow-install-update"]
     }).to_string()).map_err(|_| "폴더 선택 권한을 준비하지 못했습니다.")?;
     let downloads = app.path().download_dir().ok();
     let app_window =
@@ -225,7 +226,8 @@ fn main() {
     let application = tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![folder_picker::select_source_folder])
+        .invoke_handler(tauri::generate_handler![folder_picker::select_source_folder, notion_browser::open_notion_connections, updates::update_status, updates::install_update])
+        .manage(lifecycle.clone())
         .manage(folder_picker::FolderPicker::default())
         .manage(updates::UpdateState::default())
         .manage(FailureMessage::default())
@@ -319,10 +321,10 @@ mod startup_tests {
         let page = include_str!("../../host-ui/index.html");
         let style = include_str!("../../host-ui/style.css");
         assert!(page.contains("Dougle을 준비하고 있어요"));
-        assert!(page.contains("id=\"failure-help\" hidden"));
+        assert!(page.contains("dougle-mascot-transparent.png"));
         assert!(!page.contains("앱을 열 수 없습니다"));
         assert!(!page.contains("앱을 종료한 뒤 다시 실행해 주세요."));
-        assert_eq!(page.matches("진행하던 AI 요청은 자동으로 다시 보내지 않습니다.").count(), 1);
+        assert!(!page.contains("진행하던 AI 요청은 자동으로 다시 보내지 않습니다."));
         assert_eq!(page.matches("<span aria-hidden=\"true\">").count(), 6);
         for color in ["#3478db", "#dc6454", "#e5ab32", "#36966b"] {
             assert!(style.contains(color));

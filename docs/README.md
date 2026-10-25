@@ -1,5 +1,19 @@
 # 문서 안내 — 어디부터 읽으면 되나요?
 
+현재 제품은 **Dougle · 더글**입니다. [5분 사용법](how-it-works.md) · [수집·검색 개선과 검증 상태](ingestion-retrieval-upgrade.md) · [현재 디자인](dougle-brand.md). 과거 릴리스/검증 문서의 화면과 브랜드는 당시 기록이며 현재 사용법과 구분합니다.
+
+[플러그인 목록·Notion 연결 안내와 남은 구현](plugins.md)
+
+[실제 Notion 문서 40개 질문 검증·기본 제공 검색·이력 일괄 삭제](notion-search-verification.md)
+
+[0.1.20 즉시 답변·스트리밍·이력 삭제](release-0.1.20-report.md)
+
+[0.1.19 업로드 동기화·자연어 질문 검색](release-0.1.19-report.md)
+
+[0.1.18 파일 추가 진행 표시·입력 UI 통일](release-0.1.18-report.md)
+
+[0.1.17 자동 갱신 주기·왼쪽 아래 업데이트](release-0.1.17-report.md) · [업데이트 릴리스 게시 방법](automatic-updates.md)
+
 [통합 자료 목록·전체 동기화·설정](library-simplification.md) · [0.1.16 자료 추가·오류 안내 정리](release-0.1.16-report.md)
 
 [질문에 이미지·문서 첨부하기](question-attachments.md) · [Dougle 로고·디자인](dougle-brand.md)
@@ -23,7 +37,7 @@ Dougle은 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하�
 | 모델과 구현을 다시 조사한 결과 | [전 파일 조사 범위·규칙별 테스트·미구현 차이](model-audit.md) |
 | 개발자가 알아야 할 구조 | [아키텍처](architecture.md) · [API](api.md) |
 | 개발 실행·수정 후 배포 순서 | [개발 환경과 완료 체크리스트](development.md) |
-| 최신 변경과 설치 파일 배포 상태 | [0.1.11 배포 기록](release-0.1.11-report.md) |
+| 최신 변경과 설치 파일 배포 상태 | [0.1.20 로컬 설치 기록](release-0.1.20-report.md) · [현재 작업 검증](ingestion-retrieval-upgrade.md) |
 | GitHub 자료를 별도 설치 없이 가져오기 | [내장 Git 구성과 검증](bundled-git.md) |
 | 등록한 자료의 이름·분류 수정 | [자료 설정 편집](source-metadata.md) |
 | 전체 사용 흐름 검사와 발견한 문제 | [E2E 점검 결과](e2e-report.md) |
@@ -38,7 +52,7 @@ Dougle은 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하�
 
 ## 알아두면 좋은 세 가지
 
-1. **자료 등록 ≠ AI 전송.** 수집·검색은 로컬 처리이고 외부 AI는 미리보기와 건별 승인 후 호출합니다.
+1. **자료 등록 ≠ AI 전송.** 수집·검색은 로컬 처리이고 질문을 전송할 때 관련 자료의 AI 전송/실행에 동의합니다.
 2. **AI 초안 ≠ 확정 지식.** 사람이 출처와 내용을 검토한 뒤 게시합니다. 기존 편집을 자동으로 덮어쓰지 않습니다.
 3. **최신 상태 ≠ 사실 보증.** CURRENT는 마지막 로컬 수집본과 같다는 뜻입니다.
 

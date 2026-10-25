@@ -36,7 +36,7 @@ Java·Codex·Git은 앱에 포함되며 Claude는 기존 호환 도구를 연결
 
 ## 설치 파일
 
-[0.1.5 설치 파일](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.5-preview.1).
+[0.1.5 설치 파일](https://github.com/thisisnew/dougle/releases/tag/v0.1.5-preview.1).
 
 | 파일 | 크기(bytes) | SHA-256 |
 |---|---:|---|

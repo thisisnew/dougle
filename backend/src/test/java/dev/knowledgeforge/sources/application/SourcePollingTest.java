@@ -13,8 +13,8 @@ class SourcePollingTest {
     void limitsWorkersWithoutQueuingAndInterruptsOnShutdown() throws Exception {
         SourceStore store = mock(SourceStore.class);
         SourceService service = mock(SourceService.class);
-        Source first = new Source("one", "workspace", "one", "URL", "https://example.com", "", "NEW", null, null, null, null, true, 60, 1L, 0, 1);
-        Source second = new Source("two", "workspace", "two", "URL", "https://example.com", "", "NEW", null, null, null, null, true, 60, 1L, 0, 1);
+        Source first = new Source("one", "workspace", "one", "URL", "https://example.com", "", "NEW", null, null, null, null, true, 60, 1L, 0, 1, null);
+        Source second = new Source("two", "workspace", "two", "URL", "https://example.com", "", "NEW", null, null, null, null, true, 60, 1L, 0, 1, null);
         when(store.due(2)).thenReturn(List.of(first, second));
         CountDownLatch started = new CountDownLatch(2);
         CountDownLatch interrupted = new CountDownLatch(2);

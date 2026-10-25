@@ -4,7 +4,7 @@ import { request } from './api'
 import { Button } from './components/ui/button'
 import type { ConnectionIndicator } from './connectionIndicator'
 import type { AnswerJob } from './answerJobEvents'
-import QuickAnswerPanel from './QuickAnswerPanel'
+import { sendChatAnswer, type ChatSubmission } from './sendChatAnswer'
 import AnswerJobsPanel from './AnswerJobsPanel'
 import { attachmentAccept, useQuestionAttachments } from './useQuestionAttachments'
 import Wordmark from './Wordmark'
@@ -36,14 +36,19 @@ export function QuestionHistory({ workspaceId, revision, selectedId, onSelect }:
   </section>
 }
 
-export default function ChatPanel({ workspaceId, selectedId, connection, onCreated, onSources, onDeleted }: {
+export default function ChatPanel({ workspaceId, selectedId, connection, onCreated, searchState = 'READY' }: {
   workspaceId: string; selectedId: string | null; connection: ConnectionIndicator | null;
-  onCreated: (id: string) => void; onConnect: () => void; onSources: () => void; onDeleted?: () => void
+  onCreated: (id: string) => void; onConnect: () => void; onSources: () => void
+  searchState?: string
 }) {
   const [question, setQuestion] = useState('')
   const [bundle, setBundle] = useState<Bundle | null>(null)
   const [job, setJob] = useState<AnswerJob | null>(null)
+  const [previousTurns, setPreviousTurns] = useState<{ bundle: Bundle; job: AnswerJob | null; fresh: boolean }[]>([])
   const [busy, setBusy] = useState(false)
+  const [submission, setSubmission] = useState<ChatSubmission | null>(null)
+  const [fresh, setFresh] = useState(false)
+  const [sentQuestion, setSentQuestion] = useState('')
   const [error, setError] = useState('')
   const pending = useRef<AbortController | null>(null)
   const locked = useRef(false)
@@ -52,13 +57,15 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
   const attachments = useQuestionAttachments(workspaceId)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}`
   const connected = connection?.state === 'AUTHENTICATED'
+  const searchReady = searchState === 'READY'
   useEffect(() => {
     if (created.current === selectedId && selectedId) { created.current = null; return }
     attachments.reset()
+    setPreviousTurns([])
     pending.current?.abort()
     const controller = new AbortController()
     pending.current = controller
-    setBundle(null); setJob(null); setError(''); setQuestion(''); setBusy(!!selectedId)
+    setBundle(null); setJob(null); setSubmission(null); setFresh(false); setSentQuestion(''); setError(''); setQuestion(''); setBusy(!!selectedId)
     locked.current = !!selectedId
     if (selectedId) void (async () => {
       try {
@@ -78,14 +85,15 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
 
   async function submit(event: FormEvent) {
     event.preventDefault()
-    if (locked.current || attachments.uploading || !connected || !question.trim()) return
+    if (locked.current || attachments.uploading || !connected || !searchReady || !question.trim()) return
     if (connection?.provider !== 'CODEX' && attachments.items.some(item => item.mediaType.startsWith('image/'))) {
       setError('이미지 질문은 Codex를 선택해 주세요.'); return
     }
     locked.current = true
     const controller = new AbortController()
     pending.current = controller
-    setBusy(true); setError(''); setBundle(null); setJob(null)
+    if (bundle) setPreviousTurns(turns => [...turns, { bundle, job, fresh }])
+    setBusy(true); setError(''); setBundle(null); setJob(null); setSubmission(null); setFresh(true); setSentQuestion(question.trim())
     try {
       const value = await request<Bundle>(`${base}/evidence-bundles`, { method: 'POST', signal: controller.signal,
         body: JSON.stringify({ question: question.trim(), domains: [], includeKnowledge: false,
@@ -93,46 +101,63 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       if (controller.signal.aborted) return
       if (value.workspaceId !== workspaceId) throw new Error('질문의 서재가 다릅니다.')
       attachments.reset(true); setBundle(value); setQuestion(''); created.current = value.id; onCreated(value.id)
+      if (value.payload.items.length && value.payload.status !== 'NO_EVIDENCE'
+        && value.payload.items.every(item => ['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind))) {
+        setJob(await sendChatAnswer(workspaceId, value.id, value.digest, connection!.provider, connection?.model ?? null, controller.signal, setSubmission))
+      }
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) { locked.current = false; setBusy(false) } }
   }
 
-  async function remove() {
-    if (!bundle || locked.current || !window.confirm('이 질문과 연결된 답변을 삭제할까요? 원본 자료는 유지됩니다.')) return
+  async function retryAnswer() {
+    if (!bundle || locked.current || !connected || bundle.payload.items.some(item => !['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind))) return
+    locked.current = true
     const controller = new AbortController()
     pending.current = controller
-    locked.current = true; setBusy(true); setError('')
+    setBusy(true); setError(''); setFresh(true)
     try {
-      await request(`${base}/evidence-bundles/${encodeURIComponent(bundle.id)}`, { method: 'DELETE', signal: controller.signal })
-      if (!controller.signal.aborted) { setBundle(null); setJob(null); onDeleted?.() }
+      setJob(await sendChatAnswer(workspaceId, bundle.id, bundle.digest, connection!.provider, connection?.model ?? null,
+        controller.signal, setSubmission, submission ?? undefined))
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) { locked.current = false; setBusy(false) } }
   }
 
-  return <section className={`chat-panel ${bundle ? 'has-question' : ''}`} aria-label="AI 대화">
-    {!bundle && !busy && <div className="chat-welcome"><h1 aria-label="Dougle"><Wordmark /></h1></div>}
-    {busy && <p role="status">참고 자료를 확인하고 있습니다…</p>}
+  const activeBundleId = bundle?.id
+  return <section className={`chat-panel ${bundle || previousTurns.length ? 'has-question' : ''}`} aria-label="AI 대화">
+    {!bundle && !busy && previousTurns.length === 0 && <div className="chat-welcome"><h2 aria-label="Dougle"><Wordmark mascot /></h2></div>}
     {error && <p role="alert">{error}</p>}
-    {bundle && <div className="chat-thread">
+    {[...previousTurns, ...(bundle ? [{ bundle, job, fresh }] : [])].map(turn => {
+      const { bundle: turnBundle, job: turnJob, fresh: turnFresh } = turn
+      const current = turnBundle.id === activeBundleId
+      const bundle = turnBundle
+      const job = turnJob
+      const references = (answer: string) => {
+        const cited = new Set([...answer.replace(/```[\s\S]*?```/g, '').matchAll(/\[(R\d+)\]/g)].map(match => match[1]))
+        const items = bundle.payload.items.filter(item => cited.has(item.label))
+        if (!items.length) return null
+        return <section className="chat-evidence" aria-label="참고 자료">
+          <h3>참고 자료 <span>{items.length}</span></h3>
+          {items.map(item => <details key={item.label}><summary>[{item.label}] {item.title}{item.kind === 'ATTACHMENT_IMAGE' ? ' · 첨부 이미지' : item.kind === 'ATTACHMENT_TEXT' ? ' · 첨부 문서' : ''}</summary><p>{item.kind === 'ATTACHMENT_IMAGE' ? '답변에 사용한 첨부 이미지' : `${item.startLine}–${item.endLine}행 · 질문 당시 복사본`}{item.sourceRevision === 'TRUNCATED' && ' · 문서 앞부분만 포함'}</p><pre>{item.quote}</pre></details>)}
+        </section>
+      }
+      return <div className="chat-thread" key={bundle.id}>
       <h2 className="question-bubble">{bundle.payload.question}</h2>
-      <section className="chat-evidence" aria-label="참고 자료">
-        <h3>참고 자료 <span>{bundle.payload.items.length}</span></h3>
-        {bundle.payload.items.map(item => <details key={item.label}><summary>[{item.label}] {item.title}{item.kind === 'ATTACHMENT_IMAGE' ? ' · 첨부 이미지' : item.kind === 'ATTACHMENT_TEXT' ? ' · 첨부 문서' : ''}</summary><p>{item.kind === 'ATTACHMENT_IMAGE' ? '이 이미지를 AI에 함께 보냅니다.' : `${item.startLine}–${item.endLine}행 · 질문 당시 복사본`}{item.sourceRevision === 'TRUNCATED' && ' · 문서 앞부분만 포함'}</p><pre>{item.quote}</pre></details>)}
-        {!bundle.payload.items.length && <p>답변의 근거가 될 자료가 없어요. 자료를 추가하거나 질문을 바꿔 주세요.<Button variant="ghost" onClick={onSources}>자료 추가하기</Button></p>}
-      </section>
-      {job ? <AnswerJobsPanel key={job.id} workspaceId={workspaceId} bundleId={bundle.id} approval={null} initialJob={job} compact />
-        : bundle.payload.items.some(item => !['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind)) ? <p>이전 지식 문서가 포함된 질문입니다. 원본에서 다시 확인해 주세요.<Button variant="outline" onClick={() => { setQuestion(bundle.payload.question); setBundle(null) }}>원본으로 다시 질문</Button></p>
-        : bundle.payload.items.length > 0 && bundle.payload.status !== 'NO_EVIDENCE' && <QuickAnswerPanel key={JSON.stringify([bundle.id, connection?.provider, connection?.model])} workspaceId={workspaceId} bundleId={bundle.id} bundleDigest={bundle.digest}
-          connectedProvider={connected ? connection!.provider : null} connectedModel={connection?.model} requireConnection />}
-      <details className="secondary-tools"><summary>질문 관리</summary><Button variant="destructive" disabled={busy} onClick={() => void remove()}>질문과 답변 삭제</Button></details>
-    </div>}
+      {current && busy && <p role="status" className="chat-thinking">확인해보겠습니다<span aria-hidden="true">…</span></p>}
+      {job ? <AnswerJobsPanel key={job.id} workspaceId={workspaceId} bundleId={bundle.id} approval={null} initialJob={job} compact animate={turnFresh} references={references} />
+        : current && bundle.payload.items.some(item => !['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind)) ? <p>이전 지식 문서가 포함된 질문입니다. 원본에서 다시 확인해 주세요.<Button variant="outline" onClick={() => { setQuestion(bundle.payload.question); setBundle(null) }}>원본으로 다시 질문</Button></p>
+        : current && !busy && bundle.payload.items.length > 0 && bundle.payload.status !== 'NO_EVIDENCE' && <Button disabled={!connected} onClick={() => void retryAnswer()}>{submission ? '접수 상태 다시 확인' : '답변 받기'}</Button>}
+      {!bundle.payload.items.length && <p>질문과 관련된 내용을 찾지 못했어요.</p>}
+
+    </div>})}
+    {busy && !bundle && <div className="chat-thread"><h2 className="question-bubble">{sentQuestion}</h2><p role="status" className="chat-thinking">확인해보겠습니다<span aria-hidden="true">…</span></p></div>}
     <form className="chat-composer" onSubmit={event => void submit(event)} onDragOver={event => { if (event.dataTransfer.types.includes('Files')) event.preventDefault() }} onDrop={event => {
       if (!event.dataTransfer.files.length) return
       event.preventDefault(); if (!busy) void attachments.add(Array.from(event.dataTransfer.files))
     }}>
       <label className="sr-only" htmlFor="chat-question">질문</label>
-      <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || busy}
-        placeholder={connected ? '더글한테 물어보기' : 'AI를 연결해 주세요'} onChange={event => setQuestion(event.target.value)}
+      {!searchReady && connected && <p role="status" className="chat-thinking">{searchState === 'ERROR' ? '검색 준비에 실패했습니다. 설정에서 다시 시도해 주세요.' : '자료 검색을 준비하고 있어요…'}</p>}
+      <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || !searchReady || busy}
+        placeholder={!connected ? 'AI를 연결해 주세요' : !searchReady ? '검색 준비가 끝나면 질문할 수 있어요' : '더글한테 물어보기'} onChange={event => setQuestion(event.target.value)}
         onPaste={event => { if (event.clipboardData.files.length) { event.preventDefault(); void attachments.add(Array.from(event.clipboardData.files)) } }}
         onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.form?.requestSubmit() } }} />
       <input ref={fileInput} type="file" className="sr-only" aria-label="질문에 첨부할 파일" multiple accept={attachmentAccept} disabled={busy || attachments.uploading} onChange={event => { void attachments.add(Array.from(event.target.files ?? [])); event.target.value = '' }} />
@@ -142,7 +167,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       </li>)}</ul>}
       {attachments.uploading && <p role="status">첨부 파일을 읽고 있어요.<Button type="button" variant="ghost" onClick={attachments.cancel}>첨부 중단</Button></p>}
       {attachments.error && <p role="alert">{attachments.error}</p>}
-      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || busy || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
+      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || !searchReady || busy || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
     </form>
   </section>
 }

@@ -42,7 +42,7 @@
 
 ## 설치 파일
 
-[0.1.7 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.7-preview.1). 이전 공개 파일·서명 키는 변경하지 않습니다.
+[0.1.7 릴리스](https://github.com/thisisnew/dougle/releases/tag/v0.1.7-preview.1). 이전 공개 파일·서명 키는 변경하지 않습니다.
 
 | 파일 | 크기(bytes) | SHA-256 |
 |---|---:|---|

@@ -23,7 +23,7 @@ DB v21과 기능은 Intel 0.1.1과 같습니다. 앱 이름·데이터 위치도
 SHA-256: `ff03267107138100f0ee7c3cd0ee0a711298978770a1ee27f86d26b31f118816`.
 기존 검증된 UI/JAR를 그대로 사용했으며 백엔드·프런트 기능 코드는 변경하지 않았습니다.
 공증 없이 배포하는 실험적 ARM 미리보기이며 정적 검사를 실행 성공으로 표현하지 않습니다.
-[ARM 설치 파일과 체크섬](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.1-arm-preview.1) · [Mac별 설치 안내](macos-install.md).
+[ARM 설치 파일과 체크섬](https://github.com/thisisnew/dougle/releases/tag/v0.1.1-arm-preview.1) · [Mac별 설치 안내](macos-install.md).
 
 ## 빌드
 

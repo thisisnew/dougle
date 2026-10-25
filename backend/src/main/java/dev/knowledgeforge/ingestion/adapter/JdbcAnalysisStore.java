@@ -33,6 +33,23 @@ public class JdbcAnalysisStore implements AnalysisStore {
 
     @Override
     @Transactional(readOnly = true)
+    public java.util.List<Failure> failures(String workspaceId) {
+        return jdbc.query("""
+                WITH RECURSIVE failures(entry_id,parent_id,error) AS (
+                  SELECT e.id,e.parent_id,COALESCE(d.error,'파일을 읽지 못했습니다.')
+                  FROM entry e JOIN extracted_document d ON d.entry_id=e.id
+                  WHERE e.workspace_id=? AND e.area='ORIGINAL' AND d.status IN ('ERROR','UNSUPPORTED','PARTIAL')
+                  UNION
+                  SELECT parent.id,parent.parent_id,'일부 파일을 읽지 못했습니다.'
+                  FROM entry parent JOIN failures child ON child.parent_id=parent.id
+                  WHERE parent.workspace_id=? AND parent.area='ORIGINAL'
+                ) SELECT entry_id,MIN(error) AS error FROM failures GROUP BY entry_id
+                """, (result, row) -> new Failure(result.getString("entry_id"), result.getString("error")),
+                workspaceId, workspaceId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Analysis> find(String workspaceId, String entryId) {
         return jdbc.query("""
                 SELECT d.* FROM extracted_document d JOIN entry e ON e.id=d.entry_id

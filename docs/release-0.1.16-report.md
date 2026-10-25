@@ -12,8 +12,8 @@ DB v23·백엔드·인증·AI 전송 계약은 변경하지 않습니다. 최종
 
 양 CPU 서명·업데이트 아카이브·DMG 무결성/설치 복사본/아키텍처 정적 검사와 Intel 실제 WebKit UI 검사를 통과했습니다. 이 Mac은 앱/DB를 내용 열람 없이 백업한 후 0.1.16으로 교체했고, 설치 JAR 일치·UI HTTP 200·미인증 API 403을 확인했습니다. 사용자 자료와 인증은 보존했습니다. 공개 자산 10개의 크기·SHA-256을 대조한 후 [v0.1.16-preview.1](https://github.com/thisisnew/dougle/releases/tag/v0.1.16-preview.1)을 공개했습니다. 공개 자산의 서명·해시를 다시 검증한 뒤 업데이트 피드를 0.1.16으로 승격했습니다. Java 전체 검사는 재실행하지 않았으며 기존 실패는 [0.1.14 기록](release-0.1.14-report.md)에 남겨 둡니다. ARM 실기기·외부 AI·Apple 공증은 포함하지 않습니다.
 
-![간결한 자료 추가](images/source-add-simple.png)
+[당시 화면 — 간결한 자료 추가](images/source-add-simple.png)
 
-![900px 자료 추가](images/source-add-compact.png)
+[당시 화면 — 900px 자료 추가](images/source-add-compact.png)
 
-![중복 없는 오류 안내 — 화면 fixture](images/failure-simple.png)
+[당시 화면 — 중복 없는 오류 안내 — 화면 fixture](images/failure-simple.png)

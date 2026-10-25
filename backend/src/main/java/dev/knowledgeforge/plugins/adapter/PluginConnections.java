@@ -1,0 +1,38 @@
+package dev.knowledgeforge.plugins.adapter;
+
+import dev.knowledgeforge.library.application.LibraryException;
+import org.springframework.stereotype.Service;
+import tools.jackson.databind.json.JsonMapper;
+
+@Service
+public class PluginConnections {
+    private final PluginVault vault;
+    private final NotionClient notion;
+    private final MysqlClient mysql;
+    private final JsonMapper json = new JsonMapper();
+    public record Status(boolean notionConnected, boolean mysqlConnected, MysqlClient.Config mysql) {}
+    public PluginConnections(PluginVault vault, NotionClient notion, MysqlClient mysql) {
+        this.vault = vault; this.notion = notion; this.mysql = mysql;
+    }
+    public Status status() {
+        var config = mysqlConfig();
+        return new Status(notionToken() != null, config != null, config == null ? null : config.withoutPassword());
+    }
+    public String notionToken() { return vault.get("notion"); }
+    public MysqlClient.Config mysqlConfig() {
+        String saved = vault.get("mysql");
+        return saved == null ? null : json.readValue(saved, MysqlClient.Config.class);
+    }
+    public void notion(String token, boolean save) {
+        notion.test(token);
+        if (save) vault.put("notion", token);
+    }
+    public void mysql(MysqlClient.Config config, boolean save) {
+        mysql.test(config);
+        if (save) vault.put("mysql", json.writeValueAsString(config));
+    }
+    public void disconnect(String provider) {
+        if (!provider.equals("notion") && !provider.equals("mysql")) throw new LibraryException(404, "플러그인을 찾을 수 없습니다.");
+        vault.put(provider, null);
+    }
+}

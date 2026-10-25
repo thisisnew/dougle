@@ -64,9 +64,12 @@ public class EvidenceBundleWriter {
                 if (material == null) reason = "REMOVED";
                 else if (!List.of("READY", "PARTIAL").contains(material.analysisStatus())
                         || !ContentDigest.of(material.text()).equals(hit.textHash())) reason = "INDEX_CHANGED";
-                else item = new Item(label, hit.kind(), hit.entryId(), null, null, material.name(), material.sourceId(),
+                else {
+                    var window = dev.knowledgeforge.search.domain.EvidenceWindow.around(material.text(), hit.snippet(), hit.startLine(), hit.endLine(), 12000 - used);
+                    item = new Item(label, hit.kind(), hit.entryId(), null, null, material.name(), material.sourceId(),
                         material.path() == null ? material.name() : material.path(), material.revision(), ContentDigest.of(material.content()),
-                        hit.textHash(), hit.startLine(), hit.endLine(), hit.snippet(), List.of());
+                        hit.textHash(), window.startLine(), window.endLine(), window.text(), List.of());
+                }
             } else if ("KNOWLEDGE".equals(hit.kind())) {
                 var version = knowledge.version(workspaceId, hit.cardId(), hit.version()).orElse(null);
                 var release = publications.publication(hit.cardId()).orElse(null);

@@ -8,8 +8,8 @@
 
 UI 전체 264건(App 13건 포함)·Rust 20건·TypeScript/Vite/JAR·양 CPU 네이티브 빌드를 통과했습니다. 실제 브라우저에서 새 문구 한 줄, 반복 설명 없음, 가로 넘침 없음을 확인했습니다. 가상 추론 호출 0회입니다. 최종 설정 행 변경 후 App 13건을 별도 재검사했습니다(전체 수에 중복 합산하지 않음). 실제 브라우저에서 설정 행의 Enter 진입, 관리창의 불필요한 문구·중첩 버튼·설명 참조 제거를 확인했습니다. 양 CPU 패키지 서명·해시·정적 검사와 Intel 설치 복사본의 실제 WebKit UI 검사를 통과했습니다. 이 Mac 앱/DB 백업 후 최종 0.1.15를 재설치했으며 설치 JAR 일치·화면 HTTP 200·미인증 API 403을 확인했습니다. 자료·인증은 보존했습니다. 이전 Java 전체 검사의 기존 종료/임시 폴더 정리 오류는 [0.1.14 보고서](release-0.1.14-report.md)에 기록되어 있으며 이번 문구 변경으로 해결된 것으로 보고하지 않습니다. 백엔드 소스는 변경하지 않았고 Java 전체 검사를 다시 수행하지 않았습니다. ARM 실기기·외부 AI·Apple 공증은 별도입니다.
 
-![정리한 설정 화면](images/settings-overview.png)
+[당시 화면 — 정리한 설정 화면](images/settings-overview.png)
 
-![간결한 Workspace 관리](images/settings-simple.png)
+[당시 화면 — 간결한 Workspace 관리](images/settings-simple.png)
 
-![간결한 빈 자료 화면](images/library-empty.png)
+[당시 화면 — 간결한 빈 자료 화면](images/library-empty.png)

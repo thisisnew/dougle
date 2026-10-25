@@ -69,6 +69,116 @@ class SourceIntegrationTest {
     }
 
     @Test
+    void cancelledCollectionResumesCompletedAnalysisFromDatabaseCheckpoint() throws Exception {
+        String workspace = library.createWorkspace("체크포인트 가상 자료").id();
+        Files.writeString(fixture.resolve("a.txt"), "Synthetic first observation");
+        Files.writeString(fixture.resolve("b.txt"), "Synthetic second observation");
+        Source source = local(workspace, "가상 폴더", "");
+        doAnswer(invocation -> {
+            Analysis result = (Analysis) invocation.callRealMethod();
+            assertThat(sources.progress(workspace, source.id()).stage()).isEqualTo("EXTRACTING");
+            sources.cancel(workspace, source.id());
+            return result;
+        }).when(analyzer).analyzeStream(eq("a.txt"), any(java.io.InputStream.class));
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("ERROR");
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM source_analysis_checkpoint WHERE source_id=?", Integer.class, source.id())).isEqualTo(1);
+        assertThat(library.entries(workspace, "ORIGINAL", null)).isEmpty();
+        doCallRealMethod().when(analyzer).analyzeStream(eq("a.txt"), any(java.io.InputStream.class));
+        clearInvocations(analyzer);
+        var restarted = new SourceService(sourceStore, libraryStore, collectors, analyzer);
+        assertThat(restarted.sync(workspace, source.id()).status()).isEqualTo("READY");
+        verify(analyzer, never()).analyzeStream(eq("a.txt"), any(java.io.InputStream.class));
+        verify(analyzer).analyzeStream(eq("b.txt"), any(java.io.InputStream.class));
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM source_analysis_checkpoint WHERE source_id=?", Integer.class, source.id())).isZero();
+        String other = library.createWorkspace("격리된 진행 상태").id();
+        mvc.perform(get("/api/workspaces/" + other + "/sources/" + source.id() + "/progress")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void unchangedUnreadableFileIsNotAnalyzedForeverAndDoesNotDiscardHealthySibling() throws Exception {
+        String workspace = library.createWorkspace("부분 실패 가상 자료").id();
+        Files.writeString(fixture.resolve("broken.txt"), "synthetic broken bytes");
+        Files.writeString(fixture.resolve("healthy.txt"), "healthy evidence");
+        Source source = local(workspace, "부분 실패", "");
+        doReturn(new Analysis("", "text/plain", "ERROR", "파일 손상을 확인하세요.", List.of()))
+                .when(analyzer).analyzeStream(eq("broken.txt"), any(java.io.InputStream.class));
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("PARTIAL");
+        assertThat(entryId(source.id(), "healthy.txt")).isNotBlank();
+        clearInvocations(analyzer);
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("PARTIAL");
+        verifyNoInteractions(analyzer);
+        doCallRealMethod().when(analyzer).analyzeStream(eq("broken.txt"), any(java.io.InputStream.class));
+        Files.writeString(fixture.resolve("broken.txt"), "repaired synthetic evidence");
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("READY");
+        verify(analyzer).analyzeStream(eq("broken.txt"), any(java.io.InputStream.class));
+        verify(analyzer, never()).analyzeStream(eq("healthy.txt"), any(java.io.InputStream.class));
+    }
+
+    @Test
+    void registrationCollectsFolderAndIndexesBeforeReturning() throws Exception {
+        String workspace = library.createWorkspace("첫 동기화").id();
+        Files.writeString(fixture.resolve("notes.txt"), "가상 온실 관측 기록");
+        mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
+                        .contentType("application/json").content("{\"name\":\"가상 폴더\",\"kind\":\"LOCAL_FOLDER\",\"location\":\"" + fixture + "\",\"sync\":true}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("READY"))
+                .andExpect(jsonPath("$.syncedAt").isNotEmpty()).andExpect(jsonPath("$.rootEntryId").isNotEmpty());
+        assertThat(search.search(workspace, "온실", List.of())).isNotEmpty();
+    }
+
+    @Test
+    void notionRegistrationPersistsConnectionRequirementWithoutCollectingAppShell() throws Exception {
+        String workspace = library.createWorkspace("플러그인 안내").id();
+        mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
+                        .contentType("application/json").content("{\"name\":\"가상 페이지\",\"kind\":\"URL\",\"location\":\"https://app.notion.com/p/synthetic\",\"sync\":true}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("ERROR"))
+                .andExpect(jsonPath("$.error").value("Notion 연결이 필요합니다. 플러그인에서 Notion을 연결해 주세요."));
+        assertThat(sources.list(workspace)).hasSize(1);
+        verifyNoInteractions(remote);
+        assertThat(search.search(workspace, "Notion", List.of())).isEmpty();
+    }
+
+    @Test
+    void registrationCollectsUrlAndIndexesBeforeReturning() throws Exception {
+        String workspace = library.createWorkspace("첫 웹 동기화").id();
+        URI uri = URI.create("https://example.org/automatic");
+        when(remote.read(uri)).thenReturn(new RemoteReader.Response(uri, "text/plain", "가상 온실 기록".getBytes(StandardCharsets.UTF_8)));
+        mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
+                        .contentType("application/json").content("{\"name\":\"가상 링크\",\"kind\":\"URL\",\"location\":\"" + uri + "\",\"sync\":true}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("READY"));
+        assertThat(search.search(workspace, "온실", List.of())).isNotEmpty();
+        verify(remote, times(1)).read(uri);
+    }
+
+    @Test
+    void registrationCollectsGithubUsingSyntheticCollectorBeforeReturning() {
+        String workspace = library.createWorkspace("첫 저장소 동기화").id();
+        Collector collector = mock(Collector.class);
+        when(collector.kind()).thenReturn("GITHUB");
+        try {
+            when(collector.collect(anyString())).thenReturn(new dev.knowledgeforge.sources.domain.CollectedSnapshot("a".repeat(40),
+                    List.of(new dev.knowledgeforge.sources.domain.CollectedSnapshot.File("notes.txt", "가상 온실 기록".getBytes(StandardCharsets.UTF_8)))));
+        } catch (Exception exception) { throw new AssertionError(exception); }
+        var controller = new dev.knowledgeforge.sources.adapter.SourceController(new SourceService(sourceStore, libraryStore, List.of(collector), analyzer), search);
+        var result = controller.create(workspace, new dev.knowledgeforge.sources.adapter.SourceController.Registration(
+                "가상 저장소", "GITHUB", "https://github.com/example/synthetic", "", true));
+        assertThat(result.status()).isEqualTo("READY");
+        assertThat(search.search(workspace, "온실", List.of())).isNotEmpty();
+    }
+
+    @Test
+    void firstSyncFailureKeepsRegisteredSourceWithActionableLimit() throws Exception {
+        String workspace = library.createWorkspace("가상 용량 오류").id();
+        try (var file = new java.io.RandomAccessFile(fixture.resolve("large.txt").toFile(), "rw")) {
+            file.setLength(dev.knowledgeforge.sources.adapter.CollectionLimits.MAX_DOCUMENT + 1);
+        }
+        mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
+                        .contentType("application/json").content("{\"name\":\"가상 큰 폴더\",\"kind\":\"LOCAL_FOLDER\",\"location\":\"" + fixture + "\",\"sync\":true}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("PARTIAL"))
+                .andExpect(jsonPath("$.error").value(org.hamcrest.Matchers.containsString("256 MiB")));
+        assertThat(sources.list(workspace)).hasSize(1);
+    }
+
+    @Test
     void workspacePollingToggleIsAtomicAndInheritedByNewSources() throws Exception {
         String workspace = library.createWorkspace("자동 갱신 가상 테스트").id();
         String other = library.createWorkspace("분리된 테스트").id();
@@ -123,6 +233,47 @@ class SourceIntegrationTest {
         mvc.perform(patch(path).header("X-Forge-Client", "1").contentType("application/json")
                 .content("{}")).andExpect(status().isBadRequest());
         assertThat(sources.workspacePolling(workspace).enabled()).isTrue();
+    }
+
+    @Test
+    void workspaceIntervalPersistsWhileOffAndIsInheritedByNewSources() {
+        String workspace = library.createWorkspace("Timer fixture").id();
+        Source first = local(workspace, "First", "");
+        assertThat(first.createdAt()).isNotBlank();
+        assertThat(sources.workspacePolling(workspace).intervalSeconds()).isEqualTo(3600);
+        sources.configureWorkspacePolling(workspace, false, 900, 0);
+        assertThat(sources.workspacePolling(workspace).intervalSeconds()).isEqualTo(900);
+        Source second = local(workspace, "Second", "");
+        assertThat(second.pollIntervalSeconds()).isEqualTo(900);
+        assertThat(second.nextPollAt()).isNull();
+        sources.configureWorkspacePolling(workspace, true, 1);
+        assertThat(sources.list(workspace)).allSatisfy(source -> {
+            assertThat(source.pollingEnabled()).isTrue();
+            assertThat(source.pollIntervalSeconds()).isEqualTo(900);
+            assertThat(source.nextPollAt()).isNotNull();
+        });
+        assertThatThrownBy(() -> sources.configureWorkspacePolling(workspace, true, 300, 1))
+                .isInstanceOf(LibraryException.class);
+        assertThat(sources.workspacePolling(workspace).intervalSeconds()).isEqualTo(900);
+        sources.configureWorkspacePolling(workspace, true, 300, 2);
+        assertThat(sources.list(workspace)).allMatch(source -> source.pollIntervalSeconds() == 300);
+        sources.configureWorkspacePolling(workspace, false, 3);
+        assertThat(sources.list(workspace)).allMatch(source -> source.nextPollAt() == null);
+        assertThat(sources.workspacePolling(workspace).intervalSeconds()).isEqualTo(300);
+        assertThat(sourceStore.find(workspace, first.id()).orElseThrow().createdAt()).isEqualTo(first.createdAt());
+    }
+
+    @Test
+    void workspaceIntervalRejectsInvalidValuesWithoutChangingSettings() throws Exception {
+        String workspace = library.createWorkspace("Timer bounds").id();
+        for (int interval : new int[] { 0, 59, 86401 }) {
+            mvc.perform(patch("/api/workspaces/" + workspace + "/source-polling")
+                    .header("X-Forge-Client", "1").contentType("application/json")
+                    .content("{\"enabled\":true,\"intervalSeconds\":" + interval + ",\"expectedRevision\":0}"))
+                    .andExpect(status().isBadRequest());
+        }
+        assertThat(sources.workspacePolling(workspace).revision()).isZero();
+        assertThat(sources.workspacePolling(workspace).enabled()).isFalse();
     }
 
     private Source local(String workspaceId, String name, String domain) {
@@ -182,7 +333,7 @@ class SourceIntegrationTest {
                         .header("X-Forge-Client", "1").contentType("application/json")
                         .content("{\"name\":\"Blocked\",\"domain\":\"\",\"expectedRevision\":2}"))
                 .andExpect(status().isConflict());
-        String other = library.createWorkspace("Other metadata workspace").id();
+        String other = library.createWorkspace("Other metadata").id();
         mvc.perform(patch("/api/workspaces/{workspace}/sources/{id}", other, original.id())
                         .header("X-Forge-Client", "1").contentType("application/json")
                         .content("{\"name\":\"Blocked\",\"domain\":\"\",\"expectedRevision\":2}"))
@@ -229,7 +380,7 @@ class SourceIntegrationTest {
 
     @Test
     void url304ReusesPersistedBytesAndFailedCollectionPreservesValidators() throws Exception {
-        String workspace = library.createWorkspace("Conditional synthetic URL").id();
+        String workspace = library.createWorkspace("Conditional URL").id();
         URI uri = URI.create("https://example.org/synthetic.txt");
         var validators = new dev.knowledgeforge.sources.domain.HttpValidators(uri.toString(), "\"synthetic\"", null);
         byte[] content = "synthetic conditional document".getBytes(StandardCharsets.UTF_8);
@@ -258,7 +409,7 @@ class SourceIntegrationTest {
 
     @Test
     void incrementalCollectorReceivesOnlyItsCommittedSnapshotAfterClaim() {
-        String workspace = library.createWorkspace("Synthetic incremental collector").id();
+        String workspace = library.createWorkspace("Synthetic collector").id();
         var seen = new java.util.concurrent.atomic.AtomicReference<dev.knowledgeforge.sources.domain.CollectedSnapshot>();
         Collector collector = new Collector() {
             public String kind() { return "GITHUB"; }
@@ -266,7 +417,8 @@ class SourceIntegrationTest {
             public boolean usesPreviousSnapshot() { return true; }
             public dev.knowledgeforge.sources.domain.CollectedSnapshot collect(String location) { throw new AssertionError("Baseline required"); }
             public dev.knowledgeforge.sources.domain.CollectedSnapshot collect(String location, dev.knowledgeforge.sources.domain.CollectedSnapshot previous) {
-                seen.set(previous);
+                if (previous != null) seen.set(new dev.knowledgeforge.sources.domain.CollectedSnapshot(previous.revision(),
+                        previous.files().stream().map(file -> new dev.knowledgeforge.sources.domain.CollectedSnapshot.File(file.path(), file.content())).toList()));
                 return new dev.knowledgeforge.sources.domain.CollectedSnapshot("a".repeat(40), List.of(
                         new dev.knowledgeforge.sources.domain.CollectedSnapshot.File("synthetic.txt", "synthetic source".getBytes(StandardCharsets.UTF_8))));
             }
@@ -285,7 +437,7 @@ class SourceIntegrationTest {
 
     @Test
     void changedRevisionPreservesUnchangedRowsAndAnalyzesOnlyChangedFiles() throws Exception {
-        String workspace = library.createWorkspace("Incremental synthetic").id();
+        String workspace = library.createWorkspace("Incremental fixture").id();
         Files.createDirectories(fixture.resolve("keep"));
         Files.writeString(fixture.resolve("keep/Stable.java"), "class Stable { void unchangedSymbol() {} }");
         Files.writeString(fixture.resolve("edit.txt"), "obsoleteToken");
@@ -312,8 +464,8 @@ class SourceIntegrationTest {
         assertThat(library.analysis(workspace, stable)).isEqualTo(analysis);
         assertThat(jdbc.queryForList("SELECT rowid,* FROM symbol WHERE entry_id=?", stable)).isEqualTo(symbols);
         assertThat(jdbc.queryForMap("SELECT rowid,* FROM extracted_document WHERE entry_id=?", stable)).isEqualTo(document);
-        verify(analyzer).analyze(eq("edit.txt"), any(byte[].class));
-        verify(analyzer).analyze(eq("add.txt"), any(byte[].class));
+        verify(analyzer).analyzeStream(eq("edit.txt"), any(java.io.InputStream.class));
+        verify(analyzer).analyzeStream(eq("add.txt"), any(java.io.InputStream.class));
         verifyNoMoreInteractions(analyzer);
         search.refresh();
         assertThat(search.search(workspace, "obsoleteToken", List.of())).isEmpty();
@@ -366,20 +518,21 @@ class SourceIntegrationTest {
         Files.writeString(fixture.resolve("keep.txt"), "updatedToken");
         Files.delete(fixture.resolve("delete.txt"));
         doReturn(new Analysis("", "text/plain", "ERROR", "synthetic failure", List.of()))
-                .when(analyzer).analyze(eq("keep.txt"), any(byte[].class));
+                .when(analyzer).analyzeStream(eq("keep.txt"), any(java.io.InputStream.class));
         Source failed = sources.sync(workspace, first.id());
-        assertThat(failed.status()).isEqualTo("ERROR");
-        assertThat(failed.revision()).isEqualTo(first.revision());
-        assertThat(failed.syncedAt()).isEqualTo(first.syncedAt());
-        assertThat(entryId(first.id(), "delete.txt")).isEqualTo(deleted);
-        doCallRealMethod().when(analyzer).analyze(eq("keep.txt"), any(byte[].class));
+        assertThat(failed.status()).isEqualTo("PARTIAL");
+        assertThat(libraryStore.entry(workspace, deleted)).isEmpty();
+        assertThat(new String(library.content(workspace, kept), StandardCharsets.UTF_8)).isEqualTo("originalToken");
+        Source partial = failed;
+        doCallRealMethod().when(analyzer).analyzeStream(eq("keep.txt"), any(java.io.InputStream.class));
+        Files.writeString(fixture.resolve("keep.txt"), "updatedToken next revision");
         jdbc.execute("CREATE TRIGGER synthetic_reconcile_failure BEFORE UPDATE ON extracted_document BEGIN SELECT RAISE(ABORT,'synthetic failure'); END");
         try {
             failed = sources.sync(workspace, first.id());
             assertThat(failed.status()).isEqualTo("ERROR");
-            assertThat(failed.revision()).isEqualTo(first.revision());
-            assertThat(failed.syncedAt()).isEqualTo(first.syncedAt());
-            assertThat(entryId(first.id(), "delete.txt")).isEqualTo(deleted);
+            assertThat(failed.revision()).isEqualTo(partial.revision());
+            assertThat(failed.syncedAt()).isEqualTo(partial.syncedAt());
+            assertThat(libraryStore.entry(workspace, deleted)).isEmpty();
             assertThat(new String(library.content(workspace, kept), StandardCharsets.UTF_8)).isEqualTo("originalToken");
             search.refresh();
             assertThat(search.search(workspace, "originalToken", List.of())).hasSize(1);

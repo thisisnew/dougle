@@ -1,5 +1,35 @@
 # 아키텍처
 
+## 현재 수집·검색 경로 (DB v25)
+
+SourceService는 디스크 스냅샷을 수집하고 파일별 분석을 `source_analysis_checkpoint`에 저장합니다. 읽기·분석 실패는 `source_file_failure`에 남기며 이전 성공 자료를 보존합니다. `ProcessingProgress` → Source 진행 API → `SourceSyncProgress`는 실제 파일명·바이트·페이지·분할 상태를 표시합니다. 원본 발행 전에 취소할 수 있으며 다음 동기화는 완료 분석을 재사용합니다.
+
+`TextChunks`는 문단·코드 선언 경계와 실제 행 번호를 보존합니다. `LocalSearchModel`은 Mac 번들에 동봉된 고정 해시 모델을 앱 시작 후 비동기로 준비합니다. `LuceneSearchIndex`는 키워드/벡터 후보를 조각 단위로 재평가한 후 문서 중복을 제거합니다. 준비/실패 중 새 질문은 UI와 API에서 차단하며, 조용히 키워드 전용으로 낮추지 않습니다. `EvidenceWindow`는 근거 고정 시 해시가 일치하는 원문에서 앞뒤 문맥을 확장합니다. [검색 설계](internal-search.md) · [처리 한도·실제 검증](ingestion-retrieval-upgrade.md).
+
+BrowserPluginHttp는 OAuth form과 JSON 요청에 UTF-8을 명시합니다. Apache FORM_URLENCODED의 기본 ISO-8859-1은 Notion token endpoint에서 실제 `invalid_request` 400을 유발하여 가상 client/code로 재현 후 수정했습니다. 토큰 교환/갱신의 보안 검증·리소스 지정은 유지합니다.
+
+ChatPanel은 완료 답변의 코드 블록 밖 `[R번호]`와 일치하는 근거만 references로 전달합니다. compact 답변이 SUCCEEDED이고 화면 출력까지 끝난 뒤 표시합니다. 후보 묶음 전체를 출처로 보여주지 않습니다. 인용 번호 필터링이며 답변의 사실성을 별도 보증하는 기능은 아닙니다.
+
+플러그인은 설정 하위입니다. BrowserPluginConnect → PluginController → BrowserPluginConnections가 DCR/PKCE 브라우저 승인·loopback 콜백·인증 회전/취소를 담당합니다. BrowserPluginReader → PluginMcpSession은 Notion/Atlassian의 고정된 읽기 도구로 등록 링크를 수집하며 UrlCollector의 기존 검색 색인 흐름을 재사용합니다. MySQL과 이전 내부 토큰 API는 PluginConnections/MysqlClient/NotionClient 호환 경로입니다. PluginVault의 AES-GCM·0700/0600·원자 교체를 유지합니다. DB v24 변경 없음. 실제 외부 계정은 미검증입니다. [계약·한계](plugins.md).
+
+연속 질문은 ChatPanel의 턴 목록에 누적하고 bundle ID를 React key로 유지합니다. 자동 이전 문맥 전송은 하지 않습니다. SourcePanel은 자료 등록 직후 반환된 ID로 동기화를 시작하고 진행 API를 조회합니다. 완료까지 탐색 잠금을 유지하며 첫 동기화 실패도 목록에서 확인·재시도할 수 있습니다. 이전 클라이언트의 `sync:true` 등록 API는 호환 경로로 유지합니다. 파일 업로드는 LibraryService의 자동 분석과 Controller의 색인 갱신을 사용합니다.
+
+자료 변경 작업의 busy를 App에 공유하여 탭·설정·Workspace 선택/생성·AI 연결과 파일 변경을 잠급니다. 종료/실패 후 해제합니다. 개별 파일 진행은 약 700ms 간격으로 조회하며 예상 시간은 만들지 않습니다. 최근 성공 시각은 Workspace별 UI 캐시 및 Source syncedAt을 사용하고 일괄 실패 시 캐시를 갱신하지 않습니다. 캐시는 승인 판단에 사용하지 않습니다.
+
+빈 Workspace 탐색: 질문 기록 탭은 세션 준비 후 Workspace 유무와 무관하게 열립니다. QuestionGrid는 nullable workspaceId를 받아 null에서는 빈 목록만 표시하며 조회/삭제 API를 호출하지 않습니다. 대화의 페이지 제목(h1)과 브랜드(h2)를 구분하고 빈 시작 화면은 브랜드/만들기 버튼만 제공합니다.
+
+0.1.20 후속: Workspace 전환은 활성화 PUT→세션 확인→새 자료 GET 완료까지 스켈레톤과 선택 잠금을 유지합니다. 이전 화면은 전환 시작 시 unmount하고 이전 요청 응답은 AbortController로 무시합니다. 메인 상단의 중복 Workspace 이름은 제거했습니다. GET `/api/workspaces/{id}/analysis-failures`는 추출 오류/미지원 파일과 상위 폴더의 메타데이터만 한 번에 반환하며 자료 본문은 포함하지 않습니다.
+
+업데이트 IPC는 확인 작업을 시작한 뒤 즉시 반환하고 UI가 상태를 조회합니다. 사이드바 하단은 설정 버튼이며 업데이트 확인은 설정 화면 안에 표시합니다. DesktopUpdate는 다른 화면에서 hidden 상태로 유지하여 자동 확인을 계속하고 새 버전을 설정 버튼의 점으로 알립니다. 새 버전 없음은 `current`로 유지하여 ‘최신 버전입니다’를 표시합니다. 오류는 재시도 가능한 상태이며 단순 확인 결과에 차단형 네이티브 팝업을 띄우지 않습니다. 실제 다운로드/설치 확인·서명/CPU/버전 검사는 유지합니다.
+
+0.1.20: ChatPanel submit→sendChatAnswer가 기존 근거/미리보기/승인/작업 API를 순서대로 호출합니다. 사용자 질문 전송을 실행 동의로 처리하고 별도 동의 UI를 생략합니다. digest·모델 검증/CAS·일회 승인·요청 멱등성은 유지합니다. compact AnswerJobsPanel→StreamingAnswer로 수신한 글을 표시하며 SSE 상태는 숨깁니다. QuestionGrid가 기존 근거 삭제 API와 공통 DeleteConfirmation을 사용합니다. DB v24 유지.
+
+0.1.19: `EvidenceBundleService → SearchService.searchQuestion → SearchIndex.searchQuestion`으로 자연어 질문용 OR 검색(최소 한 토큰 일치)을 분리합니다. 일반 `search`는 기존 AND를 유지합니다. `LibraryService.syncFiles`는 Workspace 보관 업로드를 재분석하고 Controller에서 색인을 갱신합니다. Source 관리 Entry는 제외합니다. PDF 미리보기는 저장된 추출문을 사용합니다. DB v24·승인 계약은 유지합니다.
+
+0.1.18 파일 추가 피드백: App의 업로드 상태를 SourcePanel 버튼과 탐색기 진행 행에 공유합니다. 네트워크 응답까지 파일명을 표시하며, 성공 후 기존 목록 재조회 상태로 넘어갑니다. ref 가드로 동일 시점의 중복 요청을 막습니다. 진행률 추측·API/DB 변경은 없습니다.
+
+0.1.17 DB v24(로컬 설치 완료, GitHub 미공개): `source.created_at`은 신규 등록 시 기록하고 과거 NULL은 보존합니다. `workspace_source_polling.interval_seconds`는 기본 3600, 60–86400초입니다. `WorkspacePollingToggle → SourceController → SourceService → JdbcSourceStore`가 CAS로 설정을 저장합니다. 명시적 주기 변경은 기존 자료에 원자적으로 적용하고 신규 자료는 정책을 상속합니다. OFF는 주기를 지우지 않고 다음 실행 시각만 제거합니다. 이전 클라이언트가 주기를 생략하면 기존 개별 주기는 유지합니다.
+
 0.1.16의 자료 등록은 `SourcePanel → sourceName → 기존 Source API`로 이름을 자동 생성하고 신규 domain을 빈 문자열로 보냅니다. 이름/분류 입력은 없으며 기존 데이터와 API 계약은 유지합니다. [검증·범위](release-0.1.16-report.md).
 
 0.1.14는 `SourcePanel.renderLibrary`로 연결 자료 행과 App의 업로드 탐색기를 통합합니다. 연결 루트는 중복 제거하고 폴더 선택 시 기존 Entry API로 탐색합니다. 전체 동기화는 기존 Source별 POST를 순서대로 호출하며 실패 후에도 다음 자료를 처리합니다. 자동 갱신은 `WorkspacePollingToggle → SourceController → SourceService → JdbcSourceStore`를 통해 DB v23의 Workspace 정책을 저장하며 새 Source가 이를 상속합니다. AI/승인 계약은 바꾸지 않습니다. [화면 설계](library-simplification.md).

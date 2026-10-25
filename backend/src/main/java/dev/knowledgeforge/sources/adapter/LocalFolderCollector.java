@@ -34,8 +34,10 @@ public class LocalFolderCollector implements Collector {
         }
         Path root = requested.toRealPath();
         var files = new ArrayList<CollectedSnapshot.File>();
+        var failures = new java.util.HashMap<String, String>();
         long[] total = {0};
-        long deadline = System.nanoTime() + java.time.Duration.ofSeconds(30).toNanos();
+        long deadline = System.nanoTime() + java.time.Duration.ofMinutes(30).toNanos();
+        try {
         Files.walkFileTree(root, new SimpleFileVisitor<>() {
             private void budget() throws IOException {
                 if (System.nanoTime() > deadline || Thread.currentThread().isInterrupted()) {
@@ -56,24 +58,53 @@ public class LocalFolderCollector implements Collector {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
                 budget();
+                dev.knowledgeforge.ingestion.application.ProcessingProgress.report("READING",
+                        root.relativize(file).toString(), files.size(), 0);
                 if (CollectionLimits.excluded(file.getFileName().toString())) return FileVisitResult.CONTINUE;
                 if (!attributes.isRegularFile() || Files.isSymbolicLink(file) || !file.toRealPath().startsWith(root)) {
                     throw new LibraryException(400, "심볼릭 링크·특수 파일은 수집하지 않습니다.");
                 }
-                if (attributes.size() > CollectionLimits.MAX_FILE || files.size() >= CollectionLimits.MAX_FILES) {
-                    throw new LibraryException(413, "파일 크기 또는 개수 제한을 초과했습니다.");
+                if (attributes.size() > CollectionLimits.MAX_DOCUMENT) {
+                    failures.put(root.relativize(file).toString().replace('\\', '/'), "256 MiB가 넘는 파일은 나눠 등록하세요.");
+                    return FileVisitResult.CONTINUE;
                 }
-                byte[] content;
+                if (files.size() >= CollectionLimits.MAX_SNAPSHOT_FILES) {
+                    throw new LibraryException(413, "파일이 20,000개를 초과했습니다. 폴더를 나눠 연결하세요.");
+                }
+                CollectedSnapshot.File collected;
                 try (var channel = Files.newByteChannel(file, StandardOpenOption.READ, LinkOption.NOFOLLOW_LINKS);
                      var input = Channels.newInputStream(channel)) {
-                    content = CollectionLimits.read(input);
+                    collected = CollectedSnapshot.File.copy(root.relativize(file).toString().replace('\\', '/'),
+                            input, CollectionLimits.MAX_DOCUMENT,
+                            bytes -> dev.knowledgeforge.ingestion.application.ProcessingProgress.report(
+                                    "READING_BYTES", root.relativize(file).toString(), bytes, attributes.size()));
+                } catch (java.io.InterruptedIOException exception) {
+                    throw exception;
+                } catch (IOException exception) {
+                    failures.put(root.relativize(file).toString().replace('\\', '/'), "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요.");
+                    return FileVisitResult.CONTINUE;
                 }
-                total[0] += content.length;
-                if (total[0] > CollectionLimits.MAX_TOTAL) throw new LibraryException(413, "Source 총 50 MiB 제한을 초과했습니다.");
-                files.add(new CollectedSnapshot.File(root.relativize(file).toString().replace('\\', '/'), content));
+                files.add(collected);
+                total[0] += collected.size();
+                if (total[0] > CollectionLimits.MAX_SNAPSHOT) throw new LibraryException(413, "총 8 GiB를 초과했습니다. 폴더를 나눠 연결하세요.");
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exception) throws IOException {
+                budget();
+                if (file.equals(root)) throw exception;
+                String path = root.relativize(file).toString().replace('\\', '/');
+                CollectionLimits.path(path);
+                failures.put(path, "접근할 수 없습니다. 읽기 권한을 확인하고 다시 동기화하세요.");
                 return FileVisitResult.CONTINUE;
             }
         });
-        return CollectionLimits.snapshot(files);
+        var snapshot = CollectionLimits.snapshot(files);
+        return new CollectedSnapshot(snapshot.revision(), snapshot.files(), null, failures);
+        } catch (IOException | RuntimeException exception) {
+            files.forEach(CollectedSnapshot.File::close);
+            throw exception;
+        }
     }
 }

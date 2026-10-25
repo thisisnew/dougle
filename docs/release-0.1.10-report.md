@@ -1,6 +1,6 @@
 # 0.1.10 — 기능 다이어트
 
-소스 `4d4558b`의 Intel/Apple Silicon 설치 파일과 서명 업데이트를 [0.1.10 릴리스](https://github.com/thisisnew/knowledge-forge/releases/tag/v0.1.10-preview.1)에 공개했습니다. 자산 10개의 크기·SHA-256을 로컬 파일과 대조했습니다. 이 Mac에도 0.1.10을 설치했습니다. [쉬운 사용법과 코드 대조](simple-workflow.md).
+소스 `4d4558b`의 Intel/Apple Silicon 설치 파일과 서명 업데이트를 [0.1.10 릴리스](https://github.com/thisisnew/dougle/releases/tag/v0.1.10-preview.1)에 공개했습니다. 자산 10개의 크기·SHA-256을 로컬 파일과 대조했습니다. 이 Mac에도 0.1.10을 설치했습니다. [쉬운 사용법과 코드 대조](simple-workflow.md).
 
 두 DMG 공개 다운로드 HTTP 200을 확인했습니다. 공개 자산의 해시·서명을 다시 검증한 뒤 업데이트 피드를 0.1.10으로 갱신했습니다. GitHub 캐시 때문에 앱의 업데이트 알림에는 지연이 있을 수 있습니다.
 

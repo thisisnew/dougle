@@ -12,6 +12,42 @@ const done = { id: 'job', bundleId: 'bundle', approvalId: 'approval', status: 'S
 beforeEach(() => { api.mockReset(); FakeEventSource.instances = []; vi.stubGlobal('EventSource', FakeEventSource) })
 afterEach(() => vi.unstubAllGlobals())
 
+it.each(['QUEUED', 'FAILED', 'CANCELLED', 'INTERRUPTED'])('완료되지 않은 %s 답변에는 참고 자료를 제안하지 않는다', status => {
+  const view = render(<AnswerJobsPanel {...props} compact initialJob={{ ...done, status, answer: null }} references={<section>가상 참고 자료</section>} />)
+  expect(screen.queryByText('가상 참고 자료')).not.toBeInTheDocument()
+  view.unmount()
+})
+
+it('완료 이력은 재실행 없이 답변 아래 참고 자료를 즉시 표시한다', () => {
+  render(<AnswerJobsPanel {...props} compact initialJob={done} references={<section>가상 참고 자료</section>} />)
+  const answer = screen.getByLabelText('AI 답변')
+  expect(answer.compareDocumentPosition(screen.getByText('가상 참고 자료')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  expect(api).not.toHaveBeenCalled()
+})
+
+it('대화에서는 연결 상태와 모델을 숨기고 실제 스트림을 표시한다', async () => {
+  render(<AnswerJobsPanel {...props} approval={null} compact animate references={<section>가상 참고 자료</section>} initialJob={{ ...done, status: 'RUNNING', answer: null }} />)
+  expect(screen.queryByText('가상 참고 자료')).not.toBeInTheDocument()
+  expect(screen.getByRole('status')).toHaveTextContent('확인해보겠습니다')
+  const source = FakeEventSource.instances[0]
+  act(() => {
+    source.emit('evidence', { id: 'bundle', workspaceId: 'workspace', digest: 'digest' })
+    source.emit('job', { ...done, workspaceId: 'workspace', status: 'RUNNING', answer: null })
+    source.emit('partial', { workspaceId: 'workspace', bundleId: 'bundle', jobId: 'job', text: '가상 답변이 생성됩니다', unverified: true })
+  })
+  await waitFor(() => expect(screen.getByLabelText('AI 답변')).toHaveTextContent('가상 답변이 생성됩니다'))
+  expect(screen.queryByText('가상 참고 자료')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('SSE 연결 상태')).not.toBeInTheDocument()
+  expect(screen.queryByText('연결 상태')).not.toBeInTheDocument()
+  expect(screen.queryByText(/요청 모델/)).not.toBeInTheDocument()
+  act(() => source.emit('job', { ...done, workspaceId: 'workspace', answer: '최종 답변 [R1]' }))
+  expect(screen.queryByText('가상 참고 자료')).not.toBeInTheDocument()
+  await waitFor(() => expect(screen.getByLabelText('AI 답변')).toHaveTextContent('최종 답변 [R1]'))
+  expect(screen.getByText('가상 참고 자료')).toBeVisible()
+  expect(screen.queryByText('답변 생성 완료')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '답변 중단' })).not.toBeInTheDocument()
+})
+
 it('간편 질문은 접수된 작업을 바로 관측하고 중단하며 다시 전송하지 않는다', async () => {
   api.mockResolvedValue({ ...done, status: 'CANCELLED', answer: null })
   render(<AnswerJobsPanel {...props} approval={null} compact initialJob={{ ...done, status: 'RUNNING', answer: null }} />)
@@ -19,8 +55,10 @@ it('간편 질문은 접수된 작업을 바로 관측하고 중단하며 다시
   const source = FakeEventSource.instances[0]
   expect(source).toBeDefined()
   expect(screen.queryByRole('button', { name: '답변 작업 조회·새로고침' })).not.toBeInTheDocument()
+  expect(screen.queryByText('답변 중단')).not.toBeInTheDocument()
+  expect(screen.getByRole('button', { name: '답변 중단' }).querySelector('svg')).toHaveClass('lucide-square')
   await userEvent.click(screen.getByRole('button', { name: '답변 중단' }))
-  expect(await screen.findByText('중단됨')).toBeInTheDocument()
+  expect(await screen.findByText('답변이 중단되었습니다.')).toBeInTheDocument()
   expect(source.closed).toBe(true)
   expect(api.mock.calls[0][0]).toMatch(/answer-jobs\/job\/cancel$/)
 })

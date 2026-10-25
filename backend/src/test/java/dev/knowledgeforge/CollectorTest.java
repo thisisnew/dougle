@@ -34,7 +34,7 @@ class CollectorTest {
         RemoteReader remote = mock(RemoteReader.class);
         URI uri = URI.create("https://example.org/document");
         when(remote.read(uri)).thenReturn(new RemoteReader.Response(uri, null, new byte[0], true, null));
-        UrlCollector collector = new UrlCollector(remote);
+        UrlCollector collector = new UrlCollector(remote, mock(dev.knowledgeforge.plugins.adapter.NotionClient.class), mock(dev.knowledgeforge.plugins.adapter.PluginConnections.class), mock(dev.knowledgeforge.plugins.adapter.BrowserPluginReader.class));
         assertThatThrownBy(() -> collector.collect(uri.toString())).isInstanceOf(LibraryException.class).hasMessageContaining("304");
         var validators = new dev.knowledgeforge.sources.domain.HttpValidators(uri.toString(), "\"synthetic\"", null);
         var previous = new CollectedSnapshot("previous", List.of(new CollectedSnapshot.File("document", new byte[] {1})), validators);
@@ -55,13 +55,17 @@ class CollectorTest {
     }
 
     @Test
-    void enforcesFileCountSizeAndPathDepth() throws Exception {
+    void streamsMoreThanLegacyFileCountAndSizeWhileKeepingPathProtection() throws Exception {
         for (int index = 0; index <= 500; index++) Files.writeString(directory.resolve("file-" + index), "x");
-        assertThatThrownBy(() -> new LocalFolderCollector().collect(directory.toString())).isInstanceOf(LibraryException.class);
+        try (var snapshot = new LocalFolderCollector().collect(directory.toString())) {
+            assertThat(snapshot.files()).hasSize(501);
+        }
         assertThatThrownBy(() -> CollectionLimits.path("../secret")).isInstanceOf(LibraryException.class);
         assertThatThrownBy(() -> CollectionLimits.path("a/".repeat(17) + "file")).isInstanceOf(LibraryException.class);
-        assertThatThrownBy(() -> CollectionLimits.snapshot(List.of(
-                new CollectedSnapshot.File("large.bin", new byte[CollectionLimits.MAX_FILE + 1])))).isInstanceOf(LibraryException.class);
+        try (var snapshot = CollectionLimits.snapshot(List.of(
+                new CollectedSnapshot.File("large.bin", new byte[CollectionLimits.MAX_FILE + 1])))) {
+            assertThat(snapshot.files().getFirst().size()).isEqualTo(CollectionLimits.MAX_FILE + 1);
+        }
     }
 
     @Test
@@ -166,11 +170,13 @@ class CollectorTest {
         assertThat(collected.revision()).isEqualTo(second);
         assertThat(collected.files()).extracting(CollectedSnapshot.File::path).containsExactly("edit.txt", "renamed.txt", "stable.txt");
         assertThat(new String(collected.files().get(0).content(), StandardCharsets.UTF_8)).isEqualTo("new synthetic");
-        verify(runner).run(directory, 1024 * 1024, "ls-tree", "-rz", second);
-        verify(runner, times(2)).run(eq(directory), anyInt(), eq("cat-file"), anyString(), anyString());
+        verify(runner).run(directory, 8 * 1024 * 1024, "ls-tree", "-rz", second);
+        verify(runner).run(eq(directory), anyInt(), eq("cat-file"), anyString(), anyString());
+        verify(runner).readBlob(eq(directory), eq("edit.txt"), anyString(), anyLong());
         clearInvocations(runner);
         collector.readSnapshot(directory, second, collected);
         verify(runner, never()).run(eq(directory), anyInt(), eq("cat-file"), anyString(), anyString());
+        verify(runner, never()).readBlob(any(), anyString(), anyString(), anyLong());
     }
 
     @Test
@@ -178,15 +184,30 @@ class CollectorTest {
         GitRunner runner = mock(GitRunner.class);
         String revision = "a".repeat(40);
         String blob = "b".repeat(40);
-        when(runner.run(directory, 1024 * 1024, "ls-tree", "-rz", revision))
+        when(runner.run(directory, 8 * 1024 * 1024, "ls-tree", "-rz", revision))
                 .thenReturn(("100644 blob " + blob + "\tfile.txt\u0000").getBytes(StandardCharsets.UTF_8));
         when(runner.run(directory, 32, "cat-file", "-s", blob)).thenReturn("1".getBytes(StandardCharsets.UTF_8));
-        when(runner.run(directory, CollectionLimits.MAX_FILE, "cat-file", "blob", blob)).thenReturn(new byte[] {1});
+        when(runner.readBlob(directory, "file.txt", blob, 1)).thenReturn(new CollectedSnapshot.File("file.txt", new byte[] {1}));
         GithubCollector collector = new GithubCollector(mock(RemoteReader.class), runner);
         assertThatThrownBy(() -> collector.readSnapshot(directory, revision)).isInstanceOf(LibraryException.class).hasMessageContaining("해시");
-        when(runner.run(directory, 1024 * 1024, "ls-tree", "-rz", revision))
+        when(runner.run(directory, 8 * 1024 * 1024, "ls-tree", "-rz", revision))
                 .thenReturn(("120000 blob " + blob + "\tlink\u0000").getBytes(StandardCharsets.UTF_8));
         assertThatThrownBy(() -> collector.readSnapshot(directory, revision)).isInstanceOf(LibraryException.class).hasMessageContaining("링크");
+    }
+
+    @Test
+    void gitBlobReadFailureKeepsReadableSiblings() throws Exception {
+        GitRunner runner = spy(new GitRunner());
+        runner.run(directory, 4096, "init", "--quiet");
+        Files.writeString(directory.resolve("readable.txt"), "synthetic healthy document");
+        Files.writeString(directory.resolve("unavailable.txt"), "synthetic unavailable document");
+        String revision = commitFixture(runner);
+        doThrow(new java.io.IOException("synthetic read failure")).when(runner)
+                .readBlob(eq(directory), eq("unavailable.txt"), anyString(), anyLong());
+        try (var snapshot = new GithubCollector(mock(RemoteReader.class), runner).readSnapshot(directory, revision)) {
+            assertThat(snapshot.files()).extracting(CollectedSnapshot.File::path).containsExactly("readable.txt");
+            assertThat(snapshot.failures()).containsKey("unavailable.txt");
+        }
     }
 
     private String commitFixture(GitRunner runner) throws Exception {
@@ -210,6 +231,11 @@ class CollectorTest {
         String second = commitFixture(runner);
         var missing = new java.util.concurrent.atomic.AtomicReference<String>();
         GitRunner transportFixture = new GitRunner() {
+            @Override
+            public CollectedSnapshot.File readBlob(Path working, String path, String object, long size) throws Exception {
+                byte[] content = run(working, (int) size, "cat-file", "blob", object);
+                return CollectedSnapshot.File.copy(path, new java.io.ByteArrayInputStream(content), size);
+            }
             public byte[] run(Path working, int limit, String... arguments) throws Exception {
                 var safeArguments = new java.util.ArrayList<String>(List.of("-c", "protocol.file.allow=always"));
                 for (String argument : arguments) {

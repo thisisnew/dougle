@@ -1,5 +1,15 @@
 # API
 
+## 수집 진행·로컬 검색 준비 (DB v25)
+
+- `GET /api/workspaces/{workspaceId}/sources/{sourceId}/progress`: 실제 stage/file/completed/total/cancellable. 전체량 미확정은 total=0이며 예상 시간을 생성하지 않습니다.
+- `POST /api/workspaces/{workspaceId}/sources/{sourceId}/cancel`: 발행 전 수집 중단 요청. 완료 분석은 다음 동기화에 재사용합니다. 진행 관측 종료는 취소가 아닙니다.
+- `GET /api/search-model`: 로컬 검색 준비 상태·다운로드 바이트·오류. 조회만으로 다운로드하지 않습니다.
+- `POST /api/search-model/prepare`: 명시적 모델 다운로드/검증 후 검색 색인 준비. 자료를 다운로드 서버에 보내지 않습니다.
+- `POST /api/search-model/cancel`: 다운로드 단계에서만 중단 요청.
+
+기존 세션/Origin 검증과 Workspace 범위 검증을 유지합니다. 원본 파일 업로드는 256 MiB, 폴더/GitHub는 파일별 256 MiB·20,000개·총 8 GiB 한도입니다. [자세한 처리 경계](ingestion-retrieval-upgrade.md).
+
 0.1.14: `GET /api/workspaces/{id}/source-polling` → `{enabled,revision,mixed}`. 같은 경로 PATCH `{enabled,expectedRevision}`는 Workspace 정책과 기존 Source 활성 여부를 원자적으로 갱신합니다. 신규 Source는 저장한 정책을 상속합니다. 누락/잘못된 입력 400, 없는 Workspace 404, revision 충돌 409. 기존 개별 폴링 API는 호환 유지합니다.
  명세
 

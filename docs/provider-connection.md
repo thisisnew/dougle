@@ -4,7 +4,7 @@
 
 **0.1.2부터** 포함된 흐름입니다. 0.1.7은 전용 로그인·답변 스트리밍을 연결합니다. [사용법](codex-managed-login.md) · [검증·배포 상태](release-0.1.7-report.md). 0.1.3에서 실제 앱 연결 버튼의 요청 오류와 한글 표시를 수정했습니다.
 
-![AI 연결과 제공자 선택 화면](images/ai-connection.png)
+![AI 연결과 제공자 선택 화면](screenshots/dougle-ai-connection.png)
 
 가상 자료·가상 인증 도구로 촬영한 화면입니다. 실제 계정 인증 성공을 뜻하지 않습니다.
 
