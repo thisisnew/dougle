@@ -36,7 +36,7 @@
 
 ![질문 기록 일괄 선택](screenshots/dougle-history-bulk-delete.png)
 
-![기본 제공 검색 엔진](screenshots/dougle-bundled-search.png)
+[검증 당시 검색 엔진 상태 화면](screenshots/dougle-bundled-search.png). 이후 별도 옵션처럼 보이는 설정 항목과 모달을 제거했습니다. 현재는 설치본의 검색 엔진을 자동 준비하며 대화 입력창에 준비/오류 상태만 표시합니다.
 
 ## 재현과 경계
 
