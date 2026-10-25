@@ -25,7 +25,7 @@ it('검색 준비 중에는 질문을 막고 준비 완료 후 입력을 연다'
   expect(screen.getByRole('textbox', { name: '질문' })).toBeEnabled()
   view.rerender(<ChatPanel {...props} searchState="ERROR" />)
   expect(screen.getByRole('textbox', { name: '질문' })).toBeDisabled()
-  expect(screen.getByRole('status')).toHaveTextContent('설정에서 다시 시도')
+  expect(screen.getByRole('status')).toHaveTextContent('앱을 다시 실행')
 })
 
 it('답변에서 인용하지 않은 후보와 코드블록 속 번호는 출처로 표시하지 않는다', async () => {

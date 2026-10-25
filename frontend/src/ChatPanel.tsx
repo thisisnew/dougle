@@ -155,7 +155,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       event.preventDefault(); if (!busy) void attachments.add(Array.from(event.dataTransfer.files))
     }}>
       <label className="sr-only" htmlFor="chat-question">질문</label>
-      {!searchReady && connected && <p role="status" className="chat-thinking">{searchState === 'ERROR' ? '검색 준비에 실패했습니다. 설정에서 다시 시도해 주세요.' : '자료 검색을 준비하고 있어요…'}</p>}
+      {!searchReady && connected && <p role="status" className="chat-thinking">{searchState === 'ERROR' ? '검색 준비에 실패했습니다. 앱을 다시 실행해 주세요.' : '자료 검색을 준비하고 있어요…'}</p>}
       <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || !searchReady || busy}
         placeholder={!connected ? 'AI를 연결해 주세요' : !searchReady ? '검색 준비가 끝나면 질문할 수 있어요' : '더글한테 물어보기'} onChange={event => setQuestion(event.target.value)}
         onPaste={event => { if (event.clipboardData.files.length) { event.preventDefault(); void attachments.add(Array.from(event.clipboardData.files)) } }}

@@ -24,6 +24,7 @@ describe('Workspace와 자료 탐색기', () => {
     await screen.findByRole('button', { name: 'Workspace 만들기' })
     expect(screen.queryByRole('button', { name: '플러그인' })).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: '설정' }))
+    expect(screen.queryByRole('button', { name: '검색 엔진' })).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: '플러그인' }))
     expect(screen.getByRole('heading', { name: '플러그인' })).toBeVisible()
     await userEvent.click(screen.getByRole('button', { name: 'Notion 연결 설정' }))
