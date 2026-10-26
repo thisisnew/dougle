@@ -1,0 +1,1988 @@
+{
+  "fixtureVersion": "synthetic-seeded-b1-implicit-diagnostic-v1",
+  "startedAt": "2026-10-26T14:56:38.712Z",
+  "maximumDispatches": 2,
+  "scenarios": [
+    "seeded-exact-implicit-followup"
+  ],
+  "variants": 1,
+  "variantStart": 0,
+  "dispatched": 2,
+  "planDispatches": 1,
+  "answerDispatches": 1,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6",
+      "at": "2026-10-26T14:58:29.676Z",
+      "scenario": "seeded-exact-implicit-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "result": {
+        "id": "5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6",
+        "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+        "bundleId": "115e2f06-dc7f-44b6-9336-89faa90209ae",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "b804d83f78d735b6d47ad30c89e42305354042fb6ee418a8466ef4970e473a34",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T14:58:29.773231Z",
+        "updatedAt": "2026-10-26T14:58:41.140867Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "67d904c6-341b-4012-8e86-80981c684fb0",
+      "at": "2026-10-26T14:58:44.399Z",
+      "scenario": "seeded-exact-implicit-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    }
+  ],
+  "results": [
+    {
+      "scenario": "seeded-exact-implicit-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신에는 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6",
+        "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+        "bundleId": "115e2f06-dc7f-44b6-9336-89faa90209ae",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "b804d83f78d735b6d47ad30c89e42305354042fb6ee418a8466ef4970e473a34",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T14:58:29.773231Z",
+        "updatedAt": "2026-10-26T14:58:41.140867Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Seeded exact b1 prior questions/answers; not uninterrupted third turn. Resolve that badge to corrected AMBER, no auto-renewal, visitor-desk manual approval grounded in R1. No invented actual issuance/approval. Protocol diagnostic, not E04/E05 acceptance.",
+      "manualVerdict": "PASS",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "originalBundleId": "115e2f06-dc7f-44b6-9336-89faa90209ae",
+      "originalStatus": "READY",
+      "answerBundleId": "115e2f06-dc7f-44b6-9336-89faa90209ae",
+      "threadId": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+      "elapsedMs": 29945,
+      "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "historyTurns": 2,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "semanticReview": {
+        "checkpointId": "8c1e580d-e2d3-48cc-92c3-cc408a0971e1",
+        "resultSha256": "bfd9e02a0aaf42029cea9a198479f910608287bcb6c61da3841dee7495a699a0",
+        "verdict": "PASS",
+        "reviewer": "AGENT",
+        "note": "Manually inspected exact implicit question, both seeded b1 exchanges, AMBER correction and R1. Answer resolves the pronoun to AMBER, correctly denies automatic renewal and identifies visitor-desk manual approval; no actual record/status invented. Seeded-history probe only, not uninterrupted third-turn equivalence or timeout-root-cause proof."
+      }
+    }
+  ],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "apiTrace": [
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "POST",
+      "path": "/ai/providers/CODEX/connection"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/sources"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/sources/a498988c-353c-4029-9a02-a9fdb42f0c29/sync"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads/93b0cd62-899a-48b0-b94a-9a9950f45247"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads/93b0cd62-899a-48b0-b94a-9a9950f45247"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads/93b0cd62-899a-48b0-b94a-9a9950f45247"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/evidence-bundles/597780cc-b611-403d-8cd6-51202db7efe6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs?bundleId=597780cc-b611-403d-8cd6-51202db7efe6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/evidence-bundles/2167cfe6-03fb-4148-8674-26a9a01e7a11"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs?bundleId=2167cfe6-03fb-4148-8674-26a9a01e7a11"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/generation-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs/5b4ee481-30a4-4d6c-a1ad-f6435e1b73b6"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/evidence-bundles/115e2f06-dc7f-44b6-9336-89faa90209ae/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/evidence-bundles/115e2f06-dc7f-44b6-9336-89faa90209ae/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/evidence-bundles/115e2f06-dc7f-44b6-9336-89faa90209ae/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/answer-jobs/67d904c6-341b-4012-8e86-80981c684fb0"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/evidence-bundles/115e2f06-dc7f-44b6-9336-89faa90209ae/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/ea6f2665-1edd-4703-b724-c5223e2e366b/chat-threads/93b0cd62-899a-48b0-b94a-9a9950f45247"
+    }
+  ],
+  "restartChecks": [],
+  "runtimes": [
+    {
+      "pid": 40218,
+      "port": 54721,
+      "startedAt": "2026-10-26T14:57:07.989Z",
+      "stoppedAt": "2026-10-26T14:57:15.210Z"
+    },
+    {
+      "pid": 40404,
+      "port": 54750,
+      "startedAt": "2026-10-26T14:57:39.263Z",
+      "stoppedAt": "2026-10-26T14:57:42.291Z"
+    },
+    {
+      "pid": 40537,
+      "port": 54784,
+      "startedAt": "2026-10-26T14:58:24.155Z",
+      "stoppedAt": "2026-10-26T14:59:54.351Z"
+    }
+  ],
+  "contextBundles": [
+    {
+      "turn": 0,
+      "bundle": {
+        "id": "115e2f06-dc7f-44b6-9336-89faa90209ae",
+        "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+        "createdAt": "2026-10-26T14:58:27.483092Z",
+        "digest": "df959a5a4e8bca3a0f4509ba24a44c9413ffeb63841166950f784d85012fb983",
+        "payload": {
+          "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+          "domains": [],
+          "includeKnowledge": false,
+          "status": "READY",
+          "usedCharacters": 247,
+          "maxCharacters": 9589,
+          "items": [
+            {
+              "label": "R1",
+              "kind": "ORIGINAL",
+              "entryId": "01706cde-0fdd-40bf-a358-939ecaed880a",
+              "cardId": null,
+              "version": null,
+              "title": "synthetic-context-badges.md",
+              "sourceId": "a498988c-353c-4029-9a02-a9fdb42f0c29",
+              "path": "synthetic-context-badges.md",
+              "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+              "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+              "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+              "startLine": 1,
+              "endLine": 5,
+              "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+              "supports": []
+            }
+          ],
+          "excluded": [],
+          "chatContext": {
+            "threadId": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+            "parentBundleId": "2167cfe6-03fb-4148-8674-26a9a01e7a11",
+            "requestId": "a2ca306e-566e-4e08-81b3-60b52e049878",
+            "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+            "history": [
+              {
+                "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+                "bundleDigest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "answer": "BLUE 배지는 발급 시각부터 72시간 동안 유효하며, 자동 갱신되지 않습니다. 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책 정의이며, 실제 배지 레코드나 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않습니다. [R1]"
+              },
+              {
+                "bundleId": "2167cfe6-03fb-4148-8674-26a9a01e7a11",
+                "bundleDigest": "0fc5a9e42052f9f5231039eb0fc88d5276df7a3dcaefe642084dda72e61923b1",
+                "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+              }
+            ],
+            "extractive": {
+              "version": 1,
+              "turnKind": "USER_QUESTION",
+              "totalQuestions": 2,
+              "omittedQuestions": 0,
+              "maxSerializedCharacters": 8000,
+              "answerCharacterLimit": 800,
+              "omittedAnswers": 0,
+              "truncatedAnswerBundleIds": [],
+              "questions": [
+                {
+                  "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+                  "bundleDigest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+                  "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "legacyUnclassified": false
+                },
+                {
+                  "bundleId": "2167cfe6-03fb-4148-8674-26a9a01e7a11",
+                  "bundleDigest": "0fc5a9e42052f9f5231039eb0fc88d5276df7a3dcaefe642084dda72e61923b1",
+                  "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                  "legacyUnclassified": false
+                }
+              ],
+              "retrievalQueries": [
+                "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "fullE04Pass": false,
+  "fullE05Pass": false,
+  "privateDirectory": "/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/dougle-expert-live-kqLHlD",
+  "seededHistoryLimitation": "Exact prior questions/answers seeded into fresh local bundles and terminal jobs; new IDs/digests; not uninterrupted third turn or identical full serialized prompt.",
+  "assetHashes": {
+    "runtime/bin/java": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+    "ai/codex": "73697f229103f463acaafd8659976caaa4892ec11e2c246c7fa97f93d523f90e"
+  },
+  "resourceDirectory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources",
+  "seedReportSha256": "1db06e9d5c98ecfad55d7a81fbf38f86b27d648f689bf84b4224a8e590b07b50",
+  "seededTurns": [
+    {
+      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+      "answer": "BLUE 배지는 발급 시각부터 72시간 동안 유효하며, 자동 갱신되지 않습니다. 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책 정의이며, 실제 배지 레코드나 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않습니다. [R1]"
+    },
+    {
+      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+      "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+    }
+  ],
+  "harnessSha256": "3ba980366861872b95c231bada18ff32d700821fb61c2bbf1e1f9faf6e13ef7d",
+  "fixtureSha256": "73f98ab5b42650e1ed55ebcf007df2ec583f7f2a285b91e616dcf8c3804d9a60",
+  "historyHelperSha256": "13cefde5187bb49dc6ae0d07d2fb038755842853dd0b5d3b58beec1946f12c26",
+  "uiHoldHelperSha256": "cacd278f45a17051dea3db46e8e5834bd4aee44b3d099eb748fc96fd32a9f72b",
+  "scheduleHelperSha256": "459517071aa565a1a5981960f0ab8fb610a97896180f646d3f2d5ecdaa70f2d3",
+  "semantic-reviewHelperSha256": "60434a527847a665a067a147d4b048f9ea9047b0828fc461946c5bbefcc9bc32",
+  "search-modelsHelperSha256": "7adc5776c2d57669522c781d42e0d59edc265a0fa8d67326fdf4559247754c23",
+  "jarSha256": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
+  "protocolCounter": {
+    "version": 1,
+    "cliSha256": "73697f229103f463acaafd8659976caaa4892ec11e2c246c7fa97f93d523f90e",
+    "helperSha256": "831f6a62ab9cd204ae56540021bb26665fdca557e21cb346ccbf9f1d7399ab4e",
+    "hookSha256": "81dbab35cadef88a3a5d406c283b9e7ccb447cdc2dc95992daf47f1427beca1c",
+    "scope": "Opt-in byte-preserving wrapper; numeric protocol counters only; not provider diagnosis or acceptance evidence.",
+    "ordering": "Unordered per-process counters; random filenames do not establish dispatch or answer order.",
+    "timing": "Wrapper forwarding and counter persistence add overhead and may affect timing; not an uninstrumented baseline.",
+    "appServerProcesses": 1,
+    "counters": [
+      {
+        "version": 1,
+        "totals": {
+          "stdoutBytes": 39794,
+          "lines": 68,
+          "invalidJson": 0,
+          "invalidEnvelopes": 0,
+          "oversizedLines": 0,
+          "captureLimitReached": 0,
+          "earlyDropped": 0
+        },
+        "responses": {
+          "INITIALIZE": 1,
+          "CONFIG": 1,
+          "THREAD": 1,
+          "TURN": 1,
+          "UNEXPECTED": 0,
+          "INVALID": 0
+        },
+        "preStreamIgnored": {
+          "AGENT_STARTED": 0,
+          "AGENT_DELTA": 0,
+          "AGENT_COMPLETED": 0,
+          "USER_STARTED": 0,
+          "USER_COMPLETED": 0,
+          "REASONING_STARTED": 0,
+          "REASONING_COMPLETED": 0,
+          "OTHER_ITEM_STARTED": 0,
+          "OTHER_ITEM_COMPLETED": 0,
+          "TURN_STARTED": 0,
+          "TURN_COMPLETED": 0,
+          "THREAD_STARTED": 0,
+          "THREAD_STATUS": 0,
+          "TOKEN_USAGE": 0,
+          "ERROR": 0,
+          "OTHER": 1
+        },
+        "applicationBinding": {
+          "AGENT_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "AGENT_DELTA": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 49
+          },
+          "AGENT_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "REASONING_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "REASONING_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 1,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "THREAD_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 1,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "THREAD_STATUS": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TOKEN_USAGE": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "ERROR": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 2,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          }
+        },
+        "normalizedBinding": {
+          "AGENT_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "AGENT_DELTA": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 49
+          },
+          "AGENT_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "REASONING_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "REASONING_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "TURN_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "THREAD_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 1,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "THREAD_STATUS": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TOKEN_USAGE": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "ERROR": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 2,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          }
+        },
+        "completionStatus": {
+          "APPLICATION_MATCH": {
+            "NONE": 0,
+            "COMPLETED": 1,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "APPLICATION_IGNORED": {
+            "NONE": 0,
+            "COMPLETED": 0,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "NORMALIZED_MATCH": {
+            "NONE": 0,
+            "COMPLETED": 1,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "NORMALIZED_IGNORED": {
+            "NONE": 0,
+            "COMPLETED": 0,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          }
+        },
+        "buffer": {
+          "pendingLineBytes": 0,
+          "earlyPending": 0
+        }
+      }
+    ]
+  },
+  "searchModels": {
+    "directory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "architecture": "x86_64",
+    "files": [
+      {
+        "name": "model.onnx",
+        "size": 118346824,
+        "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      {
+        "name": "reranker.onnx",
+        "size": 118620016,
+        "sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+      },
+      {
+        "name": "reranker-tokenizer.json",
+        "size": 17082660,
+        "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+      }
+    ],
+    "verifiedAt": "2026-10-26T14:57:44.936Z"
+  },
+  "launchFailed": false,
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-26T14:57:10.512927Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "syntheticSourceId": "a498988c-353c-4029-9a02-a9fdb42f0c29",
+  "seededHistory": {
+    "detail": {
+      "id": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+      "bundles": [
+        {
+          "id": "597780cc-b611-403d-8cd6-51202db7efe6",
+          "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+          "createdAt": "2026-10-26T14:57:13.726674Z",
+          "digest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+          "payload": {
+            "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+            "domains": [],
+            "includeKnowledge": false,
+            "status": "READY",
+            "usedCharacters": 247,
+            "maxCharacters": 10702,
+            "items": [
+              {
+                "label": "R1",
+                "kind": "ORIGINAL",
+                "entryId": "01706cde-0fdd-40bf-a358-939ecaed880a",
+                "cardId": null,
+                "version": null,
+                "title": "synthetic-context-badges.md",
+                "sourceId": "a498988c-353c-4029-9a02-a9fdb42f0c29",
+                "path": "synthetic-context-badges.md",
+                "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                "startLine": 1,
+                "endLine": 5,
+                "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                "supports": []
+              }
+            ],
+            "excluded": [],
+            "chatContext": {
+              "threadId": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+              "parentBundleId": null,
+              "requestId": "4b1724d5-28ab-474e-a155-512ed2109a54",
+              "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+              "history": [],
+              "extractive": {
+                "version": 1,
+                "turnKind": "USER_QUESTION",
+                "totalQuestions": 0,
+                "omittedQuestions": 0,
+                "maxSerializedCharacters": 8000,
+                "answerCharacterLimit": 800,
+                "omittedAnswers": 0,
+                "truncatedAnswerBundleIds": [],
+                "questions": [],
+                "retrievalQueries": [
+                  "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": "2167cfe6-03fb-4148-8674-26a9a01e7a11",
+          "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+          "createdAt": "2026-10-26T14:57:40.987394Z",
+          "digest": "0fc5a9e42052f9f5231039eb0fc88d5276df7a3dcaefe642084dda72e61923b1",
+          "payload": {
+            "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+            "domains": [],
+            "includeKnowledge": false,
+            "status": "READY",
+            "usedCharacters": 247,
+            "maxCharacters": 10079,
+            "items": [
+              {
+                "label": "R1",
+                "kind": "ORIGINAL",
+                "entryId": "01706cde-0fdd-40bf-a358-939ecaed880a",
+                "cardId": null,
+                "version": null,
+                "title": "synthetic-context-badges.md",
+                "sourceId": "a498988c-353c-4029-9a02-a9fdb42f0c29",
+                "path": "synthetic-context-badges.md",
+                "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                "startLine": 1,
+                "endLine": 5,
+                "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                "supports": []
+              }
+            ],
+            "excluded": [],
+            "chatContext": {
+              "threadId": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+              "parentBundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+              "requestId": "37579888-1870-44c8-b0e3-a2dc17d8f17e",
+              "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+              "history": [
+                {
+                  "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+                  "bundleDigest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+                  "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "answer": "BLUE 배지는 발급 시각부터 72시간 동안 유효하며, 자동 갱신되지 않습니다. 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책 정의이며, 실제 배지 레코드나 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않습니다. [R1]"
+                }
+              ],
+              "extractive": {
+                "version": 1,
+                "turnKind": "USER_QUESTION",
+                "totalQuestions": 1,
+                "omittedQuestions": 0,
+                "maxSerializedCharacters": 8000,
+                "answerCharacterLimit": 800,
+                "omittedAnswers": 0,
+                "truncatedAnswerBundleIds": [],
+                "questions": [
+                  {
+                    "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+                    "bundleDigest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "legacyUnclassified": false
+                  }
+                ],
+                "retrievalQueries": [
+                  "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                  "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "jobs": [
+        {
+          "id": "0fa364e5-0d7c-40e5-b78f-7e3a639c6104",
+          "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+          "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+          "approvalId": "seeded-0fa364e5-0d7c-40e5-b78f-7e3a639c6104",
+          "provider": "CODEX",
+          "requestedModel": "synthetic-seeded-b1-not-generated",
+          "digest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+          "status": "SUCCEEDED",
+          "answer": "BLUE 배지는 발급 시각부터 72시간 동안 유효하며, 자동 갱신되지 않습니다. 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책 정의이며, 실제 배지 레코드나 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않습니다. [R1]",
+          "error": null,
+          "createdAt": "2026-10-26T00:00:00Z",
+          "updatedAt": "2026-10-26T00:00:00Z"
+        },
+        {
+          "id": "8d6f4646-b23b-463d-9948-cb979a43b265",
+          "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+          "bundleId": "2167cfe6-03fb-4148-8674-26a9a01e7a11",
+          "approvalId": "seeded-8d6f4646-b23b-463d-9948-cb979a43b265",
+          "provider": "CODEX",
+          "requestedModel": "synthetic-seeded-b1-not-generated",
+          "digest": "0fc5a9e42052f9f5231039eb0fc88d5276df7a3dcaefe642084dda72e61923b1",
+          "status": "SUCCEEDED",
+          "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+          "error": null,
+          "createdAt": "2026-10-26T00:00:00Z",
+          "updatedAt": "2026-10-26T00:00:00Z"
+        }
+      ]
+    },
+    "history": [
+      {
+        "id": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+        "createdAt": "2026-10-26T14:57:40.987394Z",
+        "turns": 2,
+        "questions": [
+          "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+          "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "597780cc-b611-403d-8cd6-51202db7efe6",
+        "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+        "createdAt": "2026-10-26T14:57:13.726674Z",
+        "digest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+        "payload": {
+          "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+          "domains": [],
+          "includeKnowledge": false,
+          "status": "READY",
+          "usedCharacters": 247,
+          "maxCharacters": 10702,
+          "items": [
+            {
+              "label": "R1",
+              "kind": "ORIGINAL",
+              "entryId": "01706cde-0fdd-40bf-a358-939ecaed880a",
+              "cardId": null,
+              "version": null,
+              "title": "synthetic-context-badges.md",
+              "sourceId": "a498988c-353c-4029-9a02-a9fdb42f0c29",
+              "path": "synthetic-context-badges.md",
+              "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+              "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+              "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+              "startLine": 1,
+              "endLine": 5,
+              "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+              "supports": []
+            }
+          ],
+          "excluded": [],
+          "chatContext": {
+            "threadId": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+            "parentBundleId": null,
+            "requestId": "4b1724d5-28ab-474e-a155-512ed2109a54",
+            "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+            "history": [],
+            "extractive": {
+              "version": 1,
+              "turnKind": "USER_QUESTION",
+              "totalQuestions": 0,
+              "omittedQuestions": 0,
+              "maxSerializedCharacters": 8000,
+              "answerCharacterLimit": 800,
+              "omittedAnswers": 0,
+              "truncatedAnswerBundleIds": [],
+              "questions": [],
+              "retrievalQueries": [
+                "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "2167cfe6-03fb-4148-8674-26a9a01e7a11",
+        "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+        "createdAt": "2026-10-26T14:57:40.987394Z",
+        "digest": "0fc5a9e42052f9f5231039eb0fc88d5276df7a3dcaefe642084dda72e61923b1",
+        "payload": {
+          "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+          "domains": [],
+          "includeKnowledge": false,
+          "status": "READY",
+          "usedCharacters": 247,
+          "maxCharacters": 10079,
+          "items": [
+            {
+              "label": "R1",
+              "kind": "ORIGINAL",
+              "entryId": "01706cde-0fdd-40bf-a358-939ecaed880a",
+              "cardId": null,
+              "version": null,
+              "title": "synthetic-context-badges.md",
+              "sourceId": "a498988c-353c-4029-9a02-a9fdb42f0c29",
+              "path": "synthetic-context-badges.md",
+              "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+              "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+              "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+              "startLine": 1,
+              "endLine": 5,
+              "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+              "supports": []
+            }
+          ],
+          "excluded": [],
+          "chatContext": {
+            "threadId": "93b0cd62-899a-48b0-b94a-9a9950f45247",
+            "parentBundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+            "requestId": "37579888-1870-44c8-b0e3-a2dc17d8f17e",
+            "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+            "history": [
+              {
+                "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+                "bundleDigest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "answer": "BLUE 배지는 발급 시각부터 72시간 동안 유효하며, 자동 갱신되지 않습니다. 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책 정의이며, 실제 배지 레코드나 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않습니다. [R1]"
+              }
+            ],
+            "extractive": {
+              "version": 1,
+              "turnKind": "USER_QUESTION",
+              "totalQuestions": 1,
+              "omittedQuestions": 0,
+              "maxSerializedCharacters": 8000,
+              "answerCharacterLimit": 800,
+              "omittedAnswers": 0,
+              "truncatedAnswerBundleIds": [],
+              "questions": [
+                {
+                  "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+                  "bundleDigest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+                  "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "legacyUnclassified": false
+                }
+              ],
+              "retrievalQueries": [
+                "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "plans": [
+      [],
+      []
+    ],
+    "answerJobs": [
+      {
+        "id": "0fa364e5-0d7c-40e5-b78f-7e3a639c6104",
+        "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+        "bundleId": "597780cc-b611-403d-8cd6-51202db7efe6",
+        "approvalId": "seeded-0fa364e5-0d7c-40e5-b78f-7e3a639c6104",
+        "provider": "CODEX",
+        "requestedModel": "synthetic-seeded-b1-not-generated",
+        "digest": "9d5118b4bbf02e218cd4f9fe4d172075ca10e4a4ef2dfee70821195eff7f9bd1",
+        "status": "SUCCEEDED",
+        "answer": "BLUE 배지는 발급 시각부터 72시간 동안 유효하며, 자동 갱신되지 않습니다. 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책 정의이며, 실제 배지 레코드나 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않습니다. [R1]",
+        "error": null,
+        "createdAt": "2026-10-26T00:00:00Z",
+        "updatedAt": "2026-10-26T00:00:00Z"
+      },
+      {
+        "id": "8d6f4646-b23b-463d-9948-cb979a43b265",
+        "workspaceId": "ea6f2665-1edd-4703-b724-c5223e2e366b",
+        "bundleId": "2167cfe6-03fb-4148-8674-26a9a01e7a11",
+        "approvalId": "seeded-8d6f4646-b23b-463d-9948-cb979a43b265",
+        "provider": "CODEX",
+        "requestedModel": "synthetic-seeded-b1-not-generated",
+        "digest": "0fc5a9e42052f9f5231039eb0fc88d5276df7a3dcaefe642084dda72e61923b1",
+        "status": "SUCCEEDED",
+        "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+        "error": null,
+        "createdAt": "2026-10-26T00:00:00Z",
+        "updatedAt": "2026-10-26T00:00:00Z"
+      }
+    ],
+    "generationJobs": []
+  },
+  "lastModelVerificationAt": "2026-10-26T14:58:44.399Z",
+  "completed": true,
+  "sourceJarUnchanged": true,
+  "snapshotJarUnchanged": true,
+  "assetsUnchanged": {
+    "runtime/bin/java": true,
+    "ai/codex": true
+  },
+  "finishedAt": "2026-10-26T14:59:56.841Z"
+}

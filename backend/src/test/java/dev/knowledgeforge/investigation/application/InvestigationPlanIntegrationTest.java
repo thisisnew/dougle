@@ -50,8 +50,10 @@ class InvestigationPlanIntegrationTest {
     @Autowired EvidenceBundleService bundles;
     @Autowired dev.knowledgeforge.search.application.EvidenceBundleStore bundleStore;
     @Autowired ChatThreadService threads;
-    @Autowired SearchService search;
+    @MockitoSpyBean SearchService search;
     @Autowired InvestigationPlanPreview planPreviews;
+    @Autowired dev.knowledgeforge.plugins.adapter.DatadogConnections datadogConnections;
+    @Autowired dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService operationalReads;
     @Autowired JdbcTemplate jdbc;
     @MockitoBean PlanModel model;
     @MockitoSpyBean LocalInvestigationTools localTools;
@@ -97,6 +99,218 @@ class InvestigationPlanIntegrationTest {
     }
     void rejects(int status, Runnable action) {
         assertThatThrownBy(action::run).isInstanceOfSatisfying(LibraryException.class, problem -> assertThat(problem.status()).isEqualTo(status));
+    }
+
+    private String logCandidate() {
+        return "{\"decision\":\"PROPOSE_DATADOG_LOGS\",\"query\":null,\"candidate\":{\"environment\":null,\"service\":null,\"indexes\":null,\"from\":null,\"to\":null,\"timeZone\":null,\"limit\":null}}";
+    }
+
+    @Test void completedScopeCancellationRequiresExactRevisionAndOwnershipAndPreservesPlanReceipt() throws Exception {
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn(logCandidate());
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        var scope = service.scope(workspace, completed.id());
+        rejects(400, () -> service.cancelScope(workspace, completed.id(), 0));
+        rejects(409, () -> service.cancelScope(workspace, completed.id(), scope.revision() + 1));
+        rejects(404, () -> service.cancelScope("other", completed.id(), scope.revision()));
+        assertThat(service.requireCurrent(workspace, scope.id())).isEqualTo(scope);
+        var mvc = MockMvcBuilders.standaloneSetup(new InvestigationPlanController(service))
+                .setControllerAdvice(new dev.knowledgeforge.library.adapter.web.ApiErrors()).build();
+        String route = "/api/workspaces/" + workspace + "/investigation-plans/jobs/" + completed.id() + "/scope/cancel";
+        for (String body : List.of("{}", "null", "{\"expectedRevision\":null}", "{\"expectedRevision\":\"1\"}",
+                "{\"expectedRevision\":1.5}", "{\"expectedRevision\":1,\"expectedRevision\":1}",
+                "{\"expectedRevision\":1,\"connectionGeneration\":\"client\"}", "{\"expectedRevision\":1}{}")) {
+            mvc.perform(post(route).contentType("application/json").content(body)).andExpect(status().isBadRequest());
+            assertThat(service.requireCurrent(workspace, scope.id())).isEqualTo(scope);
+        }
+        mvc.perform(post(route).contentType("application/json").content(" ".repeat(513))).andExpect(status().isPayloadTooLarge());
+        mvc.perform(post(route).contentType("application/json").content("{\"expectedRevision\":1}")).andExpect(status().isNoContent());
+        rejects(404, () -> service.clarification(workspace, completed.id()));
+        rejects(404, () -> service.requireCurrent(workspace, scope.id()));
+        assertThat(service.get(workspace, completed.id())).isEqualTo(completed);
+        verifyNoInteractions(localTools, mysqlRead, datadogRead);
+    }
+
+    @Test void cancellingCompletedScopeRevokesExistingReadApprovalBeforeAnyProviderCall() throws Exception {
+        var now = Instant.now().minusSeconds(5);
+        datadogConnections.save(workspace, new dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Config(
+                dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Site.EU1,
+                "synthetic_api_key_0000000000000000", "synthetic_app_key_0000000000000000"));
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn("""
+                {"decision":"PROPOSE_DATADOG_LOGS","query":null,"candidate":{
+                 "environment":"staging","service":"orders","indexes":["fixture-index"],
+                 "from":"%s","to":"%s","timeZone":"UTC","limit":20}}
+                """.formatted(now.minusSeconds(600), now));
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        var scope = service.scope(workspace, completed.id());
+        var read = operationalReads.preview(workspace,
+                new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Input(scope.id(), scope.revision()));
+        service.cancelScope(workspace, completed.id(), scope.revision());
+        rejects(404, () -> operationalReads.execute(workspace, read.id(),
+                new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Start(UUID.randomUUID().toString(), read.digest(), true)));
+        rejects(404, () -> operationalReads.preview(workspace,
+                new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Input(scope.id(), scope.revision())));
+        verifyNoInteractions(localTools, mysqlRead, datadogRead);
+    }
+
+    @Test void plannerCaptureUsesExactTypedSnapshotAndNeverPerformsASecondSearchOrHoldsPlanMonitor() throws Exception {
+        clearInvocations(search);
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        assertThat(completed.status()).isEqualTo("SUCCEEDED");
+        verify(search, times(1)).searchQuestion(eq(workspace), eq("telescope"), anyList(), eq(false));
+        var snapshot = localTools.snapshot(workspace, completed.id(), completed.query());
+        doAnswer(call -> {
+            assertThat(Thread.holdsLock(service)).isFalse();
+            return snapshot;
+        }).when(localTools).snapshot(workspace, completed.id(), completed.query());
+        clearInvocations(search);
+        String requestId = UUID.randomUUID().toString();
+        var captured = service.capture(workspace, completed.id(), requestId);
+        assertThat(captured.payload().items()).extracting(EvidenceBundle.Item::quote)
+                .containsExactlyElementsOf(snapshot.entries().stream().map(entry -> entry.hit().snippet()).toList());
+        assertThat(service.capture(workspace, completed.id(), requestId)).isEqualTo(captured);
+        verify(search, never()).searchQuestion(anyString(), anyString(), anyList(), anyBoolean());
+        verify(search, never()).searchQuestionCandidates(anyString(), anyString());
+        verify(model, times(1)).generate(anyString(), anyString(), anyString());
+    }
+
+    @Test void missingSnapshotCannotFallbackToNewSearchOrCommitAnotherTurn() throws Exception {
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        doThrow(new LibraryException(409, "synthetic expired snapshot")).when(localTools)
+                .snapshot(workspace, completed.id(), completed.query());
+        clearInvocations(search);
+        rejects(409, () -> service.capture(workspace, completed.id(), UUID.randomUUID().toString()));
+        assertThat(threads.get(workspace, bundle.payload().chatContext().threadId()).bundles()).hasSize(1);
+        verify(search, never()).searchQuestion(anyString(), anyString(), anyList(), anyBoolean());
+        verify(search, never()).searchQuestionCandidates(anyString(), anyString());
+    }
+
+    @Test void actualPlannerScopeBridgeApprovedLogReadCaptureAndImmutableAttachmentRemainSeparate() throws Exception {
+        var now = Instant.now().minusSeconds(5);
+        datadogConnections.save(workspace, new dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Config(
+                dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Site.EU1,
+                "synthetic_api_key_0000000000000000", "synthetic_app_key_0000000000000000"));
+        bundle = threads.create(workspace, new ChatThreadService.Create(UUID.randomUUID().toString(), null, null,
+                "staging orders 요청 실패 로그를 확인해 주세요", List.of()));
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn("""
+                {"decision":"PROPOSE_DATADOG_LOGS","query":null,"candidate":{
+                 "environment":"staging","service":"orders","indexes":["fixture-index"],
+                 "from":"%s","to":"%s","timeZone":"UTC","limit":20}}
+                """.formatted(now.minusSeconds(600), now));
+        doReturn(new dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Result("synthetic request SYN-42 failed", 1, false))
+                .when(datadogRead).read(any(), any(), any(), any());
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        var clarification = service.clarification(workspace, completed.id());
+        assertThat(clarification.questions()).isEmpty();
+        assertThat(clarification.internalResolutionRequired()).isFalse();
+        var readPreview = operationalReads.preview(workspace,
+                new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Input(clarification.scopeId(), clarification.revision()));
+        verify(datadogRead, never()).read(any(), any(), any(), any());
+        var denied = new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Start(UUID.randomUUID().toString(), readPreview.digest(), false);
+        rejects(403, () -> operationalReads.execute(workspace, readPreview.id(), denied));
+        var approved = new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Start(UUID.randomUUID().toString(), readPreview.digest(), true);
+        var result = operationalReads.execute(workspace, readPreview.id(), approved);
+        assertThat(result.status()).isEqualTo("SUCCEEDED");
+        assertThat(operationalReads.execute(workspace, readPreview.id(), approved)).isEqualTo(result);
+        verify(datadogRead, times(1)).read(any(), any(), any(), any());
+        var capturePreview = operationalReads.capturePreview(workspace, readPreview.id());
+        rejects(403, () -> operationalReads.capture(workspace, readPreview.id(),
+                new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Start(UUID.randomUUID().toString(), capturePreview.digest(), false)));
+        var captureRequest = new dev.knowledgeforge.investigation.adapter.ConversationOperationalReadService.Start(UUID.randomUUID().toString(), capturePreview.digest(), true);
+        var receipt = operationalReads.capture(workspace, readPreview.id(), captureRequest);
+        assertThat(receipt.status()).isEqualTo("CAPTURED");
+        assertThat(receipt.externalCalls()).isZero();
+        assertThat(operationalReads.capture(workspace, readPreview.id(), captureRequest)).isEqualTo(receipt);
+        var saved = threads.create(workspace, new ChatThreadService.Create(UUID.randomUUID().toString(),
+                bundle.payload().chatContext().threadId(), bundle.id(), "이 결과에서 무엇을 확인할 수 있나요?", List.of(receipt.attachment().id())));
+        assertThat(saved.payload().items()).anySatisfy(item -> assertThat(item.quote()).contains("SYN-42", "staging", "orders", "fixture-index"));
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM answer_job", Integer.class)).isZero();
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM answer_approval", Integer.class)).isZero();
+        verify(model, times(1)).generate(anyString(), anyString(), anyString());
+        verifyNoInteractions(mysqlRead, localTools);
+    }
+
+    @Test void typedPlanCreatesBusinessOnlyClarificationWithoutPersistingTechnicalCandidateOrExecuting() throws Exception {
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn(logCandidate());
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        assertThat(completed.status()).isEqualTo("SUCCEEDED");
+        assertThat(completed.toolStatus()).isEqualTo("PENDING_SCOPE");
+        var clarification = service.clarification(workspace, completed.id());
+        assertThat(clarification.threadId()).isEqualTo(bundle.payload().chatContext().threadId());
+        assertThat(clarification.parentBundleId()).isEqualTo(bundle.id());
+        assertThat(clarification.executionAllowed()).isFalse();
+        assertThat(clarification.internalResolutionRequired()).isTrue();
+        assertThat(clarification.questions()).extracting(question -> question.topic().name())
+                .containsExactly("ENVIRONMENT", "TIME_WINDOW", "TIME_ZONE");
+        assertThat(completed.output()).isEqualTo(clarification.scopeId()).matches("[a-f0-9-]{36}");
+        assertThat(service.scope(workspace, completed.id()).executionAllowed()).isFalse();
+        var mvc = MockMvcBuilders.standaloneSetup(new InvestigationPlanController(service))
+                .setControllerAdvice(new dev.knowledgeforge.library.adapter.web.ApiErrors()).build();
+        mvc.perform(get("/api/workspaces/{workspaceId}/investigation-plans/jobs/{id}/clarification", workspace, completed.id()))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.executionAllowed").value(false))
+                .andExpect(jsonPath("$.candidate").doesNotExist()).andExpect(jsonPath("$.connectionGeneration").doesNotExist())
+                .andExpect(jsonPath("$.requiredFields").doesNotExist());
+        rejects(404, () -> service.clarification("other", completed.id()));
+        rejects(409, () -> service.capture(workspace, completed.id(), UUID.randomUUID().toString()));
+        verifyNoInteractions(localTools, mysqlRead, datadogRead);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM answer_job", Integer.class)).isZero();
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM answer_approval", Integer.class)).isZero();
+    }
+
+    @Test void naturalClarificationRetainsOriginalTaskAndRequiresFreshApprovalWithoutOldScopeInheritance() throws Exception {
+        String original = bundle.payload().question();
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn(logCandidate());
+        var old = terminal(service.start(workspace, startRequest(preview())).id());
+        bundle = threads.create(workspace, new ChatThreadService.Create(UUID.randomUUID().toString(),
+                bundle.payload().chatContext().threadId(), bundle.id(), "staging 환경이고 시간대는 UTC입니다", List.of()));
+        rejects(409, () -> service.clarification(workspace, old.id()));
+        var nextPreview = preview();
+        assertThat(nextPreview.prompt()).contains(original, "staging", "UTC", "Keep the original task", "never ask users for SQL");
+        verify(model, times(1)).generate(anyString(), anyString(), anyString());
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn(logCandidate()
+                .replace("\"environment\":null", "\"environment\":\"staging\"")
+                .replace("\"timeZone\":null", "\"timeZone\":\"UTC\""));
+        var next = terminal(service.start(workspace, startRequest(nextPreview)).id());
+        var clarification = service.clarification(workspace, next.id());
+        assertThat(clarification.parentBundleId()).isEqualTo(bundle.id());
+        assertThat(clarification.scopeId()).isNotEqualTo(old.output());
+        assertThat(clarification.questions()).extracting(question -> question.topic().name()).containsExactly("TIME_WINDOW");
+        verifyNoInteractions(localTools, mysqlRead, datadogRead);
+    }
+
+    @Test void scopeExpiryAndConnectionAbaNeverReconstructPersistedScopeId() throws Exception {
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn(logCandidate());
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        datadogConnections.save(workspace, new dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Config(
+                dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Site.EU1,
+                "synthetic_api_key_0000000000000000", "synthetic_app_key_0000000000000000"));
+        datadogConnections.disconnect(workspace);
+        rejects(409, () -> service.clarification(workspace, completed.id()));
+        rejects(404, () -> service.clarification(workspace, completed.id()));
+        var fresh = terminal(service.start(workspace, startRequest(preview())).id());
+        var scopes = (OperationalScopeClarification) ReflectionTestUtils.getField(service, "scopes");
+        var clock = ReflectionTestUtils.getField(scopes, "clock");
+        try {
+            ReflectionTestUtils.setField(scopes, "clock", java.time.Clock.fixed(Instant.now().plusSeconds(601), java.time.ZoneOffset.UTC));
+            rejects(409, () -> service.clarification(workspace, fresh.id()));
+        } finally { ReflectionTestUtils.setField(scopes, "clock", clock); }
+        rejects(404, () -> service.clarification(workspace, fresh.id()));
+        verifyNoInteractions(localTools, mysqlRead, datadogRead);
+    }
+
+    @Test void failedSqlitePublicationRollsBackJobAndRemovesUnpublishedMemoryCandidate() throws Exception {
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn(logCandidate());
+        var scopes = ReflectionTestUtils.getField(service, "scopes");
+        var pending = (java.util.Map<?, ?>) ReflectionTestUtils.getField(scopes, "pending");
+        int before = pending.size();
+        jdbc.execute("CREATE TEMP TRIGGER scope_fail BEFORE UPDATE ON investigation_plan WHEN NEW.tool_status='PENDING_SCOPE' BEGIN SELECT RAISE(ABORT, 'synthetic rollback'); END");
+        try {
+            var failed = terminal(service.start(workspace, startRequest(preview())).id());
+            assertThat(failed.status()).isEqualTo("FAILED");
+            assertThat(failed.output()).isNull();
+            assertThat(pending).hasSize(before);
+            rejects(409, () -> service.clarification(workspace, failed.id()));
+        } finally { jdbc.execute("DROP TRIGGER scope_fail"); }
+        verifyNoInteractions(localTools, mysqlRead, datadogRead);
     }
 
     @Test void previewIsPersistedBoundAndDoesNotCallModel() {

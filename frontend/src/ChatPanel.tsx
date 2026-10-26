@@ -11,6 +11,9 @@ import { attachmentAccept, useQuestionAttachments } from './useQuestionAttachmen
 import Wordmark from './Wordmark'
 import InvestigationPanel from './InvestigationPanel'
 import BrowserInvestigationPanel from './BrowserInvestigationPanel'
+import type { ConversationCapture, ConversationScope } from './ConversationReadPanel'
+import { readConversationPlan, sendConversationPlan, type ConversationPlan, type PlanSubmission } from './sendConversationPlan'
+import { readPlanSubmission, savePlanSubmission, removePlanSubmission } from './planSubmissionStorage'
 
 type Summary = { id: string; question: string }
 type Bundle = { id: string; workspaceId: string; digest: string; payload: { question: string; status: string; chatContext?: { threadId: string; extractive?: unknown } | null;
@@ -65,6 +68,12 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
   const [job, setJob] = useState<AnswerJob | null>(null)
   const [previousTurns, setPreviousTurns] = useState<{ bundle: Bundle; job: AnswerJob | null; fresh: boolean }[]>([])
   const [busy, setBusy] = useState(false)
+  const [investigating, setInvestigating] = useState(false)
+  const [plan, setPlan] = useState<ConversationPlan | null>(null)
+  const [planPending, setPlanPending] = useState(false)
+  const [historyPlanUnknown, setHistoryPlanUnknown] = useState(false)
+  const [clarification, setClarification] = useState<ConversationScope | null>(null)
+  const planSubmission = useRef<PlanSubmission | undefined>(undefined)
   const [submission, setSubmission] = useState<ChatSubmission | null>(null)
   const [canAbandonAnswer, setCanAbandonAnswer] = useState(false)
   const [fresh, setFresh] = useState(false)
@@ -76,18 +85,25 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
   const threadId = useRef<string | null>(selectedId)
   const turnRequest = useRef<{ key: string; requestId: string } | null>(null)
   const captureRequest = useRef<{ jobId: string; requestId: string } | null>(null)
+  const operationalTurn = useRef<{ key: string; requestId: string } | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
   const attachments = useQuestionAttachments(workspaceId)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}`
   const connected = connection?.state === 'AUTHENTICATED'
   const searchReady = searchState === 'READY'
-  const pendingAnswer = !!bundle && !job && bundle.payload.status !== 'NO_EVIDENCE' && bundle.payload.items.length > 0
+  const activePlan = !!plan && ['QUEUED', 'RUNNING', 'CANCELLING'].includes(plan.status)
+  const answerPlanResolved = !plan || (['SUCCEEDED', 'STOPPED'].includes(plan.status) && plan.decision === 'STOP')
+  const pendingAnswer = !!bundle && !job && answerPlanResolved && !planPending && bundle.payload.status !== 'NO_EVIDENCE' && bundle.payload.items.length > 0
     && bundle.payload.items.every(item => ['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind))
   useEffect(() => {
     if (created.current === selectedId && selectedId) { created.current = null; return }
     created.current = null
     threadId.current = selectedId
     turnRequest.current = null
+    operationalTurn.current = null
+    setInvestigating(false)
+    setPlan(null); setPlanPending(false); setHistoryPlanUnknown(false); planSubmission.current = undefined
+    setClarification(null)
     attachments.reset()
     setPreviousTurns([])
     pending.current?.abort()
@@ -104,6 +120,15 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
         const turns = detail.bundles.map(value => ({ bundle: value, job: detail.jobs.find(item => item.bundleId === value.id) ?? null, fresh: false }))
         const current = turns.pop()!
         setPreviousTurns(turns); setBundle(current.bundle); setJob(current.job)
+        setPlanPending(true); setHistoryPlanUnknown(true)
+        const planScope = { workspaceId, bundleId: current.bundle.id, bundleDigest: current.bundle.digest }
+        planSubmission.current = readPlanSubmission(planScope)
+        const restoredPlan = await readConversationPlan(workspaceId, current.bundle.id, controller.signal)
+        if (controller.signal.aborted) return
+        if (planSubmission.current && restoredPlan && (restoredPlan.id !== planSubmission.current.requestId || restoredPlan.digest !== planSubmission.current.digest
+          || restoredPlan.provider !== planSubmission.current.provider || restoredPlan.requestedModel !== planSubmission.current.requestedModel)) throw new Error('조사 접수 정보가 다릅니다.')
+        setPlan(restoredPlan); setPlanPending(!!planSubmission.current && !restoredPlan); setHistoryPlanUnknown(false)
+        if (restoredPlan && planSubmission.current) removePlanSubmission(planScope, restoredPlan.id)
         const saved = readChatSubmission({ workspaceId, bundleId: current.bundle.id, bundleDigest: current.bundle.digest })
         if (saved) {
           const reconciled = detail.jobs.find(value => value.id === saved.submission.requestId && value.bundleId === saved.bundleId
@@ -177,7 +202,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
 
   async function submit(event: FormEvent) {
     event.preventDefault()
-    if (locked.current || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !connected || !searchReady || !question.trim()) return
+    if (locked.current || investigating || activePlan || planPending || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !connected || !searchReady || !question.trim()) return
     if (connection?.provider !== 'CODEX' && attachments.items.some(item => item.mediaType.startsWith('image/'))) {
       setError('이미지 질문은 Codex를 선택해 주세요.'); return
     }
@@ -186,6 +211,15 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     pending.current = controller
     setBusy(true); setError(''); setSentQuestion(question.trim())
     try {
+      if (clarification) {
+        const current = await request<ConversationScope>(`${base}/investigation-plans/jobs/${encodeURIComponent(clarification.jobId)}/clarification`, { signal: controller.signal })
+        if (controller.signal.aborted) return
+        if (current.workspaceId !== workspaceId || current.threadId !== threadId.current || current.parentBundleId !== bundle?.id
+          || current.scopeId !== clarification.scopeId || current.revision !== clarification.revision
+          || current.executionAllowed !== false || current.sessionOnly !== true || !Number.isFinite(Date.parse(current.expiresAt)) || Date.parse(current.expiresAt) <= Date.now()) {
+          throw new Error('조회 범위가 변경되었습니다. 대화 내용을 보존했으니 범위를 다시 확인해 주세요.')
+        }
+      }
       const input = { threadId: threadId.current, parentBundleId: bundle?.id ?? null, question: question.trim(),
         ...(attachments.items.length ? { attachmentIds: attachments.items.map(item => item.id) } : {}) }
       const key = JSON.stringify(input)
@@ -199,12 +233,70 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       turnRequest.current = null
       threadId.current = value.payload.chatContext?.threadId ?? value.id
       attachments.reset(true); setBundle(value); setQuestion(''); created.current = selectedId === threadId.current ? null : threadId.current; onCreated(threadId.current)
-      if (value.payload.items.length && value.payload.status !== 'NO_EVIDENCE'
-        && value.payload.items.every(item => ['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind))) {
-        setJob(await requestAnswer(value, controller))
-      }
+      setPlan(null); setClarification(null); planSubmission.current = undefined
+      await planAndAnswer(value, controller)
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) { locked.current = false; setBusy(false); setSentQuestion('') } }
+  }
+
+  async function planAndAnswer(value: Bundle, controller: AbortController) {
+    if (value.payload.items.some(item => item.kind === 'ATTACHMENT_IMAGE')) {
+      setPlanPending(false)
+      setJob(await requestAnswer(value, controller))
+      return
+    }
+    setPlanPending(true)
+    const planScope = { workspaceId, bundleId: value.id, bundleDigest: value.digest }
+    const decision = await sendConversationPlan(workspaceId, value.id, connection!.provider, connection?.model ?? null,
+      controller.signal, next => { savePlanSubmission(planScope, next); planSubmission.current = next }, planSubmission.current)
+    if (controller.signal.aborted) return
+    if (planSubmission.current) removePlanSubmission(planScope, decision.id)
+    setPlanPending(false)
+    if (decision.status === 'SUCCEEDED' && ['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'].includes(decision.decision ?? '')) {
+      setPlan(decision)
+      return
+    }
+    if (!['SUCCEEDED', 'STOPPED'].includes(decision.status)) { setPlan(decision); throw new Error('자료 확인을 마치지 못했습니다. 조사를 자동으로 반복하지 않습니다.') }
+    if (decision.decision === 'SEARCH' && decision.toolStatus === 'OK' && !decision.truncated) {
+      setPlan(decision)
+      if (captureRequest.current?.jobId !== decision.id) captureRequest.current = { jobId: decision.id, requestId: crypto.randomUUID() }
+      const captured = await request<Bundle>(`${base}/investigation-plans/jobs/${encodeURIComponent(decision.id)}/capture`, {
+        method: 'POST', signal: controller.signal, body: JSON.stringify({ requestId: captureRequest.current.requestId }),
+      })
+      if (controller.signal.aborted) return
+      if (captured.workspaceId !== workspaceId || captured.payload.chatContext?.threadId !== threadId.current) throw new Error('조사 대상 대화가 다릅니다.')
+      setPreviousTurns(turns => [...turns, { bundle: value, job: null, fresh: true }])
+      setBundle(captured); onCreated(threadId.current!)
+      value = captured
+    } else if (decision.decision !== 'STOP' && decision.status !== 'STOPPED') {
+      setPlan(decision)
+      return
+    }
+    setPlan(null)
+    if (value.payload.items.length && value.payload.status !== 'NO_EVIDENCE'
+      && value.payload.items.every(item => ['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind))) setJob(await requestAnswer(value, controller))
+  }
+
+  async function retryPlan() {
+    if (!bundle || locked.current || !connected || !searchReady) return
+    locked.current = true
+    const controller = new AbortController()
+    pending.current = controller
+    setBusy(true); setError('')
+    try {
+      if (historyPlanUnknown) {
+        const restoredPlan = await readConversationPlan(workspaceId, bundle.id, controller.signal)
+        if (!controller.signal.aborted) {
+          const saved = planSubmission.current
+          if (saved && restoredPlan && (restoredPlan.id !== saved.requestId || restoredPlan.provider !== saved.provider
+            || restoredPlan.requestedModel !== saved.requestedModel || restoredPlan.digest !== saved.digest)) throw new Error('조사 접수 정보가 다릅니다.')
+          setPlan(restoredPlan); setPlanPending(!!saved && !restoredPlan); setHistoryPlanUnknown(false)
+          if (saved && restoredPlan) removePlanSubmission({ workspaceId, bundleId: bundle.id, bundleDigest: bundle.digest }, restoredPlan.id)
+        }
+      } else await planAndAnswer(bundle, controller)
+    }
+    catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
+    finally { if (!controller.signal.aborted) { locked.current = false; setBusy(false) } }
   }
 
   async function retryAnswer() {
@@ -233,11 +325,51 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       if (controller.signal.aborted) return
       if (value.workspaceId !== workspaceId || value.payload.chatContext?.threadId !== threadId.current) throw new Error('조사 대상 대화가 다릅니다.')
       setPreviousTurns(turns => [...turns, { bundle, job, fresh }])
-      setBundle(value); setJob(null); setSubmission(null); setCanAbandonAnswer(false); setFresh(true)
+      setBundle(value); setJob(null); setSubmission(null); setCanAbandonAnswer(false); setFresh(true); setPlan(null)
       onCreated(threadId.current!)
       if (value.payload.items.length && value.payload.status !== 'NO_EVIDENCE') setJob(await requestAnswer(value, controller))
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) { locked.current = false; setBusy(false) } }
+  }
+
+  async function answerOperational(receipt: ConversationCapture, signal: AbortSignal) {
+    if (!bundle || locked.current || busy || !connected || !searchReady || activeAnswerJob(job) || signal.aborted) throw new Error('현재 대화가 끝난 뒤 다시 확인해 주세요.')
+    if (receipt.threadId !== threadId.current || receipt.parentBundleId !== bundle.id) throw new Error('조회 대상 대화가 다릅니다.')
+    locked.current = true
+    const controller = new AbortController()
+    const abort = () => controller.abort()
+    signal.addEventListener('abort', abort, { once: true })
+    let rejectAbort: () => void = () => {}
+    const interrupted = new Promise<never>((_, reject) => {
+      rejectAbort = () => reject(new Error('자료 연결 응답을 확인하지 못했습니다. 저장된 자료에서 다시 확인해 주세요.'))
+      controller.signal.addEventListener('abort', rejectAbort, { once: true })
+    })
+    pending.current = controller
+    setBusy(true); setError('')
+    const input = { threadId: threadId.current, parentBundleId: bundle.id, question: bundle.payload.question, attachmentIds: [receipt.attachment.id] }
+    const key = JSON.stringify(input)
+    if (operationalTurn.current?.key !== key) operationalTurn.current = { key, requestId: crypto.randomUUID() }
+    try {
+      const current = await Promise.race([request<{ id: string; bundles: Bundle[] }>(`${base}/chat-threads/${encodeURIComponent(receipt.threadId)}`, { signal: controller.signal }), interrupted])
+      if (controller.signal.aborted) return
+      if (current.id !== receipt.threadId || current.bundles.at(-1)?.id !== receipt.parentBundleId
+        || current.bundles.some(item => item.workspaceId !== workspaceId)) throw new Error('조회 이후 대화가 변경되었습니다. 저장한 자료는 자동 전송하지 않습니다.')
+      const value = await Promise.race([request<Bundle>(`${base}/chat-threads`, { method: 'POST', signal: controller.signal,
+        body: JSON.stringify({ requestId: operationalTurn.current.requestId, ...input }) }), interrupted])
+      if (controller.signal.aborted) return
+      if (value.workspaceId !== workspaceId || value.payload.chatContext?.threadId !== threadId.current) throw new Error('조회 대상 대화가 다릅니다.')
+      signal.removeEventListener('abort', abort)
+      setPreviousTurns(turns => [...turns, { bundle, job, fresh }])
+      setBundle(value); setJob(null); setSubmission(null); setCanAbandonAnswer(false); setFresh(true); setInvestigating(false); setPlan(null)
+      onCreated(threadId.current!)
+      if (value.payload.items.length && value.payload.status !== 'NO_EVIDENCE') setJob(await Promise.race([requestAnswer(value, controller), interrupted]))
+    } catch (reason) {
+      if (!controller.signal.aborted) { setError((reason as Error).message); throw reason }
+    } finally {
+      signal.removeEventListener('abort', abort)
+      controller.signal.removeEventListener('abort', rejectAbort)
+      if (pending.current === controller) { locked.current = false; setBusy(false) }
+    }
   }
 
   const activeBundleId = bundle?.id
@@ -264,13 +396,16 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       {current && busy && !sentQuestion && <p role="status" className="chat-thinking">확인해보겠습니다<span aria-hidden="true">…</span></p>}
       {job ? <AnswerJobsPanel key={job.id} workspaceId={workspaceId} bundleId={bundle.id} approval={null} initialJob={job} onJobChange={current ? setJob : undefined} compact animate={turnFresh} references={references} />
         : current && bundle.payload.items.some(item => !['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind)) ? <p>이전 지식 문서가 포함된 질문입니다. 원본에서 다시 확인해 주세요.<Button variant="outline" onClick={() => { setQuestion(bundle.payload.question); setBundle(null); threadId.current = null }}>원본으로 다시 질문</Button></p>
-        : current && !busy && bundle.payload.items.length > 0 && bundle.payload.status !== 'NO_EVIDENCE' && <Button disabled={!connected} onClick={() => void retryAnswer()}>{submission ? '접수 상태 다시 확인' : '답변 받기'}</Button>}
+        : current && !busy && answerPlanResolved && !planPending && bundle.payload.items.length > 0 && bundle.payload.status !== 'NO_EVIDENCE' && <Button disabled={!connected} onClick={() => void retryAnswer()}>{submission ? '접수 상태 다시 확인' : '답변 받기'}</Button>}
+      {current && !busy && planPending && <Button disabled={!connected || !searchReady} onClick={() => void retryPlan()}>조사 접수 상태 확인</Button>}
       {current && !busy && pendingAnswer && canAbandonAnswer && !submission && !job && <Button variant="outline" onClick={() => void abandonAnswer()}>새 대화로 다시 질문</Button>}
       {!bundle.payload.items.length && <p>질문과 관련된 내용을 찾지 못했어요.</p>}
-      {current && ((job && !activeAnswerJob(job)) || (!job && !bundle.payload.items.length)) && <InvestigationPanel key={`${workspaceId}:${bundle.id}`}
-        workspaceId={workspaceId} bundleId={bundle.id} connection={connection} disabled={busy || !searchReady} onAnswer={answerInvestigation} />}
+      {current && !planPending && (plan || (job && !activeAnswerJob(job)) || (!job && !bundle.payload.items.length)) && <InvestigationPanel key={`${workspaceId}:${bundle.id}`}
+        workspaceId={workspaceId} bundleId={bundle.id} threadId={threadId.current ?? undefined} connection={connection} disabled={busy || !searchReady}
+        initialJob={plan} onPlanChange={value => setPlan(current => current ? { ...current, ...value } : current)}
+        onScope={setClarification} onAnswer={answerInvestigation} onCaptured={answerOperational} onBusyChange={setInvestigating} />}
       {current && !busy && (!job || !activeAnswerJob(job)) && <BrowserInvestigationPanel key={`browser:${workspaceId}:${bundle.id}`}
-        workspaceId={workspaceId} bundleId={bundle.id} disabled={busy} />}
+        workspaceId={workspaceId} bundleId={bundle.id} disabled={busy || investigating || activePlan || planPending} />}
 
     </div>})}
     {busy && sentQuestion && <div className="chat-thread"><h2 className="question-bubble">{sentQuestion}</h2><p role="status" className="chat-thinking">확인해보겠습니다<span aria-hidden="true">…</span></p></div>}
@@ -279,8 +414,9 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       event.preventDefault(); if (!busy) void attachments.add(Array.from(event.dataTransfer.files))
     }}>
       <label className="sr-only" htmlFor="chat-question">질문</label>
+      {clarification && clarification.questions.length > 0 && <p>앞선 질문에 이어서 확인합니다.</p>}
       {!searchReady && connected && <p role="status" className="chat-thinking">{searchState === 'ERROR' ? '검색 준비에 실패했습니다. 앱을 다시 실행해 주세요.' : '자료 검색을 준비하고 있어요…'}</p>}
-      <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || !searchReady || busy}
+      <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || !searchReady || busy || investigating || activePlan}
         placeholder={!connected ? 'AI를 연결해 주세요' : !searchReady ? '검색 준비가 끝나면 질문할 수 있어요' : '더글한테 물어보기'} onChange={event => setQuestion(event.target.value)}
         onPaste={event => { if (event.clipboardData.files.length) { event.preventDefault(); void attachments.add(Array.from(event.clipboardData.files)) } }}
         onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.form?.requestSubmit() } }} />
@@ -291,7 +427,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       </li>)}</ul>}
       {attachments.uploading && <p role="status">첨부 파일을 읽고 있어요.<Button type="button" variant="ghost" onClick={attachments.cancel}>첨부 중단</Button></p>}
       {attachments.error && <p role="alert">{attachments.error}</p>}
-      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || !searchReady || busy || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
+      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || investigating || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || !searchReady || busy || investigating || activePlan || planPending || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
     </form>
   </section>
 }

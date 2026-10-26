@@ -29,6 +29,83 @@ class MysqlInvestigationServiceTest {
         when(library.workspace("workspace")).thenReturn(Optional.of(new Workspace("workspace", "fixture", "now")));
     }
 
+    @org.junit.jupiter.api.AfterEach void closeService() { service.close(); }
+
+    @Test void revokedScopeBeforeDispatchNeverCallsReader() throws Exception {
+        var preview = service.preview("workspace", query);
+        assertThatThrownBy(() -> service.execute("workspace", preview.id(), UUID.randomUUID().toString(), true,
+                () -> { throw new LibraryException(409, "scope revoked"); })).isInstanceOf(LibraryException.class);
+        verify(reader, never()).read(any(), any(), any(), any());
+    }
+
+    @Test void scopeRevocationWithinReadStopsFurtherWorkAndSuppressesOutput() throws Exception {
+        var preview = service.preview("workspace", query);
+        var revoked = new java.util.concurrent.atomic.AtomicBoolean();
+        var afterCheckpoint = new java.util.concurrent.atomic.AtomicBoolean();
+        when(reader.read(any(), any(), any(), any())).thenAnswer(invocation -> {
+            Runnable checkpoint = invocation.getArgument(3);
+            checkpoint.run();
+            revoked.set(true);
+            checkpoint.run();
+            afterCheckpoint.set(true);
+            return new MysqlReadClient.Result("must not escape", 1, false);
+        });
+        var result = service.execute("workspace", preview.id(), UUID.randomUUID().toString(), true, () -> {
+            if (revoked.get()) throw new java.util.concurrent.CancellationException();
+        });
+        assertThat(result.status()).isEqualTo("CANCELLED");
+        assertThat(result.output()).isEmpty();
+        assertThat(afterCheckpoint).isFalse();
+    }
+
+    @Test void lateReadResultAfterScopeRevocationIsNotPublishedOrReexecuted() throws Exception {
+        var preview = service.preview("workspace", query);
+        var revoked = new java.util.concurrent.atomic.AtomicBoolean();
+        when(reader.read(any(), any(), any(), any())).thenAnswer(invocation -> {
+            revoked.set(true);
+            return new MysqlReadClient.Result("private late result", 1, false);
+        });
+        String requestId = UUID.randomUUID().toString();
+        var result = service.execute("workspace", preview.id(), requestId, true, () -> {
+            if (revoked.get()) throw new LibraryException(409, "revoked");
+        });
+        assertThat(result.status()).isEqualTo("FAILED");
+        assertThat(result.output()).isEmpty();
+        assertThat(service.execute("workspace", preview.id(), requestId, true)).isEqualTo(result);
+        verify(reader, times(1)).read(any(), any(), any(), any());
+    }
+
+    @Test void scopeChecksCanAcquirePendingMonitorWithoutDeadlock() throws Exception {
+        var preview = service.preview("workspace", query);
+        Object monitor = org.springframework.test.util.ReflectionTestUtils.getField(service, "pending");
+        var checks = new java.util.concurrent.atomic.AtomicInteger();
+        when(reader.read(any(), any(), any(), any())).thenAnswer(invocation -> {
+            ((Runnable) invocation.getArgument(3)).run();
+            return new MysqlReadClient.Result("safe", 1, false);
+        });
+        var result = service.execute("workspace", preview.id(), UUID.randomUUID().toString(), true, () -> {
+            synchronized (monitor) { checks.incrementAndGet(); }
+        });
+        assertThat(result.status()).isEqualTo("SUCCEEDED");
+        assertThat(checks.get()).isGreaterThanOrEqualTo(5);
+    }
+
+    @Test void blockedScopeCheckTimesOutWithoutDispatchAndWorkerIsInterrupted() throws Exception {
+        var exited = new java.util.concurrent.CountDownLatch(1);
+        try (var bounded = new MysqlInvestigationService(connections, reader, library, java.time.Clock.systemUTC(),
+                java.time.Duration.ofMillis(100), java.time.Duration.ofSeconds(2))) {
+            var preview = bounded.preview("workspace", query);
+            assertThatThrownBy(() -> bounded.execute("workspace", preview.id(), UUID.randomUUID().toString(), true, () -> {
+                try { new java.util.concurrent.CountDownLatch(1).await(); }
+                catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+                finally { exited.countDown(); }
+            })).isInstanceOfSatisfying(LibraryException.class, failure -> assertThat(failure.status()).isEqualTo(504));
+            assertThat(exited.await(2, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+            assertThat(bounded.result("workspace", preview.id()).status()).isEqualTo("PREVIEW");
+            verify(reader, never()).read(any(), any(), any(), any());
+        }
+    }
+
     @Test void previewDoesNotReadRowsOrExposePassword() throws Exception {
         var preview = service.preview("workspace", query);
         assertThat(preview.connection()).isEqualTo("localhost:3306");

@@ -29,7 +29,8 @@ class LocalWorkspaceSearchToolTest {
     private final ToolExecution.Binding binding = LocalWorkspaceSearchTool.binding("workspace");
     private final ToolExecution.Budget budget = new ToolExecution.Budget(5, Duration.ofSeconds(5),
             Duration.ofSeconds(2), 10000, 5000);
-    private final LocalToolExecutorFactory factory = new LocalToolExecutorFactory(search, library);
+    private final LocalToolExecutorFactory factory = new LocalToolExecutorFactory(search, library,
+            mock(dev.knowledgeforge.knowledge.application.KnowledgeStore.class));
 
     @BeforeEach
     void prepare() {

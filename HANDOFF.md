@@ -1,5 +1,21 @@
 # Dougle — 이어서 작업하기
 
+## 현재 설치 — 0.1.26 (2026-10-27 05:43 KST)
+
+제한형 팀 설정/아카이브 화면 제거와 대화 조사 연결을 포함한 Intel0.1.26을 설치·실행했다. JAR `f88d6f01b115c5951a98c35dd6723b447c4bce1da03843666a8ad5f64f368093`; 이전0.1.25 앱/정지된 DB 백업, 설치 서명·HTTP200/비인증403·DB v28 확인. [설치 증거](docs/evaluations/local-install-0.1.26-20261027.json). Java1132실행/1125통과/7skip(기존 fixture2클래스 제외), UI669통과·빌드, Node153통과. 기존 범용 smoke는 긴 Workspace 이름 fixture에서 실패했고 [검증 기록](docs/evaluations/source-validation-0.1.26-20261027.md)에 보존했다. 별도 Intel native/WebKit 합성 검사는 통과했다. 전체 자료 export·전체50개 인수·실제 회사 서비스/ARM 실기기/다른 Mac 검증을 완료로 표시하지 않는다. 공개 릴리스/업데이트 피드는 보류한다. 아래 설치 전/0.1.25는 이전 기록이다.
+
+Intel/ARM 설치 파일과 업데이트 서명·정적 검증을 모두 완료했다. [패키지 증거](docs/evaluations/macos-package-0.1.26-20261027.json). ARM은 실기기 실행 검증이 아니며 설치된 것은 Intel이다. 이전0.1.25 버전별 산출물6개와 고정 JAR 해시 보존을 확인했다.
+
+## 다음 후보 — 0.1.26 소스 (2026-10-27, 설치 전)
+
+사용자 요청에 따라 제한형 팀 설정 JSON·자료/대화 ZIP 화면과 설정 진입점을 제거했다. 전체 자료 export를 구현한 것이 아니며 기존 자료·내부 호환 API는 보존한다. [제거 검증](docs/evaluations/team-settings-removal-20261027.md).
+
+일반 대화의 계획→로컬 검색→고정 근거→답변과 업무 범위 확인→읽기 전용 조회→결과 첨부 흐름을 통합 중이다. 수동 SQL/로그 입력 화면을 복원하지 않는다. 검색 결과는 재검색 대신 당시 스냅샷을 재검증하며, 외부 조회는 고정 범위 승인·취소·연결 변경·시간 제한을 적용한다. [범위](docs/conversation-operational-scope.md), [조회](docs/conversation-operational-read.md). 최종 합산 회귀·패키징·설치 전까지 아래0.1.25가 설치본이다.
+
+실제0.1.25 AI 추가 검사는 [연속 대화 b1](docs/evaluations/context-live-025-b1-20261026-review.md)의 앞선 두 답변이 적합했지만 세 번째 답변은 시간 초과했다. [정확한 이전 이력을 넣은 별도 b2](docs/evaluations/context-protocol-025-seeded-b2-20261026-review.md)는 후속 질문을 정확히 답했으나 연속 실행 재현 성공과 같지 않다. 원인/해결 또는 전체50개 인수를 선언하지 않는다. 새 진단은 내용·식별자 대신 고정 이벤트 분류 수만 기록한다.
+
+새벽 UI 검증 중 호스트 절전이 장시간 중단을 유발했다. [절전 기록](docs/evaluations/host-sleep-validation-20261027.md)을 별도 보존하고 이전 실제 AI 실패 원인으로 확대하지 않는다. 검사 동안만 임시 `caffeinate`를 사용하며 종료 시 정리한다.
+
 ## 현재 설치 — 0.1.25 (2026-10-26 23:00 KST)
 
 bounded conversation retrieval을 포함한 Intel0.1.25를 설치했다. JAR `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`; 이전0.1.24 앱/DB 백업·서명·v28·비인증403 확인. [설치 증거](docs/evaluations/local-install-0.1.25-20261026.json). 새 JAR의 실제 로컬 다국어 검색·이어 질문·재시작·Workspace 경계와 readonly300건, Intel native/WebKit, UI665개를 검증했다. E50은 엄격한 파일 격리 환경의 합성6그룹, E37은88쌍 소유/타 Workspace 조회 및8개 검색/주입 그룹 통과이며 전체 인수 승격은 아니다. 양 CPU 패키지·서명·정적 검사도 완료했다. ARM 실기기는 미검증이고 공개/피드는 보류한다. [패키지 증거](docs/evaluations/macos-package-0.1.25-20261026.json).

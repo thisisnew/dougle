@@ -52,14 +52,20 @@ final class CodexTextStream {
             String method = requiredText(value, "method");
             JsonNode params = value.path("params");
             if (!params.isObject()) throw new IOException("Invalid notification");
-            if (!threadId.equals(params.path("threadId").asString(""))) {
-                diagnostics.appEvent(ProcessDiagnostics.AppEvent.IGNORED_BINDING);
+            boolean answerLifecycle = method.equals("item/agentMessage/delta") || method.equals("turn/completed")
+                    || (Set.of("item/started", "item/completed").contains(method)
+                    && params.path("item").path("type").asString("").equals("agentMessage"));
+            String eventThread = params.path("threadId").asString("");
+            if (!threadId.equals(eventThread)) {
+                diagnostics.ignoredBinding(eventThread.isBlank() ? ProcessDiagnostics.BindingMismatch.MISSING_THREAD
+                        : ProcessDiagnostics.BindingMismatch.FOREIGN_THREAD, answerLifecycle);
                 return;
             }
             String eventTurn = method.equals("turn/completed")
                     ? params.path("turn").path("id").asString("") : params.path("turnId").asString("");
             if (!turnId.equals(eventTurn)) {
-                diagnostics.appEvent(ProcessDiagnostics.AppEvent.IGNORED_BINDING);
+                diagnostics.ignoredBinding(eventTurn.isBlank() ? ProcessDiagnostics.BindingMismatch.MISSING_TURN
+                        : ProcessDiagnostics.BindingMismatch.FOREIGN_TURN, answerLifecycle);
                 return;
             }
             switch (method) {

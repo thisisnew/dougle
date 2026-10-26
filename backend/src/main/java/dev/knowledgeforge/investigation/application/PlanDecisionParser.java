@@ -1,7 +1,16 @@
 package dev.knowledgeforge.investigation.application;
 
 import dev.knowledgeforge.investigation.domain.PlanDecision;
+import dev.knowledgeforge.investigation.domain.PendingOperationalScope;
+import dev.knowledgeforge.security.application.CredentialContentGuard;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import tools.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
@@ -24,26 +33,87 @@ public final class PlanDecisionParser {
             if (root == null || !root.isObject() || !root.path("decision").isString()) {
                 throw new IllegalArgumentException();
             }
+            fields(root, Set.of("decision", "query", "candidate"));
+            boolean candidatePresent = root.has("candidate") && !root.path("candidate").isNull();
             return switch (root.path("decision").asString()) {
                 case "SEARCH" -> {
-                    if (root.size() != 2 || !root.path("query").isString()) throw new IllegalArgumentException();
+                    if (candidatePresent || !root.path("query").isString()) throw new IllegalArgumentException();
                     yield new PlanDecision.Search(root.path("query").asString());
                 }
                 case "STOP" -> {
-                    if (root.size() != 1 && !(root.size() == 2 && root.has("query") && root.path("query").isNull())) {
+                    if (candidatePresent || root.has("query") && !root.path("query").isNull()) {
                         throw new IllegalArgumentException();
                     }
                     yield new PlanDecision.Stop();
                 }
                 case "PROPOSE_MYSQL_READ", "PROPOSE_DATADOG_LOGS" -> {
-                    if (root.size() != 2 || !root.has("query") || !root.path("query").isNull()) throw new IllegalArgumentException();
-                    yield new PlanDecision.Propose(root.path("decision").asString().equals("PROPOSE_MYSQL_READ")
-                            ? PlanDecision.OperationalTool.MYSQL_READ : PlanDecision.OperationalTool.DATADOG_LOGS);
+                    if (!root.has("query") || !root.path("query").isNull()) throw new IllegalArgumentException();
+                    var tool = root.path("decision").asString().equals("PROPOSE_MYSQL_READ")
+                            ? PlanDecision.OperationalTool.MYSQL_READ : PlanDecision.OperationalTool.DATADOG_LOGS;
+                    yield new PlanDecision.Propose(tool, candidatePresent ? candidate(tool, root.path("candidate")) : null);
                 }
                 default -> throw new IllegalArgumentException();
             };
         } catch (RuntimeException exception) {
             throw new IllegalArgumentException("Invalid investigation plan decision");
         }
+    }
+
+    private PendingOperationalScope.Candidate candidate(PlanDecision.OperationalTool tool, JsonNode node) {
+        CredentialContentGuard.requireSafeTree(node);
+        if (tool == PlanDecision.OperationalTool.MYSQL_READ) {
+            fields(node, Set.of("table", "columns", "equalities", "limit"));
+            java.util.Map<String, String> equalities = null;
+            if (node.hasNonNull("equalities")) {
+                var conditions = node.path("equalities");
+                if (!conditions.isArray() || conditions.size() > 16) throw new IllegalArgumentException();
+                equalities = new LinkedHashMap<>();
+                for (var condition : conditions) {
+                    fields(condition, Set.of("column", "value"));
+                    String column = text(condition, "column");
+                    String value = text(condition, "value");
+                    if (column == null || value == null || equalities.containsKey(column)) throw new IllegalArgumentException();
+                    CredentialContentGuard.requireSafe(column + "=" + value);
+                    equalities.put(column, value);
+                }
+            }
+            return new PendingOperationalScope.Mysql(text(node, "table"), strings(node, "columns"), equalities, integer(node, "limit"));
+        }
+        fields(node, Set.of("environment", "service", "indexes", "from", "to", "timeZone", "limit"));
+        var indexes = strings(node, "indexes");
+        if (indexes != null && new HashSet<>(indexes).size() != indexes.size()) throw new IllegalArgumentException();
+        String from = text(node, "from");
+        String to = text(node, "to");
+        return new PendingOperationalScope.Datadog(text(node, "environment"), text(node, "service"),
+                indexes == null ? null : Set.copyOf(indexes), from == null ? null : Instant.parse(from),
+                to == null ? null : Instant.parse(to), text(node, "timeZone"), integer(node, "limit"));
+    }
+
+    private static void fields(JsonNode node, Set<String> allowed) {
+        if (!node.isObject() || !allowed.containsAll(node.propertyNames())) throw new IllegalArgumentException();
+    }
+
+    private static String text(JsonNode node, String key) {
+        if (!node.hasNonNull(key)) return null;
+        if (!node.path(key).isString()) throw new IllegalArgumentException();
+        return node.path(key).asString();
+    }
+
+    private static Integer integer(JsonNode node, String key) {
+        if (!node.hasNonNull(key)) return null;
+        if (!node.path(key).isIntegralNumber() || !node.path(key).canConvertToInt()) throw new IllegalArgumentException();
+        return node.path(key).intValue();
+    }
+
+    private static List<String> strings(JsonNode node, String key) {
+        if (!node.hasNonNull(key)) return null;
+        var values = node.path(key);
+        if (!values.isArray()) throw new IllegalArgumentException();
+        var result = new ArrayList<String>();
+        for (var value : values) {
+            if (!value.isString()) throw new IllegalArgumentException();
+            result.add(value.asString());
+        }
+        return List.copyOf(result);
     }
 }

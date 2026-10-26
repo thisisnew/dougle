@@ -8,9 +8,23 @@ public final class ProviderExecutionException extends LibraryException {
         INITIALIZE, CONFIG, THREAD, TURN, WAIT_RESPONSE }
     public enum Signal { NONE, RATE_LIMIT, NETWORK_RECONNECT, PROVIDER_UNAVAILABLE }
     public enum StreamPhase { NONE, TURN_ACCEPTED, MESSAGE_STARTED, TEXT_DELTA, MESSAGE_COMPLETED, TURN_COMPLETION_RECEIVED, COMPLETED, PROTOCOL_INVALID }
+    public record IgnoredEvents(int missingThread, int foreignThread, int missingTurn, int foreignTurn,
+                                int answerLifecycle, int other) {
+        public IgnoredEvents {
+            for (int count : new int[]{missingThread, foreignThread, missingTurn, foreignTurn, answerLifecycle, other}) {
+                if (count < 0 || count > 1048576) throw new IllegalArgumentException("Invalid ignored event count");
+            }
+        }
+    }
     public record AppStream(StreamPhase phase, boolean turnAccepted, int messages, int deltas, int completedMessages,
                             int matchedCompletions, int ignoredBindings, int otherNotifications, int protocolInvalid,
-                            int pendingLineBytes, boolean callbackActive) {
+                            int pendingLineBytes, boolean callbackActive, IgnoredEvents ignoredEvents) {
+        public AppStream(StreamPhase phase, boolean turnAccepted, int messages, int deltas, int completedMessages,
+                         int matchedCompletions, int ignoredBindings, int otherNotifications, int protocolInvalid,
+                         int pendingLineBytes, boolean callbackActive) {
+            this(phase, turnAccepted, messages, deltas, completedMessages, matchedCompletions, ignoredBindings,
+                    otherNotifications, protocolInvalid, pendingLineBytes, callbackActive, null);
+        }
         public AppStream {
             java.util.Objects.requireNonNull(phase);
             for (int count : new int[]{messages, deltas, completedMessages, matchedCompletions, ignoredBindings, otherNotifications, protocolInvalid}) {

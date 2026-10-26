@@ -6,9 +6,11 @@
 
 [전문가 구현 작업본·검증과 남은 한계](expert-implementation.md) · [50개 인수 기준](expert-adoption.md) · [외부 소스 감사](expert-upstream-audit.md)
 
-[팀 설정 내보내기·새 Workspace 가져오기](team-settings.md)
+[대화의 로컬 검색](conversation-local-retrieval.md) · [업무 범위 확인](conversation-operational-scope.md) · [읽기 전용 조회·저장 결과 복구](conversation-operational-read.md)
 
-[자료·대화 ZIP 이전 범위](workspace-archive.md) · [Slack 수신함](slack-inbox-runtime.md) · [격리 브라우저 조사](browser-investigation.md)
+[제거된 팀 설정 기능의 내부 이력](team-settings.md)
+
+[제거된 제한형 ZIP 이전의 내부 이력](workspace-archive.md) · [Slack 수신함](slack-inbox-runtime.md) · [격리 브라우저 조사](browser-investigation.md)
 
 [실제 계획 AI·추가 검색·후속 답변 검증](evaluations/investigation-live-v3-20261025-review.md)
 

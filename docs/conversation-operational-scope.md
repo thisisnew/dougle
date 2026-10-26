@@ -1,6 +1,20 @@
 # 대화형 운영 범위 후보 계약
 
-다음 후보용 **계약 계층과 서버 Authority adapter**를 구현했다. `.25` 고정 JAR `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`에 포함되지 않는다. 기존 ChatThread/계획/조회 서비스, HTTP, UI, 모델 prompt는 변경하지 않았다. 연결 서비스에는 내부 메타데이터 조회와 생명주기 추적만 보강했다. 이 독립 계약이 자연 대화 조사 흐름 전체를 제공한다는 주장은 하지 않는다.
+다음 후보용 **계약 계층·서버 Authority·typed 계획 후보와 대화 확인 DTO**를 구현했다. `.25` 고정 JAR `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`에 포함되지 않는다. 초기 계약 단계는 계획/HTTP/prompt를 변경하지 않았지만 후속 단계는 아래처럼 실제 planner에 연결했다. 외부 조회 실행/결과 AI 전송은 여전히 별도 승인 경계이며 전체 자동 조사 완성을 주장하지 않는다.
+
+## 최신 통합 상태
+
+실제 계획 SEARCH는 typed snapshot을 저장하고 capture는 `createFromSnapshot`으로 이어져 두 번째 검색이 없다. 실제 `InvestigationPlanService → scope-access → ConversationOperationalReadService → DatadogInvestigationService → OperationalCaptureService → AttachmentService → 새 ChatThread immutable bundle` 경로도 합성 provider로 검사했다. 계획 완료/미리보기는 조회하지 않고, read의 별도 digest 승인 후 1회 호출하며 같은 요청 재실행은 호출을 늘리지 않는다. local capture도 별도 승인이 필요하다. 첨부를 새 대화에 고정해도 이 backend 검사에서는 answer job/approval을 만들지 않았다. 결과 AI 전송 동의를 생략하는 경로가 아니다.
+
+focused **147건 통과, 실패/오류/skip 0**, `/tmp/dougle-planner-snapshot-bridge-first.log`. 실제 Spring/SQLite와 synthetic Datadog 응답을 사용했으며 회사 계정/외부 AI/실제 Datadog 호출은 없다. MySQL bridge 경계는 합성 서비스 단위 검사에 포함되지만 이 종단 검사가 실제 MySQL 네트워크 조회를 검증한 것은 아니다. `.25` 불변 artifact와 별도인 다음 후보 소스이며 전체 50항목 인수/모델 품질 통과를 의미하지 않는다. 아래 독립 계약/Authority 단계 기록은 이전 단계의 범위다.
+
+2026-10-27 broad: `bash scripts/maven.sh '-Dtest=*,!AnswerPartialIntegrationTest,!QuestionAttachmentIntegrationTest' test` **1114실행/1107통과/7 skip/실패·오류0**, `/tmp/dougle-operational-vertical-broad.log`. 기존 긴 Workspace 이름 fixture 두 클래스 제외를 명시하며 당시 신규 관련 검사 제외는 없다. test goal만 사용했고 `.25` JAR 해시는 위 값으로 불변이다. 이 실행 이후 추가한 아래 scope 취소 수정은 이 결과에 포함되지 않는다. backend 통합 결과를 frontend/실제 모델/전체 50항목 인수로 승격하지 않는다.
+
+### 완료 후보 취소 — focused 검사 완료
+
+`POST /api/workspaces/{workspaceId}/investigation-plans/jobs/{id}/scope/cancel`에 `{"expectedRevision":1}`을 보내는 명시적 취소 경로를 추가했다. 성공 응답은 204다. 현재 workspace의 성공한 PENDING_SCOPE 후보와 정확한 revision만 허용하며, 누락·문자열/소수 revision·중복/추가 JSON 필드는 거부한다. 완료된 계획 영수증은 보존하고 session 후보만 제거한다. 이후 clarification/scope-access는 404이며 기존 bridge 승인도 다음 재검증에서 거부된다. 이미 시작된 원격 읽기의 즉시 중단이나 이미 전달한 응답의 회수를 보장하지 않는다. 재취소는 404이며 새 후보를 만들지 않는다.
+
+`InvestigationPlanIntegrationTest`에 소유권/CAS/strict JSON/완료 기록 보존과 기존 read 승인 철회 후 provider 호출 차단 회귀를 추가했다. 2026-10-27 05:24 KST focused 실행에서 **77건 통과, 실패/오류/skip 0, 36.871초**를 확인했다. 로그 `/tmp/dougle-scope-cancel-awake.log`; selector는 `InvestigationPlanIntegrationTest,ConversationOperationalReadServiceTest,ConversationOperationalReadControllerTest,OperationalScopeClarificationTest,ChatThreadSnapshotIntegrationTest,LocalSearchSnapshotTest,ArchitectureContractTest`다. timeout을 늘리지 않았고 `.25` JAR 해시는 불변이다. 이 두 취소 회귀를 앞선 1114 broad나 147 focused에 소급 합산하지 않는다. 최종 combined 회귀는 부모 담당이다. 기존 `/jobs/{id}/cancel`은 실행 중 계획 취소 용도다. scope revise HTTP 경로는 추가하지 않았다. 자연어 보완은 같은 thread의 새 user turn과 새 승인 계획을 사용하며 새 parent가 이전 후보를 무효화한다.
 
 ## API와 상태
 
@@ -58,11 +72,39 @@ MySQL의 신규 metadata 경계는 손상된 저장 JSON 등 예상치 못한 ru
 
 실제 Spring proxy + 임시 SQLite/암호화 vault를 사용하고 MySQL/Datadog/Notion provider와 검색은 fake인 통합 검사를 추가했다. 삭제 workspace, foreign thread, latest parent, 연결 revision 교체, 두 도구의 none→connected→none을 확인한다. MySQL save의 접속 검사도 mock이며 실제 DB/log/AI 호출은 없다.
 
-## 권장 다음 통합 — 아직 미구현
+## 초기 단계의 후속 통합 목록
 
 1. 구현된 서버 Authority를 향후 대화 application에 연결하되 모델/source는 Candidate 제안만 할 수 있게 한다. 실행 직전 재검증과 경합 검사는 별도 실행 통합 단계에서 추가한다.
 2. 자연 대화 오케스트레이터는 내부 필드 해결과 사용자 업무 맥락 확인을 분리한다. 미해결 기술 필드는 schema/read-only metadata로 해결하거나 명시적 미지원으로 멈춘다. 후보 전체 교체는 내부 구현 방식이며 매 턴 수동 keep/replace UI를 만들라는 뜻이 아니다.
 3. 별도 승인 계약을 설계하기 전에는 기존 DB/log execute 서비스와 연결하지 않는다. 후속 통합도 기존 read-only 정책·revision/TTL·단일 소비·예산·결과 snapshot 및 별도 AI 전송 동의를 그대로 유지해야 한다.
+
+## Typed planner와 자연어 후속 turn 연결
+
+`PlanDecision.Propose(tool,candidate)`와 strict parser를 추가했다. 기존 두 필드 proposal 출력은 legacy로 읽고 자동 scope를 복구하지 않는다. 새 CLI schema는 decision/query/candidate 세 필드를 요구하며 SEARCH/STOP의 candidate는 null이다. proposal candidate는 다음 두 구조만 허용한다.
+
+- MySQL: table, columns, equalities(`[{column,value}]`), limit. 내부 계약은 기존 equality map으로 변환하며 중복 column을 거부한다.
+- Datadog: environment, service, indexes, from, to, timeZone, limit. 미정은 null이고 상대 날짜 문자열, 숫자 coercion, 도구 간 필드 혼합을 거부한다.
+- 전체 원문 4,096 UTF-8 bytes 제한, 중복 JSON key/후행 JSON/SQL·URL·credential·authority 필드 거부를 유지한다. 알려진 credential 패턴은 차단하지만 임의의 모든 업무 비밀을 탐지한다는 보장은 아니다.
+
+`ContextPrompt.planPrompt`는 원질문과 최신 사용자 보완을 같은 task로 다루도록 지시하고, 근거에 없는 기술 필드는 local SEARCH로 해결하도록 한다. 사용자에게 table/columns/SQL/index를 물으라는 지시는 제거했다. 상대 시각은 명시적 서버 기준 instant와 사용자 timezone이 없으면 from/to=null로 남긴다. 이번 연결은 새로운 서버 기준시각 payload나 자연어 날짜 parser를 추가하지 않았으므로 상대 날짜 해석 완성으로 보고하지 않는다. 모델 지시가 의미적 grounding 검증의 증거는 아니며 schema/실행 승인 경계를 대체하지 않는다.
+
+승인된 `InvestigationPlanService`가 typed proposal을 받으면 현재 workspace/thread/latest parent/connection generation에 묶인 session 후보를 만들고 최종 check 후 job을 SUCCEEDED/PENDING_SCOPE로 저장한다. job.output에는 scope UUID만 저장하고 candidate 본문/조건값은 저장하지 않는다. publication transaction 실패 시 새 메모리 후보를 제거한다. 재시작/TTL 이후 DB의 scope UUID만으로 후보를 재구성하지 않는다. 이전 승인은 plan binding V6 / typed-candidate schema v4 변경으로 무효화된다. 기존 evidence JSON/digest를 바꾸지 않는다.
+
+`GET /api/workspaces/{workspaceId}/investigation-plans/jobs/{id}/clarification` DTO:
+
+```
+{jobId,scopeId,revision,workspaceId,threadId,parentBundleId,tool,expiresAt,
+ sessionOnly:true,executionAllowed:false,internalResolutionRequired,
+ questions:[{topic:"ENVIRONMENT"|"TIME_WINDOW"|"TIME_ZONE",prompt}]}
+```
+
+candidate/technical requiredFields/connection revision·generation/credentials는 이 DTO에 없다. `internalResolutionRequired`는 사용자에게 기술 입력을 요청하는 플래그가 아니다. `executionAllowed:false`는 이 DTO 자체가 승인이 아니라는 뜻이며 별도 정확한 scope preview/execute 승인을 막는 영구 상태가 아니다.
+
+사용자는 기존 composer에 자연어로 응답한다. 같은 thread의 새 user turn과 immutable context가 원질문+보완을 보존하고, **새 계획 동의** 후 새 후보를 생성한다. 기존 후보 필드를 자동 병합하거나 원질문을 짧은 답변으로 덮어쓰지 않는다. 실제 ChatThreadService/계획 통합 검사에서 이 흐름과 이전 parent 후보 무효화를 확인했다. 이 backend 검사는 frontend composer wiring 완료 증거가 아니다.
+
+bridge용 내부 API는 `InvestigationPlanService.scope(workspaceId,jobId)` 및 `ConversationOperationalScopeAccess.requireCurrent(workspaceId,scopeId)`다. 둘 다 Authority/TTL을 재검증하고 성공한 PENDING_SCOPE job에 연결된 후보만 반환한다. 공개 API는 client generation을 받지 않는다. 별도 담당 bridge는 ready candidate를 기존 정확한 scope preview→명시적 read 승인→local capture 경계에 연결한다. planner는 DB/log 실행기나 result AI transmission을 호출하지 않는다. 해당 bridge/typed search capture 전체 경로의 종단 증거는 각 담당 통합 결과와 구분한다.
+
+최초 focused 실행은 병렬 추가된 bridge의 scope-access bean 미연결로 Spring 검사 27건이 시작하지 못했다. `/tmp/dougle-typed-scope-planner-first.log`를 보존했다. PlanService의 실제 port 구현 후 **128건 통과, 실패/오류/skip 0**, `/tmp/dougle-typed-scope-planner-fixed.log`. 범위는 parser, planner 실제 Spring/SQLite, fake CLI transport, scope/Authority, architecture, prompt budgets다. 자연어 후속 재계획·연결 ABA·TTL·실제 SQLite publication rollback·candidate 비저장·scope DTO 비노출을 포함하며 실제 외부 AI/회사 자료 호출은 없다.
 
 ## 검증
 

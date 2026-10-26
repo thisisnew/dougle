@@ -43,6 +43,11 @@ public class EvidenceBundleWriter {
     }
 
     @Transactional
+    public EvidenceBundle captureInspectedConversation(String workspaceId, String question, List<SearchIndex.Hit> hits, ChatContext context) {
+        return capture(workspaceId, question, List.of(), false, hits, List.of(), context, true, true);
+    }
+
+    @Transactional
     public EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge, List<SearchIndex.Hit> hits, List<String> attachmentIds) {
         return capture(workspaceId, question, domains, includeKnowledge, hits, attachmentIds, null);
     }
@@ -54,6 +59,12 @@ public class EvidenceBundleWriter {
 
     private EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge,
                                     List<SearchIndex.Hit> hits, List<String> attachmentIds, ChatContext chatContext, boolean strictSelection) {
+        return capture(workspaceId, question, domains, includeKnowledge, hits, attachmentIds, chatContext, strictSelection, false);
+    }
+
+    private EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge,
+                                    List<SearchIndex.Hit> hits, List<String> attachmentIds, ChatContext chatContext,
+                                    boolean strictSelection, boolean inspectedWindow) {
         if (library.workspace(workspaceId).isEmpty()) throw new LibraryException(404, "Workspace를 찾을 수 없습니다.");
         if (bundles.list(workspaceId).size() >= 100) throw new LibraryException(409, "근거 묶음은 Workspace당 최대 100개입니다. 불필요한 묶음을 삭제하세요.");
         List<Item> items = new ArrayList<>();
@@ -91,7 +102,19 @@ public class EvidenceBundleWriter {
                 else if (!List.of("READY", "PARTIAL").contains(material.analysisStatus())
                         || !ContentDigest.of(material.text()).equals(hit.textHash())) reason = "INDEX_CHANGED";
                 else {
-                    var window = dev.knowledgeforge.search.domain.EvidenceWindow.around(material.text(), hit.snippet(), hit.startLine(), hit.endLine(), maxCharacters - used);
+                    if (inspectedWindow) {
+                        var lines = material.text().split("\n", -1);
+                        if (hit.snippet() == null || hit.snippet().isBlank() || hit.startLine() < 1
+                                || hit.endLine() < hit.startLine() || hit.endLine() > lines.length
+                                || !String.join("\n", java.util.Arrays.copyOfRange(lines, hit.startLine() - 1, hit.endLine()))
+                                        .concat(hit.endLine() < lines.length ? "\n" : "").contains(hit.snippet())
+                                || hit.endLine() != hit.startLine() + (int) hit.snippet().chars()
+                                        .limit(Math.max(0, hit.snippet().length() - 1)).filter(value -> value == '\n').count()) {
+                            throw new LibraryException(409, "검토한 검색 인용문을 원문에서 확인하지 못했습니다.");
+                        }
+                    }
+                    var window = inspectedWindow ? new dev.knowledgeforge.search.domain.EvidenceWindow(hit.snippet(), hit.startLine(), hit.endLine())
+                            : dev.knowledgeforge.search.domain.EvidenceWindow.around(material.text(), hit.snippet(), hit.startLine(), hit.endLine(), maxCharacters - used);
                     item = new Item(label, hit.kind(), hit.entryId(), null, null, material.name(), material.sourceId(),
                         material.path() == null ? material.name() : material.path(), material.revision(), ContentDigest.of(material.content()),
                         hit.textHash(), window.startLine(), window.endLine(), window.text(), List.of());

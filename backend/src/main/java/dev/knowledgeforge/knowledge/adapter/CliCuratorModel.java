@@ -32,9 +32,21 @@ public class CliCuratorModel implements CuratorModel {
               "text":{"type":"string"},"evidenceIds":{"type":"array","items":{"type":"string"}}}}}}}
             """;
     static final String PLAN_SCHEMA = """
-            {"type":"object","additionalProperties":false,"required":["decision","query"],"properties":{
+            {"type":"object","additionalProperties":false,"required":["decision","query","candidate"],"properties":{
               "decision":{"type":"string","enum":["SEARCH","STOP","PROPOSE_MYSQL_READ","PROPOSE_DATADOG_LOGS"]},
-              "query":{"type":["string","null"],"maxLength":256}}}
+              "query":{"type":["string","null"],"maxLength":256},
+              "candidate":{"anyOf":[{"type":"null"},
+                {"type":"object","additionalProperties":false,"required":["table","columns","equalities","limit"],"properties":{
+                  "table":{"type":["string","null"]},"columns":{"type":["array","null"],"items":{"type":"string"}},
+                  "equalities":{"type":["array","null"],"items":{"type":"object","additionalProperties":false,
+                    "required":["column","value"],"properties":{"column":{"type":"string"},"value":{"type":"string"}}}},
+                  "limit":{"type":["integer","null"]}}},
+                {"type":"object","additionalProperties":false,"required":["environment","service","indexes","from","to","timeZone","limit"],"properties":{
+                  "environment":{"type":["string","null"]},"service":{"type":["string","null"]},
+                  "indexes":{"type":["array","null"],"items":{"type":"string"}},
+                  "from":{"type":["string","null"]},"to":{"type":["string","null"]},
+                  "timeZone":{"type":["string","null"]},"limit":{"type":["integer","null"]}}}
+              ]}}}
             """;
     private final String codex;
     private final String claude;

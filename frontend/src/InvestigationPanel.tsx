@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ApiError, request } from './api'
 import { Button } from './components/ui/button'
 import type { ConnectionIndicator } from './connectionIndicator'
+import ConversationReadPanel, { type ConversationCapture, type ConversationScope } from './ConversationReadPanel'
 
 type Preview = { digest: string; prompt: string; characters: number; maxCalls: number; provider: string; requestedModel: string }
 type Job = { id: string; workspaceId: string; bundleId: string; status: string; decision?: string | null; query?: string | null; output?: string | null; error?: string | null; truncated?: boolean; toolStatus?: string | null }
@@ -20,21 +21,31 @@ function excerpts(output: string | null | undefined): { content: string; startLi
   })
 }
 
-export default function InvestigationPanel({ workspaceId, bundleId, connection, disabled, onAnswer }: {
+export default function InvestigationPanel({ workspaceId, bundleId, threadId, connection, disabled, onAnswer, onCaptured, onBusyChange, initialJob, onPlanChange, onScope }: {
   workspaceId: string; bundleId: string; connection: ConnectionIndicator | null; disabled: boolean; onAnswer?: (jobId: string) => Promise<void>
+  threadId?: string; onCaptured?: (receipt: ConversationCapture, signal: AbortSignal) => Promise<void>; onBusyChange?: (busy: boolean) => void
+  initialJob?: Job | null
+  onPlanChange?: (job: Job) => void
+  onScope?: (scope: ConversationScope | null) => void
 }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(!!initialJob)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [preview, setPreview] = useState<Preview | null>(null)
-  const [job, setJob] = useState<Job | null>(null)
+  const [job, setJob] = useState<Job | null>(initialJob ?? null)
   const [submission, setSubmission] = useState<Submission | null>(null)
+  const [scope, setScope] = useState<ConversationScope | null>(null)
+  const [reading, setReading] = useState(false)
+  const scopeCallback = useRef(onScope)
+  scopeCallback.current = onScope
   const locked = useRef(false)
   const lifetime = useRef(new AbortController())
   const base = `/workspaces/${encodeURIComponent(workspaceId)}/investigation-plans`
   const connected = connection?.state === 'AUTHENTICATED'
   const matches = excerpts(job?.output)
   const proposed = job?.status === 'SUCCEEDED' && ['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'].includes(job.decision ?? '')
+
+  useEffect(() => { if (initialJob) { setJob(initialJob); setOpen(true) } }, [initialJob])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -48,11 +59,28 @@ export default function InvestigationPanel({ workspaceId, bundleId, connection, 
   }
 
   useEffect(() => {
+    setScope(null)
+    if (!open || !proposed || job?.toolStatus !== 'PENDING_SCOPE' || !threadId || !onCaptured) return
+    const controller = new AbortController()
+    void request<ConversationScope>(`${base}/jobs/${encodeURIComponent(job.id)}/clarification`, { signal: controller.signal }).then(value => {
+      if (controller.signal.aborted) return
+      if (value.jobId !== job.id || value.workspaceId !== workspaceId || value.threadId !== threadId || value.parentBundleId !== bundleId
+        || value.executionAllowed !== false || value.sessionOnly !== true || !Array.isArray(value.questions)
+        || value.tool !== (job.decision === 'PROPOSE_MYSQL_READ' ? 'MYSQL_READ' : 'DATADOG_LOGS')) throw new Error('조사 대상 대화가 다릅니다.')
+      setScope(value); scopeCallback.current?.(value)
+    }).catch(reason => { if (!controller.signal.aborted) setError((reason as Error).message) })
+    return () => { controller.abort(); scopeCallback.current?.(null) }
+  }, [base, open, proposed, job?.id, job?.toolStatus, threadId, bundleId, workspaceId, !!onCaptured])
+
+  useEffect(() => {
     if (!open || !active(job)) return
     const controller = new AbortController()
     const timer = setInterval(() => {
       void request<Job>(`${base}/jobs/${encodeURIComponent(job!.id)}`, { signal: controller.signal })
-        .then(value => { if (!controller.signal.aborted) { setJob(checked(value)); setError('') } })
+        .then(value => { if (!controller.signal.aborted) {
+          if (value.id !== job!.id) throw new Error('조사 접수 대상이 다릅니다.')
+          setJob(checked(value)); onPlanChange?.(value); setError('')
+        } })
         .catch(() => { if (!controller.signal.aborted) setError('진행 상태를 확인하지 못했습니다. 다시 확인 중입니다.') })
     }, 1500)
     return () => { clearInterval(timer); controller.abort() }
@@ -109,6 +137,22 @@ export default function InvestigationPanel({ workspaceId, bundleId, connection, 
     finally { locked.current = false; if (!signal.aborted) setBusy(false) }
   }
 
+  async function cancelScope() {
+    if (!scope || locked.current || disabled || reading) return
+    locked.current = true; setBusy(true); setError('')
+    const signal = lifetime.current.signal
+    try {
+      await request(`${base}/jobs/${encodeURIComponent(scope.jobId)}/scope/cancel`, { method: 'POST', signal,
+        body: JSON.stringify({ expectedRevision: scope.revision }) })
+      if (!signal.aborted) {
+        setScope(null); scopeCallback.current?.(null)
+        setJob(current => current ? { ...current, status: 'CANCELLED', output: null } : current)
+        if (job) onPlanChange?.({ ...job, status: 'CANCELLED', output: null })
+      }
+    } catch (reason) { if (!signal.aborted) setError((reason as Error).message) }
+    finally { locked.current = false; if (!signal.aborted) setBusy(false) }
+  }
+
   return <section className="chat-investigation" aria-label="추가 자료 검색">
     {!open ? <Button variant="ghost" size="sm" disabled={disabled || !connected} onClick={() => void prepare()}>자료 더 찾아보기</Button>
       : <>
@@ -122,21 +166,28 @@ export default function InvestigationPanel({ workspaceId, bundleId, connection, 
         {job && <>
           {active(job) ? <p role="status">추가 자료를 찾고 있어요. <Button variant="ghost" disabled={busy} onClick={() => void cancel()}>취소</Button></p>
             : <p>{proposed ? '운영 조회 제안 · 실행하지 않음' : job.decision === 'STOP' || job.status === 'STOPPED' ? '추가 검색을 진행하지 않았습니다.' : job.status === 'SUCCEEDED' ? '자료 검색 완료' : job.status === 'CANCELLED' ? '검색 취소됨' : '자료 검색을 완료하지 못했습니다.'}</p>}
-          {proposed && <p>수동 운영 조회는 제공하지 않습니다. DB·로그 조회는 실행되지 않았습니다.</p>}
+          {proposed && !scope && <p>DB·로그 조회는 아직 실행되지 않았습니다.</p>}
+          {scope && scope.questions.map(question => <p key={question.topic}>{question.prompt}</p>)}
+          {scope && scope.questions.length > 0 && <p>아래 대화 입력창에 답해 주세요. 처음 질문과 함께 확인하겠습니다.</p>}
+          {scope && !scope.questions.length && scope.internalResolutionRequired && <p>아직 조회할 자료를 확인하지 못했습니다. 원본은 조회하지 않았습니다.</p>}
+          {scope && !scope.internalResolutionRequired && !scope.questions.length && onCaptured && <ConversationReadPanel
+            key={`${scope.scopeId}:${scope.revision}`} scope={scope} disabled={disabled || !connected} onCaptured={onCaptured}
+            onBusyChange={value => { setReading(value); onBusyChange?.(value) }} />}
+          {scope && <Button variant="ghost" disabled={busy || reading || disabled} onClick={() => void cancelScope()}>이번 조회 안 하기</Button>}
           {job.query && <p>검색어: {job.query}</p>}
           {job.error && <p role="alert">{job.error}</p>}
           {job.toolStatus === 'EMPTY' && <p>추가로 일치하는 자료가 없습니다.</p>}
-          {job.truncated && <p>표시 한도로 검색 결과 일부만 표시합니다.</p>}
-          {job.output && <details open><summary>검색 결과 · 답변으로 검증되지 않은 자료</summary>
+          {job.truncated && <p>검색 결과가 많아 일부만 확인했습니다. 질문의 범위를 좁혀 다시 찾아 주세요.</p>}
+          {job.output && !proposed && <details open><summary>검색 결과 · 답변으로 검증되지 않은 자료</summary>
             {matches.length ? matches.map((match, index) => <div key={index}><p>자료 {index + 1} · {match.startLine}–{match.endLine}행</p><pre>{match.content}</pre></div>)
               : <pre>{job.output}</pre>}
           </details>}
-          {job.status === 'SUCCEEDED' && job.decision === 'SEARCH' && job.toolStatus === 'OK' && onAnswer &&
+          {job.status === 'SUCCEEDED' && job.decision === 'SEARCH' && job.toolStatus === 'OK' && !job.truncated && onAnswer &&
             <Button variant="outline" disabled={busy || disabled || !connected} onClick={() => void onAnswer(job.id)}>이 자료로 다시 답변</Button>}
-          {!active(job) && <Button variant="ghost" disabled={busy || disabled || !connected} onClick={() => void prepare(true)}>새 검색 계획 확인</Button>}
+          {!active(job) && <Button variant="ghost" disabled={busy || reading || disabled || !connected} onClick={() => void prepare(true)}>새 검색 계획 확인</Button>}
         </>}
         {!busy && !preview && !job && <Button variant="outline" onClick={() => void prepare()}>다시 확인</Button>}
-        <Button variant="ghost" disabled={busy} onClick={() => setOpen(false)}>접기</Button>
+        <Button variant="ghost" disabled={busy || reading} onClick={() => setOpen(false)}>접기</Button>
       </>}
   </section>
 }

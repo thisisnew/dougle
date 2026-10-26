@@ -36,12 +36,18 @@ let unexpected: string[] = []
 
 beforeEach(() => {
   vi.clearAllMocks(); api.mockReset(); unexpected = []
-  for (const key of Object.keys(sessionStorage)) if (key.startsWith('dougle.chat-submission.')) sessionStorage.removeItem(key)
+  for (const key of Object.keys(sessionStorage)) if (key.startsWith('dougle.chat-submission.') || key.startsWith('dougle.plan-submission.')) sessionStorage.removeItem(key)
   api.mockImplementation(async (path, options) => {
     const method = options?.method ?? 'GET'
     if (method === 'GET' && path === `${base}/chat-threads/${threadId}`) return { id: threadId, bundles: [root, parent],
       jobs: [job, { ...job, id: 'parent-job', bundleId: parent.id, answer: 'Existing synthetic answer' }] }
     if (method === 'POST' && path === `${base}/chat-threads`) return next
+    if (method === 'GET' && path === `${base}/investigation-plans/jobs?bundleId=${parent.id}`) return []
+    if (method === 'POST' && path === `${base}/investigation-plans/preview`) return { bundleId: next.id, provider: 'CODEX', requestedModel: 'synthetic-model', digest: 'plan-digest' }
+    if (method === 'POST' && path === `${base}/investigation-plans/jobs`) {
+      const input = JSON.parse(options!.body as string)
+      return { ...input, id: input.requestId, workspaceId: 'one', status: 'SUCCEEDED', decision: 'STOP' }
+    }
     if (method === 'POST' && path === `${answerBase}/answer-preview`) return { bundleId: next.id, bundleDigest: next.digest,
       provider: 'CODEX', requestedModel: 'synthetic-model', digest: approval.digest, validation: { eligible: true } }
     if (method === 'GET' && path === `${answerBase}/answer-approval`) return { status: 'NONE', approval: null }
@@ -74,17 +80,18 @@ it('keeps the existing thread and latest parent; normal file upload starts no AI
   expect(screen.getByRole('heading', { name: root.payload.question })).toBeVisible()
   expect(screen.getByRole('heading', { name: parent.payload.question })).toBeVisible()
   expect(onCreated).not.toHaveBeenCalled()
-  expect(api.mock.calls.map(([path]) => path)).toEqual([base + '/chat-threads/' + threadId, base + '/attachments'])
+  expect(api.mock.calls.map(([path]) => path)).toEqual([base + '/chat-threads/' + threadId, `${base}/investigation-plans/jobs?bundleId=${parent.id}`, base + '/attachments'])
   await userEvent.type(screen.getByRole('textbox', { name: '질문' }), next.payload.question)
   expect(writes()).toHaveLength(1)
   await userEvent.click(screen.getByRole('button', { name: '질문 보내기' }))
   await waitFor(() => expect(writes().some(([path]) => path === `${answerBase}/answer-jobs`)).toBe(true))
   const calls = writes().filter(([path]) => path !== base + '/attachments')
-  expect(calls.map(([path]) => path)).toEqual([`${base}/chat-threads`, `${answerBase}/answer-preview`,
+  expect(calls.map(([path]) => path)).toEqual([`${base}/chat-threads`, `${base}/investigation-plans/preview`, `${base}/investigation-plans/jobs`, `${answerBase}/answer-preview`,
     `${answerBase}/answer-approval`, `${answerBase}/answer-jobs`])
   expect(JSON.parse(calls[0][1]!.body as string)).toEqual({ requestId: expect.any(String), threadId,
     parentBundleId: parent.id, question: next.payload.question, attachmentIds: [attachment.id] })
-  expect(JSON.parse(calls[3][1]!.body as string)).toMatchObject({ approvalId: approval.id, digest: approval.digest, approved: true })
+  expect(JSON.parse(calls[2][1]!.body as string)).toMatchObject({ bundleId: next.id, digest: 'plan-digest', approved: true })
+  expect(JSON.parse(calls[5][1]!.body as string)).toMatchObject({ approvalId: approval.id, digest: approval.digest, approved: true })
   expect(onCreated).toHaveBeenCalledExactlyOnceWith(threadId)
   expect(screen.getByRole('heading', { name: root.payload.question })).toBeVisible()
   expect(screen.getByRole('heading', { name: parent.payload.question })).toBeVisible()
@@ -98,5 +105,5 @@ it('does not mount manual tools in a reopened conversation', async () => {
   for (const name of ['운영 자료 조회', '조회 양식 열기', 'DB 데이터 조회', '조회 결과 다시 첨부']) expect(screen.queryByRole('button', { name })).not.toBeInTheDocument()
   expect(screen.getByRole('button', { name: '파일 첨부' })).toBeEnabled()
   expect(writes()).toHaveLength(0)
-  expect(api.mock.calls.map(([path]) => path)).toEqual([base + '/chat-threads/' + threadId])
+  expect(api.mock.calls.map(([path]) => path)).toEqual([base + '/chat-threads/' + threadId, `${base}/investigation-plans/jobs?bundleId=${parent.id}`])
 })

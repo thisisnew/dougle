@@ -1,5 +1,17 @@
 # 일반 질문의 제한된 로컬 검색
 
+## 최신 소스: 계획 검색 snapshot capture
+
+설치된 `.25`와 별개인 다음 후보 소스에서 `InvestigationPlanService`의 실제 SEARCH를 `LocalInvestigationTools.search(workspace,job,query,...)`에 연결했다. 성공한 비절단 결과는 최대 5개 typed hit·content/text hash를 10분 session snapshot(최대 32개)으로 보관한다. capture는 `tools.snapshot → ChatThreadService.createFromSnapshot`이며 다시 검색하거나 원문 문맥을 확장하지 않는다. workspace/job/query/TTL·최신 parent·원문 해시가 다르거나 snapshot이 없으면 실패하며 fallback 검색/새 turn 저장을 하지 않는다. 재시작하면 미저장 snapshot은 복구하지 않는다.
+
+capture 메서드의 PlanService monitor를 제거했다. snapshot factory의 DB 조회도 그 factory monitor 밖이다. 기존 plan start/check/stop 전체의 DB 잠금을 제거했다는 뜻은 아니다. 실제 계획 경로의 검색 1회·capture/replay 검색 0회·snapshot 실패 rollback·정확한 excerpt 유지·capture에서 PlanService monitor 미점유를 검사했다. focused **147/147 통과**, `/tmp/dougle-planner-snapshot-bridge-first.log` (scope/bridge 및 fake CLI 검사 포함). 새 source를 기존 `.25` 실행 증거로 합산하지 않는다.
+
+2026-10-27 통합 후 broad: `bash scripts/maven.sh '-Dtest=*,!AnswerPartialIntegrationTest,!QuestionAttachmentIntegrationTest' test` **1114실행/1107통과/7 skip/실패·오류0**, `/tmp/dougle-operational-vertical-broad.log`. 기존 긴 Workspace 이름 fixture 두 클래스만 명시적으로 제외했으며 신규 관련 검사는 모두 포함했다. 무제외 전체 통과는 아니다. JAR 생성 goal 없이 test만 실행했고 `.25` SHA-256 `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`는 불변이다.
+
+이 broad 이후 완료 운영 후보의 명시적 취소 경로와 회귀 2건을 추가했다. 2026-10-27 05:24 KST 후속 focused는 **77건 통과, 실패/오류/skip 0, 36.871초**이며 `/tmp/dougle-scope-cancel-awake.log`를 따른다. snapshot 통합·단위 검사도 포함했고 timeout 변경이나 JAR 생성은 없었다. 취소 회귀를 위 broad 수에 소급 합산하지 않는다. [scope 취소 계약과 검사 범위](conversation-operational-scope.md#완료-후보-취소--focused-검사-완료)를 따른다. 소스는 동결했으며 최종 combined 회귀는 부모 담당이다. 자연어 보완은 새 user turn→새 승인 계획 방식이고 별도 기술 입력/revise 폼은 없다.
+
+## 설치된 .25 및 이전 검사 기록
+
 2026-10-26 23:00 KST: 아래 구현은 **0.1.25 Intel 설치본에 반영**했다. [새 JAR의 실제 로컬 검색·이어 질문·재시작 검사](evaluations/retrieval-runtime-0.1.25-20261026.json)와 [백업·설치 증거](evaluations/local-install-0.1.25-20261026.json)를 따른다. 아래 `.24에 미포함`은 소스 작업 당시 기록이다. 후속 운영 범위 후보 계약은 여전히 별도 미설치 소스이며 이 검색 개선과 구별한다.
 
 최종 광범위 회귀: 2026-10-26 `bash scripts/maven.sh '-Dtest=*,!AnswerPartialIntegrationTest,!QuestionAttachmentIntegrationTest' test`로 **1041실행/1034통과/7 opt-in 건너뜀/실패·오류0**. 기존 Workspace 이름 길이 fixture 문제인 두 클래스를 명시적으로 제외했으므로 무제외 전체 통과는 아니다. 로그 `/tmp/dougle-conversation-retrieval-broad.log`. 도구 단위 검사는 `node --test scripts/*.test.mjs` **143/143통과** (`/tmp/dougle-conversation-tools-final.log`). 독립 재검토에서도 앞선 네 경계 수정의 남은 구체적 blocker는 발견하지 않았다. 실제 모델 품질·운영 조사·새 패키지 설치 인수를 대신하지 않는다.

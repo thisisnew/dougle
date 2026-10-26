@@ -14,7 +14,7 @@ import java.util.concurrent.CancellationException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DatadogInvestigationService {
+public class DatadogInvestigationService implements AutoCloseable {
     public record Query(String connectionRevision, String environment, String service, Set<String> indexes,
                         Instant from, Instant to, int limit) {
         public Query { indexes = Set.copyOf(indexes); }
@@ -26,9 +26,21 @@ public class DatadogInvestigationService {
     private final DatadogLogsClient client;
     private final Clock clock;
     private final Map<String, Pending> pending = new HashMap<>();
+    private static final Runnable NO_SCOPE_CHECK = () -> {};
+    private final Duration scopeTimeout;
+    private final java.util.concurrent.ThreadPoolExecutor scopeWorkers = new java.util.concurrent.ThreadPoolExecutor(
+            2, 2, 2, java.util.concurrent.TimeUnit.SECONDS, new java.util.concurrent.ArrayBlockingQueue<>(2),
+            Thread.ofPlatform().daemon().name("datadog-scope-", 0).factory());
 
+    @org.springframework.beans.factory.annotation.Autowired
     public DatadogInvestigationService(DatadogConnections connections, DatadogLogsClient client, Clock clock) {
+        this(connections, client, clock, Duration.ofSeconds(2));
+    }
+
+    DatadogInvestigationService(DatadogConnections connections, DatadogLogsClient client, Clock clock, Duration scopeTimeout) {
         this.connections = connections; this.client = client; this.clock = clock;
+        this.scopeTimeout = scopeTimeout;
+        scopeWorkers.allowCoreThreadTimeOut(true);
     }
 
     public Preview preview(String workspaceId, Query input) {
@@ -63,10 +75,18 @@ public class DatadogInvestigationService {
     }
 
     public Result execute(String workspaceId, String id, String requestId, boolean approved) {
+        return execute(workspaceId, id, requestId, approved, NO_SCOPE_CHECK);
+    }
+
+    public Result execute(String workspaceId, String id, String requestId, boolean approved, Runnable scopeCheckpoint) {
         if (!approved) throw new LibraryException(403, "표시한 Datadog 조회 범위 실행에 동의하세요.");
         if (requestId == null || !requestId.matches("[A-Za-z0-9_-]{16,64}")) throw new LibraryException(400, "요청 식별자가 필요합니다.");
+        java.util.Objects.requireNonNull(scopeCheckpoint);
+        long deadline = System.nanoTime() + Duration.ofSeconds(10).toNanos();
+        checkpoint(null, deadline, scopeCheckpoint);
         Pending operation = owned(workspaceId, id);
         var config = connections.require(workspaceId, operation.preview.query().connectionRevision());
+        checkpoint(null, deadline, scopeCheckpoint);
         synchronized (pending) {
             ensureAvailable(operation);
             if (operation.requestId != null) {
@@ -80,11 +100,10 @@ public class DatadogInvestigationService {
         }
         Result result;
         try {
-            var observed = client.read(config, operation.policy, operation.query, () -> {
-                if (operation.cancelled || Thread.currentThread().isInterrupted()) throw new CancellationException();
-            });
+            checkpoint(operation, deadline, scopeCheckpoint);
+            var observed = client.read(config, operation.policy, operation.query, () -> checkpoint(operation, deadline, scopeCheckpoint));
             connections.require(workspaceId, operation.preview.query().connectionRevision());
-            if (operation.cancelled) throw new CancellationException();
+            checkpoint(operation, deadline, scopeCheckpoint);
             result = new Result(id, observed.output().isEmpty() ? "EMPTY" : "OK", observed.output(), observed.rows(), observed.truncated(), clock.instant().toString());
         } catch (CancellationException cancelled) {
             result = state(operation, "CANCELLED");
@@ -145,6 +164,47 @@ public class DatadogInvestigationService {
     }
 
     private Result state(Pending value, String status) { return new Result(value.preview.id(), status, "", 0, false, null); }
+
+    private void checkWaiting(Pending operation, long deadline) {
+        if (Thread.currentThread().isInterrupted() || operation != null && operation.cancelled) throw new CancellationException();
+        if (System.nanoTime() >= deadline) throw new LibraryException(504, "Datadog 조회 시간이 초과되었습니다.");
+    }
+
+    private void checkpoint(Pending operation, long deadline, Runnable scopeCheckpoint) {
+        checkWaiting(operation, deadline);
+        if (scopeCheckpoint == NO_SCOPE_CHECK) return;
+        long scopeDeadline = System.nanoTime() + Math.min(scopeTimeout.toNanos(), deadline - System.nanoTime());
+        java.util.concurrent.Future<?> task;
+        try { task = scopeWorkers.submit(scopeCheckpoint); }
+        catch (java.util.concurrent.RejectedExecutionException busy) {
+            throw new LibraryException(503, "조회 범위 검증이 사용 중입니다. 잠시 후 다시 확인하세요.");
+        }
+        try {
+            while (true) {
+                checkWaiting(operation, deadline);
+                long remaining = scopeDeadline - System.nanoTime();
+                if (remaining <= 0) throw new LibraryException(504, "조회 범위 검증 시간이 초과되었습니다.");
+                try {
+                    task.get(Math.min(remaining, java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(20)), java.util.concurrent.TimeUnit.NANOSECONDS);
+                    checkWaiting(operation, deadline);
+                    return;
+                } catch (java.util.concurrent.TimeoutException waiting) { }
+            }
+        } catch (InterruptedException interrupted) {
+            Thread.currentThread().interrupt();
+            throw new CancellationException();
+        } catch (java.util.concurrent.ExecutionException failure) {
+            if (failure.getCause() instanceof CancellationException cancelled) throw cancelled;
+            if (failure.getCause() instanceof LibraryException problem) throw problem;
+            throw new LibraryException(409, "조회 범위를 확인하지 못했습니다.");
+        } finally {
+            task.cancel(true);
+            if (task instanceof Runnable queued) scopeWorkers.remove(queued);
+        }
+    }
+
+    @Override @jakarta.annotation.PreDestroy
+    public void close() { scopeWorkers.shutdownNow(); }
 
     private static final class Pending {
         final Preview preview;

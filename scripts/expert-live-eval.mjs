@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
-import { spawn } from 'node:child_process'
+import { execFile, spawn } from 'node:child_process'
+import { promisify } from 'node:util'
 import { once } from 'node:events'
 import { createHash, randomBytes, randomUUID } from 'node:crypto'
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { constants } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -14,13 +16,17 @@ import { scheduledDispatches, createVariantBudget, validateMemoryContext, memory
 import { requireSemanticReview } from './expert-live-semantic-review.mjs'
 import { verifySearchModels } from './expert-live-search-models.mjs'
 import { prepareProtocolHook, collectProtocolCounters } from './expert-live-protocol-hook.mjs'
+import { contextApiAllowed, validateContextConfiguration } from './expert-live-context-fixtures.mjs'
+import { readSeedReport, seededAnswerSql, validateDiagnosticConfiguration, verifySeededContext } from './expert-live-context-diagnostic-fixtures.mjs'
 const proposalOnly = process.env.FORGE_EXPERT_MODE === 'proposal'
+const contextDiagnostic = process.env.FORGE_EXPERT_MODE === 'context-diagnostic'
+const contextOnly = contextDiagnostic || process.env.FORGE_EXPERT_MODE === 'context'
 const memoryOnly = process.env.FORGE_EXPERT_MODE === 'memory'
-const localOnly = memoryOnly || process.env.FORGE_EXPERT_MODE === 'local'
+const localOnly = contextOnly || memoryOnly || process.env.FORGE_EXPERT_MODE === 'local'
 assert.ok(process.argv.slice(2).every(argument => argument === '--hold-at-restart'), 'Unknown evaluation option')
 const holdForUi = process.argv.includes('--hold-at-restart')
 const investigation = localOnly || process.env.FORGE_EXPERT_MODE === 'investigation'
-const fixtureFile = memoryOnly ? 'expert-live-memory-fixtures.mjs' : localOnly ? 'expert-live-local-fixtures.mjs'
+const fixtureFile = contextDiagnostic ? 'expert-live-context-diagnostic-fixtures.mjs' : contextOnly ? 'expert-live-context-fixtures.mjs' : memoryOnly ? 'expert-live-memory-fixtures.mjs' : localOnly ? 'expert-live-local-fixtures.mjs'
   : investigation ? 'expert-live-investigation-fixtures.mjs' : 'expert-live-fixtures.mjs'
 const fixtures = await import('./' + fixtureFile)
 const { documents } = fixtures
@@ -36,6 +42,11 @@ assert.ok(Number.isSafeInteger(maximumDispatches) && maximumDispatches > 0, 'Pos
 assert.ok(Number.isSafeInteger(variantStart) && variantStart >= 0, 'Invalid starting variant')
 assert.ok(Number.isSafeInteger(variants) && variants > 0 && scenarios.every(scenario => scenario.questions.length >= variantStart + variants), 'Invalid variant count')
 assert.ok((proposalOnly ? proposalCases.length : scheduledDispatches(scenarios, variantStart, variants, investigation ? 2 : 1)) <= maximumDispatches, 'Select scenarios fitting the bounded batch')
+if (contextOnly) {
+  if (contextDiagnostic) validateDiagnosticConfiguration(process.env, maximumDispatches, variants, variantStart)
+  else validateContextConfiguration(process.env, maximumDispatches, variants, variantStart)
+  assert.equal(holdForUi, false)
+}
 if (memoryOnly) {
   assert.equal(variants, 1, 'Only one separately authorized memory variant per invocation')
   assert.equal(maximumDispatches, 64, 'Memory variant requires an explicit 64-dispatch cap')
@@ -55,10 +66,12 @@ assert.equal(process.env.FORGE_EXPERT_LIVE, 'approved', 'Explicit synthetic exte
 assert.ok(process.env.FORGE_EXPERT_PROFILE, 'Dedicated authenticated profile required; never read or copy credentials')
 assert.ok(process.env.FORGE_EXPERT_REPORT, 'Choose a new private report path')
 const root = fileURLToPath(new URL('../', import.meta.url))
-const resources = '/Applications/Knowledge Forge.app/Contents/Resources/resources'
-const jar = resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
+const resources = contextOnly ? resolve(process.env.FORGE_EXPERT_RESOURCES) : '/Applications/Knowledge Forge.app/Contents/Resources/resources'
+const sourceJar = contextOnly ? resolve(process.env.FORGE_EXPERT_JAR) : resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
 const reportPath = resolve(process.env.FORGE_EXPERT_REPORT)
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-expert-live-'))
+const jar = contextOnly ? resolve(directory, 'frozen-context-0.1.25.jar') : sourceJar
+const privateHome = resolve(directory, 'home')
 let token = randomBytes(32).toString('hex')
 const report = { fixtureVersion: investigation ? 'synthetic-investigation-v3' : 'synthetic-expert-v1', startedAt: new Date().toISOString(), maximumDispatches,
   scenarios: scenarios.map(scenario => scenario.id), variants, variantStart,
@@ -74,6 +87,16 @@ report.restartChecks = []
 report.runtimes = []
 if (localOnly) report.fixtureVersion = 'synthetic-local-restart-glossary-v1'
 if (memoryOnly) { report.fixtureVersion = 'synthetic-memory-v1'; report.fullE05Pass = false; report.memoryChecks = [] }
+if (contextOnly) {
+  report.fixtureVersion = 'synthetic-short-context-correction-v1'
+  report.contextBundles = []; report.fullE04Pass = false; report.fullE05Pass = false
+  report.privateDirectory = directory
+}
+let seededTurns
+if (contextDiagnostic) {
+  report.fixtureVersion = 'synthetic-seeded-b1-implicit-diagnostic-v1'
+  report.seededHistoryLimitation = 'Exact prior questions/answers seeded into fresh local bundles and terminal jobs; new IDs/digests; not uninterrupted third turn or identical full serialized prompt.'
+}
 let variantBudget = null
 let child
 let base
@@ -84,6 +107,7 @@ let protocolHook = null
 const pause = milliseconds => new Promise(done => setTimeout(done, milliseconds))
 const shutdown = new AbortController()
 const onSignal = () => shutdown.abort()
+const batchTimer = contextOnly ? setTimeout(onSignal, 30 * 60 * 1000) : null
 process.on('SIGINT', onSignal)
 process.on('SIGTERM', onSignal)
 async function save() { await writeFile(reportPath, JSON.stringify(report, null, 2), { mode: 0o600 }) }
@@ -99,6 +123,7 @@ async function dispatch(kind, requestId, context) {
   await save()
 }
 async function api(path, method = 'GET', body) {
+  if (contextOnly) assert(contextApiAllowed(path, method), 'Context batch route outside synthetic local/AI allowlist')
   assert.ok(!uiHoldActive || method === 'GET', 'No POST while waiting for UI acknowledgment')
   if (method === 'POST') variantBudget?.beforePost(path, body)
   if (proposalOnly) {
@@ -134,12 +159,19 @@ async function startRuntime() {
   base = null
   logs = ''
   report.launchFailed = false
-  child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', jar,
+  if (contextOnly) {
+    for (const [name, expected] of Object.entries(report.assetHashes)) {
+      assert.equal(createHash('sha256').update(await readFile(resolve(resources, name))).digest('hex'), expected, 'Frozen resource changed')
+    }
+  }
+  child = spawn(resolve(resources, 'runtime/bin/java'), [...(contextOnly ? [`-Duser.home=${privateHome}`, `-Djava.io.tmpdir=${directory}`] : []), '-jar', jar,
     '--forge.desktop=true', '--server.address=127.0.0.1', '--server.port=0', `--forge.data-dir=${directory}`,
     `--forge.search-model-directory=${models.directory}`,
     `--forge.ai.codex-command=${protocolHook?.command ?? resolve(resources, 'ai/codex')}`,
     `--forge.ai.codex-stream-home=${resolve(process.env.FORGE_EXPERT_PROFILE)}`],
-  { cwd: directory, detached: true, env: { ...process.env, FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true', JAVA_TOOL_OPTIONS: '', JDK_JAVA_OPTIONS: '', _JAVA_OPTIONS: '' }, stdio: ['pipe', 'pipe', 'pipe'] })
+  { cwd: directory, detached: true, env: contextOnly
+    ? { HOME: privateHome, TMPDIR: directory, PATH: '/usr/bin:/bin:/usr/sbin:/sbin', LANG: 'en_US.UTF-8', FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true' }
+    : { ...process.env, FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true', JAVA_TOOL_OPTIONS: '', JDK_JAVA_OPTIONS: '', _JAVA_OPTIONS: '' }, stdio: ['pipe', 'pipe', 'pipe'] })
   child.on('error', () => { report.launchFailed = true })
   for (const pipe of [child.stdout, child.stderr]) pipe.on('data', chunk => { logs = (logs + chunk).slice(-16000) })
   child.stdin.write(token + '\n')
@@ -193,6 +225,20 @@ async function historySnapshot(prefix, threadId) {
 try {
   await writeFile(reportPath, '{}', { flag: 'wx', mode: 0o600 })
   reportCreated = true
+  if (contextOnly) {
+    assert.equal(createHash('sha256').update(await readFile(sourceJar)).digest('hex'), process.env.FORGE_EXPERT_JAR_SHA256)
+    await copyFile(sourceJar, jar, constants.COPYFILE_EXCL); await chmod(jar, 0o400)
+    await mkdir(privateHome, { mode: 0o700 })
+    report.assetHashes = {}
+    for (const name of ['runtime/bin/java', 'ai/codex']) report.assetHashes[name] = createHash('sha256').update(await readFile(resolve(resources, name))).digest('hex')
+    report.resourceDirectory = resources
+  }
+  if (contextDiagnostic) {
+    const bytes = await readFile(resolve(root, 'docs/evaluations/context-live-025-b1-20261026.json'))
+    seededTurns = readSeedReport(bytes)
+    report.seedReportSha256 = createHash('sha256').update(bytes).digest('hex')
+    report.seededTurns = seededTurns
+  }
   report.harnessSha256 = createHash('sha256').update(await readFile(fileURLToPath(import.meta.url))).digest('hex')
   report.fixtureSha256 = createHash('sha256').update(await readFile(resolve(root, 'scripts', fixtureFile))).digest('hex')
   report.historyHelperSha256 = createHash('sha256').update(await readFile(resolve(root, 'scripts/expert-live-history.mjs'))).digest('hex')
@@ -267,6 +313,22 @@ try {
       let expectedBundles = 0
       let restartedSnapshot = null
       const priorMemoryTurns = []
+      if (contextDiagnostic) {
+        for (const seeded of seededTurns) {
+          const bundle = await api(prefix + '/chat-threads', 'POST', { requestId: randomUUID(), threadId, parentBundleId, question: seeded.question })
+          threadId = bundle.payload.chatContext.threadId; parentBundleId = bundle.id; expectedBundles++
+          await stopRuntime()
+          assert(child.exitCode !== null || child.signalCode !== null, 'Seed only after owned backend exits')
+          await promisify(execFile)('/usr/bin/sqlite3', ['-batch', '-bail', resolve(directory, 'knowledge-forge.sqlite'), seededAnswerSql(bundle, seeded.answer, randomUUID())],
+            { timeout: 5000, maxBuffer: 16384 })
+          await startRuntime()
+          const restored = await api(prefix + '/chat-threads/' + threadId)
+          assert(restored.jobs.some(job => job.bundleId === bundle.id && job.status === 'SUCCEEDED' && job.answer === seeded.answer))
+        }
+        report.seededHistory = await historySnapshot(prefix, threadId)
+        assert.equal(report.dispatched, 0, 'Seeding must not dispatch AI')
+        await save()
+      }
       for (let turn = 0; turn < scenario.questions[variant].length; turn++) {
         if (scenario.restartBeforeTurn === turn) {
           const before = await historySnapshot(prefix, threadId)
@@ -297,6 +359,8 @@ try {
         const started = Date.now()
         const question = scenario.questions[variant][turn]
         let bundle = await api(`${prefix}/chat-threads`, 'POST', { requestId: randomUUID(), threadId, parentBundleId, question })
+        if (contextDiagnostic) verifySeededContext(bundle, seededTurns)
+        if (contextOnly) { report.contextBundles.push({ turn, bundle }); await save() }
         if (memoryOnly) {
           report.memoryChecks.push({ variant, turn, bundle, validation: 'PENDING' })
           await save()
@@ -340,6 +404,7 @@ try {
           report.dispatches.at(-1).diagnostic = executionDiagnostic('plan', plan.status, plan.error)
           await save()
           assert.equal(plan.status, 'SUCCEEDED', plan.error)
+          if (contextOnly) assert.equal(plan.decision, 'STOP', 'Routine synthetic definition must not propose or execute tools')
           if (memoryOnly) requireMemoryPlan(plan)
           else assert.deepEqual(await api(plans + '/jobs', 'POST', request), plan, 'Plan replay must reconcile without new generation')
           if (plan.decision === 'SEARCH') {
@@ -403,10 +468,10 @@ try {
         await save()
         console.log(JSON.stringify({ scenario: scenario.id, variant, turn, status, automaticPass, dispatched: report.dispatched }))
         requireSuccessfulAnswer(report.results.at(-1))
-        if (memoryOnly || protocolHook) {
+        if (contextOnly || memoryOnly || protocolHook) {
           const result = report.results.at(-1)
           result.semanticReview = await requireSemanticReview({ ownedDirectory: directory,
-            result: { ...result, memoryCheck: memoryOnly ? report.memoryChecks.at(-1) : undefined, artifactSha256: report.jarSha256 }, signal: shutdown.signal,
+            result: { ...result, contextBundle: contextOnly ? bundle : undefined, memoryCheck: memoryOnly ? report.memoryChecks.at(-1) : undefined, artifactSha256: report.jarSha256 }, signal: shutdown.signal,
             notify: details => console.log(JSON.stringify({ event: 'WAIT_SEMANTIC_REVIEW', variant, turn, ...details })) })
           result.manualVerdict = 'PASS'
           if (memoryOnly) priorMemoryTurns.push({ bundle, answer })
@@ -443,6 +508,13 @@ try {
   process.exitCode = 1
 } finally {
   await stopRuntime()
+  if (batchTimer) clearTimeout(batchTimer)
+  if (contextOnly) {
+    report.sourceJarUnchanged = createHash('sha256').update(await readFile(sourceJar)).digest('hex') === process.env.FORGE_EXPERT_JAR_SHA256
+    report.snapshotJarUnchanged = createHash('sha256').update(await readFile(jar)).digest('hex') === process.env.FORGE_EXPERT_JAR_SHA256
+    report.assetsUnchanged = {}
+    for (const [name, expected] of Object.entries(report.assetHashes ?? {})) report.assetsUnchanged[name] = createHash('sha256').update(await readFile(resolve(resources, name))).digest('hex') === expected
+  }
   if (protocolHook) {
     try { report.protocolCounter = await collectProtocolCounters(protocolHook) }
     catch {

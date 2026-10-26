@@ -1,5 +1,9 @@
 # 아키텍처
 
+## 0.1.26 후보의 대화 조사 통합
+
+`ChatPanel → sendConversationPlan → InvestigationPlanService`가 텍스트 질문의 계획과 추가 로컬 검색을 연결한다. 모델이 반환한 조회 후보는 실행 권한이 아니며 `ConversationOperationalScopeAccess`의 서버 소유 범위와 사용자의 읽기 동의가 필요하다. `ConversationOperationalReadService`는 기존 읽기 전용 어댑터의 취소·시간 제한·범위 checkpoint를 재사용하고, 결과를 확인한 뒤 같은 대화에 로컬 첨부한다. 수동 SQL/로그 조건 입력 화면은 복원하지 않는다. 이력 재열기는 상태 조회만 하며 AI나 외부 조회를 자동 재실행하지 않는다. 검색 capture는 `LocalSearchSnapshot`의 당시 발췌/원본 해시를 검증한다. [계약과 한계](conversation-operational-read.md), [검증](evaluations/source-validation-0.1.26-20261027.md)을 따른다. 아래 수동 조회 양식과 제한형 아카이브 UI 설명은 과거 이력이며 팀 설정 화면은 제거했다.
+
 ## 수동 운영 조회 UI 제거 — 2026-10-26
 
 사용자 요청에 따라 `ChatPanel`의 운영 조회 패널, 조사 제안에서 수동 양식을 여는 경로, 플러그인 설정의 DB 행/로그 조회 화면을 제거한다. 연결 설정·Slack 수신함·일반 첨부·내부 읽기 전용 API는 유지한다. 아래 수동 양식 연결 설명은 이전 구현 이력이다. 계획의 운영 도구 제안은 실제 조회 실행이나 자동 조사 완료를 의미하지 않는다.

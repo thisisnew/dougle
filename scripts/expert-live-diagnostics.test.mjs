@@ -105,11 +105,29 @@ test('parser field order and StreamPhase allowlist match current Java record con
   const source = await readFile(new URL('../backend/src/main/java/dev/knowledgeforge/knowledge/application/ProviderExecutionException.java', import.meta.url), 'utf8')
   const declaration = source.match(/public record AppStream\(([^)]*)\)/)[1]
   const fields = declaration.split(',').map(field => field.trim().split(/\s+/).at(-1))
-  assert.deepEqual(fields, Object.keys(stream))
+  assert.deepEqual(fields, [...Object.keys(stream), 'ignoredEvents'])
+  const ignoredFields = source.match(/public record IgnoredEvents\(([^)]*)\)/)[1].split(',').map(field => field.trim().split(/\s+/).at(-1))
+  assert.deepEqual(ignoredFields, ['missingThread', 'foreignThread', 'missingTurn', 'foreignTurn', 'answerLifecycle', 'other'])
   const phases = source.match(/public enum StreamPhase \{([^}]+)\}/)[1].split(',').map(phase => phase.trim())
   assert.deepEqual(phases, ['NONE', 'TURN_ACCEPTED', 'MESSAGE_STARTED', 'TEXT_DELTA', 'MESSAGE_COMPLETED',
     'TURN_COMPLETION_RECEIVED', 'COMPLETED', 'PROTOCOL_INVALID'])
   assert.match(source, /count > 1048576/)
   assert.match(source, /pendingLineBytes > 262144/)
   assert.match(source, /appStream == null \? "" : ", appStream=" \+ appStream/)
+})
+
+test('classified ignored bindings remain bounded and old snapshots are still readable', () => {
+  const prefix = 'Codex 답변 생성 단계에서 제한 시간을 초과했습니다.'
+  const suffix = streamSuffix().replace('callbackActive=false]', 'callbackActive=false, ignoredEvents=IgnoredEvents[missingThread=2, foreignThread=1, missingTurn=3, foreignTurn=0, answerLifecycle=1, other=5]]')
+  const diagnostic = executionDiagnostic('answer', 'FAILED', prefix + suffix)
+  assert.deepEqual(diagnostic.appStream.ignoredEvents, { missingThread: 2, foreignThread: 1, missingTurn: 3, foreignTurn: 0, answerLifecycle: 1, other: 5 })
+  assert.equal(executionDiagnostic('answer', 'FAILED', prefix + streamSuffix()).deadline, 'APP_SERVER')
+  assert.equal(executionDiagnostic('answer', 'FAILED', prefix + streamSuffix().replace('callbackActive=false]', 'callbackActive=false, ignoredEvents=null]')).deadline, 'APP_SERVER')
+  for (const invalid of [suffix.replace('missingThread=2', 'missingThread=1048577'), suffix.replace('other=5', 'other=secret'),
+    suffix.replace('other=5]', 'other=5, raw=private-content]'), suffix.replace('foreignTurn=0', 'foreignTurn=-1')]) {
+    const rejected = executionDiagnostic('answer', 'FAILED', prefix + invalid)
+    assert.equal(rejected.deadline, 'UNOBSERVED')
+    assert.equal(Object.hasOwn(rejected, 'appStream'), false)
+    assert.doesNotMatch(JSON.stringify(rejected), /secret|private-content/)
+  }
 })

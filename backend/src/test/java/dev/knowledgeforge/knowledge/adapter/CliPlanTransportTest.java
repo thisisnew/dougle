@@ -56,7 +56,8 @@ class CliPlanTransportTest {
         var parsed = JsonMapper.builder().build().readTree(Files.readString(schema));
         assertThat(parsed.path("type").asString()).isEqualTo("object");
         assertThat(parsed.path("additionalProperties").asBoolean()).isFalse();
-        assertThat(parsed.path("required").toString()).isEqualTo("[\"decision\",\"query\"]");
+        assertThat(parsed.path("required").toString()).isEqualTo("[\"decision\",\"query\",\"candidate\"]");
+        assertThat(parsed.path("properties").path("candidate").path("anyOf").size()).isEqualTo(3);
         assertThat(parsed.path("properties").path("query").path("type").toString()).isEqualTo("[\"string\",\"null\"]");
         assertThat(parsed.path("properties").path("decision").path("enum").toString())
                 .isEqualTo("[\"SEARCH\",\"STOP\",\"PROPOSE_MYSQL_READ\",\"PROPOSE_DATADOG_LOGS\"]");

@@ -1,0 +1,152 @@
+{
+  "version": "0.1.26",
+  "completedAt": "2026-10-26T20:48:41.596Z",
+  "result": "PASS_PACKAGING_AND_SCOPED_INTEL_RUNTIME",
+  "jarSha256": "f88d6f01b115c5951a98c35dd6723b447c4bce1da03843666a8ad5f64f368093",
+  "frontend": {
+    "files": 7,
+    "bytes": 1660652,
+    "exactJarDistMatch": true
+  },
+  "sourceValidation": {
+    "attribution": "Parent-run; not rerun by packaging agent",
+    "report": "docs/evaluations/source-validation-0.1.26-20261027.md",
+    "java": {
+      "run": 1132,
+      "passed": 1125,
+      "skipped": 7,
+      "failed": 0,
+      "excluded": [
+        "AnswerPartialIntegrationTest",
+        "QuestionAttachmentIntegrationTest"
+      ]
+    },
+    "ui": {
+      "files": 63,
+      "passed": 669,
+      "build": "PASS"
+    },
+    "nodePassed": 153
+  },
+  "packaging": {
+    "order": [
+      "x86_64",
+      "arm64"
+    ],
+    "exitCodes": [
+      0,
+      0
+    ],
+    "mode": "--skip-verify",
+    "cargoBuildJobs": 2,
+    "commands": [
+      "FORGE_MACOS_TARGET= FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify",
+      "FORGE_MACOS_TARGET=aarch64-apple-darwin FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$PWD/.tools/apple-silicon/amazon-corretto-21.jdk/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify"
+    ],
+    "logs": [
+      "/tmp/dougle-026-intel-package.log",
+      "/tmp/dougle-026-arm-package.log"
+    ],
+    "noMavenOrJarRebuild": true
+  },
+  "verification": {
+    "result": "PASS_BOTH_CPUS_STATIC",
+    "commands": [
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.26_x86_64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.26_x86_64.app.tar.gz 0.1.26 x86_64",
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.26_arm64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.26_arm64.app.tar.gz 0.1.26 arm64"
+    ],
+    "checks": [
+      "Both DMG integrity, copied-app architecture/deep strict ad-hoc signatures and CPU-specific model hashes",
+      "Both updater cryptographic signatures, signed version, extracted app version/architecture/signature and current JAR equality",
+      "Both finalized bundles version 0.1.26, pinned JAR SHA256 and exact frontend/dist match",
+      "Final Intel bundle signature still valid after ARM packaging"
+    ],
+    "logs": [
+      "/tmp/dougle-026-intel-verification.log",
+      "/tmp/dougle-026-arm-verification.log"
+    ]
+  },
+  "runtime": {
+    "mode": "synthetic",
+    "actualAiCalls": 0,
+    "userBusinessDataAccess": false,
+    "nativeHost": {
+      "result": "PASS",
+      "exitCode": 0,
+      "startupMs": 12894,
+      "measuredAt": "2026-10-26T20:41:09.272Z",
+      "command": "node scripts/native-host-smoke.mjs \"$PWD/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app\"",
+      "log": "/tmp/dougle-026-native-host.log",
+      "checks": [
+        "Private temporary HOME/minimal PATH",
+        "Bundled Java startup and unauthenticated API 403",
+        "Private local data directory",
+        "Duplicate backend rejected, original remains available",
+        "Child shutdown after native exit",
+        "Restart against same synthetic database"
+      ]
+    },
+    "webkit": {
+      "result": "PASS",
+      "exitCode": 0,
+      "log": "/tmp/dougle-026-webkit.log",
+      "command": "env -i HOME=\"$OWNED_TEMP_HOME\" PATH=/usr/bin:/bin TMPDIR=/tmp LANG=en_US.UTF-8 \"$PWD/desktop/src-tauri/target/debug/examples/runtime_smoke\" \"$PWD/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources\"",
+      "harness": "desktop/src-tauri/target/debug/examples/runtime_smoke",
+      "harnessSha256": "e34fd11a50ad53da6cb80a5e54c18461405dc99ae81475cbc65e8fbface9845e",
+      "sourceSha256": "19fa292e4f31d65868acc0b3eb3e60bcf193e8136847193d5bca798513016df8",
+      "scope": "Existing unchanged actual React/WebKit smoke: Workspace/AI buttons, Korean names/errors, same-origin local mutations, synthetic upload/download/search, local publication/relations, OFF polling, source metadata and CLI settings. No inference; not exhaustive new conversation-flow acceptance."
+    },
+    "arm": "NOT_RUN_NO_ARM_HARDWARE"
+  },
+  "artifactsSha256": {
+    "release/Knowledge.Forge_0.1.26_arm64.app.tar.gz": "b3fa53e8a88cf2a33359ecd2600198978e9920489c236cb270817f36baa24efa",
+    "release/Knowledge.Forge_0.1.26_arm64.app.tar.gz.sig": "38f38a4d3a801cac6745ed997b64c81d6fb047eccd61e0cb1f17773acab483f4",
+    "release/Knowledge.Forge_0.1.26_arm64.dmg": "9dba564bfec914e0a854fc3f0224a615d44376c928ef3baad467017a30269e0f",
+    "release/Knowledge.Forge_0.1.26_x86_64.app.tar.gz": "a207f6c33e22dbe7ebfd7ddadc4885320fd5cb804cd95d19e68f5cad811cedd8",
+    "release/Knowledge.Forge_0.1.26_x86_64.app.tar.gz.sig": "55a93e8a25754d35296b563c625805c99aebdb438027eae2fd2c96703b509dc8",
+    "release/Knowledge.Forge_0.1.26_x86_64.dmg": "f27d1179ecb62adb2cc491584cfd5a9ab0419c831bb35a12417e733b98636640"
+  },
+  "preservation": {
+    "version": "0.1.25",
+    "result": "PASS",
+    "versionedAssetsUnchanged": 6,
+    "beforeManifest": "/tmp/dougle-026-preserve-025.sha256",
+    "log": "/tmp/dougle-026-preservation-verification.log",
+    "frozenJarUnchanged": true,
+    "note": "Aggregate release checksum files intentionally updated by packaging. Parent separately replaced installed .25; packaging agent did not install or access user DB."
+  },
+  "cleanup": {
+    "result": "PASS",
+    "ownedCommandSessionsCompleted": true,
+    "packageMountsReleased": true,
+    "noOwnedRuntimeOrCompilerProcessesObserved": true,
+    "sampledQaPidsVerifiedGone": [
+      52983,
+      53244,
+      53251,
+      53396,
+      53407
+    ],
+    "webkitHomeRemoved": "/tmp/dougle-026-webkit-home.gpJSaf",
+    "webkitRuntimeDirectoryAbsent": "/tmp/forge-native-runtime-53396-*",
+    "ownershipLog": "/tmp/dougle-026-webkit-ownership.log",
+    "nativeHostCleanup": "Helper completed its finally cleanup successfully",
+    "packagingLease": "RELEASED"
+  },
+  "installation": {
+    "owner": "Parent",
+    "status": "Intel locally installed separately",
+    "report": "docs/evaluations/local-install-0.1.26-20261027.json",
+    "installedAtLocal": "2026-10-27T05:43:07+09:00"
+  },
+  "limitations": [
+    "ARM static only, no real ARM hardware runtime",
+    "Ad-hoc signing, no notarization or Gatekeeper acceptance",
+    "No public upload or update-feed promotion",
+    "No actual AI, real external-service validation or full E01-E50 acceptance promotion",
+    "Parent generic scripts/smoke.mjs failed at legacy line482 overlong Workspace fixture (HTTP400); /tmp/dougle-026-smoke.log preserved; not fixed or counted as passing",
+    "Packaging may retrieve pinned public dependency/license files; not an offline-build claim"
+  ]
+}

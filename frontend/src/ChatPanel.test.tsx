@@ -7,8 +7,12 @@ import { ApiError, request } from './api'
 import AnswerJobsPanel from './AnswerJobsPanel'
 import type { AnswerJob } from './answerJobEvents'
 import { readChatSubmission, saveChatSubmission } from './chatSubmissionStorage'
+import { readConversationPlan, sendConversationPlan } from './sendConversationPlan'
+import { savePlanSubmission } from './planSubmissionStorage'
+import * as ConversationReadModule from './ConversationReadPanel'
 
 vi.mock('./api', async importOriginal => ({ ...await importOriginal<typeof import('./api')>(), request: vi.fn() }))
+vi.mock('./sendConversationPlan', () => ({ sendConversationPlan: vi.fn(), readConversationPlan: vi.fn() }))
 vi.mock('./AnswerJobsPanel', () => ({ default: vi.fn(({ initialJob, references }: { initialJob: AnswerJob; references: (answer: string) => ReactNode }) => <><p>{initialJob.answer}</p>{initialJob.status === 'SUCCEEDED' && references(initialJob.answer ?? '')}</>) }))
 const api = vi.mocked(request)
 const props = { workspaceId: 'one', selectedId: null, connection: { provider: 'CODEX' as const, state: 'AUTHENTICATED', model: 'fixture-model' }, onCreated: vi.fn(), onConnect: vi.fn(), onSources: vi.fn() }
@@ -17,9 +21,12 @@ const prepared = { bundleId: 'bundle', bundleDigest: 'digest', provider: 'CODEX'
 const approved = { id: 'approval', bundleId: 'bundle', digest: 'preview', provider: 'CODEX', requestedModel: 'fixture-model' }
 const completed = { id: 'job', bundleId: 'bundle', approvalId: 'approval', status: 'SUCCEEDED', provider: 'CODEX', requestedModel: 'fixture-model', answer: '가상 답변 [R1]', error: null }
 const thread = { id: 'thread', workspaceId: 'one', bundles: [bundle], jobs: [{ ...completed, workspaceId: 'one' }] }
+const planBinding = { provider: 'CODEX', requestedModel: 'fixture-model', digest: 'plan-digest' }
 beforeEach(() => {
   api.mockReset(); vi.clearAllMocks(); vi.restoreAllMocks()
-  for (const key of Object.keys(sessionStorage)) if (key.startsWith('dougle.chat-submission.')) sessionStorage.removeItem(key)
+  vi.mocked(sendConversationPlan).mockReset().mockImplementation(async (workspaceId, bundleId) => ({ ...planBinding, id: 'plan', workspaceId, bundleId, status: 'SUCCEEDED', decision: 'STOP' }))
+  vi.mocked(readConversationPlan).mockReset().mockResolvedValue(null)
+  for (const key of Object.keys(sessionStorage)) if (key.startsWith('dougle.chat-submission.') || key.startsWith('dougle.plan-submission.')) sessionStorage.removeItem(key)
 })
 
 const completeContext = { version: 1, totalQuestions: 2, omittedQuestions: 0, maxSerializedCharacters: 6000,
@@ -27,6 +34,177 @@ const completeContext = { version: 1, totalQuestions: 2, omittedQuestions: 0, ma
   questions: [{ bundleId: 'previous', bundleDigest: 'a'.repeat(64), question: '이전 질문' }], retrievalQueries: ['이전 검색'] }
 const contextBundle = (extractive: unknown) => ({ ...bundle, payload: { ...bundle.payload, status: 'NO_EVIDENCE', items: [],
   chatContext: { threadId: 'thread', extractive } } })
+
+it('plans on explicit send before any answer, and pauses an operational proposal without blocking the composer', async () => {
+  let resolve!: (value: Awaited<ReturnType<typeof sendConversationPlan>>) => void
+  vi.mocked(sendConversationPlan).mockImplementation(() => new Promise(done => { resolve = done }))
+  api.mockResolvedValueOnce(bundle)
+  render(<ChatPanel {...props} />)
+  expect(sendConversationPlan).not.toHaveBeenCalled()
+  await userEvent.type(screen.getByRole('textbox'), '가상 업무 오류{Enter}')
+  await waitFor(() => expect(sendConversationPlan).toHaveBeenCalledTimes(1))
+  expect(api).toHaveBeenCalledTimes(1)
+  expect(screen.getByRole('textbox')).toBeDisabled()
+  await act(async () => resolve({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ' }))
+  expect(await screen.findByText('운영 조회 제안 · 실행하지 않음')).toBeVisible()
+  expect(screen.queryByRole('button', { name: '답변 받기' })).not.toBeInTheDocument()
+  expect(screen.getByRole('textbox')).toBeEnabled()
+  await userEvent.type(screen.getByRole('textbox'), '운영 환경이에요')
+  expect(screen.getByRole('button', { name: '질문 보내기' })).toBeEnabled()
+  expect(api.mock.calls.some(([path]) => /answer-|conversation-operational-reads/.test(path))).toBe(false)
+})
+
+it('uncertain planning preserves its request for explicit reconciliation rather than dispatching an answer', async () => {
+  const submission = { requestId: 'original-plan-request', bundleId: 'bundle', provider: 'CODEX', requestedModel: 'fixture-model', digest: 'plan-digest', approved: true as const }
+  vi.mocked(sendConversationPlan).mockImplementationOnce(async (_workspace, _bundle, _provider, _model, _signal, remember) => {
+    remember(submission)
+    throw new Error('접수 불확실')
+  }).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_DATADOG_LOGS' })
+  api.mockResolvedValueOnce(bundle)
+  render(<ChatPanel {...props} />)
+  await userEvent.type(screen.getByRole('textbox'), '가상 업무 오류{Enter}')
+  expect(await screen.findByRole('alert')).toHaveTextContent('접수 불확실')
+  expect(screen.queryByRole('button', { name: '답변 받기' })).not.toBeInTheDocument()
+  expect(sendConversationPlan).toHaveBeenCalledTimes(1)
+  fireEvent.click(screen.getByRole('button', { name: '조사 접수 상태 확인' }))
+  await screen.findByText('운영 조회 제안 · 실행하지 않음')
+  expect(vi.mocked(sendConversationPlan).mock.calls[1][6]).toEqual(submission)
+  expect(api).toHaveBeenCalledTimes(1)
+})
+
+it('reopening a conversation does not plan or generate an answer', async () => {
+  api.mockResolvedValueOnce(thread)
+  render(<ChatPanel {...props} selectedId="thread" />)
+  await screen.findByText('가상 답변 [R1]')
+  expect(sendConversationPlan).not.toHaveBeenCalled()
+  expect(api).toHaveBeenCalledTimes(1)
+})
+
+it('restores a pending plan on reopen without answer fallback or another AI dispatch', async () => {
+  vi.mocked(readConversationPlan).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'RUNNING' })
+  api.mockResolvedValueOnce({ ...thread, jobs: [] })
+  render(<ChatPanel {...props} selectedId="thread" />)
+  await screen.findByText('추가 자료를 찾고 있어요.')
+  expect(screen.queryByRole('button', { name: '답변 받기' })).not.toBeInTheDocument()
+  expect(screen.getByRole('textbox')).toBeDisabled()
+  expect(sendConversationPlan).not.toHaveBeenCalled()
+  expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
+})
+
+it('restores uncertain plan approval after reload without dispatch until explicit same-ID reconciliation', async () => {
+  const submission = { requestId: 'saved-plan', bundleId: 'bundle', ...planBinding, approved: true as const }
+  savePlanSubmission({ workspaceId: 'one', bundleId: bundle.id, bundleDigest: bundle.digest }, submission)
+  api.mockResolvedValueOnce({ ...thread, jobs: [] })
+  vi.mocked(sendConversationPlan).mockResolvedValueOnce({ ...planBinding, id: 'saved-plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ' })
+  render(<ChatPanel {...props} selectedId="thread" />)
+  await screen.findByRole('button', { name: '조사 접수 상태 확인' })
+  expect(sendConversationPlan).not.toHaveBeenCalled()
+  expect(screen.queryByRole('button', { name: '답변 받기' })).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: '조사 접수 상태 확인' }))
+  await screen.findByText('운영 조회 제안 · 실행하지 않음')
+  expect(vi.mocked(sendConversationPlan).mock.calls[0][6]).toEqual(submission)
+  expect(api).toHaveBeenCalledTimes(1)
+})
+
+it('retries failed history plan reconciliation by GET only and never falls back to answer dispatch', async () => {
+  vi.mocked(readConversationPlan).mockRejectedValueOnce(new Error('상태 확인 실패')).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ' })
+  api.mockResolvedValueOnce({ ...thread, jobs: [] })
+  render(<ChatPanel {...props} selectedId="thread" />)
+  expect(await screen.findByRole('alert')).toHaveTextContent('상태 확인 실패')
+  expect(screen.queryByRole('button', { name: '답변 받기' })).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: '조사 접수 상태 확인' }))
+  await screen.findByText('운영 조회 제안 · 실행하지 않음')
+  expect(readConversationPlan).toHaveBeenCalledTimes(2)
+  expect(sendConversationPlan).not.toHaveBeenCalled()
+  expect(api).toHaveBeenCalledTimes(1)
+})
+
+it('takes business clarification in the same composer and replans a new turn bound to the original issue', async () => {
+  const proposal = { ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_DATADOG_LOGS', toolStatus: 'PENDING_SCOPE' }
+  const scope = { jobId: 'plan', scopeId: 'scope', revision: 1, workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'DATADOG_LOGS', expiresAt: '2099-01-01T00:00:00Z', sessionOnly: true, executionAllowed: false, internalResolutionRequired: true, questions: [{ topic: 'ENVIRONMENT', prompt: '어느 환경에서 발생한 현상인지 알려 주세요.' }] }
+  const followup = { ...bundle, id: 'clarified', payload: { ...bundle.payload, question: '운영 환경, 오늘 오전 10시 한국 시간', items: [], status: 'NO_EVIDENCE' } }
+  vi.mocked(readConversationPlan).mockResolvedValueOnce(proposal)
+  api.mockImplementation(async path => {
+    if (path.endsWith('/chat-threads/thread')) return { ...thread, jobs: [] }
+    if (path.endsWith('/clarification')) return scope
+    if (path.endsWith('/chat-threads')) return followup
+    throw new Error('Unexpected request: ' + path)
+  })
+  render(<ChatPanel {...props} selectedId="thread" />)
+  await screen.findByText(scope.questions[0].prompt)
+  expect(screen.queryByRole('button', { name: '답변 받기' })).not.toBeInTheDocument()
+  expect(screen.getAllByRole('textbox')).toHaveLength(1)
+  await userEvent.type(screen.getByRole('textbox'), followup.payload.question + '{Enter}')
+  await waitFor(() => expect(sendConversationPlan).toHaveBeenCalledTimes(1))
+  expect(vi.mocked(sendConversationPlan).mock.calls[0].slice(0, 4)).toEqual(['one', 'clarified', 'CODEX', 'fixture-model'])
+  const turn = api.mock.calls.find(([path]) => path.endsWith('/chat-threads'))!
+  expect(JSON.parse(turn[1]!.body as string)).toMatchObject({ threadId: 'thread', parentBundleId: 'bundle', question: followup.payload.question })
+  expect(api.mock.calls.filter(([path]) => path.endsWith('/clarification'))).toHaveLength(2)
+  expect(api.mock.calls.some(([path]) => /answer-|\/execute/.test(path))).toBe(false)
+})
+
+it('releases the chat lock when capture handoff is aborted despite an abort-ignoring history request', async () => {
+  const controller = new AbortController()
+  const scope = { jobId: 'plan', scopeId: 'scope', revision: 1, workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'MYSQL_READ', expiresAt: '2099-01-01T00:00:00Z', sessionOnly: true, executionAllowed: false, internalResolutionRequired: false, questions: [] }
+  const receipt = { id: 'read', threadId: 'thread', parentBundleId: 'bundle', status: 'CAPTURED', attachment: { id: 'captured-attachment' }, contentHash: 'hash', externalCalls: 0 }
+  vi.mocked(readConversationPlan).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ', toolStatus: 'PENDING_SCOPE' })
+  vi.spyOn(ConversationReadModule, 'default').mockImplementation(({ onCaptured, onBusyChange }) => <button onClick={() => {
+    onBusyChange(true)
+    void onCaptured(receipt, controller.signal).finally(() => onBusyChange(false))
+  }}>가상 자료 연결</button>)
+  let reads = 0
+  let resolve!: (value: unknown) => void
+  api.mockImplementation(async path => {
+    if (path.endsWith('/clarification')) return scope
+    if (path.endsWith('/chat-threads/thread')) {
+      if (++reads === 1) return thread
+      return new Promise(done => { resolve = done })
+    }
+    throw new Error('Unexpected request: ' + path)
+  })
+  render(<ChatPanel {...props} selectedId="thread" />)
+  fireEvent.click(await screen.findByRole('button', { name: '가상 자료 연결' }))
+  expect(screen.getByRole('textbox')).toBeDisabled()
+  await act(async () => controller.abort())
+  await waitFor(() => expect(screen.getByRole('textbox')).toBeEnabled())
+  await act(async () => resolve(thread))
+  expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false)
+})
+
+it('ready scope approval captures bounded evidence and answers in the same thread without using the draft or its attachments', async () => {
+  const scope = { jobId: 'plan', scopeId: 'scope', revision: 1, workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'MYSQL_READ', expiresAt: '2099-01-01T00:00:00Z', sessionOnly: true, executionAllowed: false, internalResolutionRequired: false, questions: [] }
+  const read = { id: 'read', workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'MYSQL_READ', sessionOnly: true, scopeId: 'scope', scopeRevision: 1, digest: 'read-digest', queryPreview: 'synthetic scope', expiresAt: scope.expiresAt, maxRows: 10, maxBytes: 4096, timeoutSeconds: 10 }
+  const next = { ...bundle, id: 'operational-bundle', digest: 'operational-digest', payload: { ...bundle.payload, items: [{ ...bundle.payload.items[0], kind: 'ATTACHMENT_TEXT' }] } }
+  api.mockImplementation(async (path, options) => {
+    if (path.endsWith('/chat-threads/thread')) return { id: thread.id, bundles: thread.bundles, jobs: thread.jobs }
+    if (path.includes('/investigation-plans/jobs?')) return [{ id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ', toolStatus: 'PENDING_SCOPE', output: 'scope' }]
+    if (path.endsWith('/clarification')) return scope
+    if (path.endsWith('/conversation-operational-reads/preview')) return read
+    if (path.endsWith('/execute')) return { ...read, status: 'SUCCEEDED', output: 'result', rows: 1, truncated: false }
+    if (path.endsWith('/capture-preview')) return { ...read, digest: 'capture-digest', text: 'bounded synthetic evidence', bytes: 26, truncated: false }
+    if (path.endsWith('/read/capture')) return { id: 'read', threadId: 'thread', parentBundleId: 'bundle', status: 'CAPTURED', attachment: { id: 'captured-attachment' }, contentHash: 'hash', externalCalls: 0 }
+    if (path.endsWith('/chat-threads')) return next
+    if (path.endsWith('/answer-preview')) return { ...prepared, bundleId: next.id, bundleDigest: next.digest }
+    if (path.endsWith('/answer-approval')) return options?.method === 'POST' ? { status: 'APPROVED', approval: { ...approved, bundleId: next.id } } : { status: 'NONE', approval: null }
+    if (path.endsWith('/answer-jobs')) return { ...completed, bundleId: next.id, answer: '조회 근거 답변 [R1]' }
+    throw new Error('Unexpected request: ' + path)
+  })
+  render(<ChatPanel {...props} selectedId="thread" />)
+  fireEvent.click(await screen.findByRole('button', { name: '자료 더 찾아보기' }))
+  fireEvent.click(await screen.findByRole('button', { name: '조회 범위 확인' }))
+  expect(api.mock.calls.some(([path]) => path.endsWith('/execute'))).toBe(false)
+  await waitFor(() => expect(screen.getByRole('textbox')).toBeEnabled())
+  await userEvent.type(screen.getByRole('textbox'), '나중에 보낼 질문')
+  fireEvent.click(await screen.findByRole('button', { name: '이 범위만 읽기' }))
+  fireEvent.click(await screen.findByRole('button', { name: '이 자료로 답변 받기' }))
+  expect(await screen.findByText('조회 근거 답변 [R1]')).toBeVisible()
+  expect(screen.getByText('가상 답변 [R1]')).toBeVisible()
+  expect(screen.getByRole('textbox')).toHaveValue('나중에 보낼 질문')
+  const turn = api.mock.calls.find(([path]) => path.endsWith('/chat-threads'))!
+  expect(JSON.parse(turn[1]!.body as string)).toEqual({ requestId: expect.any(String), threadId: 'thread', parentBundleId: 'bundle', question: bundle.payload.question, attachmentIds: ['captured-attachment'] })
+  expect(api.mock.calls.filter(([path]) => path.endsWith('/execute'))).toHaveLength(1)
+  expect(sendConversationPlan).not.toHaveBeenCalled()
+})
 
 it.each([
   ['questions', { omittedQuestions: 1 }], ['answers', { omittedAnswers: 1 }], ['truncated', { truncatedAnswerBundleIds: ['previous'] }],

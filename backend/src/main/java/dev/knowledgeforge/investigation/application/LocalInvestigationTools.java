@@ -9,4 +9,7 @@ public interface LocalInvestigationTools {
         return new ToolExecution.Binding(workspaceId, "local", "workspace-search");
     }
     ConstrainedToolExecutor open(String workspaceId, ToolExecution.Budget budget, ToolExecution.Cancellation cancellation);
+    ToolExecution.Result search(String workspaceId, String jobId, String query, ToolExecution.Budget budget,
+                                ToolExecution.Cancellation cancellation);
+    dev.knowledgeforge.search.application.LocalSearchSnapshot snapshot(String workspaceId, String jobId, String query);
 }

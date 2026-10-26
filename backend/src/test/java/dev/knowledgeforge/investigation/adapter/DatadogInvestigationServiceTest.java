@@ -43,6 +43,85 @@ class DatadogInvestigationServiceTest {
         return new DatadogInvestigationService.Query(revision, "test", "orders", Set.of("fixture"), now.minusSeconds(600), now, 20);
     }
 
+    @org.junit.jupiter.api.AfterEach void closeService() { service.close(); }
+
+    @Test
+    void revokedScopeBeforeDispatchNeverCallsClient() {
+        var preview = service.preview("workspace", query());
+        assertEquals(409, assertThrows(LibraryException.class, () -> service.execute("workspace", preview.id(), requestId, true,
+                () -> { throw new LibraryException(409, "revoked"); })).status());
+        verifyNoInteractions(client);
+    }
+
+    @Test
+    void scopeRevocationWithinReadStopsFurtherWorkAndSuppressesOutput() {
+        var preview = service.preview("workspace", query());
+        var revoked = new java.util.concurrent.atomic.AtomicBoolean();
+        var afterCheckpoint = new java.util.concurrent.atomic.AtomicBoolean();
+        when(client.read(any(), any(), any(), any())).thenAnswer(invocation -> {
+            Runnable checkpoint = invocation.getArgument(3);
+            checkpoint.run();
+            revoked.set(true);
+            checkpoint.run();
+            afterCheckpoint.set(true);
+            return new DatadogLogsClient.Result("must not escape", 1, false);
+        });
+        var result = service.execute("workspace", preview.id(), requestId, true, () -> {
+            if (revoked.get()) throw new java.util.concurrent.CancellationException();
+        });
+        assertEquals("CANCELLED", result.status());
+        assertEquals("", result.output());
+        assertFalse(afterCheckpoint.get());
+    }
+
+    @Test
+    void lateResultAfterScopeRevocationIsSuppressedAndReplayDoesNotRead() {
+        var preview = service.preview("workspace", query());
+        var revoked = new java.util.concurrent.atomic.AtomicBoolean();
+        when(client.read(any(), any(), any(), any())).thenAnswer(invocation -> {
+            revoked.set(true);
+            return new DatadogLogsClient.Result("private late result", 1, false);
+        });
+        var result = service.execute("workspace", preview.id(), requestId, true, () -> {
+            if (revoked.get()) throw new LibraryException(409, "revoked");
+        });
+        assertEquals("DENIED", result.status());
+        assertEquals("", result.output());
+        assertEquals(result, service.execute("workspace", preview.id(), requestId, true));
+        verify(client, times(1)).read(any(), any(), any(), any());
+    }
+
+    @Test
+    void scopeChecksCanAcquirePendingMonitorWithoutDeadlock() {
+        var preview = service.preview("workspace", query());
+        Object monitor = org.springframework.test.util.ReflectionTestUtils.getField(service, "pending");
+        var checks = new java.util.concurrent.atomic.AtomicInteger();
+        when(client.read(any(), any(), any(), any())).thenAnswer(invocation -> {
+            ((Runnable) invocation.getArgument(3)).run();
+            return new DatadogLogsClient.Result("safe", 1, false);
+        });
+        assertEquals("OK", service.execute("workspace", preview.id(), requestId, true, () -> {
+            synchronized (monitor) { checks.incrementAndGet(); }
+        }).status());
+        assertTrue(checks.get() >= 5);
+    }
+
+    @Test
+    void blockedScopeCheckTimesOutWithoutDispatchAndWorkerIsInterrupted() throws Exception {
+        var exited = new CountDownLatch(1);
+        try (var bounded = new DatadogInvestigationService(connections, client, clock, java.time.Duration.ofMillis(100))) {
+            var preview = bounded.preview("workspace", query());
+            assertEquals(504, assertThrows(LibraryException.class, () -> bounded.execute("workspace", preview.id(), requestId, true, () -> {
+                try { new CountDownLatch(1).await(); }
+                catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); }
+                finally { exited.countDown(); }
+            })).status());
+            assertTrue(exited.await(2, TimeUnit.SECONDS));
+            assertEquals("PREVIEW", bounded.result("workspace", preview.id()).status());
+            verifyNoInteractions(client);
+        }
+    }
+
     @Test
     void provenancePinsUtcScopeMasksCredentialsAndExpiresWithOriginalApproval() {
         var input = new DatadogInvestigationService.Query(revision, "test", config.apiKey(), Set.of(config.applicationKey()), now.minusSeconds(600), now, 20);

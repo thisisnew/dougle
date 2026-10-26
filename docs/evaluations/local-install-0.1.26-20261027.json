@@ -1,0 +1,50 @@
+{
+  "version": "0.1.26",
+  "installedAtLocal": "2026-10-27T05:43:07+09:00",
+  "architecture": "x86_64",
+  "destination": "/Applications/Knowledge Forge.app",
+  "previousVersion": "0.1.25",
+  "jarSha256": "f88d6f01b115c5951a98c35dd6723b447c4bce1da03843666a8ad5f64f368093",
+  "dmgSha256": "f27d1179ecb62adb2cc491584cfd5a9ab0419c831bb35a12417e733b98636640",
+  "verification": {
+    "readOnlyDmgMount": true,
+    "mountedStagedAndInstalledCodesign": true,
+    "versionAndJarMatched": true,
+    "nativeProcessObserved": 54463,
+    "bundledJavaProcessObserved": 54634,
+    "observedLoopbackPort": 56796,
+    "rootHttpStatus": 200,
+    "unauthenticatedWorkspaceStatus": 403,
+    "databaseSchemaVersion": 28
+  },
+  "backup": {
+    "directory": "~/Library/Application Support/Dougle Local Backups/pre-0.1.26-20261027-054242",
+    "directoryMode": "0700",
+    "databaseMode": "0600",
+    "includes": ["previous app", "stopped SQLite database", "WAL and SHM when present"],
+    "credentialsCopied": false,
+    "fullDataDirectoryBackup": false
+  },
+  "scope": "Removes limited team-settings/archive UI; integrates bounded text conversation planning/search and approved read-only operational capture. Preserves existing user materials and credentials. No business rows inspected.",
+  "installationNotes": [
+    "Initial staging mount reported resource busy while independent DMG validation was mounted. No installed app changed; empty staging directories removed.",
+    "After verification mount release, mounted read-only and verified a separate staged app before stopping exact old native/Java processes.",
+    "Confirmed both old processes exited, copied stopped DB privately, moved old app into backup, then installed and launched verified staged app."
+  ],
+  "isolatedChecks": {
+    "nativeHostLog": "/tmp/dougle-026-native-host.log",
+    "nativeStartupMs": 12894,
+    "webkitLog": "/tmp/dougle-026-webkit.log",
+    "scope": "Synthetic private HOME; no actual AI or user data. Native lifecycle and actual React/WebKit existing smoke interactions passed.",
+    "sourceValidation": "docs/evaluations/source-validation-0.1.26-20261027.md"
+  },
+  "limitations": [
+    "Full material export is not implemented; limited transfer UI is removed rather than advertised as full export.",
+    "Whole 50-case expert acceptance and real company-service integration are not complete.",
+    "Actual provider intermittent timeout root cause remains unconfirmed.",
+    "Two known Java fixture classes excluded; legacy generic smoke stops on its overlong Workspace fixture.",
+    "ARM hardware and second-Mac acceptance are not verified; ad-hoc signing is not notarization."
+  ],
+  "publicReleasePublished": false,
+  "updateFeedPromoted": false
+}

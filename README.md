@@ -46,4 +46,4 @@ Java·Git·Codex 실행 도구는 앱에 포함되어 있습니다. GitHub 자�
 
 [사용 방법](docs/chat-first.md) · [검색 원리](docs/internal-search.md) · [설계도](docs/design-map.md) · [개발 환경](docs/development.md) · [전체 문서](docs/README.md)
 
-현재 개발 중인 실무 전문가 기능은 연속 대화, 범위를 확인한 DB·로그 조회, Slack 문의 연동과 자료 이전을 포함합니다. 설치 파일의 지원 범위와 개발 소스는 다를 수 있습니다. [구현·검증 상태](docs/expert-implementation.md)와 [50개 인수 기준](docs/expert-adoption.md)에서 실제 검증과 남은 항목을 구분합니다.
+현재 개발 중인 실무 전문가 기능은 연속 대화, 범위를 확인한 DB·로그 조회와 Slack 문의 연동을 포함합니다. 설치 파일의 지원 범위와 개발 소스는 다를 수 있습니다. [구현·검증 상태](docs/expert-implementation.md)와 [50개 인수 기준](docs/expert-adoption.md)에서 실제 검증과 남은 항목을 구분합니다.

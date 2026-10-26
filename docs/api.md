@@ -1,5 +1,9 @@
 # API
 
+## 0.1.26 후보의 대화 조회
+
+일반 텍스트 질문은 계획과 로컬 검색을 거쳐 답변하며, MySQL/Datadog 제안은 수동 입력 양식이 아니라 서버에 묶인 범위 확인·읽기 동의로 이어집니다. `investigation-plans/jobs/{id}/clarification`, `scope/cancel`과 `conversation-operational-reads` 경로의 계약은 [범위 확인](conversation-operational-scope.md), [조회·영수증 복구](conversation-operational-read.md)를 따릅니다. 검색 결과 capture는 당시 스냅샷을 검증하며 재검색하지 않습니다. 아래 수동 양식/V4 설명은 이전 단계 이력입니다. 팀 설정/아카이브 화면은 제거했고 기존 내부 API만 호환 목적으로 유지합니다. 전체 자료 export 지원이 아닙니다.
+
 ## 최우선 정책: 외부 업무 시스템 읽기 전용
 
 사용자 승인·과거 승인·재시작 여부와 무관하게 Slack 게시, 외부 DB 변경, 브라우저 업무 변경은 금지합니다. 로컬 Workspace/대화/근거/색인/설정 저장은 유지합니다. HTTP 메서드가 아니라 외부 효과를 기준으로 판단하며, UI 제거와 별개로 직접 API·dispatcher/transport 경계에서도 차단해야 합니다. [현재 정책과 아직 필요한 검증](external-readonly-policy.md)을 따릅니다. 아래의 과거 아티팩트 동작 설명은 차단 구현 완료나 새 릴리스 허가가 아닙니다.

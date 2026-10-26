@@ -6,9 +6,12 @@ const appServerTimeouts = new Map([
 const streamPhases = ['NONE', 'TURN_ACCEPTED', 'MESSAGE_STARTED', 'TEXT_DELTA', 'MESSAGE_COMPLETED',
   'TURN_COMPLETION_RECEIVED', 'COMPLETED', 'PROTOCOL_INVALID']
 const streamCounts = ['messages', 'deltas', 'completedMessages', 'matchedCompletions', 'ignoredBindings', 'otherNotifications', 'protocolInvalid']
+const ignoredCounts = ['missingThread', 'foreignThread', 'missingTurn', 'foreignTurn', 'answerLifecycle', 'other']
+const ignoredPattern = '(?:, ignoredEvents=(?:null|IgnoredEvents\\['
+  + ignoredCounts.map(name => `${name}=(?<ignored_${name}>[0-9]{1,7})`).join(', ') + '\\]))?'
 const streamPattern = `, appStream=AppStream\\[phase=(?<streamPhase>${streamPhases.join('|')}), turnAccepted=(?<turnAccepted>true|false)`
   + streamCounts.map(name => `, ${name}=(?<${name}>[0-9]{1,7})`).join('')
-  + ', pendingLineBytes=(?<pendingLineBytes>[0-9]{1,6}), callbackActive=(?<callbackActive>true|false)\\]'
+  + ', pendingLineBytes=(?<pendingLineBytes>[0-9]{1,6}), callbackActive=(?<callbackActive>true|false)' + ignoredPattern + '\\]'
 const suffixPattern = new RegExp(' \\[transport=(?<transport>CODEX_EXEC|CLI_EXEC|CODEX_APP_SERVER), '
   + 'phase=(?<phase>PROCESS_STARTED|PROMPT_WRITTEN|THREAD_STARTED|TURN_STARTED|TURN_COMPLETED|INITIALIZE|CONFIG|THREAD|TURN|WAIT_RESPONSE), '
   + 'stderrSignal=(?<stderrSignal>NONE|RATE_LIMIT|NETWORK_RECONNECT|PROVIDER_UNAVAILABLE), '
@@ -24,10 +27,14 @@ function safeSuffix(error, transport) {
   let appStream
   if (fields.streamPhase !== undefined) {
     if (transport !== 'CODEX_APP_SERVER' || Number(fields.pendingLineBytes) > 262144
-      || streamCounts.some(name => Number(fields[name]) > 1048576)) return null
+      || streamCounts.some(name => Number(fields[name]) > 1048576)
+      || ignoredCounts.some(name => Number(fields[`ignored_${name}`]) > 1048576)) return null
     appStream = { phase: fields.streamPhase, turnAccepted: fields.turnAccepted === 'true',
       ...Object.fromEntries(streamCounts.map(name => [name, Number(fields[name])])),
       pendingLineBytes: Number(fields.pendingLineBytes), callbackActive: fields.callbackActive === 'true' }
+    if (fields.ignored_missingThread !== undefined) {
+      appStream.ignoredEvents = Object.fromEntries(ignoredCounts.map(name => [name, Number(fields[`ignored_${name}`])]))
+    }
   }
   return { message: error.slice(0, match.index), phase: fields.phase, stderrSignal: fields.stderrSignal,
     execStdinWritten: fields.execStdinWritten === 'true', stdoutBytes: Number(fields.stdoutBytes), stderrBytes: Number(fields.stderrBytes),

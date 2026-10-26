@@ -46,6 +46,20 @@ class ProcessDiagnosticsTest {
         assertThat(diagnostics.snapshot().phase()).isEqualTo(Phase.TURN_COMPLETED);
     }
 
+    @Test void classifiedBindingCountersAreBoundedAndDoNotAlterStreamLifecycle() {
+        var diagnostics = new ProcessDiagnostics(Transport.CODEX_APP_SERVER);
+        diagnostics.appEvent(ProcessDiagnostics.AppEvent.TURN_ACCEPTED);
+        for (int index = 0; index < 1048580; index++) {
+            diagnostics.ignoredBinding(ProcessDiagnostics.BindingMismatch.FOREIGN_TURN, true);
+        }
+        var current = diagnostics.snapshot().appStream();
+        assertThat(current.ignoredBindings()).isEqualTo(1048576);
+        assertThat(current.ignoredEvents().foreignTurn()).isEqualTo(1048576);
+        assertThat(current.ignoredEvents().answerLifecycle()).isEqualTo(1048576);
+        assertThat(current.ignoredEvents().other()).isZero();
+        assertThat(current.phase()).isEqualTo(dev.knowledgeforge.knowledge.application.ProviderExecutionException.StreamPhase.TURN_ACCEPTED);
+    }
+
     @Test void onlyPreciseTransportHttpPatternsYieldSignals() {
         var diagnostics = new ProcessDiagnostics(Transport.CODEX_EXEC);
         emit(diagnostics, true, "Authorization: Bearer synthetic-secret\nSELECT 'HTTP 429'\nnetwork error\nrate limit\nHTTP 503\n");

@@ -11,13 +11,24 @@ const job = { id: 'job', workspaceId: 'workspace', bundleId: 'bundle', status: '
 const proposalJob = { ...job, decision: 'PROPOSE_MYSQL_READ', query: null, output: null }
 beforeEach(() => { api.mockReset() })
 
+it('does not offer answer capture for a truncated local search', async () => {
+  api.mockResolvedValueOnce([{ ...job, decision: 'SEARCH', toolStatus: 'OK', truncated: true }])
+  const onAnswer = vi.fn()
+  render(<InvestigationPanel {...props} onAnswer={onAnswer} />)
+  fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
+  expect(await screen.findByText(/질문의 범위를 좁혀/)).toBeVisible()
+  expect(screen.queryByRole('button', { name: '이 자료로 다시 답변' })).not.toBeInTheDocument()
+  expect(onAnswer).not.toHaveBeenCalled()
+  expect(api).toHaveBeenCalledTimes(1)
+})
+
 it.each(['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'])('restores %s without a query or handoff', async decision => {
   api.mockResolvedValueOnce([{ ...proposalJob, decision }])
   render(<InvestigationPanel {...props} onAnswer={vi.fn()} />)
   expect(api).not.toHaveBeenCalled()
   fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
   expect(await screen.findByText('운영 조회 제안 · 실행하지 않음')).toBeVisible()
-  expect(screen.getByText('수동 운영 조회는 제공하지 않습니다. DB·로그 조회는 실행되지 않았습니다.')).toBeVisible()
+  expect(screen.getByText('DB·로그 조회는 아직 실행되지 않았습니다.')).toBeVisible()
   expect(screen.queryByRole('button', { name: '조회 양식 열기' })).not.toBeInTheDocument()
   expect(screen.queryByRole('button', { name: '이 자료로 다시 답변' })).not.toBeInTheDocument()
   expect(api).toHaveBeenCalledExactlyOnceWith('/workspaces/workspace/investigation-plans/jobs?bundleId=bundle', expect.objectContaining({ signal: expect.any(AbortSignal) }))
@@ -27,6 +38,17 @@ async function prepare() {
   fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
   await screen.findByRole('button', { name: '검색 시작' })
 }
+
+it.each(['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'])('does not present the pending %s scope identifier as evidence', async decision => {
+  api.mockResolvedValueOnce([{ ...proposalJob, decision, toolStatus: 'PENDING_SCOPE', output: 'private-scope-id' }])
+  render(<InvestigationPanel {...props} onAnswer={vi.fn()} />)
+  fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
+  expect(await screen.findByText('운영 조회 제안 · 실행하지 않음')).toBeVisible()
+  expect(screen.queryByText('private-scope-id')).not.toBeInTheDocument()
+  expect(screen.queryByText('검색 결과 · 답변으로 검증되지 않은 자료')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '이 자료로 다시 답변' })).not.toBeInTheDocument()
+  expect(api).toHaveBeenCalledTimes(1)
+})
 
 it('열기 전에는 조회도 실행도 하지 않고 명시적 시작 전에 AI 요청을 제출하지 않는다', async () => {
   api.mockImplementation(async path => path.endsWith('/preview') ? preview : [])
@@ -93,7 +115,7 @@ it('검색 자료는 JSON 식별자 대신 행 범위와 발췌문으로 표시�
   fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
   expect(await screen.findByText('Strategy 코드 발췌')).toBeVisible()
   expect(screen.getByText('자료 1 · 2–5행')).toBeVisible()
-  expect(screen.getByText('표시 한도로 검색 결과 일부만 표시합니다.')).toBeVisible()
+  expect(screen.getByText('검색 결과가 많아 일부만 확인했습니다. 질문의 범위를 좁혀 다시 찾아 주세요.')).toBeVisible()
   expect(screen.queryByText(/internal-id/)).toBeNull()
 })
 

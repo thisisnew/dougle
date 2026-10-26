@@ -3,8 +3,12 @@ package dev.knowledgeforge.investigation.domain;
 public sealed interface PlanDecision {
     enum OperationalTool { MYSQL_READ, DATADOG_LOGS }
 
-    record Propose(OperationalTool tool) implements PlanDecision {
-        public Propose { java.util.Objects.requireNonNull(tool); }
+    record Propose(OperationalTool tool, PendingOperationalScope.Candidate candidate) implements PlanDecision {
+        public Propose {
+            java.util.Objects.requireNonNull(tool);
+            if (candidate != null && candidate.tool() != tool) throw new IllegalArgumentException("Mismatched candidate tool");
+        }
+        public Propose(OperationalTool tool) { this(tool, null); }
     }
 
     record Search(String query) implements PlanDecision {

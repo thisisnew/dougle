@@ -112,6 +112,22 @@ public class ChatThreadService {
     }
 
     private EvidenceBundle createInternal(String workspaceId, Create request, String retrievalOverride) {
+        return createInternal(workspaceId, request, retrievalOverride, null);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public EvidenceBundle createFromSnapshot(String workspaceId, Create request,
+                                             dev.knowledgeforge.search.application.LocalSearchSnapshot snapshot) {
+        if (snapshot == null || !workspaceId.equals(snapshot.workspaceId())
+                || !java.time.Instant.now().isBefore(snapshot.expiresAt())
+                || request == null || request.attachmentIds() != null && !request.attachmentIds().isEmpty()) {
+            throw new LibraryException(409, "검색 스냅샷이 없거나 만료되었거나 범위가 다릅니다.");
+        }
+        return createInternal(workspaceId, request, snapshot.query(), snapshot);
+    }
+
+    private EvidenceBundle createInternal(String workspaceId, Create request, String retrievalOverride,
+                                          dev.knowledgeforge.search.application.LocalSearchSnapshot snapshot) {
         if (request == null || request.question() == null || request.question().isBlank() || request.question().length() > 256
                 || request.requestId() == null || !request.requestId().matches("[a-zA-Z0-9-]{1,64}")) {
             throw new LibraryException(400, "질문은 1~256자이며 요청 식별자가 필요합니다.");
@@ -125,10 +141,15 @@ public class ChatThreadService {
             }
         }
         try {
-            var prepared = transaction.execute(status -> prepare(workspaceId, frozen, retrievalOverride, null));
-            if (prepared.existing() != null) return prepared.existing();
+            var prepared = transaction.execute(status -> prepare(workspaceId, frozen, retrievalOverride, null, snapshot != null));
+            if (prepared.existing() != null) {
+                if (snapshot != null) exactSnapshot(prepared.existing(), snapshot);
+                return prepared.existing();
+            }
             var attempt = new ConversationRetrieval.Attempt(java.time.Duration.ofSeconds(10));
-            var result = retrieval.retrieve(workspaceId, prepared.queries(), attempt);
+            var result = snapshot == null ? retrieval.retrieve(workspaceId, prepared.queries(), attempt)
+                    : new ConversationRetrieval.Result(ConversationRetrieval.Status.OK,
+                            snapshot.entries().stream().map(dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry::hit).toList());
             attempt.checkpoint();
             if (result.status() != ConversationRetrieval.Status.OK && result.status() != ConversationRetrieval.Status.EMPTY) {
                 int code = switch (result.status()) {
@@ -141,19 +162,27 @@ public class ChatThreadService {
             }
             return transaction.execute(status -> {
                 attempt.checkpoint();
-                var current = prepare(workspaceId, frozen, retrievalOverride, prepared.context().threadId());
-                if (current.existing() != null) return current.existing();
+                var current = prepare(workspaceId, frozen, retrievalOverride, prepared.context().threadId(), snapshot != null);
+                if (current.existing() != null) {
+                    if (snapshot != null) exactSnapshot(current.existing(), snapshot);
+                    return current.existing();
+                }
                 if (!current.equals(prepared)) throw new LibraryException(409, "검색 중 대화 또는 자료 범위가 변경되었습니다. 다시 질문해 주세요.");
                 if (current.missingPrior() && result.hits().isEmpty()) {
                     throw new LibraryException(409, "이전 질문의 자료가 없거나 변경되었습니다. 자료를 확인하고 주제를 명시해 주세요.");
                 }
                 attempt.checkpoint();
-                var captured = writer.captureConversation(workspaceId, frozen.question().strip(),
-                        result.hits(), frozen.attachmentIds(), current.context());
+                var captured = snapshot == null ? writer.captureConversation(workspaceId, frozen.question().strip(),
+                        result.hits(), frozen.attachmentIds(), current.context())
+                        : writer.captureInspectedConversation(workspaceId, frozen.question().strip(), result.hits(), current.context());
+                if (snapshot != null) exactSnapshot(captured, snapshot);
                 attempt.checkpoint();
                 org.springframework.transaction.support.TransactionSynchronizationManager.registerSynchronization(
                         new org.springframework.transaction.support.TransactionSynchronization() {
-                            @Override public void beforeCommit(boolean readOnly) { attempt.checkpoint(); }
+                            @Override public void beforeCommit(boolean readOnly) {
+                                attempt.checkpoint();
+                                if (snapshot != null) exactSnapshot(captured, snapshot);
+                            }
                         });
                 return captured;
             });
@@ -162,7 +191,24 @@ public class ChatThreadService {
         }
     }
 
-    private Prepared prepare(String workspaceId, Create request, String retrievalOverride, String generatedThreadId) {
+    private void exactSnapshot(EvidenceBundle captured, dev.knowledgeforge.search.application.LocalSearchSnapshot snapshot) {
+        if (!java.time.Instant.now().isBefore(snapshot.expiresAt()) || !captured.payload().excluded().isEmpty()
+                || captured.payload().items().size() != snapshot.entries().size()) {
+            throw new LibraryException(409, "검토한 검색 근거를 그대로 고정할 수 없습니다. 새 검색이 필요합니다.");
+        }
+        for (int index = 0; index < snapshot.entries().size(); index++) {
+            var expected = snapshot.entries().get(index);
+            var item = captured.payload().items().get(index);
+            var hit = expected.hit();
+            if (!"ORIGINAL".equals(item.kind()) || !Objects.equals(item.entryId(), hit.entryId())
+                    || !Objects.equals(item.contentHash(), expected.contentHash()) || !Objects.equals(item.textHash(), hit.textHash())
+                    || !Objects.equals(item.quote(), hit.snippet()) || item.startLine() != hit.startLine() || item.endLine() != hit.endLine()) {
+                throw new LibraryException(409, "검색 근거가 변경되었습니다. 검토한 결과만 고정할 수 있습니다.");
+            }
+        }
+    }
+
+    private Prepared prepare(String workspaceId, Create request, String retrievalOverride, String generatedThreadId, boolean snapshotSearch) {
         var attachmentIds = request.attachmentIds() == null ? List.<String>of() : request.attachmentIds();
         var existing = all(workspaceId).stream().filter(bundle -> bundle.payload().chatContext() != null
                 && bundle.payload().chatContext().requestId().equals(request.requestId())).findFirst();
@@ -208,7 +254,7 @@ public class ChatThreadService {
         var retrievalQueries = new ArrayList<String>();
         retrievalQueries.add(retrieval);
         boolean missingPrior = false;
-        if (retrievalOverride != null && !retrieval.equals(request.question().strip())) {
+        if (retrievalOverride != null && !snapshotSearch && !retrieval.equals(request.question().strip())) {
             retrievalQueries.add(request.question().strip());
         } else if (retrievalOverride == null && !questions.isEmpty() && !questions.getLast().question().equals(retrieval)) {
             var previousQuestion = questions.getLast();

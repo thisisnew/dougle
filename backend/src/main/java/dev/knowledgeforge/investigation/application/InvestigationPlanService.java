@@ -2,6 +2,7 @@ package dev.knowledgeforge.investigation.application;
 
 import dev.knowledgeforge.conversation.application.ChatThreadService;
 import dev.knowledgeforge.investigation.domain.PlanDecision;
+import dev.knowledgeforge.investigation.domain.PendingOperationalScope;
 import dev.knowledgeforge.investigation.domain.ToolExecution;
 import dev.knowledgeforge.library.application.LibraryException;
 import dev.knowledgeforge.knowledge.application.ProviderExecutionException;
@@ -21,7 +22,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
-public class InvestigationPlanService {
+public class InvestigationPlanService implements ConversationOperationalScopeAccess {
     public record PreviewRequest(String bundleId, String provider, String requestedModel) {}
     public record Preview(String bundleId, String provider, String requestedModel, String digest, String prompt,
                           int characters, int maxCalls, int maxToolCalls, String expiresAt) {}
@@ -33,6 +34,7 @@ public class InvestigationPlanService {
     private final PlanModel model;
     private final LocalInvestigationTools tools;
     private final PlanDecisionParser parser;
+    private final OperationalScopeClarification scopes;
     private final TransactionTemplate transaction;
     private Thread worker;
     private InvestigationPlanStore.Job active;
@@ -43,9 +45,11 @@ public class InvestigationPlanService {
 
     public InvestigationPlanService(InvestigationPlanStore store, InvestigationPlanPreview previews,
                                    EvidenceBundleService bundles, ChatThreadService threads, PlanModel model,
-                                   LocalInvestigationTools tools, PlanDecisionParser parser, PlatformTransactionManager manager) {
+                                   LocalInvestigationTools tools, PlanDecisionParser parser, PlatformTransactionManager manager,
+                                   OperationalScopeClarification.Authority authority) {
         this.store = store; this.previews = previews; this.bundles = bundles; this.threads = threads;
         this.model = model; this.tools = tools; this.parser = parser; this.transaction = new TransactionTemplate(manager);
+        this.scopes = new OperationalScopeClarification(authority, java.time.Clock.systemUTC());
     }
 
     public synchronized Preview preview(String workspaceId, PreviewRequest request) {
@@ -117,13 +121,48 @@ public class InvestigationPlanService {
         return OperationalToolProposal.from(job, kind);
     }
 
+    public OperationalClarification clarification(String workspaceId, String id) {
+        return OperationalClarification.from(id, scope(workspaceId, id));
+    }
+
+    public PendingOperationalScope scope(String workspaceId, String id) {
+        var job = get(workspaceId, id);
+        bundles.get(workspaceId, job.bundleId());
+        if (!"SUCCEEDED".equals(job.status()) || !"PENDING_SCOPE".equals(job.toolStatus())
+                || !("PROPOSE_MYSQL_READ".equals(job.decision()) || "PROPOSE_DATADOG_LOGS".equals(job.decision()))) {
+            throw new LibraryException(409, "대화에서 확인할 조회 범위 후보가 없습니다. 새 계획을 준비하세요.");
+        }
+        var scope = scopes.get(workspaceId, job.output());
+        if (!scope.binding().parentBundleId().equals(job.bundleId())
+                || !job.decision().equals("PROPOSE_" + scope.binding().tool().name())) {
+            throw new LibraryException(409, "조회 범위 후보가 변경되었습니다. 새 계획을 준비하세요.");
+        }
+        return scope;
+    }
+
+    @Override
+    public PendingOperationalScope requireCurrent(String workspaceId, String scopeId) {
+        var scope = scopes.get(workspaceId, scopeId);
+        boolean published = store.list(workspaceId, scope.binding().parentBundleId()).stream().anyMatch(job ->
+                "SUCCEEDED".equals(job.status()) && "PENDING_SCOPE".equals(job.toolStatus())
+                        && scopeId.equals(job.output()) && job.decision().equals("PROPOSE_" + scope.binding().tool().name()));
+        if (!published) throw new LibraryException(404, "완료된 계획의 조회 범위 후보를 찾을 수 없습니다.");
+        return scope;
+    }
+
     public synchronized InvestigationPlanStore.Job cancel(String workspaceId, String id) {
         var job = get(workspaceId, id);
         if (job.active() && active != null && active.id().equals(id) && active.workspaceId().equals(workspaceId)) stop(false);
         return get(workspaceId, id);
     }
 
-    public synchronized EvidenceBundle capture(String workspaceId, String id, String requestId) {
+    public void cancelScope(String workspaceId, String id, long expectedRevision) {
+        if (expectedRevision < 1) throw new LibraryException(400, "취소할 조회 범위 revision이 필요합니다.");
+        var scope = scope(workspaceId, id);
+        scopes.cancel(workspaceId, scope.id(), expectedRevision);
+    }
+
+    public EvidenceBundle capture(String workspaceId, String id, String requestId) {
         return transaction.execute(status -> {
             var job = get(workspaceId, id);
             if (!job.status().equals("SUCCEEDED") || !"SEARCH".equals(job.decision()) || !"OK".equals(job.toolStatus())) {
@@ -131,8 +170,9 @@ public class InvestigationPlanService {
             }
             var source = bundles.get(workspaceId, job.bundleId());
             String threadId = source.payload().chatContext() == null ? source.id() : source.payload().chatContext().threadId();
-            return threads.createWithRetrieval(workspaceId,
-                    new ChatThreadService.Create(requestId, threadId, source.id(), source.payload().question(), List.of()), job.query());
+            var snapshot = tools.snapshot(workspaceId, job.id(), job.query());
+            return threads.createFromSnapshot(workspaceId,
+                    new ChatThreadService.Create(requestId, threadId, source.id(), source.payload().question(), List.of()), snapshot);
         });
     }
 
@@ -153,6 +193,8 @@ public class InvestigationPlanService {
     }
 
     private void run(InvestigationPlanStore.Job job) {
+        var proposed = new java.util.concurrent.atomic.AtomicReference<PendingOperationalScope>();
+        boolean published = false;
         try {
             String prompt;
             synchronized (this) {
@@ -173,22 +215,30 @@ public class InvestigationPlanService {
                 query = search.query();
                 var budget = new ToolExecution.Budget(1, Duration.ofSeconds(10), Duration.ofSeconds(10),
                         InvestigationPlanPreview.MAX_OUTPUT_CHARACTERS, InvestigationPlanPreview.MAX_OUTPUT_CHARACTERS);
-                try (var executor = tools.open(job.workspaceId(), budget, cancellation)) {
-                    synchronized (this) { check(job); }
-                    result = executor.execute(new ToolExecution.Invocation<>(LocalInvestigationTools.SEARCH_ID,
-                            LocalInvestigationTools.binding(job.workspaceId()), new LocalSearchQuery(query)));
-                }
+                result = tools.search(job.workspaceId(), job.id(), query, budget, cancellation);
             }
             synchronized (this) {
                 ToolExecution.Result completed = result;
                 String selectedQuery = query;
                 transaction.executeWithoutResult(status -> {
                     check(job);
+                    if (decision instanceof PlanDecision.Propose proposal && proposal.candidate() != null) {
+                        var source = bundles.get(job.workspaceId(), job.bundleId());
+                        String threadId = source.payload().chatContext() == null ? source.id() : source.payload().chatContext().threadId();
+                        var scope = scopes.open(job.workspaceId(), threadId, source.id(), proposal.candidate(), PendingOperationalScope.Origin.MODEL_PROPOSAL);
+                        proposed.set(scope);
+                        scopes.get(job.workspaceId(), scope.id());
+                        check(job);
+                        if (!store.update(job.workspaceId(), job.id(), "SUCCEEDED", decisionName, null,
+                                scope.id(), false, "PENDING_SCOPE", null)) throw new CancellationException();
+                        return;
+                    }
                     boolean successful = completed == null || completed.status() == ToolExecution.Status.OK || completed.status() == ToolExecution.Status.EMPTY;
                     store.update(job.workspaceId(), job.id(), successful ? "SUCCEEDED" : "FAILED", decisionName, selectedQuery,
                             successful && completed != null ? completed.output() : null, completed != null && completed.truncated(),
                             completed == null ? null : completed.status().name(), successful ? null : "로컬 검색이 완료되지 않았습니다: " + completed.reason());
                 });
+                published = true;
             }
         } catch (Exception exception) {
             synchronized (this) {
@@ -200,6 +250,10 @@ public class InvestigationPlanService {
                 store.update(job.workspaceId(), job.id(), cancelled ? "CANCELLED" : "FAILED", null, null, null, false, null, cancelled ? null : error);
             }
         } finally {
+            if (!published && proposed.get() != null) {
+                try { scopes.cancel(job.workspaceId(), proposed.get().id(), proposed.get().revision()); }
+                catch (LibraryException alreadyInvalidated) { }
+            }
             synchronized (this) { active = null; worker = null; cancellation = null; }
         }
     }

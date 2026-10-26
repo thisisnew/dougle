@@ -17,7 +17,7 @@ class CodexTextStreamTest {
     @Test void diagnosticsCountBindingsAndLifecycleWithoutRetainingContentOrIdentifiers() throws Exception {
         var diagnostics = new ProcessDiagnostics(dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER);
         var observed = new CodexTextStream("thread", "turn", ignored -> {}, diagnostics);
-        observed.accept(end("completed").replace("\"turn\"", "\"private-turn\""));
+        observed.accept(event("turn/completed", Map.of("turn", Map.of("id", "private-turn", "status", "completed"))));
         observed.accept(end("completed").replace("\"thread\"", "\"private-thread\""));
         observed.accept(event("private-method", Map.of("secret", "private-content")));
         observed.accept(item("item/started", "private-item", "final_answer", ""));
@@ -44,6 +44,32 @@ class CodexTextStreamTest {
         assertThat(observed.completed()).isFalse();
         assertThat(diagnostics.snapshot().appStream().matchedCompletions()).isEqualTo(1);
         assertThat(diagnostics.snapshot().appStream().protocolInvalid()).isEqualTo(1);
+    }
+
+    @Test void ignoredEventReasonsSeparateMissingBindingsFromForeignAnswerEventsWithoutLeakingValues() throws Exception {
+        var diagnostics = new ProcessDiagnostics(dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER);
+        var observed = new CodexTextStream("thread", "turn", snapshots::add, diagnostics);
+        observed.accept(MAPPER.writeValueAsString(Map.of("method", "private-secret-method", "params", Map.of("secret", "private-value"))));
+        observed.accept(MAPPER.writeValueAsString(Map.of("method", "thread/status/changed", "params", Map.of("threadId", "thread"))));
+        observed.accept(delta("private-item", "private-content").replace("\"thread\"", "\"private-thread\""));
+        observed.accept(event("turn/completed", Map.of("turn", Map.of("id", "private-turn", "status", "completed"))));
+        var snapshot = diagnostics.snapshot();
+        var ignored = snapshot.appStream().ignoredEvents();
+        assertThat(ignored.missingThread()).isEqualTo(1);
+        assertThat(ignored.foreignThread()).isEqualTo(1);
+        assertThat(ignored.missingTurn()).isEqualTo(1);
+        assertThat(ignored.foreignTurn()).isEqualTo(1);
+        assertThat(ignored.answerLifecycle()).isEqualTo(2);
+        assertThat(ignored.other()).isEqualTo(2);
+        assertThat(snapshot.appStream().ignoredBindings()).isEqualTo(4);
+        assertThat(snapshot.safeSummary()).doesNotContain("private", "secret", "threadId", "turnId");
+        assertThat(snapshots).isEmpty();
+        assertThat(observed.completed()).isFalse();
+        observed.accept(item("item/started", "answer", "final_answer", ""));
+        observed.accept(item("item/completed", "answer", "final_answer", FINAL));
+        observed.accept(end("completed"));
+        assertThat(observed.result()).isEqualTo(FINAL);
+        assertThat(snapshot.appStream().messages()).isZero();
     }
 
     private String event(String method, Map<String, Object> body) {

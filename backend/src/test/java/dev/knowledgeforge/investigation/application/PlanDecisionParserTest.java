@@ -11,6 +11,36 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlanDecisionParserTest {
     private final PlanDecisionParser parser = new PlanDecisionParser();
 
+    @Test void typedCandidatesUseBoundedDataWithoutClientAuthorityAndPreserveNulls() {
+        var parsed = (PlanDecision.Propose) parser.parse("""
+                {"decision":"PROPOSE_MYSQL_READ","query":null,"candidate":{
+                  "table":"orders","columns":["id"],"equalities":[{"column":"id","value":"fixture"}],"limit":20}}
+                """);
+        assertEquals(new dev.knowledgeforge.investigation.domain.PendingOperationalScope.Mysql(
+                "orders", java.util.List.of("id"), java.util.Map.of("id", "fixture"), 20), parsed.candidate());
+        var logs = (PlanDecision.Propose) parser.parse("""
+                {"decision":"PROPOSE_DATADOG_LOGS","query":null,"candidate":{
+                  "environment":null,"service":null,"indexes":null,"from":null,"to":null,"timeZone":null,"limit":null}}
+                """);
+        assertEquals(7, logs.candidate().missingFields().size());
+        assertEquals(new PlanDecision.Stop(), parser.parse("{\"decision\":\"STOP\",\"query\":null,\"candidate\":null}"));
+    }
+
+    @Test void rejectsCandidateInjectionWrongTypesExpressionsDuplicatesAndCredentialAssignments() {
+        for (String candidate : java.util.List.of(
+                "{\"sql\":\"SELECT 1\"}", "{\"table\":\"orders;DELETE\"}", "{\"url\":\"https://invalid\"}",
+                "{\"connectionGeneration\":\"client\"}", "{\"approved\":true}", "{\"limit\":1.5}",
+                "{\"limit\":\"20\"}", "{\"limit\":2147483648}", "{\"columns\":[null]}",
+                "{\"equalities\":{\"id\":\"fixture\"}}", "{\"table\":\"first\",\"table\":\"second\"}",
+                "{\"equalities\":[{\"column\":\"id\",\"value\":\"one\"},{\"column\":\"id\",\"value\":\"two\"}]}",
+                "{\"equalities\":[{\"column\":\"password\",\"value\":\"SyntheticSecret123456789\"}]}")) {
+            rejects("{\"decision\":\"PROPOSE_MYSQL_READ\",\"query\":null,\"candidate\":" + candidate + "}");
+        }
+        rejects("{\"decision\":\"SEARCH\",\"query\":\"fixture\",\"candidate\":{}}");
+        rejects("{\"decision\":\"PROPOSE_DATADOG_LOGS\",\"query\":null,\"candidate\":{\"table\":\"orders\"}}");
+        rejects("{\"decision\":\"PROPOSE_DATADOG_LOGS\",\"query\":null,\"candidate\":{\"from\":\"yesterday\"}}");
+    }
+
     @Test
     void operationalProposalsHaveNoScopeAndRetainStrictOutputLimits() {
         for (var tool : PlanDecision.OperationalTool.values()) {

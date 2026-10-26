@@ -15,6 +15,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 final class ProcessDiagnostics {
     enum AppEvent { TURN_ACCEPTED, MESSAGE_STARTED, TEXT_DELTA, MESSAGE_COMPLETED, TURN_COMPLETION_RECEIVED, COMPLETED, IGNORED_BINDING, OTHER_NOTIFICATION, PROTOCOL_INVALID }
+    enum BindingMismatch { MISSING_THREAD, FOREIGN_THREAD, MISSING_TURN, FOREIGN_TURN }
     private static final Pattern HTTP_FAILURE = Pattern.compile("^ERROR: unexpected status (429|502|503|504)(?: (?:Too Many Requests|Bad Gateway|Service Unavailable|Gateway Timeout))?(?::.*)?$");
     private static final Pattern RECONNECT = Pattern.compile("^Reconnecting\\.\\.\\. [1-9][0-9]*/[1-9][0-9]* - unexpected status (?:408|429|502|503|504)(?: (?:Request Timeout|Too Many Requests|Bad Gateway|Service Unavailable|Gateway Timeout))?(?::.*)?$");
     private final Transport transport;
@@ -33,6 +34,9 @@ final class ProcessDiagnostics {
     private int completedMessages;
     private int matchedCompletions;
     private int ignoredBindings;
+    private final int[] bindingMismatches = new int[BindingMismatch.values().length];
+    private int ignoredAnswerLifecycle;
+    private int ignoredOther;
     private int otherNotifications;
     private int protocolInvalid;
     private volatile int pendingLineBytes;
@@ -75,6 +79,12 @@ final class ProcessDiagnostics {
         }
     }
     private static int increment(int count) { return Math.min(1048576, count + 1); }
+    synchronized void ignoredBinding(BindingMismatch reason, boolean answerLifecycle) {
+        ignoredBindings = increment(ignoredBindings);
+        bindingMismatches[reason.ordinal()] = increment(bindingMismatches[reason.ordinal()]);
+        if (answerLifecycle) ignoredAnswerLifecycle = increment(ignoredAnswerLifecycle);
+        else ignoredOther = increment(ignoredOther);
+    }
     void stdout(byte[] bytes, int count) {
         stdoutBytes.addAndGet(count);
         if (transport == Transport.CODEX_EXEC) stdout.accept(bytes, count, line -> {
@@ -100,7 +110,10 @@ final class ProcessDiagnostics {
     }
     synchronized Diagnostic snapshot() {
         var stream = transport == Transport.CODEX_APP_SERVER ? new AppStream(streamPhase, turnAccepted, messages, deltas,
-                completedMessages, matchedCompletions, ignoredBindings, otherNotifications, protocolInvalid, pendingLineBytes, callbackActive) : null;
+                completedMessages, matchedCompletions, ignoredBindings, otherNotifications, protocolInvalid, pendingLineBytes, callbackActive,
+                new dev.knowledgeforge.knowledge.application.ProviderExecutionException.IgnoredEvents(
+                        bindingMismatches[0], bindingMismatches[1], bindingMismatches[2], bindingMismatches[3],
+                        ignoredAnswerLifecycle, ignoredOther)) : null;
         return new Diagnostic(transport, phase.get(), signal.get(), promptWritten.get(), stdoutBytes.get(), stderrBytes.get(), stream);
     }
 

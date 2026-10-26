@@ -67,8 +67,8 @@ public class InvestigationPlanPreview {
         }
         String prompt = ContextPrompt.planPrompt(reference);
         if (prompt.length() > MAX_CHARACTERS) throw new LibraryException(413, "검색 계획 요청이 20,000자를 초과합니다.");
-        var binding = json.createObjectNode().put("purpose", extractive ? "LOCAL_INVESTIGATION_PLAN_V5_EXTRACTIVE" : "LOCAL_INVESTIGATION_PLAN_V4")
-                .put("planSchema", "decision-query-nullable-operational-proposal:v3")
+        var binding = json.createObjectNode().put("purpose", extractive ? "LOCAL_INVESTIGATION_PLAN_V6_EXTRACTIVE" : "LOCAL_INVESTIGATION_PLAN_V6")
+                .put("planSchema", "decision-query-nullable-typed-candidate:v4")
                 .put("workspaceId", workspaceId).put("bundleId", bundleId).put("referenceDigest", referenceDigest)
                 .put("provider", resolvedProvider).put("requestedModel", resolvedModel)
                 .put("prompt", prompt).put("toolSchema", "local.workspace.search:LocalSearchQuery:v1")

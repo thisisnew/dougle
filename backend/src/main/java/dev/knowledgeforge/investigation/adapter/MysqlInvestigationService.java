@@ -31,6 +31,7 @@ public class MysqlInvestigationService implements AutoCloseable {
                           MysqlReadClient.Request query, String expiresAt, int maxBytes, int timeoutSeconds) {}
     public record Result(String id, String status, String output, int rows, boolean truncated, String capturedAt) {}
     private static final Duration TTL = Duration.ofMinutes(10);
+    private static final Runnable NO_SCOPE_CHECK = () -> {};
     private final PluginConnections connections;
     private final MysqlReadClient reader;
     private final LibraryStore library;
@@ -97,10 +98,17 @@ public class MysqlInvestigationService implements AutoCloseable {
     }
 
     public Result execute(String workspaceId, String previewId, String requestId, boolean approved) {
+        return execute(workspaceId, previewId, requestId, approved, NO_SCOPE_CHECK);
+    }
+
+    public Result execute(String workspaceId, String previewId, String requestId, boolean approved, Runnable scopeCheckpoint) {
         if (!approved) throw new LibraryException(403, "표시한 DB와 조회 범위 실행에 동의하세요.");
         if (requestId == null || !requestId.matches("[A-Za-z0-9_-]{16,64}")) throw new LibraryException(400, "요청 식별자가 필요합니다.");
+        java.util.Objects.requireNonNull(scopeCheckpoint);
         long deadline = deadline();
+        checkpoint(null, deadline, scopeCheckpoint);
         var connection = validate(workspaceId, deadline, null);
+        checkpoint(null, deadline, scopeCheckpoint);
         var config = connection.config();
         Pending operation;
         synchronized (pending) {
@@ -121,18 +129,18 @@ public class MysqlInvestigationService implements AutoCloseable {
         }
         Result result;
         try {
-            checkpoint(operation, deadline);
+            checkpoint(operation, deadline, scopeCheckpoint);
             var access = operation.access;
             Duration remaining = Duration.ofNanos(Math.max(1_000_000, deadline - System.nanoTime()));
             if (remaining.compareTo(access.timeout()) > 0) remaining = access.timeout();
             var boundedAccess = new MysqlReadClient.Access(access.schema(), access.tables(), access.maxRows(), access.maxBytes(), remaining);
-            var observed = reader.read(config, boundedAccess, operation.preview.query(), () -> checkpoint(operation, deadline));
+            var observed = reader.read(config, boundedAccess, operation.preview.query(), () -> checkpoint(operation, deadline, scopeCheckpoint));
             var current = validate(workspaceId, deadline, operation);
             if (!operation.binding.equals(current.binding()) || operation.epoch != current.epoch()) throw new CancellationException();
-            checkpoint(operation, deadline);
+            checkpoint(operation, deadline, scopeCheckpoint);
             var bounded = OperationalResultText.redactAndBound(observed.output(), config.password(), operation.access.maxBytes(), observed.truncated());
             String output = bounded.text();
-            checkpoint(operation, deadline);
+            checkpoint(operation, deadline, scopeCheckpoint);
             result = new Result(previewId, output.isEmpty() && !bounded.truncated() ? "EMPTY" : "SUCCEEDED", output, observed.rows(), bounded.truncated(), Instant.now().toString());
         } catch (CancellationException cancelled) {
             result = new Result(previewId, "CANCELLED", "", 0, false, Instant.now().toString());
@@ -241,6 +249,7 @@ public class MysqlInvestigationService implements AutoCloseable {
             throw new CancellationException();
         } catch (ExecutionException failure) {
             if (failure.getCause() instanceof LibraryException problem) throw problem;
+            if (failure.getCause() instanceof CancellationException cancelled) throw cancelled;
             throw new LibraryException(500, "DB 연결 정보를 확인하지 못했습니다.");
         } finally {
             task.cancel(true);
@@ -256,6 +265,14 @@ public class MysqlInvestigationService implements AutoCloseable {
     }
     private void checkpoint(Pending operation, long deadline) {
         checkWaiting(operation, deadline);
+    }
+
+    private void checkpoint(Pending operation, long deadline, Runnable scopeCheckpoint) {
+        checkpoint(operation, deadline);
+        if (scopeCheckpoint != NO_SCOPE_CHECK) {
+            boundedValidation(() -> { scopeCheckpoint.run(); return true; }, deadline, operation);
+        }
+        checkpoint(operation, deadline);
     }
 
     @Override @jakarta.annotation.PreDestroy
