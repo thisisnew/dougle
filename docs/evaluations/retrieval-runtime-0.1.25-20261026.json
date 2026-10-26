@@ -1,0 +1,39 @@
+{
+  "version": "0.1.25",
+  "jarSha256": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
+  "date": "2026-10-26",
+  "result": "PASS_SCOPED_RUNTIME",
+  "build": "Maven package with skipTests after source regression 1041 run, 1034 passed, 7 opt-in skipped; two known fixture classes excluded. Exact frontend files/bytes verified separately.",
+  "threadChecks": {
+    "script": "scripts/chat-thread-smoke.mjs",
+    "log": "/tmp/dougle-025-thread-runtime.log",
+    "actualBundledMultilingualSearch": true,
+    "followupStrategyEvidence": true,
+    "previousContextInPrompt": true,
+    "sameRequestReplay": true,
+    "workspaceIsolation": true,
+    "restartRestoresIdenticalBundles": true,
+    "threadDeletionPreservesMaterial": true,
+    "externalAiCalls": 0,
+    "temporaryDataRemoved": true,
+    "privateHomeRemoved": true
+  },
+  "readonlyChecks": {
+    "script": "scripts/readonly-runtime-smoke.mjs",
+    "log": "/tmp/dougle-025-readonly-runtime.log",
+    "executedAt": "2026-10-26T13:46:49.905Z",
+    "deniedRequests": 300,
+    "restarts": 2,
+    "syntheticLegacyReceipts": 3,
+    "legacyRowsUnchanged": true,
+    "jobRows": 0,
+    "observedProxyRequests": 0
+  },
+  "isolation": "Private HOME and synthetic temporary DB; explicit installed .24 Intel Java/model assets read only; loopback-only macOS network sandbox. Model tokenizer native cache created only in owned HOME and removed after test.",
+  "limitations": [
+    "Not a file-system access sandbox or proof of all attempted socket operations.",
+    "No real AI answer quality, company systems, or ARM hardware acceptance.",
+    "Does not prove automated operational investigation.",
+    "The package is still being prepared; this record does not claim installation or public release."
+  ]
+}

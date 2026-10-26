@@ -1,5 +1,11 @@
 # Dougle — 이어서 작업하기
 
+## 현재 설치 — 0.1.25 (2026-10-26 23:00 KST)
+
+bounded conversation retrieval을 포함한 Intel0.1.25를 설치했다. JAR `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`; 이전0.1.24 앱/DB 백업·서명·v28·비인증403 확인. [설치 증거](docs/evaluations/local-install-0.1.25-20261026.json). 새 JAR의 실제 로컬 다국어 검색·이어 질문·재시작·Workspace 경계와 readonly300건, Intel native/WebKit, UI665개를 검증했다. E50은 엄격한 파일 격리 환경의 합성6그룹, E37은88쌍 소유/타 Workspace 조회 및8개 검색/주입 그룹 통과이며 전체 인수 승격은 아니다. 양 CPU 패키지·서명·정적 검사도 완료했다. ARM 실기기는 미검증이고 공개/피드는 보류한다. [패키지 증거](docs/evaluations/macos-package-0.1.25-20261026.json).
+
+다음 `PendingOperationalScope`/clarification 계약은 별도 미설치 소스다. 내부 기술 필드와 사용자 업무 맥락을 분리하며 실제 조회 권한을 주지 않는다. 독립 리뷰가 지적한 연결 상태 ABA(연결 후 해제 시 옛 후보 부활)를 보강했고23개 집중 회귀·독립 재검토를 통과했다. 실제 서버 Authority 연결은 후속 작업 중이며 자연 대화 DB/log 실행 연결은 아직 미구현이다. 아래 후보 미패키징/0.1.24 설치 문구는 이전 단계다.
+
 ## 다음 후보 소스 검증 — 2026-10-26 22:34 KST
 
 일반 대화의 bounded local retrieval과 중복 후보/선택 후보 재검증 수정은 독립 재검토를 마쳤다. Java1041실행/1034통과/7 opt-in 건너뜀/실패0(기존 fixture2클래스 제외), Node143통과. [범위·명령·로그](docs/conversation-local-retrieval.md). JAR/설치본은 아래0.1.24 그대로이며 이번 소스는 미패키징이다. 다음 작업은 새 후보 패키지 검증·설치와 자연 대화의 범위 확인/운영 조사 통합이다. 전체50개 인수는 여전히4 PASS/1 BLOCKED/45 NOT_RUN이며 자동 조사 완성을 뜻하지 않는다.

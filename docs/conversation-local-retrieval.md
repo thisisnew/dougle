@@ -1,5 +1,7 @@
 # 일반 질문의 제한된 로컬 검색
 
+2026-10-26 23:00 KST: 아래 구현은 **0.1.25 Intel 설치본에 반영**했다. [새 JAR의 실제 로컬 검색·이어 질문·재시작 검사](evaluations/retrieval-runtime-0.1.25-20261026.json)와 [백업·설치 증거](evaluations/local-install-0.1.25-20261026.json)를 따른다. 아래 `.24에 미포함`은 소스 작업 당시 기록이다. 후속 운영 범위 후보 계약은 여전히 별도 미설치 소스이며 이 검색 개선과 구별한다.
+
 최종 광범위 회귀: 2026-10-26 `bash scripts/maven.sh '-Dtest=*,!AnswerPartialIntegrationTest,!QuestionAttachmentIntegrationTest' test`로 **1041실행/1034통과/7 opt-in 건너뜀/실패·오류0**. 기존 Workspace 이름 길이 fixture 문제인 두 클래스를 명시적으로 제외했으므로 무제외 전체 통과는 아니다. 로그 `/tmp/dougle-conversation-retrieval-broad.log`. 도구 단위 검사는 `node --test scripts/*.test.mjs` **143/143통과** (`/tmp/dougle-conversation-tools-final.log`). 독립 재검토에서도 앞선 네 경계 수정의 남은 구체적 blocker는 발견하지 않았다. 실제 모델 품질·운영 조사·새 패키지 설치 인수를 대신하지 않는다.
 
 다음 후보용 소스 변경이다. `.24`의 고정 JAR/설치본에 반영되었다는 뜻이 아니다. 부모 승인 후 아래 focused `test`만 실행했다.

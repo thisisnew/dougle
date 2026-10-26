@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, expect, it, vi } from 'vitest'
 import { useState, type ReactNode } from 'react'
 import ChatPanel, { QuestionHistory } from './ChatPanel'
-import { request } from './api'
+import { ApiError, request } from './api'
 import AnswerJobsPanel from './AnswerJobsPanel'
 import type { AnswerJob } from './answerJobEvents'
 import { readChatSubmission, saveChatSubmission } from './chatSubmissionStorage'
@@ -235,6 +235,83 @@ it('여러 턴의 이력을 순서대로 다시 열고 마지막 질문에 이�
   expect(screen.getByText('두 번째 답변 [R1]')).toBe(secondAnswer)
   expect(props.onCreated).toHaveBeenCalledExactlyOnceWith('thread')
 })
+
+it.each([
+  { status: 504, detail: 'LOCAL_SEARCH_TIMEOUT: 로컬 검색 시간 한도를 초과했습니다.' },
+  { status: 503, detail: 'LOCAL_SEARCH_FAILED: 로컬 검색을 완료하지 못했습니다. 답변은 실행하지 않았습니다.' },
+  { status: 429, detail: 'LOCAL_SEARCH_DENIED: 로컬 검색을 완료하지 못했습니다. 답변은 실행하지 않았습니다.' },
+  { status: 409, detail: 'LOCAL_SEARCH_CANCELLED: 로컬 검색을 취소했습니다.' },
+].flatMap(failure => [false, true].map(reopen => ({ ...failure, reopen }))))(
+  'bounded retrieval $status releases the composer and retries the same request once (reopen: $reopen)',
+  async ({ status, detail, reopen }) => {
+    const attached = { id: 'retrieval-file', name: 'synthetic.txt', mediaType: 'text/plain', size: 9, characters: 9, truncated: false }
+    let rejectFirst!: (reason: Error) => void
+    let completeRetry!: (value: unknown) => void
+    if (reopen) api.mockResolvedValueOnce(thread)
+    api.mockResolvedValueOnce(attached)
+      .mockImplementationOnce(() => new Promise((_resolve, reject) => { rejectFirst = reject }))
+      .mockImplementationOnce(() => new Promise(resolve => { completeRetry = resolve }))
+    render(<ChatPanel {...props} selectedId={reopen ? 'thread' : null} />)
+    const previousAnswer = reopen ? await screen.findByText('가상 답변 [R1]') : null
+    await userEvent.upload(screen.getByLabelText('질문에 첨부할 파일'), new File(['synthetic'], attached.name, { type: attached.mediaType }))
+    await screen.findByText(attached.name)
+    const composer = screen.getByRole('textbox', { name: '질문' })
+    await userEvent.type(composer, '가상 검색 재시도')
+    const form = composer.closest('form')!
+    const submissions = () => api.mock.calls.filter(([path, options]) => path === '/workspaces/one/chat-threads' && options?.method === 'POST')
+
+    fireEvent.submit(form)
+    fireEvent.submit(form)
+    expect(submissions()).toHaveLength(1)
+    expect(composer).toBeDisabled()
+    expect(screen.getByRole('button', { name: '질문 보내기' })).toBeDisabled()
+    await act(async () => rejectFirst(new ApiError(detail, status)))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(detail)
+    expect(composer).toBeEnabled()
+    expect(composer).toHaveValue('가상 검색 재시도')
+    expect(screen.getByRole('button', { name: '질문 보내기' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: '파일 첨부' })).toBeEnabled()
+    expect(screen.getByLabelText('질문에 첨부할 파일')).toBeEnabled()
+    expect(screen.getByRole('button', { name: attached.name + ' 첨부 제거' })).toBeEnabled()
+    expect(screen.queryByRole('heading', { name: '가상 검색 재시도' })).not.toBeInTheDocument()
+    expect(props.onCreated).not.toHaveBeenCalled()
+    if (previousAnswer) expect(previousAnswer).toBeVisible()
+    await act(async () => {})
+    expect(submissions()).toHaveLength(1)
+    expect(api.mock.calls.map(([path]) => path)).toEqual([
+      ...(reopen ? ['/workspaces/one/chat-threads/thread'] : []),
+      '/workspaces/one/attachments', '/workspaces/one/chat-threads',
+    ])
+    expect(api.mock.calls.some(([path]) => /answer-preview|answer-approval|answer-jobs/.test(path))).toBe(false)
+
+    await userEvent.click(screen.getByRole('button', { name: '질문 보내기' }))
+    fireEvent.submit(form)
+    fireEvent.submit(form)
+    expect(submissions()).toHaveLength(2)
+    expect(composer).toBeDisabled()
+    const original = JSON.parse(submissions()[0][1]!.body as string)
+    expect(original).toEqual({ requestId: expect.any(String), threadId: reopen ? 'thread' : null,
+      parentBundleId: reopen ? 'bundle' : null, question: '가상 검색 재시도', attachmentIds: [attached.id] })
+    expect(original.requestId).toMatch(/^[0-9a-f-]{36}$/)
+    expect(submissions()[1][1]!.body).toBe(submissions()[0][1]!.body)
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+
+    await act(async () => completeRetry({ ...bundle, id: 'retried-bundle', payload: {
+      ...bundle.payload, question: '가상 검색 재시도', status: 'NO_EVIDENCE', items: [],
+    } }))
+    expect(await screen.findByRole('heading', { name: '가상 검색 재시도' })).toBeVisible()
+    expect(composer).toBeEnabled()
+    expect(composer).toHaveValue('')
+    expect(screen.queryByRole('button', { name: attached.name + ' 첨부 제거' })).not.toBeInTheDocument()
+    expect(props.onCreated).toHaveBeenCalledExactlyOnceWith('thread')
+    if (previousAnswer) expect(previousAnswer).toBeVisible()
+    expect(api.mock.calls.map(([path]) => path)).toEqual([
+      ...(reopen ? ['/workspaces/one/chat-threads/thread'] : []),
+      '/workspaces/one/attachments', '/workspaces/one/chat-threads', '/workspaces/one/chat-threads',
+    ])
+  },
+)
 
 it.each([false, true])('질문 저장 실패 시 입력·첨부·기존 대화를 보존하고 같은 부모로 재시도한다 (이력: %s)', async reopen => {
   const attached = { id: 'image', name: 'synthetic.png', mediaType: 'image/png', size: 8, characters: 8, truncated: false }

@@ -1,0 +1,1045 @@
+{
+  "criterion": "E37",
+  "result": "SCOPED_CHECKS_COMPLETED_NOT_FULL_E37",
+  "mode": "simulated",
+  "artifactSha256": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
+  "startedAt": "2026-10-26T13:58:24.755Z",
+  "observations": [
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1e55acfdfe5676245f483997bf73329b92ba6f2319884b0867500b8ef7deee9a",
+      "foreignResponseSha256": "c80c38f7e05cc9314351c42b60e9011fefdac204d81ae8b16a78716c9af9c65c"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1cf44b78a3a9b0f9b526cf54f637a358d578ef286b46847a21e6a816e925d9f8",
+      "foreignResponseSha256": "dfefd2e80e3664b2f4138607487232de5cdfe4b12f718502e004fa56404df07b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e17da11bda8b6c8ed334dc6c15d232f81eca42ffd218e7e62cd138733e8efcc3",
+      "foreignResponseSha256": "a8331400d76ddbe352e0ba2eb980e3a1aae780aa8dca126fc1de37ba7af62241"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "ff00754e06daf270c41adf0d60d80485fd5b15eef26157ffece3cd8b6e84dd0f",
+      "foreignResponseSha256": "6d67800c3df06151796ab9a4fa0cb5ec0024020c053988633b928fa84dd64250"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7711395260801c83e72126e79865a6b45fd999c50ab202982952e5c8d6bad4dd",
+      "foreignResponseSha256": "80f9ed0a31c9d1708400894c387a486e271f66df8b8b3c506ddba068cfbf1227"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "4ef3cc53df86a6a5ccd7ee820d72a8c65cf41ab1bae9d64aae3a6d1c4e7f8f67",
+      "foreignResponseSha256": "c25d51aa1172d529e69acbaea6e95550834afe1ca0657c199c7af09f47e88af2"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "bc172166b3870f7f1d7c360f453cf30a7c3a5063147500fb6a9412645698e34c",
+      "foreignResponseSha256": "9098d7f1cc99e5b864c78750985ec2e5e88edd7873a6efacac149c494f4bfb05"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "344dab1cc6deef14f0512c4b7ec16a3082a9f46242b2dec8a1520bf3d6dac893",
+      "foreignResponseSha256": "255c6a134d0617bae634c6bab771fa6374b24ac098049a0ec3d9276819b16dcf"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "4f5ddb8769367a1e342076979b9df68ee26f03e375511253ae5f63e494b85f72",
+      "foreignResponseSha256": "3e690ae81df037a65e9251d886990e9bdc936db0ec9518c22dd6d60decd5216a"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "955af377ae9f536d0d5d2aefd94ccc94edcb0897d40a87bbdd15cc485482b150",
+      "foreignResponseSha256": "ed3da57ef11f8af8f4e424f15c461987171d6984ee8a0c120e6d6726fe0a95e6"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "f5f34a3cf5693d70c38ba66d1fc79711ce87bfd75ad0a0378e8071630785348f",
+      "foreignResponseSha256": "9663cf6257da96d27ba850a44c45dd2849793850f0cf4b79881e0971c66e14a6"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1e55acfdfe5676245f483997bf73329b92ba6f2319884b0867500b8ef7deee9a",
+      "foreignResponseSha256": "c80c38f7e05cc9314351c42b60e9011fefdac204d81ae8b16a78716c9af9c65c"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1cf44b78a3a9b0f9b526cf54f637a358d578ef286b46847a21e6a816e925d9f8",
+      "foreignResponseSha256": "dfefd2e80e3664b2f4138607487232de5cdfe4b12f718502e004fa56404df07b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e17da11bda8b6c8ed334dc6c15d232f81eca42ffd218e7e62cd138733e8efcc3",
+      "foreignResponseSha256": "a8331400d76ddbe352e0ba2eb980e3a1aae780aa8dca126fc1de37ba7af62241"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "ff00754e06daf270c41adf0d60d80485fd5b15eef26157ffece3cd8b6e84dd0f",
+      "foreignResponseSha256": "6d67800c3df06151796ab9a4fa0cb5ec0024020c053988633b928fa84dd64250"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7711395260801c83e72126e79865a6b45fd999c50ab202982952e5c8d6bad4dd",
+      "foreignResponseSha256": "80f9ed0a31c9d1708400894c387a486e271f66df8b8b3c506ddba068cfbf1227"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "27c33c656a7aeacabdeb0524dca3624755a253cf78c47df1f8a9ecc4783252cd",
+      "foreignResponseSha256": "c25d51aa1172d529e69acbaea6e95550834afe1ca0657c199c7af09f47e88af2"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "bc172166b3870f7f1d7c360f453cf30a7c3a5063147500fb6a9412645698e34c",
+      "foreignResponseSha256": "9098d7f1cc99e5b864c78750985ec2e5e88edd7873a6efacac149c494f4bfb05"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "344dab1cc6deef14f0512c4b7ec16a3082a9f46242b2dec8a1520bf3d6dac893",
+      "foreignResponseSha256": "255c6a134d0617bae634c6bab771fa6374b24ac098049a0ec3d9276819b16dcf"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "4f5ddb8769367a1e342076979b9df68ee26f03e375511253ae5f63e494b85f72",
+      "foreignResponseSha256": "3e690ae81df037a65e9251d886990e9bdc936db0ec9518c22dd6d60decd5216a"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "955af377ae9f536d0d5d2aefd94ccc94edcb0897d40a87bbdd15cc485482b150",
+      "foreignResponseSha256": "ed3da57ef11f8af8f4e424f15c461987171d6984ee8a0c120e6d6726fe0a95e6"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "f5f34a3cf5693d70c38ba66d1fc79711ce87bfd75ad0a0378e8071630785348f",
+      "foreignResponseSha256": "9663cf6257da96d27ba850a44c45dd2849793850f0cf4b79881e0971c66e14a6"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "aa45a51c2599b1558961475eb6901ff1828dcad1a0a82e786aec0670effe42ae",
+      "foreignResponseSha256": "87bc6dacca26ab1c4ca05f93b4d1d9225608caad28a2c1947cf33c1aae629835"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1ac1b76c61d1b5cc41c93e48e799356dfc5461dffed355dd9a4a68212097a436",
+      "foreignResponseSha256": "68a425da3b0e4846fbd8654f9f40df2716db210109489540d4db8908aab78d91"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7888d0bb0e12af231c4df47b0e6ec7824a062bf5f72068c06ad71b067affde02",
+      "foreignResponseSha256": "8c31e8d6c356e9f374ac281fb75dc5d41d297276b634f18e127b22ab8f32124f"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e16e119c49638ff99117d9fec82c012b796cea86465f7f8e7229c8a525be8cfe",
+      "foreignResponseSha256": "477e7c7dd8b874cfe322af649be8502a362934acc245b02ad60283ca01837f4e"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "89fddb3ef463a92a1d15d8e8f386967580ac9e3b30bfb8c3cb9326eb4cadce91",
+      "foreignResponseSha256": "b942793305c58995c08c53712ed527cc7c0d02bc7da586dde6dfbc1d91539332"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "f7ba30396d4d6e1a8cc6d72c8b4f1cdfbbc88fa8694b15c0fd24785193821b12",
+      "foreignResponseSha256": "139ff9a7e1480dfda10a3cbd4f9014ca9717782b014a24fad69482d89829e32b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a4b6ce9514e6d956a74093ac00f3ccf2fc28d5e1890a841de3f21ff9bcff86cb",
+      "foreignResponseSha256": "09a05ba0f8c2afdecd6549b4bc0070bb4ba2468ef24e58c6235a0de2851f8b17"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a8013ac0b1c28b148ac4849260461b8510f54b7a0e30ee47123d9fc9dddd5dda",
+      "foreignResponseSha256": "cf5baf03bffd329d7b3c29450e49c183ef8fcc3effc4f38f321c1755ea527376"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "58c97450d41bc0494d347511838d58267eafaccd5b496dce4b6a198ccf286871",
+      "foreignResponseSha256": "dac33ef1e85f8fe55990ed45a1898556306de2f85f1ab302fc4eaffb771ca16e"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "6ef36d06403ec04e2433976ca7854974fd9bdf26974e5f42a4b1dd98705d3103",
+      "foreignResponseSha256": "407589d2aa4cb539e1faead05f29646d42ce9522a030b03e2325a40617bbe5f1"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "426f65334b7b74c6d5310cec8b4b06649656c4c352400c69ac5ffeb517f2d980",
+      "foreignResponseSha256": "c5010dec564552610a89e13a514cf23d279c8dfa4c3972e038136a2ad62b8a26"
+    },
+    {
+      "phase": "before-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "aa45a51c2599b1558961475eb6901ff1828dcad1a0a82e786aec0670effe42ae",
+      "foreignResponseSha256": "87bc6dacca26ab1c4ca05f93b4d1d9225608caad28a2c1947cf33c1aae629835"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1ac1b76c61d1b5cc41c93e48e799356dfc5461dffed355dd9a4a68212097a436",
+      "foreignResponseSha256": "68a425da3b0e4846fbd8654f9f40df2716db210109489540d4db8908aab78d91"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7888d0bb0e12af231c4df47b0e6ec7824a062bf5f72068c06ad71b067affde02",
+      "foreignResponseSha256": "8c31e8d6c356e9f374ac281fb75dc5d41d297276b634f18e127b22ab8f32124f"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e16e119c49638ff99117d9fec82c012b796cea86465f7f8e7229c8a525be8cfe",
+      "foreignResponseSha256": "477e7c7dd8b874cfe322af649be8502a362934acc245b02ad60283ca01837f4e"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "89fddb3ef463a92a1d15d8e8f386967580ac9e3b30bfb8c3cb9326eb4cadce91",
+      "foreignResponseSha256": "b942793305c58995c08c53712ed527cc7c0d02bc7da586dde6dfbc1d91539332"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "d8e5d7632754e687778da5dc50d628d8d1e6a34917d309e64c0555ddd1685ed6",
+      "foreignResponseSha256": "139ff9a7e1480dfda10a3cbd4f9014ca9717782b014a24fad69482d89829e32b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a4b6ce9514e6d956a74093ac00f3ccf2fc28d5e1890a841de3f21ff9bcff86cb",
+      "foreignResponseSha256": "09a05ba0f8c2afdecd6549b4bc0070bb4ba2468ef24e58c6235a0de2851f8b17"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a8013ac0b1c28b148ac4849260461b8510f54b7a0e30ee47123d9fc9dddd5dda",
+      "foreignResponseSha256": "cf5baf03bffd329d7b3c29450e49c183ef8fcc3effc4f38f321c1755ea527376"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "58c97450d41bc0494d347511838d58267eafaccd5b496dce4b6a198ccf286871",
+      "foreignResponseSha256": "dac33ef1e85f8fe55990ed45a1898556306de2f85f1ab302fc4eaffb771ca16e"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "6ef36d06403ec04e2433976ca7854974fd9bdf26974e5f42a4b1dd98705d3103",
+      "foreignResponseSha256": "407589d2aa4cb539e1faead05f29646d42ce9522a030b03e2325a40617bbe5f1"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "426f65334b7b74c6d5310cec8b4b06649656c4c352400c69ac5ffeb517f2d980",
+      "foreignResponseSha256": "c5010dec564552610a89e13a514cf23d279c8dfa4c3972e038136a2ad62b8a26"
+    },
+    {
+      "phase": "before-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1e55acfdfe5676245f483997bf73329b92ba6f2319884b0867500b8ef7deee9a",
+      "foreignResponseSha256": "c80c38f7e05cc9314351c42b60e9011fefdac204d81ae8b16a78716c9af9c65c"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1cf44b78a3a9b0f9b526cf54f637a358d578ef286b46847a21e6a816e925d9f8",
+      "foreignResponseSha256": "dfefd2e80e3664b2f4138607487232de5cdfe4b12f718502e004fa56404df07b"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e17da11bda8b6c8ed334dc6c15d232f81eca42ffd218e7e62cd138733e8efcc3",
+      "foreignResponseSha256": "a8331400d76ddbe352e0ba2eb980e3a1aae780aa8dca126fc1de37ba7af62241"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "ff00754e06daf270c41adf0d60d80485fd5b15eef26157ffece3cd8b6e84dd0f",
+      "foreignResponseSha256": "6d67800c3df06151796ab9a4fa0cb5ec0024020c053988633b928fa84dd64250"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7711395260801c83e72126e79865a6b45fd999c50ab202982952e5c8d6bad4dd",
+      "foreignResponseSha256": "80f9ed0a31c9d1708400894c387a486e271f66df8b8b3c506ddba068cfbf1227"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1d7deba1603102214ba927f6fd874a7e14e6c0da6d51304da12351fce78216d4",
+      "foreignResponseSha256": "c25d51aa1172d529e69acbaea6e95550834afe1ca0657c199c7af09f47e88af2"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "bc172166b3870f7f1d7c360f453cf30a7c3a5063147500fb6a9412645698e34c",
+      "foreignResponseSha256": "9098d7f1cc99e5b864c78750985ec2e5e88edd7873a6efacac149c494f4bfb05"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "344dab1cc6deef14f0512c4b7ec16a3082a9f46242b2dec8a1520bf3d6dac893",
+      "foreignResponseSha256": "255c6a134d0617bae634c6bab771fa6374b24ac098049a0ec3d9276819b16dcf"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "4f5ddb8769367a1e342076979b9df68ee26f03e375511253ae5f63e494b85f72",
+      "foreignResponseSha256": "3e690ae81df037a65e9251d886990e9bdc936db0ec9518c22dd6d60decd5216a"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "955af377ae9f536d0d5d2aefd94ccc94edcb0897d40a87bbdd15cc485482b150",
+      "foreignResponseSha256": "ed3da57ef11f8af8f4e424f15c461987171d6984ee8a0c120e6d6726fe0a95e6"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "f5f34a3cf5693d70c38ba66d1fc79711ce87bfd75ad0a0378e8071630785348f",
+      "foreignResponseSha256": "9663cf6257da96d27ba850a44c45dd2849793850f0cf4b79881e0971c66e14a6"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1e55acfdfe5676245f483997bf73329b92ba6f2319884b0867500b8ef7deee9a",
+      "foreignResponseSha256": "c80c38f7e05cc9314351c42b60e9011fefdac204d81ae8b16a78716c9af9c65c"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1cf44b78a3a9b0f9b526cf54f637a358d578ef286b46847a21e6a816e925d9f8",
+      "foreignResponseSha256": "dfefd2e80e3664b2f4138607487232de5cdfe4b12f718502e004fa56404df07b"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e17da11bda8b6c8ed334dc6c15d232f81eca42ffd218e7e62cd138733e8efcc3",
+      "foreignResponseSha256": "a8331400d76ddbe352e0ba2eb980e3a1aae780aa8dca126fc1de37ba7af62241"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "ff00754e06daf270c41adf0d60d80485fd5b15eef26157ffece3cd8b6e84dd0f",
+      "foreignResponseSha256": "6d67800c3df06151796ab9a4fa0cb5ec0024020c053988633b928fa84dd64250"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7711395260801c83e72126e79865a6b45fd999c50ab202982952e5c8d6bad4dd",
+      "foreignResponseSha256": "80f9ed0a31c9d1708400894c387a486e271f66df8b8b3c506ddba068cfbf1227"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "cc2af6e85c08e092129985ab93280a95203ad1eac261f994916ca24dcdbd650f",
+      "foreignResponseSha256": "c25d51aa1172d529e69acbaea6e95550834afe1ca0657c199c7af09f47e88af2"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "bc172166b3870f7f1d7c360f453cf30a7c3a5063147500fb6a9412645698e34c",
+      "foreignResponseSha256": "9098d7f1cc99e5b864c78750985ec2e5e88edd7873a6efacac149c494f4bfb05"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "344dab1cc6deef14f0512c4b7ec16a3082a9f46242b2dec8a1520bf3d6dac893",
+      "foreignResponseSha256": "255c6a134d0617bae634c6bab771fa6374b24ac098049a0ec3d9276819b16dcf"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "4f5ddb8769367a1e342076979b9df68ee26f03e375511253ae5f63e494b85f72",
+      "foreignResponseSha256": "3e690ae81df037a65e9251d886990e9bdc936db0ec9518c22dd6d60decd5216a"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "955af377ae9f536d0d5d2aefd94ccc94edcb0897d40a87bbdd15cc485482b150",
+      "foreignResponseSha256": "ed3da57ef11f8af8f4e424f15c461987171d6984ee8a0c120e6d6726fe0a95e6"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "f5f34a3cf5693d70c38ba66d1fc79711ce87bfd75ad0a0378e8071630785348f",
+      "foreignResponseSha256": "9663cf6257da96d27ba850a44c45dd2849793850f0cf4b79881e0971c66e14a6"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "aa45a51c2599b1558961475eb6901ff1828dcad1a0a82e786aec0670effe42ae",
+      "foreignResponseSha256": "87bc6dacca26ab1c4ca05f93b4d1d9225608caad28a2c1947cf33c1aae629835"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1ac1b76c61d1b5cc41c93e48e799356dfc5461dffed355dd9a4a68212097a436",
+      "foreignResponseSha256": "68a425da3b0e4846fbd8654f9f40df2716db210109489540d4db8908aab78d91"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7888d0bb0e12af231c4df47b0e6ec7824a062bf5f72068c06ad71b067affde02",
+      "foreignResponseSha256": "8c31e8d6c356e9f374ac281fb75dc5d41d297276b634f18e127b22ab8f32124f"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e16e119c49638ff99117d9fec82c012b796cea86465f7f8e7229c8a525be8cfe",
+      "foreignResponseSha256": "477e7c7dd8b874cfe322af649be8502a362934acc245b02ad60283ca01837f4e"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "89fddb3ef463a92a1d15d8e8f386967580ac9e3b30bfb8c3cb9326eb4cadce91",
+      "foreignResponseSha256": "b942793305c58995c08c53712ed527cc7c0d02bc7da586dde6dfbc1d91539332"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "57ec0649c6034ee539dcaf33f86677e3bcaa98424580a35b197775f0be99e5a0",
+      "foreignResponseSha256": "139ff9a7e1480dfda10a3cbd4f9014ca9717782b014a24fad69482d89829e32b"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a4b6ce9514e6d956a74093ac00f3ccf2fc28d5e1890a841de3f21ff9bcff86cb",
+      "foreignResponseSha256": "09a05ba0f8c2afdecd6549b4bc0070bb4ba2468ef24e58c6235a0de2851f8b17"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a8013ac0b1c28b148ac4849260461b8510f54b7a0e30ee47123d9fc9dddd5dda",
+      "foreignResponseSha256": "cf5baf03bffd329d7b3c29450e49c183ef8fcc3effc4f38f321c1755ea527376"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "58c97450d41bc0494d347511838d58267eafaccd5b496dce4b6a198ccf286871",
+      "foreignResponseSha256": "dac33ef1e85f8fe55990ed45a1898556306de2f85f1ab302fc4eaffb771ca16e"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "6ef36d06403ec04e2433976ca7854974fd9bdf26974e5f42a4b1dd98705d3103",
+      "foreignResponseSha256": "407589d2aa4cb539e1faead05f29646d42ce9522a030b03e2325a40617bbe5f1"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "426f65334b7b74c6d5310cec8b4b06649656c4c352400c69ac5ffeb517f2d980",
+      "foreignResponseSha256": "c5010dec564552610a89e13a514cf23d279c8dfa4c3972e038136a2ad62b8a26"
+    },
+    {
+      "phase": "after-restart",
+      "active": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "aa45a51c2599b1558961475eb6901ff1828dcad1a0a82e786aec0670effe42ae",
+      "foreignResponseSha256": "87bc6dacca26ab1c4ca05f93b4d1d9225608caad28a2c1947cf33c1aae629835"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1ac1b76c61d1b5cc41c93e48e799356dfc5461dffed355dd9a4a68212097a436",
+      "foreignResponseSha256": "68a425da3b0e4846fbd8654f9f40df2716db210109489540d4db8908aab78d91"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "7888d0bb0e12af231c4df47b0e6ec7824a062bf5f72068c06ad71b067affde02",
+      "foreignResponseSha256": "8c31e8d6c356e9f374ac281fb75dc5d41d297276b634f18e127b22ab8f32124f"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "e16e119c49638ff99117d9fec82c012b796cea86465f7f8e7229c8a525be8cfe",
+      "foreignResponseSha256": "477e7c7dd8b874cfe322af649be8502a362934acc245b02ad60283ca01837f4e"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "89fddb3ef463a92a1d15d8e8f386967580ac9e3b30bfb8c3cb9326eb4cadce91",
+      "foreignResponseSha256": "b942793305c58995c08c53712ed527cc7c0d02bc7da586dde6dfbc1d91539332"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "b914624dd135640fe19245a5601a7e0d2858107f7d1348249aa8970f6b1c5d99",
+      "foreignResponseSha256": "139ff9a7e1480dfda10a3cbd4f9014ca9717782b014a24fad69482d89829e32b"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a4b6ce9514e6d956a74093ac00f3ccf2fc28d5e1890a841de3f21ff9bcff86cb",
+      "foreignResponseSha256": "09a05ba0f8c2afdecd6549b4bc0070bb4ba2468ef24e58c6235a0de2851f8b17"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a8013ac0b1c28b148ac4849260461b8510f54b7a0e30ee47123d9fc9dddd5dda",
+      "foreignResponseSha256": "cf5baf03bffd329d7b3c29450e49c183ef8fcc3effc4f38f321c1755ea527376"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "58c97450d41bc0494d347511838d58267eafaccd5b496dce4b6a198ccf286871",
+      "foreignResponseSha256": "dac33ef1e85f8fe55990ed45a1898556306de2f85f1ab302fc4eaffb771ca16e"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "6ef36d06403ec04e2433976ca7854974fd9bdf26974e5f42a4b1dd98705d3103",
+      "foreignResponseSha256": "407589d2aa4cb539e1faead05f29646d42ce9522a030b03e2325a40617bbe5f1"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "426f65334b7b74c6d5310cec8b4b06649656c4c352400c69ac5ffeb517f2d980",
+      "foreignResponseSha256": "c5010dec564552610a89e13a514cf23d279c8dfa4c3972e038136a2ad62b8a26"
+    },
+    {
+      "phase": "after-restart",
+      "active": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "workspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "name": "search-positive-and-foreign-thread-attachment-denials",
+      "status": "CHECKED"
+    }
+  ],
+  "backendPids": [
+    30282,
+    30324,
+    30413
+  ],
+  "aiDispatches": 0,
+  "limitations": [
+    "Seeded terminal jobs are not AI/browser executions",
+    "Populated MySQL/Datadog/operational capture memory state deferred",
+    "No UI checkpoint or full E37 verdict"
+  ],
+  "javaSha256": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+  "models": {
+    "directory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "architecture": "x86_64",
+    "files": [
+      {
+        "name": "model.onnx",
+        "size": 118346824,
+        "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      {
+        "name": "reranker.onnx",
+        "size": 118620016,
+        "sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+      },
+      {
+        "name": "reranker-tokenizer.json",
+        "size": 17082660,
+        "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+      }
+    ],
+    "verifiedAt": "2026-10-26T13:58:29.350Z"
+  },
+  "snapshotJar": "/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/dougle-e37-runtime-c1zi8F/frozen-0.1.25.jar",
+  "sandboxProfileSha256": "c15c00997a1e5fd71dc78bd795637a0671fc56d6fdd205976760b33719c93dd1",
+  "networkAndFiles": "Existing E50 strict file allowlist and loopback-only network; no fallback or added permission",
+  "startup": {
+    "exitCode": 143,
+    "signal": null,
+    "stdoutBytes": 4465,
+    "stderrBytes": 245,
+    "ready": true
+  },
+  "fixtures": [
+    {
+      "ownerWorkspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "entryId": "967b3012-d7c8-4b82-8356-1442ee8ed0ca",
+      "attachmentId": "fea8f1d2-d742-4de6-9f61-8a121e55506c",
+      "canary": "E37_PRIVATE_A_D2EA94FD52953E46",
+      "browserJobId": "a2a1c062-2784-452c-a1ca-90f57d33aab9",
+      "answerJobId": "5c401b5f-a5e9-472f-b0dd-d36d24221deb",
+      "planJobId": "6ac48649-0a76-41f5-9bfb-a0c5b437d1db",
+      "otherWorkspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "bundleId": "41562c87-876d-46cc-8627-5a1070c2e588",
+      "bundleDigest": "00a5edec9f1fad6f2511775f848dc542a1bddbb3920e3863b5c96e02adede83f",
+      "threadId": "47e163fb-f843-4b47-8282-208e90248776"
+    },
+    {
+      "ownerWorkspaceId": "de6584f6-7293-4fd1-9330-601cd98cbff8",
+      "entryId": "06bed5c5-9539-4b7d-b194-2249b03fa398",
+      "attachmentId": "d3d56ccb-6ce9-4089-93e8-f3ba81f09780",
+      "canary": "E37_PRIVATE_B_975295BCD5EA8E15",
+      "browserJobId": "392f841e-cc03-4257-8201-18d906839106",
+      "answerJobId": "2ecba266-2de2-473c-92ab-dd0384d6dbff",
+      "planJobId": "a21e3296-63c9-4805-ad94-f1a3772173b6",
+      "otherWorkspaceId": "4526d69c-e86c-4b6c-b44f-2fcd502d51d3",
+      "bundleId": "b5d25837-a28f-4b93-885a-834a2ca8a544",
+      "bundleDigest": "89db650f2fe62c2f3824d2e55e8d1f0284f79626dcd25d97a5c2b3adf7e90bb5",
+      "threadId": "8151d49d-1d38-40ca-a1f5-875c438c6d9c"
+    }
+  ],
+  "deferred": [
+    {
+      "scope": "MYSQL/DATADOG populated result and operational capture",
+      "status": "BLOCKED",
+      "reason": "Results/previews are process-memory state; no configured providers or credentials. Missing IDs cannot demonstrate populated-result isolation."
+    },
+    {
+      "scope": "tool proposal payload",
+      "status": "NOT_RUN",
+      "reason": "Requires a valid terminal proposal fixture and positive owner response; never generate it with AI for this run."
+    }
+  ],
+  "persistedRowsUnchanged": true,
+  "readPairs": 88,
+  "localSearchAndInjectionGroups": 8,
+  "ownedBackendStopped": true,
+  "observedProxyRequests": 0,
+  "snapshotHashUnchanged": true,
+  "sourceHashUnchanged": true,
+  "javaUnchanged": true,
+  "ownedTemporaryRemoved": true,
+  "finishedAt": "2026-10-26T13:59:50.400Z",
+  "harnessSha256": "70f84353f3ffb7907cb185245d4715da8d3a30b1b094645259978a8fcdcbf980"
+}

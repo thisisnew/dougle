@@ -34,3 +34,18 @@ The initial unified-log query selected `java(18409)` only. Follow-up queries of 
 No file-denial record was obtained. The only returned relevant diagnostic was `sandbox compile: using compatibility definitions for version 1 (latest version is 3)`; one non-diagnostic target record was withheld. This compatibility notice does not identify the abort cause or justify changing the sandbox version. Native crash reports or actual user profile/credential files were not opened.
 
 The exact denied resource remains unknown, and no system-path allowance has been verified. Do not convert this negative log observation into a claim that no denial occurred. Further probes are paused for the parent installation, and any later probe must use the parent-approved immutable bundle/runtime rather than the changing installed application. No full E50 rerun is authorized by these Java-only diagnostics.
+
+## Subsequent approved .24 narrow system-read comparison
+
+After parent confirmed the installed .24 runtime immutable, inspected launcher `LC_LOAD_DYLINKER` (`/usr/lib/dyld`), `LC_RPATH` (`@loader_path/.`), bundled `libjvm.dylib` dependencies, and system symlink metadata. `/System/Cryptexes/OS` resolves beneath `/System/Volumes/Preboot/Cryptexes/OS`, already covered by the existing `/System` rule; no extra cryptex tree grant was justified. Runtime directories were not symlinks to an unapproved tree. The root directory itself was not covered by any existing read-data rule, although metadata access was allowed. This justified testing directory-only root access for native path resolution, not adding broad system trees.
+
+Executed **two of the maximum three** authorized Java-version probes; stopped once the comparison isolated the required allowance:
+
+1. Strict profile plus exactly `(allow file-read-data (literal "/"))`: **exit 0**, OpenJDK 21.0.10 / Corretto 21.0.10.7.1 version output.
+2. Unmodified strict profile, same installed Java executable: **SIGABRT**, zero stdout/stderr.
+
+Results are preserved in `e50-java-root-read-20261026.json`. Both runs used loopback-only networking, private HOME/cwd/scratch and the existing user-data content denial. Both removed their temporary roots and verified the Java executable unchanged. No application, DB, model inference, accounts or AI were invoked. No installed assets were modified; asset lease released.
+
+**Minimal verified proposal:** add only `(allow file-read-data (literal "/"))` to the app harness profile after parent approval. This permits opening/reading the root directory itself (including root directory entries), **not** descendant file contents; it is not `(subpath "/")`. Existing denials on user directories and broad `/private/var` remain. No write or network rule changes are needed for the observed version startup.
+
+This experimentally identifies the missing resource allowance for Java-version startup, but does not identify the precise native syscall/call stack, prove all app startup resources are covered, or establish E50 correctness. The application harness profile is **not changed**, and full E50 runtime remains awaiting explicit approval. The earlier unknown-resource conclusions above describe the evidence available before this controlled comparison.

@@ -1,0 +1,40 @@
+{
+  "scope": "Java -version only; installed immutable .24 runtime",
+  "javaSha256": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+  "probeLimit": 3,
+  "probesExecuted": 2,
+  "results": [
+    {
+      "order": 1,
+      "mode": "strict-files",
+      "profileDiff": "(allow file-read-data (literal \"/\"))",
+      "code": 0,
+      "signal": null,
+      "stdoutBytes": 0,
+      "stderrBytes": 192,
+      "diagnostics": [
+        "openjdk version \"21.0.10\" <number>-01-20 LTS",
+        "OpenJDK Runtime Environment Corretto-21.0.10.7.1 (build 21.0.10+7-LTS)",
+        "OpenJDK 64-Bit Server VM Corretto-21.0.10.7.1 (build 21.0.10+7-LTS, mixed mode)"
+      ],
+      "temporaryRemoved": true,
+      "javaUnchanged": true
+    },
+    {
+      "order": 2,
+      "mode": "strict-files",
+      "profileDiff": "",
+      "code": null,
+      "signal": "SIGABRT",
+      "stdoutBytes": 0,
+      "stderrBytes": 0,
+      "diagnostics": [],
+      "temporaryRemoved": true,
+      "javaUnchanged": true
+    }
+  ],
+  "appProfileChanged": false,
+  "fullE50Executed": false,
+  "acceptanceUpdated": false,
+  "limitation": "Literal root-directory read fixes observed Java version startup; no denied syscall or archive runtime behavior was observed. Root directory entries become readable, but this is not a recursive descendant-file grant."
+}

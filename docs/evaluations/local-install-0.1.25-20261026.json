@@ -1,0 +1,47 @@
+{
+  "version": "0.1.25",
+  "installedAtLocal": "2026-10-26T23:00:48+09:00",
+  "architecture": "x86_64",
+  "destination": "/Applications/Knowledge Forge.app",
+  "previousVersion": "0.1.24",
+  "jarSha256": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
+  "dmgSha256": "ee46e0ed57db29b9be27d7a86549866f598144667fadec6d1572a1656847c6e4",
+  "verification": {
+    "readOnlyDmgMount": true,
+    "mountedStagedAndInstalledCodesign": true,
+    "versionAndJarMatched": true,
+    "nativeProcessObserved": 30672,
+    "bundledJavaProcessObserved": 30693,
+    "observedLoopbackPort": 52923,
+    "databaseSchemaVersion": 28,
+    "unauthenticatedWorkspaceStatus": 403
+  },
+  "backup": {
+    "directory": "~/Library/Application Support/Dougle Local Backups/pre-0.1.25-20261026-230045",
+    "directoryMode": "0700",
+    "databaseMode": "0600",
+    "includes": ["previous app", "SQLite database", "WAL and SHM when present"],
+    "credentialsCopied": false,
+    "fullDataDirectoryBackup": false
+  },
+  "installationPrecondition": "First attempt stopped safely after staging because expected old Java PID18984 was already absent. Native PID18927 still existed. Cause of prior backend exit was not determined. A second checked step confirmed no installed backend, gracefully stopped the exact native process, backed up the stopped database, then swapped the staged app. No user business rows were inspected.",
+  "scope": "Includes bounded current/follow-up local retrieval; preserves manual-query UI removal and external read-only policy. New pending operational scope source is not included.",
+  "isolatedChecks": {
+    "retrievalAndReadonly": "docs/evaluations/retrieval-runtime-0.1.25-20261026.json",
+    "nativeHostLog": "/tmp/dougle-025-native-host.log",
+    "nativeStartupMs": 64050,
+    "nativeStartupCaveat": "Measured during concurrent build/test load, near the existing 65-second deadline; not a performance improvement claim.",
+    "webkitLog": "/tmp/dougle-025-webkit.log",
+    "webkit": "Existing e34fd11 runtime_smoke binary, private HOME and synthetic DB; real React/WebKit interactions; no inference; owned private HOME removed afterward.",
+    "uiTests": "62 files, 665 passed; eight added retrieval-failure tests only, production frontend unchanged.",
+    "archive": "docs/evaluations/e50-independent-5cf78b64-20261026.json"
+  },
+  "limitations": [
+    "Natural-language operational investigation remains incomplete.",
+    "No whole 50-case acceptance promotion.",
+    "Actual provider timeout root cause remains unconfirmed.",
+    "No ARM hardware or second-Mac acceptance; ad-hoc signing is not notarization."
+  ],
+  "publicReleasePublished": false,
+  "updateFeedPromoted": false
+}

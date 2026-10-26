@@ -9,6 +9,14 @@ import { childEnvironment, sandboxProfile, sha256 } from './e50-archive-fixtures
 
 const execute = promisify(execFile)
 const networkOnly = '(version 1) (allow default) (deny network*) (allow network-bind (local ip "localhost:*")) (allow network-inbound (local ip "localhost:*")) (allow network-outbound (remote ip "localhost:*"))'
+const probeDiffs = {
+  '--system-root-directory': '(allow file-read-data (literal "/"))',
+}
+
+export function versionProbeDiff(option) {
+  assert(Object.hasOwn(probeDiffs, option))
+  return probeDiffs[option]
+}
 
 export function safeNativeLines(output) {
   return String(output).split('\n').filter(line => /^(?:openjdk |java version |OpenJDK |Java\(TM\)|dyld\[\d+\]:|libc\+\+abi:|libsystem[^:]*:|  (?:Library not loaded|Referenced from|Reason|tried):|Error occurred during initialization of VM|Could not create the Java Virtual Machine|sandbox-exec:|# (?:A fatal error|SIG[A-Z]+|JRE version:|Java VM:|Problematic frame:))/.test(line))
@@ -19,7 +27,7 @@ export function safeNativeLines(output) {
 
 async function run() {
   assert.equal(process.platform, 'darwin')
-  assert(process.argv.length === 3 && ['--compare-version-only', '--strict-version-only', '--pid-denials'].includes(process.argv[2]))
+  assert(process.argv.length === 3 && ['--compare-version-only', '--strict-version-only', '--pid-denials', ...Object.keys(probeDiffs)].includes(process.argv[2]))
   const java = await realpath('/Applications/Knowledge Forge.app/Contents/Resources/resources/runtime/bin/java')
   const before = sha256(await readFile(java))
   const root = await realpath(await mkdtemp(join(tmpdir(), 'dougle-e50-java-')))
@@ -29,7 +37,8 @@ async function run() {
     for (const mode of process.argv[2] !== '--compare-version-only' ? ['strict-files'] : ['strict-files', 'network-only-control']) {
       const directory = join(root, mode), home = join(directory, 'home'), scratch = join(directory, 'tmp')
       for (const path of [home, scratch]) await mkdir(path, { recursive: true, mode: 0o700 })
-      const profile = mode === 'strict-files' ? sandboxProfile(directory, dirname(dirname(java)), directory) : networkOnly
+      const profileDiff = Object.hasOwn(probeDiffs, process.argv[2]) ? versionProbeDiff(process.argv[2]) : ''
+      const profile = (mode === 'strict-files' ? sandboxProfile(directory, dirname(dirname(java)), directory) : networkOnly) + ' ' + profileDiff
       let output, code = 0, signal = null, pid
       try {
         const pending = execute('/usr/bin/sandbox-exec', ['-p', profile, java, '-Djava.net.preferIPv4Stack=true',
@@ -41,7 +50,7 @@ async function run() {
         output = error; code = Number.isInteger(error.code) ? error.code : null
         signal = ['SIGABRT', 'SIGKILL', 'SIGSEGV'].includes(error.signal) ? error.signal : null
       }
-      results.push({ mode, code, signal, stdoutBytes: Buffer.byteLength(output.stdout ?? ''), stderrBytes: Buffer.byteLength(output.stderr ?? ''),
+      results.push({ mode, profileDiff, code, signal, stdoutBytes: Buffer.byteLength(output.stdout ?? ''), stderrBytes: Buffer.byteLength(output.stderr ?? ''),
         diagnostics: safeNativeLines(String(output.stdout ?? '') + '\n' + String(output.stderr ?? '')) })
       if (process.argv[2] === '--pid-denials') {
         assert(Number.isInteger(pid) && pid > 0)

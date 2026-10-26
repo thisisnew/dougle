@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.25",
+  "verifiedAt": "2026-10-26T14:05:34.341Z",
+  "status": "PASS_SCOPED_PACKAGE_VERIFICATION",
+  "distribution": "Local test installation performed separately by parent; public release/feed promotion remain on hold.",
+  "backend": {
+    "path": "backend/target/knowledge-forge-0.1.0.jar",
+    "sha256": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
+    "unchangedThroughoutPackaging": true
+  },
+  "prerequisiteTests": {
+    "source": "Parent-reported; packaging agent did not rerun product tests.",
+    "sourceBaseline": "ee1a205",
+    "backend": {
+      "run": 1041,
+      "passed": 1034,
+      "skipped": 7,
+      "knownExcludedFixtureClasses": 2,
+      "failures": 0
+    },
+    "frontendBeforePackaging": {
+      "passed": 657,
+      "build": "PASS"
+    },
+    "nodeBeforePackaging": {
+      "passed": 143
+    },
+    "frontendDuringPackaging": {
+      "files": 62,
+      "passed": 665,
+      "log": "/tmp/dougle-025-ui-tests.log",
+      "scope": "Parent reports eight added tests only; production/dist unchanged."
+    },
+    "jarBuild": "Parent Maven skipTests package after broad regression; no Maven run or JAR write by packaging agent."
+  },
+  "frontend": {
+    "guard": "scripts/verify-frontend-bundle.mjs",
+    "result": "PASS exact paths and bytes",
+    "files": 7,
+    "bytes": 1664102,
+    "scope": [
+      "Pinned JAR preflight",
+      "Intel finalized app",
+      "Both mounted DMG JARs"
+    ],
+    "initialParentUsageError": "An earlier verifier invocation omitted required arguments; CLI usage failure was not an artifact failure."
+  },
+  "packaging": {
+    "order": [
+      "x86_64",
+      "arm64"
+    ],
+    "exitCodes": [
+      0,
+      0
+    ],
+    "mode": "--skip-verify",
+    "cargoBuildJobs": 2,
+    "javaVersion": "21.0.10",
+    "hostIntelJdk": "$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home",
+    "armTargetJdk": ".tools/apple-silicon/amazon-corretto-21.jdk/Contents/Home",
+    "commands": [
+      "FORGE_MACOS_TARGET= FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify",
+      "FORGE_MACOS_TARGET=aarch64-apple-darwin FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$PWD/.tools/apple-silicon/amazon-corretto-21.jdk/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify"
+    ],
+    "logs": [
+      "/tmp/dougle-025-intel-package.log",
+      "/tmp/dougle-025-arm-package.log"
+    ]
+  },
+  "verification": {
+    "result": "PASS_BOTH_CPUS",
+    "commands": [
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.25_x86_64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.25_x86_64.app.tar.gz 0.1.25 x86_64",
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.25_arm64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.25_arm64.app.tar.gz 0.1.25 arm64"
+    ],
+    "checks": [
+      "DMG integrity and copied-app strict/deep ad-hoc signatures",
+      "Bundled search models verified for expected CPU",
+      "Both cryptographic updater signatures and signed version",
+      "Both extracted updater apps version/architecture/signature and byte-identical pinned JAR",
+      "Both read-only mounted DMGs exact 0.1.25, dev.knowledgeforge.desktop, expected CPU, pinned JAR SHA256 and seven frontend files",
+      "Intel finalized bundle signature intact after ARM"
+    ],
+    "logs": [
+      "/tmp/dougle-025-intel-verification.log",
+      "/tmp/dougle-025-arm-verification.log"
+    ],
+    "directPinEvidence": "Mounted-DMG and final Intel signature checks exited0 in agent tool transcript.",
+    "limits": [
+      "ARM static only; no actual ARM hardware runtime.",
+      "Application signatures are ad-hoc; no Apple notarization or Gatekeeper acceptance."
+    ]
+  },
+  "artifactsSha256": {
+    "release/Knowledge.Forge_0.1.25_arm64.app.tar.gz": "abf786022af68a336751aa335e6072a2897cb20cc7f4d77a0c0cca0aed85ace4",
+    "release/Knowledge.Forge_0.1.25_arm64.app.tar.gz.sig": "7a48b8e99fa790521859b5ffd8042b7a267b1d3c417b9108ea30d192aba3472c",
+    "release/Knowledge.Forge_0.1.25_arm64.dmg": "9352f6365e6d28e70eca23a5dc04885aa826cd6a22a17e08aabc43b70be8792c",
+    "release/Knowledge.Forge_0.1.25_x86_64.app.tar.gz": "7755668a2c777def2c5b836564e9261a3e57731639b4c46e7002a353156ec677",
+    "release/Knowledge.Forge_0.1.25_x86_64.app.tar.gz.sig": "9166ebae4b6de93f2968ef71df14f5b3ad594a0279e60d40b09d43283873bf2c",
+    "release/Knowledge.Forge_0.1.25_x86_64.dmg": "ee46e0ed57db29b9be27d7a86549866f598144667fadec6d1572a1656847c6e4"
+  },
+  "preservation": {
+    "result": "PASS",
+    "oldVersions": [
+      "0.1.20",
+      "0.1.21",
+      "0.1.22",
+      "0.1.23",
+      "0.1.24"
+    ],
+    "oldAssetCount": 30,
+    "successfulOldAssetAndJarChecks": 31,
+    "sha256": {
+      "backend/target/knowledge-forge-0.1.0.jar": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
+      "release/Knowledge.Forge_0.1.20_arm64.app.tar.gz": "0349047fed077b71ef6df4b99f44137b443123be741cd98124b766f85d286ec3",
+      "release/Knowledge.Forge_0.1.20_arm64.app.tar.gz.sig": "bb981e78d01a00bd1cdd80739ff5b96728b274c679dfdd008ef6b9796660d522",
+      "release/Knowledge.Forge_0.1.20_arm64.dmg": "5cdd8ebee1b28f741facecc4be66ee28335b2a64741a4de512dcab38ce895423",
+      "release/Knowledge.Forge_0.1.20_x86_64.app.tar.gz": "a497e2ca1b99232e358839d78a3ed73a932467fa91d57552e48d4966ba086da2",
+      "release/Knowledge.Forge_0.1.20_x86_64.app.tar.gz.sig": "6adaaa4e40fc23be93fe813ca5ee13232239af029e101ccb63191296e0ce4d39",
+      "release/Knowledge.Forge_0.1.20_x86_64.dmg": "afb7e031ee789d6c91d211d2f578d63ceb76fd53530de1f01006f374f8779165",
+      "release/Knowledge.Forge_0.1.21_arm64.app.tar.gz": "0cfa6950d5a8938a27b697f0c506c918101008f4c42fe84ad42e59d48a2e80a3",
+      "release/Knowledge.Forge_0.1.21_arm64.app.tar.gz.sig": "a6df5694229051688f5fdbe05b5ace76cd1544b673fc2e1d70138174689a432e",
+      "release/Knowledge.Forge_0.1.21_arm64.dmg": "06839bf433475503eb9428818146deb82d141cfe313159b546e81fc09876ef0f",
+      "release/Knowledge.Forge_0.1.21_x86_64.app.tar.gz": "2872aaf811d94e674456f1038a407ee2b5a8314ddf755154a028ef24789375b7",
+      "release/Knowledge.Forge_0.1.21_x86_64.app.tar.gz.sig": "151f6ecbd48a103525e503a94c2e674f86327ed511839a9dc5cf154ea440f7ee",
+      "release/Knowledge.Forge_0.1.21_x86_64.dmg": "a1950c1e1f664cc98058dd7c12828116faf8b8e25770d4cce7b376916d45554a",
+      "release/Knowledge.Forge_0.1.22_arm64.app.tar.gz": "bae46b4a602c8c4bb0c71429d7a7032869ea42f021288ad9a6623247175f1f2a",
+      "release/Knowledge.Forge_0.1.22_arm64.app.tar.gz.sig": "9324ccc4b5ef9a0df9960906dd3a0e53da38989b1da31b0e3ff8939b31318218",
+      "release/Knowledge.Forge_0.1.22_arm64.dmg": "75193e672166d490988348c45720c6c6bcf9ab2822e4b6fd5a0bb9ac85238838",
+      "release/Knowledge.Forge_0.1.22_x86_64.app.tar.gz": "cb1f0a5a576c393db41b08f7af52f15a29d72e716ac082b40b3560e3b5a15179",
+      "release/Knowledge.Forge_0.1.22_x86_64.app.tar.gz.sig": "4b018ca498c18d0355769768682492fa43667d87ca5c448f650da0609e540bfd",
+      "release/Knowledge.Forge_0.1.22_x86_64.dmg": "f226368aca2e04ab7c53d2aeea0d4d89c05426e359031054fe2f448469ca942c",
+      "release/Knowledge.Forge_0.1.23_arm64.app.tar.gz": "d71fefebe9fd5e6fd2b769164b34357b95ff1a0eb98d638266b543e31858863d",
+      "release/Knowledge.Forge_0.1.23_arm64.app.tar.gz.sig": "b8aaa87e3477bf265003c6089932749f9fc03b6768cb699c996ef40134a08f5e",
+      "release/Knowledge.Forge_0.1.23_arm64.dmg": "e65e97a13f664c705405f670dce35728600ea86f6ed5c3d49ce77ec1413200d4",
+      "release/Knowledge.Forge_0.1.23_x86_64.app.tar.gz": "b930dc298ba454986ff3d806e470e685c6a201c58ce67702307c0a41dc7434aa",
+      "release/Knowledge.Forge_0.1.23_x86_64.app.tar.gz.sig": "fc5012fa1c823ad303fc31343ab56600de445583d1c087a5b724715decadff6b",
+      "release/Knowledge.Forge_0.1.23_x86_64.dmg": "7aff531cb5062717ee361ac1ac9e124c01fbf85a6629269193878784d1adf659",
+      "release/Knowledge.Forge_0.1.24_arm64.app.tar.gz": "79ec9a90c39dbdc27cc8782a0e399b2580187f30b5f9e81e9060f1c529c96b97",
+      "release/Knowledge.Forge_0.1.24_arm64.app.tar.gz.sig": "4e88e0cdbe8d6d56602bc98581fd666fe9ce792a5834930e185e903f97420178",
+      "release/Knowledge.Forge_0.1.24_arm64.dmg": "2bd705de9943d268a03f638cda62643013b8053cfbd3b99f1d6cf51744f1f246",
+      "release/Knowledge.Forge_0.1.24_x86_64.app.tar.gz": "adb415ab61f5e142acffb4a4172b836b7e07a53fa85bb9be50ab957ca7d40899",
+      "release/Knowledge.Forge_0.1.24_x86_64.app.tar.gz.sig": "93ad16c6b07bd29e3460be7d36328e173c948a92f23056221088c66e9fbb03c9",
+      "release/Knowledge.Forge_0.1.24_x86_64.dmg": "5866609cf38a72658a6c9e67bde6c9dcedf153b97cdd20b0511b6c2ada20310d"
+    },
+    "log": "/tmp/dougle-025-preservation-verification.log",
+    "installedApp": {
+      "versionAtCheck": "0.1.24",
+      "path": "/Applications/Knowledge Forge.app",
+      "regularFilesMatched": 375,
+      "completedAt": "2026-10-26T13:58:20Z",
+      "log": "/tmp/dougle-025-installed-verification.log",
+      "boundary": "Preservation verified before parent's separately authorized .25 replacement at 23:00:48 KST. No expected .24 hash equality after that replacement. No installed-app/user DB/credential modification or inspection of credential/business contents by packaging agent."
+    },
+    "aggregateChecksumFiles": "Package scripts intentionally updated release aggregate SHA256SUMS; old versioned assets unchanged."
+  },
+  "parentRuntimeEvidence": {
+    "attribution": "Parent-run checks against immutable Intel bundle or pinned JAR; not run by packaging agent.",
+    "nativeHost": {
+      "result": "PASS",
+      "startupMs": 64050,
+      "measuredAt": "2026-10-26T13:56:04.401Z",
+      "log": "/tmp/dougle-025-native-host.log",
+      "scope": "Synthetic private HOME/minimal PATH, bundled Java/API session protection, private data, duplicate backend rejection, cleanup and restart.",
+      "performanceCaveat": "64.050 seconds under concurrent build/test load, near the 65-second limit. This is not a performance improvement or startup-latency acceptance claim."
+    },
+    "webkitReact": {
+      "result": "PASS",
+      "log": "/tmp/dougle-025-webkit.log",
+      "harness": "desktop/src-tauri/target/debug/examples/runtime_smoke",
+      "harnessSha256": "e34fd11a50ad53da6cb80a5e54c18461405dc99ae81475cbc65e8fbface9845e",
+      "scope": "Existing unchanged harness; private HOME/synthetic data, Workspace/AI buttons, Korean errors, local same-origin mutations, upload/download/search, local publication/relations, polling OFF and CLI settings; no inference."
+    },
+    "threadAndReadonly": {
+      "report": "docs/evaluations/retrieval-runtime-0.1.25-20261026.json",
+      "threadLog": "/tmp/dougle-025-thread-runtime.log",
+      "scope": "Parent reports actual bundled multilingual retrieval/followup, prompt context, replay, workspace isolation, restart and deletion; readonly 300 denials, two restarts, three preserved receipt rows and no jobs. No external AI."
+    },
+    "archive": {
+      "report": "docs/evaluations/e50-independent-5cf78b64-20261026.json",
+      "scope": "Parent reports six strict-file/runtime groups and cleanup passed; separate evidence, no acceptance promotion by packaging agent."
+    },
+    "limits": "No real AI success or full expert acceptance inferred; no claim of absent ambient tool discovery. Runtime evidence does not extend to ARM."
+  },
+  "localInstallation": {
+    "owner": "Parent",
+    "report": "docs/evaluations/local-install-0.1.25-20261026.json",
+    "status": "Parent reports installed Intel .25 at 2026-10-26T23:00:48+09:00; version/JAR/signature/schema28 and unauthenticated403 recorded separately.",
+    "backup": "~/Library/Application Support/Dougle Local Backups/pre-0.1.25-20261026-230045",
+    "firstAttempt": "Parent reports safe halt when expected old Java PID was already absent; reverified ownership before graceful native shutdown. Cause of old backend absence is unproven.",
+    "scope": "No installation by packaging agent; local test install is not public release."
+  },
+  "handoff": {
+    "cargoSharedResourceAndBackendPreservationLease": "RELEASED",
+    "ownedSessions": "All packaging and verification commands completed.",
+    "publication": "No upload or feed promotion.",
+    "acceptance": "No acceptance inventory changes or blanket expert PASS.",
+    "report": "Frozen after JSON/whitespace validation."
+  }
+}

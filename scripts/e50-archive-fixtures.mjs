@@ -43,6 +43,7 @@ export function sandboxProfile(temporary, javaHome, models) {
     + '(allow network-bind (local ip "localhost:*")) (allow network-inbound (local ip "localhost:*")) '
     + '(allow network-outbound (remote ip "localhost:*")) '
     + '(deny file-read* file-write*) (allow file-read-metadata) '
+    + '(allow file-read-data (literal "/")) '
     + '(allow file-read* (subpath "/System") (subpath "/usr") (subpath "/bin") (subpath "/sbin") '
     + '(subpath "/dev") (subpath "/private/etc") (subpath "/private/var/db/timezone") '
     + '(subpath ' + quote(javaHome) + ') (subpath ' + quote(models) + ') (subpath ' + quote(temporary) + ')) '

@@ -1,5 +1,9 @@
 # Phase 완료 기준과 현재 상태
 
+## 현재 로컬 시험 설치 — 0.1.25
+
+2026-10-26 23:00 KST, bounded conversation retrieval 포함 Intel0.1.25를 설치했다. [설치 증거](evaluations/local-install-0.1.25-20261026.json). 실제 로컬 다국어 검색·이어 질문·동일 요청·재시작, readonly300거부·과거 영수증 보존, Intel native/WebKit, UI665개를 확인했다. E50 합성6그룹도 통과했지만 전체50개 인수나 실제 AI 품질로 확대하지 않는다. 후속 운영 범위 후보 계약은 별도 미설치 소스이며 자연 대화 조사 연결은 남아 있다. 공개/피드 승격은 계속 보류한다. 아래0.1.24와 미패키징 문구는 이전 상태다.
+
 ## 현재 로컬 시험 설치 — 0.1.24
 
 2026-10-26 22:22 KST, 고정 JAR `b5b59534ed02f1ad342a64d55f6e40cff03947997af2c07340b5b9bd85473d47`의 수동 조회 제거본을 설치했다. 이전 앱/DB 백업·Intel 실행/WebKit·v28/403 확인 완료. [설치 증거](evaluations/local-install-0.1.24-20261026.json). 이전967cd7e7 후보의 낡은 static 자산 잔존은 scoped Maven cleanup과 패키지-dist 정확 일치 검사로 수정했다. 공개/피드 승격 없음. 다음 bounded retrieval 소스는 별도 미설치 단계다. 아래 후보/패키징 중은 이전 기록이다.
