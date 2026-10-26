@@ -1,0 +1,267 @@
+{
+  "version": "0.1.27",
+  "date": "2026-10-27",
+  "result": "PASS_NARROW_SYNTHETIC_UI_REGRESSION",
+  "artifactSha256": "b647ff9815037ddef3780246d712a944d4534a43060f881cdcbab8c2e6f3a612",
+  "scope": "Real frozen bundled React and HTTP backend in existing Ego17/p1; synthetic CLI only. No actual AI, real credentials, user DB, connector execution, package/install or release validation.",
+  "artifactSource": "backend/target/knowledge-forge-0.1.0.jar",
+  "runtime": "Installed .26 Intel Java and search models read immutably; exact candidate bytes verified and copied to private temporary directory before execution.",
+  "executedHarnessSha256": "e7f0ddfb095a1b5bafe17074a1f07c48c287ae630a73f7ca5084c6e0ba677846",
+  "executedFakeCliSha256": "b5135fac21a53c7df23be0b407a1e076062d2004bf202e02122e7facf02931f9",
+  "postQaGuard": {
+    "change": "After runtime cleanup, restricted explicit hashes to known .26 f88d6f01... and .27 b647ff98...; previously any syntactically valid hash was accepted, but executed candidate still matched parent-approved exact hash.",
+    "hardenedHarnessSha256": "da97a6bf4aeb891eeb984103789e880f6e21b3b00a0782a362a122324c2cb864",
+    "offlineTests": {
+      "run": 3,
+      "passed": 3,
+      "includesUnknown64HexRejection": true
+    },
+    "runtimeRerun": false
+  },
+  "questions": [
+    "Strategy",
+    "Strategy에서 어느 부분을 중점적으로 보면 돼?"
+  ],
+  "checkpoints": [
+    {
+      "phase": "before_submit",
+      "counts": {
+        "plan": 0,
+        "answer": 0
+      }
+    },
+    {
+      "phase": "first_answer",
+      "questionBubbles": 1,
+      "counts": {
+        "plan": 1,
+        "answer": 1
+      }
+    },
+    {
+      "phase": "followup_answer",
+      "questionBubbles": 2,
+      "answers": 2,
+      "counts": {
+        "plan": 2,
+        "answer": 2
+      }
+    },
+    {
+      "phase": "history_reopen",
+      "historyConversations": 1,
+      "questionBubbles": 2,
+      "answers": 2,
+      "counts": {
+        "plan": 2,
+        "answer": 2
+      }
+    },
+    {
+      "phase": "explicit_restart_reload_history_reopen",
+      "historyConversations": 1,
+      "questionBubbles": 2,
+      "answers": 2,
+      "counts": {
+        "plan": 2,
+        "answer": 2
+      }
+    }
+  ],
+  "ui": {
+    "questionTextsExact": true,
+    "duplicateQuestionBubbles": false,
+    "oldTurnActionControls": 0,
+    "currentContinuationControls": 1,
+    "currentBrowserInvestigationControls": 1,
+    "answerTexts": [
+      "Synthetic Strategy delegates hand selection to Strategy. This answer is a deterministic fixture, not actual AI. [R1]",
+      "Synthetic Strategy delegates hand selection to Strategy. This answer is a deterministic fixture, not actual AI. [R1]"
+    ],
+    "screenshot": "docs/screenshots/conversation-capture-fixed-027.png",
+    "screenshotSha256": "17852944d91873247f464931b411c8442f0ff9af764d9393c0a47e2eb3282d01",
+    "screenshotViewed": true
+  },
+  "http": {
+    "traceEntries": 91,
+    "summary": {
+      "GET / 200": 2,
+      "GET /assets/index-BTnKW-vD.css 200": 2,
+      "GET /assets/index-DuWVghRA.js 200": 2,
+      "GET /api/session 200": 2,
+      "GET /favicon.ico 404": 1,
+      "GET /assets/dougle-mascot-transparent-BO725UxM.png 200": 4,
+      "GET /api/slack/workspaces/:id/inbox-count 200": 8,
+      "GET /api/search-model 200": 40,
+      "POST /api/ai/providers/CODEX/connection 200": 2,
+      "GET /api/workspaces/:id/entries 200": 2,
+      "POST /api/workspaces/:id/chat-threads 201": 2,
+      "POST /api/workspaces/:id/investigation-plans/preview 200": 2,
+      "POST /api/workspaces/:id/investigation-plans/jobs 202": 2,
+      "GET /api/workspaces/:id/investigation-plans/jobs/:id 200": 2,
+      "POST /api/workspaces/:id/investigation-plans/jobs/:id/capture 201": 2,
+      "POST /api/workspaces/:id/evidence-bundles/:id/answer-preview 200": 2,
+      "GET /api/workspaces/:id/evidence-bundles/:id/answer-approval 200": 2,
+      "POST /api/workspaces/:id/evidence-bundles/:id/answer-approval 200": 2,
+      "POST /api/workspaces/:id/evidence-bundles/:id/answer-jobs 202": 2,
+      "GET /api/workspaces/:id/answer-jobs/:id/events 200": 2,
+      "GET /api/workspaces/:id/chat-threads 200": 2,
+      "GET /api/workspaces/:id/chat-threads/:id 200": 2,
+      "GET /api/workspaces/:id/investigation-plans/jobs 200": 2
+    },
+    "orderedConversationTrace": [
+      {
+        "index": 4,
+        "method": "GET",
+        "path": "/favicon.ico",
+        "status": 404
+      },
+      {
+        "index": 8,
+        "method": "POST",
+        "path": "/api/ai/providers/CODEX/connection",
+        "status": 200
+      },
+      {
+        "index": 17,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/chat-threads",
+        "status": 201
+      },
+      {
+        "index": 18,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/investigation-plans/preview",
+        "status": 200
+      },
+      {
+        "index": 20,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/investigation-plans/jobs",
+        "status": 202
+      },
+      {
+        "index": 22,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/investigation-plans/jobs/30306b2c-40e9-4a72-a15c-97ec6f8f622a/capture",
+        "status": 201
+      },
+      {
+        "index": 23,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/evidence-bundles/ca4217da-3b52-43cf-a64d-addcec755147/answer-preview",
+        "status": 200
+      },
+      {
+        "index": 25,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/evidence-bundles/ca4217da-3b52-43cf-a64d-addcec755147/answer-approval",
+        "status": 200
+      },
+      {
+        "index": 26,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/evidence-bundles/ca4217da-3b52-43cf-a64d-addcec755147/answer-jobs",
+        "status": 202
+      },
+      {
+        "index": 35,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/chat-threads",
+        "status": 201
+      },
+      {
+        "index": 37,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/investigation-plans/preview",
+        "status": 200
+      },
+      {
+        "index": 38,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/investigation-plans/jobs",
+        "status": 202
+      },
+      {
+        "index": 40,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/investigation-plans/jobs/83c2bf31-cd5f-430f-b1d7-758dc93a8c9d/capture",
+        "status": 201
+      },
+      {
+        "index": 42,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/evidence-bundles/cc330941-852a-4012-80d2-9c5722896297/answer-preview",
+        "status": 200
+      },
+      {
+        "index": 44,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/evidence-bundles/cc330941-852a-4012-80d2-9c5722896297/answer-approval",
+        "status": 200
+      },
+      {
+        "index": 45,
+        "method": "POST",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/evidence-bundles/cc330941-852a-4012-80d2-9c5722896297/answer-jobs",
+        "status": 202
+      },
+      {
+        "index": 57,
+        "method": "GET",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/chat-threads",
+        "status": 200
+      },
+      {
+        "index": 63,
+        "method": "GET",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/chat-threads/e9401198-1d33-43a0-8489-473276943c15",
+        "status": 200
+      },
+      {
+        "index": 80,
+        "method": "POST",
+        "path": "/api/ai/providers/CODEX/connection",
+        "status": 200
+      },
+      {
+        "index": 81,
+        "method": "GET",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/chat-threads",
+        "status": 200
+      },
+      {
+        "index": 84,
+        "method": "GET",
+        "path": "/api/workspaces/f5f846dc-394c-45ad-9059-359b5550296f/chat-threads/e9401198-1d33-43a0-8489-473276943c15",
+        "status": 200
+      }
+    ]
+  },
+  "restart": {
+    "signal": "SIGUSR1",
+    "runnerPid": 64043,
+    "initialBackendPid": 64044,
+    "restartedBackendPid": 65492
+  },
+  "limitations": [
+    "Fake CLI always returns SEARCH for plan schema and a fixed R1 claim for answer schema; this is orchestration/persistence regression evidence, not real reasoning or factual quality acceptance.",
+    "Raw planner EvidenceBundle capture was consumed successfully through the real UI; trace records statuses/paths, not complete DTO bodies.",
+    "Optional explicit continuation preview/cancel was not exercised; no additional CLI generation or operational read was requested.",
+    "Transient initial AI connection control disappeared before a click could target it; action timed out without dispatch, then live state was inspected and normal composer used.",
+    "HTTP trace has no timestamps/restart markers; sequential browser observations and explicit RESTARTED log establish restart chronology.",
+    "Baseline .26 partial/duplicate evidence and screenshot are preserved unchanged."
+  ],
+  "cleanup": {
+    "absentPidsVerified": [
+      64043,
+      64044,
+      65492
+    ],
+    "activeOwnedChildren": 0,
+    "ego17Page": "about:blank",
+    "ego17LeftOpen": true,
+    "temporaryDirectory": "Removed after evidence preservation; absence verified. Separate /tmp/dougle-conversation-ui-027.log retained."
+  },
+  "baseline": "docs/evaluations/conversation-ui-026-20261027.json"
+}

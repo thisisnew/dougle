@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { ArrowUp, FileText, ImageIcon, MessageSquare, Plus, X } from 'lucide-react'
-import { request } from './api'
+import { ApiError, request } from './api'
 import { Button } from './components/ui/button'
 import type { ConnectionIndicator } from './connectionIndicator'
 import { activeAnswerJob, type AnswerJob } from './answerJobEvents'
@@ -16,8 +16,16 @@ import { readConversationPlan, sendConversationPlan, type ConversationPlan, type
 import { readPlanSubmission, savePlanSubmission, removePlanSubmission } from './planSubmissionStorage'
 
 type Summary = { id: string; question: string }
-type Bundle = { id: string; workspaceId: string; digest: string; payload: { question: string; status: string; chatContext?: { threadId: string; extractive?: unknown } | null;
-  items: { kind: string; label: string; title: string; quote: string; startLine: number; endLine: number; sourceRevision?: string }[] } }
+type Bundle = { id: string; workspaceId: string; digest: string; payload: { question: string; status: string; chatContext?: { threadId: string; parentBundleId?: string | null; requestId?: string; extractive?: unknown } | null;
+  items: { kind: string; label: string; title: string; quote: string; startLine: number; endLine: number; sourceRevision?: string; entryId?: string; contentHash?: string }[] } }
+
+function searchCaptureRoot(bundle: Bundle): string | undefined {
+  const context = bundle.payload.chatContext
+  const extractive = context?.extractive
+  return extractive && typeof extractive === 'object' && !Array.isArray(extractive)
+    && 'turnKind' in extractive && extractive.turnKind === 'SEARCH_CAPTURE'
+    && typeof context?.parentBundleId === 'string' && context.parentBundleId ? context.parentBundleId : undefined
+}
 
 function hasOmittedContext(value: unknown): boolean {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false
@@ -71,6 +79,8 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
   const [investigating, setInvestigating] = useState(false)
   const [plan, setPlan] = useState<ConversationPlan | null>(null)
   const [planPending, setPlanPending] = useState(false)
+  const [canAbandonPlan, setCanAbandonPlan] = useState(false)
+  const [planAbandoned, setPlanAbandoned] = useState(false)
   const [historyPlanUnknown, setHistoryPlanUnknown] = useState(false)
   const [clarification, setClarification] = useState<ConversationScope | null>(null)
   const planSubmission = useRef<PlanSubmission | undefined>(undefined)
@@ -93,7 +103,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
   const searchReady = searchState === 'READY'
   const activePlan = !!plan && ['QUEUED', 'RUNNING', 'CANCELLING'].includes(plan.status)
   const answerPlanResolved = !plan || (['SUCCEEDED', 'STOPPED'].includes(plan.status) && plan.decision === 'STOP')
-  const pendingAnswer = !!bundle && !job && answerPlanResolved && !planPending && bundle.payload.status !== 'NO_EVIDENCE' && bundle.payload.items.length > 0
+  const pendingAnswer = !!bundle && !job && answerPlanResolved && !planPending && !planAbandoned && bundle.payload.status !== 'NO_EVIDENCE' && bundle.payload.items.length > 0
     && bundle.payload.items.every(item => ['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind))
   useEffect(() => {
     if (created.current === selectedId && selectedId) { created.current = null; return }
@@ -103,6 +113,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     operationalTurn.current = null
     setInvestigating(false)
     setPlan(null); setPlanPending(false); setHistoryPlanUnknown(false); planSubmission.current = undefined
+    setCanAbandonPlan(false); setPlanAbandoned(false)
     setClarification(null)
     attachments.reset()
     setPreviousTurns([])
@@ -233,7 +244,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       turnRequest.current = null
       threadId.current = value.payload.chatContext?.threadId ?? value.id
       attachments.reset(true); setBundle(value); setQuestion(''); created.current = selectedId === threadId.current ? null : threadId.current; onCreated(threadId.current)
-      setPlan(null); setClarification(null); planSubmission.current = undefined
+      setPlan(null); setClarification(null); setCanAbandonPlan(false); setPlanAbandoned(false); planSubmission.current = undefined
       await planAndAnswer(value, controller)
     } catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) { locked.current = false; setBusy(false); setSentQuestion('') } }
@@ -246,9 +257,17 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       return
     }
     setPlanPending(true)
+    setCanAbandonPlan(false)
     const planScope = { workspaceId, bundleId: value.id, bundleDigest: value.digest }
-    const decision = await sendConversationPlan(workspaceId, value.id, connection!.provider, connection?.model ?? null,
-      controller.signal, next => { savePlanSubmission(planScope, next); planSubmission.current = next }, planSubmission.current)
+    let decision: ConversationPlan
+    try {
+      decision = await sendConversationPlan(workspaceId, value.id, connection!.provider, connection?.model ?? null,
+        controller.signal, next => { savePlanSubmission(planScope, next); planSubmission.current = next }, planSubmission.current)
+    } catch (reason) {
+      if (!controller.signal.aborted && !planSubmission.current && reason instanceof ApiError
+        && [400, 403, 404, 409, 410, 413, 422].includes(reason.status)) setCanAbandonPlan(true)
+      throw reason
+    }
     if (controller.signal.aborted) return
     if (planSubmission.current) removePlanSubmission(planScope, decision.id)
     setPlanPending(false)
@@ -265,7 +284,8 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       })
       if (controller.signal.aborted) return
       if (captured.workspaceId !== workspaceId || captured.payload.chatContext?.threadId !== threadId.current) throw new Error('조사 대상 대화가 다릅니다.')
-      setPreviousTurns(turns => [...turns, { bundle: value, job: null, fresh: true }])
+      const previousBundle = value
+      setPreviousTurns(turns => [...turns, { bundle: previousBundle, job: null, fresh: true }])
       setBundle(captured); onCreated(threadId.current!)
       value = captured
     } else if (decision.decision !== 'STOP' && decision.status !== 'STOPPED') {
@@ -297,6 +317,15 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     }
     catch (reason) { if (!controller.signal.aborted) setError((reason as Error).message) }
     finally { if (!controller.signal.aborted) { locked.current = false; setBusy(false) } }
+  }
+
+  function abandonPlan() {
+    if (!bundle || busy || locked.current || !canAbandonPlan || planSubmission.current) return
+    try {
+      if (readPlanSubmission({ workspaceId, bundleId: bundle.id, bundleDigest: bundle.digest })) throw new Error('확인하지 못한 조사 접수가 남아 있습니다.')
+      setPlanPending(false); setCanAbandonPlan(false); setPlanAbandoned(true)
+      setQuestion(current => current || bundle.payload.question)
+    } catch (reason) { setError((reason as Error).message) }
   }
 
   async function retryAnswer() {
@@ -350,19 +379,32 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     const key = JSON.stringify(input)
     if (operationalTurn.current?.key !== key) operationalTurn.current = { key, requestId: crypto.randomUUID() }
     try {
-      const current = await Promise.race([request<{ id: string; bundles: Bundle[] }>(`${base}/chat-threads/${encodeURIComponent(receipt.threadId)}`, { signal: controller.signal }), interrupted])
+      const current = await Promise.race([request<{ id: string; bundles: Bundle[]; jobs: (AnswerJob & { workspaceId: string })[] }>(`${base}/chat-threads/${encodeURIComponent(receipt.threadId)}`, { signal: controller.signal }), interrupted])
       if (controller.signal.aborted) return
-      if (current.id !== receipt.threadId || current.bundles.at(-1)?.id !== receipt.parentBundleId
-        || current.bundles.some(item => item.workspaceId !== workspaceId)) throw new Error('조회 이후 대화가 변경되었습니다. 저장한 자료는 자동 전송하지 않습니다.')
-      const value = await Promise.race([request<Bundle>(`${base}/chat-threads`, { method: 'POST', signal: controller.signal,
-        body: JSON.stringify({ requestId: operationalTurn.current.requestId, ...input }) }), interrupted])
+      if (current.id !== receipt.threadId || current.bundles.some(item => item.workspaceId !== workspaceId)
+        || current.jobs.some(item => item.workspaceId !== workspaceId)) throw new Error('조회 이후 대화가 변경되었습니다. 저장한 자료는 자동 전송하지 않습니다.')
+      const accepted = current.bundles.filter(item => item.payload.chatContext?.requestId === operationalTurn.current!.requestId)
+      let value: Bundle
+      let recoveredJob: AnswerJob | undefined
+      if (accepted.length) {
+        value = accepted[0]
+        const attached = value.payload.items.filter(item => item.kind.startsWith('ATTACHMENT_'))
+        if (accepted.length !== 1 || current.bundles.at(-1)?.id !== value.id || value.payload.chatContext?.parentBundleId !== receipt.parentBundleId
+          || value.payload.question !== input.question || attached.length !== 1 || attached[0].entryId !== receipt.attachment.id
+          || attached[0].contentHash !== receipt.contentHash) throw new Error('저장된 대화의 요청 또는 자료가 다릅니다. 자동으로 다시 보내지 않습니다.')
+        recoveredJob = current.jobs.find(item => item.bundleId === value.id)
+      } else {
+        if (current.bundles.at(-1)?.id !== receipt.parentBundleId) throw new Error('조회 이후 대화가 변경되었습니다. 저장한 자료는 자동 전송하지 않습니다.')
+        value = await Promise.race([request<Bundle>(`${base}/chat-threads`, { method: 'POST', signal: controller.signal,
+          body: JSON.stringify({ requestId: operationalTurn.current.requestId, ...input }) }), interrupted])
+      }
       if (controller.signal.aborted) return
       if (value.workspaceId !== workspaceId || value.payload.chatContext?.threadId !== threadId.current) throw new Error('조회 대상 대화가 다릅니다.')
       signal.removeEventListener('abort', abort)
       setPreviousTurns(turns => [...turns, { bundle, job, fresh }])
-      setBundle(value); setJob(null); setSubmission(null); setCanAbandonAnswer(false); setFresh(true); setInvestigating(false); setPlan(null)
+      setBundle(value); setJob(recoveredJob ?? null); setSubmission(null); setCanAbandonAnswer(false); setFresh(!recoveredJob); setInvestigating(false); setPlan(null)
       onCreated(threadId.current!)
-      if (value.payload.items.length && value.payload.status !== 'NO_EVIDENCE') setJob(await Promise.race([requestAnswer(value, controller), interrupted]))
+      if (!recoveredJob && value.payload.items.length && value.payload.status !== 'NO_EVIDENCE') setJob(await Promise.race([requestAnswer(value, controller), interrupted]))
     } catch (reason) {
       if (!controller.signal.aborted) { setError((reason as Error).message); throw reason }
     } finally {
@@ -391,18 +433,19 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
         </section>
       }
       return <div className="chat-thread" key={bundle.id}>
-      <h2 className="question-bubble">{bundle.payload.question}</h2>
+      {searchCaptureRoot(bundle) ? <p className="chat-thinking">추가로 확인한 자료</p> : <h2 className="question-bubble">{bundle.payload.question}</h2>}
       {hasOmittedContext(bundle.payload.chatContext?.extractive) && <small>이전 대화 일부만 참고</small>}
       {current && busy && !sentQuestion && <p role="status" className="chat-thinking">확인해보겠습니다<span aria-hidden="true">…</span></p>}
       {job ? <AnswerJobsPanel key={job.id} workspaceId={workspaceId} bundleId={bundle.id} approval={null} initialJob={job} onJobChange={current ? setJob : undefined} compact animate={turnFresh} references={references} />
         : current && bundle.payload.items.some(item => !['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind)) ? <p>이전 지식 문서가 포함된 질문입니다. 원본에서 다시 확인해 주세요.<Button variant="outline" onClick={() => { setQuestion(bundle.payload.question); setBundle(null); threadId.current = null }}>원본으로 다시 질문</Button></p>
-        : current && !busy && answerPlanResolved && !planPending && bundle.payload.items.length > 0 && bundle.payload.status !== 'NO_EVIDENCE' && <Button disabled={!connected} onClick={() => void retryAnswer()}>{submission ? '접수 상태 다시 확인' : '답변 받기'}</Button>}
+        : current && !busy && answerPlanResolved && !planPending && !planAbandoned && bundle.payload.items.length > 0 && bundle.payload.status !== 'NO_EVIDENCE' && <Button disabled={!connected} onClick={() => void retryAnswer()}>{submission ? '접수 상태 다시 확인' : '답변 받기'}</Button>}
       {current && !busy && planPending && <Button disabled={!connected || !searchReady} onClick={() => void retryPlan()}>조사 접수 상태 확인</Button>}
+      {current && !busy && canAbandonPlan && <Button variant="outline" onClick={abandonPlan}>질문 수정하기</Button>}
       {current && !busy && pendingAnswer && canAbandonAnswer && !submission && !job && <Button variant="outline" onClick={() => void abandonAnswer()}>새 대화로 다시 질문</Button>}
       {!bundle.payload.items.length && <p>질문과 관련된 내용을 찾지 못했어요.</p>}
       {current && !planPending && (plan || (job && !activeAnswerJob(job)) || (!job && !bundle.payload.items.length)) && <InvestigationPanel key={`${workspaceId}:${bundle.id}`}
         workspaceId={workspaceId} bundleId={bundle.id} threadId={threadId.current ?? undefined} connection={connection} disabled={busy || !searchReady}
-        initialJob={plan} onPlanChange={value => setPlan(current => current ? { ...current, ...value } : current)}
+        continuationRoot={searchCaptureRoot(bundle)} initialJob={plan} onPlanChange={setPlan}
         onScope={setClarification} onAnswer={answerInvestigation} onCaptured={answerOperational} onBusyChange={setInvestigating} />}
       {current && !busy && (!job || !activeAnswerJob(job)) && <BrowserInvestigationPanel key={`browser:${workspaceId}:${bundle.id}`}
         workspaceId={workspaceId} bundleId={bundle.id} disabled={busy || investigating || activePlan || planPending} />}

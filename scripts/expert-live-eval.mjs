@@ -16,7 +16,7 @@ import { scheduledDispatches, createVariantBudget, validateMemoryContext, memory
 import { requireSemanticReview } from './expert-live-semantic-review.mjs'
 import { verifySearchModels } from './expert-live-search-models.mjs'
 import { prepareProtocolHook, collectProtocolCounters } from './expert-live-protocol-hook.mjs'
-import { contextApiAllowed, validateContextConfiguration } from './expert-live-context-fixtures.mjs'
+import { contextApiAllowed, knownArtifacts, validateContextConfiguration } from './expert-live-context-fixtures.mjs'
 import { readSeedReport, seededAnswerSql, validateDiagnosticConfiguration, verifySeededContext } from './expert-live-context-diagnostic-fixtures.mjs'
 const proposalOnly = process.env.FORGE_EXPERT_MODE === 'proposal'
 const contextDiagnostic = process.env.FORGE_EXPERT_MODE === 'context-diagnostic'
@@ -70,7 +70,7 @@ const resources = contextOnly ? resolve(process.env.FORGE_EXPERT_RESOURCES) : '/
 const sourceJar = contextOnly ? resolve(process.env.FORGE_EXPERT_JAR) : resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
 const reportPath = resolve(process.env.FORGE_EXPERT_REPORT)
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-expert-live-'))
-const jar = contextOnly ? resolve(directory, 'frozen-context-0.1.25.jar') : sourceJar
+const jar = contextOnly ? resolve(directory, `frozen-context-${knownArtifacts[process.env.FORGE_EXPERT_JAR_SHA256]}.jar`) : sourceJar
 const privateHome = resolve(directory, 'home')
 let token = randomBytes(32).toString('hex')
 const report = { fixtureVersion: investigation ? 'synthetic-investigation-v3' : 'synthetic-expert-v1', startedAt: new Date().toISOString(), maximumDispatches,
@@ -88,6 +88,7 @@ report.runtimes = []
 if (localOnly) report.fixtureVersion = 'synthetic-local-restart-glossary-v1'
 if (memoryOnly) { report.fixtureVersion = 'synthetic-memory-v1'; report.fullE05Pass = false; report.memoryChecks = [] }
 if (contextOnly) {
+  report.artifactVersion = knownArtifacts[process.env.FORGE_EXPERT_JAR_SHA256]
   report.fixtureVersion = 'synthetic-short-context-correction-v1'
   report.contextBundles = []; report.fullE04Pass = false; report.fullE05Pass = false
   report.privateDirectory = directory

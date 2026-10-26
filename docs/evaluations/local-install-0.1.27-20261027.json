@@ -1,0 +1,51 @@
+{
+  "version": "0.1.27",
+  "installedAtLocal": "2026-10-27T07:01:39+09:00",
+  "architecture": "x86_64",
+  "destination": "/Applications/Knowledge Forge.app",
+  "previousVersion": "0.1.26",
+  "jarSha256": "b647ff9815037ddef3780246d712a944d4534a43060f881cdcbab8c2e6f3a612",
+  "dmgSha256": "4535c88fdea5a253f4f256e309e22ae117c1165d47c8f05d30b3f8cf84bc8a5e",
+  "verification": {
+    "readOnlyDmgMount": true,
+    "mountedStagedAndInstalledCodesign": true,
+    "versionAndJarMatched": true,
+    "nativeProcessObserved": 71147,
+    "bundledJavaProcessObserved": 71258,
+    "observedLoopbackPort": 59106,
+    "rootHttpStatus": 200,
+    "unauthenticatedWorkspaceStatus": 403,
+    "databaseSchemaVersion": 29
+  },
+  "backup": {
+    "directory": "~/Library/Application Support/Dougle Local Backups/pre-0.1.27-20261027-070135",
+    "directoryMode": "0700",
+    "databaseMode": "0600",
+    "includes": ["previous app", "stopped SQLite database", "WAL and SHM when present"],
+    "credentialsCopied": false,
+    "fullDataDirectoryBackup": false
+  },
+  "installationNotes": [
+    "Verified a separately staged app, stopped exact old native/Java processes 54463/54634 and confirmed exit before copying the DB or moving the old app.",
+    "First health polling shell exited before Java opened its listener because lsof returned nonzero under errexit; subsequent explicit process/port/HTTP/schema checks passed. No product restart or reinstall was needed.",
+    "No business rows or credential contents read. Existing materials and credentials were not rewritten by the installer. v29 migration occurred on normal app startup.",
+    "Rollback requires stopping the app and restoring the matching prior app and v28 database together after preserving newer user changes; replacing only the app is not a database rollback."
+  ],
+  "isolatedChecks": {
+    "source": "docs/evaluations/source-validation-0.1.27-20261027.md",
+    "conversationUi": "docs/evaluations/conversation-ui-027-20261027.json",
+    "nativeHostLog": "/tmp/dougle-027-native-host.log",
+    "nativeStartupMs": 16610,
+    "webkitLog": "/tmp/dougle-027-webkit.log",
+    "scope": "Synthetic private HOME and fake CLI; no actual AI or company-service calls. Two questions/two answers, one history conversation and restart/reopen without extra generation passed."
+  },
+  "limitations": [
+    "Whole 50-case expert acceptance and real company-service integration remain incomplete.",
+    "Actual-AI four-turn evidence is from .26, not a new .27 model-quality evaluation or a proven timeout root-cause fix.",
+    "Two known Java fixture classes excluded; earlier timing-sensitive Node failures are retained in source-validation history.",
+    "ARM hardware and second-Mac acceptance remain unverified; ad-hoc signing is not notarization.",
+    "Full material export is not implemented; the rejected limited team-settings/transfer UI remains removed."
+  ],
+  "publicReleasePublished": false,
+  "updateFeedPromoted": false
+}

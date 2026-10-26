@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { artifactSha256, contextApiAllowed, documents, scenarios, validateContextConfiguration } from './expert-live-context-fixtures.mjs'
+import { artifactSha256, knownArtifacts, contextApiAllowed, documents, scenarios, validateContextConfiguration } from './expert-live-context-fixtures.mjs'
 import { scheduledDispatches } from './expert-live-schedule.mjs'
 
 test('four purposeful turns fit eight dispatches and restart after correction/followup', () => {
@@ -30,4 +30,22 @@ test('context route allowlist excludes operational providers, external URLs and 
   }
   assert(contextApiAllowed('/workspaces/synthetic/investigation-plans/jobs?bundleId=bundle', 'GET'))
   assert(contextApiAllowed('/workspaces/synthetic/evidence-bundles/bundle/answer-jobs', 'POST'))
+})
+
+test('artifact allowlist accepts only frozen .25/.26 with matching approval and unchanged finite guards', () => {
+  assert.deepEqual(Object.values(knownArtifacts), ['0.1.25', '0.1.26'])
+  assert(Object.isFrozen(knownArtifacts))
+  const environment = { FORGE_EXPERT_RESOURCES: '/synthetic/bundle', FORGE_EXPERT_JAR: '/synthetic/app.jar',
+    FORGE_EXPERT_SEARCH_MODELS: '/synthetic/models', FORGE_EXPERT_PROFILE: '/synthetic/profile' }
+  for (const pin of Object.keys(knownArtifacts)) {
+    const approved = { ...environment, FORGE_EXPERT_JAR_SHA256: pin, FORGE_EXPERT_READONLY_ARTIFACT_SHA256: pin }
+    validateContextConfiguration(approved, 8, 1, 0)
+    assert.throws(() => validateContextConfiguration({ ...approved, FORGE_EXPERT_READONLY_ARTIFACT_SHA256: 'a'.repeat(64) }, 8, 1, 0))
+    assert.throws(() => validateContextConfiguration({ ...approved, FORGE_EXPERT_PROTOCOL_COUNTER: 'approved' }, 8, 1, 0))
+    for (const schedule of [[10, 1, 0], [8, 2, 0], [8, 1, 1]]) assert.throws(() => validateContextConfiguration(approved, ...schedule))
+  }
+  for (const pin of ['a'.repeat(64), 'toString', '__proto__', '', undefined]) {
+    assert.throws(() => validateContextConfiguration({ ...environment, FORGE_EXPERT_JAR_SHA256: pin,
+      FORGE_EXPERT_READONLY_ARTIFACT_SHA256: pin }, 8, 1, 0))
+  }
 })

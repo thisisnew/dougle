@@ -2,6 +2,10 @@ import assert from 'node:assert/strict'
 import { isAbsolute } from 'node:path'
 
 export const artifactSha256 = '5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a'
+export const knownArtifacts = Object.freeze({
+  [artifactSha256]: '0.1.25',
+  f88d6f01b115c5951a98c35dd6723b447c4bce1da03843666a8ad5f64f368093: '0.1.26',
+})
 export const documents = {
   'synthetic-context-badges.md': `# 합성 방문 배지 정의
 BLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.
@@ -24,8 +28,8 @@ export const scenarios = [{ id: 'context-correction-restart', restartBeforeTurn:
 
 export function validateContextConfiguration(environment, maximumDispatches, variants, variantStart) {
   assert.equal(maximumDispatches, 8); assert.equal(variants, 1); assert.equal(variantStart, 0)
-  assert.equal(environment.FORGE_EXPERT_JAR_SHA256, artifactSha256)
-  assert.equal(environment.FORGE_EXPERT_READONLY_ARTIFACT_SHA256, artifactSha256)
+  assert(Object.hasOwn(knownArtifacts, environment.FORGE_EXPERT_JAR_SHA256), 'Explicit known artifact required')
+  assert.equal(environment.FORGE_EXPERT_READONLY_ARTIFACT_SHA256, environment.FORGE_EXPERT_JAR_SHA256)
   assert.equal(environment.FORGE_EXPERT_PROTOCOL_COUNTER, undefined, 'Uninstrumented semantic probe')
   for (const key of ['FORGE_EXPERT_RESOURCES', 'FORGE_EXPERT_JAR', 'FORGE_EXPERT_SEARCH_MODELS', 'FORGE_EXPERT_PROFILE']) {
     assert(isAbsolute(environment[key] ?? '') && !environment[key].split('/').includes('..'), 'Explicit resource path required: ' + key)

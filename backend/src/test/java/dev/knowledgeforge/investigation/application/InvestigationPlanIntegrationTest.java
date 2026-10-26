@@ -613,6 +613,164 @@ class InvestigationPlanIntegrationTest {
         rejects(404, () -> service.capture(other, first.id(), UUID.randomUUID().toString()));
     }
 
+    private InvestigationPlanStore.Job captureForContinuation() throws Exception {
+        var searched = terminal(service.start(workspace, startRequest(preview())).id());
+        bundle = service.capture(workspace, searched.id(), UUID.randomUUID().toString());
+        clearInvocations(model, localTools);
+        return searched;
+    }
+
+    @Test void continuationRequiresFreshConsentAndPublishesTypedPreviewAndCandidateWithoutTools() throws Exception {
+        var searched = captureForContinuation();
+        var root = bundle.payload().chatContext().parentBundleId();
+        var prepared = preview();
+        assertThat(prepared.mode()).isEqualTo("RESOLVE_CAPTURED_SCOPE");
+        assertThat(prepared.rootQuestionBundleId()).isEqualTo(root);
+        assertThat(prepared.maxCalls()).isEqualTo(1);
+        assertThat(prepared.maxToolCalls()).isZero();
+        assertThat(prepared.prompt()).contains("SEARCH is forbidden", "telescope");
+        assertThat(store.capture(workspace, bundle.id()).orElseThrow().jobId()).isEqualTo(searched.id());
+        assertThat(store.continuationConsumed(workspace, root)).isFalse();
+        var request = startRequest(prepared);
+        rejects(403, () -> service.start(workspace, new InvestigationPlanService.Start(request.requestId(), bundle.id(),
+                request.provider(), request.requestedModel(), request.digest(), false)));
+        rejects(409, () -> service.start(workspace, new InvestigationPlanService.Start(request.requestId(), bundle.id(),
+                "CLAUDE", request.requestedModel(), request.digest(), true)));
+        rejects(409, () -> service.start(workspace, new InvestigationPlanService.Start(request.requestId(), bundle.id(),
+                request.provider(), "different-model", request.digest(), true)));
+        String other = library.createWorkspace("other continuation").id();
+        rejects(404, () -> service.preview(other, new InvestigationPlanService.PreviewRequest(bundle.id(), "CODEX", "model-one")));
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn(logCandidate());
+        var completed = terminal(service.start(workspace, request).id());
+        assertThat(completed.toolStatus()).isEqualTo("PENDING_SCOPE");
+        assertThat(service.scope(workspace, completed.id()).binding().parentBundleId()).isEqualTo(bundle.id());
+        assertThat(store.continuationConsumed(workspace, root)).isTrue();
+        assertThat(service.start(workspace, request)).isEqualTo(completed);
+        rejects(409, this::preview);
+        verify(model, times(1)).generate(anyString(), anyString(), anyString());
+        verifyNoInteractions(localTools, mysqlRead, datadogRead);
+    }
+
+    @Test void continuationSearchFailsWithoutToolDispatchAndDoesNotRefundOrReplayAfterRestart() throws Exception {
+        captureForContinuation();
+        var first = startRequest(preview());
+        var second = startRequest(preview());
+        var failed = terminal(service.start(workspace, first).id());
+        assertThat(failed.status()).isEqualTo("FAILED");
+        assertThat(failed.output()).isNull();
+        rejects(409, () -> service.start(workspace, second));
+        new JdbcInvestigationPlanStore(jdbc);
+        clearInvocations(model);
+        assertThat(service.start(workspace, first)).isEqualTo(failed);
+        assertThat(service.list(workspace, bundle.id())).containsExactly(failed);
+        rejects(409, this::preview);
+        verifyNoInteractions(model, localTools);
+    }
+
+    @Test void continuationStopConsumesAllowanceEvenIfCapturedBundleAndJobAreDeleted() throws Exception {
+        captureForContinuation();
+        String root = bundle.payload().chatContext().parentBundleId();
+        when(model.generate(anyString(), anyString(), anyString())).thenReturn("{\"decision\":\"STOP\",\"query\":null,\"candidate\":null}");
+        var completed = terminal(service.start(workspace, startRequest(preview())).id());
+        assertThat(completed.status()).isEqualTo("SUCCEEDED");
+        assertThat(completed.decision()).isEqualTo("STOP");
+        jdbc.update("DELETE FROM evidence_bundle WHERE id=?", bundle.id());
+        assertThat(store.continuationConsumed(workspace, root)).isTrue();
+        assertThat(store.claimContinuation(workspace, root, UUID.randomUUID().toString())).isFalse();
+        bundle = threads.create(workspace, new ChatThreadService.Create(UUID.randomUUID().toString(),
+                bundles.get(workspace, root).payload().chatContext().threadId(), root, "a new user question", List.of()));
+        assertThat(preview().mode()).isEqualTo("LOCAL_PLAN");
+        verifyNoInteractions(localTools);
+    }
+
+    @Test void cancelledContinuationNeverRefundsAndLateProposalIsDiscarded() throws Exception {
+        captureForContinuation();
+        blockIgnoringInterrupts();
+        var request = startRequest(preview());
+        var job = service.start(workspace, request);
+        assertThat(entered.await(2, TimeUnit.SECONDS)).isTrue();
+        service.cancel(workspace, job.id());
+        release.countDown();
+        var cancelled = terminal(job.id());
+        assertThat(cancelled.status()).isEqualTo("CANCELLED");
+        assertThat(cancelled.output()).isNull();
+        rejects(409, this::preview);
+        assertThat(service.start(workspace, request)).isEqualTo(cancelled);
+        verifyNoInteractions(localTools);
+    }
+
+    @Test void continuationRejectsChangedParentBeforeStartAndBeforePublishing() throws Exception {
+        captureForContinuation();
+        var oldBundle = bundle;
+        var request = startRequest(preview());
+        threads.create(workspace, new ChatThreadService.Create(UUID.randomUUID().toString(),
+                bundle.payload().chatContext().threadId(), bundle.id(), "new correction", List.of()));
+        rejects(409, () -> service.start(workspace, request));
+        assertThat(store.continuationConsumed(workspace, oldBundle.payload().chatContext().parentBundleId())).isFalse();
+        verifyNoInteractions(model);
+    }
+
+    @Test void continuationDiscardsLateResultWhenParentChangesDuringModelCall() throws Exception {
+        captureForContinuation();
+        when(model.generate(anyString(), anyString(), anyString())).thenAnswer(invocation -> {
+            worker.set(Thread.currentThread()); entered.countDown(); release.await(); return logCandidate();
+        });
+        var request = startRequest(preview());
+        var running = service.start(workspace, request);
+        assertThat(entered.await(2, TimeUnit.SECONDS)).isTrue();
+        threads.create(workspace, new ChatThreadService.Create(UUID.randomUUID().toString(),
+                bundle.payload().chatContext().threadId(), bundle.id(), "new correction", List.of()));
+        release.countDown();
+        var failed = terminal(running.id());
+        assertThat(failed.status()).isEqualTo("FAILED");
+        assertThat(failed.output()).isNull();
+        assertThat(store.continuationConsumed(workspace, bundle.payload().chatContext().parentBundleId())).isTrue();
+        verifyNoInteractions(localTools);
+    }
+
+    @Test void continuationClaimRollsBackIfApprovalConsumptionFails() throws Exception {
+        captureForContinuation();
+        var prepared = preview();
+        jdbc.update("UPDATE investigation_plan SET status='FAILED' WHERE digest=?", prepared.digest());
+        rejects(409, () -> service.start(workspace, startRequest(prepared)));
+        assertThat(store.continuationConsumed(workspace, prepared.rootQuestionBundleId())).isFalse();
+        verifyNoInteractions(model, localTools);
+    }
+
+    @Test void continuationNeedsRealCaptureMappingAndRecoversCaptureWithoutSnapshotAfterRestart() throws Exception {
+        var searched = captureForContinuation();
+        var mapping = store.capture(workspace, bundle.id()).orElseThrow();
+        new JdbcInvestigationPlanStore(jdbc);
+        assertThat(service.capture(workspace, searched.id(), mapping.requestId())).isEqualTo(bundle);
+        verifyNoInteractions(localTools, model);
+        jdbc.update("DELETE FROM investigation_capture WHERE bundle_id=?", bundle.id());
+        rejects(409, this::preview);
+    }
+
+    @Test void durableContinuationClaimSurvivesRestartOfAnUnfinishedApprovedJob() throws Exception {
+        captureForContinuation();
+        var prepared = preview();
+        String requestId = UUID.randomUUID().toString();
+        assertThat(store.claimContinuation(workspace, prepared.rootQuestionBundleId(), requestId)).isTrue();
+        assertThat(store.consume(workspace, prepared.digest(), requestId, Instant.now().toString())).isTrue();
+        new JdbcInvestigationPlanStore(jdbc);
+        var request = new InvestigationPlanService.Start(requestId, bundle.id(), prepared.provider(), prepared.requestedModel(), prepared.digest(), true);
+        assertThat(service.start(workspace, request).status()).isEqualTo("FAILED");
+        rejects(409, this::preview);
+        verifyNoInteractions(model, localTools);
+    }
+
+    @Test void continuationControllerPublishesFreshApprovalModeAndZeroToolBudget() throws Exception {
+        captureForContinuation();
+        var mvc = MockMvcBuilders.standaloneSetup(new InvestigationPlanController(service)).build();
+        mvc.perform(post("/api/workspaces/{workspaceId}/investigation-plans/preview", workspace)
+                .contentType("application/json").content("{\"bundleId\":\"" + bundle.id() + "\",\"provider\":\"CODEX\",\"requestedModel\":\"model-one\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.mode").value("RESOLVE_CAPTURED_SCOPE"))
+                .andExpect(jsonPath("$.rootQuestionBundleId").value(bundle.payload().chatContext().parentBundleId()))
+                .andExpect(jsonPath("$.maxCalls").value(1)).andExpect(jsonPath("$.maxToolCalls").value(0));
+        verifyNoInteractions(model, localTools);
+    }
+
     @Test void controllerExposesAgreedPreviewAndPollingContract() throws Exception {
         var mvc = MockMvcBuilders.standaloneSetup(new InvestigationPlanController(service)).build();
         mvc.perform(post("/api/workspaces/{workspaceId}/investigation-plans/preview", workspace)

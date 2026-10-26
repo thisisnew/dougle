@@ -11,6 +11,56 @@ const job = { id: 'job', workspaceId: 'workspace', bundleId: 'bundle', status: '
 const proposalJob = { ...job, decision: 'PROPOSE_MYSQL_READ', query: null, output: null }
 beforeEach(() => { api.mockReset() })
 
+const continuationPreview = { ...preview, bundleId: 'bundle', mode: 'RESOLVE_CAPTURED_SCOPE', rootQuestionBundleId: 'root', maxToolCalls: 0 }
+
+it('requires separate consent for one captured-scope plan without offering another search', async () => {
+  api.mockResolvedValueOnce([]).mockResolvedValueOnce(continuationPreview).mockResolvedValueOnce({ ...proposalJob, provider: 'CODEX', requestedModel: 'fixture', digest: 'digest' })
+  render(<InvestigationPanel {...props} continuationRoot="root" />)
+  expect(api).not.toHaveBeenCalled()
+  fireEvent.click(screen.getByRole('button', { name: '찾은 자료로 조회 범위 확인' }))
+  await screen.findByText(/찾은 자료와 원래 질문을 AI에 한 번/)
+  expect(api.mock.calls.map(([path]) => path)).toEqual(['/workspaces/workspace/investigation-plans/jobs?bundleId=bundle', '/workspaces/workspace/investigation-plans/preview'])
+  fireEvent.click(screen.getByRole('button', { name: '찾은 자료로 조회 범위 확인' }))
+  await screen.findByText('운영 조회 제안 · 실행하지 않음')
+  expect(api.mock.calls.filter(([path]) => path.endsWith('/jobs'))).toHaveLength(1)
+  expect(screen.queryByRole('button', { name: '새 검색 계획 확인' })).not.toBeInTheDocument()
+  expect(api.mock.calls.some(([path]) => /\/execute|\/capture/.test(path))).toBe(false)
+})
+
+it.each([
+  { mode: 'LOCAL_PLAN' }, { rootQuestionBundleId: 'other' }, { bundleId: 'other' }, { maxCalls: 2 }, { maxToolCalls: 1 },
+])('rejects a mismatched continuation preview before any AI dispatch: %j', async mismatch => {
+  api.mockResolvedValueOnce([]).mockResolvedValueOnce({ ...continuationPreview, ...mismatch })
+  render(<InvestigationPanel {...props} continuationRoot="root" />)
+  fireEvent.click(screen.getByRole('button', { name: '찾은 자료로 조회 범위 확인' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('추가 범위 확인의 대상 또는 실행 한도가 다릅니다')
+  expect(screen.queryByText('전송 내용 확인')).not.toBeInTheDocument()
+  expect(api.mock.calls.some(([path]) => path.endsWith('/jobs'))).toBe(false)
+})
+
+it('restores a consumed continuation job without requesting another preview or executing a tool', async () => {
+  api.mockResolvedValueOnce([{ ...proposalJob, provider: 'CODEX', requestedModel: 'fixture', digest: 'digest' }])
+  render(<InvestigationPanel {...props} continuationRoot="root" />)
+  fireEvent.click(screen.getByRole('button', { name: '찾은 자료로 조회 범위 확인' }))
+  await screen.findByText('운영 조회 제안 · 실행하지 않음')
+  expect(api).toHaveBeenCalledTimes(1)
+  expect(screen.queryByRole('button', { name: '찾은 자료로 조회 범위 확인' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '새 검색 계획 확인' })).not.toBeInTheDocument()
+})
+
+it('rejects SEARCH returned from a scope-only continuation without capture or another plan', async () => {
+  api.mockResolvedValueOnce([]).mockResolvedValueOnce(continuationPreview).mockResolvedValueOnce({ ...job, decision: 'SEARCH', toolStatus: 'OK' })
+  const onAnswer = vi.fn()
+  render(<InvestigationPanel {...props} continuationRoot="root" onAnswer={onAnswer} />)
+  fireEvent.click(screen.getByRole('button', { name: '찾은 자료로 조회 범위 확인' }))
+  await screen.findByText('전송 내용 확인')
+  fireEvent.click(screen.getByRole('button', { name: '찾은 자료로 조회 범위 확인' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('허용하지 않은 작업')
+  expect(onAnswer).not.toHaveBeenCalled()
+  expect(screen.queryByRole('button', { name: '이 자료로 다시 답변' })).not.toBeInTheDocument()
+  expect(api).toHaveBeenCalledTimes(3)
+})
+
 it('does not offer answer capture for a truncated local search', async () => {
   api.mockResolvedValueOnce([{ ...job, decision: 'SEARCH', toolStatus: 'OK', truncated: true }])
   const onAnswer = vi.fn()

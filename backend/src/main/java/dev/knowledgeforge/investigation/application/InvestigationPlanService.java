@@ -25,7 +25,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class InvestigationPlanService implements ConversationOperationalScopeAccess {
     public record PreviewRequest(String bundleId, String provider, String requestedModel) {}
     public record Preview(String bundleId, String provider, String requestedModel, String digest, String prompt,
-                          int characters, int maxCalls, int maxToolCalls, String expiresAt) {}
+                          int characters, int maxCalls, int maxToolCalls, String expiresAt,
+                          String mode, String rootQuestionBundleId) {}
     public record Start(String requestId, String bundleId, String provider, String requestedModel, String digest, boolean approved) {}
     private final InvestigationPlanStore store;
     private final InvestigationPlanPreview previews;
@@ -55,14 +56,21 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
     public synchronized Preview preview(String workspaceId, PreviewRequest request) {
         if (request == null) throw new LibraryException(400, "검색 계획 요청이 필요합니다.");
         return transaction.execute(status -> {
-            var material = previews.prepare(workspaceId, request.bundleId(), request.provider(), request.requestedModel());
+            var capture = continuation(workspaceId, request.bundleId());
+            if (capture != null && store.continuationConsumed(workspaceId, capture.rootQuestionBundleId())) {
+                throw new LibraryException(409, "이 질문의 추가 범위 확인은 이미 사용했습니다. 기존 작업을 확인하거나 새 질문을 입력하세요.");
+            }
+            var material = material(workspaceId, request.bundleId(), request.provider(), request.requestedModel(), capture);
             Instant now = Instant.now();
             String expires = now.plus(Duration.ofMinutes(10)).toString();
             String digest = ContentDigest.of(material.bindingDigest() + "\n" + UUID.randomUUID() + "\n" + expires);
             store.save(new InvestigationPlanStore.Preview(workspaceId, request.bundleId(), material.provider(), material.requestedModel(),
-                    digest, material.bindingDigest(), material.prompt(), now.toString(), expires));
+                    digest, material.bindingDigest(), material.prompt(), now.toString(), expires,
+                    capture == null ? null : capture.rootQuestionBundleId(), capture == null ? null : capture.jobId()));
             return new Preview(request.bundleId(), material.provider(), material.requestedModel(), digest, material.prompt(),
-                    material.prompt().length(), 1, 1, expires);
+                    material.prompt().length(), 1, capture == null ? 1 : 0, expires,
+                    capture == null ? "LOCAL_PLAN" : "RESOLVE_CAPTURED_SCOPE",
+                    capture == null ? request.bundleId() : capture.rootQuestionBundleId());
         });
     }
 
@@ -85,6 +93,9 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
             if (!Objects.equals(preview.bundleId(), request.bundleId()) || !Objects.equals(preview.provider(), request.provider())
                     || !Objects.equals(preview.requestedModel(), request.requestedModel())) throw new LibraryException(409, "검색 계획 제공자·모델·근거가 변경되었습니다.");
             validate(preview);
+            if (preview.continuationRoot() != null && !store.claimContinuation(workspaceId, preview.continuationRoot(), request.requestId())) {
+                throw new LibraryException(409, "이 질문의 추가 범위 확인은 이미 사용했습니다. 기존 작업을 확인하세요.");
+            }
             if (!store.consume(workspaceId, request.digest(), request.requestId(), Instant.now().toString())) {
                 throw new LibraryException(409, "이미 사용한 검색 계획 동의입니다. 새 미리보기를 준비하세요.");
             }
@@ -165,23 +176,74 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
     public EvidenceBundle capture(String workspaceId, String id, String requestId) {
         return transaction.execute(status -> {
             var job = get(workspaceId, id);
-            if (!job.status().equals("SUCCEEDED") || !"SEARCH".equals(job.decision()) || !"OK".equals(job.toolStatus())) {
+            if (!job.status().equals("SUCCEEDED") || !"SEARCH".equals(job.decision()) || !"OK".equals(job.toolStatus()) || job.truncated()) {
                 throw new LibraryException(409, "성공한 로컬 검색 결과만 새 근거로 고정할 수 있습니다.");
             }
             var source = bundles.get(workspaceId, job.bundleId());
+            var existing = store.captureForJob(workspaceId, id);
+            if (existing.isPresent()) {
+                if (!existing.get().requestId().equals(requestId)) throw new LibraryException(409, "이미 저장한 검색 결과입니다. 기존 요청을 확인하세요.");
+                var saved = bundles.get(workspaceId, existing.get().bundleId());
+                if (!saved.digest().equals(existing.get().bundleDigest())) throw new LibraryException(409, "저장한 검색 근거가 변경되었습니다.");
+                return saved;
+            }
+            if (!userTurn(source)) throw new LibraryException(409, "검색 결과에서 다시 검색을 이어갈 수 없습니다. 새 질문이 필요합니다.");
             String threadId = source.payload().chatContext() == null ? source.id() : source.payload().chatContext().threadId();
             var snapshot = tools.snapshot(workspaceId, job.id(), job.query());
-            return threads.createFromSnapshot(workspaceId,
+            var captured = threads.createFromSnapshot(workspaceId,
                     new ChatThreadService.Create(requestId, threadId, source.id(), source.payload().question(), List.of()), snapshot);
+            store.saveCapture(new InvestigationPlanStore.Capture(workspaceId, job.id(), captured.id(), captured.digest(), source.id(), requestId));
+            return captured;
         });
     }
 
     private void validate(InvestigationPlanStore.Preview preview) {
         if (!Instant.now().isBefore(Instant.parse(preview.expiresAt()))) throw new LibraryException(409, "검색 계획 동의가 만료되었습니다.");
-        var current = previews.prepare(preview.workspaceId(), preview.bundleId(), preview.provider(), preview.requestedModel());
+        var capture = continuation(preview.workspaceId(), preview.bundleId());
+        if (!Objects.equals(preview.continuationRoot(), capture == null ? null : capture.rootQuestionBundleId())
+                || !Objects.equals(preview.captureJobId(), capture == null ? null : capture.jobId())) {
+            throw new LibraryException(409, "검색 결과의 출처 또는 추가 확인 동의가 변경되었습니다.");
+        }
+        var current = material(preview.workspaceId(), preview.bundleId(), preview.provider(), preview.requestedModel(), capture);
         if (!current.bindingDigest().equals(preview.bindingDigest()) || !current.prompt().equals(preview.prompt())) {
             throw new LibraryException(409, "검색 계획 근거·문맥·모델 연결이 변경되었습니다. 새 동의가 필요합니다.");
         }
+    }
+
+    private static boolean userTurn(EvidenceBundle bundle) {
+        var context = bundle.payload().chatContext();
+        return context == null || context.extractive() != null && "USER_QUESTION".equals(context.extractive().turnKind());
+    }
+
+    private InvestigationPlanStore.Capture continuation(String workspaceId, String bundleId) {
+        var bundle = bundles.get(workspaceId, bundleId);
+        var context = bundle.payload().chatContext();
+        var capture = store.capture(workspaceId, bundleId).orElse(null);
+        if (capture == null && (context == null || context.extractive() == null || !"SEARCH_CAPTURE".equals(context.extractive().turnKind()))) return null;
+        if (capture == null || context == null || context.extractive() == null || !"SEARCH_CAPTURE".equals(context.extractive().turnKind())
+                || !capture.bundleDigest().equals(bundle.digest()) || !capture.rootQuestionBundleId().equals(context.parentBundleId())) {
+            throw new LibraryException(409, "실제 검색 작업에서 저장한 근거만 추가 확인할 수 있습니다.");
+        }
+        var root = bundles.get(workspaceId, capture.rootQuestionBundleId());
+        var job = get(workspaceId, capture.jobId());
+        String rootThread = root.payload().chatContext() == null ? root.id() : root.payload().chatContext().threadId();
+        if (!userTurn(root) || !rootThread.equals(context.threadId()) || !job.bundleId().equals(root.id())
+                || !"SUCCEEDED".equals(job.status()) || !"SEARCH".equals(job.decision()) || !"OK".equals(job.toolStatus())
+                || job.truncated() || !Objects.equals(job.query(), context.retrievalQuery())
+                || !root.payload().question().equals(bundle.payload().question())) {
+            throw new LibraryException(409, "검색 근거와 원래 질문의 연결을 확인하지 못했습니다.");
+        }
+        var thread = threads.find(workspaceId, context.threadId()).orElseThrow(() -> new LibraryException(404, "대화를 찾을 수 없습니다."));
+        if (!thread.bundles().getLast().id().equals(bundleId)) throw new LibraryException(409, "대화가 변경되었습니다. 최신 질문을 확인하세요.");
+        return capture;
+    }
+
+    private InvestigationPlanPreview.Material material(String workspaceId, String bundleId, String provider, String requestedModel,
+                                                       InvestigationPlanStore.Capture capture) {
+        var value = previews.prepare(workspaceId, bundleId, provider, requestedModel, capture != null);
+        if (capture == null) return value;
+        return new InvestigationPlanPreview.Material(value.provider(), value.requestedModel(), value.prompt(),
+                ContentDigest.of(value.bindingDigest() + "\n" + capture.rootQuestionBundleId() + "\n" + capture.jobId() + "\n" + capture.bundleDigest()));
     }
 
     private void check(InvestigationPlanStore.Job job) {
@@ -206,6 +268,11 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
             }
             String raw = model.generate(job.provider(), prompt, job.requestedModel());
             var decision = parser.parse(raw);
+            var approval = store.preview(job.workspaceId(), job.digest()).orElseThrow(CancellationException::new);
+            if (approval.continuationRoot() != null && (decision instanceof PlanDecision.Search
+                    || decision instanceof PlanDecision.Propose proposal && proposal.candidate() == null)) {
+                throw new LibraryException(409, "추가 범위 확인은 구조화된 조회 후보 또는 중단만 허용합니다. 검색을 반복하지 않습니다.");
+            }
             String decisionName = decision instanceof PlanDecision.Search ? "SEARCH"
                     : decision instanceof PlanDecision.Propose proposal ? "PROPOSE_" + proposal.tool().name() : "STOP";
             ToolExecution.Result result = null;

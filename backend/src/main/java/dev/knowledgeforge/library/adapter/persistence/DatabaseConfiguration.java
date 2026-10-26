@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 28) {
+        if (version > 29) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -626,6 +626,39 @@ public class DatabaseConfiguration {
                                 """);
                         jdbc.execute("CREATE INDEX IF NOT EXISTS idx_slack_reply_inbox ON slack_reply(workspace_id,inbox_item_id,created_at)");
                         jdbc.execute("PRAGMA user_version=28");
+                    });
+        }
+        if (version < 29) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        if (jdbc.queryForList("PRAGMA table_info(investigation_plan)").stream().noneMatch(column -> "continuation_root".equals(column.get("name")))) {
+                            jdbc.execute("ALTER TABLE investigation_plan ADD COLUMN continuation_root TEXT");
+                        }
+                        if (jdbc.queryForList("PRAGMA table_info(investigation_plan)").stream().noneMatch(column -> "capture_job_id".equals(column.get("name")))) {
+                            jdbc.execute("ALTER TABLE investigation_plan ADD COLUMN capture_job_id TEXT");
+                        }
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS investigation_capture (
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  job_id TEXT NOT NULL,
+                                  bundle_id TEXT NOT NULL REFERENCES evidence_bundle(id) ON DELETE CASCADE,
+                                  bundle_digest TEXT NOT NULL,
+                                  root_question_bundle_id TEXT NOT NULL REFERENCES evidence_bundle(id) ON DELETE CASCADE,
+                                  request_id TEXT NOT NULL,
+                                  PRIMARY KEY(workspace_id,job_id), UNIQUE(workspace_id,bundle_id),
+                                  FOREIGN KEY(workspace_id,job_id) REFERENCES investigation_plan(workspace_id,request_id) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS investigation_continuation (
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  root_question_bundle_id TEXT NOT NULL REFERENCES evidence_bundle(id) ON DELETE CASCADE,
+                                  request_id TEXT NOT NULL,
+                                  PRIMARY KEY(workspace_id,root_question_bundle_id), UNIQUE(workspace_id,request_id)
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=29");
                     });
         }
         jdbc.update("UPDATE slack_reply SET status='UNCERTAIN',failure_code='RESTART',updated_at=? WHERE status='SENDING'", java.time.Instant.now().toString());

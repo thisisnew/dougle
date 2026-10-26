@@ -1,0 +1,4083 @@
+{
+  "fixtureVersion": "synthetic-short-context-correction-v1",
+  "startedAt": "2026-10-26T21:28:52.344Z",
+  "maximumDispatches": 8,
+  "scenarios": [
+    "context-correction-restart"
+  ],
+  "variants": 1,
+  "variantStart": 0,
+  "dispatched": 8,
+  "planDispatches": 4,
+  "answerDispatches": 4,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "47533732-f722-478c-9c63-2ce6319a2d4a",
+      "at": "2026-10-26T21:29:29.535Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+      "result": {
+        "id": "47533732-f722-478c-9c63-2ce6319a2d4a",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "b10b55aaf1f29b0ff745e1340f42bc3f350b46b440c7905e3f9c7cdde4417578",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:29:29.574928Z",
+        "updatedAt": "2026-10-26T21:29:35.545227Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "eb3cbc7c-a20b-4da5-a6c8-895115a18304",
+      "at": "2026-10-26T21:29:36.727Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "24ea7df2-f02f-41d0-b439-a79bcda75c54",
+      "at": "2026-10-26T21:30:18.961Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 1,
+      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+      "result": {
+        "id": "24ea7df2-f02f-41d0-b439-a79bcda75c54",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "631578efce32797f4571b5690f55ac1cc5dde338da4eecbc3e50295a9476923a",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:30:18.985680Z",
+        "updatedAt": "2026-10-26T21:30:23.972521Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "8ac3a026-86bd-4567-bd19-275fcd761f08",
+      "at": "2026-10-26T21:30:25.222Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 1,
+      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "561c9d0b-e23c-4b3a-831d-05bfa488a842",
+      "at": "2026-10-26T21:30:55.778Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 2,
+      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "result": {
+        "id": "561c9d0b-e23c-4b3a-831d-05bfa488a842",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "e2fdb50655c25d555775d8357d435f9f272aaa54be8ed32e6c5544a4c3b15a32",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:30:55.803504Z",
+        "updatedAt": "2026-10-26T21:31:01.256889Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "90890e0c-f5cf-48ec-94a8-432799acd5ff",
+      "at": "2026-10-26T21:31:02.412Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 2,
+      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "7fb9559f-b5be-413a-86f7-5bd2530ce76b",
+      "at": "2026-10-26T21:32:14.850Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 3,
+      "question": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+      "result": {
+        "id": "7fb9559f-b5be-413a-86f7-5bd2530ce76b",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "1ec365a6617ada4fbd68be167c1c0affd2accda756dd819ea99beca43b27a73b",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:32:14.912896Z",
+        "updatedAt": "2026-10-26T21:32:20.741087Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "1c77976a-4a36-4a99-ab42-e1deeefea922",
+      "at": "2026-10-26T21:32:22.073Z",
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 3,
+      "question": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    }
+  ],
+  "results": [
+    {
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "47533732-f722-478c-9c63-2ce6319a2d4a",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "b10b55aaf1f29b0ff745e1340f42bc3f350b46b440c7905e3f9c7cdde4417578",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:29:29.574928Z",
+        "updatedAt": "2026-10-26T21:29:35.545227Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Synthetic short-context probe, not full E04/E05: turn0 BLUE/72h/operator approval; turn1 explicit correction AMBER/24h; turn2 implicit AMBER/no auto-renewal/visitor-desk manual approval; turn3 after backend restart retains AMBER/24h/visitor-desk approval. Reject invented real issuance, approval or current status. Historical BLUE contrast is allowed if not current target. Four individually reviewed answers, no automatic semantic approval.",
+      "manualVerdict": "PASS",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "originalBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+      "originalStatus": "READY",
+      "answerBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+      "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+      "elapsedMs": 14499,
+      "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "semanticReview": {
+        "checkpointId": "c44cb539-2770-48cf-b59a-c93ca4bcf814",
+        "resultSha256": "acb289143b4ce7bfa14ddcb6f50b791ad48a5bc9256e54242627b9ba5fe05bcc",
+        "verdict": "PASS",
+        "reviewer": "AGENT",
+        "note": "Manually read complete answer, question, R1 and empty prior context. BLUE 72 hours from issuance, no automatic renewal, operator manual approval and explicit synthetic/no actual records all match R1; STOP and no invented operational status."
+      }
+    },
+    {
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 1,
+      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "24ea7df2-f02f-41d0-b439-a79bcda75c54",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "631578efce32797f4571b5690f55ac1cc5dde338da4eecbc3e50295a9476923a",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:30:18.985680Z",
+        "updatedAt": "2026-10-26T21:30:23.972521Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Synthetic short-context probe, not full E04/E05: turn0 BLUE/72h/operator approval; turn1 explicit correction AMBER/24h; turn2 implicit AMBER/no auto-renewal/visitor-desk manual approval; turn3 after backend restart retains AMBER/24h/visitor-desk approval. Reject invented real issuance, approval or current status. Historical BLUE contrast is allowed if not current target. Four individually reviewed answers, no automatic semantic approval.",
+      "manualVerdict": "PASS",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "originalBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+      "originalStatus": "READY",
+      "answerBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+      "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+      "elapsedMs": 14254,
+      "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+      "historyTurns": 1,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "semanticReview": {
+        "checkpointId": "6f8e04a7-f1fb-402c-9e3b-b1d420deddae",
+        "resultSha256": "c161698672c5b024f387091d3dcc8d78ceb09b4b1693973012ef76e4c9f24ff2",
+        "verdict": "PASS",
+        "reviewer": "AGENT",
+        "note": "Manually compared full answer with explicit BLUE-to-AMBER correction, retained prior BLUE exchange and exact R1. AMBER 24 hours from issuance is correct and directly cited; no invented record/status. Plan STOP."
+      }
+    },
+    {
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 2,
+      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "561c9d0b-e23c-4b3a-831d-05bfa488a842",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "e2fdb50655c25d555775d8357d435f9f272aaa54be8ed32e6c5544a4c3b15a32",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:30:55.803504Z",
+        "updatedAt": "2026-10-26T21:31:01.256889Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Synthetic short-context probe, not full E04/E05: turn0 BLUE/72h/operator approval; turn1 explicit correction AMBER/24h; turn2 implicit AMBER/no auto-renewal/visitor-desk manual approval; turn3 after backend restart retains AMBER/24h/visitor-desk approval. Reject invented real issuance, approval or current status. Historical BLUE contrast is allowed if not current target. Four individually reviewed answers, no automatic semantic approval.",
+      "manualVerdict": "PASS",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "originalBundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+      "originalStatus": "READY",
+      "answerBundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+      "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+      "elapsedMs": 12481,
+      "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+      "historyTurns": 2,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "semanticReview": {
+        "checkpointId": "fb1bd63d-862c-478e-bf3a-b711eb8df38e",
+        "resultSha256": "29740472f497ca9aaa56456c92bb125224d9f01f2992932676c8e615221c11dc",
+        "verdict": "PASS",
+        "reviewer": "AGENT",
+        "note": "Manually read full implicit question, both exact prior exchanges and R1. Answer resolves that badge to corrected AMBER, correctly denies automatic renewal and names visitor-desk manual approval. No actual approval/record claim; plan STOP. Prior context has no omissions/truncation."
+      }
+    },
+    {
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "turn": 3,
+      "question": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "대화에서 마지막으로 정정한 대상인 AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]\n\nAMBER 배지는 자동 갱신되지 않으며, 갱신에는 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "7fb9559f-b5be-413a-86f7-5bd2530ce76b",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "bundleId": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "1ec365a6617ada4fbd68be167c1c0affd2accda756dd819ea99beca43b27a73b",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T21:32:14.912896Z",
+        "updatedAt": "2026-10-26T21:32:20.741087Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Synthetic short-context probe, not full E04/E05: turn0 BLUE/72h/operator approval; turn1 explicit correction AMBER/24h; turn2 implicit AMBER/no auto-renewal/visitor-desk manual approval; turn3 after backend restart retains AMBER/24h/visitor-desk approval. Reject invented real issuance, approval or current status. Historical BLUE contrast is allowed if not current target. Four individually reviewed answers, no automatic semantic approval.",
+      "manualVerdict": "PASS",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "originalBundleId": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+      "originalStatus": "READY",
+      "answerBundleId": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+      "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+      "elapsedMs": 15437,
+      "retrievalQuery": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+      "historyTurns": 3,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-context-badges.md",
+          "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다."
+        }
+      ],
+      "semanticReview": {
+        "checkpointId": "e7394dad-75b5-47b8-a901-4e97a3037f8c",
+        "resultSha256": "122e68532558c95758230de85fc10436b1632efb92330f359e57b4d79db4cd20",
+        "verdict": "PASS",
+        "reviewer": "AGENT",
+        "note": "Manually read complete post-restart answer and all three restored prior exchanges against R1. Correct latest target AMBER, 24 hours from issuance, no automatic renewal and visitor-desk manual approval. No invented actual record/status; no omitted/truncated prior context; STOP. Scoped four-turn recall only."
+      }
+    }
+  ],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "apiTrace": [
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "POST",
+      "path": "/ai/providers/CODEX/connection"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/sources"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/sources/c805f64d-040f-4519-9641-ac34f741284a/sync"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/47533732-f722-478c-9c63-2ce6319a2d4a"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/eb3cbc7c-a20b-4da5-a6c8-895115a18304"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171/answer-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/24ea7df2-f02f-41d0-b439-a79bcda75c54"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/8ac3a026-86bd-4567-bd19-275fcd761f08"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46/answer-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/561c9d0b-e23c-4b3a-831d-05bfa488a842"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/90890e0c-f5cf-48ec-94a8-432799acd5ff"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads/7bafcae3-b3bc-409e-a7bf-234ce49070fd"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/generation-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads/7bafcae3-b3bc-409e-a7bf-234ce49070fd"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/generation-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs/7fb9559f-b5be-413a-86f7-5bd2530ce76b"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/292c7b6b-74f1-4ad8-9ef7-f5a6d9840152/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/292c7b6b-74f1-4ad8-9ef7-f5a6d9840152/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/292c7b6b-74f1-4ad8-9ef7-f5a6d9840152/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs/1c77976a-4a36-4a99-ab42-e1deeefea922"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/292c7b6b-74f1-4ad8-9ef7-f5a6d9840152/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads/7bafcae3-b3bc-409e-a7bf-234ce49070fd"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads/7bafcae3-b3bc-409e-a7bf-234ce49070fd"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/292c7b6b-74f1-4ad8-9ef7-f5a6d9840152"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=292c7b6b-74f1-4ad8-9ef7-f5a6d9840152"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/generation-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads/7bafcae3-b3bc-409e-a7bf-234ce49070fd"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=96913134-2eb6-45d7-b2e1-5b913dc98171"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=558223dc-311d-4051-9e40-993d5fee9d46"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=550c67b8-db25-4021-9233-e64be63c1617"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/evidence-bundles/292c7b6b-74f1-4ad8-9ef7-f5a6d9840152"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/investigation-plans/jobs?bundleId=292c7b6b-74f1-4ad8-9ef7-f5a6d9840152"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fe305ec2-b0e9-4331-b87d-ad778c1bc836/generation-jobs"
+    }
+  ],
+  "restartChecks": [
+    {
+      "scenario": "context-correction-restart",
+      "variant": 0,
+      "before": {
+        "detail": {
+          "id": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+          "bundles": [
+            {
+              "id": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:29:28.428347Z",
+              "digest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+              "payload": {
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 10702,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": null,
+                  "requestId": "1f2f1201-5d78-49a9-b765-e18819c993e2",
+                  "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:30:17.932165Z",
+              "digest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+              "payload": {
+                "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 10079,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                  "requestId": "318dda0a-c6cf-4929-b1d0-e61156aa029c",
+                  "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                  "history": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 1,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                        "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "550c67b8-db25-4021-9233-e64be63c1617",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:30:54.701051Z",
+              "digest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+              "payload": {
+                "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 9589,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                  "requestId": "137b1257-3449-40b6-acc9-477b78f2c6a9",
+                  "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                  "history": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 2,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                        "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                        "legacyUnclassified": false
+                      },
+                      {
+                        "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                        "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                        "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                      "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "90890e0c-f5cf-48ec-94a8-432799acd5ff",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+              "approvalId": "f1c6f905-5a79-450b-ba8f-7b1ead42a4ca",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "9560216019c9cdc22e54237f6ae56055ded05928c9fea5f119126872133b824a",
+              "status": "SUCCEEDED",
+              "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:31:02.435308Z",
+              "updatedAt": "2026-10-26T21:31:06.829979Z"
+            },
+            {
+              "id": "8ac3a026-86bd-4567-bd19-275fcd761f08",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "approvalId": "27be4382-4883-416c-b3d9-8456bb452ac2",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "7ef1ce6956a51a2e7a009df9702fae21eb7f08f5981fe45ad710146f22cabab2",
+              "status": "SUCCEEDED",
+              "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:30:25.245157Z",
+              "updatedAt": "2026-10-26T21:30:31.922478Z"
+            },
+            {
+              "id": "eb3cbc7c-a20b-4da5-a6c8-895115a18304",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "approvalId": "cf7da016-c068-46e0-afb3-8e6ed6fe0edc",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "9b315f8cbe0b3817ae4478f63d3cd6d08607437bab9ba6d285bf89f2a47da1d2",
+              "status": "SUCCEEDED",
+              "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:29:36.754399Z",
+              "updatedAt": "2026-10-26T21:29:42.339417Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+            "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+            "createdAt": "2026-10-26T21:30:54.701051Z",
+            "turns": 3,
+            "questions": [
+              "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+              "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+              "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:29:28.428347Z",
+            "digest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+            "payload": {
+              "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 10702,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": null,
+                "requestId": "1f2f1201-5d78-49a9-b765-e18819c993e2",
+                "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "558223dc-311d-4051-9e40-993d5fee9d46",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:30:17.932165Z",
+            "digest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+            "payload": {
+              "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 10079,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                "requestId": "318dda0a-c6cf-4929-b1d0-e61156aa029c",
+                "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "history": [
+                  {
+                    "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                    "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 1,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                    "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "550c67b8-db25-4021-9233-e64be63c1617",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:30:54.701051Z",
+            "digest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+            "payload": {
+              "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 9589,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                "requestId": "137b1257-3449-40b6-acc9-477b78f2c6a9",
+                "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "history": [
+                  {
+                    "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                    "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                  },
+                  {
+                    "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                    "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                    "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                    "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 2,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "legacyUnclassified": false
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                    "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "47533732-f722-478c-9c63-2ce6319a2d4a",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "b10b55aaf1f29b0ff745e1340f42bc3f350b46b440c7905e3f9c7cdde4417578",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:29:29.574928Z",
+              "updatedAt": "2026-10-26T21:29:35.545227Z"
+            }
+          ],
+          [
+            {
+              "id": "24ea7df2-f02f-41d0-b439-a79bcda75c54",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "631578efce32797f4571b5690f55ac1cc5dde338da4eecbc3e50295a9476923a",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:30:18.985680Z",
+              "updatedAt": "2026-10-26T21:30:23.972521Z"
+            }
+          ],
+          [
+            {
+              "id": "561c9d0b-e23c-4b3a-831d-05bfa488a842",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "e2fdb50655c25d555775d8357d435f9f272aaa54be8ed32e6c5544a4c3b15a32",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:30:55.803504Z",
+              "updatedAt": "2026-10-26T21:31:01.256889Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "90890e0c-f5cf-48ec-94a8-432799acd5ff",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+            "approvalId": "f1c6f905-5a79-450b-ba8f-7b1ead42a4ca",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "9560216019c9cdc22e54237f6ae56055ded05928c9fea5f119126872133b824a",
+            "status": "SUCCEEDED",
+            "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:31:02.435308Z",
+            "updatedAt": "2026-10-26T21:31:06.829979Z"
+          },
+          {
+            "id": "8ac3a026-86bd-4567-bd19-275fcd761f08",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+            "approvalId": "27be4382-4883-416c-b3d9-8456bb452ac2",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "7ef1ce6956a51a2e7a009df9702fae21eb7f08f5981fe45ad710146f22cabab2",
+            "status": "SUCCEEDED",
+            "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:30:25.245157Z",
+            "updatedAt": "2026-10-26T21:30:31.922478Z"
+          },
+          {
+            "id": "eb3cbc7c-a20b-4da5-a6c8-895115a18304",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+            "approvalId": "cf7da016-c068-46e0-afb3-8e6ed6fe0edc",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "9b315f8cbe0b3817ae4478f63d3cd6d08607437bab9ba6d285bf89f2a47da1d2",
+            "status": "SUCCEEDED",
+            "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:29:36.754399Z",
+            "updatedAt": "2026-10-26T21:29:42.339417Z"
+          }
+        ],
+        "generationJobs": []
+      },
+      "status": "FOLLOWUP_VERIFIED",
+      "uiReopenObserved": false,
+      "after": {
+        "detail": {
+          "id": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+          "bundles": [
+            {
+              "id": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:29:28.428347Z",
+              "digest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+              "payload": {
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 10702,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": null,
+                  "requestId": "1f2f1201-5d78-49a9-b765-e18819c993e2",
+                  "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:30:17.932165Z",
+              "digest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+              "payload": {
+                "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 10079,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                  "requestId": "318dda0a-c6cf-4929-b1d0-e61156aa029c",
+                  "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                  "history": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 1,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                        "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "550c67b8-db25-4021-9233-e64be63c1617",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:30:54.701051Z",
+              "digest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+              "payload": {
+                "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 9589,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                  "requestId": "137b1257-3449-40b6-acc9-477b78f2c6a9",
+                  "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                  "history": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 2,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                        "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                        "legacyUnclassified": false
+                      },
+                      {
+                        "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                        "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                        "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                      "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "90890e0c-f5cf-48ec-94a8-432799acd5ff",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+              "approvalId": "f1c6f905-5a79-450b-ba8f-7b1ead42a4ca",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "9560216019c9cdc22e54237f6ae56055ded05928c9fea5f119126872133b824a",
+              "status": "SUCCEEDED",
+              "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:31:02.435308Z",
+              "updatedAt": "2026-10-26T21:31:06.829979Z"
+            },
+            {
+              "id": "8ac3a026-86bd-4567-bd19-275fcd761f08",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "approvalId": "27be4382-4883-416c-b3d9-8456bb452ac2",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "7ef1ce6956a51a2e7a009df9702fae21eb7f08f5981fe45ad710146f22cabab2",
+              "status": "SUCCEEDED",
+              "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:30:25.245157Z",
+              "updatedAt": "2026-10-26T21:30:31.922478Z"
+            },
+            {
+              "id": "eb3cbc7c-a20b-4da5-a6c8-895115a18304",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "approvalId": "cf7da016-c068-46e0-afb3-8e6ed6fe0edc",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "9b315f8cbe0b3817ae4478f63d3cd6d08607437bab9ba6d285bf89f2a47da1d2",
+              "status": "SUCCEEDED",
+              "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:29:36.754399Z",
+              "updatedAt": "2026-10-26T21:29:42.339417Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+            "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+            "createdAt": "2026-10-26T21:30:54.701051Z",
+            "turns": 3,
+            "questions": [
+              "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+              "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+              "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:29:28.428347Z",
+            "digest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+            "payload": {
+              "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 10702,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": null,
+                "requestId": "1f2f1201-5d78-49a9-b765-e18819c993e2",
+                "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "558223dc-311d-4051-9e40-993d5fee9d46",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:30:17.932165Z",
+            "digest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+            "payload": {
+              "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 10079,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                "requestId": "318dda0a-c6cf-4929-b1d0-e61156aa029c",
+                "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "history": [
+                  {
+                    "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                    "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 1,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                    "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "550c67b8-db25-4021-9233-e64be63c1617",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:30:54.701051Z",
+            "digest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+            "payload": {
+              "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 9589,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                "requestId": "137b1257-3449-40b6-acc9-477b78f2c6a9",
+                "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "history": [
+                  {
+                    "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                    "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                  },
+                  {
+                    "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                    "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                    "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                    "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 2,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "legacyUnclassified": false
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                    "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "47533732-f722-478c-9c63-2ce6319a2d4a",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "b10b55aaf1f29b0ff745e1340f42bc3f350b46b440c7905e3f9c7cdde4417578",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:29:29.574928Z",
+              "updatedAt": "2026-10-26T21:29:35.545227Z"
+            }
+          ],
+          [
+            {
+              "id": "24ea7df2-f02f-41d0-b439-a79bcda75c54",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "631578efce32797f4571b5690f55ac1cc5dde338da4eecbc3e50295a9476923a",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:30:18.985680Z",
+              "updatedAt": "2026-10-26T21:30:23.972521Z"
+            }
+          ],
+          [
+            {
+              "id": "561c9d0b-e23c-4b3a-831d-05bfa488a842",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "e2fdb50655c25d555775d8357d435f9f272aaa54be8ed32e6c5544a4c3b15a32",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:30:55.803504Z",
+              "updatedAt": "2026-10-26T21:31:01.256889Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "90890e0c-f5cf-48ec-94a8-432799acd5ff",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+            "approvalId": "f1c6f905-5a79-450b-ba8f-7b1ead42a4ca",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "9560216019c9cdc22e54237f6ae56055ded05928c9fea5f119126872133b824a",
+            "status": "SUCCEEDED",
+            "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:31:02.435308Z",
+            "updatedAt": "2026-10-26T21:31:06.829979Z"
+          },
+          {
+            "id": "8ac3a026-86bd-4567-bd19-275fcd761f08",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+            "approvalId": "27be4382-4883-416c-b3d9-8456bb452ac2",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "7ef1ce6956a51a2e7a009df9702fae21eb7f08f5981fe45ad710146f22cabab2",
+            "status": "SUCCEEDED",
+            "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:30:25.245157Z",
+            "updatedAt": "2026-10-26T21:30:31.922478Z"
+          },
+          {
+            "id": "eb3cbc7c-a20b-4da5-a6c8-895115a18304",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+            "approvalId": "cf7da016-c068-46e0-afb3-8e6ed6fe0edc",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "9b315f8cbe0b3817ae4478f63d3cd6d08607437bab9ba6d285bf89f2a47da1d2",
+            "status": "SUCCEEDED",
+            "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:29:36.754399Z",
+            "updatedAt": "2026-10-26T21:29:42.339417Z"
+          }
+        ],
+        "generationJobs": []
+      },
+      "final": {
+        "detail": {
+          "id": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+          "bundles": [
+            {
+              "id": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:29:28.428347Z",
+              "digest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+              "payload": {
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 10702,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": null,
+                  "requestId": "1f2f1201-5d78-49a9-b765-e18819c993e2",
+                  "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:30:17.932165Z",
+              "digest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+              "payload": {
+                "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 10079,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                  "requestId": "318dda0a-c6cf-4929-b1d0-e61156aa029c",
+                  "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                  "history": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 1,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                        "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "550c67b8-db25-4021-9233-e64be63c1617",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:30:54.701051Z",
+              "digest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+              "payload": {
+                "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 9589,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                  "requestId": "137b1257-3449-40b6-acc9-477b78f2c6a9",
+                  "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                  "history": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 2,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                        "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                        "legacyUnclassified": false
+                      },
+                      {
+                        "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                        "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                        "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                      "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "createdAt": "2026-10-26T21:32:13.510481Z",
+              "digest": "6c96b88ec11277113527c7bb4489b99a3160443a72d005a28a2609b61efd0f77",
+              "payload": {
+                "question": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 247,
+                "maxCharacters": 9161,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-context-badges.md",
+                    "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                    "path": "synthetic-context-badges.md",
+                    "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                    "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                    "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                    "startLine": 1,
+                    "endLine": 5,
+                    "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                  "parentBundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                  "requestId": "4ca1dcfa-382e-4271-9c89-e2ee44a6291e",
+                  "retrievalQuery": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+                  "history": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                    },
+                    {
+                      "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                      "bundleDigest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+                      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                      "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 3,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                        "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                        "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                        "legacyUnclassified": false
+                      },
+                      {
+                        "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                        "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                        "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                        "legacyUnclassified": false
+                      },
+                      {
+                        "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                        "bundleDigest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+                        "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+                      "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "1c77976a-4a36-4a99-ab42-e1deeefea922",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+              "approvalId": "7c8994c6-6d89-4ff2-a818-e90da7e0558e",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "42a24e83fccaa0543f6fad3c43d005568abfd722c7ad5ffbd37b4ac85d6012b2",
+              "status": "SUCCEEDED",
+              "answer": "대화에서 마지막으로 정정한 대상인 AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]\n\nAMBER 배지는 자동 갱신되지 않으며, 갱신에는 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:32:22.108853Z",
+              "updatedAt": "2026-10-26T21:32:27.511738Z"
+            },
+            {
+              "id": "90890e0c-f5cf-48ec-94a8-432799acd5ff",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+              "approvalId": "f1c6f905-5a79-450b-ba8f-7b1ead42a4ca",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "9560216019c9cdc22e54237f6ae56055ded05928c9fea5f119126872133b824a",
+              "status": "SUCCEEDED",
+              "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:31:02.435308Z",
+              "updatedAt": "2026-10-26T21:31:06.829979Z"
+            },
+            {
+              "id": "8ac3a026-86bd-4567-bd19-275fcd761f08",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "approvalId": "27be4382-4883-416c-b3d9-8456bb452ac2",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "7ef1ce6956a51a2e7a009df9702fae21eb7f08f5981fe45ad710146f22cabab2",
+              "status": "SUCCEEDED",
+              "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:30:25.245157Z",
+              "updatedAt": "2026-10-26T21:30:31.922478Z"
+            },
+            {
+              "id": "eb3cbc7c-a20b-4da5-a6c8-895115a18304",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "approvalId": "cf7da016-c068-46e0-afb3-8e6ed6fe0edc",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "9b315f8cbe0b3817ae4478f63d3cd6d08607437bab9ba6d285bf89f2a47da1d2",
+              "status": "SUCCEEDED",
+              "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T21:29:36.754399Z",
+              "updatedAt": "2026-10-26T21:29:42.339417Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+            "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+            "createdAt": "2026-10-26T21:32:13.510481Z",
+            "turns": 4,
+            "questions": [
+              "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+              "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+              "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+              "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘."
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:29:28.428347Z",
+            "digest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+            "payload": {
+              "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 10702,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": null,
+                "requestId": "1f2f1201-5d78-49a9-b765-e18819c993e2",
+                "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "558223dc-311d-4051-9e40-993d5fee9d46",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:30:17.932165Z",
+            "digest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+            "payload": {
+              "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 10079,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                "requestId": "318dda0a-c6cf-4929-b1d0-e61156aa029c",
+                "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "history": [
+                  {
+                    "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                    "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 1,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                    "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "550c67b8-db25-4021-9233-e64be63c1617",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:30:54.701051Z",
+            "digest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+            "payload": {
+              "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 9589,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                "requestId": "137b1257-3449-40b6-acc9-477b78f2c6a9",
+                "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "history": [
+                  {
+                    "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                    "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                  },
+                  {
+                    "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                    "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                    "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                    "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 2,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "legacyUnclassified": false
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                    "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "createdAt": "2026-10-26T21:32:13.510481Z",
+            "digest": "6c96b88ec11277113527c7bb4489b99a3160443a72d005a28a2609b61efd0f77",
+            "payload": {
+              "question": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 247,
+              "maxCharacters": 9161,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-context-badges.md",
+                  "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+                  "path": "synthetic-context-badges.md",
+                  "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+                  "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+                  "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+                  "startLine": 1,
+                  "endLine": 5,
+                  "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+                "parentBundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                "requestId": "4ca1dcfa-382e-4271-9c89-e2ee44a6291e",
+                "retrievalQuery": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+                "history": [
+                  {
+                    "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                    "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                    "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                    "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+                  },
+                  {
+                    "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                    "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                    "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                    "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+                  },
+                  {
+                    "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                    "bundleDigest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+                    "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                    "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 3,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                      "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                      "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                      "legacyUnclassified": false
+                    },
+                    {
+                      "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                      "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                      "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                      "legacyUnclassified": false
+                    },
+                    {
+                      "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                      "bundleDigest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+                      "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+                    "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "47533732-f722-478c-9c63-2ce6319a2d4a",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "b10b55aaf1f29b0ff745e1340f42bc3f350b46b440c7905e3f9c7cdde4417578",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:29:29.574928Z",
+              "updatedAt": "2026-10-26T21:29:35.545227Z"
+            }
+          ],
+          [
+            {
+              "id": "24ea7df2-f02f-41d0-b439-a79bcda75c54",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "631578efce32797f4571b5690f55ac1cc5dde338da4eecbc3e50295a9476923a",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:30:18.985680Z",
+              "updatedAt": "2026-10-26T21:30:23.972521Z"
+            }
+          ],
+          [
+            {
+              "id": "561c9d0b-e23c-4b3a-831d-05bfa488a842",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "e2fdb50655c25d555775d8357d435f9f272aaa54be8ed32e6c5544a4c3b15a32",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:30:55.803504Z",
+              "updatedAt": "2026-10-26T21:31:01.256889Z"
+            }
+          ],
+          [
+            {
+              "id": "7fb9559f-b5be-413a-86f7-5bd2530ce76b",
+              "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+              "bundleId": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "1ec365a6617ada4fbd68be167c1c0affd2accda756dd819ea99beca43b27a73b",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T21:32:14.912896Z",
+              "updatedAt": "2026-10-26T21:32:20.741087Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "1c77976a-4a36-4a99-ab42-e1deeefea922",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+            "approvalId": "7c8994c6-6d89-4ff2-a818-e90da7e0558e",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "42a24e83fccaa0543f6fad3c43d005568abfd722c7ad5ffbd37b4ac85d6012b2",
+            "status": "SUCCEEDED",
+            "answer": "대화에서 마지막으로 정정한 대상인 AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]\n\nAMBER 배지는 자동 갱신되지 않으며, 갱신에는 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:32:22.108853Z",
+            "updatedAt": "2026-10-26T21:32:27.511738Z"
+          },
+          {
+            "id": "90890e0c-f5cf-48ec-94a8-432799acd5ff",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+            "approvalId": "f1c6f905-5a79-450b-ba8f-7b1ead42a4ca",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "9560216019c9cdc22e54237f6ae56055ded05928c9fea5f119126872133b824a",
+            "status": "SUCCEEDED",
+            "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:31:02.435308Z",
+            "updatedAt": "2026-10-26T21:31:06.829979Z"
+          },
+          {
+            "id": "8ac3a026-86bd-4567-bd19-275fcd761f08",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+            "approvalId": "27be4382-4883-416c-b3d9-8456bb452ac2",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "7ef1ce6956a51a2e7a009df9702fae21eb7f08f5981fe45ad710146f22cabab2",
+            "status": "SUCCEEDED",
+            "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:30:25.245157Z",
+            "updatedAt": "2026-10-26T21:30:31.922478Z"
+          },
+          {
+            "id": "eb3cbc7c-a20b-4da5-a6c8-895115a18304",
+            "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+            "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+            "approvalId": "cf7da016-c068-46e0-afb3-8e6ed6fe0edc",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "9b315f8cbe0b3817ae4478f63d3cd6d08607437bab9ba6d285bf89f2a47da1d2",
+            "status": "SUCCEEDED",
+            "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T21:29:36.754399Z",
+            "updatedAt": "2026-10-26T21:29:42.339417Z"
+          }
+        ],
+        "generationJobs": []
+      }
+    }
+  ],
+  "runtimes": [
+    {
+      "pid": 57829,
+      "port": 57344,
+      "startedAt": "2026-10-26T21:29:25.439Z",
+      "stoppedAt": "2026-10-26T21:31:49.321Z"
+    },
+    {
+      "pid": 58872,
+      "port": 57622,
+      "startedAt": "2026-10-26T21:32:11.932Z",
+      "stoppedAt": "2026-10-26T21:32:59.777Z"
+    }
+  ],
+  "artifactVersion": "0.1.26",
+  "contextBundles": [
+    {
+      "turn": 0,
+      "bundle": {
+        "id": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "createdAt": "2026-10-26T21:29:28.428347Z",
+        "digest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+        "payload": {
+          "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+          "domains": [],
+          "includeKnowledge": false,
+          "status": "READY",
+          "usedCharacters": 247,
+          "maxCharacters": 10702,
+          "items": [
+            {
+              "label": "R1",
+              "kind": "ORIGINAL",
+              "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+              "cardId": null,
+              "version": null,
+              "title": "synthetic-context-badges.md",
+              "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+              "path": "synthetic-context-badges.md",
+              "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+              "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+              "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+              "startLine": 1,
+              "endLine": 5,
+              "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+              "supports": []
+            }
+          ],
+          "excluded": [],
+          "chatContext": {
+            "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+            "parentBundleId": null,
+            "requestId": "1f2f1201-5d78-49a9-b765-e18819c993e2",
+            "retrievalQuery": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+            "history": [],
+            "extractive": {
+              "version": 1,
+              "turnKind": "USER_QUESTION",
+              "totalQuestions": 0,
+              "omittedQuestions": 0,
+              "maxSerializedCharacters": 8000,
+              "answerCharacterLimit": 800,
+              "omittedAnswers": 0,
+              "truncatedAnswerBundleIds": [],
+              "questions": [],
+              "retrievalQueries": [
+                "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "turn": 1,
+      "bundle": {
+        "id": "558223dc-311d-4051-9e40-993d5fee9d46",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "createdAt": "2026-10-26T21:30:17.932165Z",
+        "digest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+        "payload": {
+          "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+          "domains": [],
+          "includeKnowledge": false,
+          "status": "READY",
+          "usedCharacters": 247,
+          "maxCharacters": 10079,
+          "items": [
+            {
+              "label": "R1",
+              "kind": "ORIGINAL",
+              "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+              "cardId": null,
+              "version": null,
+              "title": "synthetic-context-badges.md",
+              "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+              "path": "synthetic-context-badges.md",
+              "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+              "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+              "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+              "startLine": 1,
+              "endLine": 5,
+              "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+              "supports": []
+            }
+          ],
+          "excluded": [],
+          "chatContext": {
+            "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+            "parentBundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+            "requestId": "318dda0a-c6cf-4929-b1d0-e61156aa029c",
+            "retrievalQuery": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+            "history": [
+              {
+                "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+              }
+            ],
+            "extractive": {
+              "version": 1,
+              "turnKind": "USER_QUESTION",
+              "totalQuestions": 1,
+              "omittedQuestions": 0,
+              "maxSerializedCharacters": 8000,
+              "answerCharacterLimit": 800,
+              "omittedAnswers": 0,
+              "truncatedAnswerBundleIds": [],
+              "questions": [
+                {
+                  "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                  "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                  "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "legacyUnclassified": false
+                }
+              ],
+              "retrievalQueries": [
+                "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "turn": 2,
+      "bundle": {
+        "id": "550c67b8-db25-4021-9233-e64be63c1617",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "createdAt": "2026-10-26T21:30:54.701051Z",
+        "digest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+        "payload": {
+          "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+          "domains": [],
+          "includeKnowledge": false,
+          "status": "READY",
+          "usedCharacters": 247,
+          "maxCharacters": 9589,
+          "items": [
+            {
+              "label": "R1",
+              "kind": "ORIGINAL",
+              "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+              "cardId": null,
+              "version": null,
+              "title": "synthetic-context-badges.md",
+              "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+              "path": "synthetic-context-badges.md",
+              "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+              "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+              "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+              "startLine": 1,
+              "endLine": 5,
+              "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+              "supports": []
+            }
+          ],
+          "excluded": [],
+          "chatContext": {
+            "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+            "parentBundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+            "requestId": "137b1257-3449-40b6-acc9-477b78f2c6a9",
+            "retrievalQuery": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+            "history": [
+              {
+                "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+              },
+              {
+                "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+              }
+            ],
+            "extractive": {
+              "version": 1,
+              "turnKind": "USER_QUESTION",
+              "totalQuestions": 2,
+              "omittedQuestions": 0,
+              "maxSerializedCharacters": 8000,
+              "answerCharacterLimit": 800,
+              "omittedAnswers": 0,
+              "truncatedAnswerBundleIds": [],
+              "questions": [
+                {
+                  "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                  "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                  "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "legacyUnclassified": false
+                },
+                {
+                  "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                  "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                  "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                  "legacyUnclassified": false
+                }
+              ],
+              "retrievalQueries": [
+                "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "turn": 3,
+      "bundle": {
+        "id": "292c7b6b-74f1-4ad8-9ef7-f5a6d9840152",
+        "workspaceId": "fe305ec2-b0e9-4331-b87d-ad778c1bc836",
+        "createdAt": "2026-10-26T21:32:13.510481Z",
+        "digest": "6c96b88ec11277113527c7bb4489b99a3160443a72d005a28a2609b61efd0f77",
+        "payload": {
+          "question": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+          "domains": [],
+          "includeKnowledge": false,
+          "status": "READY",
+          "usedCharacters": 247,
+          "maxCharacters": 9161,
+          "items": [
+            {
+              "label": "R1",
+              "kind": "ORIGINAL",
+              "entryId": "b286698e-05cb-46ff-94b5-3b2947ed521b",
+              "cardId": null,
+              "version": null,
+              "title": "synthetic-context-badges.md",
+              "sourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+              "path": "synthetic-context-badges.md",
+              "sourceRevision": "2dcc9673c543bb3922791ae2e14019ec6281ff016614897f706196f9f05ec8d1",
+              "contentHash": "8f8117fb465692c784f5a7ea7581880d5b13e0399a387a809d15d6bb3ffdd8c6",
+              "textHash": "770e724f237c8ea2f805c12f142a4e92474c77ba2833482e116facf775d2c38f",
+              "startLine": 1,
+              "endLine": 5,
+              "quote": "# 합성 방문 배지 정의\nBLUE 배지의 유효 기간은 발급 시각부터 72시간이다. 자동 갱신은 없고 운영 담당자의 수동 승인이 필요하다.\nAMBER 배지의 유효 기간은 발급 시각부터 24시간이다. 자동 갱신은 없고 방문 안내 담당자의 수동 승인이 필요하다.\n이 문서는 가상 정책 정의만 담는다. 현재 선택한 대상은 문서가 아니라 대화에서 정한다.\n실제 배지 레코드, 발급 시각, 갱신 요청, 승인 완료 상태 및 운영 시스템은 존재하지 않는다.",
+              "supports": []
+            }
+          ],
+          "excluded": [],
+          "chatContext": {
+            "threadId": "7bafcae3-b3bc-409e-a7bf-234ce49070fd",
+            "parentBundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+            "requestId": "4ca1dcfa-382e-4271-9c89-e2ee44a6291e",
+            "retrievalQuery": "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+            "history": [
+              {
+                "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                "answer": "BLUE 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]\n\n자동 갱신은 없으며, 갱신에는 운영 담당자의 수동 승인이 필요합니다. [R1]\n\n이는 가상 정책이며, 실제 배지 레코드나 갱신 요청·승인 상태, 운영 시스템은 존재하지 않습니다. [R1]"
+              },
+              {
+                "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                "answer": "AMBER 배지의 유효 기간은 발급 시각부터 24시간입니다. [R1]"
+              },
+              {
+                "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                "bundleDigest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+                "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                "answer": "AMBER 배지는 자동 갱신되지 않으며, 갱신하려면 방문 안내 담당자의 수동 승인이 필요합니다. [R1]"
+              }
+            ],
+            "extractive": {
+              "version": 1,
+              "turnKind": "USER_QUESTION",
+              "totalQuestions": 3,
+              "omittedQuestions": 0,
+              "maxSerializedCharacters": 8000,
+              "answerCharacterLimit": 800,
+              "omittedAnswers": 0,
+              "truncatedAnswerBundleIds": [],
+              "questions": [
+                {
+                  "bundleId": "96913134-2eb6-45d7-b2e1-5b913dc98171",
+                  "bundleDigest": "29cfa87e4925593bc9881954255fc192af3dc4d44e12d7fddb726527809b6b20",
+                  "question": "가상 BLUE 배지 정책을 설명해줘. 유효 기간과 갱신 승인 주체는?",
+                  "legacyUnclassified": false
+                },
+                {
+                  "bundleId": "558223dc-311d-4051-9e40-993d5fee9d46",
+                  "bundleDigest": "f5fe61947989c0bf6343c2b09323964fa6c90551be5bb9641bb5ab16383fde6d",
+                  "question": "앞서 말한 대상은 잘못 골랐어. 이제 BLUE가 아니라 AMBER를 대상으로 정정할게. 정정된 배지의 유효 기간은?",
+                  "legacyUnclassified": false
+                },
+                {
+                  "bundleId": "550c67b8-db25-4021-9233-e64be63c1617",
+                  "bundleDigest": "b96663ee442986ee7b73cabeb9f06a72f07212f411039a167b89375375515866",
+                  "question": "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?",
+                  "legacyUnclassified": false
+                }
+              ],
+              "retrievalQueries": [
+                "우리가 마지막으로 정정한 배지 이름과 유효 기간, 갱신 승인 주체를 다시 알려줘.",
+                "그럼 그 배지도 자동 갱신돼? 누가 승인해야 해?"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "fullE04Pass": false,
+  "fullE05Pass": false,
+  "privateDirectory": "/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/dougle-expert-live-RZ4c5m",
+  "assetHashes": {
+    "runtime/bin/java": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+    "ai/codex": "73697f229103f463acaafd8659976caaa4892ec11e2c246c7fa97f93d523f90e"
+  },
+  "resourceDirectory": "/Applications/Knowledge Forge.app/Contents/Resources/resources",
+  "harnessSha256": "65c634590407e89fb6d78f0ecffce686005c35f63b82e882923d3b8d9af42f3d",
+  "fixtureSha256": "f0a062b015ae7c022325015e2efe8a6561272fa4dcb827a8fb440496d5ee7808",
+  "historyHelperSha256": "13cefde5187bb49dc6ae0d07d2fb038755842853dd0b5d3b58beec1946f12c26",
+  "uiHoldHelperSha256": "cacd278f45a17051dea3db46e8e5834bd4aee44b3d099eb748fc96fd32a9f72b",
+  "scheduleHelperSha256": "459517071aa565a1a5981960f0ab8fb610a97896180f646d3f2d5ecdaa70f2d3",
+  "semantic-reviewHelperSha256": "60434a527847a665a067a147d4b048f9ea9047b0828fc461946c5bbefcc9bc32",
+  "search-modelsHelperSha256": "7adc5776c2d57669522c781d42e0d59edc265a0fa8d67326fdf4559247754c23",
+  "jarSha256": "f88d6f01b115c5951a98c35dd6723b447c4bce1da03843666a8ad5f64f368093",
+  "searchModels": {
+    "directory": "/Applications/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "architecture": "x86_64",
+    "files": [
+      {
+        "name": "model.onnx",
+        "size": 118346824,
+        "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      {
+        "name": "reranker.onnx",
+        "size": 118620016,
+        "sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+      },
+      {
+        "name": "reranker-tokenizer.json",
+        "size": 17082660,
+        "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+      }
+    ],
+    "verifiedAt": "2026-10-26T21:31:51.239Z"
+  },
+  "launchFailed": false,
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-26T21:29:25.790659Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "syntheticSourceId": "c805f64d-040f-4519-9641-ac34f741284a",
+  "lastModelVerificationAt": "2026-10-26T21:32:22.073Z",
+  "completed": true,
+  "sourceJarUnchanged": true,
+  "snapshotJarUnchanged": true,
+  "assetsUnchanged": {
+    "runtime/bin/java": true,
+    "ai/codex": true
+  },
+  "finishedAt": "2026-10-26T21:33:03.654Z"
+}

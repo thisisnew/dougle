@@ -1,5 +1,11 @@
 # 아키텍처
 
+## 0.1.27 검색 후속 계획과 대화 표시
+
+DB v29의 `investigation_capture`는 성공한 검색 작업과 고정 근거·원래 사용자 질문을 연결하고, `investigation_continuation`은 원래 질문당 추가 계획 1회 예산을 보존한다. `RESOLVE_CAPTURED_SCOPE`는 새 미리보기/동의를 요구하며 검색 실행은 0회, 계획 AI는 1회다. 취소·실패·재시작으로 예산을 돌려주지 않는다. 조회 후보는 실행 권한이 아니며 외부 업무 시스템은 여전히 읽기 전용이다. [계약](conversation-operational-read.md).
+
+화면은 내부 `SEARCH_CAPTURE`를 별도 사용자 질문으로 표시하지 않지만 원래 bundle/parent 연결은 유지한다. React 상태 updater에는 재할당되는 변수가 아니라 고정한 이전 bundle을 넘겨 현재 질문의 버튼이 이전 턴에 중복되지 않도록 한다. 답변 및 첨부 접수 응답이 유실되면 동일 요청의 저장 상태를 확인하며 AI나 외부 조회를 자동 재실행하지 않는다. 소스 검증과 패키지/설치 검증은 [현재 작업 기록](../HANDOFF.md)에서 구별한다. 아래 항목은 이전 단계 이력이다.
+
 ## 0.1.26 후보의 대화 조사 통합
 
 `ChatPanel → sendConversationPlan → InvestigationPlanService`가 텍스트 질문의 계획과 추가 로컬 검색을 연결한다. 모델이 반환한 조회 후보는 실행 권한이 아니며 `ConversationOperationalScopeAccess`의 서버 소유 범위와 사용자의 읽기 동의가 필요하다. `ConversationOperationalReadService`는 기존 읽기 전용 어댑터의 취소·시간 제한·범위 checkpoint를 재사용하고, 결과를 확인한 뒤 같은 대화에 로컬 첨부한다. 수동 SQL/로그 조건 입력 화면은 복원하지 않는다. 이력 재열기는 상태 조회만 하며 AI나 외부 조회를 자동 재실행하지 않는다. 검색 capture는 `LocalSearchSnapshot`의 당시 발췌/원본 해시를 검증한다. [계약과 한계](conversation-operational-read.md), [검증](evaluations/source-validation-0.1.26-20261027.md)을 따른다. 아래 수동 조회 양식과 제한형 아카이브 UI 설명은 과거 이력이며 팀 설정 화면은 제거했다.

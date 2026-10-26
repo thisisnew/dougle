@@ -29,16 +29,17 @@ public class JdbcInvestigationPlanStore implements InvestigationPlanStore {
         Integer count = jdbc.queryForObject("SELECT count(*) FROM investigation_plan WHERE workspace_id=?", Integer.class, preview.workspaceId());
         if (count != null && count >= 100) throw new dev.knowledgeforge.library.application.LibraryException(409, "검색 계획 보관 한도 100개입니다. 불필요한 근거 묶음을 삭제하세요.");
         jdbc.update("""
-                INSERT INTO investigation_plan(digest,workspace_id,bundle_id,provider,requested_model,binding_digest,prompt,created_at,expires_at,updated_at)
-                VALUES(?,?,?,?,?,?,?,?,?,?)
+                INSERT INTO investigation_plan(digest,workspace_id,bundle_id,provider,requested_model,binding_digest,prompt,created_at,expires_at,updated_at,continuation_root,capture_job_id)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?)
                 """, preview.digest(), preview.workspaceId(), preview.bundleId(), preview.provider(), preview.requestedModel(),
-                preview.bindingDigest(), preview.prompt(), preview.createdAt(), preview.expiresAt(), preview.createdAt());
+                preview.bindingDigest(), preview.prompt(), preview.createdAt(), preview.expiresAt(), preview.createdAt(), preview.continuationRoot(), preview.captureJobId());
     }
 
     public Optional<Preview> preview(String workspaceId, String digest) {
         return jdbc.query("SELECT * FROM investigation_plan WHERE workspace_id=? AND digest=?",
                 (row, index) -> new Preview(workspaceId, row.getString("bundle_id"), row.getString("provider"), row.getString("requested_model"),
-                        digest, row.getString("binding_digest"), row.getString("prompt"), row.getString("created_at"), row.getString("expires_at")),
+                        digest, row.getString("binding_digest"), row.getString("prompt"), row.getString("created_at"), row.getString("expires_at"),
+                        row.getString("continuation_root"), row.getString("capture_job_id")),
                 workspaceId, digest).stream().findFirst();
     }
 
@@ -51,6 +52,33 @@ public class JdbcInvestigationPlanStore implements InvestigationPlanStore {
 
     public Optional<Job> find(String workspaceId, String requestId) {
         return jdbc.query("SELECT * FROM investigation_plan WHERE workspace_id=? AND request_id=?", jobs, workspaceId, requestId).stream().findFirst();
+    }
+
+    public void saveCapture(Capture capture) {
+        jdbc.update("INSERT INTO investigation_capture(workspace_id,job_id,bundle_id,bundle_digest,root_question_bundle_id,request_id) VALUES(?,?,?,?,?,?)",
+                capture.workspaceId(), capture.jobId(), capture.bundleId(), capture.bundleDigest(), capture.rootQuestionBundleId(), capture.requestId());
+    }
+
+    private final RowMapper<Capture> captures = (row, index) -> new Capture(row.getString("workspace_id"),
+            row.getString("job_id"), row.getString("bundle_id"), row.getString("bundle_digest"),
+            row.getString("root_question_bundle_id"), row.getString("request_id"));
+
+    public Optional<Capture> capture(String workspaceId, String bundleId) {
+        return jdbc.query("SELECT * FROM investigation_capture WHERE workspace_id=? AND bundle_id=?", captures, workspaceId, bundleId).stream().findFirst();
+    }
+
+    public Optional<Capture> captureForJob(String workspaceId, String jobId) {
+        return jdbc.query("SELECT * FROM investigation_capture WHERE workspace_id=? AND job_id=?", captures, workspaceId, jobId).stream().findFirst();
+    }
+
+    public boolean claimContinuation(String workspaceId, String rootQuestionBundleId, String requestId) {
+        return jdbc.update("INSERT INTO investigation_continuation(workspace_id,root_question_bundle_id,request_id) VALUES(?,?,?) ON CONFLICT(workspace_id,root_question_bundle_id) DO NOTHING",
+                workspaceId, rootQuestionBundleId, requestId) == 1;
+    }
+
+    public boolean continuationConsumed(String workspaceId, String rootQuestionBundleId) {
+        return jdbc.queryForObject("SELECT count(*) FROM investigation_continuation WHERE workspace_id=? AND root_question_bundle_id=?",
+                Integer.class, workspaceId, rootQuestionBundleId) != 0;
     }
 
     public List<Job> list(String workspaceId, String bundleId) {

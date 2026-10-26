@@ -1,5 +1,15 @@
 # Dougle — 이어서 작업하기
 
+## 현재 설치 — 0.1.27 (2026-10-27 07:01 KST)
+
+Intel0.1.27을 설치·실행했다. JAR `b647ff9815037ddef3780246d712a944d4534a43060f881cdcbab8c2e6f3a612`; 이전0.1.26 앱/정지된 DB 백업, 설치 서명·HTTP200/비인증403·DB v29 확인. [설치 증거](docs/evaluations/local-install-0.1.27-20261027.json). 제한형 팀 설정 화면 제거는 유지한다. 전체 export나 외부 업무 시스템 쓰기를 추가하지 않았다.
+
+검색 캡처 뒤 질문/현재 버튼이 중복되던 React 참조 오류를 수정했다. [실제 HTTP·합성 CLI 화면 검사](docs/evaluations/conversation-ui-027-20261027.json)는 질문2개·답변2개·기록1개, 재시작/재열기 뒤 추가 AI 호출 없음으로 통과했다. 이전0.1.26의 재현/스크린샷도 보존한다. DB v29는 실제 검색 근거에만 새 동의로 후속 범위 확인1회를 허용하며 재귀 검색·실패/취소 후 예산 환불을 막는다. [계약](docs/conversation-operational-read.md).
+
+[소스 검사](docs/evaluations/source-validation-0.1.27-20261027.md): Java1143실행/1136통과/7skip(기존2클래스 제외), UI686/빌드, 최신 Node157통과. 앞선 Node2회 실패·격리 재검증도 보존하며 원인을 단정하지 않는다. Intel native/WebKit 검증과 Intel/ARM 패키지 정적·업데이트 서명 검증을 완료했다. ARM 실기기는 미검증이다. 공개/업데이트 피드는 보류한다. [패키지 증거](docs/evaluations/macos-package-0.1.27-20261027.json).
+
+[0.1.26 실제 AI4턴](docs/evaluations/context-live-026-b1-20261027-review.md)은 정정·대명사·재시작 문맥을 유지했으나 단일 변형이다. 전체50개 인수(기록상4PASS/1BLOCKED/45NOT_RUN), 회사 서비스, 장기 문맥, 다른 Mac 인수 완료가 아니며 과거 timeout 원인은 미확정이다. 아래 설치/미완료 표현은 각 당시의 기록이다.
+
 ## 현재 설치 — 0.1.26 (2026-10-27 05:43 KST)
 
 제한형 팀 설정/아카이브 화면 제거와 대화 조사 연결을 포함한 Intel0.1.26을 설치·실행했다. JAR `f88d6f01b115c5951a98c35dd6723b447c4bce1da03843666a8ad5f64f368093`; 이전0.1.25 앱/정지된 DB 백업, 설치 서명·HTTP200/비인증403·DB v28 확인. [설치 증거](docs/evaluations/local-install-0.1.26-20261027.json). Java1132실행/1125통과/7skip(기존 fixture2클래스 제외), UI669통과·빌드, Node153통과. 기존 범용 smoke는 긴 Workspace 이름 fixture에서 실패했고 [검증 기록](docs/evaluations/source-validation-0.1.26-20261027.md)에 보존했다. 별도 Intel native/WebKit 합성 검사는 통과했다. 전체 자료 export·전체50개 인수·실제 회사 서비스/ARM 실기기/다른 Mac 검증을 완료로 표시하지 않는다. 공개 릴리스/업데이트 피드는 보류한다. 아래 설치 전/0.1.25는 이전 기록이다.

@@ -117,6 +117,12 @@ flowchart LR
 ## Workspace 관리 화면 (0.1.11)
 
 대화·자료 화면과 Workspace 관리를 분리했습니다. 왼쪽 Workspace 관리 아이콘 → 전체 목록 → 삭제 대상 이름 확인 → 명시적 삭제 순서입니다. 삭제 요청은 화면의 현재 선택이 아니라 확인한 Workspace ID에 묶입니다. 비활성 Workspace를 삭제해도 현재 대화 선택은 바뀌지 않습니다. 기존 Workspace 모델과 API·DB v21은 그대로입니다. `App.tsx`와 `App.test.tsx`에서 활성/비활성 삭제·취소 경로를 대조합니다.
+# DB v29 검색 근거 후속 계획
+
+`investigation_capture`는 실제 성공한 검색 작업과 새 불변 근거의 ID·digest, 원래 사용자 턴, 저장 요청 ID를 연결한다. 임의 검색/가져온 근거에 출처를 소급 부여하지 않는다. `investigation_plan`의 nullable `continuation_root`·`capture_job_id`는 새 후속 승인만 구분하며 기존 작업은 그대로 둔다.
+
+`investigation_continuation`은 Workspace·원래 사용자 턴별 추가 계획 1회 소비를 영속 보관한다. 승인 소비와 같은 트랜잭션으로 생성하며 실패·취소·재시작·검색 근거/작업 삭제로 환불하지 않는다. 원래 턴 또는 Workspace 삭제 때만 함께 삭제한다. 후속 계획은 도구 호출 없이 구조화된 제안 또는 중단만 허용한다.
+
 # DB v27 브라우저 조사
 
 `browser_investigation`은 Workspace·불변 근거·정확한 HTTPS 페이지/GET 경로 범위를 일회 승인에 묶고 요청 ID, 진행 상태, 제한된 캡처 결과를 보관한다. Workspace/근거 삭제는 해당 조사 기록도 삭제한다. 재시작 중 미완료 실행은 실패 처리하며 자동 재실행하지 않는다. 브라우저 인증 정보·사용자 프로필은 저장하지 않는다.

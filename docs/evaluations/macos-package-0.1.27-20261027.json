@@ -1,0 +1,131 @@
+{
+  "version": "0.1.27",
+  "completedAt": "2026-10-26T22:08:46.127Z",
+  "result": "PASS_PACKAGING_AND_SCOPED_INTEL_RUNTIME",
+  "jarSha256": "b647ff9815037ddef3780246d712a944d4534a43060f881cdcbab8c2e6f3a612",
+  "frontend": {
+    "exactMatch": true,
+    "files": 7,
+    "bytes": 1663455
+  },
+  "sourceValidation": {
+    "attribution": "Parent-run",
+    "report": "docs/evaluations/source-validation-0.1.27-20261027.md",
+    "java": {
+      "run": 1143,
+      "passed": 1136,
+      "skipped": 7,
+      "excluded": [
+        "AnswerPartialIntegrationTest",
+        "QuestionAttachmentIntegrationTest"
+      ]
+    },
+    "uiPassed": 686,
+    "uiBuild": "PASS",
+    "nodePassed": 157,
+    "nodeLog": "/tmp/dougle-027-node-final3.log",
+    "caveat": "Earlier Node timing failures retained in source-validation record; cause unproven, not overwritten by final pass."
+  },
+  "packaging": {
+    "order": [
+      "x86_64",
+      "arm64"
+    ],
+    "exitCodes": [
+      0,
+      0
+    ],
+    "mode": "--skip-verify",
+    "cargoBuildJobs": 2,
+    "commands": [
+      "FORGE_MACOS_TARGET= FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify",
+      "FORGE_MACOS_TARGET=aarch64-apple-darwin FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$PWD/.tools/apple-silicon/amazon-corretto-21.jdk/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify"
+    ],
+    "logs": [
+      "/tmp/dougle-027-intel-package.log",
+      "/tmp/dougle-027-arm-package.log"
+    ],
+    "noMavenOrJarRebuild": true
+  },
+  "verification": {
+    "result": "PASS_BOTH_CPUS_STATIC",
+    "commands": [
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.27_x86_64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.27_x86_64.app.tar.gz 0.1.27 x86_64",
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.27_arm64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.27_arm64.app.tar.gz 0.1.27 arm64"
+    ],
+    "checks": [
+      "Both DMG integrity, copied-app CPU/deep strict ad-hoc signature, CPU-specific model hashes",
+      "Both updater cryptographic signatures, signed version, extracted version/CPU/signature and current JAR equality",
+      "Both finalized bundles version 0.1.27, pinned JAR SHA256 and exact frontend/dist match",
+      "Intel finalized signature intact after ARM packaging"
+    ],
+    "logs": [
+      "/tmp/dougle-027-intel-verification.log",
+      "/tmp/dougle-027-arm-verification.log"
+    ]
+  },
+  "runtime": {
+    "actualAiCalls": 0,
+    "userBusinessDataAccess": false,
+    "nativeHost": {
+      "result": "PASS",
+      "exitCode": 0,
+      "startupMs": 16610,
+      "measuredAt": "2026-10-26T21:58:55.150Z",
+      "command": "node scripts/native-host-smoke.mjs \"$PWD/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app\"",
+      "log": "/tmp/dougle-027-native-host.log",
+      "scope": "Private temporary HOME/minimal PATH; bundled Java/API 403, private data, duplicate backend rejection, child shutdown and same synthetic DB restart."
+    },
+    "webkit": {
+      "result": "PASS",
+      "exitCode": 0,
+      "command": "env -i HOME=\"$OWNED_TEMP_HOME\" PATH=/usr/bin:/bin TMPDIR=/tmp LANG=en_US.UTF-8 \"$PWD/desktop/src-tauri/target/debug/examples/runtime_smoke\" \"$PWD/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources\"",
+      "log": "/tmp/dougle-027-webkit.log",
+      "harnessSha256": "e34fd11a50ad53da6cb80a5e54c18461405dc99ae81475cbc65e8fbface9845e",
+      "sourceSha256": "19fa292e4f31d65868acc0b3eb3e60bcf193e8136847193d5bca798513016df8",
+      "scope": "Existing unchanged React/WebKit smoke: Workspace/AI buttons, Korean names/errors, same-origin local mutations, synthetic upload/download/search, local publication/relations, OFF polling, source metadata and CLI settings. No inference; not exhaustive .27 continuation acceptance."
+    },
+    "arm": "NOT_RUN_NO_ARM_HARDWARE"
+  },
+  "artifactsSha256": {
+    "release/Knowledge.Forge_0.1.27_arm64.app.tar.gz": "1418d1b304f9dd5b0665a84804a60d326b180bb4c6eac210fcfc8d103a3022be",
+    "release/Knowledge.Forge_0.1.27_arm64.app.tar.gz.sig": "be184d81631478e5d172cdc32baa58da17aef22213f605ffd1922ac0dffb8138",
+    "release/Knowledge.Forge_0.1.27_arm64.dmg": "4772db9936a21f1fb28544ce50a2484aa9f50fa9c2198c9de74662fc07b2fea3",
+    "release/Knowledge.Forge_0.1.27_x86_64.app.tar.gz": "0b54f7c6947f93102b99fb723fbb86ddf96360356867bd3f02c8f94594848e64",
+    "release/Knowledge.Forge_0.1.27_x86_64.app.tar.gz.sig": "e485ed428fe33d335b5be9f8e27023a7a93275e12f98c2009a9bdffef19b678b",
+    "release/Knowledge.Forge_0.1.27_x86_64.dmg": "4535c88fdea5a253f4f256e309e22ae117c1165d47c8f05d30b3f8cf84bc8a5e"
+  },
+  "preservation": {
+    "result": "PASS",
+    "version": "0.1.26",
+    "versionedAssetsUnchanged": 6,
+    "frozenJarUnchanged": true,
+    "beforeManifest": "/tmp/dougle-027-preserve-026.sha256",
+    "log": "/tmp/dougle-027-preservation-verification.log",
+    "note": "Aggregate release checksums intentionally updated. No installed-app or user DB mutation by packaging agent."
+  },
+  "cleanup": {
+    "result": "PASS",
+    "allOwnedSessionsExited": true,
+    "noOwnedRuntimeCompilerProcessesObserved": true,
+    "no027DmgMountsRemaining": true,
+    "nativeHostFinallyCompleted": true,
+    "webkitHomeRemoved": "/tmp/dougle-027-webkit-home.nhIhTK",
+    "ownershipLog": "/tmp/dougle-027-webkit-ownership.log",
+    "lease": "RELEASED"
+  },
+  "installation": {
+    "owner": "Parent",
+    "report": "docs/evaluations/local-install-0.1.27-20261027.json",
+    "status": "Parent separately reports Intel installed 2026-10-27 07:01:39 KST; not performed by packaging agent."
+  },
+  "limits": [
+    "ARM static only; no actual ARM hardware runtime",
+    "Ad-hoc signing, no notarization/Gatekeeper acceptance",
+    "No real AI or company-system validation; no whole expert-acceptance promotion",
+    "No public release upload or update-feed promotion",
+    "Public pinned dependencies/licenses may be fetched during packaging; not an offline-build claim"
+  ]
+}
