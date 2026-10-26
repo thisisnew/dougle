@@ -5,11 +5,11 @@ const identifier = value => assert(typeof value === 'string' && /^[A-Za-z0-9_-]{
 const oldArtifact = 'e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d'
 
 export function validateArtifactBinding(binding) {
-  assert.equal(binding.version, '0.1.24', 'Explicit frozen .24 binding required')
+  assert.equal(binding.version, '0.1.25', 'Explicit frozen .25 binding required')
   assert(isAbsolute(binding.jar) && !binding.jar.split('/').includes('..'), 'Absolute immutable artifact required')
   assert(!binding.jar.split('/').includes('target'), 'Mutable build artifact excluded')
   assert.match(binding.sha256, /^[a-f0-9]{64}$/)
-  assert.notEqual(binding.sha256, oldArtifact, '.22 is not the approved .24 artifact')
+  assert.notEqual(binding.sha256, oldArtifact, '.22 is not the approved .25 artifact')
   return { version: binding.version, jar: binding.jar, sha256: binding.sha256 }
 }
 

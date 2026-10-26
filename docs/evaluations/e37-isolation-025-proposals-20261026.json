@@ -1,0 +1,221 @@
+{
+  "criterion": "E37",
+  "result": "FAILED_OR_INCOMPLETE",
+  "mode": "simulated",
+  "artifactSha256": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
+  "startedAt": "2026-10-26T14:10:22.210Z",
+  "observations": [
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "entry",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "1ecdc18614d6297ef81e760ba62ea5b2a71013ee5faade10486f0365691fd894",
+      "foreignResponseSha256": "02ee425e2bfd689d77c0db50c4f4a9d171630dac05132b5eb9c8e837b5db88de"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "entry-content",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "47bff8e322a5b8e26f51e94334d6d01d33af3bef44f347110c81f1607a6a2a04",
+      "foreignResponseSha256": "8e0b88b216bf3a8b58367437705cb175d48b29500b65592f0fcc48ab37638c63"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "entry-preview",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "541fb4cc97309099d4dc91215fc4557be90e72aeb7b92a60bc57d17841a9a992",
+      "foreignResponseSha256": "9496920265d32e7b6a1e5fb4cdbe478d68f81d81472ab4b7e3ad34dc1f60930b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "thread",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "f82faf5995831d8e60234dacee573383adaea51e84f8a3aab54ec1729aab7493",
+      "foreignResponseSha256": "323a3311b6386b87cb132bc27af4e1049df69cd87c516d7fb616cf9a41c96bf9"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "bundle",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "931c88b3e67479439c456e8ce59ed0d8a12775585bcad33fa5ad81ad13c6aadc",
+      "foreignResponseSha256": "3f80fb3b80592c08b7319455a1d61e8398136d0b7f1d022358f1df662d395b4b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "bundle-validation",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "a09812735f91a1486af5d64cbd49b83902790bdf53c6deafc77074f2adbade74",
+      "foreignResponseSha256": "2dbb94abec33816fcd76fb81c77b6461ccf75e4defdd8a27666e13144f18137b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "answer-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "2c5dcdfb15204bf10cb04cbc41c07bba8e9d74705bb23e2f9956ce6bb04f065c",
+      "foreignResponseSha256": "e2fdf8bb05fab4b7168be75556931c36a4fe1aa8b05659f74a49678b21b4dd7b"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "answer-events",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "865c04ae88b2c822d08e3fd00e8234fbeec84e45aded71a4546d3a64c422d3fd",
+      "foreignResponseSha256": "2d99885ec83639869c656ecda02a49e2767631972131967e8befb827d13944d9"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "browser-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "2b766fbb1bbac390f0fba058dfad1eb74d56f3568a72e646ac4149cfbdf5903f",
+      "foreignResponseSha256": "7fb38e29c92a64e357471f79a4f10210ed3c1ea0b84140c1aed4564de8e6847c"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "browser-list",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "245d18f83d5580eff45b2bb9fe3d23914328308adaf93a08dae75a2a3dd547d9",
+      "foreignResponseSha256": "f901d13f15190658009cdb1f53655abca754a07e1ff4eec8e14fb504bc517961"
+    },
+    {
+      "phase": "before-restart",
+      "active": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "workspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "name": "plan-job",
+      "ownerStatus": 200,
+      "foreignStatus": 404,
+      "ownerResponseSha256": "fd68a84cd281d3cc353143914b6c0c47bcef40875b5d707aec4c02e99781c52c",
+      "foreignResponseSha256": "6628732a104501f56def36a625ae99700485ba8bea3ca60268531c175bcbc65a"
+    }
+  ],
+  "proposalObservations": [],
+  "backendPids": [
+    32441,
+    32470
+  ],
+  "aiDispatches": 0,
+  "limitations": [
+    "Seeded terminal jobs are not AI/browser executions",
+    "Populated MySQL/Datadog/operational capture memory state deferred",
+    "No UI checkpoint or full E37 verdict"
+  ],
+  "javaSha256": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+  "models": {
+    "directory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "architecture": "x86_64",
+    "files": [
+      {
+        "name": "model.onnx",
+        "size": 118346824,
+        "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      {
+        "name": "reranker.onnx",
+        "size": 118620016,
+        "sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+      },
+      {
+        "name": "reranker-tokenizer.json",
+        "size": 17082660,
+        "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+      }
+    ],
+    "verifiedAt": "2026-10-26T14:10:25.555Z"
+  },
+  "snapshotJar": "/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/dougle-e37-runtime-IzKtVJ/frozen-0.1.25.jar",
+  "sandboxProfileSha256": "19c24d4de933aca6545f550530a9f618b48502b2b7287b45a8db5bb68e73e7e2",
+  "networkAndFiles": "Existing E50 strict file allowlist and loopback-only network; no fallback or added permission",
+  "startup": {
+    "exitCode": 143,
+    "signal": null,
+    "stdoutBytes": 4463,
+    "stderrBytes": 245,
+    "ready": true
+  },
+  "fixtures": [
+    {
+      "ownerWorkspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "entryId": "7e499b38-7386-4e80-a503-69696e1303e9",
+      "attachmentId": "33feb526-08bb-4bdc-af15-e049b72eaece",
+      "canary": "E37_PRIVATE_A_A116B6DD898E91D0",
+      "browserJobId": "10b11f63-6c1e-41a9-8248-4beaaf751915",
+      "answerJobId": "5c747d9f-a4f4-4421-88d4-c2211c3ddc01",
+      "planJobId": "f54d30f1-d2d0-410a-be48-34cedb6fbb23",
+      "mysqlProposalId": "28409457-95c1-40bd-9733-58a0387c20c0",
+      "datadogProposalId": "a0fb48b1-1ea3-4b01-8770-62e595f4cfdc",
+      "otherWorkspaceId": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "bundleId": "e5e38a7b-5c59-4b15-a685-aca00f46c7ee",
+      "bundleDigest": "0fac31a607b4af2895dd0b4a5e6f620a446df7e83aaa996a71a4819905c39877",
+      "threadId": "26a4bb74-7f20-4924-82b6-0db654ef6568"
+    },
+    {
+      "ownerWorkspaceId": "bee3b178-b832-4766-8118-9b50ad34b1ce",
+      "entryId": "c3a7b4b9-c65f-41f6-846e-ff6372768c58",
+      "attachmentId": "ab659a1b-6cab-4ed7-8056-eb8bb3941239",
+      "canary": "E37_PRIVATE_B_D31D5F8D374B0495",
+      "browserJobId": "672c44f7-e16c-4944-aa68-5bdb16c359ad",
+      "answerJobId": "5bbd8d57-0036-40c7-9efe-4f2805c646ee",
+      "planJobId": "2f5a5533-140e-4e83-8554-eff089a58721",
+      "mysqlProposalId": "ac34577a-1e1d-406d-a151-8a0ae5296b50",
+      "datadogProposalId": "e7bb62ff-4ec4-4270-877f-e96268da9fa3",
+      "otherWorkspaceId": "45b616c6-0028-4bf9-aaeb-e9d215e120b4",
+      "bundleId": "25477620-b5a3-4325-a8e3-e8b70af3a987",
+      "bundleDigest": "590f375ff364fd33956c5ec8ddb748332c8adfaf6e0c26f2dc0068e6e490763b",
+      "threadId": "1d5d7427-22f9-46e4-8f27-2aa414d031dd"
+    }
+  ],
+  "deferred": [
+    {
+      "scope": "MYSQL/DATADOG populated result and operational capture",
+      "status": "BLOCKED",
+      "reason": "Results/previews are process-memory state; no configured providers or credentials. Missing IDs cannot demonstrate populated-result isolation."
+    },
+    {
+      "scope": "tool proposal payload",
+      "status": "NOT_RUN",
+      "reason": "Requires a valid terminal proposal fixture and positive owner response; never generate it with AI for this run."
+    }
+  ],
+  "failure": "Foreign content leaked in denial response",
+  "ownedBackendStopped": true,
+  "observedProxyRequests": 0,
+  "snapshotHashUnchanged": true,
+  "sourceHashUnchanged": true,
+  "javaUnchanged": true,
+  "ownedTemporaryRemoved": true,
+  "finishedAt": "2026-10-26T14:11:07.338Z",
+  "harnessSha256": "456bb74188019241170975e7275823c784e6357986ec21b2fbdaf99ffcbabdd6"
+}

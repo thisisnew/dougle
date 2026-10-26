@@ -6,6 +6,8 @@
 
 ## 연속 대화 작업본 — 미배포
 
+후속 운영 범위의 미설치 소스는 `PendingOperationalScope → OperationalScopeClarification → Authority` 계약을 사용한다. `ServerOperationalScopeAuthority`가 실제 로컬 DB의 Workspace/소유 대화/최신 parent를 먼저 검증한 뒤 비밀 없는 연결 revision/generation만 제공한다. 후보 완성은 조회 승인이 아니며 모든 후보의 실행 권한은 false다. 연결 변경을 관측한 옛 후보는 영구 무효화하고, 관측하지 못한 연결→해제 전환도 lifecycle generation으로 거부한다. HTTP/UI/모델 또는 조회 실행에는 아직 연결하지 않았다. [상세 계약·검사](conversation-operational-scope.md).
+
 0.1.25의 일반 질문은 `ChatThreadService → ConversationRetrieval → BoundedConversationRetrieval`을 거친다. 현재 질문과 유효한 직전 질문을 최대2회 로컬 검색하고 공통 시간·결과·동시 실행 예산을 적용한다. 검색 후 서버가 Workspace와 원문을 재검증해 불변 근거를 저장한다. 실패를 무결과로 숨기거나 자동 AI 재전송하지 않는다. Intel 로컬 설치와 격리 런타임 검사를 완료했으나 운영 도구 자동 선택/실행 구현은 아니다. [검증과 제한](conversation-local-retrieval.md).
 
 최신 정책은 Slack을 포함한 모든 외부 업무 시스템의 조회 전용이다. `SlackReplyController`와 `SlackReplyService`는 전송 미리보기·실행·확인을 `403 READ_ONLY`로 거부하고, `SlackReplyHttpTransport`에는 외부 전송 구현이 없다. 사용자 승인으로 이 제한을 해제하지 않는다. DB v28의 `slack_reply`와 화면은 과거 영수증 조회를 위해 보존한다. 앱 내부 대화·색인·설정 저장과 조회용 인증 수립은 허용하며, 원본 자료나 외부 메시지 변경은 허용하지 않는다. 아래 과거 전송 설명보다 [외부 조회 전용 정책](external-readonly-policy.md)이 우선한다. 소스 검증과 설치된 패키지 검증은 구별한다.

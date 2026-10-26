@@ -6,7 +6,7 @@ const fixture = { ownerWorkspaceId: 'owner', otherWorkspaceId: 'other', entryId:
   bundleId: 'bundle', attachmentId: 'attachment', browserJobId: 'browser', answerJobId: 'answer', planJobId: 'plan' }
 
 test('artifact binding rejects implicit old or mutable build artifacts', () => {
-  const binding = { version: '0.1.24', jar: '/synthetic/immutable/resources/knowledge-forge.jar', sha256: 'a'.repeat(64) }
+  const binding = { version: '0.1.25', jar: '/synthetic/immutable/resources/knowledge-forge.jar', sha256: 'a'.repeat(64) }
   assert.deepEqual(validateArtifactBinding(binding), binding)
   for (const change of [{ version: '0.1.22' }, { version: '0.1.23' }, { jar: 'relative.jar' }, { jar: '/repo/backend/target/app.jar' }, { jar: '/repo/desktop/target/app.jar' },
     { jar: '/safe/../unsafe.jar' }, { sha256: 'invalid' },
@@ -16,9 +16,9 @@ test('artifact binding rejects implicit old or mutable build artifacts', () => {
 })
 
 test('explicit artifact options have no installed-app or target fallback', () => {
-  const args = ['--version', '0.1.24', '--jar', '/synthetic/frozen/app.jar', '--sha256', 'b'.repeat(64)]
+  const args = ['--version', '0.1.25', '--jar', '/synthetic/frozen/app.jar', '--sha256', 'b'.repeat(64)]
   assert.equal(artifactOptions(args).jar, '/synthetic/frozen/app.jar')
-  for (const invalid of [[], args.slice(0, 4), [...args, '--run'], ['--jar', args[3], '--version', '0.1.24', '--sha256', args[5]],
+  for (const invalid of [[], args.slice(0, 4), [...args, '--run'], ['--jar', args[3], '--version', '0.1.25', '--sha256', args[5]],
     [...args.slice(0, 5), ''], [...args.slice(0, 2), '--jar', '/backend/target/app.jar', ...args.slice(4)]]) {
     assert.throws(() => artifactOptions(invalid))
   }

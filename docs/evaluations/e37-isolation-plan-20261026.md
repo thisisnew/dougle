@@ -1,5 +1,9 @@
 # E37 bounded artifact plan — NOT RUN
 
+## Current result: .25 scoped runtime completed
+
+The historical NOT_RUN plan and .24 failure below are superseded only for the executed headless scope. One approved .25 attempt on `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`, using finalized Intel bundle Java/models (not installed assets), completed 88 owner/foreign read pairs and eight search/injection groups. The shared strict sandbox's approved root-literal read rule was retained without additional permissions. Cleanup and unchanged artifact hashes were verified; lease released. See `e37-isolation-025-5cf78b64-20261026-review.md`. Memory-provider/proposal/UI gaps remain; no full E37 promotion.
+
 ## Latest: one b5 attempt stopped at JVM startup
 
 The `967cd7…` pin below is superseded and rejected by current guards because its frontend assets were stale. Parent authorized exactly one attempt on corrected .24 SHA-256 `b5b59534ed02f1ad342a64d55f6e40cff03947997af2c07340b5b9bd85473d47`. Eleven offline guard tests passed. That attempt ended before READY with SIGABRT, zero stdout/stderr bytes and zero completed checks. See `e37-isolation-024-b5b59534-20261026.json` and its review. No retry, sandbox broadening or E37 promotion occurred. The planned checks below remain unexecuted.

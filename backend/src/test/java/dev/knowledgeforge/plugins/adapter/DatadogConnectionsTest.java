@@ -95,4 +95,38 @@ class DatadogConnectionsTest {
         request.setContent(body.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         return request;
     }
+
+    @Test void lifecycleMetadataIsStableWithoutMutationAndRotatesAcrossDisconnectedAbaAndRestart() {
+        var before = connections.scopeMetadata("one");
+        assertNull(before.revision());
+        assertEquals(before, connections.scopeMetadata("one"));
+        connections.save("one", config);
+        var connected = connections.scopeMetadata("one");
+        connections.disconnect("one");
+        var after = connections.scopeMetadata("one");
+        assertNull(after.revision());
+        assertNotEquals(before.generation(), after.generation());
+        assertNotEquals(connected.generation(), after.generation());
+        assertFalse(json.writeValueAsString(connected).contains(config.apiKey()));
+        assertFalse(json.writeValueAsString(connected).contains(config.applicationKey()));
+        assertNotEquals(after.generation(), new DatadogConnections(new PluginVault(root.toString()), library).scopeMetadata("one").generation());
+    }
+
+    @Test void failedVaultReadSaveAndDisconnectRotateGenerationAndDoNotLeakProviderError() {
+        var vault = mock(PluginVault.class);
+        var service = new DatadogConnections(vault, library);
+        var initial = service.scopeMetadata("one");
+        when(vault.get(anyString())).thenThrow(new IllegalStateException("synthetic sensitive error"));
+        var error = assertThrows(LibraryException.class, () -> service.scopeMetadata("one"));
+        assertFalse(error.getMessage().contains("sensitive"));
+        doReturn(null).when(vault).get(anyString());
+        var recovered = service.scopeMetadata("one");
+        assertNotEquals(initial.generation(), recovered.generation());
+        doThrow(new LibraryException(500, "synthetic write error")).when(vault).put(anyString(), nullable(String.class));
+        assertThrows(LibraryException.class, () -> service.save("one", config));
+        var failedSave = service.scopeMetadata("one");
+        assertNotEquals(recovered.generation(), failedSave.generation());
+        assertThrows(LibraryException.class, () -> service.disconnect("one"));
+        assertNotEquals(failedSave.generation(), service.scopeMetadata("one").generation());
+    }
 }

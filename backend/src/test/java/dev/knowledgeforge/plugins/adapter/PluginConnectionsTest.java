@@ -15,6 +15,58 @@ class PluginConnectionsTest {
     private final String token = "ntn_synthetic_test_token_not_real_12345";
     private MysqlClient.Config config() { return new MysqlClient.Config("localhost", 3306, "fixture", "reader", "synthetic-password", "DISABLED"); }
 
+    @Test void scopeMetadataIsCredentialFreeStableAndDetectsDisconnectedAbaWithoutNotionLookup() {
+        var vault = spy(new PluginVault(root.toString()));
+        var service = new PluginConnections(vault, mock(NotionClient.class), mock(MysqlClient.class));
+        var before = service.mysqlScopeMetadata();
+        assertThat(before.revision()).isNull();
+        assertThat(service.mysqlScopeMetadata()).isEqualTo(before);
+        service.mysql(config(), true);
+        var connected = service.mysqlScopeMetadata();
+        service.disconnect("mysql");
+        var after = service.mysqlScopeMetadata();
+        assertThat(after.revision()).isNull();
+        assertThat(after.generation()).isNotEqualTo(before.generation()).isNotEqualTo(connected.generation());
+        assertThat(new JsonMapper().writeValueAsString(connected)).doesNotContain("synthetic-password", "reader", "localhost");
+        verify(vault, never()).get("notion");
+    }
+
+    @Test void failedMysqlMetadataReadAndFailedSaveInvalidateGenerationAfterRecovery() {
+        var vault = mock(PluginVault.class);
+        var service = new PluginConnections(vault, mock(NotionClient.class), mock(MysqlClient.class));
+        var before = service.mysqlScopeMetadata();
+        when(vault.get("mysql")).thenThrow(new LibraryException(500, "synthetic failure"));
+        assertThatThrownBy(service::mysqlScopeMetadata).isInstanceOf(LibraryException.class);
+        doReturn(null).when(vault).get("mysql");
+        var recovered = service.mysqlScopeMetadata();
+        assertThat(recovered.generation()).isNotEqualTo(before.generation());
+        doThrow(new LibraryException(500, "synthetic write failure")).when(vault).put(eq("mysql"), anyString());
+        assertThatThrownBy(() -> service.mysql(config(), true)).isInstanceOf(LibraryException.class);
+        assertThat(service.mysqlScopeMetadata().generation()).isNotEqualTo(recovered.generation());
+    }
+
+    @Test void corruptedSavedConfigNeverEscapesMetadataBoundaryAndMissingRevisionKeepsSafe409() {
+        var vault = new PluginVault(root.toString());
+        var service = new PluginConnections(vault, mock(NotionClient.class), mock(MysqlClient.class));
+        String canary = "SyntheticCredentialCanary_DoNotExpose_92741";
+        var before = service.mysqlScopeMetadata();
+        vault.put("mysql", "{\"password\":\"" + canary + "\",\"port\":\"" + canary + "\"}");
+        assertThatThrownBy(service::mysqlScopeMetadata).isInstanceOfSatisfying(LibraryException.class, failure -> {
+            assertThat(failure.status()).isEqualTo(500);
+            assertThat(failure.getMessage()).isEqualTo("MySQL 연결 정보를 읽지 못했습니다.").doesNotContain(canary);
+            assertThat(failure.toString()).doesNotContain(canary);
+            assertThat(failure.getCause()).isNull();
+        });
+        vault.put("mysql", null);
+        assertThat(service.mysqlScopeMetadata().generation()).isNotEqualTo(before.generation());
+        vault.put("mysql", new JsonMapper().writeValueAsString(config()));
+        assertThatThrownBy(service::mysqlScopeMetadata).isInstanceOfSatisfying(LibraryException.class, failure -> {
+            assertThat(failure.status()).isEqualTo(409);
+            assertThat(failure.getMessage()).isEqualTo("MySQL 연결을 다시 저장하세요.");
+            assertThat(failure.getCause()).isNull();
+        });
+    }
+
     @Test void everySavedConnectionAndDisconnectRotateThePersistedMysqlRevision() {
         var service = new PluginConnections(new PluginVault(root.toString()), mock(NotionClient.class), mock(MysqlClient.class));
         service.mysql(config(), true);

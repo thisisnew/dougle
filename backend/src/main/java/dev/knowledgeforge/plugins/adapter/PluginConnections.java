@@ -11,6 +11,8 @@ public class PluginConnections {
     private final MysqlClient mysql;
     private final JsonMapper json = new JsonMapper();
     private final java.util.concurrent.atomic.AtomicLong mysqlEpoch = new java.util.concurrent.atomic.AtomicLong();
+    private final String mysqlSession = java.util.UUID.randomUUID().toString();
+    public record MysqlScopeMetadata(String revision, String generation) {}
     public record Status(boolean notionConnected, boolean mysqlConnected, MysqlClient.Config mysql) {}
     public PluginConnections(PluginVault vault, NotionClient notion, MysqlClient mysql) {
         this.vault = vault; this.notion = notion; this.mysql = mysql;
@@ -42,6 +44,22 @@ public class PluginConnections {
     }
     public synchronized String mysqlRevision() { return vault.get("mysql-revision"); }
     public long mysqlEpoch() { return mysqlEpoch.get(); }
+    public synchronized MysqlScopeMetadata mysqlScopeMetadata() {
+        MysqlClient.Config config;
+        String revision;
+        try {
+            config = mysqlConfig();
+            revision = config == null ? null : mysqlRevision();
+        } catch (RuntimeException failure) {
+            mysqlEpoch.incrementAndGet();
+            throw new LibraryException(500, "MySQL 연결 정보를 읽지 못했습니다.");
+        }
+        if (config != null && revision == null) {
+            mysqlEpoch.incrementAndGet();
+            throw new LibraryException(409, "MySQL 연결을 다시 저장하세요.");
+        }
+        return new MysqlScopeMetadata(revision, mysqlSession + "_" + mysqlEpoch.get());
+    }
     public synchronized void disconnect(String provider) {
         if (!provider.equals("notion") && !provider.equals("mysql")) throw new LibraryException(404, "플러그인을 찾을 수 없습니다.");
         if (provider.equals("mysql")) {

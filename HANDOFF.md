@@ -4,7 +4,9 @@
 
 bounded conversation retrieval을 포함한 Intel0.1.25를 설치했다. JAR `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`; 이전0.1.24 앱/DB 백업·서명·v28·비인증403 확인. [설치 증거](docs/evaluations/local-install-0.1.25-20261026.json). 새 JAR의 실제 로컬 다국어 검색·이어 질문·재시작·Workspace 경계와 readonly300건, Intel native/WebKit, UI665개를 검증했다. E50은 엄격한 파일 격리 환경의 합성6그룹, E37은88쌍 소유/타 Workspace 조회 및8개 검색/주입 그룹 통과이며 전체 인수 승격은 아니다. 양 CPU 패키지·서명·정적 검사도 완료했다. ARM 실기기는 미검증이고 공개/피드는 보류한다. [패키지 증거](docs/evaluations/macos-package-0.1.25-20261026.json).
 
-다음 `PendingOperationalScope`/clarification 계약은 별도 미설치 소스다. 내부 기술 필드와 사용자 업무 맥락을 분리하며 실제 조회 권한을 주지 않는다. 독립 리뷰가 지적한 연결 상태 ABA(연결 후 해제 시 옛 후보 부활)를 보강했고23개 집중 회귀·독립 재검토를 통과했다. 실제 서버 Authority 연결은 후속 작업 중이며 자연 대화 DB/log 실행 연결은 아직 미구현이다. 아래 후보 미패키징/0.1.24 설치 문구는 이전 단계다.
+다음 `PendingOperationalScope`/clarification 계약과 `ServerOperationalScopeAuthority`는 별도 미설치 소스다. 내부 기술 필드와 사용자 업무 맥락을 분리하며 실제 조회 권한을 주지 않는다. 서버 Workspace/소유 thread/최신 parent 및 연결 lifecycle을 검증하고, 연결 상태 ABA(연결 후 해제 시 옛 후보 부활)와 metadata 파싱 오류 원문 노출을 막는다. 집중76개·독립 재검토, 광범위1070실행/1063통과/7 opt-in 건너뜀/실패0(기존 fixture2클래스 제외), Node147개 통과. [구현과 한계](docs/conversation-operational-scope.md). 자연 대화 DB/log 실행 연결은 아직 미구현이다. 아래 후보 미패키징/0.1.24 설치 문구는 이전 단계다.
+
+E37 후속 proposal 검사는 별도 b2에서16쌍 소유/타 Workspace 조회와 기존88쌍·검색/주입8그룹을 통과했다. [검토](docs/evaluations/e37-isolation-025-proposals-b2-20261026-review.md). 최초 proposal 검사는 과도한 substring guard에서 중단됐고 당시 어떤 필드가 일치했는지는 미기록이다. 실패 증거를 보존했으며 b2의 정확한 요청 경로 `instance` 반사는 호출자가 이미 제공한 값으로만 예외 처리한다. 전체 E37/50개는 승격하지 않는다. 실제 Codex 합성 검증 최대4회는 사용자에게 비동기 승인 요청만 했으며 승인 전 실행하지 않았다.
 
 ## 다음 후보 소스 검증 — 2026-10-26 22:34 KST
 

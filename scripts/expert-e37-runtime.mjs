@@ -14,7 +14,7 @@ import { sandboxProfile } from './e50-archive-fixtures.mjs'
 import { isolationPlan, validateArtifactBinding, validateIsolationObservation } from './expert-e37-isolation.mjs'
 import { verifySearchModels } from './expert-live-search-models.mjs'
 
-export const approvedHash = 'b5b59534ed02f1ad342a64d55f6e40cff03947997af2c07340b5b9bd85473d47'
+export const approvedHash = '5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a'
 const execute = promisify(execFile)
 const pause = milliseconds => new Promise(done => setTimeout(done, milliseconds))
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -24,7 +24,7 @@ export function runtimeOptions(args) {
   assert.equal(args.length, 13)
   assert.deepEqual(args.filter((value, index) => index % 2 === 1), ['--version', '--source-jar', '--sha256', '--java', '--models', '--report'])
   const options = { version: args[2], sourceJar: args[4], hash: args[6], java: args[8], models: args[10], report: args[12] }
-  assert.equal(options.version, '0.1.24'); assert.equal(options.hash, approvedHash)
+  assert.equal(options.version, '0.1.25'); assert.equal(options.hash, approvedHash)
   for (const key of ['sourceJar', 'java', 'models', 'report']) assert(isAbsolute(options[key]) && !options[key].split('/').includes('..'))
   assert(options.report.endsWith('.json'))
   assert(!options.report.split('/').includes('target'), 'Never write build output')
@@ -34,7 +34,7 @@ export function runtimeOptions(args) {
 export async function snapshotArtifact(source, destination, expectedHash) {
   assert.equal(expectedHash, approvedHash)
   assert((await lstat(source)).isFile(), 'Regular source JAR required')
-  validateArtifactBinding({ version: '0.1.24', jar: destination, sha256: expectedHash })
+  validateArtifactBinding({ version: '0.1.25', jar: destination, sha256: expectedHash })
   assert.equal(sha256(await readFile(source)), expectedHash, 'Source artifact pin mismatch')
   await copyFile(source, destination, constants.COPYFILE_EXCL)
   await chmod(destination, 0o400)
@@ -63,7 +63,58 @@ export function terminalSql(fixture) {
     expires_at: '2026-10-26T00:00:01Z', request_id: fixture.browserJobId, approved_at: now,
     result_json: JSON.stringify({ url: 'https://synthetic.invalid/e37', capturedAt: now, title: 'Synthetic seeded browser snapshot',
       text: fixture.canary, observations: [], truncated: false, status: 'OK' }) })
-  return `PRAGMA foreign_keys=ON; BEGIN IMMEDIATE;\n${answer}\n${plan}\n${browser}\nCOMMIT;`
+  const proposals = proposalContracts(fixture).map(proposal => insert('investigation_plan', { ...shared,
+    digest: sha256('proposal-' + proposal.jobId), provider: 'CODEX', requested_model: 'synthetic-no-dispatch',
+    binding_digest: fixture.bundleDigest, prompt: 'Synthetic seeded proposal; not model-generated; no execution',
+    expires_at: '2026-10-26T00:00:01Z', request_id: proposal.jobId, approved_at: now,
+    decision: 'PROPOSE_' + proposal.kind, query: null, output: null, truncated: 0, tool_status: null,
+  })).join('\n')
+  return `PRAGMA foreign_keys=ON; BEGIN IMMEDIATE;\n${answer}\n${plan}\n${browser}\n${proposals}\nCOMMIT;`
+}
+
+export function proposalContracts(fixture) {
+  const ids = [fixture.mysqlProposalId, fixture.datadogProposalId]
+  for (const id of ids) assert(typeof id === 'string' && /^[A-Za-z0-9_-]{12,128}$/.test(id))
+  assert.equal(new Set([...ids, fixture.planJobId]).size, 3, 'Proposal records must be separate from each other and SEARCH')
+  return [
+    { kind: 'MYSQL_READ', jobId: ids[0], requiredFields: ['table', 'columns', 'equalities', 'limit'] },
+    { kind: 'DATADOG_LOGS', jobId: ids[1], requiredFields: ['environment', 'service', 'indexes', 'from', 'to', 'limit'] },
+  ].map(proposal => ({ ...proposal, workspaceId: fixture.ownerWorkspaceId, bundleId: fixture.bundleId, executionAllowed: false }))
+}
+
+export function verifyProposal(value, expected) {
+  assert.deepEqual(value, expected, 'Proposal must exactly match owner/job/bundle/kind/required fields and forbid execution')
+}
+
+export function verifyProposalDenial(response, requestedPath, fixture, expected) {
+  assert.equal(response.status, 404)
+  assert(response.body && typeof response.body === 'object' && !Array.isArray(response.body))
+  assert.equal(response.body.status, 404)
+  for (const key of Object.keys(response.body)) {
+    assert(['type', 'title', 'status', 'detail', 'instance'].includes(key), 'Unexpected ProblemDetail extension')
+  }
+  for (const key of ['type', 'title', 'detail']) {
+    if (Object.hasOwn(response.body, key)) assert.equal(typeof response.body[key], 'string', 'ProblemDetail text field must be a string')
+  }
+  const content = { ...response.body }
+  if (Object.hasOwn(content, 'instance')) {
+    assert.equal(content.instance, requestedPath, 'Only exact requested-path reflection is allowed')
+    delete content.instance
+  }
+  const text = JSON.stringify(content)
+  for (const value of [fixture.canary, fixture.bundleId, fixture.ownerWorkspaceId, expected.jobId]) {
+    assert(!text.includes(value), 'Foreign data outside exact request-path reflection')
+  }
+}
+
+export function proposalDenialDiagnostics(response, requestedPath, fixture, expected) {
+  const body = response.body
+  const markers = { ownerCanary: fixture.canary, ownerBundleId: fixture.bundleId, ownerWorkspaceId: fixture.ownerWorkspaceId, suppliedJobId: expected.jobId }
+  const fields = body && typeof body === 'object' && !Array.isArray(body) ? Object.entries(body) : [['NON_OBJECT_BODY', body]]
+  return { instanceMatchesRequest: body?.instance === requestedPath,
+    matches: fields.flatMap(([field, value]) => Object.entries(markers)
+      .filter(([, marker]) => typeof marker === 'string' && marker.length > 0 && JSON.stringify(value)?.includes(marker))
+      .map(([marker]) => ({ field: ['type', 'title', 'status', 'detail', 'instance'].includes(field) ? field : 'EXTENSION_OR_INVALID_BODY', marker }))) }
 }
 
 export function verifyHits(hits, owned, foreign) {
@@ -76,10 +127,10 @@ export function verifyHits(hits, owned, foreign) {
 }
 
 export async function run(config) {
-  assert.equal(config.hash, approvedHash); assert.equal(config.version, '0.1.24')
+  assert.equal(config.hash, approvedHash); assert.equal(config.version, '0.1.25')
   await access(config.report).then(() => { throw Error('Report exists; refusing overwrite') }, error => { if (error.code !== 'ENOENT') throw error })
   const report = { criterion: 'E37', result: 'INCOMPLETE', mode: 'simulated', artifactSha256: approvedHash,
-    startedAt: new Date().toISOString(), observations: [], backendPids: [], aiDispatches: 0,
+    startedAt: new Date().toISOString(), observations: [], proposalObservations: [], backendPids: [], aiDispatches: 0,
     limitations: ['Seeded terminal jobs are not AI/browser executions', 'Populated MySQL/Datadog/operational capture memory state deferred', 'No UI checkpoint or full E37 verdict'], }
   let modelDirectory
 
@@ -87,7 +138,7 @@ export async function run(config) {
   for (const executable of [config.java, '/usr/bin/sandbox-exec', '/usr/bin/sqlite3']) await access(executable)
   const temporary = await mkdtemp(join(tmpdir(), 'dougle-e37-runtime-'))
   await chmod(temporary, 0o700)
-  const jar = join(temporary, 'frozen-0.1.24.jar')
+  const jar = join(temporary, 'frozen-0.1.25.jar')
   const home = join(temporary, 'home')
   const data = join(temporary, 'data')
   const database = join(data, 'knowledge-forge.sqlite')
@@ -230,7 +281,8 @@ export async function run(config) {
       attachmentForm.append('file', new Blob(['E37 attachment ' + canary], { type: 'text/plain' }), 'attached-' + suffix + '.txt')
       const attachment = await api('/workspaces/' + workspace.id + '/attachments', 'POST', attachmentForm, 201)
       fixtures.push({ ownerWorkspaceId: workspace.id, entryId: entry.id, attachmentId: attachment.id, canary,
-        browserJobId: randomUUID(), answerJobId: randomUUID(), planJobId: randomUUID() })
+        browserJobId: randomUUID(), answerJobId: randomUUID(), planJobId: randomUUID(),
+        mysqlProposalId: randomUUID(), datadogProposalId: randomUUID() })
     }
     for (const [index, fixture] of fixtures.entries()) {
       const foreign = fixtures[1 - index]; fixture.otherWorkspaceId = foreign.ownerWorkspaceId
@@ -279,6 +331,23 @@ export async function run(config) {
               ownerStatus: owner.status, foreignStatus: denied.status, ownerResponseSha256: sha256(owner.text), foreignResponseSha256: sha256(denied.text) })
           }
           verifyHits(await api('/workspaces/' + fixture.ownerWorkspaceId + '/search?query=E37_COMMON'), fixture, foreign)
+          for (const expected of proposalContracts(fixture)) {
+            const suffix = '/investigation-plans/jobs/' + expected.jobId + '/tool-proposal'
+            const owner = await request('/workspaces/' + fixture.ownerWorkspaceId + suffix)
+            assert.equal(owner.status, 200); verifyProposal(owner.body, expected)
+            const denied = await request('/workspaces/' + fixture.otherWorkspaceId + suffix)
+            report.proposalLastProbe = { phase, active, kind: expected.kind, ownerStatus: owner.status, foreignStatus: denied.status,
+              ownerExactVerified: true, foreignResponseSha256: sha256(denied.text),
+              problemKeys: denied.body && typeof denied.body === 'object' ? Object.keys(denied.body).sort() : [],
+              ...proposalDenialDiagnostics(denied, '/api/workspaces/' + fixture.otherWorkspaceId + suffix, fixture, expected) }
+            verifyProposalDenial(denied, '/api/workspaces/' + fixture.otherWorkspaceId + suffix, fixture, expected)
+            validateIsolationObservation({ ownerStatus: 200, foreignStatus: 404 }, {
+              ownerStatus: owner.status, ownerIdentityVerified: true, foreignStatus: denied.status,
+              foreignBody: denied.text, ownerUnchanged: true, aiDispatches: 0, externalRequests: proxyRequests,
+            }, [fixture.canary, fixture.bundleId])
+            report.proposalObservations.push({ phase, active, expected, ownerStatus: owner.status, foreignStatus: denied.status,
+              ownerResponseSha256: sha256(owner.text), foreignResponseSha256: sha256(denied.text), provenance: 'STOPPED_DB_SEEDED_NOT_MODEL_GENERATED' })
+          }
           const before = await api('/workspaces/' + fixture.ownerWorkspaceId + '/chat-threads/' + fixture.threadId)
           await api('/workspaces/' + foreign.ownerWorkspaceId + '/chat-threads', 'POST',
             { requestId: randomUUID(), question: 'E37_COMMON', threadId: fixture.threadId, parentBundleId: fixture.bundleId }, 404)
@@ -294,6 +363,9 @@ export async function run(config) {
     assert.equal(proxyRequests, 0)
     report.result = 'SCOPED_CHECKS_COMPLETED_NOT_FULL_E37'
     report.persistedRowsUnchanged = true
+    report.proposalReadPairs = report.proposalObservations.length
+    assert.equal(report.proposalReadPairs, 16)
+    report.deferred = report.deferred.filter(value => value.scope !== 'tool proposal payload')
     report.readPairs = report.observations.filter(value => value.foreignStatus === 404).length
     report.localSearchAndInjectionGroups = report.observations.filter(value => value.name === 'search-positive-and-foreign-thread-attachment-denials').length
   } catch (error) {
