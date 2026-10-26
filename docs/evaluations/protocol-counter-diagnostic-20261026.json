@@ -1,0 +1,2623 @@
+{
+  "fixtureVersion": "synthetic-local-restart-glossary-v1",
+  "startedAt": "2026-10-26T11:29:39.036Z",
+  "maximumDispatches": 4,
+  "scenarios": [
+    "restart-history-followup"
+  ],
+  "variants": 1,
+  "variantStart": 0,
+  "dispatched": 4,
+  "planDispatches": 2,
+  "answerDispatches": 2,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "1f68625c-272f-4f41-bd7d-6e7ff362ac17",
+      "at": "2026-10-26T11:29:59.930Z",
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+      "result": {
+        "id": "1f68625c-272f-4f41-bd7d-6e7ff362ac17",
+        "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+        "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "19db51de61300ab96be10ea92bff4695e9985e2b4fae75d6fb08162e5b9ed87b",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T11:29:59.953326Z",
+        "updatedAt": "2026-10-26T11:30:07.476968Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5",
+      "at": "2026-10-26T11:30:08.478Z",
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "3eeba357-ff4d-4861-bd40-282880aa5325",
+      "at": "2026-10-26T11:31:38.946Z",
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 1,
+      "question": "그럼 그 배지는 자동으로 갱신돼?",
+      "result": {
+        "id": "3eeba357-ff4d-4861-bd40-282880aa5325",
+        "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+        "bundleId": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "369bf9f8b0a0daf45f3ea3329adb7b9f3d3568e6c08d708b3ae70d5f44459714",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T11:31:38.979603Z",
+        "updatedAt": "2026-10-26T11:31:44.864425Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "2784ee40-fa2e-4893-8dce-aa9903ffd7e7",
+      "at": "2026-10-26T11:31:46.064Z",
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 1,
+      "question": "그럼 그 배지는 자동으로 갱신돼?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    }
+  ],
+  "results": [
+    {
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "1f68625c-272f-4f41-bd7d-6e7ff362ac17",
+        "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+        "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "19db51de61300ab96be10ea92bff4695e9985e2b4fae75d6fb08162e5b9ed87b",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T11:29:59.953326Z",
+        "updatedAt": "2026-10-26T11:30:07.476968Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E04 backend-only: restart same synthetic DB after completed answer, preserve thread/evidence/jobs/order, reopen via GET, then answer manual operator approval without losing context. UI reopen not exercised.",
+      "manualVerdict": "PASS",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-badge-policy.md",
+          "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다."
+        }
+      ],
+      "originalBundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+      "originalStatus": "READY",
+      "answerBundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+      "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+      "elapsedMs": 15236,
+      "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-badge-policy.md",
+          "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다."
+        }
+      ],
+      "semanticReview": {
+        "checkpointId": "29c2e234-861f-4d9b-b9ac-c8934c4622f8",
+        "resultSha256": "529dd4d6d79fe3b9757bdbd3553715befcd8586700195d3addfe7e219f6ba626",
+        "verdict": "PASS",
+        "reviewer": "AGENT",
+        "note": "Diagnostic turn 0 manually reviewed against synthetic badge fixture and exact R1: validity is 72 hours from issuance, not an invented current expiry. STOP with no operational output is appropriate. Diagnostic only, no E04 promotion."
+      }
+    },
+    {
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 1,
+      "question": "그럼 그 배지는 자동으로 갱신돼?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "아니요. BLUE 배지는 자동 갱신되지 않으며, 갱신하려면 운영 담당자의 수동 승인이 필요합니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "3eeba357-ff4d-4861-bd40-282880aa5325",
+        "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+        "bundleId": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "369bf9f8b0a0daf45f3ea3329adb7b9f3d3568e6c08d708b3ae70d5f44459714",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T11:31:38.979603Z",
+        "updatedAt": "2026-10-26T11:31:44.864425Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E04 backend-only: restart same synthetic DB after completed answer, preserve thread/evidence/jobs/order, reopen via GET, then answer manual operator approval without losing context. UI reopen not exercised.",
+      "manualVerdict": "PASS",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-badge-policy.md",
+          "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다."
+        }
+      ],
+      "originalBundleId": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+      "originalStatus": "READY",
+      "answerBundleId": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+      "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+      "elapsedMs": 45672,
+      "retrievalQuery": "그럼 그 배지는 자동으로 갱신돼?",
+      "historyTurns": 1,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-badge-policy.md",
+          "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다."
+        }
+      ],
+      "semanticReview": {
+        "checkpointId": "20924d79-eacf-4a67-a0ab-b9fd1362d46a",
+        "resultSha256": "613003fe3f15a280ce9a7931f902699868d151cf9923172fdff2fb3e7ace371b",
+        "verdict": "PASS",
+        "reviewer": "AGENT",
+        "note": "Parent compared followup with R1: correctly resolves that badge to BLUE, denies automatic renewal and states manual approval by operations staff. No invented live record. One diagnostic variant with backend restart only; not full E04 acceptance."
+      }
+    }
+  ],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "apiTrace": [
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "POST",
+      "path": "/ai/providers/CODEX/connection"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/sources"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/sources/748539aa-f851-497c-a708-008f85a592b4/sync"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/1f68625c-272f-4f41-bd7d-6e7ff362ac17"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads/5ceec1b3-efff-4c87-963a-5cd6c670eda4"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs?bundleId=c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/generation-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads/5ceec1b3-efff-4c87-963a-5cd6c670eda4"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs?bundleId=c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/generation-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs/3eeba357-ff4d-4861-bd40-282880aa5325"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/6066120e-e822-4053-b1b4-7cb132ee9cef/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/6066120e-e822-4053-b1b4-7cb132ee9cef/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/6066120e-e822-4053-b1b4-7cb132ee9cef/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs/2784ee40-fa2e-4893-8dce-aa9903ffd7e7"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/6066120e-e822-4053-b1b4-7cb132ee9cef/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads/5ceec1b3-efff-4c87-963a-5cd6c670eda4"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads/5ceec1b3-efff-4c87-963a-5cd6c670eda4"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs?bundleId=c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/6066120e-e822-4053-b1b4-7cb132ee9cef"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs?bundleId=6066120e-e822-4053-b1b4-7cb132ee9cef"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/generation-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads/5ceec1b3-efff-4c87-963a-5cd6c670eda4"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs?bundleId=c0e31575-a4b1-486a-8d72-f8e7fa41dcf5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/evidence-bundles/6066120e-e822-4053-b1b4-7cb132ee9cef"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/investigation-plans/jobs?bundleId=6066120e-e822-4053-b1b4-7cb132ee9cef"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/519c4af4-ed57-4406-a6d8-ceedecaf7482/generation-jobs"
+    }
+  ],
+  "restartChecks": [
+    {
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "before": {
+        "detail": {
+          "id": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+          "bundles": [
+            {
+              "id": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "createdAt": "2026-10-26T11:29:59.147478Z",
+              "digest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+              "payload": {
+                "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 141,
+                "maxCharacters": 10718,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-badge-policy.md",
+                    "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                    "path": "synthetic-badge-policy.md",
+                    "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                    "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                    "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                    "startLine": 1,
+                    "endLine": 4,
+                    "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                  "parentBundleId": null,
+                  "requestId": "c82e4969-21ae-4856-be14-6398dc90e863",
+                  "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 방문 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "approvalId": "4ec5b2cc-9b69-46ee-87fc-0d89d277fa38",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "3a8bb86ec544716276b007c629b9b5561e3930881ee83952f01460a3f7237099",
+              "status": "SUCCEEDED",
+              "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T11:30:08.519317Z",
+              "updatedAt": "2026-10-26T11:30:13.922923Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+            "question": "가상 BLUE 방문 배지의 유효 기간은?",
+            "createdAt": "2026-10-26T11:29:59.147478Z",
+            "turns": 1,
+            "questions": [
+              "가상 BLUE 방문 배지의 유효 기간은?"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "createdAt": "2026-10-26T11:29:59.147478Z",
+            "digest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+            "payload": {
+              "question": "가상 BLUE 방문 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 141,
+              "maxCharacters": 10718,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-badge-policy.md",
+                  "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                  "path": "synthetic-badge-policy.md",
+                  "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                  "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                  "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                  "startLine": 1,
+                  "endLine": 4,
+                  "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                "parentBundleId": null,
+                "requestId": "c82e4969-21ae-4856-be14-6398dc90e863",
+                "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 방문 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "1f68625c-272f-4f41-bd7d-6e7ff362ac17",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "19db51de61300ab96be10ea92bff4695e9985e2b4fae75d6fb08162e5b9ed87b",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T11:29:59.953326Z",
+              "updatedAt": "2026-10-26T11:30:07.476968Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+            "approvalId": "4ec5b2cc-9b69-46ee-87fc-0d89d277fa38",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "3a8bb86ec544716276b007c629b9b5561e3930881ee83952f01460a3f7237099",
+            "status": "SUCCEEDED",
+            "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T11:30:08.519317Z",
+            "updatedAt": "2026-10-26T11:30:13.922923Z"
+          }
+        ],
+        "generationJobs": []
+      },
+      "status": "FOLLOWUP_VERIFIED",
+      "uiReopenObserved": false,
+      "after": {
+        "detail": {
+          "id": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+          "bundles": [
+            {
+              "id": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "createdAt": "2026-10-26T11:29:59.147478Z",
+              "digest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+              "payload": {
+                "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 141,
+                "maxCharacters": 10718,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-badge-policy.md",
+                    "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                    "path": "synthetic-badge-policy.md",
+                    "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                    "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                    "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                    "startLine": 1,
+                    "endLine": 4,
+                    "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                  "parentBundleId": null,
+                  "requestId": "c82e4969-21ae-4856-be14-6398dc90e863",
+                  "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 방문 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "approvalId": "4ec5b2cc-9b69-46ee-87fc-0d89d277fa38",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "3a8bb86ec544716276b007c629b9b5561e3930881ee83952f01460a3f7237099",
+              "status": "SUCCEEDED",
+              "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T11:30:08.519317Z",
+              "updatedAt": "2026-10-26T11:30:13.922923Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+            "question": "가상 BLUE 방문 배지의 유효 기간은?",
+            "createdAt": "2026-10-26T11:29:59.147478Z",
+            "turns": 1,
+            "questions": [
+              "가상 BLUE 방문 배지의 유효 기간은?"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "createdAt": "2026-10-26T11:29:59.147478Z",
+            "digest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+            "payload": {
+              "question": "가상 BLUE 방문 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 141,
+              "maxCharacters": 10718,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-badge-policy.md",
+                  "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                  "path": "synthetic-badge-policy.md",
+                  "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                  "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                  "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                  "startLine": 1,
+                  "endLine": 4,
+                  "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                "parentBundleId": null,
+                "requestId": "c82e4969-21ae-4856-be14-6398dc90e863",
+                "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 방문 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "1f68625c-272f-4f41-bd7d-6e7ff362ac17",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "19db51de61300ab96be10ea92bff4695e9985e2b4fae75d6fb08162e5b9ed87b",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T11:29:59.953326Z",
+              "updatedAt": "2026-10-26T11:30:07.476968Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+            "approvalId": "4ec5b2cc-9b69-46ee-87fc-0d89d277fa38",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "3a8bb86ec544716276b007c629b9b5561e3930881ee83952f01460a3f7237099",
+            "status": "SUCCEEDED",
+            "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T11:30:08.519317Z",
+            "updatedAt": "2026-10-26T11:30:13.922923Z"
+          }
+        ],
+        "generationJobs": []
+      },
+      "final": {
+        "detail": {
+          "id": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+          "bundles": [
+            {
+              "id": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "createdAt": "2026-10-26T11:29:59.147478Z",
+              "digest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+              "payload": {
+                "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 141,
+                "maxCharacters": 10718,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-badge-policy.md",
+                    "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                    "path": "synthetic-badge-policy.md",
+                    "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                    "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                    "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                    "startLine": 1,
+                    "endLine": 4,
+                    "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                  "parentBundleId": null,
+                  "requestId": "c82e4969-21ae-4856-be14-6398dc90e863",
+                  "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 방문 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "createdAt": "2026-10-26T11:31:37.976374Z",
+              "digest": "b8cc4a2aacd6affa13f2fefe06f5316a77c2c2c9ac38912fa289eb1b5a916bbc",
+              "payload": {
+                "question": "그럼 그 배지는 자동으로 갱신돼?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 141,
+                "maxCharacters": 10278,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-badge-policy.md",
+                    "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                    "path": "synthetic-badge-policy.md",
+                    "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                    "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                    "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                    "startLine": 1,
+                    "endLine": 4,
+                    "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                  "parentBundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+                  "requestId": "fa279fdc-7d8e-40cb-998d-c00aed9534b5",
+                  "retrievalQuery": "그럼 그 배지는 자동으로 갱신돼?",
+                  "history": [
+                    {
+                      "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+                      "bundleDigest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+                      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                      "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]"
+                    }
+                  ],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 1,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [
+                      {
+                        "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+                        "bundleDigest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+                        "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                        "legacyUnclassified": false
+                      }
+                    ],
+                    "retrievalQueries": [
+                      "그럼 그 배지는 자동으로 갱신돼?",
+                      "가상 BLUE 방문 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "2784ee40-fa2e-4893-8dce-aa9903ffd7e7",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+              "approvalId": "d9314186-370a-4e92-9d1d-6e53bb0f9811",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "5df7434e94e68df2602bedef844dc1d7303f5b591ddceca0670f4fce22ffce38",
+              "status": "SUCCEEDED",
+              "answer": "아니요. BLUE 배지는 자동 갱신되지 않으며, 갱신하려면 운영 담당자의 수동 승인이 필요합니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T11:31:46.088266Z",
+              "updatedAt": "2026-10-26T11:31:52.597369Z"
+            },
+            {
+              "id": "1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "approvalId": "4ec5b2cc-9b69-46ee-87fc-0d89d277fa38",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "3a8bb86ec544716276b007c629b9b5561e3930881ee83952f01460a3f7237099",
+              "status": "SUCCEEDED",
+              "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T11:30:08.519317Z",
+              "updatedAt": "2026-10-26T11:30:13.922923Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+            "question": "가상 BLUE 방문 배지의 유효 기간은?",
+            "createdAt": "2026-10-26T11:31:37.976374Z",
+            "turns": 2,
+            "questions": [
+              "가상 BLUE 방문 배지의 유효 기간은?",
+              "그럼 그 배지는 자동으로 갱신돼?"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "createdAt": "2026-10-26T11:29:59.147478Z",
+            "digest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+            "payload": {
+              "question": "가상 BLUE 방문 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 141,
+              "maxCharacters": 10718,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-badge-policy.md",
+                  "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                  "path": "synthetic-badge-policy.md",
+                  "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                  "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                  "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                  "startLine": 1,
+                  "endLine": 4,
+                  "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                "parentBundleId": null,
+                "requestId": "c82e4969-21ae-4856-be14-6398dc90e863",
+                "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 방문 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "createdAt": "2026-10-26T11:31:37.976374Z",
+            "digest": "b8cc4a2aacd6affa13f2fefe06f5316a77c2c2c9ac38912fa289eb1b5a916bbc",
+            "payload": {
+              "question": "그럼 그 배지는 자동으로 갱신돼?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 141,
+              "maxCharacters": 10278,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "bb402c2e-6233-4741-b88a-e3ff2ec3e367",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-badge-policy.md",
+                  "sourceId": "748539aa-f851-497c-a708-008f85a592b4",
+                  "path": "synthetic-badge-policy.md",
+                  "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                  "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                  "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                  "startLine": 1,
+                  "endLine": 4,
+                  "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "5ceec1b3-efff-4c87-963a-5cd6c670eda4",
+                "parentBundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+                "requestId": "fa279fdc-7d8e-40cb-998d-c00aed9534b5",
+                "retrievalQuery": "그럼 그 배지는 자동으로 갱신돼?",
+                "history": [
+                  {
+                    "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+                    "bundleDigest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+                    "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                    "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]"
+                  }
+                ],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 1,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [
+                    {
+                      "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+                      "bundleDigest": "a4b6c59947830fcc6fce15e980bf15f4068b93b7f1a91316139b359baaeb8a40",
+                      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                      "legacyUnclassified": false
+                    }
+                  ],
+                  "retrievalQueries": [
+                    "그럼 그 배지는 자동으로 갱신돼?",
+                    "가상 BLUE 방문 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "1f68625c-272f-4f41-bd7d-6e7ff362ac17",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "19db51de61300ab96be10ea92bff4695e9985e2b4fae75d6fb08162e5b9ed87b",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T11:29:59.953326Z",
+              "updatedAt": "2026-10-26T11:30:07.476968Z"
+            }
+          ],
+          [
+            {
+              "id": "3eeba357-ff4d-4861-bd40-282880aa5325",
+              "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+              "bundleId": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "369bf9f8b0a0daf45f3ea3329adb7b9f3d3568e6c08d708b3ae70d5f44459714",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T11:31:38.979603Z",
+              "updatedAt": "2026-10-26T11:31:44.864425Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "2784ee40-fa2e-4893-8dce-aa9903ffd7e7",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "bundleId": "6066120e-e822-4053-b1b4-7cb132ee9cef",
+            "approvalId": "d9314186-370a-4e92-9d1d-6e53bb0f9811",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "5df7434e94e68df2602bedef844dc1d7303f5b591ddceca0670f4fce22ffce38",
+            "status": "SUCCEEDED",
+            "answer": "아니요. BLUE 배지는 자동 갱신되지 않으며, 갱신하려면 운영 담당자의 수동 승인이 필요합니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T11:31:46.088266Z",
+            "updatedAt": "2026-10-26T11:31:52.597369Z"
+          },
+          {
+            "id": "1c13cd15-e1e1-4b9d-9a9e-22d55c1116e5",
+            "workspaceId": "519c4af4-ed57-4406-a6d8-ceedecaf7482",
+            "bundleId": "c0e31575-a4b1-486a-8d72-f8e7fa41dcf5",
+            "approvalId": "4ec5b2cc-9b69-46ee-87fc-0d89d277fa38",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "3a8bb86ec544716276b007c629b9b5561e3930881ee83952f01460a3f7237099",
+            "status": "SUCCEEDED",
+            "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T11:30:08.519317Z",
+            "updatedAt": "2026-10-26T11:30:13.922923Z"
+          }
+        ],
+        "generationJobs": []
+      }
+    }
+  ],
+  "runtimes": [
+    {
+      "pid": 92182,
+      "port": 64007,
+      "startedAt": "2026-10-26T11:29:55.205Z",
+      "stoppedAt": "2026-10-26T11:30:50.348Z"
+    },
+    {
+      "pid": 92384,
+      "port": 64081,
+      "startedAt": "2026-10-26T11:31:07.001Z",
+      "stoppedAt": "2026-10-26T11:32:19.484Z"
+    }
+  ],
+  "harnessSha256": "627d58cb78cf1fcaef37a0168986a462a7bc2f3d1bbece69466057359875eb01",
+  "fixtureSha256": "595466aabe28ce30cb952588cc986b3ef31262b0ad5a4c2957bd8632def2bf3b",
+  "historyHelperSha256": "13cefde5187bb49dc6ae0d07d2fb038755842853dd0b5d3b58beec1946f12c26",
+  "uiHoldHelperSha256": "cacd278f45a17051dea3db46e8e5834bd4aee44b3d099eb748fc96fd32a9f72b",
+  "scheduleHelperSha256": "459517071aa565a1a5981960f0ab8fb610a97896180f646d3f2d5ecdaa70f2d3",
+  "semantic-reviewHelperSha256": "60434a527847a665a067a147d4b048f9ea9047b0828fc461946c5bbefcc9bc32",
+  "search-modelsHelperSha256": "7adc5776c2d57669522c781d42e0d59edc265a0fa8d67326fdf4559247754c23",
+  "jarSha256": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
+  "protocolCounter": {
+    "version": 1,
+    "cliSha256": "73697f229103f463acaafd8659976caaa4892ec11e2c246c7fa97f93d523f90e",
+    "helperSha256": "831f6a62ab9cd204ae56540021bb26665fdca557e21cb346ccbf9f1d7399ab4e",
+    "hookSha256": "81dbab35cadef88a3a5d406c283b9e7ccb447cdc2dc95992daf47f1427beca1c",
+    "scope": "Opt-in byte-preserving wrapper; numeric protocol counters only; not provider diagnosis or acceptance evidence.",
+    "ordering": "Unordered per-process counters; random filenames do not establish dispatch or answer order.",
+    "timing": "Wrapper forwarding and counter persistence add overhead and may affect timing; not an uninstrumented baseline.",
+    "appServerProcesses": 2,
+    "counters": [
+      {
+        "version": 1,
+        "totals": {
+          "stdoutBytes": 35185,
+          "lines": 67,
+          "invalidJson": 0,
+          "invalidEnvelopes": 0,
+          "oversizedLines": 0,
+          "captureLimitReached": 0,
+          "earlyDropped": 0
+        },
+        "responses": {
+          "INITIALIZE": 1,
+          "CONFIG": 1,
+          "THREAD": 1,
+          "TURN": 1,
+          "UNEXPECTED": 0,
+          "INVALID": 0
+        },
+        "preStreamIgnored": {
+          "AGENT_STARTED": 0,
+          "AGENT_DELTA": 0,
+          "AGENT_COMPLETED": 0,
+          "USER_STARTED": 0,
+          "USER_COMPLETED": 0,
+          "REASONING_STARTED": 0,
+          "REASONING_COMPLETED": 0,
+          "OTHER_ITEM_STARTED": 0,
+          "OTHER_ITEM_COMPLETED": 0,
+          "TURN_STARTED": 0,
+          "TURN_COMPLETED": 0,
+          "THREAD_STARTED": 0,
+          "THREAD_STATUS": 0,
+          "TOKEN_USAGE": 0,
+          "ERROR": 0,
+          "OTHER": 1
+        },
+        "applicationBinding": {
+          "AGENT_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "AGENT_DELTA": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 48
+          },
+          "AGENT_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "REASONING_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "REASONING_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 1,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "THREAD_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 1,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "THREAD_STATUS": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TOKEN_USAGE": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "ERROR": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 2,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          }
+        },
+        "normalizedBinding": {
+          "AGENT_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "AGENT_DELTA": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 48
+          },
+          "AGENT_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "REASONING_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "REASONING_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "TURN_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "THREAD_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 1,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "THREAD_STATUS": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TOKEN_USAGE": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "ERROR": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 2,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          }
+        },
+        "completionStatus": {
+          "APPLICATION_MATCH": {
+            "NONE": 0,
+            "COMPLETED": 1,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "APPLICATION_IGNORED": {
+            "NONE": 0,
+            "COMPLETED": 0,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "NORMALIZED_MATCH": {
+            "NONE": 0,
+            "COMPLETED": 1,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "NORMALIZED_IGNORED": {
+            "NONE": 0,
+            "COMPLETED": 0,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          }
+        },
+        "buffer": {
+          "pendingLineBytes": 0,
+          "earlyPending": 0
+        }
+      },
+      {
+        "version": 1,
+        "totals": {
+          "stdoutBytes": 37186,
+          "lines": 70,
+          "invalidJson": 0,
+          "invalidEnvelopes": 0,
+          "oversizedLines": 0,
+          "captureLimitReached": 0,
+          "earlyDropped": 0
+        },
+        "responses": {
+          "INITIALIZE": 1,
+          "CONFIG": 1,
+          "THREAD": 1,
+          "TURN": 1,
+          "UNEXPECTED": 0,
+          "INVALID": 0
+        },
+        "preStreamIgnored": {
+          "AGENT_STARTED": 0,
+          "AGENT_DELTA": 0,
+          "AGENT_COMPLETED": 0,
+          "USER_STARTED": 0,
+          "USER_COMPLETED": 0,
+          "REASONING_STARTED": 0,
+          "REASONING_COMPLETED": 0,
+          "OTHER_ITEM_STARTED": 0,
+          "OTHER_ITEM_COMPLETED": 0,
+          "TURN_STARTED": 0,
+          "TURN_COMPLETED": 0,
+          "THREAD_STARTED": 0,
+          "THREAD_STATUS": 0,
+          "TOKEN_USAGE": 0,
+          "ERROR": 0,
+          "OTHER": 1
+        },
+        "applicationBinding": {
+          "AGENT_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "AGENT_DELTA": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 51
+          },
+          "AGENT_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "REASONING_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "REASONING_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 1,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "THREAD_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 1,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "THREAD_STATUS": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TOKEN_USAGE": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "ERROR": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 2,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          }
+        },
+        "normalizedBinding": {
+          "AGENT_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "AGENT_DELTA": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 51
+          },
+          "AGENT_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "USER_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "REASONING_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "REASONING_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER_ITEM_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TURN_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "TURN_COMPLETED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "THREAD_STARTED": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 1,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "THREAD_STATUS": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "TOKEN_USAGE": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 1
+          },
+          "ERROR": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 0,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 0,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          },
+          "OTHER": {
+            "UNBOUND": 0,
+            "MISSING_THREAD": 2,
+            "INVALID_THREAD": 0,
+            "OTHER_THREAD": 0,
+            "MISSING_TURN": 2,
+            "INVALID_TURN": 0,
+            "OTHER_TURN": 0,
+            "MATCH": 0
+          }
+        },
+        "completionStatus": {
+          "APPLICATION_MATCH": {
+            "NONE": 0,
+            "COMPLETED": 1,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "APPLICATION_IGNORED": {
+            "NONE": 0,
+            "COMPLETED": 0,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "NORMALIZED_MATCH": {
+            "NONE": 0,
+            "COMPLETED": 1,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          },
+          "NORMALIZED_IGNORED": {
+            "NONE": 0,
+            "COMPLETED": 0,
+            "FAILED": 0,
+            "INTERRUPTED": 0,
+            "IN_PROGRESS": 0,
+            "OTHER": 0
+          }
+        },
+        "buffer": {
+          "pendingLineBytes": 0,
+          "earlyPending": 0
+        }
+      }
+    ]
+  },
+  "searchModels": {
+    "directory": "/Users/thisisnew/Desktop/knowledge-forge/.tools/search-model/x86_64",
+    "architecture": "x86_64",
+    "files": [
+      {
+        "name": "model.onnx",
+        "size": 118346824,
+        "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      {
+        "name": "reranker.onnx",
+        "size": 118620016,
+        "sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+      },
+      {
+        "name": "reranker-tokenizer.json",
+        "size": 17082660,
+        "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+      }
+    ],
+    "verifiedAt": "2026-10-26T11:30:51.853Z"
+  },
+  "launchFailed": false,
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-26T11:29:57.016347Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "syntheticSourceId": "748539aa-f851-497c-a708-008f85a592b4",
+  "lastModelVerificationAt": "2026-10-26T11:31:46.064Z",
+  "completed": true,
+  "finishedAt": "2026-10-26T11:32:19.494Z"
+}

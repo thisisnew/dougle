@@ -81,6 +81,15 @@ CLI가 토큰 갱신·캐시·메타데이터를 이 폴더에 쓸 수 있습니
 
 완료 생명주기 참고: [공식 Codex App Server 문서](https://learn.chatgpt.com/docs/app-server). 이 후속 검사는 새 JAR·설치본 검증을 뜻하지 않으며, 아래 수치는 초기 구현 당시 기록이다. 서로 중복 합산하지 않는다.
 
+### 후보 JAR를 변경하지 않는 선택형 진단 도구
+
+`scripts/codex-protocol-counter.mjs`는 제품에 동봉하지 않는 검사 전용 래퍼다. 명시적으로 승인한 최대4dispatch 배치에서만 `expert-live-protocol-hook.mjs`로 연결한다. 기존 실행은 기본적으로 이 도구를 사용하지 않는다. JAR와 실제 CLI의 SHA-256을 고정하며 CLI 인자·입출력 bytes·종료 상태를 그대로 전달한다.
+
+- 이벤트 종류와 thread/turn 일치·누락·불일치의 고정 카운터만0600파일에 원자적으로 저장한다. thread/turn ID는 메모리에서만 대조하고 원문·인증정보·추론 내용을 기록하지 않는다.
+- 제품 세션이 버리는 초기 알림은 `preStreamIgnored`로 분리한다. `applicationBinding`은 현재 제품의 범위 판정을, `normalizedBinding`은 중첩 `turn.id`를 가진 시작 알림까지 구분한 진단 판정을 나타낸다. 제품의 완료 조건이나 권한을 완화하지 않는다.
+- 프로세스별 결과 배열에는 시간 순서가 없다. 파일 저장·해시 대조의 부하가 시간에 영향을 줄 수 있어 비계측 실행과 동일한 성능이나 제공자 귀책을 증명하지 않는다.
+- 가상 자식 프로세스·종료 신호·프로필 보호·잘못된 해시·내용 미기록·기본 비활성 검사26개를 포함한 전체 Node100개가 통과했다(`/tmp/dougle-protocol-full-node.log`). 실제 모델 성공이나50개 인수 통과와 별개다.
+
 ### 초기 구현 검증
 
 - 로컬 `codex-cli 0.163.0`에서 **인증 없는 새 임시 프로필로 initialize/config/read만** 실행했습니다. 답변 생성 요청은 보내지 않았습니다.

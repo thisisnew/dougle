@@ -13,6 +13,7 @@ import { proposalCases, proposalFields } from './expert-live-proposal-fixtures.m
 import { scheduledDispatches, createVariantBudget, validateMemoryContext, memoryAnswerCheck, requireMemoryPlan, validateMemoryPrompt } from './expert-live-schedule.mjs'
 import { requireSemanticReview } from './expert-live-semantic-review.mjs'
 import { verifySearchModels } from './expert-live-search-models.mjs'
+import { prepareProtocolHook, collectProtocolCounters } from './expert-live-protocol-hook.mjs'
 const proposalOnly = process.env.FORGE_EXPERT_MODE === 'proposal'
 const memoryOnly = process.env.FORGE_EXPERT_MODE === 'memory'
 const localOnly = memoryOnly || process.env.FORGE_EXPERT_MODE === 'local'
@@ -79,6 +80,7 @@ let base
 let logs = ''
 let reportCreated = false
 let uiHoldActive = false
+let protocolHook = null
 const pause = milliseconds => new Promise(done => setTimeout(done, milliseconds))
 const shutdown = new AbortController()
 const onSignal = () => shutdown.abort()
@@ -135,7 +137,7 @@ async function startRuntime() {
   child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', jar,
     '--forge.desktop=true', '--server.address=127.0.0.1', '--server.port=0', `--forge.data-dir=${directory}`,
     `--forge.search-model-directory=${models.directory}`,
-    `--forge.ai.codex-command=${resolve(resources, 'ai/codex')}`,
+    `--forge.ai.codex-command=${protocolHook?.command ?? resolve(resources, 'ai/codex')}`,
     `--forge.ai.codex-stream-home=${resolve(process.env.FORGE_EXPERT_PROFILE)}`],
   { cwd: directory, detached: true, env: { ...process.env, FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true', JAVA_TOOL_OPTIONS: '', JDK_JAVA_OPTIONS: '', _JAVA_OPTIONS: '' }, stdio: ['pipe', 'pipe', 'pipe'] })
   child.on('error', () => { report.launchFailed = true })
@@ -200,6 +202,9 @@ try {
   if (proposalOnly) report.proposalFixtureSha256 = createHash('sha256').update(await readFile(resolve(root, 'scripts/expert-live-proposal-fixtures.mjs'))).digest('hex')
   report.jarSha256 = createHash('sha256').update(await readFile(jar)).digest('hex')
   if (process.env.FORGE_EXPERT_JAR_SHA256) assert.equal(report.jarSha256, process.env.FORGE_EXPERT_JAR_SHA256, 'JAR changed; do not run a different artifact')
+  protocolHook = await prepareProtocolHook({ environment: process.env, executable: resolve(resources, 'ai/codex'),
+    ownedDirectory: directory, maximumDispatches, jarSha256: report.jarSha256 })
+  if (protocolHook) report.protocolCounter = protocolHook.metadata
   await startRuntime()
   const connection = await api('/ai/providers/CODEX/connection', 'POST')
   report.connection = connection
@@ -398,13 +403,13 @@ try {
         await save()
         console.log(JSON.stringify({ scenario: scenario.id, variant, turn, status, automaticPass, dispatched: report.dispatched }))
         requireSuccessfulAnswer(report.results.at(-1))
-        if (memoryOnly) {
+        if (memoryOnly || protocolHook) {
           const result = report.results.at(-1)
           result.semanticReview = await requireSemanticReview({ ownedDirectory: directory,
-            result: { ...result, memoryCheck: report.memoryChecks.at(-1), artifactSha256: report.jarSha256 }, signal: shutdown.signal,
+            result: { ...result, memoryCheck: memoryOnly ? report.memoryChecks.at(-1) : undefined, artifactSha256: report.jarSha256 }, signal: shutdown.signal,
             notify: details => console.log(JSON.stringify({ event: 'WAIT_SEMANTIC_REVIEW', variant, turn, ...details })) })
           result.manualVerdict = 'PASS'
-          priorMemoryTurns.push({ bundle, answer })
+          if (memoryOnly) priorMemoryTurns.push({ bundle, answer })
           await save()
         }
       }
@@ -438,6 +443,15 @@ try {
   process.exitCode = 1
 } finally {
   await stopRuntime()
+  if (protocolHook) {
+    try { report.protocolCounter = await collectProtocolCounters(protocolHook) }
+    catch {
+      report.protocolCounter = { ...protocolHook.metadata, collectionFailed: true }
+      report.error = report.error || 'Protocol counter collection failed; no raw stats retained'
+      report.completed = false
+      process.exitCode = 1
+    }
+  }
   await rm(directory, { recursive: true, force: true })
   process.removeListener('SIGINT', onSignal)
   process.removeListener('SIGTERM', onSignal)
