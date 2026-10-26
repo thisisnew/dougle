@@ -1,0 +1,14 @@
+{
+  "fixtureVersion": "readonly-slack-receipts-v1",
+  "executedAt": "2026-10-26T10:18:04.359Z",
+  "jarSha256": "5cd81269031769b8c65af4a3cfc136dcd562e30a0c3e91f255f6a959f4a9bd0d",
+  "result": "PASS",
+  "deniedRequests": 300,
+  "restarts": 2,
+  "legacyReceiptCount": 3,
+  "legacyRowsUnchanged": true,
+  "jobRows": 0,
+  "observedProxyRequests": 0,
+  "networkPolicy": "macOS sandbox loopback-only; JVM HTTP(S) rejecting proxy",
+  "limits": "Proxy observation does not count bypassed/blocked transport attempts. No real Slack, credentials, external AI, user DB, or whole-product E35 acceptance. Legacy SENT is seeded synthetic data, not a real send. No acceptance inventory promotion."
+}

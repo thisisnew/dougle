@@ -1,5 +1,13 @@
 # Dougle 개발 지침
 
+- 2026-10-26 최우선 사용자 정책: Slack을 포함한 모든 외부 업무 시스템은 조회 전용이다. DB·문서·원본 파일 생성/수정/삭제, Slack 메시지 게시/수정/삭제를 금지하며 사용자 승인이나 설정으로 해제하지 않는다. 앱 내부 대화·색인·설정 저장과 조회용 인증/연결 수립은 허용한다. Slack 답변은 로컬 초안·복사까지만 허용한다. 아래 답장 전송 구현/검증은 과거 기록이며 신규 실행 경로를 유지할 근거가 아니다. 정책 반영 전 0.1.21 스냅샷은 설치·공개하지 않는다.
+
+- 최신 소스는 DB v28 작업 중이다. `slack_reply`는 명시적 일회 전송 동의/영수증을 저장하고 시작 시 미완료 SENDING을 UNCERTAIN으로 바꿔 자동 재전송하지 않는다. 전송 중 Workspace 삭제는 원자적으로 거부한다. 아래 v27은 앞서 검증한 JAR 범위이며 v28 공개·설치·실제 Slack 전송 검증을 뜻하지 않는다.
+
+- 최신 전문가 작업본은 DB v27이다. `browser_investigation`은 별도 동의한 격리 브라우저 조회 범위/진행을 저장한다. `investigation_plan`은 별도 일회 동의된 계획 AI 1회·로컬 검색 1회를 저장하며 새 답변은 새 불변 근거/승인으로 실행한다. V3 계획 미리보기는 NO_EVIDENCE 질문도 검색을 재시도할 수 있다. `PlanModel` 전용 출력 schema를 사용하고 답변용 schema를 재사용하지 않는다. `team_settings_import_receipt`는 새 Workspace 가져오기의 요청/계획 중복을 막는다. 기존 v25 근거 JSON·답변 승인은 유지한다. 최신 검사·미배포 범위는 `HANDOFF.md`와 `docs/expert-implementation.md`를 우선하고 아래 DB v25/v26 유지 문구는 이전 단계로 읽는다.
+
+- 전문가 구현 작업본은 `docs/expert-implementation.md`를 우선한다. 최신 사용자 요구는 실제 연속 대화이며 아래 독립 질문/자동 이전 문맥 미전송은 이전 정책이다. thread/parent/request ID와 제한된 최근 문맥을 불변 근거 JSON에 저장하고 DB v25·기존 승인/일회 소비를 유지한다. 단위/가상 검사를 실제 모델·서비스·ARM 인수 통과로 합산하지 않는다. 50개 판정은 `docs/expert-evaluation-status.json`과 `node scripts/expert-evaluation.mjs gate`로 확인한다. 새 작업본은 기존 draft 0.1.20 패키지와 다르며 미배포다.
+
 - 최신 검색 작업본은 DB v25입니다. Mac 패키지에 CPU별 다국어 검색 엔진을 포함하고 자동 준비합니다. 준비/오류 중 새 질문은 UI/API에서 잠급니다. 768자 조각을 재평가한 뒤 문서 중복을 제거하고, 근거 고정 시 짧은 원문/앞뒤 문맥을 확장합니다. Notion MCP JSON 본문·제목을 해제하며 기존 자료에는 재동기화가 필요합니다. 질문 기록은 체크박스 일괄 삭제입니다. 최신 검증과 남은 한계는 `docs/ingestion-retrieval-upgrade.md`를 우선합니다. 아래 선택형 다운로드·v24 설명은 이전 이력입니다.
 
 - 최신 플러그인은 설정 내부에 있습니다. Notion·Jira/Confluence Cloud는 공식 MCP의 DCR/PKCE·기본 브라우저 승인·로컬 콜백·취소/만료·암호화 보관·refresh 회전을 구현합니다. 읽기 도구만 허용하고 Workspace에 등록한 개별 링크를 수집합니다. MySQL 접속 폼/스키마 수집과 이전 내부 토큰 API는 유지합니다. 실제 외부 계정 승인·자료 선택 검색창·복수 계정·공간 전체 수집·DB 행/SQL IDE는 미검증/미구현 구분을 `docs/plugins.md`에서 확인합니다.

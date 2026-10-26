@@ -40,21 +40,117 @@ class CodexAppServerTest {
         return new CodexAppServer(executable, home, timeout);
     }
 
+    private CodexAppServer turnFixture(String events) throws Exception {
+        var server = fixture("normal", Duration.ofMillis(1500));
+        Path original = Path.of("../scripts/fixtures/fake-codex-app-server.mjs").toRealPath();
+        String script = Files.readString(original);
+        String marker = "    if (mode === 'request')";
+        assertThat(script).contains(marker);
+        Path synthetic = directory.resolve("synthetic-app-server.mjs");
+        Files.writeString(synthetic, script.replace(marker, "    if (mode === 'normal') { " + events + "; return }\n" + marker));
+        Path wrapper = Path.of(executable);
+        Files.writeString(wrapper, Files.readString(wrapper).replace(original.toString(), synthetic.toString()));
+        return server;
+    }
+
+    @Test
+    void timeoutReportsCompletedMessageButIgnoredWrongTurnCompletion() throws Exception {
+        var server = turnFixture("partial(); notification('item/completed', {item: {...item, text: 'private-final'}}); "
+                + "notification('turn/completed', {turn: {id: 'private-other-turn', status: 'completed'}})");
+        assertThatThrownBy(() -> server.generate("private-prompt", "", ignored -> {}))
+                .isInstanceOfSatisfying(dev.knowledgeforge.knowledge.application.ProviderExecutionException.class, error -> {
+                    assertThat(error.status()).isEqualTo(504);
+                    var progress = error.diagnostic().appStream();
+                    assertThat(progress.turnAccepted()).isTrue();
+                    assertThat(progress.messages()).isEqualTo(1);
+                    assertThat(progress.deltas()).isEqualTo(1);
+                    assertThat(progress.completedMessages()).isEqualTo(1);
+                    assertThat(progress.matchedCompletions()).isZero();
+                    assertThat(progress.ignoredBindings()).isEqualTo(1);
+                    assertThat(progress.protocolInvalid()).isZero();
+                    assertThat(error.getMessage()).doesNotContain("private", home.toString());
+                });
+        assertFixtureStopped();
+    }
+
+    @Test
+    void unterminatedCompletionLineIsCountedButNeverAccepted() throws Exception {
+        var server = turnFixture("process.stdout.write(JSON.stringify({method: 'turn/completed', params: {threadId: 'fixture-thread', turn: {id: 'fixture-turn', status: 'completed'}}}))");
+        assertThatThrownBy(() -> server.generate("synthetic", "", ignored -> {}))
+                .isInstanceOfSatisfying(dev.knowledgeforge.knowledge.application.ProviderExecutionException.class, error -> {
+                    assertThat(error.status()).isEqualTo(504);
+                    assertThat(error.diagnostic().appStream().turnAccepted()).isTrue();
+                    assertThat(error.diagnostic().appStream().pendingLineBytes()).isPositive();
+                    assertThat(error.diagnostic().appStream().matchedCompletions()).isZero();
+                });
+        assertFixtureStopped();
+    }
+
+    @Test
+    void invalidCompletionRetainsTypedDiagnosticsWithoutReturningCandidate() throws Exception {
+        var server = turnFixture("notification('turn/completed', {turn: {id: 'fixture-turn', status: 'completed'}})");
+        assertThatThrownBy(() -> server.generate("private-prompt", "", ignored -> {}))
+                .isInstanceOfSatisfying(dev.knowledgeforge.knowledge.application.ProviderExecutionException.class, error -> {
+                    assertThat(error.status()).isEqualTo(502);
+                    assertThat(error.diagnostic().appStream().matchedCompletions()).isEqualTo(1);
+                    assertThat(error.diagnostic().appStream().protocolInvalid()).isEqualTo(1);
+                    assertThat(error.getMessage()).contains("자동 재전송하지 않습니다").doesNotContain("private");
+                });
+        assertFixtureStopped();
+    }
+
+    @Test
+    void timeoutDistinguishesBlockedLocalCallbackWithoutRelaxingDeadline() throws Exception {
+        var server = turnFixture("partial()");
+        var entered = new CountDownLatch(1);
+        var release = new CountDownLatch(1);
+        try {
+            assertThatThrownBy(() -> server.generate("synthetic", "", ignored -> {
+                entered.countDown();
+                try { release.await(); }
+                catch (InterruptedException stopped) { Thread.currentThread().interrupt(); }
+            })).isInstanceOfSatisfying(dev.knowledgeforge.knowledge.application.ProviderExecutionException.class, error -> {
+                assertThat(error.status()).isEqualTo(504);
+                assertThat(entered.getCount()).isZero();
+                assertThat(error.diagnostic().appStream().callbackActive()).isTrue();
+                assertThat(error.diagnostic().appStream().messages()).isEqualTo(1);
+            });
+        } finally { release.countDown(); }
+        assertFixtureStopped();
+    }
+
+    private void assertFixtureStopped() throws Exception {
+        var first = JsonMapper.builder().build().readTree(Files.readAllLines(trace).getFirst());
+        assertThat(ProcessHandle.of(first.path("pid").asLong()).map(ProcessHandle::isAlive).orElse(false)).isFalse();
+        assertThat(Files.exists(Path.of(first.path("cwd").asString()))).isFalse();
+        assertThat(Files.readAllLines(trace).stream().filter(line -> line.contains("turn/start")).count()).isEqualTo(1);
+    }
+
     @Test
     void optInRoutesCodexAnswerThroughIsolatedStreamAndReleasesProcessAndLock() throws Exception {
         fixture("normal", Duration.ofSeconds(8));
         var model = new CliCuratorModel(executable, "unused", Duration.ofSeconds(8), new CuratorSettings("", ""), home.toString());
         var texts = new CopyOnWriteArrayList<String>();
-        var partial = new CountDownLatch(1);
+        var partial = new CompletableFuture<String>();
+        var releasePartial = new CountDownLatch(1);
         var result = new CompletableFuture<String>();
         Thread worker = Thread.ofVirtual().start(() -> {
             try { result.complete(model.generateWithText(Provider.CODEX, "synthetic-only", "fixture-model", text -> {
-                texts.add(text); if (!text.isEmpty()) partial.countDown();
+                texts.add(text);
+                if (!text.isEmpty() && partial.complete(text)) {
+                    try { releasePartial.await(); }
+                    catch (InterruptedException error) {
+                        Thread.currentThread().interrupt();
+                        throw new IllegalStateException("Partial output observation interrupted", error);
+                    }
+                }
             })); } catch (Throwable error) { result.completeExceptionally(error); }
         });
         try {
-            assertThat(partial.await(5, TimeUnit.SECONDS)).isTrue();
+            CompletableFuture.anyOf(partial, result).get(8, TimeUnit.SECONDS);
+            assertThat(partial).isCompletedWithValue("가상 Codex 임시 출력");
             assertThat(result.isDone()).isFalse();
+            releasePartial.countDown();
             assertThat(result.get(8, TimeUnit.SECONDS)).contains("R1", "claims").doesNotContain("임시");
             assertThat(texts).contains("가상 Codex 임시 출력");
             var first = JsonMapper.builder().build().readTree(Files.readAllLines(trace).getFirst());
@@ -62,7 +158,7 @@ class CodexAppServerTest {
             assertThat(ProcessHandle.of(first.path("pid").asLong()).map(ProcessHandle::isAlive).orElse(false)).isFalse();
             assertThat(Files.readString(home.resolve("auth.json"))).isEqualTo("{\"synthetic\":true}");
             assertThat(new CodexAppServer(executable, home, Duration.ofSeconds(8)).generate("synthetic", "", text -> {})).contains("claims");
-        } finally { worker.interrupt(); worker.join(5000); }
+        } finally { releasePartial.countDown(); worker.interrupt(); worker.join(5000); }
     }
 
     @Test
@@ -139,7 +235,10 @@ class CodexAppServerTest {
     void enforcesTimeout() throws Exception {
         var server = fixture("hang", Duration.ofMillis(500));
         assertThatThrownBy(() -> server.generate("synthetic", "", text -> {}))
-                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(504));
+                .isInstanceOfSatisfying(LibraryException.class, error -> {
+                    assertThat(error.status()).isEqualTo(504);
+                    assertThat(error.getMessage()).contains("단계에서 제한 시간을 초과").doesNotContain("synthetic", home.toString());
+                });
     }
 
     @Test

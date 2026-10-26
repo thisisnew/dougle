@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "reportId": "mysql-runtime-20261025",
+  "fixtureVersion": "synthetic-mysql-read-runtime-v1",
+  "reviewedAt": "2026-10-25T14:26:58.733Z",
+  "reviewer": "Coding agent; fixture/source review, not independent human acceptance",
+  "scope": "Real isolated MySQL adapter smoke plus mocked JDBC unit regressions. Not packaged JAR, HTTP/UI, planner, company database, log-provider or full E24/E25 acceptance.",
+  "revision": {
+    "gitHead": "11e7750acff964080a2193329584399ca4da964c",
+    "workingTree": "dirty; tested source changes are not represented by HEAD alone",
+    "sha256CapturedAt": "2026-10-25T14:26:58.733Z",
+    "sourceAndDependencyHashes": [
+      {
+        "path": "scripts/mysql-read-runtime-smoke.mjs",
+        "sha256": "4c5471a5b6e231c2c875724e4e65ce2d55b06df3595e3a28c32b73d9ea886ea7"
+      },
+      {
+        "path": "scripts/fixtures/MysqlReadRuntimeSmoke.java",
+        "sha256": "566cef59a653cd203caf5f51195b1eaab15c012d334b95f9a6e905d5b4ab791d"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/plugins/adapter/MysqlClient.java",
+        "sha256": "d95bb658ed081fb648a5adbf149aaf10ddc84eab1e630184a6bbd4809d15f447"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/plugins/adapter/MysqlReadClient.java",
+        "sha256": "120bc26fb37e0adf943dfb197038281147ece447550a9da5017de17b415da178"
+      },
+      {
+        "path": "backend/src/test/java/dev/knowledgeforge/plugins/adapter/MysqlReadClientTest.java",
+        "sha256": "733bda56ae9f064ba69e8f66d10f20bf780720cff4a3668d59570a03a1342992"
+      },
+      {
+        "path": ".m2/com/mysql/mysql-connector-j/9.7.0/mysql-connector-j-9.7.0.jar",
+        "sha256": "0353648eaa1c91e0f4020c959abf756bc866ffd583df22ae6b6f6e0cbd43eb44"
+      },
+      {
+        "path": ".m2/org/springframework/spring-context/7.0.9/spring-context-7.0.9.jar",
+        "sha256": "7552a2fcfa30cea53eb14d7a65a7a8e1b1dd82e832a7164fb7e6fb105f438858"
+      }
+    ],
+    "hashCaveat": "Hashes were recorded after the successful runs, not atomically at launch. The main client and fixture sources were unchanged between their successful runs and this capture. Supporting backend/target/classes and the complete unit-test dependency classpath were reused and not hashed at run time; no fully hermetic build claim."
+  },
+  "artifact": {
+    "jarUsed": false,
+    "jarSha256": null,
+    "jarWritten": false,
+    "mavenUsed": false,
+    "temporaryJavacOutput": true,
+    "compiledSources": [
+      "MysqlClient.java",
+      "MysqlReadClient.java",
+      "MysqlReadRuntimeSmoke.java"
+    ],
+    "supportingClasses": "Existing backend/target/classes; production supporting types were not independently rebuilt by this smoke.",
+    "inventoryModified": false
+  },
+  "environment": {
+    "os": "macOS",
+    "architecture": "x86_64",
+    "java": "Java 21 selected with /usr/libexec/java_home -v 21; exact patch version not captured",
+    "node": "v24.2.0",
+    "server": {
+      "version": "MySQL 8.4.0 for macos13.2 on x86_64 (Anaconda)",
+      "sha256": "2c384c16c3d3e6d2a9de3348f2aaf97dc7f235cb6855fadb37f189bea70cb120",
+      "versionProbe": {
+        "arguments": [
+          "--no-defaults",
+          "--version"
+        ],
+        "exitCode": 0,
+        "elapsedMs": 27568
+      },
+      "diagnosis": "Earlier bounded probes spent time in dyld dependency loading/mapping. Subsequent version and server startup succeeded; exact OS-level latency cause not established."
+    },
+    "jdbc": "Connector/J 9.7.0"
+  },
+  "isolation": {
+    "data": "Synthetic fixture only: three rows, one 4096-character ASCII value, numeric/text/generated/blob columns and a view.",
+    "credentials": "Generated disposable fixture credentials only; no credential values retained. Root temporary password was never read; root locked at normal startup. SELECT-only fixture account. No user/company credential or configuration access.",
+    "server": "--no-defaults first; fresh private datadir/HOME/socket/pid/log, random loopback port, mysqlx OFF, binary log disabled, local-infile OFF. No OS service/default datadir.",
+    "tls": "REQUIRED with local generated certificate, not VERIFY_IDENTITY.",
+    "cleanup": "Successful run exited 0; owned process groups stopped and private directory removed. Subsequent scoped process check found no matching owned mysqld. SIGKILL/power-loss cleanup not guaranteed."
+  },
+  "reproduction": {
+    "command": "node scripts/mysql-read-runtime-smoke.mjs /absolute/path/to/mysqld",
+    "runner": "scripts/mysql-read-runtime-smoke.mjs",
+    "fixture": "scripts/fixtures/MysqlReadRuntimeSmoke.java",
+    "instructions": "scripts/fixtures/mysql-read-runtime.md",
+    "requirements": "Existing local MySQL installation with basedir/lib/plugin, Java 21, Node, prebuilt backend/target/classes, cached Connector/J and spring-context jars. No install/network/Maven.",
+    "evidenceRetention": "Sanitized runtime transcript and complete captured unit summary embedded below; /tmp files are not required to read this result."
+  },
+  "toolCalls": {
+    "type": "Source-reviewed operation summary corroborated by assertion transcript; not a complete timestamped JDBC/wire trace.",
+    "externalAiCalls": 0,
+    "externalServiceCalls": 0,
+    "actualConnectionCount": null,
+    "operations": [
+      {
+        "name": "mysqld",
+        "arguments": [
+          "--no-defaults",
+          "--version"
+        ],
+        "result": "version succeeded"
+      },
+      {
+        "name": "javac",
+        "scope": "current MysqlClient, MysqlReadClient and synthetic fixture into private temporary classes",
+        "result": "exit 0"
+      },
+      {
+        "name": "mysqld",
+        "arguments": [
+          "--no-defaults",
+          "--basedir=<provided-installation>",
+          "--datadir=<private>/data",
+          "--initialize"
+        ],
+        "result": "secure initialization succeeded; full additional private path flags in runner"
+      },
+      {
+        "name": "mysqld",
+        "scope": "private loopback server with init-file creating synthetic schema and SELECT-only account",
+        "result": "ready; cleaned up"
+      },
+      {
+        "name": "MysqlClient.schema",
+        "scope": "fixture schema via TLS",
+        "result": "one schema file containing label"
+      },
+      {
+        "name": "MysqlReadClient.read",
+        "scope": "text equality, injection-as-data, row/byte caps, rejected table/binary/generated/view, cancellation, post-start budget, numeric equality and early budget",
+        "result": "all corresponding assertions passed"
+      },
+      {
+        "name": "direct JDBC fixture checks",
+        "scope": "INSERT denied by server SELECT-only grant; transaction active status then rollback-cleared status",
+        "result": "passed; these bypass production request policy to test account/server behavior"
+      },
+      {
+        "name": "JUnit Platform via direct javac/java",
+        "scope": "MysqlReadClientTest, cached dependencies, temporary classes",
+        "result": "22 tests successful, no skips or failures"
+      }
+    ]
+  },
+  "results": {
+    "realServer": {
+      "status": "PASS_WITHIN_FIXTURE_SCOPE",
+      "checks": 17,
+      "failed": 0,
+      "exitCode": 0,
+      "finishedAtInferredFromLogMtime": "2026-10-25T14:24:14.806Z",
+      "totalLatencyMs": null,
+      "checksPassed": [
+        "production schema collection over TLS",
+        "selected real rows",
+        "predicate injection remains data",
+        "row cap with truncation",
+        "128-byte output cap",
+        "unapproved table denied",
+        "binary_value denied by real metadata",
+        "derived denied by real metadata",
+        "view denied by real metadata",
+        "cooperative cancellation",
+        "cancellation executes real JDBC rollback",
+        "elapsed budget enforced with synthetic checkpoint delay",
+        "server SELECT-only grant rejects mutation",
+        "server reports transaction active",
+        "server reports transaction ends after rollback",
+        "numeric column real JDBC conversion",
+        "early timeout preserves timeout classification"
+      ]
+    },
+    "unit": {
+      "status": "PASS_WITHIN_UNIT_SCOPE",
+      "tests": 22,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 6093,
+      "finishedAtInferredFromLogMtime": "2026-10-25T14:24:56.647Z"
+    },
+    "fixesValidated": [
+      "Numeric conversion no longer calls unsupported getCharacterStream on INT; unit tests also cover scalar type routing and defensive 128-character representation cap.",
+      "Early timeout no longer triggers rollback while autocommit=true; unit regressions verify failing rollback cannot mask primary timeout, cancellation or Error."
+    ]
+  },
+  "limits": {
+    "exercised": {
+      "fixtureRows": 3,
+      "largeCellCharacters": 4096,
+      "requestedRowCap": 1,
+      "outputByteCap": 128,
+      "normalBudgetMs": 5000,
+      "timeoutBudgetMs": 1000,
+      "syntheticDelayMs": 1100
+    },
+    "productionConfiguredNotAllBoundaryTested": {
+      "maxRows": 200,
+      "maxBytes": 65536,
+      "maxTimeoutMs": 15000,
+      "maxColumnsPerRequest": 16,
+      "scalarRepresentationCharacters": 128
+    },
+    "runnerDeadlinesMs": {
+      "version": 60000,
+      "javac": 30000,
+      "initialize": 120000,
+      "readiness": 60000,
+      "javaFixture": 45000,
+      "overall": 300000,
+      "termToKill": 5000
+    },
+    "limitations": [
+      "Time-budget evidence uses cooperative checkpoint delay; not a server-stalled query, socket interruption or measured hard wall-clock cutoff.",
+      "No exhaustive boundary matrix, large-table load, pagination, retries, log responses, 429, HTTP/controller consent, UI rendering or model final-answer evaluation."
+    ]
+  },
+  "acceptanceReview": [
+    {
+      "id": "E24",
+      "input": "SQL 변경문·다중문·파일 접근·부작용 함수 시도",
+      "acceptance": "읽기 전용 계정과 실행 정책으로 차단, 실제 변경 0건",
+      "status": "PARTIAL",
+      "recommendation": "Do not mark PASS from this report; leave parent-owned inventory unchanged.",
+      "supported": [
+        "Real server rejects one INSERT under SELECT-only fixture account.",
+        "Parameterized equality treats SQL injection text as data.",
+        "Request allowlist rejects an unapproved table; actual metadata rejects a view and generated/binary columns; read transactions end by rollback.",
+        "Unit tests reject expression/multistatement/file-access-like identifiers and assert restrictive JDBC properties; these are mocked/policy checks, not real-server attack executions."
+      ],
+      "gaps": [
+        "Real transport attack matrix does not execute or assert rejection of UPDATE/DELETE/DDL, multiple statements, LOAD_FILE/OUTFILE or side-effect functions.",
+        "No before/after database-state snapshot or independent audit establishing zero changes across the entire attack matrix. Expected fixture initialization mutations are outside investigation-read scope.",
+        "Production approval/controller/executor entry point not exercised. Account grant restriction and fixed request policy are separate tested layers, not full end-to-end proof."
+      ]
+    },
+    {
+      "id": "E25",
+      "input": "큰 DB/로그 응답·429·일시 실패",
+      "acceptance": "페이지·행·바이트·시간·재시도 예산 준수, 일부 결과를 전체로 표현하지 않음",
+      "status": "PARTIAL",
+      "recommendation": "Do not mark PASS from this report; leave parent-owned inventory unchanged.",
+      "supported": [
+        "Real three-row query obeys one-row cap and reports truncated=true.",
+        "4096-character text cell obeys 128-byte output cap and reports truncated=true.",
+        "Synthetic delayed checkpoints enforce elapsed budget before/after transaction setup; cancellation rolls back.",
+        "Adapter truncation is explicit; unit tests separately assert truncation marker and streaming UTF-8 budget."
+      ],
+      "gaps": [
+        "No large database/log load, pagination budget or multi-page behavior exercised.",
+        "No HTTP 429, retry policy, transient failure sequence or retry-budget assertion.",
+        "No actual server-stalled query/network timeout or maximum-limit stress case.",
+        "No UI/model final-answer check showing partial output is never presented as complete; result flag alone does not satisfy that end-to-end criterion."
+      ]
+    }
+  ],
+  "retainedEvidence": {
+    "runtime": {
+      "originalSha256": "9f30aa1cee64a4fc81b9236bfe4df51eb6c4898fbba8493d98318d883a3a7d3e",
+      "sanitization": "Only absolute supplied binary path replaced with <provided-mysqld>. No password in captured transcript. Original hash refers to pre-substitution text.",
+      "transcript": "<provided-mysqld>  Ver 8.4.0 for macos13.2 on x86_64 (Anaconda)\nInitializing private synthetic datadir (120s deadline)\nPASS production schema collection over TLS\nPASS selected real rows\nPASS predicate injection remains data\nPASS row cap with truncation\nPASS 128-byte output cap\nPASS unapproved table denied\nPASS binary_value denied by real metadata\nPASS derived denied by real metadata\nPASS view denied by real metadata\nPASS cooperative cancellation\nPASS cancellation executes real JDBC rollback\nPASS elapsed budget enforced with synthetic checkpoint delay\nSynthetic JDBC operation executeUpdate: java.sql.SQLSyntaxErrorException: INSERT command denied to user 'fixture_reader'@'127.0.0.1' for table 'items'\nPASS server SELECT-only grant rejects mutation\nPASS server reports transaction active\nPASS server reports transaction ends after rollback\nChecks passed before numeric-column regression: 15\nPASS numeric column real JDBC conversion\nPASS early timeout preserves timeout classification\nSynthetic MySQL checks passed: 17\n\nOwned processes stopped; private datadir and generated credentials removed.\n"
+    },
+    "unit": {
+      "sha256": "ae8fef06aefb9547de880fe73bf4fa06c864efa1be733bc0f5c1f736dbfa1e11",
+      "transcript": "\nTest run finished after 6093 ms\n[         2 containers found      ]\n[         0 containers skipped    ]\n[         2 containers started    ]\n[         0 containers aborted    ]\n[         2 containers successful ]\n[         0 containers failed     ]\n[        22 tests found           ]\n[         0 tests skipped         ]\n[        22 tests started         ]\n[         0 tests aborted         ]\n[        22 tests successful      ]\n[         0 tests failed          ]\n\n",
+      "coverageCaveat": "Captured stdout summary only; JVM/Mockito warnings were on stderr and are not included. This is not a per-test XML report."
+    }
+  }
+}

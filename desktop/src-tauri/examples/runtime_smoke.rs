@@ -29,10 +29,10 @@ window.addEventListener('DOMContentLoaded', () => {
       if (!response.ok) throw Error('API ' + response.status);
       return response.json();
     }
-    async function until(ready) {
-      const deadline = Date.now() + 10000;
+    async function until(ready, timeout = 10000) {
+      const deadline = Date.now() + timeout;
       while (Date.now() < deadline) {
-        if (ready()) return;
+        if (await ready()) return;
         await new Promise(done => setTimeout(done, 50));
       }
       throw Error('UI timeout');
@@ -44,13 +44,25 @@ window.addEventListener('DOMContentLoaded', () => {
       phase = 'workspace dialog';
       await until(() => document.querySelector('#item-name'));
       const input = document.querySelector('#item-name');
+      if (input.maxLength !== 20) throw Error('Workspace name limit mismatch');
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, '가상 데스크톱 검증');
       input.dispatchEvent(new Event('input', { bubbles: true }));
       phase = 'workspace input';
       await until(() => !document.querySelector('[role="dialog"] button[type="submit"]').disabled);
       document.querySelector('[role="dialog"] button[type="submit"]').click();
       phase = 'workspace saved';
-      await until(() => document.querySelector('#workspace option:checked')?.textContent === '가상 데스크톱 검증');
+      const picker = () => document.querySelector('button[role="combobox"][aria-label="Workspace 선택"]');
+      await until(() => picker()?.textContent.trim() === '가상 데스크톱 검증' && !picker().disabled);
+      picker().click();
+      phase = 'workspace dropdown';
+      await until(() => picker().getAttribute('aria-expanded') === 'true'
+        && document.querySelector('[role="listbox"][aria-label="Workspace 목록"]'));
+      const selected = document.querySelectorAll('[role="listbox"][aria-label="Workspace 목록"] [role="option"][aria-selected="true"]');
+      if (selected.length !== 1 || selected[0].textContent.trim() !== '가상 데스크톱 검증'
+        || selected[0].getBoundingClientRect().height === 0) throw Error('Workspace dropdown selection mismatch');
+      picker().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      await until(() => picker().getAttribute('aria-expanded') === 'false'
+        && !document.querySelector('[role="listbox"][aria-label="Workspace 목록"]'));
       const session = await api('/session');
       const workspace = session.workspaces.find(item => item.name === '가상 데스크톱 검증');
       if (!workspace || session.activeWorkspaceId !== workspace.id) throw Error('Workspace UI mismatch');
@@ -96,6 +108,12 @@ window.addEventListener('DOMContentLoaded', () => {
       const checkText = dialog.querySelector('.check-option span').getBoundingClientRect();
       if (checkBox.width < 16 || checkText.left - checkBox.right < 8) throw Error('Checkbox label spacing mismatch');
       [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '닫기').click();
+      phase = 'bundled local search model readiness';
+      await until(async () => {
+        const model = await api('/search-model');
+        if (!['STARTING', 'LOADING', 'INDEXING', 'READY'].includes(model.state)) throw Error('Bundled search model unavailable: ' + model.state);
+        return model.state === 'READY';
+      }, 120000);
       phase = 'library operations';
       const base = '/workspaces/' + workspace.id;
       const form = new FormData();
@@ -105,8 +123,10 @@ window.addEventListener('DOMContentLoaded', () => {
       if (preview.text !== 'Synthetic telescope observations.') throw Error('Preview mismatch');
       const downloaded = await fetch('/api' + base + '/entries/' + file.id + '/content', { headers });
       if (await downloaded.text() !== preview.text) throw Error('Download mismatch');
-      const hits = await api(base + '/search?query=telescope');
-      if (!hits.some(hit => hit.entryId === file.id)) throw Error('Search mismatch');
+      await until(async () => {
+        const hits = await api(base + '/search?query=telescope');
+        return hits.some(hit => hit.entryId === file.id && hit.snippet.includes('Synthetic telescope observations.'));
+      }, 30000);
       const draft = await api(base + '/knowledge', 'POST', {
         title: 'Synthetic native publication', markdown: 'Synthetic telescope observations. [E1]',
         citations: [{ entryId: file.id, startLine: 1, endLine: 1 }],
@@ -144,15 +164,15 @@ window.addEventListener('DOMContentLoaded', () => {
         codexPath: '', claudePath: '', expectedRevision: settings.saved.revision, acknowledged: true,
       });
       if (!saved.restartRequired || saved.saved.revision !== settings.saved.revision + 1) throw Error('CLI settings mismatch');
-      await api('/workspaces', 'POST', { name: 'NATIVE_RUNTIME_QA_PASSED' });
+      await api('/workspaces', 'POST', { name: 'NATIVE_QA_PASSED' });
     } catch (error) {
       const opened = document.querySelector('dialog[aria-label="AI 연결"]');
       const select = opened?.querySelector('select');
       const diagnostic = `dialog=${!!opened},open=${!!opened?.open},height=${select?.getBoundingClientRect().height ?? -1},loading=${document.body.innerText.includes('AI 연결을 여는 중')}`;
+      window.__FORGE_QA_FAILURE__ = phase + ' ' + diagnostic + ' ' + String(error);
+      location.hash = 'forge-qa-' + encodeURIComponent(window.__FORGE_QA_FAILURE__);
       await fetch('/api/workspaces', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: ('QA ' + diagnostic + ' ' + String(error)).slice(0, 100) }) }).catch(() => {});
-      await fetch('/api/workspaces', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'NATIVE_RUNTIME_QA_FAILED: ' + phase.replaceAll('/', '-').slice(0, 80) }) }).catch(() => {});
+        body: JSON.stringify({ name: 'NATIVE_QA_FAILED' }) }).catch(() => {});
     }
   }, 100);
 }, { once: true });
@@ -277,7 +297,7 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
         .timeout_global(Some(Duration::from_secs(2)))
         .build()
         .into();
-    let deadline = Instant::now() + Duration::from_secs(45);
+    let deadline = Instant::now() + Duration::from_secs(180);
     let mut passed = false;
     while Instant::now() < deadline && backend.check_process().is_ok() {
         if let Ok(mut response) = agent
@@ -293,19 +313,19 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
         {
             passed = workspaces
                 .iter()
-                .any(|workspace| workspace["name"] == "NATIVE_RUNTIME_QA_PASSED");
+                .any(|workspace| workspace["name"] == "NATIVE_QA_PASSED");
             if passed
                 || workspaces.iter().any(|workspace| {
                     workspace["name"]
                         .as_str()
-                        .is_some_and(|name| name.starts_with("NATIVE_RUNTIME_QA_FAILED:"))
+                        .is_some_and(|name| name == "NATIVE_QA_FAILED")
                 })
             {
                 if !passed {
                     for workspace in workspaces {
                         if let Some(name) = workspace["name"]
                             .as_str()
-                            .filter(|name| name.starts_with("NATIVE_RUNTIME_QA_FAILED:"))
+                            .filter(|name| *name == "NATIVE_QA_FAILED")
                         {
                             eprintln!("{name}");
                         }
@@ -335,10 +355,10 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
             ),
             Err(error) => eprintln!("Session diagnostic: {error}"),
         }
-        let _ = _window.eval("location.hash = 'forge-qa-' + encodeURIComponent(String(window.__FORGE_QA_PHASE__ || 'script missing')); ");
+        let _ = _window.eval("location.hash = 'forge-qa-' + encodeURIComponent(String(window.__FORGE_QA_FAILURE__ || window.__FORGE_QA_PHASE__ || 'script missing')); ");
         let diagnostic = r#"fetch('/api/workspaces', {
           method: 'POST', headers: { 'X-Forge-Session': SESSION_VALUE, 'X-Forge-Client': '1', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: 'NATIVE_RUNTIME_QA_FAILED: timeout - ' + String(window.__FORGE_QA_PHASE__ || 'script missing').replaceAll('/', '-').slice(0, 60) })
+          body: JSON.stringify({ name: 'NATIVE_QA_FAILED' })
         }).catch(() => {});"#
             .replace("SESSION_VALUE", &serde_json::to_string(&backend.token).unwrap());
         let _ = _window.eval(diagnostic);
@@ -353,7 +373,7 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
                 && let Some(name) = workspaces.iter().find_map(|workspace| {
                     workspace["name"]
                         .as_str()
-                        .filter(|name| name.starts_with("NATIVE_RUNTIME_QA_FAILED: timeout"))
+                        .filter(|name| *name == "NATIVE_QA_FAILED")
                 })
             {
                 eprintln!("{name}");

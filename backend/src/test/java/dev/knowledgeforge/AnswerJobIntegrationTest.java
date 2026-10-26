@@ -41,6 +41,8 @@ class AnswerJobIntegrationTest {
     static void properties(DynamicPropertyRegistry registry) { registry.add("forge.data-dir", DATA::toString); }
     @Autowired AnswerJobService jobs;
     @Autowired AnswerApprovalService approvals;
+    @Autowired AnswerApprovalStore approvalStore;
+    @Autowired EvidenceBundleStore bundleStore;
     @Autowired ConversationService conversations;
     @Autowired ConversationPreviewService contextPreviews;
     @Autowired ConversationRequestService contextRequests;
@@ -84,6 +86,22 @@ class AnswerJobIntegrationTest {
         if (worker.get() != null) { worker.get().join(5000); assertThat(worker.get().isAlive()).isFalse(); }
     }
     AnswerJobService.Request request() { return new AnswerJobService.Request(UUID.randomUUID().toString(), approval.id(), approval.digest(), true); }
+
+    @Test
+    void legacyCredentialApprovalCannotExecuteAndImmutableBundleIsPreserved() {
+        var payload = bundle.payload();
+        bundle = bundleStore.save(workspace, new EvidenceBundle.Payload("password=Synthet1c-Only-Value-7823",
+                List.of(), false, "READY", payload.usedCharacters(), payload.maxCharacters(), payload.items(), List.of()));
+        var original = bundle;
+        approval = new AnswerApproval(UUID.randomUUID().toString(), bundle.id(), "CODEX", "model-one", "a".repeat(64),
+                Instant.now().toString(), Instant.now().plusSeconds(600).toString(), null);
+        approvalStore.save(approval);
+        assertThatThrownBy(() -> submit(request())).isInstanceOf(LibraryException.class).hasMessageContaining("인증정보");
+        assertThat(bundleStore.find(workspace, bundle.id()).orElseThrow()).isEqualTo(original);
+        assertThat(approvalStore.find(bundle.id()).orElseThrow()).isEqualTo(approval);
+        assertThat(jobs.list(workspace)).isEmpty();
+        verifyNoInteractions(model);
+    }
     AnswerJob submit(AnswerJobService.Request value) { return jobs.submit(workspace, bundle.id(), value); }
     AnswerJob terminal(String id) throws Exception {
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(6);

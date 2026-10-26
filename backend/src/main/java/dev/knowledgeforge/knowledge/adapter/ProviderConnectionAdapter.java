@@ -103,7 +103,7 @@ public class ProviderConnectionAdapter implements ProviderConnection {
         Process process;
         try { process = builder.start(); }
         catch (IOException exception) { throw new java.io.FileNotFoundException("Provider executable unavailable"); }
-        var executor = Executors.newVirtualThreadPerTaskExecutor();
+        var executor = Executors.newFixedThreadPool(2);
         var descendants = java.util.concurrent.ConcurrentHashMap.<ProcessHandle>newKeySet();
         try {
             process.getOutputStream().close();

@@ -4,7 +4,7 @@ import { request } from './api'
 import { Button } from './components/ui/button'
 import DeleteConfirmation from './DeleteConfirmation'
 
-type Question = { id: string; question: string; createdAt: string }
+type Question = { id: string; question: string; createdAt: string; questions?: string[] }
 
 type Props = { workspaceId: string | null; onSelect: (id: string | null) => void; onDeleted?: (id: string) => void }
 export default function QuestionGrid(props: Props) {
@@ -32,7 +32,7 @@ function ScopedQuestionGrid({ workspaceId, onSelect, onDeleted }: Props) {
       for (const item of deleting) {
         if (controller.signal.aborted) return
         try {
-          await request(`/workspaces/${encodeURIComponent(workspaceId)}/evidence-bundles/${encodeURIComponent(item.id)}`, { method: 'DELETE', signal: controller.signal })
+          await request(`/workspaces/${encodeURIComponent(workspaceId)}/chat-threads/${encodeURIComponent(item.id)}`, { method: 'DELETE', signal: controller.signal })
           if (controller.signal.aborted) return
           setItems(previous => previous.filter(value => value.id !== item.id))
           setSelected(previous => previous.filter(id => id !== item.id))
@@ -51,13 +51,13 @@ function ScopedQuestionGrid({ workspaceId, onSelect, onDeleted }: Props) {
     const controller = new AbortController()
     setLoading(true); setItems([]); setSelected([]); setError('')
     if (!workspaceId) { setLoading(false); return () => controller.abort() }
-    request<Question[]>(`/workspaces/${encodeURIComponent(workspaceId)}/evidence-bundles`, { signal: controller.signal })
+    request<Question[]>(`/workspaces/${encodeURIComponent(workspaceId)}/chat-threads`, { signal: controller.signal })
       .then(value => { if (!controller.signal.aborted) setItems(value) })
       .catch(reason => { if (!controller.signal.aborted) setError(reason.message) })
       .finally(() => { if (!controller.signal.aborted) setLoading(false) })
     return () => controller.abort()
   }, [workspaceId, revision])
-  const visible = items.filter(item => item.question.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))
+  const visible = items.filter(item => (item.questions ?? [item.question]).some(question => question.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())))
   return <section aria-label="질문 기록" className="question-grid-page">
     <div className="page-heading"><h1>질문 기록</h1></div>
     <div className="history-search" role="search"><Search size={18} aria-hidden="true" /><label className="sr-only" htmlFor="history-query">질문 찾기</label><input id="history-query" type="search" placeholder="질문 찾기" maxLength={256} value={query} disabled={deletingBusy} onChange={event => { setQuery(event.target.value); setSelected([]) }} /></div>

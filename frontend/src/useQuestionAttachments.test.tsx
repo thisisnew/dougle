@@ -8,6 +8,27 @@ const api = vi.mocked(request)
 const item = { id: 'file', name: 'note.txt', mediaType: 'text/plain', size: 4, characters: 4, truncated: false }
 beforeEach(() => { api.mockReset() })
 
+it('adopts captured text once without uploading or sending it and cleans abandoned drafts', () => {
+  api.mockResolvedValue(undefined)
+  const view = renderHook(() => useQuestionAttachments('one'))
+  act(() => { expect(view.result.current.adopt(item)).toBe(true) })
+  act(() => { expect(view.result.current.adopt(item)).toBe(true) })
+  expect(view.result.current.items).toEqual([item])
+  expect(api).not.toHaveBeenCalled()
+  view.unmount()
+  expect(api).toHaveBeenCalledExactlyOnceWith('/workspaces/one/attachments/file', { method: 'DELETE' })
+})
+
+it('enforces capture type and combined attachment limits', () => {
+  api.mockResolvedValue(undefined)
+  const view = renderHook(() => useQuestionAttachments('one'))
+  act(() => { expect(view.result.current.adopt({ ...item, mediaType: 'image/png' })).toBe(false) })
+  act(() => { for (const id of ['first', 'second', 'third', 'fourth']) expect(view.result.current.adopt({ ...item, id })).toBe(true) })
+  act(() => { expect(view.result.current.adopt({ ...item, id: 'fifth' })).toBe(false) })
+  expect(view.result.current.items).toHaveLength(4)
+  expect(api).not.toHaveBeenCalled()
+})
+
 it('uploads locally with multipart and removes without any AI request', async () => {
   api.mockResolvedValue(item)
   const view = renderHook(() => useQuestionAttachments('one'))

@@ -3,6 +3,9 @@ package dev.knowledgeforge.knowledge.application;
 public interface CuratorModel {
     enum Provider { CODEX, CLAUDE }
     String generate(Provider provider, String prompt, String requestedModel);
+    default String generatePlan(Provider provider, String prompt, String requestedModel) {
+        throw new dev.knowledgeforge.library.application.LibraryException(400, "이 AI 연결은 검색 계획을 지원하지 않습니다.");
+    }
     default String generateWithText(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
         return generate(provider, prompt, requestedModel);
     }

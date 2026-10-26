@@ -107,6 +107,24 @@ class CodexProfileTest {
     }
 
     @Test
+    void permitsOnlyTheRegularSqliteMaintenanceLockWithoutReadingOrChangingIt() throws Exception {
+        Path profile = CodexProfile.prepare(directory.resolve("profile").toString());
+        Path lock = profile.resolve(".sqlite-maintenance.lock");
+        Files.writeString(lock, "synthetic lock contents");
+        assertThat(CodexProfile.validate(profile, false)).isEqualTo(profile.toRealPath());
+        assertThat(Files.readString(lock)).isEqualTo("synthetic lock contents");
+        Files.delete(lock);
+        Files.createSymbolicLink(lock, directory.resolve("outside"));
+        assertThatThrownBy(() -> CodexProfile.validate(profile, false)).isInstanceOf(java.io.IOException.class);
+        Files.delete(lock);
+        Files.createDirectory(lock);
+        assertThatThrownBy(() -> CodexProfile.validate(profile, false)).isInstanceOf(java.io.IOException.class);
+        Files.delete(lock);
+        Files.writeString(profile.resolve(".sqlite-maintenance.toml"), "synthetic config");
+        assertThatThrownBy(() -> CodexProfile.validate(profile, false)).isInstanceOf(java.io.IOException.class);
+    }
+
+    @Test
     void profileChangeInvalidatesCodexApprovalBindingWithoutChangingClaude() {
         var store = mock(CliLaunchStore.class);
         when(store.current()).thenReturn(new CliLaunchStore.Configuration("", "", 0));

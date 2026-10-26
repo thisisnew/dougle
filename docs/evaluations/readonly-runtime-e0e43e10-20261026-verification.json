@@ -1,0 +1,40 @@
+{
+  "actualRunTimestamp": "2026-10-26T10:36:51.875Z",
+  "fixtureVersion": "readonly-slack-receipts-v1",
+  "authorizedHarnessInvocations": 1,
+  "exitCode": 0,
+  "rawReport": "docs/evaluations/readonly-runtime-e0e43e10-20261026.json",
+  "log": "/tmp/dougle-readonly-e0e43e10-20261026.log",
+  "rawStdout": "/tmp/dougle-readonly-e0e43e10-20261026.raw.json",
+  "jarSha256BeforeAndAfter": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
+  "harnessSha256BeforeAndAfter": "6e8c0dbbadc0ad2757f6451f2a0ed93d71cb54938e34385539c18b31b9547747",
+  "javaExecutable": "/Users/thisisnew/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home/bin/java",
+  "networkRestrictions": {
+    "sandbox": "(version 1) (allow default) (deny network*) (allow network-bind (local ip \"localhost:*\")) (allow network-inbound (local ip \"localhost:*\")) (allow network-outbound (remote ip \"localhost:*\"))",
+    "javaOption": "-Djava.net.preferIPv4Stack=true",
+    "proxy": "Rejecting loopback JVM HTTP(S) proxy; observed request count 0, not a global transport-attempt count",
+    "unsandboxedFallback": false
+  },
+  "checks": {
+    "deniedRequestsWith403ReadOnlyDetail": 300,
+    "requestShapes": ["old-shaped approval and digest", "malformed JSON", "absent body", "wrong-typed fields", "missing receipt", "nonexistent workspace"],
+    "repeatedRequestIds": true,
+    "restarts": 2,
+    "legacyReceiptStates": ["PREVIEW", "SENT", "UNCERTAIN"],
+    "legacyRowsUnchangedIncludingDispatchCounts": true,
+    "legacyListAndDetailAvailable": true,
+    "answerGenerationInvestigationJobRows": 0
+  },
+  "cleanup": {
+    "ownedBackendTerminatedAndAwaitedBeforeSqliteAccessAndCleanup": true,
+    "noHarnessTemporaryDirectoriesRemain": true,
+    "unrelatedProcessesUserDataCredentialsAndSharedModelsUntouched": true
+  },
+  "priorEvidencePreserved": [
+    "docs/evaluations/readonly-runtime-20261026.json",
+    "docs/evaluations/readonly-runtime-20261026-failed-startup.json",
+    "docs/evaluations/readonly-runtime-20261026-verification.json"
+  ],
+  "selfTests": "Frozen harness previously passed 8 pure self-tests; not rerun or added to this artifact's runtime count.",
+  "limits": "Scoped synthetic runtime PASS only. No real Slack, credentials, external AI, user DB, whole-product E35 acceptance, inventory promotion, source edits, Maven, JAR writes, package, installation or publication. Packaging remains on hold pending parent authorization."
+}

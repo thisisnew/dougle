@@ -21,14 +21,21 @@ final class CodexTextStream {
     private String result;
     private int bytes;
     private boolean failed;
+    private final ProcessDiagnostics diagnostics;
 
     CodexTextStream(String threadId, String turnId, Consumer<String> consumer) {
+        this(threadId, turnId, consumer,
+                new ProcessDiagnostics(dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER));
+    }
+
+    CodexTextStream(String threadId, String turnId, Consumer<String> consumer, ProcessDiagnostics diagnostics) {
         if (threadId == null || threadId.isBlank() || turnId == null || turnId.isBlank() || consumer == null) {
             throw new IllegalArgumentException("Missing stream binding");
         }
         this.threadId = threadId;
         this.turnId = turnId;
         this.consumer = consumer;
+        this.diagnostics = diagnostics;
     }
 
     void accept(String line) throws IOException {
@@ -45,19 +52,29 @@ final class CodexTextStream {
             String method = requiredText(value, "method");
             JsonNode params = value.path("params");
             if (!params.isObject()) throw new IOException("Invalid notification");
-            if (!threadId.equals(params.path("threadId").asString(""))) return;
+            if (!threadId.equals(params.path("threadId").asString(""))) {
+                diagnostics.appEvent(ProcessDiagnostics.AppEvent.IGNORED_BINDING);
+                return;
+            }
             String eventTurn = method.equals("turn/completed")
                     ? params.path("turn").path("id").asString("") : params.path("turnId").asString("");
-            if (!turnId.equals(eventTurn)) return;
+            if (!turnId.equals(eventTurn)) {
+                diagnostics.appEvent(ProcessDiagnostics.AppEvent.IGNORED_BINDING);
+                return;
+            }
             switch (method) {
                 case "item/started" -> start(params.path("item"));
                 case "item/agentMessage/delta" -> delta(params);
                 case "item/completed" -> complete(params.path("item"));
-                case "turn/completed" -> finish(params.path("turn"));
+                case "turn/completed" -> {
+                    diagnostics.appEvent(ProcessDiagnostics.AppEvent.TURN_COMPLETION_RECEIVED);
+                    finish(params.path("turn"));
+                }
                 case "error" -> throw new IOException("Turn error");
-                default -> { }
+                default -> diagnostics.appEvent(ProcessDiagnostics.AppEvent.OTHER_NOTIFICATION);
             }
         } catch (IOException | RuntimeException exception) {
+            diagnostics.appEvent(ProcessDiagnostics.AppEvent.PROTOCOL_INVALID);
             failed = true;
             candidate = null;
             result = null;
@@ -73,17 +90,19 @@ final class CodexTextStream {
         itemId = nextId;
         phase = phase(item);
         text.setLength(0);
-        consumer.accept("");
+        diagnostics.appEvent(ProcessDiagnostics.AppEvent.MESSAGE_STARTED);
+        publish("");
     }
 
     private void delta(JsonNode params) throws IOException {
         if (itemId == null || !itemId.equals(requiredText(params, "itemId"))) throw new IOException("Unbound delta");
         JsonNode delta = params.path("delta");
         if (!delta.isString()) throw new IOException("Invalid delta");
+        diagnostics.appEvent(ProcessDiagnostics.AppEvent.TEXT_DELTA);
         if (phase.equals("commentary")) return;
         if (text.length() + delta.asString().length() > 20000) throw new IOException("Partial limit");
         text.append(delta.asString());
-        consumer.accept(text.toString());
+        publish(text.toString());
     }
 
     private void complete(JsonNode item) throws IOException {
@@ -93,6 +112,7 @@ final class CodexTextStream {
         if (!phase.isEmpty() && !phase.equals(completedPhase)) throw new IOException("Changed message phase");
         JsonNode completedText = item.path("text");
         if (!completedText.isString() || completedText.asString().length() > 65536) throw new IOException("Result limit");
+        diagnostics.appEvent(ProcessDiagnostics.AppEvent.MESSAGE_COMPLETED);
         if (completedPhase.isEmpty() || completedPhase.equals("final_answer")) candidate = completedText.asString();
         else candidate = null;
         itemId = null;
@@ -105,7 +125,14 @@ final class CodexTextStream {
                 || candidate == null || candidate.isBlank()) throw new IOException("Incomplete answer");
         result = candidate;
         candidate = null;
-        consumer.accept("");
+        publish("");
+        diagnostics.appEvent(ProcessDiagnostics.AppEvent.COMPLETED);
+    }
+
+    private void publish(String value) {
+        diagnostics.appCallback(true);
+        try { consumer.accept(value); }
+        finally { diagnostics.appCallback(false); }
     }
 
     private String phase(JsonNode item) throws IOException {

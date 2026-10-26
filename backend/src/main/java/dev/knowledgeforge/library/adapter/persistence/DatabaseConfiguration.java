@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 25) {
+        if (version > 28) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -521,7 +521,114 @@ public class DatabaseConfiguration {
                         jdbc.execute("PRAGMA user_version=25");
                     });
         }
+        if (version < 26) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS investigation_plan (
+                                  digest TEXT PRIMARY KEY, workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  bundle_id TEXT NOT NULL REFERENCES evidence_bundle(id) ON DELETE CASCADE,
+                                  provider TEXT NOT NULL, requested_model TEXT NOT NULL, binding_digest TEXT NOT NULL,
+                                  prompt TEXT NOT NULL, created_at TEXT NOT NULL, expires_at TEXT NOT NULL,
+                                  request_id TEXT, approved_at TEXT, updated_at TEXT NOT NULL,
+                                  status TEXT NOT NULL DEFAULT 'PREVIEW', decision TEXT, query TEXT, output TEXT,
+                                  truncated INTEGER NOT NULL DEFAULT 0, tool_status TEXT, error TEXT,
+                                  UNIQUE(workspace_id, request_id)
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS team_settings_import_receipt (
+                                  request_id TEXT PRIMARY KEY, digest TEXT NOT NULL, preview_id TEXT NOT NULL,
+                                  result_json TEXT
+                                )
+                                """);
+                        jdbc.execute("CREATE UNIQUE INDEX IF NOT EXISTS team_settings_import_preview_once ON team_settings_import_receipt(preview_id)");
+                        jdbc.execute("PRAGMA user_version=26");
+                    });
+        }
         jdbc.update("UPDATE source SET status='ERROR',error='동기화가 중단되었습니다. 다시 누르면 완료된 분석부터 이어갑니다.' WHERE status='SYNCING'");
+        if (version < 27) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS browser_investigation (
+                                  digest TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  bundle_id TEXT NOT NULL REFERENCES evidence_bundle(id) ON DELETE CASCADE,
+                                  bundle_digest TEXT NOT NULL, scope_json TEXT NOT NULL,
+                                  created_at TEXT NOT NULL, expires_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+                                  request_id TEXT, approved_at TEXT, status TEXT NOT NULL DEFAULT 'PREVIEW',
+                                  result_json TEXT, error TEXT, UNIQUE(workspace_id, request_id)
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS workspace_archive_import_receipt (
+                                  request_id TEXT PRIMARY KEY, digest TEXT NOT NULL,
+                                  preview_id TEXT NOT NULL UNIQUE, result_json TEXT
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS slack_inbox_route (
+                                  route_key TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  payload_json TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS slack_inbox_item (
+                                  id TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  payload_json TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS slack_inbox_seen (
+                                  event_key TEXT PRIMARY KEY, received_at TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS slack_inbox_thread (
+                                  thread_key TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  thread_id TEXT NOT NULL
+                                )
+                                """);
+                        jdbc.execute("PRAGMA user_version=27");
+                    });
+        }
+        if (version < 28) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS slack_reply (
+                                  id TEXT PRIMARY KEY,
+                                  workspace_id TEXT NOT NULL REFERENCES workspace(id) ON DELETE CASCADE,
+                                  inbox_item_id TEXT NOT NULL,
+                                  preview_request_id TEXT NOT NULL,
+                                  scope_hash TEXT NOT NULL,
+                                  scope_json TEXT NOT NULL CHECK(length(scope_json) <= 4096),
+                                  body TEXT NOT NULL CHECK(length(body) BETWEEN 1 AND 4000),
+                                  digest TEXT NOT NULL,
+                                  status TEXT NOT NULL CHECK(status IN ('PREVIEW','CANCELLED','EXPIRED','SENDING','SENT','FAILED','UNCERTAIN')),
+                                  execute_request_id TEXT,
+                                  dispatch_count INTEGER NOT NULL DEFAULT 0 CHECK(dispatch_count IN (0,1)),
+                                  slack_message_ts TEXT,
+                                  failure_code TEXT,
+                                  created_at TEXT NOT NULL,
+                                  expires_at TEXT NOT NULL,
+                                  updated_at TEXT NOT NULL,
+                                  UNIQUE(workspace_id, preview_request_id),
+                                  UNIQUE(workspace_id, execute_request_id)
+                                )
+                                """);
+                        jdbc.execute("CREATE INDEX IF NOT EXISTS idx_slack_reply_inbox ON slack_reply(workspace_id,inbox_item_id,created_at)");
+                        jdbc.execute("PRAGMA user_version=28");
+                    });
+        }
+        jdbc.update("UPDATE slack_reply SET status='UNCERTAIN',failure_code='RESTART',updated_at=? WHERE status='SENDING'", java.time.Instant.now().toString());
         return source;
     }
 }

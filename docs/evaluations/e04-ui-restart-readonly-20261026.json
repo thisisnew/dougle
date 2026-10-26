@@ -1,0 +1,1077 @@
+{
+  "fixtureVersion": "synthetic-local-restart-glossary-v1",
+  "startedAt": "2026-10-26T10:36:22.152Z",
+  "maximumDispatches": 12,
+  "scenarios": [
+    "restart-history-followup"
+  ],
+  "variants": 3,
+  "variantStart": 0,
+  "dispatched": 2,
+  "planDispatches": 1,
+  "answerDispatches": 1,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "f6494559-83c8-4ebc-bfb5-5303b4e7b707",
+      "at": "2026-10-26T10:36:46.988Z",
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+      "result": {
+        "id": "f6494559-83c8-4ebc-bfb5-5303b4e7b707",
+        "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+        "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "994a5722eb7af956745eb3536fa75eb71492c007d4011a9c547f4e40938b6b08",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T10:36:47.058147Z",
+        "updatedAt": "2026-10-26T10:36:55.277410Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "22ac7335-7be8-431b-9da4-29ca16251431",
+      "at": "2026-10-26T10:36:56.462Z",
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    }
+  ],
+  "results": [
+    {
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 BLUE 방문 배지의 유효 기간은?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "f6494559-83c8-4ebc-bfb5-5303b4e7b707",
+        "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+        "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "994a5722eb7af956745eb3536fa75eb71492c007d4011a9c547f4e40938b6b08",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-26T10:36:47.058147Z",
+        "updatedAt": "2026-10-26T10:36:55.277410Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E04: restart the same synthetic DB after a completed answer; preserve thread/evidence/jobs/order. Parent Ego UI reopening of the exact persisted history row is REQUIRED before followup: inspect the prior question, answer, citations and order; save a synthetic screenshot and exact bound acknowledgment without submitting. UI GETs and persisted-state checks must show no new jobs or changes. Only after acknowledgment may the harness submit the same-thread followup and verify manual operator approval as the answer. Followup is API-driven, not UI-submitted; native desktop bootstrap is not tested. These are required criteria, not a claim that the checkpoint has already been observed.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-badge-policy.md",
+          "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다."
+        }
+      ],
+      "originalBundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+      "originalStatus": "READY",
+      "answerBundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+      "threadId": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+      "elapsedMs": 16531,
+      "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-badge-policy.md",
+          "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다."
+        }
+      ]
+    }
+  ],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "apiTrace": [
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "POST",
+      "path": "/ai/providers/CODEX/connection"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/sources"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/sources/31a01c01-bba3-4761-98f8-2c7630447306/sync"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs/f6494559-83c8-4ebc-bfb5-5303b4e7b707"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/evidence-bundles/51bfae08-d32d-40d7-875c-c2f2c392490c/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/evidence-bundles/51bfae08-d32d-40d7-875c-c2f2c392490c/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/evidence-bundles/51bfae08-d32d-40d7-875c-c2f2c392490c/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs/22ac7335-7be8-431b-9da4-29ca16251431"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/evidence-bundles/51bfae08-d32d-40d7-875c-c2f2c392490c/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/chat-threads/6c6a5caa-ae42-43b8-92d4-96daf6753c0b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/evidence-bundles/51bfae08-d32d-40d7-875c-c2f2c392490c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs?bundleId=51bfae08-d32d-40d7-875c-c2f2c392490c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/generation-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/chat-threads/6c6a5caa-ae42-43b8-92d4-96daf6753c0b"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/chat-threads"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/evidence-bundles/51bfae08-d32d-40d7-875c-c2f2c392490c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/investigation-plans/jobs?bundleId=51bfae08-d32d-40d7-875c-c2f2c392490c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/e5bd861b-bdcc-4e44-8119-7bb60aa244ed/generation-jobs"
+    }
+  ],
+  "restartChecks": [
+    {
+      "scenario": "restart-history-followup",
+      "variant": 0,
+      "before": {
+        "detail": {
+          "id": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+          "bundles": [
+            {
+              "id": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+              "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+              "createdAt": "2026-10-26T10:36:45.593094Z",
+              "digest": "be698969f8e838fd9c8e61320b4e8322943466ddc8c68a21c01586c0b40d14ba",
+              "payload": {
+                "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 141,
+                "maxCharacters": 10718,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "e4806875-66b3-4ed4-ba7c-c2d1b1dcd9e8",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-badge-policy.md",
+                    "sourceId": "31a01c01-bba3-4761-98f8-2c7630447306",
+                    "path": "synthetic-badge-policy.md",
+                    "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                    "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                    "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                    "startLine": 1,
+                    "endLine": 4,
+                    "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+                  "parentBundleId": null,
+                  "requestId": "80ccfbdc-b16a-4067-90ff-746c2efdc727",
+                  "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 방문 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "22ac7335-7be8-431b-9da4-29ca16251431",
+              "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+              "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+              "approvalId": "1bd27b6a-3632-4ccf-8e23-57e6e2a83bda",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "99a7d6a409ab6d44691ee00f46f665cafa206b8ec21b4a75365c7b68705c3053",
+              "status": "SUCCEEDED",
+              "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T10:36:56.485455Z",
+              "updatedAt": "2026-10-26T10:37:01.654543Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+            "question": "가상 BLUE 방문 배지의 유효 기간은?",
+            "createdAt": "2026-10-26T10:36:45.593094Z",
+            "turns": 1,
+            "questions": [
+              "가상 BLUE 방문 배지의 유효 기간은?"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+            "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+            "createdAt": "2026-10-26T10:36:45.593094Z",
+            "digest": "be698969f8e838fd9c8e61320b4e8322943466ddc8c68a21c01586c0b40d14ba",
+            "payload": {
+              "question": "가상 BLUE 방문 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 141,
+              "maxCharacters": 10718,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "e4806875-66b3-4ed4-ba7c-c2d1b1dcd9e8",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-badge-policy.md",
+                  "sourceId": "31a01c01-bba3-4761-98f8-2c7630447306",
+                  "path": "synthetic-badge-policy.md",
+                  "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                  "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                  "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                  "startLine": 1,
+                  "endLine": 4,
+                  "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+                "parentBundleId": null,
+                "requestId": "80ccfbdc-b16a-4067-90ff-746c2efdc727",
+                "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 방문 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "f6494559-83c8-4ebc-bfb5-5303b4e7b707",
+              "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+              "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "994a5722eb7af956745eb3536fa75eb71492c007d4011a9c547f4e40938b6b08",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T10:36:47.058147Z",
+              "updatedAt": "2026-10-26T10:36:55.277410Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "22ac7335-7be8-431b-9da4-29ca16251431",
+            "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+            "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+            "approvalId": "1bd27b6a-3632-4ccf-8e23-57e6e2a83bda",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "99a7d6a409ab6d44691ee00f46f665cafa206b8ec21b4a75365c7b68705c3053",
+            "status": "SUCCEEDED",
+            "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T10:36:56.485455Z",
+            "updatedAt": "2026-10-26T10:37:01.654543Z"
+          }
+        ],
+        "generationJobs": []
+      },
+      "status": "WAIT_UI_REOPEN",
+      "uiReopenObserved": false,
+      "after": {
+        "detail": {
+          "id": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+          "bundles": [
+            {
+              "id": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+              "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+              "createdAt": "2026-10-26T10:36:45.593094Z",
+              "digest": "be698969f8e838fd9c8e61320b4e8322943466ddc8c68a21c01586c0b40d14ba",
+              "payload": {
+                "question": "가상 BLUE 방문 배지의 유효 기간은?",
+                "domains": [],
+                "includeKnowledge": false,
+                "status": "READY",
+                "usedCharacters": 141,
+                "maxCharacters": 10718,
+                "items": [
+                  {
+                    "label": "R1",
+                    "kind": "ORIGINAL",
+                    "entryId": "e4806875-66b3-4ed4-ba7c-c2d1b1dcd9e8",
+                    "cardId": null,
+                    "version": null,
+                    "title": "synthetic-badge-policy.md",
+                    "sourceId": "31a01c01-bba3-4761-98f8-2c7630447306",
+                    "path": "synthetic-badge-policy.md",
+                    "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                    "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                    "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                    "startLine": 1,
+                    "endLine": 4,
+                    "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                    "supports": []
+                  }
+                ],
+                "excluded": [],
+                "chatContext": {
+                  "threadId": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+                  "parentBundleId": null,
+                  "requestId": "80ccfbdc-b16a-4067-90ff-746c2efdc727",
+                  "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                  "history": [],
+                  "extractive": {
+                    "version": 1,
+                    "turnKind": "USER_QUESTION",
+                    "totalQuestions": 0,
+                    "omittedQuestions": 0,
+                    "maxSerializedCharacters": 8000,
+                    "answerCharacterLimit": 800,
+                    "omittedAnswers": 0,
+                    "truncatedAnswerBundleIds": [],
+                    "questions": [],
+                    "retrievalQueries": [
+                      "가상 BLUE 방문 배지의 유효 기간은?"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "jobs": [
+            {
+              "id": "22ac7335-7be8-431b-9da4-29ca16251431",
+              "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+              "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+              "approvalId": "1bd27b6a-3632-4ccf-8e23-57e6e2a83bda",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "99a7d6a409ab6d44691ee00f46f665cafa206b8ec21b4a75365c7b68705c3053",
+              "status": "SUCCEEDED",
+              "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]",
+              "error": null,
+              "createdAt": "2026-10-26T10:36:56.485455Z",
+              "updatedAt": "2026-10-26T10:37:01.654543Z"
+            }
+          ]
+        },
+        "history": [
+          {
+            "id": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+            "question": "가상 BLUE 방문 배지의 유효 기간은?",
+            "createdAt": "2026-10-26T10:36:45.593094Z",
+            "turns": 1,
+            "questions": [
+              "가상 BLUE 방문 배지의 유효 기간은?"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "id": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+            "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+            "createdAt": "2026-10-26T10:36:45.593094Z",
+            "digest": "be698969f8e838fd9c8e61320b4e8322943466ddc8c68a21c01586c0b40d14ba",
+            "payload": {
+              "question": "가상 BLUE 방문 배지의 유효 기간은?",
+              "domains": [],
+              "includeKnowledge": false,
+              "status": "READY",
+              "usedCharacters": 141,
+              "maxCharacters": 10718,
+              "items": [
+                {
+                  "label": "R1",
+                  "kind": "ORIGINAL",
+                  "entryId": "e4806875-66b3-4ed4-ba7c-c2d1b1dcd9e8",
+                  "cardId": null,
+                  "version": null,
+                  "title": "synthetic-badge-policy.md",
+                  "sourceId": "31a01c01-bba3-4761-98f8-2c7630447306",
+                  "path": "synthetic-badge-policy.md",
+                  "sourceRevision": "9e1f5bee279101df220aee1e9153f42d7ece71937844babc22f2d21aa19c65f6",
+                  "contentHash": "f9d9edd25c0113b19ebc4b7a2ac4e4a9eb90da1238b886696b7c77a3175e65d4",
+                  "textHash": "d70620a7c05f3f16fdff2877a3a57bb67fbfb726b5a9f06e1286e67620ddb01a",
+                  "startLine": 1,
+                  "endLine": 4,
+                  "quote": "# 가상 방문 배지 정책\n가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간이다.\nBLUE 배지는 자동 갱신되지 않는다. 갱신은 운영 담당자의 수동 승인이 필요하다.\n이 문서는 합성 정책 정의이며 현재 실제 배지 레코드나 운영 시스템은 없다.",
+                  "supports": []
+                }
+              ],
+              "excluded": [],
+              "chatContext": {
+                "threadId": "6c6a5caa-ae42-43b8-92d4-96daf6753c0b",
+                "parentBundleId": null,
+                "requestId": "80ccfbdc-b16a-4067-90ff-746c2efdc727",
+                "retrievalQuery": "가상 BLUE 방문 배지의 유효 기간은?",
+                "history": [],
+                "extractive": {
+                  "version": 1,
+                  "turnKind": "USER_QUESTION",
+                  "totalQuestions": 0,
+                  "omittedQuestions": 0,
+                  "maxSerializedCharacters": 8000,
+                  "answerCharacterLimit": 800,
+                  "omittedAnswers": 0,
+                  "truncatedAnswerBundleIds": [],
+                  "questions": [],
+                  "retrievalQueries": [
+                    "가상 BLUE 방문 배지의 유효 기간은?"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "plans": [
+          [
+            {
+              "id": "f6494559-83c8-4ebc-bfb5-5303b4e7b707",
+              "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+              "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+              "provider": "CODEX",
+              "requestedModel": "",
+              "digest": "994a5722eb7af956745eb3536fa75eb71492c007d4011a9c547f4e40938b6b08",
+              "status": "SUCCEEDED",
+              "decision": "STOP",
+              "query": null,
+              "output": null,
+              "truncated": false,
+              "toolStatus": null,
+              "error": null,
+              "approvedAt": "2026-10-26T10:36:47.058147Z",
+              "updatedAt": "2026-10-26T10:36:55.277410Z"
+            }
+          ]
+        ],
+        "answerJobs": [
+          {
+            "id": "22ac7335-7be8-431b-9da4-29ca16251431",
+            "workspaceId": "e5bd861b-bdcc-4e44-8119-7bb60aa244ed",
+            "bundleId": "51bfae08-d32d-40d7-875c-c2f2c392490c",
+            "approvalId": "1bd27b6a-3632-4ccf-8e23-57e6e2a83bda",
+            "provider": "CODEX",
+            "requestedModel": "",
+            "digest": "99a7d6a409ab6d44691ee00f46f665cafa206b8ec21b4a75365c7b68705c3053",
+            "status": "SUCCEEDED",
+            "answer": "가상 BLUE 방문 배지의 유효 기간은 발급 시각부터 72시간입니다. [R1]",
+            "error": null,
+            "createdAt": "2026-10-26T10:36:56.485455Z",
+            "updatedAt": "2026-10-26T10:37:01.654543Z"
+          }
+        ],
+        "generationJobs": []
+      }
+    }
+  ],
+  "runtimes": [
+    {
+      "pid": 82466,
+      "port": 62228,
+      "startedAt": "2026-10-26T10:36:41.929Z",
+      "stoppedAt": "2026-10-26T10:37:03.262Z"
+    },
+    {
+      "pid": 82563,
+      "port": 62276,
+      "startedAt": "2026-10-26T10:37:22.292Z",
+      "stoppedAt": "2026-10-26T10:38:25.637Z"
+    }
+  ],
+  "harnessSha256": "ee9d8b1a3f0a3b4a3fa0af79413902b96ff4853d52d3c813be718c28766d652e",
+  "fixtureSha256": "595466aabe28ce30cb952588cc986b3ef31262b0ad5a4c2957bd8632def2bf3b",
+  "historyHelperSha256": "13cefde5187bb49dc6ae0d07d2fb038755842853dd0b5d3b58beec1946f12c26",
+  "uiHoldHelperSha256": "cacd278f45a17051dea3db46e8e5834bd4aee44b3d099eb748fc96fd32a9f72b",
+  "scheduleHelperSha256": "459517071aa565a1a5981960f0ab8fb610a97896180f646d3f2d5ecdaa70f2d3",
+  "semantic-reviewHelperSha256": "60434a527847a665a067a147d4b048f9ea9047b0828fc461946c5bbefcc9bc32",
+  "search-modelsHelperSha256": "7adc5776c2d57669522c781d42e0d59edc265a0fa8d67326fdf4559247754c23",
+  "jarSha256": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
+  "searchModels": {
+    "directory": "/Users/thisisnew/Desktop/knowledge-forge/.tools/search-model/x86_64",
+    "architecture": "x86_64",
+    "files": [
+      {
+        "name": "model.onnx",
+        "size": 118346824,
+        "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      {
+        "name": "reranker.onnx",
+        "size": 118620016,
+        "sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+      },
+      {
+        "name": "reranker-tokenizer.json",
+        "size": 17082660,
+        "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+      }
+    ],
+    "verifiedAt": "2026-10-26T10:37:04.894Z"
+  },
+  "launchFailed": false,
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-26T10:36:42.361903Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "syntheticSourceId": "31a01c01-bba3-4761-98f8-2c7630447306",
+  "lastModelVerificationAt": "2026-10-26T10:36:56.462Z",
+  "error": "Private regular acknowledgment required",
+  "finishedAt": "2026-10-26T10:38:25.640Z"
+}

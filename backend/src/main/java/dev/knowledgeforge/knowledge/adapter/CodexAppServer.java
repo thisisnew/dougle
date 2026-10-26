@@ -1,6 +1,8 @@
 package dev.knowledgeforge.knowledge.adapter;
 
 import dev.knowledgeforge.library.application.LibraryException;
+import dev.knowledgeforge.knowledge.application.ProviderExecutionException;
+import dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -101,9 +103,11 @@ final class CodexAppServer {
         builder.environment().put("CODEX_HOME", profile.toString());
         Process process = builder.start();
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
-        var executor = Executors.newVirtualThreadPerTaskExecutor();
+        var executor = Executors.newFixedThreadPool(2);
+        var phase = new java.util.concurrent.atomic.AtomicReference<>("연결 초기화");
+        var diagnostics = new ProcessDiagnostics(Transport.CODEX_APP_SERVER);
         try {
-            var stdout = executor.submit(() -> exchange(process, directory, prompt, model, text, images));
+            var stdout = executor.submit(() -> exchange(process, directory, prompt, model, text, images, phase, diagnostics));
             var stderr = executor.submit(() -> {
                 byte[] buffer = new byte[4096];
                 int total = 0;
@@ -111,6 +115,7 @@ final class CodexAppServer {
                 while ((count = process.getErrorStream().read(buffer)) != -1) {
                     total += count;
                     if (total > 262144) throw new IOException("Stderr limit");
+                    diagnostics.stderr(buffer, count);
                 }
                 return true;
             });
@@ -118,15 +123,15 @@ final class CodexAppServer {
             while (true) {
                 process.descendants().forEach(descendants::add);
                 if (stderr.isDone()) stderr.get();
-                if (System.nanoTime() >= deadline) throw new LibraryException(504, "Codex 스트리밍 제한 시간을 초과했습니다.");
+                if (System.nanoTime() >= deadline) throw new ProviderExecutionException(504, "Codex " + phase.get() + " 단계에서 제한 시간을 초과했습니다.", diagnostics.snapshot());
                 try { return stdout.get(100, TimeUnit.MILLISECONDS); }
                 catch (TimeoutException ignored) { }
             }
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw new LibraryException(503, "Codex 스트리밍이 중단되었습니다.");
+            throw new ProviderExecutionException(503, "Codex 스트리밍이 중단되었습니다.", diagnostics.snapshot());
         } catch (java.util.concurrent.ExecutionException exception) {
-            throw new IOException("App Server I/O failed");
+            throw new ProviderExecutionException(502, "Codex 스트리밍 응답을 검증하지 못했습니다. 자동 재전송하지 않습니다.", diagnostics.snapshot());
         } finally {
             boolean interrupted = Thread.interrupted();
             process.descendants().forEach(descendants::add);
@@ -145,9 +150,10 @@ final class CodexAppServer {
         }
     }
 
-    private String exchange(Process process, Path directory, String prompt, String model, Consumer<String> text, List<Path> images) throws IOException {
+    private String exchange(Process process, Path directory, String prompt, String model, Consumer<String> text, List<Path> images,
+                            java.util.concurrent.atomic.AtomicReference<String> phase, ProcessDiagnostics diagnostics) throws IOException {
         var session = new CodexAppServerSession(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8),
-                directory, prompt, model, text, images);
+                directory, prompt, model, text, images, diagnostics);
         session.initialize();
         var input = new BufferedInputStream(process.getInputStream());
         var line = new ByteArrayOutputStream();
@@ -155,13 +161,20 @@ final class CodexAppServer {
         int next;
         while ((next = input.read()) != -1) {
             if (++total > 1048576) throw new IOException("Stdout limit");
+            diagnostics.appStdoutBytes(total);
             if (next == '\n') {
-                if (line.size() > 0) session.accept(line.toString(StandardCharsets.UTF_8));
+                diagnostics.appPendingLineBytes(0);
+                if (line.size() > 0) {
+                    session.accept(line.toString(StandardCharsets.UTF_8));
+                    phase.set(session.phase());
+                    diagnostics.appPhase(session.phase());
+                }
                 line.reset();
                 if (session.result() != null) return session.result();
             } else {
                 if (line.size() >= 262144) throw new IOException("Line limit");
                 line.write(next);
+                diagnostics.appPendingLineBytes(line.size());
             }
         }
         throw new IOException("App Server ended without a completed turn");

@@ -1,0 +1,25 @@
+{
+  "measuredAt": "2026-10-25T22:30:14.877Z",
+  "platform": "darwin/x64",
+  "startupMs": 20237,
+  "checks": [
+    "packaged native executable with isolated HOME and minimal PATH",
+    "bundled Java startup and API session protection",
+    "private stable application data path",
+    "duplicate backend rejected while original stays available",
+    "parent termination closes Java through stdin EOF",
+    "native restart uses the same database"
+  ],
+  "limits": "Synthetic isolated home; no Finder/Gatekeeper interaction, actual external AI, or Apple Silicon validation.",
+  "reviewNote": {
+    "reviewedOn": "2026-10-26",
+    "kind": "READ_ONLY_SOURCE_REVIEW",
+    "newRuntimeRun": false,
+    "historicalMeasurementsUnchanged": true,
+    "dataBoundary": "The native smoke launches with a fresh temporary HOME and replacement environment, checks the private application SQLite location beneath that HOME, and cleans up owned processes and temporary data. It does not intentionally open the actual user's application database.",
+    "toolBoundary": "PATH=/usr/bin:/bin and private HOME do not simulate absence of globally installed tools. Production Claude discovery also checks fixed /usr/local/bin and /opt/homebrew/bin paths. This review observed /usr/local/bin/claude on the host. Minimal PATH therefore does not prove no ambient tool discovery.",
+    "dispatchBoundary": "Tool discovery is distinct from execution or model dispatch. The harness does not request inference, but it has no comprehensive process or network dispatch instrumentation. Its historical no-real-AI scope must not be restated as measured absence of all tool discovery or all dispatch.",
+    "acceptanceBoundary": "This review does not establish E46 or new-Mac acceptance PASS, and does not validate the 0.1.22 package. Prior measurements are not transferred to a new artifact.",
+    "productionUnchanged": "No change to production Claude discovery, no environment backdoor, and no source/API or packaging change accompanies this review."
+  }
+}

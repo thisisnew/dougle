@@ -1,5 +1,13 @@
 # 아키텍처
 
+## 연속 대화 작업본 — 미배포
+
+최신 정책은 Slack을 포함한 모든 외부 업무 시스템의 조회 전용이다. `SlackReplyController`와 `SlackReplyService`는 전송 미리보기·실행·확인을 `403 READ_ONLY`로 거부하고, `SlackReplyHttpTransport`에는 외부 전송 구현이 없다. 사용자 승인으로 이 제한을 해제하지 않는다. DB v28의 `slack_reply`와 화면은 과거 영수증 조회를 위해 보존한다. 앱 내부 대화·색인·설정 저장과 조회용 인증 수립은 허용하며, 원본 자료나 외부 메시지 변경은 허용하지 않는다. 아래 과거 전송 설명보다 [외부 조회 전용 정책](external-readonly-policy.md)이 우선한다. 소스 검증과 설치된 패키지 검증은 구별한다.
+
+최신 DB v27 작업본은 별도 계획 동의로 `PlanModel → SEARCH/STOP → ConstrainedToolExecutor → 로컬 검색`을 실행하며, 결과로 새 불변 근거/답변 승인을 만든다. V3 계획 미리보기는 검색 결과가 없는 질문도 지원하되 변경된 기존 근거는 거부한다. MySQL 제한 조회는 `MysqlReadPanel → MysqlInvestigationController/Service → MysqlReadClient`이며 명시적 호스트/DB 확인·조건/열 범위·서버 읽기 전용 트랜잭션·단일 사용 미리보기를 적용한다. DB 결과는 자동 모델 전송하지 않는다. v27은 격리 브라우저 조사, Slack 수신함과 대화 연결, 자료·대화 아카이브 가져오기 영수증을 보관한다. 아래 미연결·DB v25 설명보다 최신이며 자세한 현재 범위는 `expert-implementation.md`를 따른다.
+
+`ChatPanel → /chat-threads → ChatThreadService`는 불변 근거 JSON의 `chatContext`에 thread/parent/request ID와 제한된 최근 문맥을 저장한다. 이력은 대화별 조회·삭제, 순서는 parent 연결 기준이다. `EvidenceAnswerPreview`는 과거 bundle digest를 재검사하고 문맥을 승인 prompt에 포함한다. 현재 추출형 문맥은 최대32개 질문과 최근5개 답변 발췌를8,000자 예산 내에서 보존하며 생략 여부를 표시한다. AI 의미 요약이나 무제한 기억은 아니다. 현재 DB는 v28이며 [문맥 계약](conversation-context.md)과 [구현·검증 및 남은 한계](expert-implementation.md)를 따른다. 계획 모델의 로컬 검색 실행은 연결되어 있으나 MySQL·Datadog 제안은 자동 운영 조회가 아닌 별도 수동 조회 양식으로 이어진다. 아래 독립 질문·문맥 미전송·도구 실행기 미연결 설명은 이전 버전이다.
+
 ## 현재 수집·검색 경로 (DB v25)
 
 SourceService는 디스크 스냅샷을 수집하고 파일별 분석을 `source_analysis_checkpoint`에 저장합니다. 읽기·분석 실패는 `source_file_failure`에 남기며 이전 성공 자료를 보존합니다. `ProcessingProgress` → Source 진행 API → `SourceSyncProgress`는 실제 파일명·바이트·페이지·분할 상태를 표시합니다. 원본 발행 전에 취소할 수 있으며 다음 동기화는 완료 분석을 재사용합니다.
@@ -12,7 +20,7 @@ ChatPanel은 완료 답변의 코드 블록 밖 `[R번호]`와 일치하는 근�
 
 플러그인은 설정 하위입니다. BrowserPluginConnect → PluginController → BrowserPluginConnections가 DCR/PKCE 브라우저 승인·loopback 콜백·인증 회전/취소를 담당합니다. BrowserPluginReader → PluginMcpSession은 Notion/Atlassian의 고정된 읽기 도구로 등록 링크를 수집하며 UrlCollector의 기존 검색 색인 흐름을 재사용합니다. MySQL과 이전 내부 토큰 API는 PluginConnections/MysqlClient/NotionClient 호환 경로입니다. PluginVault의 AES-GCM·0700/0600·원자 교체를 유지합니다. DB v24 변경 없음. 실제 외부 계정은 미검증입니다. [계약·한계](plugins.md).
 
-연속 질문은 ChatPanel의 턴 목록에 누적하고 bundle ID를 React key로 유지합니다. 자동 이전 문맥 전송은 하지 않습니다. SourcePanel은 자료 등록 직후 반환된 ID로 동기화를 시작하고 진행 API를 조회합니다. 완료까지 탐색 잠금을 유지하며 첫 동기화 실패도 목록에서 확인·재시도할 수 있습니다. 이전 클라이언트의 `sync:true` 등록 API는 호환 경로로 유지합니다. 파일 업로드는 LibraryService의 자동 분석과 Controller의 색인 갱신을 사용합니다.
+연속 질문은 ChatPanel의 턴 목록에 누적하고 bundle ID를 React key로 유지합니다. 같은 대화의 후속 질문은 검증된 제한 문맥을 포함하며 이력 열기만으로 AI를 호출하지 않습니다. SourcePanel은 자료 등록 직후 반환된 ID로 동기화를 시작하고 진행 API를 조회합니다. 완료까지 탐색 잠금을 유지하며 첫 동기화 실패도 목록에서 확인·재시도할 수 있습니다. 이전 클라이언트의 `sync:true` 등록 API는 호환 경로로 유지합니다. 파일 업로드는 LibraryService의 자동 분석과 Controller의 색인 갱신을 사용합니다.
 
 자료 변경 작업의 busy를 App에 공유하여 탭·설정·Workspace 선택/생성·AI 연결과 파일 변경을 잠급니다. 종료/실패 후 해제합니다. 개별 파일 진행은 약 700ms 간격으로 조회하며 예상 시간은 만들지 않습니다. 최근 성공 시각은 Workspace별 UI 캐시 및 Source syncedAt을 사용하고 일괄 실패 시 캐시를 갱신하지 않습니다. 캐시는 승인 판단에 사용하지 않습니다.
 

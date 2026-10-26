@@ -10,12 +10,13 @@ const names: Record<string, string> = { QUEUED: '대기', RUNNING: '답변 생�
 type Props = {
   workspaceId: string; bundleId: string; approval: { id: string; digest: string } | null
   initialJob?: Job; compact?: boolean; animate?: boolean
+  onJobChange?: (job: Job) => void
   references?: ReactNode | ((answer: string) => ReactNode)
 }
 export default function AnswerJobsPanel(props: Props) {
   return <ScopedAnswerJobsPanel key={`${props.workspaceId}/${props.bundleId}`} {...props} />
 }
-function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval, initialJob, compact = false, animate = false, references }: Props) {
+function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval, initialJob, compact = false, animate = false, references, onJobChange }: Props) {
   const [jobs, setJobs] = useState<Job[]>(initialJob ? [initialJob] : [])
   const [job, setJob] = useState<Job | null>(initialJob ?? null)
   const [agreed, setAgreed] = useState(false)
@@ -26,6 +27,7 @@ function ScopedAnswerJobsPanel({ workspaceId, bundleId, approval, initialJob, co
   const requestId = useRef<{ approvalId: string; id: string } | null>(null)
   const pending = useRef<AbortController | null>(null)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}`
+  useEffect(() => { if (job) onJobChange?.(job) }, [job, onJobChange])
   useEffect(() => () => pending.current?.abort(), [])
   useEffect(() => {
     if (!active(job) || busy) return

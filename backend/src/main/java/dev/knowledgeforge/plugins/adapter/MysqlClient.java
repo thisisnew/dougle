@@ -29,13 +29,18 @@ public class MysqlClient {
     }
 
     Connection open(Config config) throws SQLException {
+        return open(config, 15000);
+    }
+
+    Connection open(Config config, int timeoutMillis) throws SQLException {
         validate(config);
+        if (timeoutMillis < 1 || timeoutMillis > 15000) throw new IllegalArgumentException("Invalid connection timeout");
         var properties = new Properties();
         properties.setProperty("user", config.username());
         properties.setProperty("password", config.password());
         properties.setProperty("sslMode", config.sslMode());
-        properties.setProperty("connectTimeout", "5000");
-        properties.setProperty("socketTimeout", "15000");
+        properties.setProperty("connectTimeout", Integer.toString(Math.min(5000, timeoutMillis)));
+        properties.setProperty("socketTimeout", Integer.toString(timeoutMillis));
         properties.setProperty("allowMultiQueries", "false");
         properties.setProperty("allowLoadLocalInfile", "false");
         properties.setProperty("allowUrlInLocalInfile", "false");

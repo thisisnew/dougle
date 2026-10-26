@@ -3,6 +3,8 @@ import * as Dialog from '@radix-ui/react-dialog'
 import DeleteConfirmation from './DeleteConfirmation'
 import DesktopUpdate from './DesktopUpdate'
 import PluginPanel from './PluginPanel'
+import SlackInboxIndicator from './SlackInboxIndicator'
+import WorkspaceTransferSettings from './WorkspaceTransferSettings'
 import type { PluginId } from './plugins'
 import { ArrowLeft, ChevronRight, Download, FileText, Folder, FolderOpen, History, MessageSquare, PanelsTopLeft, Plug, Plus, Settings2, Trash2, X } from 'lucide-react'
 import { Button } from './components/ui/button'
@@ -18,6 +20,7 @@ import { downloadApi } from './download'
 import AnalysisPanel from './AnalysisPanel'
 import { type ConnectionIndicator } from './connectionIndicator'
 import ChatPanel from './ChatPanel'
+import type { QuestionAttachment } from './useQuestionAttachments'
 import { useSearchEngine } from './useSearchEngine'
 import { preferredProvider } from './providerPreference'
 import { loadModel, requestedModel } from './modelPreference'
@@ -32,10 +35,11 @@ export default function App() {
   const [ready, setReady] = useState(false)
   const searchState = useSearchEngine(ready)
   const [updateAvailable, setUpdateAvailable] = useState(false)
-  const [view, setView] = useState<'CHAT' | 'LIBRARY' | 'SETTINGS' | 'HISTORY' | 'PLUGINS'>('CHAT')
+  const [view, setView] = useState<'CHAT' | 'LIBRARY' | 'SETTINGS' | 'HISTORY' | 'PLUGINS' | 'TEAM_SETTINGS'>('CHAT')
   const [pluginId, setPluginId] = useState<PluginId | null>(null)
   const [questionId, setQuestionId] = useState<string | null>(null)
   const [chatRevision, setChatRevision] = useState(0)
+  const [stagedAttachment, setStagedAttachment] = useState<{ workspaceId: string; attachment: QuestionAttachment } | null>(null)
   const [trail, setTrail] = useState<Entry[]>([])
   const [entries, setEntries] = useState<Entry[]>([])
   const [analysisFailures, setAnalysisFailures] = useState<Record<string, string>>({})
@@ -241,7 +245,7 @@ export default function App() {
           <button className={view === 'LIBRARY' ? 'nav-item active' : 'nav-item'} disabled={busy} onClick={() => resetNavigation()}><FolderOpen size={19} /> 자료 <ChevronRight size={15} /></button>
           <button className={view === 'HISTORY' ? 'nav-item active' : 'nav-item'} disabled={busy || !ready} onClick={() => setView('HISTORY')}><History size={19} /> 질문 기록 <ChevronRight size={15} /></button>
         </nav>
-        <div className="sidebar-bottom"><button className={view === 'SETTINGS' || view === 'PLUGINS' ? 'nav-item active' : 'nav-item'} disabled={busy || !ready} onClick={() => setView('SETTINGS')}><Settings2 size={17} /> 설정 {updateAvailable && <i className="settings-update-dot" aria-hidden="true" title="새 업데이트가 있습니다" />}<ChevronRight size={15} /></button></div>
+        <div className="sidebar-bottom"><button className={view === 'SETTINGS' || view === 'PLUGINS' || view === 'TEAM_SETTINGS' ? 'nav-item active' : 'nav-item'} disabled={busy || !ready} onClick={() => setView('SETTINGS')}><Settings2 size={17} /> 설정 {ready && <SlackInboxIndicator workspaceId={activeId} />} {updateAvailable && <i className="settings-update-dot" aria-hidden="true" title="새 업데이트가 있습니다" />}<ChevronRight size={15} /></button></div>
       </aside>
 
       <main>
@@ -253,9 +257,11 @@ export default function App() {
             <div><h1>자료</h1></div>
           </div>}
           {error && <div role="alert" className="error-banner">{error}<Button variant="ghost" size="sm" disabled={busy} onClick={() => { setError(''); void refreshSession().then(() => setRevision(value => value + 1)).catch(reason => setError(reason.message)) }}>다시 시도</Button></div>}
-          {switchingWorkspace ? <section className="workspace-loading" role="status" aria-label="Workspace 불러오는 중" aria-busy="true"><span className="sr-only">Workspace를 불러오는 중…</span><div className="workspace-loading-line" /><div className="workspace-loading-block" /><div className="workspace-loading-block" /></section> : !ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : view === 'PLUGINS' ? <div><Button variant="ghost" disabled={busy} onClick={() => setView('SETTINGS')}><ArrowLeft size={16} />설정으로</Button><PluginPanel initialPlugin={pluginId} workspaceId={activeId} onBusyChange={setSourceBusy} onChanged={() => setRevision(value => value + 1)} /></div> : view === 'SETTINGS' ? <div className="settings-page"><div className="page-heading"><h1>설정</h1></div><button type="button" className="settings-row" onClick={() => openModal({ kind: 'manage-workspaces' })}><span className="settings-row-icon" aria-hidden="true"><PanelsTopLeft size={22} /></span><span>Workspace 관리</span><ChevronRight size={19} aria-hidden="true" /></button><button type="button" className="settings-row" onClick={() => { setPluginId(null); setView('PLUGINS') }}><span className="settings-row-icon" aria-hidden="true"><Plug size={22} /></span><span>플러그인</span><ChevronRight size={19} aria-hidden="true" /></button></div> : view === 'HISTORY' ? <QuestionGrid key={activeId} workspaceId={activeId} onDeleted={id => { if (questionId === id) setQuestionId(null) }} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} /> : !workspace ? (
+          {switchingWorkspace ? <section className="workspace-loading" role="status" aria-label="Workspace 불러오는 중" aria-busy="true"><span className="sr-only">Workspace를 불러오는 중…</span><div className="workspace-loading-line" /><div className="workspace-loading-block" /><div className="workspace-loading-block" /></section> : !ready ? <div className="empty-state" role="status">로컬 저장소에 연결하는 중…</div> : view === 'TEAM_SETTINGS' ? <div><Button variant="ghost" disabled={busy} onClick={() => setView('SETTINGS')}><ArrowLeft size={16} />설정으로</Button><WorkspaceTransferSettings workspaceId={activeId} workspaceNames={session.workspaces.map(item => item.name)} disabled={actionBusy} onBusyChange={setSourceBusy} onApplied={async () => { await refreshSession(); setQuestionId(null); setTrail([]); setSelected(null); setRevision(value => value + 1) }} /></div> : view === 'PLUGINS' ? <div><Button variant="ghost" disabled={busy} onClick={() => setView('SETTINGS')}><ArrowLeft size={16} />설정으로</Button><PluginPanel onCaptured={(workspaceId, attachment) => { if (workspaceId === activeId) { setStagedAttachment({ workspaceId, attachment }); setQuestionId(null); setChatRevision(value => value + 1); setView('CHAT') } }} initialPlugin={pluginId} workspaceId={activeId} onBusyChange={setSourceBusy} onChanged={() => setRevision(value => value + 1)} onConversationSaved={(workspaceId, threadId) => { if (workspaceId === activeId) { setQuestionId(threadId); setChatRevision(value => value + 1); setView('CHAT') } }} /></div> : view === 'SETTINGS' ? <div className="settings-page"><div className="page-heading"><h1>설정</h1></div><button type="button" className="settings-row" disabled={busy} onClick={() => openModal({ kind: 'manage-workspaces' })}><span className="settings-row-icon" aria-hidden="true"><PanelsTopLeft size={22} /></span><span>Workspace 관리</span><ChevronRight size={19} aria-hidden="true" /></button><button type="button" className="settings-row" disabled={busy} onClick={() => { setPluginId(null); setView('PLUGINS') }}><span className="settings-row-icon" aria-hidden="true"><Plug size={22} /></span><span>플러그인</span><ChevronRight size={19} aria-hidden="true" /></button><button type="button" className="settings-row" disabled={busy} onClick={() => setView('TEAM_SETTINGS')}><span className="settings-row-icon" aria-hidden="true"><Download size={22} /></span><span>팀 설정</span><ChevronRight size={19} aria-hidden="true" /></button></div> : view === 'HISTORY' ? <QuestionGrid key={activeId} workspaceId={activeId} onDeleted={id => { if (questionId === id) setQuestionId(null) }} onSelect={id => { setQuestionId(id); setChatRevision(value => value + 1); setView('CHAT') }} /> : !workspace ? (
             <section className="welcome welcome-start"><h2 aria-label="Dougle"><Wordmark /></h2><Button onClick={() => openModal({ kind: 'workspace' })}><Plus /> Workspace 만들기</Button></section>
           ) : view === 'CHAT' ? <ChatPanel key={`${activeId}/${chatRevision}`} workspaceId={activeId!} selectedId={questionId} connection={connection} searchState={searchState}
+            stagedAttachment={stagedAttachment} onAttachmentStaged={() => setStagedAttachment(null)}
+            onOperationalBusyChange={setSourceBusy}
             onCreated={setQuestionId} onConnect={() => setCliSettingsOpen(true)} onSources={() => resetNavigation()} /> : (
             <>
               <SourcePanel manageOnly syncUploads key={activeId} workspaceId={activeId!} revision={revision}

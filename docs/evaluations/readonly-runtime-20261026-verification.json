@@ -1,0 +1,50 @@
+{
+  "fixtureVersion": "readonly-slack-receipts-v1",
+  "actualRunTimestamp": "2026-10-26T10:18:04.359Z",
+  "successfulAttempt": 6,
+  "exitCode": 0,
+  "rawReport": "docs/evaluations/readonly-runtime-20261026.json",
+  "failedStartupHistory": "docs/evaluations/readonly-runtime-20261026-failed-startup.json",
+  "initialLog": "/tmp/dougle-022-readonly-runtime.log",
+  "successfulLog": "/tmp/dougle-022-readonly-runtime-attempt6.log",
+  "otherFailedLogs": [
+    "/tmp/dougle-022-readonly-runtime-attempt2.log",
+    "/tmp/dougle-022-readonly-runtime-attempt3.log",
+    "/tmp/dougle-022-readonly-runtime-attempt4.log",
+    "/tmp/dougle-022-readonly-runtime-attempt5.log"
+  ],
+  "harnessSha256": "6e8c0dbbadc0ad2757f6451f2a0ed93d71cb54938e34385539c18b31b9547747",
+  "selfTestSourceSha256": "11677d731f7a1eb4eddbae8de719eeec01ee1e5e4a1b6a2f14f2ce11a68d0320",
+  "jarSha256BeforeAndAfter": "5cd81269031769b8c65af4a3cfc136dcd562e30a0c3e91f255f6a959f4a9bd0d",
+  "javaExecutable": "/Users/thisisnew/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home/bin/java",
+  "selfTests": {
+    "initialPreparedHarness": { "passed": 6, "failed": 0 },
+    "withBoundedStartupDiagnostics": { "passed": 7, "failed": 0 },
+    "finalHarness": { "passed": 8, "failed": 0 },
+    "syntaxCheck": "PASS",
+    "note": "Successive self-test runs overlap and are not additive; only the artifact run supplies runtime evidence."
+  },
+  "harnessOnlyCorrections": [
+    "Retain only bounded, redacted, recognized startup diagnostics instead of discarding all stderr.",
+    "Set FORGE_DATA_DIR to the same absolute private fixture directory already provided as a CLI property; DesktopBootstrap requires this environment key.",
+    "Explicitly allow network-bind only on localhost in the sandbox; external networking remains denied.",
+    "Use -Djava.net.preferIPv4Stack=true to match the application's 127.0.0.1 listener. Before this, Net.bind0 failed under the same loopback-only restrictions; attempt 6 succeeded."
+  ],
+  "sandboxProfile": "(version 1) (allow default) (deny network*) (allow network-bind (local ip \"localhost:*\")) (allow network-inbound (local ip \"localhost:*\")) (allow network-outbound (remote ip \"localhost:*\"))",
+  "checks": [
+    "Three Slack write routes reject old-shaped approvals, malformed JSON, missing bodies, wrong-typed bodies and missing workspace/receipt with 403 and READ_ONLY detail.",
+    "Identical request IDs repeatedly denied before and after two restarts.",
+    "Initial denied requests create zero reply rows; synthetic PREVIEW/SENT/UNCERTAIN rows seeded only with the private backend stopped.",
+    "GET receipt list/detail stays available; all three complete SQLite receipt rows remain unchanged across retries/restarts.",
+    "Answer, generation and investigation job tables remain empty; no observed request reaches the rejecting JVM HTTP(S) proxy."
+  ],
+  "cleanup": {
+    "harnessExited": true,
+    "ownedBackendStoppedBeforeEverySqliteAccess": true,
+    "ownedBackendTerminatedAndAwaitedInFinally": true,
+    "noHarnessTemporaryDirectoriesRemain": true,
+    "unrelatedJavaProcessesUntouched": true,
+    "userDataCredentialsSharedModelsAndJarUntouched": true
+  },
+  "limits": "No total transport-attempt count, real Slack validation, external AI, user database, or whole-product E35 pass. Existing inventory unchanged. No Maven/build/package/install/publish. Harness and documentation frozen after recording this result."
+}

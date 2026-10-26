@@ -55,6 +55,29 @@ class CollectorTest {
     }
 
     @Test
+    void collectingAndDiscardingSnapshotsNeverChangesSourceFiles() throws Exception {
+        Path root = Files.createDirectory(directory.resolve("originals"));
+        Path source = Files.writeString(root.resolve("업무 원본.txt"), "synthetic immutable original");
+        var modified = Files.getLastModifiedTime(source);
+        byte[] original = Files.readAllBytes(source);
+        var collector = new LocalFolderCollector();
+        try (var snapshot = collector.collect(root.toString())) {
+            assertThat(snapshot.files()).hasSize(1);
+            assertThat(snapshot.files().getFirst().content()).isEqualTo(original);
+        }
+        assertThat(Files.readAllBytes(source)).isEqualTo(original);
+        assertThat(Files.getLastModifiedTime(source)).isEqualTo(modified);
+        try (var files = Files.list(root)) {
+            assertThat(files.toList()).containsExactly(source);
+        }
+        Files.createSymbolicLink(root.resolve("rejected-link"), source);
+        assertThatThrownBy(() -> collector.collect(root.toString())).isInstanceOf(LibraryException.class);
+        assertThat(Files.readAllBytes(source)).isEqualTo(original);
+        assertThat(Files.getLastModifiedTime(source)).isEqualTo(modified);
+        assertThat(Files.isSymbolicLink(root.resolve("rejected-link"))).isTrue();
+    }
+
+    @Test
     void streamsMoreThanLegacyFileCountAndSizeWhileKeepingPathProtection() throws Exception {
         for (int index = 0; index <= 500; index++) Files.writeString(directory.resolve("file-" + index), "x");
         try (var snapshot = new LocalFolderCollector().collect(directory.toString())) {
@@ -106,12 +129,12 @@ class CollectorTest {
     @Test
     void gitReadsCommittedBlobsWithoutCheckoutOrTouchingWorkflow() throws Exception {
         GitRunner runner = new GitRunner();
-        runner.run(directory, 4096, "init", "--quiet");
+        fixtureGit(directory, 4096, "init", "--quiet");
         Files.createDirectories(directory.resolve(".github/workflows"));
         Files.writeString(directory.resolve(".github/workflows/test.yml"), "name: synthetic");
         Files.writeString(directory.resolve("Sample.java"), "class Sample { void observe() {} }");
-        runner.run(directory, 4096, "add", "--", ".");
-        runner.run(directory, 4096, "-c", "user.name=Synthetic", "-c", "user.email=synthetic@example.test",
+        fixtureGit(directory, 4096, "add", "--", ".");
+        fixtureGit(directory, 4096, "-c", "user.name=Synthetic", "-c", "user.email=synthetic@example.test",
                 "-c", "commit.gpgsign=false", "commit", "--quiet", "-m", "Synthetic fixture");
         String revision = new String(runner.run(directory, 1024, "rev-parse", "HEAD"), StandardCharsets.UTF_8).strip();
         var collector = new GithubCollector(mock(RemoteReader.class), runner);
@@ -120,7 +143,7 @@ class CollectorTest {
         assertThat(snapshot.files()).extracting(CollectedSnapshot.File::path)
                 .containsExactly(".github/workflows/test.yml", "Sample.java");
         assertThat(Files.readString(directory.resolve(".github/workflows/test.yml"))).isEqualTo("name: synthetic");
-        assertThat(new String(runner.run(directory, 4096, "status", "--porcelain"), StandardCharsets.UTF_8)).isEmpty();
+        assertThat(new String(fixtureGit(directory, 4096, "status", "--porcelain"), StandardCharsets.UTF_8)).isEmpty();
     }
 
     @Test
@@ -153,7 +176,7 @@ class CollectorTest {
     @Test
     void changedGitTreeReusesUnchangedAndRenamedBlobsAndDropsDeletedPaths() throws Exception {
         GitRunner runner = spy(new GitRunner());
-        runner.run(directory, 4096, "init", "--quiet");
+        fixtureGit(directory, 4096, "init", "--quiet");
         Files.writeString(directory.resolve("stable.txt"), "stable synthetic");
         Files.writeString(directory.resolve("rename.txt"), "rename synthetic");
         Files.writeString(directory.resolve("edit.txt"), "old synthetic");
@@ -198,7 +221,7 @@ class CollectorTest {
     @Test
     void gitBlobReadFailureKeepsReadableSiblings() throws Exception {
         GitRunner runner = spy(new GitRunner());
-        runner.run(directory, 4096, "init", "--quiet");
+        fixtureGit(directory, 4096, "init", "--quiet");
         Files.writeString(directory.resolve("readable.txt"), "synthetic healthy document");
         Files.writeString(directory.resolve("unavailable.txt"), "synthetic unavailable document");
         String revision = commitFixture(runner);
@@ -211,8 +234,8 @@ class CollectorTest {
     }
 
     private String commitFixture(GitRunner runner) throws Exception {
-        runner.run(directory, 4096, "add", "--", ".");
-        runner.run(directory, 4096, "-c", "user.name=Synthetic", "-c", "user.email=synthetic@example.test",
+        fixtureGit(directory, 4096, "add", "--", ".");
+        fixtureGit(directory, 4096, "-c", "user.name=Synthetic", "-c", "user.email=synthetic@example.test",
                 "-c", "commit.gpgsign=false", "commit", "--quiet", "-m", "Synthetic incremental fixture");
         return new String(runner.run(directory, 1024, "rev-parse", "HEAD"), StandardCharsets.UTF_8).strip();
     }
@@ -220,13 +243,13 @@ class CollectorTest {
     @Test
     void partialCloneLeavesUnchangedBlobMissingOnTheWire() throws Exception {
         GitRunner runner = new GitRunner();
-        runner.run(directory, 4096, "init", "--quiet");
-        runner.run(directory, 4096, "config", "uploadpack.allowFilter", "true");
+        fixtureGit(directory, 4096, "init", "--quiet");
+        fixtureGit(directory, 4096, "config", "uploadpack.allowFilter", "true");
         Files.writeString(directory.resolve("stable.txt"), "stable synthetic partial clone");
         Files.writeString(directory.resolve("edit.txt"), "old synthetic partial clone");
         String first = commitFixture(runner);
         var previous = new GithubCollector(mock(RemoteReader.class), runner).readSnapshot(directory, first);
-        String stableBlob = new String(runner.run(directory, 1024, "rev-parse", first + ":stable.txt"), StandardCharsets.UTF_8).strip();
+        String stableBlob = new String(fixtureGit(directory, 1024, "rev-parse", first + ":stable.txt"), StandardCharsets.UTF_8).strip();
         Files.writeString(directory.resolve("edit.txt"), "new synthetic partial clone");
         String second = commitFixture(runner);
         var missing = new java.util.concurrent.atomic.AtomicReference<String>();
@@ -241,9 +264,9 @@ class CollectorTest {
                 for (String argument : arguments) {
                     safeArguments.add(argument.equals("https://github.com/example/synthetic.git") ? directory.toUri().toString() : argument);
                 }
-                byte[] result = super.run(working, limit, safeArguments.toArray(String[]::new));
+                byte[] result = fixtureGit(working, limit, safeArguments.toArray(String[]::new));
                 if (arguments.length > 1 && arguments[0].equals("cat-file") && arguments[1].equals("blob")) {
-                    missing.set(new String(super.run(working, 65536, "rev-list", "--objects", "--all", "--missing=print"), StandardCharsets.UTF_8));
+                    missing.set(new String(fixtureGit(working, 65536, "rev-list", "--objects", "--all", "--missing=print"), StandardCharsets.UTF_8));
                 }
                 return result;
             }
@@ -257,5 +280,29 @@ class CollectorTest {
         assertThat(result.files()).hasSize(2);
         assertThat(missing.get()).contains("?" + stableBlob);
         assertThat(new String(result.files().get(0).content(), StandardCharsets.UTF_8)).isEqualTo("new synthetic partial clone");
+    }
+
+    private byte[] fixtureGit(Path working, int limit, String... arguments) throws Exception {
+        var command = new java.util.ArrayList<>(List.of("git", "-c", "core.hooksPath=/dev/null",
+                "-c", "core.fsmonitor=false", "-c", "init.templateDir="));
+        command.addAll(List.of(arguments));
+        Path output = Files.createTempFile("dougle-test-git-", ".out");
+        Process process = null;
+        try {
+            var builder = new ProcessBuilder(command).directory(working.toFile()).redirectErrorStream(true)
+                    .redirectOutput(output.toFile());
+            builder.environment().keySet().removeIf(key -> key.startsWith("GIT_"));
+            builder.environment().put("GIT_CONFIG_NOSYSTEM", "1");
+            builder.environment().put("GIT_CONFIG_GLOBAL", "/dev/null");
+            builder.environment().put("GIT_TERMINAL_PROMPT", "0");
+            process = builder.start();
+            assertThat(process.waitFor(30, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+            assertThat(process.exitValue()).isZero();
+            assertThat(Files.size(output)).isLessThanOrEqualTo(limit);
+            return Files.readAllBytes(output);
+        } finally {
+            if (process != null && process.isAlive()) process.destroyForcibly().waitFor();
+            Files.deleteIfExists(output);
+        }
     }
 }

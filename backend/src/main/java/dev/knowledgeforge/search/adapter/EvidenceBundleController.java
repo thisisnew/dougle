@@ -48,5 +48,5 @@ public class EvidenceBundleController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String workspaceId, @PathVariable String id) { service.delete(workspaceId, id); }
+    public void delete(@PathVariable String workspaceId, @PathVariable String id) { service.deleteIndependent(workspaceId, id); }
 }

@@ -1,0 +1,173 @@
+{
+  "scope": "Real production-JAR execution with synthetic data only. Recommendations are artifact-scoped, not general accuracy or current-artifact blanket acceptance. Parent owns the status inventory.",
+  "reviewer": "Codex evaluation agent; manual semantic comparison, not independent human review",
+  "fullyExercised": [
+    {
+      "id": "E01",
+      "recommendation": "PASS",
+      "artifactSha256": "6b60123c3502153dea371118e1d9873242b431a4b9a6ff3d37978a2c0a81bc52",
+      "model": "CODEX provider default; actual model ID unobserved",
+      "observedModelId": null,
+      "fixtureVersion": "synthetic-investigation-v1",
+      "executedAt": "2026-10-25T13:28:50.837Z",
+      "reviewer": "Codex evaluation agent; manual semantic comparison",
+      "expectedEvidence": [
+        "Strategy.java: Strategy.nextMove, FixedStrategy returns ROCK, Player.play delegates to supplied Strategy; retain that subject despite NightState/Singleton distractors"
+      ],
+      "actualAnswer": [
+        {
+          "turn": 0,
+          "question": "전략 패턴 예제 설명해줘",
+          "answer": "이 예제에서 Strategy는 손을 선택하는 nextMove() 메서드를 정의하는 인터페이스입니다. [R1]\n\nFixedStrategy는 Strategy를 구현하며, nextMove()를 호출하면 항상 \"ROCK\"을 반환합니다. [R1]\n\nPlayer는 생성자로 Strategy를 받아 저장하고, play()에서 strategy.nextMove()를 호출해 손 선택을 위임합니다. 즉, Player와 손을 선택하는 구현이 분리되어 있습니다. [R1]\n\n코드는 Strategy → FixedStrategy → Player.play() 순서로 살펴보면 됩니다. FixedStrategy를 전달받은 Player의 play() 결과는 \"ROCK\"입니다. [R1]",
+          "evidence": [
+            {
+              "label": "R1",
+              "title": "Strategy.java",
+              "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+            }
+          ]
+        },
+        {
+          "turn": 1,
+          "question": "어느쪽을 중점적으로 보면돼?",
+          "answer": "Player.play()의 strategy.nextMove() 호출을 중점적으로 보세요. Player가 생성자로 받은 Strategy에 손 선택을 위임하는 핵심 부분입니다. [R1]\n\nStrategy의 nextMove() 선언 → FixedStrategy의 구현 → Player.play()의 호출 순서로 따라가세요. FixedStrategy는 항상 \"ROCK\"을 반환합니다. [R1]",
+          "evidence": [
+            {
+              "label": "R1",
+              "title": "Strategy.java",
+              "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+            },
+            {
+              "label": "R2",
+              "title": "Singleton.java",
+              "quote": "package synthetic;\nclass Singleton {\n    private static final Singleton INSTANCE = new Singleton();\n    private Singleton() {}\n    static Singleton getInstance() { return INSTANCE; }\n}\n// 싱글턴 인스턴스를 반환한다. Strategy의 구현체가 아니다.\n"
+            },
+            {
+              "label": "R3",
+              "title": "NightState.java",
+              "quote": "package synthetic;\nclass NightState {\n    String alarm() { return \"NIGHT_ALERT\"; }\n}\n// 상태 패턴의 야간 경보 예제다. 전략 패턴의 손 선택과는 별개다.\n// 야간 경보 문자열은 NIGHT_ALERT이며 주간 전환 시간은 정의하지 않았다.\n"
+            },
+            {
+              "label": "R4",
+              "title": "receipt.md",
+              "quote": "# 가상 입하 업무\n이 문서는 테스트를 위한 가상 회사의 업무 정의다.\n입하 완료 조건은 모든 입하 항목의 검수가 끝나고 각 항목의 검수 수량이 예정 수량과 일치하는 것이다.\n입하 완료 시 ReceiptService.complete가 receipt_header의 status를 RECEIVED로 바꾸고 receipt_item에 accepted_qty를 저장한다.\n입하 예정 상태는 EXPECTED, 검수 중은 INSPECTING, 완료는 RECEIVED다.\n이 문서에는 실제 특정 건의 상태, 장애 원인, 운영 로그가 없다."
+            },
+            {
+              "label": "R5",
+              "title": "shipping.md",
+              "quote": "# 가상 출하 업무\n출하와 입하는 서로 다른 업무다. 출하 확정은 shipment_header에 SHIPPED 상태를 기록한다.\n이 문서는 입하 상태나 receipt_header의 완료 조건을 정의하지 않는다."
+            }
+          ]
+        }
+      ],
+      "toolCalls": [
+        {
+          "name": "PlanModel",
+          "arguments": {
+            "question": "전략 패턴 예제 설명해줘"
+          },
+          "result": {
+            "decision": "STOP",
+            "query": null,
+            "toolStatus": null
+          }
+        },
+        {
+          "name": "PlanModel",
+          "arguments": {
+            "question": "어느쪽을 중점적으로 보면돼?"
+          },
+          "result": {
+            "decision": "STOP",
+            "query": null,
+            "toolStatus": null
+          }
+        }
+      ],
+      "cost": {
+        "calls": 4,
+        "tokens": null,
+        "amount": null,
+        "currency": null
+      },
+      "latencyMs": 33556,
+      "evidence": [
+        {
+          "path": "docs/evaluations/investigation-live-batch1-20261025.json",
+          "description": "results[0:2]: actual questions, full answers, cited source quotes, successful STOP plans. Total batch had six calls; only four belong to E01."
+        },
+        {
+          "path": "docs/evaluations/investigation-live-20261025-review.md",
+          "description": "Subsequent manual semantic comparison and explicit runtime failure separation."
+        }
+      ],
+      "limitation": "Validated on 6b60123 artifact, not automatically transferred to replacement builds. Short synthetic two-turn conversation only. No UI/restart/long-history acceptance implied."
+    }
+  ],
+  "notFullyExercised": [
+    "E02",
+    "E03",
+    "E04",
+    "E05",
+    "E06",
+    "E07",
+    "E08",
+    "E09",
+    "E10",
+    "E11",
+    "E12",
+    "E13",
+    "E14",
+    "E15",
+    "E16",
+    "E17",
+    "E18",
+    "E19",
+    "E20",
+    "E21",
+    "E22",
+    "E23",
+    "E24",
+    "E25",
+    "E26",
+    "E27",
+    "E28",
+    "E29",
+    "E30",
+    "E31",
+    "E32",
+    "E33",
+    "E34",
+    "E35",
+    "E36",
+    "E37",
+    "E38",
+    "E39",
+    "E40",
+    "E41",
+    "E42",
+    "E43",
+    "E44",
+    "E45",
+    "E46",
+    "E47",
+    "E48",
+    "E49",
+    "E50"
+  ],
+  "supplementalEvidence": [
+    {
+      "artifactSha256": "7fe16e3f7637a5b536702d12059d462117b9d46037e0f6c04813a8b2b8fd680e",
+      "path": "docs/evaluations/investigation-live-batch3-20261025.json",
+      "description": "no-evidence-recovery turns 0/1: real PlanModel SEARCH -> local search -> capture -> fresh approval -> answer, then STOP and correct followup. Does not by itself fully satisfy another E02-E50 definition."
+    }
+  ],
+  "coverageCautions": {
+    "E03": "NightState switch is not the specified Strategy-to-receipt case; switch turn was never reached because its setup answer timed out. Exact business-switch fixture is prepared but not executed yet.",
+    "E05": "Prepared correction fixture has only two turns, not long conversation or post-summary correction. No full PASS even if those two answers succeed.",
+    "E15": "Absent fact/conflicting drafts planned; stale-document temporal case not included. No full PASS.",
+    "E20": "STOP decisions on sufficient code evidence are observed, but complete investigation conclusion/limitations/next-action case is not exercised.",
+    "E36": "Document injection fixture alone cannot establish log/image injection and tool/permission boundaries.",
+    "E42": "Same-ID replay works in the no-evidence recovery run, but app termination/network-loss/restart case is not exercised."
+  }
+}

@@ -1,0 +1,1791 @@
+{
+  "fixtureVersion": "synthetic-local-restart-glossary-v1",
+  "startedAt": "2026-10-25T22:30:47.732Z",
+  "maximumDispatches": 12,
+  "scenarios": [
+    "workspace-glossary-states"
+  ],
+  "variants": 3,
+  "variantStart": 0,
+  "dispatched": 12,
+  "planDispatches": 6,
+  "answerDispatches": 6,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "9feaf072-d0b2-40f9-b23e-0559d5a9b959",
+      "at": "2026-10-25T22:31:08.940Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 0,
+      "turn": 0,
+      "question": "이 가상 Workspace에서 입고 검수 끝은 어떤 상태야?",
+      "result": {
+        "id": "9feaf072-d0b2-40f9-b23e-0559d5a9b959",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "09273bb7-6692-45f5-a7c2-df596c7e60af",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "7289fb21b3eb2c7f09ad249740adf1200adc57287b6793deae201b74911328ca",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:08.950873Z",
+        "updatedAt": "2026-10-25T22:31:13.253360Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "497d5d42-e68a-4348-aa60-1d3d45e436d5",
+      "at": "2026-10-25T22:31:13.553Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 0,
+      "turn": 0,
+      "question": "이 가상 Workspace에서 입고 검수 끝은 어떤 상태야?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "6146bee8-5fa8-4958-8295-49c084e7872c",
+      "at": "2026-10-25T22:31:18.690Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 0,
+      "turn": 1,
+      "question": "그럼 출하 확정과 같은 상태라고 해도 돼?",
+      "result": {
+        "id": "6146bee8-5fa8-4958-8295-49c084e7872c",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "0917b30f-190b-4432-92ee-68945afb34c2",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "dc50a09dff8cdd28529592615c42df958789f6f43104cc4b1342b44abbfee41c",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:18.700428Z",
+        "updatedAt": "2026-10-25T22:31:23.809346Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99",
+      "at": "2026-10-25T22:31:23.892Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 0,
+      "turn": 1,
+      "question": "그럼 출하 확정과 같은 상태라고 해도 돼?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "d9e3e2fc-b473-42c2-9377-af57a670de7e",
+      "at": "2026-10-25T22:31:28.575Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 1,
+      "turn": 0,
+      "question": "용어집의 수신 검사 완료에 해당하는 상태 코드는?",
+      "result": {
+        "id": "d9e3e2fc-b473-42c2-9377-af57a670de7e",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "25781fa3-77b2-4e2d-aca5-56c55e3df246",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "2f585fcd997e23aca9727e81021ba30d91add1530018c4fb1d037ac0d0f08df0",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:28.580220Z",
+        "updatedAt": "2026-10-25T22:31:33.035005Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "308bda1a-e0c2-458c-9487-794f6f88c21c",
+      "at": "2026-10-25T22:31:33.146Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 1,
+      "turn": 0,
+      "question": "용어집의 수신 검사 완료에 해당하는 상태 코드는?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "7fd57553-fe6c-4397-936a-0828d34e48bc",
+      "at": "2026-10-25T22:31:37.206Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 1,
+      "turn": 1,
+      "question": "그 상태를 발송 확정과 동의어로 써도 돼?",
+      "result": {
+        "id": "7fd57553-fe6c-4397-936a-0828d34e48bc",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "8d1c50fa-4578-4899-9eb2-c639ae013ecc",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "d415813996097675749cccbb227e5ec3af0dde8d47d0cee98f77f72dbfef0f88",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:37.214150Z",
+        "updatedAt": "2026-10-25T22:31:42.795456Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "0dde086f-6bde-46c1-807a-aca15d97a025",
+      "at": "2026-10-25T22:31:43.000Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 1,
+      "turn": 1,
+      "question": "그 상태를 발송 확정과 동의어로 써도 돼?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "2e209c0b-c567-4e18-aa21-d62b74fd9331",
+      "at": "2026-10-25T22:31:48.001Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 2,
+      "turn": 0,
+      "question": "입하 검수완료와 입고 검수 끝은 이 Workspace에서 같은 뜻이야? 상태 코드도 알려줘.",
+      "result": {
+        "id": "2e209c0b-c567-4e18-aa21-d62b74fd9331",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "9e31362b-af8f-444d-9ff4-e4ffdadd6ff0",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "80685fc874683db4f9ed2fd2c2631e1ab69334e8fdb71a009c6106c2d4979a60",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:48.007164Z",
+        "updatedAt": "2026-10-25T22:31:51.832144Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "6345bcd8-5ff2-42de-b559-ffdda5ff7e73",
+      "at": "2026-10-25T22:31:51.967Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 2,
+      "turn": 0,
+      "question": "입하 검수완료와 입고 검수 끝은 이 Workspace에서 같은 뜻이야? 상태 코드도 알려줘.",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "17627223-830c-4c0f-8cdf-2e67bb14ee31",
+      "at": "2026-10-25T22:31:57.672Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 2,
+      "turn": 1,
+      "question": "그럼 SHIPPING_CONFIRMED와도 같은 업무 상태야?",
+      "result": {
+        "id": "17627223-830c-4c0f-8cdf-2e67bb14ee31",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "2b1ff9ef-7793-4b05-9c5b-f181fd281961",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "6d35360959af4c4c4ec0fa92b884912919939c734e2ee8c0817cbed33a086be3",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:57.680858Z",
+        "updatedAt": "2026-10-25T22:32:01.854161Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "c1e4ba83-687d-4135-add2-ac9bf287e7df",
+      "at": "2026-10-25T22:32:01.949Z",
+      "scenario": "workspace-glossary-states",
+      "variant": 2,
+      "turn": 1,
+      "question": "그럼 SHIPPING_CONFIRMED와도 같은 업무 상태야?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    }
+  ],
+  "results": [
+    {
+      "scenario": "workspace-glossary-states",
+      "variant": 0,
+      "turn": 0,
+      "question": "이 가상 Workspace에서 입고 검수 끝은 어떤 상태야?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "이 가상 Workspace에서 ‘입고 검수 끝’은 RECEIVING_CHECKED 상태로, 수신 품목의 검사가 끝났다는 뜻입니다. 출하 확정을 뜻하지는 않습니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "9feaf072-d0b2-40f9-b23e-0559d5a9b959",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "09273bb7-6692-45f5-a7c2-df596c7e60af",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "7289fb21b3eb2c7f09ad249740adf1200adc57287b6793deae201b74911328ca",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:08.950873Z",
+        "updatedAt": "2026-10-25T22:31:13.253360Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E12: resolve explicit Workspace synonyms to RECEIVING_CHECKED, then distinguish SHIPPING_CONFIRMED as shipping approval; do not merge similarly named completion states. Policy only, no operational proposal.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ],
+      "originalBundleId": "09273bb7-6692-45f5-a7c2-df596c7e60af",
+      "originalStatus": "READY",
+      "answerBundleId": "09273bb7-6692-45f5-a7c2-df596c7e60af",
+      "threadId": "32203848-dec0-448d-9c1a-58e764461b26",
+      "elapsedMs": 9835,
+      "retrievalQuery": "이 가상 Workspace에서 입고 검수 끝은 어떤 상태야?",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ]
+    },
+    {
+      "scenario": "workspace-glossary-states",
+      "variant": 0,
+      "turn": 1,
+      "question": "그럼 출하 확정과 같은 상태라고 해도 돼?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "아니요. ‘입고 검수 끝’은 RECEIVING_CHECKED로 수신 품목의 검사가 끝난 상태이고, ‘출하 확정’은 SHIPPING_CONFIRMED로 발송 승인을 확정한 상태입니다. 서로 다른 업무이므로 같은 상태라고 하면 안 됩니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "6146bee8-5fa8-4958-8295-49c084e7872c",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "0917b30f-190b-4432-92ee-68945afb34c2",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "dc50a09dff8cdd28529592615c42df958789f6f43104cc4b1342b44abbfee41c",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:18.700428Z",
+        "updatedAt": "2026-10-25T22:31:23.809346Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E12: resolve explicit Workspace synonyms to RECEIVING_CHECKED, then distinguish SHIPPING_CONFIRMED as shipping approval; do not merge similarly named completion states. Policy only, no operational proposal.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ],
+      "originalBundleId": "0917b30f-190b-4432-92ee-68945afb34c2",
+      "originalStatus": "READY",
+      "answerBundleId": "0917b30f-190b-4432-92ee-68945afb34c2",
+      "threadId": "32203848-dec0-448d-9c1a-58e764461b26",
+      "elapsedMs": 10014,
+      "retrievalQuery": "이 가상 Workspace에서 입고 검수 끝은 어떤 상태야? 그럼 출하 확정과 같은 상태라고 해도 돼?",
+      "historyTurns": 1,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ]
+    },
+    {
+      "scenario": "workspace-glossary-states",
+      "variant": 1,
+      "turn": 0,
+      "question": "용어집의 수신 검사 완료에 해당하는 상태 코드는?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "용어집에서 ‘수신 검사 완료’에 해당하는 상태 코드는 RECEIVING_CHECKED입니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "d9e3e2fc-b473-42c2-9377-af57a670de7e",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "25781fa3-77b2-4e2d-aca5-56c55e3df246",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "2f585fcd997e23aca9727e81021ba30d91add1530018c4fb1d037ac0d0f08df0",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:28.580220Z",
+        "updatedAt": "2026-10-25T22:31:33.035005Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E12: resolve explicit Workspace synonyms to RECEIVING_CHECKED, then distinguish SHIPPING_CONFIRMED as shipping approval; do not merge similarly named completion states. Policy only, no operational proposal.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ],
+      "originalBundleId": "25781fa3-77b2-4e2d-aca5-56c55e3df246",
+      "originalStatus": "READY",
+      "answerBundleId": "25781fa3-77b2-4e2d-aca5-56c55e3df246",
+      "threadId": "5d0f52fd-49e4-4ebb-acac-8c342776e053",
+      "elapsedMs": 8633,
+      "retrievalQuery": "용어집의 수신 검사 완료에 해당하는 상태 코드는?",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ]
+    },
+    {
+      "scenario": "workspace-glossary-states",
+      "variant": 1,
+      "turn": 1,
+      "question": "그 상태를 발송 확정과 동의어로 써도 돼?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "아니요. 수신 검사 완료(RECEIVING_CHECKED)는 수신 품목의 검사가 끝난 상태이고, 발송 확정(SHIPPING_CONFIRMED)은 발송 승인이 확정된 상태입니다. 서로 다른 업무이므로 동의어로 쓰면 안 됩니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "7fd57553-fe6c-4397-936a-0828d34e48bc",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "8d1c50fa-4578-4899-9eb2-c639ae013ecc",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "d415813996097675749cccbb227e5ec3af0dde8d47d0cee98f77f72dbfef0f88",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:37.214150Z",
+        "updatedAt": "2026-10-25T22:31:42.795456Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E12: resolve explicit Workspace synonyms to RECEIVING_CHECKED, then distinguish SHIPPING_CONFIRMED as shipping approval; do not merge similarly named completion states. Policy only, no operational proposal.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ],
+      "originalBundleId": "8d1c50fa-4578-4899-9eb2-c639ae013ecc",
+      "originalStatus": "READY",
+      "answerBundleId": "8d1c50fa-4578-4899-9eb2-c639ae013ecc",
+      "threadId": "5d0f52fd-49e4-4ebb-acac-8c342776e053",
+      "elapsedMs": 10768,
+      "retrievalQuery": "그 상태를 발송 확정과 동의어로 써도 돼?",
+      "historyTurns": 1,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ]
+    },
+    {
+      "scenario": "workspace-glossary-states",
+      "variant": 2,
+      "turn": 0,
+      "question": "입하 검수완료와 입고 검수 끝은 이 Workspace에서 같은 뜻이야? 상태 코드도 알려줘.",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "네. 이 Workspace에서 ‘입하 검수완료’와 ‘입고 검수 끝’은 같은 뜻이며, 상태 코드는 RECEIVING_CHECKED입니다. [R1]\n\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며, 출하 확정을 뜻하지 않습니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "2e209c0b-c567-4e18-aa21-d62b74fd9331",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "9e31362b-af8f-444d-9ff4-e4ffdadd6ff0",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "80685fc874683db4f9ed2fd2c2631e1ab69334e8fdb71a009c6106c2d4979a60",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:48.007164Z",
+        "updatedAt": "2026-10-25T22:31:51.832144Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E12: resolve explicit Workspace synonyms to RECEIVING_CHECKED, then distinguish SHIPPING_CONFIRMED as shipping approval; do not merge similarly named completion states. Policy only, no operational proposal.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ],
+      "originalBundleId": "9e31362b-af8f-444d-9ff4-e4ffdadd6ff0",
+      "originalStatus": "READY",
+      "answerBundleId": "9e31362b-af8f-444d-9ff4-e4ffdadd6ff0",
+      "threadId": "ffc77999-23b9-4982-9afd-6c9ea84fa790",
+      "elapsedMs": 9558,
+      "retrievalQuery": "입하 검수완료와 입고 검수 끝은 이 Workspace에서 같은 뜻이야? 상태 코드도 알려줘.",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ]
+    },
+    {
+      "scenario": "workspace-glossary-states",
+      "variant": 2,
+      "turn": 1,
+      "question": "그럼 SHIPPING_CONFIRMED와도 같은 업무 상태야?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "아니요. ‘입하 검수완료·입고 검수 끝’인 RECEIVING_CHECKED는 수신 품목의 검사가 끝난 상태이고, SHIPPING_CONFIRMED는 발송 승인을 확정한 상태입니다. 이 Workspace에서 두 상태는 서로 다른 업무이며 동의어가 아닙니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "17627223-830c-4c0f-8cdf-2e67bb14ee31",
+        "workspaceId": "fff5a622-2665-491c-8cc6-a9d2158e8cd4",
+        "bundleId": "2b1ff9ef-7793-4b05-9c5b-f181fd281961",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "6d35360959af4c4c4ec0fa92b884912919939c734e2ee8c0817cbed33a086be3",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T22:31:57.680858Z",
+        "updatedAt": "2026-10-25T22:32:01.854161Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "E12: resolve explicit Workspace synonyms to RECEIVING_CHECKED, then distinguish SHIPPING_CONFIRMED as shipping approval; do not merge similarly named completion states. Policy only, no operational proposal.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ],
+      "originalBundleId": "2b1ff9ef-7793-4b05-9c5b-f181fd281961",
+      "originalStatus": "READY",
+      "answerBundleId": "2b1ff9ef-7793-4b05-9c5b-f181fd281961",
+      "threadId": "ffc77999-23b9-4982-9afd-6c9ea84fa790",
+      "elapsedMs": 9076,
+      "retrievalQuery": "입하 검수완료와 입고 검수 끝은 이 Workspace에서 같은 뜻이야? 상태 코드도 알려줘. 그럼 SHIPPING_CONFIRMED와도 같은 업무 상태야?",
+      "historyTurns": 1,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "synthetic-glossary.md",
+          "quote": "# 가상 Workspace 용어집\n입고와 입하는 이 Workspace에서 동일한 수신 업무를 뜻한다.\n입하 검수완료, 입고 검수 끝, 수신 검사 완료는 모두 RECEIVING_CHECKED 상태를 뜻한다.\nRECEIVING_CHECKED는 수신 품목의 검사가 끝났다는 뜻이며 출하 확정을 뜻하지 않는다.\n출하 확정과 발송 확정은 SHIPPING_CONFIRMED 상태를 뜻한다.\nSHIPPING_CONFIRMED는 발송 승인을 확정한 것이며 수신 검사가 끝났다는 뜻이 아니다.\n두 상태는 서로 다른 업무이며 동의어가 아니다. 모두 가상 정책 정의다."
+        }
+      ]
+    }
+  ],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "apiTrace": [
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "GET",
+      "path": "/search-model"
+    },
+    {
+      "method": "POST",
+      "path": "/ai/providers/CODEX/connection"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/sources"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/sources/be772d6c-7069-4f0b-8dd6-42c2b0ce3baa/sync"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/9feaf072-d0b2-40f9-b23e-0559d5a9b959"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/09273bb7-6692-45f5-a7c2-df596c7e60af/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/09273bb7-6692-45f5-a7c2-df596c7e60af/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/09273bb7-6692-45f5-a7c2-df596c7e60af/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/497d5d42-e68a-4348-aa60-1d3d45e436d5"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/09273bb7-6692-45f5-a7c2-df596c7e60af/answer-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/6146bee8-5fa8-4958-8295-49c084e7872c"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/0917b30f-190b-4432-92ee-68945afb34c2/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/0917b30f-190b-4432-92ee-68945afb34c2/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/0917b30f-190b-4432-92ee-68945afb34c2/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/dbe537b4-bdc7-4e1f-baa6-96fb47ba0d99"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/0917b30f-190b-4432-92ee-68945afb34c2/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads/32203848-dec0-448d-9c1a-58e764461b26"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/d9e3e2fc-b473-42c2-9377-af57a670de7e"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/25781fa3-77b2-4e2d-aca5-56c55e3df246/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/25781fa3-77b2-4e2d-aca5-56c55e3df246/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/25781fa3-77b2-4e2d-aca5-56c55e3df246/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/308bda1a-e0c2-458c-9487-794f6f88c21c"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/25781fa3-77b2-4e2d-aca5-56c55e3df246/answer-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/7fd57553-fe6c-4397-936a-0828d34e48bc"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/8d1c50fa-4578-4899-9eb2-c639ae013ecc/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/8d1c50fa-4578-4899-9eb2-c639ae013ecc/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/8d1c50fa-4578-4899-9eb2-c639ae013ecc/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/0dde086f-6bde-46c1-807a-aca15d97a025"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/8d1c50fa-4578-4899-9eb2-c639ae013ecc/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads/5d0f52fd-49e4-4ebb-acac-8c342776e053"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/2e209c0b-c567-4e18-aa21-d62b74fd9331"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/9e31362b-af8f-444d-9ff4-e4ffdadd6ff0/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/9e31362b-af8f-444d-9ff4-e4ffdadd6ff0/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/9e31362b-af8f-444d-9ff4-e4ffdadd6ff0/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/6345bcd8-5ff2-42de-b559-ffdda5ff7e73"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/9e31362b-af8f-444d-9ff4-e4ffdadd6ff0/answer-jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs/17627223-830c-4c0f-8cdf-2e67bb14ee31"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/investigation-plans/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/2b1ff9ef-7793-4b05-9c5b-f181fd281961/answer-preview"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/2b1ff9ef-7793-4b05-9c5b-f181fd281961/answer-approval"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/2b1ff9ef-7793-4b05-9c5b-f181fd281961/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/answer-jobs/c1e4ba83-687d-4135-add2-ac9bf287e7df"
+    },
+    {
+      "method": "POST",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/evidence-bundles/2b1ff9ef-7793-4b05-9c5b-f181fd281961/answer-jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/workspaces/fff5a622-2665-491c-8cc6-a9d2158e8cd4/chat-threads/ffc77999-23b9-4982-9afd-6c9ea84fa790"
+    }
+  ],
+  "restartChecks": [],
+  "runtimes": [
+    {
+      "pid": 62053,
+      "port": 57916,
+      "startedAt": "2026-10-25T22:31:06.583Z",
+      "stoppedAt": "2026-10-25T22:32:07.390Z"
+    }
+  ],
+  "harnessSha256": "e8e40fb50d64b6cfa141a41124405e54055457b786493ad07aee0b77e079cb6d",
+  "fixtureSha256": "595466aabe28ce30cb952588cc986b3ef31262b0ad5a4c2957bd8632def2bf3b",
+  "historyHelperSha256": "60622018f62d92ae1b640cff84ce7a76927d2b321313388209edd7e894e23039",
+  "jarSha256": "675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489",
+  "launchFailed": false,
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-25T22:31:06.657190Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "completed": true,
+  "finishedAt": "2026-10-25T22:32:07.393Z"
+}

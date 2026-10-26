@@ -30,7 +30,7 @@ public class BrowserPluginHttp {
     public record Reply(JsonNode body, String session) {}
 
     public Reply send(BrowserProvider provider, String method, URI uri, String body, boolean form, String token, String session, String requestId) {
-        provider.trusted(uri.toString());
+        validateReadOrAuthentication(provider, method, uri, body, form, token, session, requestId);
         var request = new HttpUriRequestBase(method, uri);
         request.setHeader("Accept", "application/json, text/event-stream");
         if (token != null) request.setHeader("Authorization", "Bearer " + token);
@@ -72,6 +72,73 @@ public class BrowserPluginHttp {
         catch (Exception exception) { throw new LibraryException(502, "서비스 응답을 확인하지 못했습니다. 네트워크를 확인해 주세요."); }
         finally { deadline.cancel(false); }
     }
+
+    static void validateReadOrAuthentication(BrowserProvider provider, String method, URI uri, String body,
+                                             boolean form, String token, String session, String requestId) {
+        provider.trusted(uri.toString());
+        if ("GET".equals(method) && uri.toString().equals(provider.origin + "/.well-known/oauth-authorization-server")
+                && body == null && !form && token == null && session == null && requestId == null) return;
+        if (!"POST".equals(method) || body == null || body.length() > 65536) throw readOnlyDenied();
+        try {
+            if (uri.equals(URI.create(provider.origin + provider.path))) {
+                if (form || token == null) throw readOnlyDenied();
+                var payload = JsonMapper.builder().enable(tools.jackson.core.StreamReadFeature.STRICT_DUPLICATE_DETECTION)
+                        .enable(tools.jackson.databind.DeserializationFeature.FAIL_ON_TRAILING_TOKENS).build().readTree(body);
+                if (!only(payload, java.util.Set.of("jsonrpc", "id", "method", "params"))
+                        || !"2.0".equals(payload.path("jsonrpc").asText()) || !payload.path("params").isObject()) throw readOnlyDenied();
+                String operation = payload.path("method").asText();
+                var params = payload.path("params");
+                switch (operation) {
+                    case "initialize" -> {
+                        if (!only(params, java.util.Set.of("protocolVersion", "capabilities", "clientInfo"))
+                                || !params.path("capabilities").isObject() || !params.path("capabilities").isEmpty()) throw readOnlyDenied();
+                    }
+                    case "notifications/initialized" -> {
+                        if (!params.isEmpty() || payload.has("id") || requestId != null) throw readOnlyDenied();
+                    }
+                    case "tools/list" -> {
+                        if (!only(params, java.util.Set.of("cursor"))) throw readOnlyDenied();
+                    }
+                    case "tools/call" -> {
+                        if (!only(params, java.util.Set.of("name", "arguments"))) throw readOnlyDenied();
+                        PluginMcpSession.validateReadArguments(provider, params.path("name").asText(), params.path("arguments"));
+                    }
+                    default -> throw readOnlyDenied();
+                }
+                if (!"notifications/initialized".equals(operation)
+                        && (requestId == null || !requestId.equals(payload.path("id").asText()))) throw readOnlyDenied();
+                return;
+            }
+            if (token != null || session != null || requestId != null || uri.getRawQuery() != null) throw readOnlyDenied();
+            if (form) {
+                var fields = BrowserPluginConnections.query(body);
+                var allowed = switch (fields.getOrDefault("grant_type", "")) {
+                    case "authorization_code" -> java.util.Set.of("grant_type", "client_id", "code", "redirect_uri", "code_verifier", "resource");
+                    case "refresh_token" -> java.util.Set.of("grant_type", "client_id", "refresh_token", "resource");
+                    default -> throw readOnlyDenied();
+                };
+                if (!allowed.equals(fields.keySet()) || fields.values().stream().anyMatch(String::isBlank)
+                        || !provider.resource().equals(fields.get("resource"))) throw readOnlyDenied();
+            } else {
+                var registration = JsonMapper.builder().enable(tools.jackson.core.StreamReadFeature.STRICT_DUPLICATE_DETECTION)
+                        .enable(tools.jackson.databind.DeserializationFeature.FAIL_ON_TRAILING_TOKENS).build().readTree(body);
+                if (!only(registration, java.util.Set.of("client_name", "redirect_uris", "grant_types", "response_types", "token_endpoint_auth_method"))
+                        || registration.size() != 5 || !"Dougle".equals(registration.path("client_name").asText())
+                        || !"none".equals(registration.path("token_endpoint_auth_method").asText())
+                        || !registration.path("grant_types").toString().equals("[\"authorization_code\",\"refresh_token\"]")
+                        || !registration.path("response_types").toString().equals("[\"code\"]")
+                        || !registration.path("redirect_uris").isArray() || registration.path("redirect_uris").size() != 1
+                        || !registration.path("redirect_uris").get(0).asText().matches("http://127\\.0\\.0\\.1:[0-9]{1,5}/callback")) throw readOnlyDenied();
+            }
+        } catch (LibraryException denied) { throw denied; }
+        catch (RuntimeException invalid) { throw readOnlyDenied(); }
+    }
+
+    private static boolean only(JsonNode value, java.util.Set<String> names) {
+        return value.isObject() && value.size() == names.stream().filter(value::has).count();
+    }
+
+    static LibraryException readOnlyDenied() { return new LibraryException(403, "외부 서비스는 등록된 읽기 기능과 인증 연결만 허용합니다."); }
 
     static StringEntity requestEntity(String body, boolean form) {
         return new StringEntity(body, (form ? ContentType.APPLICATION_FORM_URLENCODED : ContentType.APPLICATION_JSON).withCharset(StandardCharsets.UTF_8));

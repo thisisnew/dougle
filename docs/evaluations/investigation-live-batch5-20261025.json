@@ -1,0 +1,55 @@
+{
+  "fixtureVersion": "synthetic-investigation-v2",
+  "startedAt": "2026-10-25T13:46:35.660Z",
+  "maximumDispatches": 8,
+  "scenarios": [
+    "latest-target-environment-correction",
+    "conflicting-evidence"
+  ],
+  "variants": 1,
+  "dispatched": 1,
+  "planDispatches": 1,
+  "answerDispatches": 0,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "b8d31049-0b3c-44dd-b4ad-32a2c592e5b9",
+      "at": "2026-10-25T13:47:03.942Z",
+      "scenario": "latest-target-environment-correction",
+      "variant": 0,
+      "turn": 0,
+      "question": "가상 ORBIT staging의 retry limit은?",
+      "result": {
+        "id": "b8d31049-0b3c-44dd-b4ad-32a2c592e5b9",
+        "workspaceId": "7cf796ac-1020-48ce-a2af-c097a49dbf76",
+        "bundleId": "4c051ba6-56ce-484c-be8a-824e1dcc2a94",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "a546437ffb1f3e163bd777547fc6eff627c55295acb6ef3fc28064744e58659c",
+        "status": "FAILED",
+        "decision": null,
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": "검색 계획 시간 한도 90초를 초과했습니다. 새 동의가 필요합니다.",
+        "approvedAt": "2026-10-25T13:47:03.963251Z",
+        "updatedAt": "2026-10-25T13:48:34.025477Z"
+      }
+    }
+  ],
+  "results": [],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "harnessSha256": "d864d39c0b9e5bcf2c20be85ec636c66023c8b1cfe6851f651fde27f7d065422",
+  "fixtureSha256": "804dcb1c2e6fdd2680036d4a334a08fe8d250a3fe3dc7ff49cb3627dd09fa8e5",
+  "jarSha256": "7fe16e3f7637a5b536702d12059d462117b9d46037e0f6c04813a8b2b8fd680e",
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-25T13:46:57.046662Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "error": "검색 계획 시간 한도 90초를 초과했습니다. 새 동의가 필요합니다.\n+ actual - expected\n\n+ 'FAILED'\n- 'SUCCEEDED'\n",
+  "finishedAt": "2026-10-25T13:48:37.842Z"
+}

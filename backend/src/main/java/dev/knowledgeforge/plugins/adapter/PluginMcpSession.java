@@ -27,7 +27,8 @@ final class PluginMcpSession {
             if (!result.path("tools").isArray()) throw new LibraryException(502, "서비스의 읽기 기능을 확인하지 못했습니다.");
             for (JsonNode tool : result.path("tools")) {
                 String name = tool.path("name").asText();
-                if (provider.readTools.contains(name)) tools.put(name, tool.path("inputSchema"));
+                var readOnlyHint = tool.path("annotations").path("readOnlyHint");
+                if (provider.readTools.contains(name) && !(readOnlyHint.isBoolean() && !readOnlyHint.asBoolean())) tools.put(name, tool.path("inputSchema"));
             }
             cursor = result.path("nextCursor").asText("");
             if (cursor.isEmpty()) break;
@@ -43,11 +44,37 @@ final class PluginMcpSession {
     }
     JsonNode call(String tool, Map<String, Object> arguments) {
         JsonNode schema = schema(tool);
+        validateReadArguments(provider, tool, json.valueToTree(arguments));
         for (JsonNode required : schema.path("required")) if (!arguments.containsKey(required.asText()))
             throw new LibraryException(502, "자료 읽기 형식이 변경되었습니다. 앱 업데이트를 확인해 주세요.");
         JsonNode result = rpc("tools/call", Map.of("name", tool, "arguments", arguments), false);
         if (result.path("isError").asBoolean()) throw new LibraryException(403, "자료를 읽지 못했습니다. 링크와 접근 권한을 확인해 주세요.");
         return result;
+    }
+
+    static void validateReadArguments(BrowserProvider provider, String tool, JsonNode arguments) {
+        if (!provider.readTools.contains(tool) || !arguments.isObject()) throw BrowserPluginHttp.readOnlyDenied();
+        Set<String> identifiers = switch (tool) {
+            case "notion-fetch" -> Set.of("id");
+            case "getAccessibleAtlassianResources" -> Set.of();
+            case "getJiraIssue" -> Set.of("issueIdOrKey", "issueKey", "issueId");
+            case "getConfluenceContent", "getConfluencePage" -> Set.of("contentId", "pageId", "id");
+            default -> throw BrowserPluginHttp.readOnlyDenied();
+        };
+        if (identifiers.isEmpty()) {
+            if (!arguments.isEmpty()) throw BrowserPluginHttp.readOnlyDenied();
+            return;
+        }
+        long selected = identifiers.stream().filter(arguments::has).count();
+        boolean cloud = provider == BrowserProvider.ATLASSIAN;
+        if (selected != 1 || arguments.size() != (cloud ? 2 : 1)) throw BrowserPluginHttp.readOnlyDenied();
+        if (cloud && (!arguments.path("cloudId").isTextual() || !arguments.path("cloudId").asText().matches("[A-Za-z0-9_-]{1,128}"))) {
+            throw BrowserPluginHttp.readOnlyDenied();
+        }
+        for (String name : identifiers) if (arguments.has(name)
+                && (!arguments.path(name).isTextual() || !arguments.path(name).asText().matches("[A-Za-z0-9_-]{1,128}"))) {
+            throw BrowserPluginHttp.readOnlyDenied();
+        }
     }
     private JsonNode rpc(String method, Map<String, ?> parameters, boolean notification) {
         String id = UUID.randomUUID().toString();

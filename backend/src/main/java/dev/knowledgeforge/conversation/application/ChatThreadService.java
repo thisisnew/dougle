@@ -1,0 +1,193 @@
+package dev.knowledgeforge.conversation.application;
+
+import dev.knowledgeforge.conversation.domain.AnswerJob;
+import dev.knowledgeforge.library.application.LibraryException;
+import dev.knowledgeforge.search.application.EvidenceBundleService;
+import dev.knowledgeforge.search.application.EvidenceBundleValidator;
+import dev.knowledgeforge.search.application.EvidenceBundleWriter;
+import dev.knowledgeforge.search.application.ContextPrompt;
+import dev.knowledgeforge.search.application.SearchService;
+import dev.knowledgeforge.search.application.SearchIndex;
+import dev.knowledgeforge.search.domain.EvidenceBundle;
+import dev.knowledgeforge.search.domain.EvidenceBundle.ChatContext;
+import dev.knowledgeforge.search.domain.EvidenceBundle.ChatTurn;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class ChatThreadService {
+    public record Create(String requestId, String threadId, String parentBundleId, String question, List<String> attachmentIds) {}
+    public record Summary(String id, String question, String createdAt, int turns, List<String> questions) {}
+    public record Detail(String id, List<EvidenceBundle> bundles, List<AnswerJob> jobs) {}
+    private final EvidenceBundleService bundles;
+    private final EvidenceBundleWriter writer;
+    private final EvidenceBundleValidator validator;
+    private final SearchService search;
+    private final AnswerJobStore jobs;
+
+    public ChatThreadService(EvidenceBundleService bundles, EvidenceBundleWriter writer, EvidenceBundleValidator validator,
+                             SearchService search, AnswerJobStore jobs) {
+        this.bundles = bundles; this.writer = writer; this.validator = validator; this.search = search; this.jobs = jobs;
+    }
+
+    private String threadId(EvidenceBundle bundle) {
+        return bundle.payload().chatContext() == null ? bundle.id() : bundle.payload().chatContext().threadId();
+    }
+
+    private List<EvidenceBundle> all(String workspaceId) {
+        return bundles.list(workspaceId).stream().map(summary -> bundles.get(workspaceId, summary.id())).toList();
+    }
+
+    private List<EvidenceBundle> ordered(List<EvidenceBundle> turns) {
+        var ids = turns.stream().map(EvidenceBundle::id).collect(java.util.stream.Collectors.toSet());
+        var remaining = new ArrayList<>(turns);
+        var result = new ArrayList<EvidenceBundle>();
+        String parentId = null;
+        while (!remaining.isEmpty()) {
+            String expected = parentId;
+            var candidates = remaining.stream().filter(bundle -> {
+                var context = bundle.payload().chatContext();
+                String parent = context == null ? null : context.parentBundleId();
+                return expected == null ? parent == null || !ids.contains(parent) : expected.equals(parent);
+            }).toList();
+            if (candidates.size() != 1) throw new LibraryException(409, "대화 순서를 확인하지 못했습니다.");
+            var next = candidates.getFirst();
+            result.add(next); remaining.remove(next); parentId = next.id();
+        }
+        return List.copyOf(result);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Summary> list(String workspaceId) {
+        var grouped = new LinkedHashMap<String, List<EvidenceBundle>>();
+        for (var bundle : all(workspaceId)) {
+            String id = threadId(bundle);
+            grouped.computeIfAbsent(id, ignored -> new ArrayList<>()).add(bundle);
+        }
+        return grouped.entrySet().stream().map(group -> {
+            var turns = ordered(group.getValue());
+            return new Summary(group.getKey(), turns.getFirst().payload().question(), turns.getLast().createdAt(), turns.size(),
+                    turns.stream().map(bundle -> bundle.payload().question()).toList());
+        }).sorted(Comparator.comparing((Summary summary) -> java.time.Instant.parse(summary.createdAt())).reversed().thenComparing(Summary::id)).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Detail get(String workspaceId, String id) {
+        return find(workspaceId, id).orElseThrow(() -> new LibraryException(404, "대화를 찾을 수 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public java.util.Optional<Detail> find(String workspaceId, String id) {
+        var turns = ordered(all(workspaceId).stream().filter(bundle -> threadId(bundle).equals(id)).toList());
+        if (turns.isEmpty()) return java.util.Optional.empty();
+        var ids = turns.stream().map(EvidenceBundle::id).toList();
+        return java.util.Optional.of(new Detail(id, turns, jobs.list(workspaceId).stream().filter(job -> ids.contains(job.bundleId())).toList()));
+    }
+
+    public EvidenceBundle create(String workspaceId, Create request) {
+        return createInternal(workspaceId, request, null);
+    }
+
+    public EvidenceBundle createWithRetrieval(String workspaceId, Create request, String retrievalQuery) {
+        if (retrievalQuery == null || retrievalQuery.isBlank() || retrievalQuery.length() > 256) {
+            throw new LibraryException(400, "추가 검색어는 1~256자여야 합니다.");
+        }
+        return createInternal(workspaceId, request, retrievalQuery.strip());
+    }
+
+    private EvidenceBundle createInternal(String workspaceId, Create request, String retrievalOverride) {
+        if (request == null || request.question() == null || request.question().isBlank() || request.question().length() > 256
+                || request.requestId() == null || !request.requestId().matches("[a-zA-Z0-9-]{1,64}")) {
+            throw new LibraryException(400, "질문은 1~256자이며 요청 식별자가 필요합니다.");
+        }
+        var attachmentIds = request.attachmentIds() == null ? List.<String>of() : request.attachmentIds();
+        var existing = all(workspaceId).stream().filter(bundle -> bundle.payload().chatContext() != null
+                && bundle.payload().chatContext().requestId().equals(request.requestId())).findFirst();
+        if (existing.isPresent()) {
+            var bundle = existing.get();
+            var context = bundle.payload().chatContext();
+            var attached = bundle.payload().items().stream().filter(item -> item.kind().startsWith("ATTACHMENT_"))
+                    .map(EvidenceBundle.Item::entryId).toList();
+            if (!bundle.payload().question().equals(request.question().strip())
+                    || (context.extractive() != null && !context.extractive().turnKind().equals(retrievalOverride == null ? "USER_QUESTION" : "SEARCH_CAPTURE"))
+                    || !Objects.equals(context.parentBundleId(), request.parentBundleId())
+                    || (retrievalOverride != null && !retrievalOverride.equals(context.retrievalQuery()))
+                    || (request.threadId() != null && !context.threadId().equals(request.threadId())) || !attached.equals(attachmentIds)) {
+                throw new LibraryException(409, "동일 요청 식별자의 내용이 변경되었습니다.");
+            }
+            return bundle;
+        }
+        String id = request.threadId();
+        String retrieval = request.question().strip();
+        var history = new ArrayList<ChatTurn>();
+        var questions = new ArrayList<EvidenceBundle.UserQuestion>();
+        EvidenceBundle parent = null;
+        if (id == null) {
+            if (request.parentBundleId() != null) throw new LibraryException(400, "새 대화에는 이전 질문을 지정할 수 없습니다.");
+            id = UUID.randomUUID().toString();
+        } else {
+            var detail = get(workspaceId, id);
+            parent = detail.bundles().getLast();
+            if (!parent.id().equals(request.parentBundleId())) throw new LibraryException(409, "대화가 변경되었습니다. 다시 열어 주세요.");
+            if (detail.jobs().stream().anyMatch(AnswerJob::active)) throw new LibraryException(409, "현재 답변이 끝난 뒤 질문해 주세요.");
+            for (var previous : detail.bundles()) {
+                if (ContextPrompt.userQuestion(previous)) questions.add(ContextPrompt.question(previous));
+            }
+            var recent = detail.bundles().subList(Math.max(0, detail.bundles().size() - 5), detail.bundles().size());
+            for (var previous : recent) {
+                var answer = detail.jobs().stream().filter(job -> job.bundleId().equals(previous.id()) && job.status().equals("SUCCEEDED"))
+                        .max(Comparator.comparing(AnswerJob::updatedAt));
+                history.add(new ChatTurn(previous.id(), previous.digest(), previous.payload().question(),
+                        answer.map(AnswerJob::answer).orElse(null)));
+            }
+        }
+        if (retrievalOverride != null) retrieval = retrievalOverride;
+        var retrievalQueries = new ArrayList<String>();
+        retrievalQueries.add(retrieval);
+        var hits = search.searchQuestion(workspaceId, retrieval, List.of(), false);
+        if (retrievalOverride != null && !retrieval.equals(request.question().strip())) {
+            retrievalQueries.add(request.question().strip());
+            hits = interleave(hits, search.searchQuestion(workspaceId, request.question().strip(), List.of(), false));
+        } else if (retrievalOverride == null && !questions.isEmpty() && !questions.getLast().question().equals(retrieval)) {
+            var previousQuestion = questions.getLast();
+            if (validator.check(workspaceId, previousQuestion.bundleId()).eligible()) {
+                retrievalQueries.add(previousQuestion.question());
+                hits = interleave(hits, search.searchQuestion(workspaceId, previousQuestion.question(), List.of(), false));
+            } else if (hits.isEmpty() && !"NO_EVIDENCE".equals(bundles.get(workspaceId, previousQuestion.bundleId()).payload().status())) {
+                throw new LibraryException(409, "이전 질문의 자료가 없거나 변경되었습니다. 자료를 확인하고 주제를 명시해 주세요.");
+            }
+        }
+        var selection = ContextPrompt.select(questions, history, retrievalQueries, retrievalOverride != null);
+        var context = new ChatContext(id, request.parentBundleId(), request.requestId(), retrieval, selection.history(), selection.extractive());
+        ContextPrompt.validate(workspaceId, request.question().strip(), context, previousId -> bundles.get(workspaceId, previousId));
+        return writer.capture(workspaceId, request.question().strip(), List.of(), false, hits, attachmentIds, context);
+    }
+
+    private static List<SearchIndex.Hit> interleave(List<SearchIndex.Hit> contextual, List<SearchIndex.Hit> current) {
+        var merged = new LinkedHashMap<String, SearchIndex.Hit>();
+        for (int rank = 0; rank < Math.max(contextual.size(), current.size()); rank++) {
+            if (rank < contextual.size()) {
+                var hit = contextual.get(rank);
+                merged.putIfAbsent(hit.entryId(), hit);
+            }
+            if (rank < current.size()) {
+                var hit = current.get(rank);
+                merged.putIfAbsent(hit.entryId(), hit);
+            }
+        }
+        return List.copyOf(merged.values());
+    }
+
+    public void delete(String workspaceId, String id) {
+        var detail = get(workspaceId, id);
+        if (detail.jobs().stream().anyMatch(AnswerJob::active)) throw new LibraryException(409, "실행 중인 답변을 중단한 뒤 삭제하세요.");
+        for (var bundle : detail.bundles()) bundles.delete(workspaceId, bundle.id());
+    }
+}

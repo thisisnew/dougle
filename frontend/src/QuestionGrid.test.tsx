@@ -50,7 +50,7 @@ it('이력에서만 확인 후 삭제하고 실패 시 재시도한다', async (
   await screen.findByText('질문 기록이 없습니다.')
   expect(deleted).toHaveBeenCalledWith(question.id)
   expect(api.mock.calls.filter(([, options]) => options?.method === 'DELETE').map(([path]) => path)).toEqual([
-    '/workspaces/one/evidence-bundles/question-one', '/workspaces/one/evidence-bundles/question-one',
+    '/workspaces/one/chat-threads/question-one', '/workspaces/one/chat-threads/question-one',
   ])
 })
 
@@ -79,7 +79,7 @@ it('표시된 질문을 체크박스로 함께 삭제하고 실패 항목만 재
   await screen.findByText('질문 기록이 없습니다.')
   expect(deleted.mock.calls).toEqual([[question.id], [second.id]])
   expect(api.mock.calls.filter(([, options]) => options?.method === 'DELETE').map(([path]) => path)).toEqual([
-    '/workspaces/one/evidence-bundles/question-one', '/workspaces/one/evidence-bundles/question-two', '/workspaces/one/evidence-bundles/question-two',
+    '/workspaces/one/chat-threads/question-one', '/workspaces/one/chat-threads/question-two', '/workspaces/one/chat-threads/question-two',
   ])
 })
 
@@ -100,7 +100,7 @@ it('제목과 날짜 목록을 표시하고 선택할 때 해당 질문으로 �
   await userEvent.click(await screen.findByRole('button', { name: question.question }))
   expect(select).toHaveBeenCalledWith(question.id)
   expect(api).toHaveBeenCalledTimes(1)
-  expect(api.mock.calls[0][0]).toBe('/workspaces/one/evidence-bundles')
+  expect(api.mock.calls[0][0]).toBe('/workspaces/one/chat-threads')
   expect(screen.queryByText('대화 보관함 관리')).not.toBeInTheDocument()
   expect(screen.queryByText('답변 당시 근거')).not.toBeInTheDocument()
   expect(screen.queryByRole('button', { name: '새 질문' })).not.toBeInTheDocument()
@@ -112,6 +112,17 @@ it('검색은 로컬 필터만 사용하고 AI를 호출하지 않는다', async
   await screen.findByRole('button', { name: question.question })
   await userEvent.type(screen.getByLabelText('질문 찾기'), '없는 내용')
   expect(screen.getByText('일치하는 질문이 없습니다.')).toBeInTheDocument()
+  expect(api).toHaveBeenCalledTimes(1)
+})
+
+it('후속 질문으로 검색해도 같은 대화 한 행을 찾는다', async () => {
+  api.mockResolvedValue([{ ...question, questions: [question.question, '어느쪽을 중점적으로 보면돼?'] }])
+  const select = vi.fn()
+  render(<QuestionGrid workspaceId="one" onSelect={select} />)
+  await screen.findByRole('button', { name: question.question })
+  await userEvent.type(screen.getByLabelText('질문 찾기'), '어느쪽')
+  await userEvent.click(screen.getByRole('button', { name: question.question }))
+  expect(select).toHaveBeenCalledExactlyOnceWith(question.id)
   expect(api).toHaveBeenCalledTimes(1)
 })
 

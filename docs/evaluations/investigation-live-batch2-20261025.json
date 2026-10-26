@@ -1,0 +1,15 @@
+{
+  "fixtureVersion": "synthetic-investigation-v1",
+  "startedAt": "2026-10-25T13:32:07.867Z",
+  "maximumDispatches": 8,
+  "dispatched": 0,
+  "planDispatches": 0,
+  "answerDispatches": 0,
+  "dispatches": [],
+  "results": [],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "jarSha256": "6b60123c3502153dea371118e1d9873242b431a4b9a6ff3d37978a2c0a81bc52",
+  "error": "Existing app login unavailable; no fallback or automatic login\n+ actual - expected\n\n+ 'CHECK_FAILED'\n- 'AUTHENTICATED'\n",
+  "finishedAt": "2026-10-25T13:32:24.664Z"
+}

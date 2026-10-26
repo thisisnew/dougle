@@ -2,6 +2,8 @@ package dev.knowledgeforge.knowledge.adapter;
 
 import dev.knowledgeforge.knowledge.application.CuratorModel;
 import dev.knowledgeforge.knowledge.application.CuratorSettings;
+import dev.knowledgeforge.knowledge.application.ProviderExecutionException;
+import dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport;
 import dev.knowledgeforge.library.application.LibraryException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,6 +30,11 @@ public class CliCuratorModel implements CuratorModel {
               "title":{"type":"string"},"claims":{"type":"array","items":{"type":"object",
               "additionalProperties":false,"required":["text","evidenceIds"],"properties":{
               "text":{"type":"string"},"evidenceIds":{"type":"array","items":{"type":"string"}}}}}}}
+            """;
+    static final String PLAN_SCHEMA = """
+            {"type":"object","additionalProperties":false,"required":["decision","query"],"properties":{
+              "decision":{"type":"string","enum":["SEARCH","STOP","PROPOSE_MYSQL_READ","PROPOSE_DATADOG_LOGS"]},
+              "query":{"type":["string","null"],"maxLength":256}}}
             """;
     private final String codex;
     private final String claude;
@@ -75,6 +82,11 @@ public class CliCuratorModel implements CuratorModel {
     }
 
     @Override
+    public String generatePlan(Provider provider, String prompt, String requestedModel) {
+        return generateInternal(provider, prompt, requestedModel, null, PLAN_SCHEMA);
+    }
+
+    @Override
     public String generateWithText(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
         if (provider == Provider.CODEX && !codexStreamHome.isBlank()) {
             return new CodexAppServer(codex, Path.of(codexStreamHome), timeout)
@@ -95,12 +107,17 @@ public class CliCuratorModel implements CuratorModel {
     }
 
     private String generateInternal(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
+        return generateInternal(provider, prompt, requestedModel, text, SCHEMA);
+    }
+
+    private String generateInternal(Provider provider, String prompt, String requestedModel,
+                                    java.util.function.Consumer<String> text, String schema) {
         String selectedModel = CuratorSettings.normalize(requestedModel);
         Path directory = null;
         try {
             directory = Files.createTempDirectory("forge-curator-");
-            Files.writeString(directory.resolve("schema.json"), SCHEMA);
-            List<String> command = command(provider, directory, selectedModel);
+            Files.writeString(directory.resolve("schema.json"), schema);
+            List<String> command = command(provider, directory, selectedModel, schema);
             ClaudeTextStream stream = text == null ? null : new ClaudeTextStream(text);
             if (stream != null) {
                 command.set(command.indexOf("--output-format") + 1, "stream-json");
@@ -137,8 +154,12 @@ public class CliCuratorModel implements CuratorModel {
     }
 
     List<String> command(Provider provider, Path directory, String requestedModel) {
+        return command(provider, directory, requestedModel, SCHEMA);
+    }
+
+    private List<String> command(Provider provider, Path directory, String requestedModel, String schema) {
         if (provider == Provider.CLAUDE) {
-            List<String> arguments = new ArrayList<>(List.of(claude, "--print", "--output-format", "json", "--json-schema", SCHEMA,
+            List<String> arguments = new ArrayList<>(List.of(claude, "--print", "--output-format", "json", "--json-schema", schema,
                     "--tools", "", "--disallowedTools", "mcp__*", "--strict-mcp-config", "--mcp-config", "{\"mcpServers\":{}}",
                     "--setting-sources", "", "--settings", "{\"disableAllHooks\":true}", "--disable-slash-commands",
                     "--no-session-persistence", "--no-chrome", "--permission-mode", "dontAsk"));
@@ -153,6 +174,7 @@ public class CliCuratorModel implements CuratorModel {
                 "--output-schema", directory.resolve("schema.json").toString(),
                 "--output-last-message", directory.resolve("answer.json").toString()));
         if (!codexStreamHome.isBlank()) arguments.addAll(List.of("--config", "cli_auth_credentials_store=\"file\""));
+        if (schema.equals(PLAN_SCHEMA)) arguments.add("--json");
         for (String feature : List.of("shell_tool", "shell_snapshot", "apps", "plugins", "hooks", "multi_agent",
                 "browser_use", "computer_use", "image_generation", "code_mode", "skill_search")) {
             arguments.addAll(List.of("--disable", feature));
@@ -183,20 +205,22 @@ public class CliCuratorModel implements CuratorModel {
             CodexProfile.configure(builder, CodexProfile.validate(Path.of(codexStreamHome), true), directory);
         }
         Process process = builder.start();
+        var diagnostics = new ProcessDiagnostics(command.contains("--output-last-message") ? Transport.CODEX_EXEC : Transport.CLI_EXEC);
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
-        var executor = Executors.newVirtualThreadPerTaskExecutor();
+        var executor = Executors.newFixedThreadPool(3);
         try {
-            var stdout = executor.submit(() -> stream == null ? read(process.getInputStream(), process) : readStream(process.getInputStream(), stream));
-            var stderr = executor.submit(() -> read(process.getErrorStream(), process));
+            var stdout = executor.submit(() -> stream == null ? read(process.getInputStream(), process, diagnostics::stdout) : readStream(process.getInputStream(), stream));
+            var stderr = executor.submit(() -> read(process.getErrorStream(), process, diagnostics::stderr));
             var input = executor.submit(() -> {
                 try (var stdin = process.getOutputStream()) { stdin.write(prompt.getBytes(StandardCharsets.UTF_8)); }
+                diagnostics.promptWritten();
                 return true;
             });
             long deadline = System.nanoTime() + limit.toNanos();
             while (!process.waitFor(100, TimeUnit.MILLISECONDS)) {
                 if (stdout.isDone()) stdout.get();
                 process.descendants().forEach(descendants::add);
-                if (System.nanoTime() >= deadline) throw new LibraryException(504, "AI CLI 응답 제한 시간을 초과했습니다. 기존 지식은 유지됩니다.");
+                if (System.nanoTime() >= deadline) throw new ProviderExecutionException(504, "AI CLI 응답 제한 시간을 초과했습니다. 기존 지식은 유지됩니다.", diagnostics.snapshot());
                 Path output = directory.resolve("answer.json");
                 if (Files.exists(output) && Files.size(output) > 65536) throw new IOException();
             }
@@ -215,9 +239,9 @@ public class CliCuratorModel implements CuratorModel {
             return output;
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw new LibraryException(503, "AI CLI 실행이 중단되었습니다.");
+            throw new ProviderExecutionException(503, "AI CLI 실행이 중단되었습니다.", diagnostics.snapshot());
         } catch (java.util.concurrent.TimeoutException exception) {
-            throw new LibraryException(504, "AI CLI 응답 제한 시간을 초과했습니다.");
+            throw new ProviderExecutionException(504, "AI CLI 응답 제한 시간을 초과했습니다.", diagnostics.snapshot());
         } catch (java.util.concurrent.ExecutionException exception) {
             throw new IOException("CLI I/O failed");
         } finally {
@@ -241,7 +265,7 @@ public class CliCuratorModel implements CuratorModel {
         }
     }
 
-    private String read(InputStream stream, Process process) throws IOException {
+    private String read(InputStream stream, Process process, java.util.function.ObjIntConsumer<byte[]> observer) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int count;
@@ -252,6 +276,7 @@ public class CliCuratorModel implements CuratorModel {
                 throw new IOException("CLI output limit");
             }
             bytes.write(buffer, 0, count);
+            observer.accept(buffer, count);
         }
         return bytes.toString(StandardCharsets.UTF_8);
     }

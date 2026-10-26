@@ -14,6 +14,38 @@ class CodexTextStreamTest {
     private final List<String> snapshots = new ArrayList<>();
     private final CodexTextStream stream = new CodexTextStream("thread", "turn", snapshots::add);
 
+    @Test void diagnosticsCountBindingsAndLifecycleWithoutRetainingContentOrIdentifiers() throws Exception {
+        var diagnostics = new ProcessDiagnostics(dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER);
+        var observed = new CodexTextStream("thread", "turn", ignored -> {}, diagnostics);
+        observed.accept(end("completed").replace("\"turn\"", "\"private-turn\""));
+        observed.accept(end("completed").replace("\"thread\"", "\"private-thread\""));
+        observed.accept(event("private-method", Map.of("secret", "private-content")));
+        observed.accept(item("item/started", "private-item", "final_answer", ""));
+        observed.accept(delta("private-item", "private-content"));
+        observed.accept(item("item/completed", "private-item", "final_answer", FINAL));
+        observed.accept(end("completed"));
+        var progress = diagnostics.snapshot().appStream();
+        assertThat(progress.messages()).isEqualTo(1);
+        assertThat(progress.deltas()).isEqualTo(1);
+        assertThat(progress.completedMessages()).isEqualTo(1);
+        assertThat(progress.matchedCompletions()).isEqualTo(1);
+        assertThat(progress.ignoredBindings()).isEqualTo(2);
+        assertThat(progress.otherNotifications()).isEqualTo(1);
+        assertThat(progress.protocolInvalid()).isZero();
+        assertThat(progress.callbackActive()).isFalse();
+        assertThat(progress.phase()).isEqualTo(dev.knowledgeforge.knowledge.application.ProviderExecutionException.StreamPhase.COMPLETED);
+        assertThat(diagnostics.snapshot().safeSummary()).doesNotContain("private", "fixture", "claims", "threadId", "turnId", "itemId");
+    }
+
+    @Test void matchedButInvalidCompletionIsNotSuccess() throws Exception {
+        var diagnostics = new ProcessDiagnostics(dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER);
+        var observed = new CodexTextStream("thread", "turn", ignored -> {}, diagnostics);
+        assertThatThrownBy(() -> observed.accept(end("completed"))).isInstanceOf(IOException.class);
+        assertThat(observed.completed()).isFalse();
+        assertThat(diagnostics.snapshot().appStream().matchedCompletions()).isEqualTo(1);
+        assertThat(diagnostics.snapshot().appStream().protocolInvalid()).isEqualTo(1);
+    }
+
     private String event(String method, Map<String, Object> body) {
         var params = new java.util.HashMap<>(body);
         params.put("threadId", "thread");

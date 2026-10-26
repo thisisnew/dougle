@@ -46,7 +46,7 @@ final class CodexProfile {
                 || !PosixFilePermissions.fromString("rw-------").containsAll(Files.getPosixFilePermissions(auth)))) {
             throw new IOException("Private file login required");
         }
-        Set<String> files = Set.of("auth.json", ".forge-stream.lock", "version.json", "models_cache.json", ".last_migration", ".sandbox_migration", "installation_id");
+        Set<String> files = Set.of("auth.json", ".forge-stream.lock", ".sqlite-maintenance.lock", "version.json", "models_cache.json", ".last_migration", ".sandbox_migration", "installation_id");
         try (var entries = Files.list(profile)) {
             for (Path entry : entries.toList()) {
                 String name = entry.getFileName().toString();

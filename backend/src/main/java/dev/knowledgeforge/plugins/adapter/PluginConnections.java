@@ -10,6 +10,7 @@ public class PluginConnections {
     private final NotionClient notion;
     private final MysqlClient mysql;
     private final JsonMapper json = new JsonMapper();
+    private final java.util.concurrent.atomic.AtomicLong mysqlEpoch = new java.util.concurrent.atomic.AtomicLong();
     public record Status(boolean notionConnected, boolean mysqlConnected, MysqlClient.Config mysql) {}
     public PluginConnections(PluginVault vault, NotionClient notion, MysqlClient mysql) {
         this.vault = vault; this.notion = notion; this.mysql = mysql;
@@ -19,7 +20,7 @@ public class PluginConnections {
         return new Status(notionToken() != null, config != null, config == null ? null : config.withoutPassword());
     }
     public String notionToken() { return vault.get("notion"); }
-    public MysqlClient.Config mysqlConfig() {
+    public synchronized MysqlClient.Config mysqlConfig() {
         String saved = vault.get("mysql");
         return saved == null ? null : json.readValue(saved, MysqlClient.Config.class);
     }
@@ -29,10 +30,26 @@ public class PluginConnections {
     }
     public void mysql(MysqlClient.Config config, boolean save) {
         mysql.test(config);
-        if (save) vault.put("mysql", json.writeValueAsString(config));
+        if (save) {
+            synchronized (this) {
+                mysqlEpoch.incrementAndGet();
+                try {
+                    vault.put("mysql-revision", java.util.UUID.randomUUID().toString());
+                    vault.put("mysql", json.writeValueAsString(config));
+                } finally { mysqlEpoch.incrementAndGet(); }
+            }
+        }
     }
-    public void disconnect(String provider) {
+    public synchronized String mysqlRevision() { return vault.get("mysql-revision"); }
+    public long mysqlEpoch() { return mysqlEpoch.get(); }
+    public synchronized void disconnect(String provider) {
         if (!provider.equals("notion") && !provider.equals("mysql")) throw new LibraryException(404, "플러그인을 찾을 수 없습니다.");
-        vault.put(provider, null);
+        if (provider.equals("mysql")) {
+            mysqlEpoch.incrementAndGet();
+            try {
+                vault.put("mysql-revision", java.util.UUID.randomUUID().toString());
+                vault.put(provider, null);
+            } finally { mysqlEpoch.incrementAndGet(); }
+        } else vault.put(provider, null);
     }
 }

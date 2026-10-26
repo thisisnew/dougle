@@ -24,18 +24,25 @@ final class CodexAppServerSession {
     private String threadId;
     private CodexTextStream stream;
     private String result;
+    private final ProcessDiagnostics diagnostics;
 
     CodexAppServerSession(Writer output, Path directory, String prompt, String model, Consumer<String> text) {
         this(output, directory, prompt, model, text, List.of());
     }
 
     CodexAppServerSession(Writer output, Path directory, String prompt, String model, Consumer<String> text, List<Path> images) {
+        this(output, directory, prompt, model, text, images,
+                new ProcessDiagnostics(dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER));
+    }
+
+    CodexAppServerSession(Writer output, Path directory, String prompt, String model, Consumer<String> text, List<Path> images, ProcessDiagnostics diagnostics) {
         this.output = output;
         this.directory = directory;
         this.prompt = prompt;
         this.model = model;
         this.text = text;
         this.images = List.copyOf(images);
+        this.diagnostics = diagnostics;
     }
 
     void initialize() throws IOException {
@@ -43,6 +50,14 @@ final class CodexAppServerSession {
     }
 
     void accept(String line) throws IOException {
+        try { acceptResponse(line); }
+        catch (IOException | RuntimeException exception) {
+            diagnostics.appEvent(ProcessDiagnostics.AppEvent.PROTOCOL_INVALID);
+            throw exception;
+        }
+    }
+
+    private void acceptResponse(String line) throws IOException {
         JsonNode value = mapper.readTree(line);
         if (!value.isObject() || result != null || value.has("error")) throw new IOException("Invalid response");
         if (value.has("id")) {
@@ -84,7 +99,8 @@ final class CodexAppServerSession {
                 }
                 case 4 -> {
                     String turnId = identifier(response.path("turn").path("id"));
-                    stream = new CodexTextStream(threadId, turnId, text);
+                    diagnostics.appEvent(ProcessDiagnostics.AppEvent.TURN_ACCEPTED);
+                    stream = new CodexTextStream(threadId, turnId, text, diagnostics);
                     awaiting = 0;
                     for (String notification : early) notification(notification);
                     early.clear();
@@ -166,4 +182,14 @@ final class CodexAppServerSession {
     }
 
     String result() { return result; }
+
+    String phase() {
+        return switch (awaiting) {
+            case 1 -> "연결 초기화";
+            case 2 -> "격리 설정 확인";
+            case 3 -> "대화 준비";
+            case 4 -> "질문 접수";
+            default -> "답변 생성";
+        };
+    }
 }

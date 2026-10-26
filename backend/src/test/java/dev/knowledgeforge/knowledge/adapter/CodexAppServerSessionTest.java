@@ -38,6 +38,22 @@ class CodexAppServerSessionTest {
     }
 
     @Test
+    void turnAcceptanceAndInvalidResponsesHaveContentFreeDiagnostics() throws Exception {
+        var diagnostics = new ProcessDiagnostics(dev.knowledgeforge.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER);
+        var observed = new CodexAppServerSession(new StringWriter(), Path.of("/synthetic"), "private-prompt", "model", ignored -> {}, List.of(), diagnostics);
+        observed.initialize();
+        observed.accept(response(1, Map.of()));
+        observed.accept(response(2, Map.of("config", config(), "layers", List.of())));
+        observed.accept(response(3, thread()));
+        assertThat(diagnostics.snapshot().appStream().turnAccepted()).isFalse();
+        observed.accept(response(4, Map.of("turn", Map.of("id", "private-turn"))));
+        assertThat(diagnostics.snapshot().appStream().turnAccepted()).isTrue();
+        assertThatThrownBy(() -> observed.accept(response(99, Map.of("secret", "private-value")))).isInstanceOf(IOException.class);
+        assertThat(diagnostics.snapshot().appStream().protocolInvalid()).isEqualTo(1);
+        assertThat(diagnostics.snapshot().safeSummary()).doesNotContain("private", "/synthetic", "model");
+    }
+
+    @Test
     void sendsPromptOnlyAfterConfigurationAndThreadValidation() throws Exception {
         initialize(); configuration(config());
         assertThat(output.toString()).contains("initialized", "config/read", "thread/start").doesNotContain("private-prompt");

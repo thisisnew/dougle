@@ -1,5 +1,103 @@
 # Dougle — 이어서 작업하기
 
+## 최종 상태 — 2026-10-26 읽기 전용 0.1.22 / DB v28
+
+최종 JAR SHA-256은 `e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d`다. Java **1004실행/997통과/opt-in7건너뜀/실패·오류0**(기존 fixture 두 클래스 제외), UI **668개 및 빌드 통과**, Node **74개 통과**다. 이전 검사 수와 중복 합산하지 않는다.
+
+[0.1.22 패키지 증거](docs/evaluations/macos-package-0.1.22-20261026.json): Intel·ARM DMG/업데이트 아카이브 생성 및 정적 검증 완료, Intel 네이티브 호스트·React/WebKit 런타임 통과. **ARM은 정적 검사만이며 실기기 실행 미검증**이다. ad-hoc 서명은 Apple 공증/Gatekeeper 인수가 아니다. **설치·공개·업데이트 피드 승격은 하지 않았다.** 외부 업무 시스템 읽기 전용과 로컬 저장 유지 정책을 따른다.
+
+E04는 재시작/UI 복원 후 후속 답변 시간 초과, E05는 직전5cd81269의6dispatch 중 세 번째 답변 시간 초과로 중단했다. E05 앞선 두 답변만 수동 검토 적합이며 장기 정정 유지 단계는 미도달이다. 제공자 원인으로 단정하지 않으며 자동 재시도·추가 AI 실행 승인은 없다. 중앙 인수 **4 PASS / 0 FAIL / 1 BLOCKED / 45 NOT_RUN**의4PASS(E01–E03/E12)는 과거675a7c59 아티팩트 한정으로, e0/0.1.22에 이월하지 않는다. E04/E05 및 전체 인수는 통과하지 않았다.
+
+## 이전 진행 기록 — 2026-10-26 외부 업무 시스템 읽기 전용
+
+아래 빌드 진행 중·패키지 미생성·당시 최신 검사 수는 이전 단계의 기록이다. 현재 상태는 위 최종 요약을 따른다.
+
+현재 읽기 전용 작업본의 네이티브 메타데이터는 **0.1.22**, DB는 **v28**이다. 최신 JAR SHA-256은 `e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d`다. 최종 Java1004실행/997통과/opt-in7건너뜀/실패0(기존 fixture 두 클래스 제외) 후 빌드했으며 `/tmp/dougle-022-final-backend.log`에 결과가 있다. 0.1.22 후보 패키지 빌드는 진행 중이고 설치·공개·업데이트 피드 승격은 하지 않는다. 아래 5cd81269와0.1.21/675a7c59 실제 평가의 아티팩트 범위는 그대로 유지한다.
+
+최신 e0e43e10의 [읽기 전용 실행 검사](docs/evaluations/readonly-runtime-e0e43e10-20261026.json)도 API300건 거부·재시작2회·영수증3개 보존을 확인했다. E04 첫 시험은2dispatch 뒤 부모 검증 도구의 ACK 파일 권한 경합으로 종료했고, 원자적 ACK 게시로 고친 별도 batch2는4dispatch 뒤 후속 답변120초 시간 초과로 중단했다. [batch2 검토](docs/evaluations/e04-ui-restart-readonly-b2-20261026-review.md)는 동일 DB 재시작·실제 화면 이력/답변/근거 재열기 성공과 후속 답변 실패를 구분한다. 새 진단은 TURN_ACCEPTED, agent 메시지/델타/완료0, 바인딩 불일치로 무시한 이벤트6, callback 비활성으로 기록됐으나 무시한 이벤트 종류는 미분류이므로 제공자 원인으로 확정할 수 없다. 자동 재전송·나머지 변형 실행은 하지 않았고 전용 런타임·임시 자료·브라우저 TaskSpace13을 정리했다. E04/E05는 승격하지 않는다. 아래 두 런타임/첫 E05 기록의 ‘새 JAR’는 직전5cd81269를 가리킨다.
+
+새 JAR의 [읽기 전용 런타임](docs/evaluations/readonly-runtime-20261026.json)은 전송 API300건 거부·재시작2회·기존 가상 영수증3개 보존·새 작업0건을 확인했다. 프록시 관측 요청0은 모든 소켓 시도0의 증명이 아니다. [초기 하네스 실패](docs/evaluations/readonly-runtime-20261026-failed-startup.json)를 보존했고, 임시 데이터 환경변수와 IPv4 loopback 바인딩을 고친 뒤 외부 네트워크 차단을 유지했다. [검색/캡처/답변/제안 런타임](docs/evaluations/investigation-readonly-5cd81269-20261026.json)은 Intel 검색 모델과 가상 CLI5회·실제 AI0회로 통과했다. 두 검사는 E35 전체나 의미 정확성 인수 통과가 아니다.
+
+E05 첫32턴 변형은 최대64dispatch 승인 후 실제6dispatch(계획3·답변3)에서 중단됐다. 앞선 두 답변은 수동 검토 적합, 세 번째 답변은120초 `WAIT_RESPONSE` 시간 초과다. 정정 유지 단계에 도달하지 못했으며 자동 재시도하지 않았다. 원인을 제공자 장애나 문맥 오류로 단정할 증거는 없다. [실제 실패 포함 기록](docs/evaluations/e05-variant0-readonly-20261026.json). 최종 전체 Node 도구 검사는63/63통과(`/tmp/dougle-tooling-final-readonly.log`)이며 앞선61개와 중복 합산하지 않는다. 아래 JAR 빌드 중·AI 시험 보류 문구는 이 갱신 이전 단계다.
+
+부모 담당자 최신 확인: 읽기 전용/장기 문맥 광범위 Java 검사는 **995실행/988통과/opt-in7건너뜀/실패·오류0**(`/tmp/dougle-readonly-longcontext-broad.log`). 기존 무관 fixture 두 클래스 `AnswerPartialIntegrationTest`, `QuestionAttachmentIntegrationTest`를 명시적으로 제외했으므로 무제외 전체 통과로 표현하지 않는다. UI 전체 **62파일/668테스트 및 빌드 통과**다. 앞선 Java237개·인증정보74개는 중복 가능 별도 검사로 합산하지 않는다. 부모가 새 읽기 전용 JAR를 빌드 중이며 아직 새 해시·런타임 통과를 기록하지 않는다.
+
+평가 도구의 최종 전체 Node 검사는 기준 해시 회귀1개 추가 후 **61/61통과**(`/tmp/dougle-e05-criterion-node.log`)다. 부모의 앞선60개와 합산하지 않는다. E05 기준 명확화·원래 문구/해시 이력·중앙 source/criterionHash를 반영했고 검증기는 **4PASS/1BLOCKED/45NOT_RUN**을 확인했다. E05는 NOT_RUN, 첫 변형은 진단만이며 전체 승격에는3변형 각각32실제턴 이상·측정된 압축·별도 loss-awareness 음성 사례 검토가 필요하다. AI 의미 요약 구현을 주장하지 않는다. 평가 담당 소스/문서는 이 갱신 후 동결하며 실제 AI dispatch는 새 아티팩트와 명시적 승인까지 보류한다.
+
+Slack 게시·외부 DB 쓰기·브라우저 업무 변경은 명시적 승인 여부와 무관하게 금지한다. 로컬 대화/Workspace/근거/색인/설정 저장은 유지한다. 전송 UI뿐 아니라 backend dispatch와 직접 API 우회도 차단해야 하며 기존 영수증은 읽기 전용으로 보존한다. 문서 정리만으로 차단 구현 완료를 주장하지 않는다. [정책·검증 경계](docs/external-readonly-policy.md).
+
+Slack 전송 경로를 포함한 기존 0.1.21/675a7c59 스냅샷은 **설치·공개·배포 금지**다. 이미 진행한 패키지/네이티브 검사는 미배포 과거 증거일 뿐이다. 새 읽기 전용 구현·회귀·새 아티팩트 검증 전까지 이전 승인을 근거로 배포하지 않는다. 아래 날짜별 “최신”과 게시 기능 설명은 이 정책 이전 시점의 이력으로 읽는다.
+
+현재 의미 평가 인수는 E01–E03/E12의 과거675a7c59 범위 **4 PASS / 0 FAIL / 1 BLOCKED / 45 NOT_RUN**이며 새 정책 준수 인증이 아니다. E35는 과거 승인 후 게시 기준을 폐기하고 승인해도 외부 전송 0회로 바꿨으며 NOT_RUN을 유지한다. E04는 실제 백엔드 재시작/GET 복원만 확인해 UI 재열기 전까지 부분 근거다. 추가 AI/재시도·외부 쓰기 호출·Maven/JAR 작업은 이번 문서 작업에서 하지 않았다. AGENTS/backlog는 부모 담당자가 동기화한다.
+
+## 2026-10-26 DB v28 통합 후속
+
+Intel 0.1.21 앱 번들의 격리 HOME·최소 PATH 네이티브 검사를 통과했다. 동봉 Java/API 보호·중복 백엔드 거절·부모 종료 후 자식 종료·같은 DB 재시작을 확인했으며 최초 준비는20,237ms였다. 번들 JAR는 아래675a7c59와 일치한다. `docs/native-host-report.json`, `/tmp/dougle-021-native-host.log`를 따른다. 개발 PC의 임시 데이터 검사이며 새 Mac·실제 AI·Gatekeeper 인수가 아니다. ARM 패키지와 사용자 설치는 아직 완료하지 않았다. 가상 제안의 이력 복원→MySQL/Datadog 미연결 안내 및 대화 전환 시 양식 초기화 UI 검사도 통과했다(`docs/evaluations/investigation-proposal-handoff-ui.json`); 실제 운영 조회가 아니다.
+
+최신 후속 JAR는 `675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489`다. 아래 V4 제안·범위 첨부·브라우저 탐색·UI 수정을 모두 포함한다. 새 JAR의 합성 런타임에서 기존 SEARCH/캡처/답변/취소 및 MySQL/Datadog 수동 제안의 정확한 DTO·scope 없음·capture409·재시작 멱등성을 통과했다. fake CLI5회·real AI0회, 운영 연결/조회 없음, JAR 불변·임시 자료/프로세스 정리 완료(`docs/evaluations/investigation-proposals-runtime.json`).
+
+같은 최신 JAR의 실제 AI 배치11–12는42/42 dispatch 완료: E01–E03 각 세 변형·두 턴36회와 명시적 MySQL/Datadog 수동 제안6회다. 실제 조회나 제안 후 자동 답변은 하지 않았다. 중앙 인수 E01–E03을 새 아티팩트 근거로 갱신했으며 여전히3PASS/1BLOCKED/46NOT_RUN이다. 실제 모델ID·토큰 비용은 미관측이며 과거 시간 초과 원인을 확정하지 않는다. `docs/evaluations/investigation-live-v4-20261026-review.md`, 평가 도구22개 통과. 모든 실제 AI 프로세스·임시 자료 정리 완료. 네이티브 버전 메타데이터는0.1.21로 올렸고 양 CPU 패키징/격리 UI QA를 진행 중이며 설치·공개는 아직 하지 않았다.
+
+최신675a7c59 JAR에 통합된 후속 변경: 운영 결과 첨부에 서버가 보관한 승인 범위/환경/시간을 마스킹하여 포함하는 변경, 사용자 `~/Applications` 브라우저 탐색, Slack 선택적 게시 권한 안내/긴 본문 배치, 운영 연결 메타데이터 10초 제한을 추가했다. AI 계획의 V4 운영 도구 제안은 조회 권한 없이 사용자 클릭으로 빈 수동 조회 양식만 연다. Workspace/질문 변경 시 이전 양식·요청·캡처 콜백을 폐기한다. 마지막 관련 서버500개 실행(498통과·opt-in2건너뜀), UI전체62파일635개 및 UI빌드를 통과했다. 최초 UI 실행의 새 stale-bundle 회귀2개는 컴포넌트 범위를 bundle까지 분리하고 재실행하여 통과했다. 로그 `/tmp/dougle-frozen-proposal-provenance-combined.log`, `/tmp/dougle-ui-proposal-final.log`. 이 변경의 JAR 빌드·런타임 검증은 위 최신 기록을 따르며 패키징·설치·공개 완료를 뜻하지 않는다. 아래276e56 JAR 기록은 이 후속 변경이 포함되기 전의 이력이다.
+
+이전 JAR SHA-256은 `276e56fd38d1720cb0bde17072bd2b14ab63233d7fb6e356e82d32bd782b6f22`다. 다음 기록부터 아래 날짜별 이력까지는 당시 검증 범위다. 제공자 안전 진단·계획·MySQL·운영 첨부·Slack 수신/답장·DB 마이그레이션·자료 이전·대화·아키텍처를 합쳐 서로 다른 테스트 410개/39클래스를 통과했다. 전체 백엔드 검사 통과 주장은 아니다. 최초 Slack 용량 검사의 Spring 프록시 spy 오류는 실제 JDBC 저장소를 직접 spy하도록 고쳐 재검사했으며 후속 MySQL/아키텍처/Slack 75개가 포함된다. 로그는 `/tmp/dougle-combined-{nonmysql-integration,mysql-architecture-slack,frozen-package}.log`다.
+
+UI 전체 스냅샷 62파일597개, 후속 Slack 관련43개·타입 검사, 최종 UI/JAR 빌드를 통과했다. 평가 도구20개와 아카이브 하네스 자체 검사·로컬 upstream 해시 대조도 통과했다. 수치들은 중복 합산하지 않는다. 번들500kB 경고는 남는다.
+
+실제 격리 MySQL 검사34개·단위26개를 통과했다. 숫자/시각을 포함한 모든 조회 값을 서버에서 제한하고 대형 생성식은 boolean 메타데이터로만 받는다. 동시 숫자→LONGTEXT 스키마 변경 시 기존 트랜잭션은 서버가 거절했으며 새 트랜잭션도 제한된 크기만 받았다. 원문·해시는 `docs/evaluations/mysql-runtime-ddl-20261026.json`을 따른다. MySQL 검증 대기를 제한하고 문자별 검증은 메모리 epoch로 바꿨지만 트랜잭션 내부 SQLite 검증까지 포함하는 엄격한 HTTP 종료 시한이라고 주장하지 않는다.
+
+새 JAR의 실제 검색 모델 포함 아카이브 런타임은 10개 그룹을 통과했다. 최초/왕복 가져오기·재시작·다른 Workspace 삭제 후 네 번 모두 모델 READY, 색인 큐0, 새 ID/원문/해시 검색을 확인했다. 프로세스·임시 자료를 정리했고 JAR 해시는 유지됐다. 증거는 `docs/evaluations/workspace-archive-v28-model-smoke.json`이다. 가상 과거 답변 이전 검사이므로 실제 AI 답변 품질이나 E49/E50 전체 인수로 승격하지 않는다.
+
+같은 JAR에서 실제 AI 배치8–10 총36 dispatch(계획18·답변18)를 모두 완료했다. E01 후속 대상 유지, E02 호출/저장 관계, E03 명시적 주제 전환을 각 세 표현 변형·두 턴으로 수동 근거 대조해 통과했다. E02 한 계획은 예상 STOP 대신 타당한 SEARCH로 누락 근거를 복구했으며 불일치도 기록했다. 인수 JSON은 PASS3/BLOCKED1/NOT_RUN46, 모델 실제 ID·토큰 비용은 미관측이다. 이전 시간 초과 원인이 해결됐다는 증거는 아니며 새 운영 제안 소스에 자동 이월하지 않는다. 원문은 `docs/evaluations/investigation-live-batch{8,9,10}*`와 각 리뷰를 따른다. 모든 평가 프로세스·임시 자료를 정리했다. 사용자 앱/DB·DMG·공개 릴리스·Git 푸시는 변경하지 않았다. 실제 회사 서비스·ARM 실기기·50개 전체 인수 완료가 아니다.
+
+## 2026-10-25 후속 진행 — 이전 승인 제한보다 우선
+
+23:30 후속: 실제 독립 MySQL 서버 검사에서 숫자 열을 문자 스트림으로 읽지 못하는 문제와 조기 시간 초과를 rollback 오류가 덮는 문제를 발견했다. 타입별 유한 문자열/텍스트 스트림 읽기와 원래 예외 보존으로 수정해 실제 서버17개·단위22개를 통과했다(`docs/evaluations/mysql-runtime-20261025.json`). 새 JAR 반영 전이다. 운영 조회 busy를 App까지 전파하고, 첨부 용량 부족 시 저장한 결과를 재조회/재캡처 없이 다시 첨부하거나 제외하도록 보완했다. 소스 후속 회귀 진행 중이다.
+
+JAR `1ddab26fc24c41a1a25ab8cc351d98659cccefdace8a0b697f54048a20f8afe0`에서 아카이브 왕복/재시작/변조 거부6개 검사 그룹을 통과했다. 실제 브라우저로 같은 대화의 Datadog 설정 조회와 로컬 범위 미리보기까지 확인했으며 Datadog 실제 조회는 하지 않았다. `docs/screenshots/operational-query-preview.png`는 가상 연결/입력만 사용한다. 16px 체크박스·가로 overflow 없음. 브라우저 TaskSpace11, 임시 서버/자료는 정리했다. UI59파일567개와 추가3파일40개를 각각 통과했으며 중복 합산하지 않는다.
+
+같은 JAR의 실제 AI 추가 배치6·7은 총7 dispatch: 계획3개·답변2개 성공 뒤 답변1개 WAIT_RESPONSE 시간 초과, 별도 배치의 계획1개90초 시간 초과였다. carrier 수정만으로 실제 시간 초과가 모두 해결되지는 않았다. E01 세 변형 평가도 끝내지 못했으며 E03/E02는 계획 단계에서 중단했다. 현재 기록의 과거 E01 PASS를 새 아티팩트로 이월하지 않는다. 전체 추가 시도21회(이전30회와 별도), 실제 계정 인증 내용이나 회사 자료는 수집하지 않았다. 안전한 고정 단계 진단 보완을 이어간다.
+
+23시 후속: DB·Datadog 조회 결과를 정확한 미리보기/명시적 저장으로 로컬 질문 첨부에 캡처한다. 같은 ChatPanel의 운영 자료 조회는 기존 thread/parent를 유지하며 다음 질문에 첨부하고, 플러그인에서 저장하면 새 대화 작성창으로 넘긴다. 저장/열기만으로 AI를 실행하지 않는다. 결과는 3,000자 이하로 보관하며 잘림·조회 완료 시각과 조건/환경 정보 미포함을 명시한다. 실제 AttachmentService·SQLite 롤백·근거 불변성 검사를 포함한 최신 관련 Java106 실행(105 통과, opt-in 1 skip), UI 전체 실행567 통과(59파일; 실행 시작 후 추가된 두 파일은 별도 후속 검사), 평가 하네스22 통과. 프로세스 파이프가 Java21 가상 스레드 carrier를 점유하는 정체를 재현하고 Codex/CLI 입출력을 고정 개수 플랫폼 스레드로 바꿨다. 제공자 관련37개 통과, 실제 AI 시간 초과 해결 여부는 새 JAR에서 재평가해야 한다. 이 변경의 새 JAR/화면·아카이브 런타임 검증을 이어간다. 50개 완료·설치·공개 배포가 아니다.
+
+최신 소스 DB v27: `browser_investigation`, `workspace_archive_import_receipt`, `slack_inbox_route/item/seen/thread`을 추가했다. 플러그인 Slack/Datadog/MySQL 조회 화면, 설정의 WorkspaceTransferSettings(팀 설정+자료/대화ZIP), ChatPanel의 BrowserInvestigationPanel을 연결했다. Slack 저장된 질문은 App이 대화 이력으로 열며 자동 답변하지 않는다. SlackInboxIndicator는 활성 Workspace 수신 건수만 로컬 조회한다. 실제 OAuth/회사 서비스·인증 브라우저·브라우저 자동 동봉·ARM 실기기는 미완료다. ZIP은 지원 범위가 제한되어 대형파일/첨부 등을 누락하지 않고 거부한다.
+
+통합 Java178 실행·177 통과·1 opt-in skip(`/tmp/dougle-expert-integrated-backend.log`), 실제 가상 응답을 렌더링한 별도 Chrome 검사4개 통과. 이후 MySQL 동일 자격증명 재연결도 이전 동의를 무효화하도록 암호화 저장소에 연결 revision을 추가했고 후속 안전 검사 중이다. 전체 UI 회귀도 진행 중이다. 최신 실평가 총14 dispatch(이전30과 별도): 완료답변4개 적합·답변시간초과2개·계획시간초과2개. NO_EVIDENCE→실제 SEARCH→새 근거/승인→답변→후속 질문 경로를 실제 모델로 확인했다. E01만 과거 아티팩트 범위를 명시해 PASS(전체1/50)로 기록했다. 새로운 시간초과 원인은 아직 미확정이며 안전한 프로토콜 단계 진단을 추가했다. 7fe16e3f… JAR의 평가 프로세스는 종료돼 재빌드 가능하다.
+
+사용자는 가상 자료로 실제 AI 검증을 완료 판단까지 계속 승인했다. 이전 30회 제한은 해제됐으며 실제 회사 자료/운영 계정/인증 내용 열람은 승인하지 않았다. 새 실평가 6회 dispatch(계획3·답변3): 답변2 적합·1 스트림 시간 초과. 이후 `.sqlite-maintenance.lock`를 프로필에서 거절해 연결 확인이 실패하는 문제를 찾아 정확한 정규 파일명만 허용하도록 수정했다. symlink/디렉터리/유사 설정명 거부 회귀를 추가했고 새 빌드·재평가 진행 중이다. 원본 기록은 `docs/evaluations/investigation-live-20261025-review.md`.
+
+검색 결과 없는 질문도 명시적 계획 동의를 통해 검색을 재시도할 수 있게 V3 미리보기·UI를 수정했다. 변경된 기존 근거/이미지는 여전히 거부한다. 관련 Java31개·UI69개 통과. MySQL 연결의 실제 제한 조회 API/UI를 연결했고 가상 JDBC 포함 관련 Java35개·UI22개 통과(기존 검사와 중복 합산 금지). 조회 결과는 자동 AI 전송하지 않고 메모리에만 보관한다. Slack/Datadog/브라우저/자료 이전은 병렬 구현 중이며 아직 완료·설치·배포로 보고하지 않는다.
+
+## 추가 검색 실행·팀 설정 적용 — 최신 작업본
+
+최신 팀 설정 새 JAR smoke13개 통과(`/tmp/dougle-team-settings-runtime-corrected.log`), 최초 하네스의 데스크톱 동적 포트 처리 오류를 수정했다. 조사 smoke에서 fixture 로그인 출력 불일치와 실제 CLI의 답변 전용 schema 재사용을 발견해 별도 PlanModel/계획 schema로 수정했다. 수정 후 관련115개 검사, 최신 UI관련99개 검사, 새 JAR의 가상 CLI 계획→검색→새 근거→새 승인 답변·취소·재시작 smoke 통과(`/tmp/dougle-investigation-runtime-final.log`, 가상 생성3회/실제AI0회). 최종 JAR 빌드 로그 `/tmp/dougle-expert-ui-layout-build.log`. 실제 브라우저에서 팀 설정 적용 성공과 이력 복원을 확인하고 체크박스 정렬도 수정했다. `docs/screenshots/team-settings-import-plan.png`는 가상 자료 화면이다. 임시 서버·자료와 TaskSpace9는 모두 정리했다. DMG·사용자 앱 설치·공개 배포는 하지 않았다.
+
+DB v26 마이그레이션으로 `investigation_plan`과 `team_settings_import_receipt`를 추가했다. 대화의 `자료 더 찾아보기` → 별도 계획 동의 → AI 1회 SEARCH/STOP 결정 → 제한된 로컬 검색 1회 → `이 자료로 다시 답변` → 새 불변 근거/대화 턴·새 답변 승인을 연결했다. 자동 다중 조사·Slack/Datadog/브라우저 운영 조회가 아니다. 계획 작업의 일회 소비·멱등·취소·시간 제한·재시작 실패 처리를 구현했다. 설정의 팀 설정 JSON 미리보기/위치 재지정/새 Workspace 적용·중복 방지·원자적 롤백도 연결했다. 가져오기 monitor/DB 역순 잠금과 같은 계획 재적용 문제를 수정했다. MySQL typed 읽기 도구는 JDBC 대역25검사를 통과했으나 런타임 도구 목록에 자동 등록하지 않았다.
+
+최신 관련 Java178개와 UI전체473개/52파일 통과. `/tmp/dougle-expert-runtime-regression.log`, `/tmp/dougle-expert-ui-current.log`. 별도 parser59/MySQL25 등은 이 실행과 중복되므로 합산하지 않는다. 추가 경로 외부 AI0회, 이전30회 승인 예산 소진 상태 유지. 새 JAR 빌드와 격리 smoke 진행 중이며 DMG/사용자앱 설치/배포는 아직 아니다. 상세 제한은 `docs/expert-implementation.md`와 `docs/team-settings.md`. 아래 DBv25·설정적용/UI없음은 이전 단계다.
+
+## 승인된 실제 AI 평가 — 최신
+
+검색 보완 후 새 JAR + 실제 동봉 다국어 검색 엔진의 로컬 회귀도 통과했다(`/tmp/dougle-expert-search-fix-smoke.log`, 외부 AI0회). 최초 하네스 15초 요청 제한 초과는 엔진 사용 검사에 한해 180초로 바꾸어 재검사했다. 새 DMG/설치/공개는 하지 않았다.
+
+가상 자료만 외부 AI 최대 30회 사용을 사용자에게 승인받아 정확히 30회 실행했다. 작은 가상 7문서·5시나리오×3표현×2턴, 수동 대조 29개 적합/1개 부분 답변/사실 오류 0개. 자동 regex는30/30이므로 정확도100%로 쓰면 안 된다. `docs/expert-live-evaluation.md`와 `docs/evaluations/expert-live-20261025.json`에 원본 근거/답변을 기록했다. 실제 모델ID는 미관측(CodexCLI0.163.0/default). 부분 답변의 검색 편향을 문맥/현재 질문 검색 교차 병합으로 수정하고 256자 후속검색 길이 초과도 수정했다. 관련Java26개 통과. 수정 후 외부 AI를 재실행하지 않았으며 이번 승인 예산은 소진됐다. 아래 ‘외부 AI0회’는 초기 구현 당시 기록이다. 실제 사용자DB/회사자료/인증내용은 읽지 않았다. 50개전체통과·설치·공개배포는 아직 아니다.
+
+## 전문가 구현 작업본 — 이전 기준 정의보다 우선
+
+연속 대화 thread/parent/request ID를 불변 근거 JSON에 저장하고 ChatPanel/질문 기록에 연결했다. 최근 문맥의 검색/답변 전달, 멱등 생성·복원·전체 삭제, 활성 작업 차단과 과거 JSON 호환을 검증했다. `investigation.domain` typed 실행기와 50개 평가 기록기, upstream 고정 LICENSE/NOTICE 및 오프라인 검증기가 추가됐다. 자세한 제한/재현은 `docs/expert-implementation.md`를 우선한다. 초기 후속 검색 휴리스틱과 5턴/800자 제한은 전문가 수준 의미 해석이 아니다. 실서비스·모델 도구 루프는 미연결, 50개는 PASS 0 / BLOCKED 1 / NOT_RUN 49다. 이번 작업 외부 AI 호출 0회. 기존 draft .20 패키지는 새 코드가 아니며 이번 변경으로 설치/공개하지 않았다. 아래 ‘문서만 변경’은 이전 단계다.
+
+최종 관련 Java 160개, UI 전체 434개/50파일, 평가·라이선스 도구 18개 통과. 이전 실행과 중복 합산 금지. 전체 Java 실행의 기존 fixture 이름 오류 10개와 opt-in skip 6개는 남아 있다. 실제 로컬 검색 typed 어댑터/팩토리, 설정 내보내기·가져오기 미리보기 API(적용/UI 없음), 메모리 전용 이전 코덱(실제 DB 복원 없음)도 추가했다. 답변 요청 식별자를 한 탭의 sessionStorage에 보관해 재로딩 시 동일 요청을 재확인하며 내용·비밀은 저장하지 않는다. GitHub 배포 상태는 아래 draft 경고를 유지한다.
+
+## 실무 전문가 도입 인수 기준
+
+사용자는 라이선스가 회사 사용에 적합하면 기존 조사 구현/스킬 도입과 약 50개 검증을 승인했습니다. `docs/expert-adoption.md`에 루트 LICENSE 확인(홀름스/ITBench Apache-2.0, AWS 두 샘플 MIT-0, Superpowers MIT), 도입 경계, E01–E50 기대 결과를 작성했습니다. 모든 시나리오는 NOT_RUN이며 실제 통합·평가 완료로 보고하지 않습니다. 웹 이전은 제외, 하나의 대화와 내부 도구/전문 역할, 기본 설명에서 불필요한 운영 조회 금지, 실제 연속 대화가 최신 요구입니다. 외부 종속성의 고정 SHA·NOTICE·간접 라이선스·모델 연결 호환성을 검증한 후 런타임을 도입해야 합니다. 문서만 변경했으므로 앱 재빌드는 하지 않았습니다.
+
+## GitHub 반영·배포 전송 상태
+
+소스/문서 `main`은 `11e7750`까지 반영했습니다. README 작은 로고 제거, `internal-search.md` 최신 Dougle 화면, 과거 릴리스 제목/메뉴 표기도 공개 GitHub에서 확인했습니다. 검색 설정 제거본 양 CPU 패키지는 `/tmp/dougle-auto-search-packages.log`의 `DOUGLE_PACKAGES_VERIFIED`까지 완료했습니다.
+
+**0.1.20 릴리스는 아직 draft입니다.** 대용량 GitHub 업로드가 HTTP 408(Upload body timed out)로 실패했고, 게시 대기 도구도 GitHub API read timeout으로 종료했습니다. `/tmp/dougle-publish-020.log`, `/tmp/dougle-upload-auto-search.log`를 확인하세요. 공개 피드 `updates/preview.json`은 0.1.16을 유지합니다. 공개 완료라고 보고하면 안 됩니다. README/설치 안내의 0.1.20 다운로드 링크 변경은 로컬에만 준비되어 있으며 릴리스 공개 후 커밋해야 합니다. 마지막 재시도는 GitHub API로 Intel DMG를 명시적 Content-Length와 HTTP/1.1로 단독 업로드하는 방식입니다. 재개 시 draft 자산과 전송 프로세스부터 확인하고 중복 업로드하지 마세요. 자산 8개(양 CPU DMG·tar·sig, SHA256SUMS, latest.json)의 서버 해시 대조 후 공개하고, `node scripts/update-manifest.mjs --publish` 검증 및 피드 커밋/푸시를 마무리해야 합니다. 자동 게시 프로세스는 현재 실행 중이 아닙니다.
+
 ## 검색 설정 제거·0.1.20 공개 준비
 
 검색 설정 제거본 UI/JAR 빌드와 Intel 설치/재실행 완료. 백업 `2026-10-25T10-03-54.165Z-before-dougle`, 설치 JAR 일치·설치 스크립트의 codesign 확인. 격리 브라우저 TaskSpace 7에서 설정에 Workspace 관리·플러그인만 나타나고 검색 엔진 항목/모달이 없음을 확인했습니다(웹 모드라 앱 업데이트 항목은 숨김). [화면](docs/screenshots/settings-automatic-search.png). 소스 반영 커밋은 `866df27`이며 양 CPU 새 패키지는 `/tmp/dougle-auto-search-packages.log`에서 검증합니다.

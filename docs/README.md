@@ -4,6 +4,16 @@
 
 [플러그인 목록·Notion 연결 안내와 남은 구현](plugins.md)
 
+[전문가 구현 작업본·검증과 남은 한계](expert-implementation.md) · [50개 인수 기준](expert-adoption.md) · [외부 소스 감사](expert-upstream-audit.md)
+
+[팀 설정 내보내기·새 Workspace 가져오기](team-settings.md)
+
+[자료·대화 ZIP 이전 범위](workspace-archive.md) · [Slack 수신함](slack-inbox-runtime.md) · [격리 브라우저 조사](browser-investigation.md)
+
+[실제 계획 AI·추가 검색·후속 답변 검증](evaluations/investigation-live-v3-20261025-review.md)
+
+[가상 자료 실제 AI 30회 평가·누락 발견과 검색 보완](expert-live-evaluation.md)
+
 [실제 Notion 문서 40개 질문 검증·기본 제공 검색·이력 일괄 삭제](notion-search-verification.md)
 
 [0.1.20 즉시 답변·스트리밍·이력 삭제](release-0.1.20-report.md)
@@ -37,7 +47,7 @@ Dougle은 **내 자료를 모으고, AI에게 질문하고, 출처를 확인하�
 | 모델과 구현을 다시 조사한 결과 | [전 파일 조사 범위·규칙별 테스트·미구현 차이](model-audit.md) |
 | 개발자가 알아야 할 구조 | [아키텍처](architecture.md) · [API](api.md) |
 | 개발 실행·수정 후 배포 순서 | [개발 환경과 완료 체크리스트](development.md) |
-| 최신 변경과 설치 파일 배포 상태 | [0.1.20 로컬 설치 기록](release-0.1.20-report.md) · [현재 작업 검증](ingestion-retrieval-upgrade.md) |
+| 최신 변경과 설치 파일 배포 상태 | [0.1.20 배포·검증 기록](release-0.1.20-report.md) · [현재 작업 검증](ingestion-retrieval-upgrade.md) |
 | GitHub 자료를 별도 설치 없이 가져오기 | [내장 Git 구성과 검증](bundled-git.md) |
 | 등록한 자료의 이름·분류 수정 | [자료 설정 편집](source-metadata.md) |
 | 전체 사용 흐름 검사와 발견한 문제 | [E2E 점검 결과](e2e-report.md) |

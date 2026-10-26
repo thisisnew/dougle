@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "reportId": "mysql-runtime-ddl-20261026",
+  "fixtureVersion": "synthetic-mysql-read-runtime-v3-uniform-bound",
+  "reviewedAt": "2026-10-25T21:21:17.848Z",
+  "revision": {
+    "head": "11e7750acff964080a2193329584399ca4da964c",
+    "workingTree": "dirty; source hashes identify changes not captured by HEAD",
+    "files": [
+      {
+        "path": "scripts/mysql-read-runtime-smoke.mjs",
+        "sha256": "e1714760d2c0070e3d73e2c11820d9e196bf0b4b8fc3362f0e50d33f2e65664b"
+      },
+      {
+        "path": "scripts/fixtures/MysqlReadRuntimeSmoke.java",
+        "sha256": "b5e9560661876348843f274e1a42a9bbd4cbd7c61be870d57e02ecd5dd3403d2"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/plugins/adapter/MysqlClient.java",
+        "sha256": "d95bb658ed081fb648a5adbf149aaf10ddc84eab1e630184a6bbd4809d15f447"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/plugins/adapter/MysqlReadClient.java",
+        "sha256": "6286492435fcd632054829b10f20434a63af36e17648332dcc093574c13cb8b4"
+      },
+      {
+        "path": "backend/src/test/java/dev/knowledgeforge/plugins/adapter/MysqlReadClientTest.java",
+        "sha256": "00ee4b0882f6b947aee14597550c8e934eca4467ccfd93c1a9d28279cb69cf8c"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/library/application/LibraryException.java",
+        "sha256": "bdbc1d26656b58e248d85e9c55f545c6251a3c9fb26cf0afd1f22c497701e795"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/sources/adapter/CollectionLimits.java",
+        "sha256": "829fada79eca97fcbebc5068e7c9e3a1e54dab5c43558cebb247c39e1fa34154"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/sources/domain/CollectedSnapshot.java",
+        "sha256": "1e1c8354d90337fbc4ebc60b9755c5a2e4c68c931f83630c697a2c658037af72"
+      },
+      {
+        "path": "backend/src/main/java/dev/knowledgeforge/sources/domain/HttpValidators.java",
+        "sha256": "72860616cf99a7f505b0ac0dbaf3be90ef393e5ab38946e4fae8f12104382d08"
+      },
+      {
+        "path": ".m2/com/mysql/mysql-connector-j/9.7.0/mysql-connector-j-9.7.0.jar",
+        "sha256": "0353648eaa1c91e0f4020c959abf756bc866ffd583df22ae6b6f6e0cbd43eb44"
+      }
+    ],
+    "hashCaveat": "Hashes captured after successful runs, not atomically at process launch; sources unchanged since corresponding tests."
+  },
+  "scope": "Real isolated synthetic MySQL adapter tests, not packaged JAR/API/UI/company database acceptance.",
+  "execution": {
+    "mavenUsed": false,
+    "jarUsed": false,
+    "jarWritten": false,
+    "externalAiCalls": 0,
+    "installs": 0,
+    "backendFrozen": true,
+    "inventoryModified": false,
+    "command": "node scripts/mysql-read-runtime-smoke.mjs /absolute/path/to/mysqld",
+    "runtimeCompilation": "Current adapters, fixture and four supporting application types compiled to private temporary classes; no target/classes dependency.",
+    "unitCompilation": "Current adapters and MysqlReadClientTest compiled to private temp classes with cached dependencies and existing target/classes for supporting types; direct JUnit Platform launcher.",
+    "environment": "macOS x86_64; Anaconda MySQL 8.4.0; Connector/J 9.7.0; Java 21"
+  },
+  "changes": [
+    "Every selected value, regardless of cached numeric/temporal/text type, uses LEFT(CONVERT(column USING utf8mb4), max(1,maxBytes/4/columnCount)). One CHAR_LENGTH comparison flag accompanies each value. Original prepared equality predicates remain unchanged.",
+    "Metadata returns COALESCE(CHAR_LENGTH(GENERATION_EXPRESSION),0)>0 rather than the expression text.",
+    "Uniform character projection preserves JSON strings for numbers/date/time and JSON null; very small budgets may truncate any value with explicit flag.",
+    "Exact-case fail-closed checks remain unchanged; no Fermat-owned service edits."
+  ],
+  "results": {
+    "runtime": {
+      "passed": 34,
+      "failed": 0,
+      "exitCode": 0,
+      "finishedAtInferredFromLogMtime": "2026-10-25T21:20:33.735Z"
+    },
+    "unit": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 7958,
+      "finishedAtInferredFromLogMtime": "2026-10-25T21:18:50.200Z"
+    },
+    "observedConcurrentDdl": {
+      "injection": "Separate disposable account changes body INT to LONGTEXT and writes 8 MiB after production metadata statement closes, before target SELECT.",
+      "observedOutcome": "MySQL error 1412 (table definition changed); no returned value payload. Production surfaces sanitized failure, not an automatic retry.",
+      "freshExplicitTransaction": "Reads the changed LONGTEXT as a bounded prefix with truncated=true, one complete serialized row.",
+      "freshReturnedFieldBytes": 256,
+      "freshServerBytesSentDelta": 681,
+      "scopeCaveat": "This real server did not return stale-schema rows: it rejected the race. The stale-numeric metadata bounded-projection path is additionally covered by unit assertions. No claim that all MySQL configurations behave identically."
+    },
+    "largeFields": [
+      {
+        "source": "ASCII",
+        "sourceBytes": 8388608,
+        "maxReturnedFieldBytes": 256,
+        "serverBytesSentDelta": 681
+      },
+      {
+        "source": "four-byte emoji",
+        "sourceBytes": 8388608,
+        "maxReturnedFieldBytes": 1024,
+        "serverBytesSentDelta": 1449
+      }
+    ],
+    "metadata": "All observed generation-expression flags are at most one returned byte; generated columns remain rejected.",
+    "scalarOutput": "[{\"id\":\"1\",\"amount\":\"12345.67\",\"day_value\":\"2026-10-25\",\"time_value\":\"12:34:56\",\"moment\":\"2026-10-25 12:34:56\",\"absent\":null}]"
+  },
+  "bounds": {
+    "textualValuePayloadPerRow": "<= maxBytes (64..65536), independently of cached type; plus one byte per selected-column flag, up to 16. Protocol/metadata overhead additional.",
+    "rows": "<= requested limit + 1, maximum 201. Completed serialized rows counted; incomplete rows not counted.",
+    "wireMethod": "Forwarding JDBC field byte observations and SHOW SESSION STATUS Bytes_sent around actual production SELECT; includes status/metadata overhead, not TLS packet capture.",
+    "time": "Version 60s, compile 30s, initialization 120s, readiness 60s, fixture 45s, overall 300s; TERM then KILL after 5s. DDL fixture statement timeout 3s. Server scan/conversion cost is not bounded by returned byte limit."
+  },
+  "safety": {
+    "credentials": "Only freshly generated local fixture credentials; none retained here. Extra DDL account has ALTER/UPDATE/SELECT only on disposable drift_items. Investigation account stays SELECT-only.",
+    "isolation": "No-defaults, private temp datadir/profile/socket/log, random loopback port, no services/default DB/user data.",
+    "cleanup": "Successful runner terminated owned server and deleted private data and generated credentials.",
+    "remainingHazards": [
+      "This fixes wire bounding under type drift; concurrent replacement with a view/generated column remains a separate metadata-policy race not solved or certified here.",
+      "Case variants may be rejected even where MySQL accepts them.",
+      "No full attack/state-diff matrix, 429/retry/pagination, UI/final-answer completeness or hard stalled-I/O proof."
+    ]
+  },
+  "acceptanceReview": [
+    {
+      "id": "E24",
+      "status": "PARTIAL"
+    },
+    {
+      "id": "E25",
+      "status": "PARTIAL"
+    }
+  ],
+  "retainedEvidence": {
+    "runtime": {
+      "originalSha256": "1a9770a85513cf0823e88bc9be7089ecf057129b9d4a72701033d9cf547c0d5e",
+      "sanitization": "Absolute supplied mysqld path replaced with <provided-mysqld>; hash covers original text.",
+      "transcript": "<provided-mysqld>  Ver 8.4.0 for macos13.2 on x86_64 (Anaconda)\nInitializing private synthetic datadir (120s deadline)\nPASS production schema collection over TLS\nPASS selected real rows\nPASS predicate injection remains data\nPASS row cap with truncation\nPASS 128-byte output cap\nPASS unapproved table denied\nPASS binary_value denied by real metadata\nPASS derived denied by real metadata\nPASS view denied by real metadata\nPASS cooperative cancellation\nPASS cancellation executes real JDBC rollback\nPASS elapsed budget enforced with synthetic checkpoint delay\nSynthetic JDBC operation executeUpdate: java.sql.SQLSyntaxErrorException: INSERT command denied to user 'fixture_reader'@'127.0.0.1' for table 'items'\nPASS server SELECT-only grant rejects mutation\nPASS server reports transaction active\nPASS server reports transaction ends after rollback\nChecks passed before numeric-column regression: 15\nPASS numeric column real JDBC conversion\nPASS early timeout preserves timeout classification\nPASS large LONGTEXT 1 stored source is exactly 8 MiB\nPASS large LONGTEXT 1 output bounded and explicitly partial\nPASS large LONGTEXT 1 server-returned field and row payload bounded\nPASS large LONGTEXT 1 actual server Bytes_sent delta bounded\nWIRE fixture=1 sourceBytes=8388608 maxFieldBytes=256 maxRowBytes=257 serverBytesSentDelta=681\nPASS large LONGTEXT 2 stored source is exactly 8 MiB\nPASS large LONGTEXT 2 output bounded and explicitly partial\nPASS large LONGTEXT 2 server-returned field and row payload bounded\nPASS large LONGTEXT 2 actual server Bytes_sent delta bounded\nWIRE fixture=2 sourceBytes=8388608 maxFieldBytes=1024 maxRowBytes=1025 serverBytesSentDelta=1449\nPASS text predicate does not match truncated prefix\nPASS full text equality returns one complete serialized row with partial cell flag\nPASS NULL or exact 256-character boundary 4 not falsely truncated\nPASS NULL or exact 256-character boundary 5 not falsely truncated\nPASS uniform SQL conversion preserves numeric temporal and NULL JSON values\nPASS generation expression metadata returns at most one byte per flag\nSynthetic JDBC operation executeQuery: java.sql.SQLException: Table definition has changed, please retry transaction\nPASS concurrent DDL either returns bounded partial data or fails closed\nDDL_OUTCOME=server_rejected_changed_definition errorCode=1412 no_result_payload\nPASS fresh transaction after DDL reads bounded LONGTEXT with partial flag\nPASS concurrent numeric-to-LONGTEXT DDL cannot restore unbounded wire payload\nWIRE fixture=ddl-drift sourceBytes=8388608 maxFieldBytes=256 serverBytesSentDelta=681\nSynthetic MySQL checks passed: 34\n\nOwned processes stopped; private datadir and generated credentials removed.\n"
+    },
+    "unit": {
+      "sha256": "9054e4db28b9a481a52b55370e9342a388358c278d672db61fb47514c0dbac22",
+      "transcript": "\nTest run finished after 7958 ms\n[         2 containers found      ]\n[         0 containers skipped    ]\n[         2 containers started    ]\n[         0 containers aborted    ]\n[         2 containers successful ]\n[         0 containers failed     ]\n[        26 tests found           ]\n[         0 tests skipped         ]\n[        26 tests started         ]\n[         0 tests aborted         ]\n[        26 tests successful      ]\n[         0 tests failed          ]\n\n",
+      "scope": "Captured stdout summary, not per-test XML; JVM stderr warnings not retained."
+    }
+  }
+}

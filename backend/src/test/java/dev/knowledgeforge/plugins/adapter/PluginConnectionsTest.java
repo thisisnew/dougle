@@ -15,6 +15,21 @@ class PluginConnectionsTest {
     private final String token = "ntn_synthetic_test_token_not_real_12345";
     private MysqlClient.Config config() { return new MysqlClient.Config("localhost", 3306, "fixture", "reader", "synthetic-password", "DISABLED"); }
 
+    @Test void everySavedConnectionAndDisconnectRotateThePersistedMysqlRevision() {
+        var service = new PluginConnections(new PluginVault(root.toString()), mock(NotionClient.class), mock(MysqlClient.class));
+        service.mysql(config(), true);
+        String first = service.mysqlRevision();
+        service.mysql(config(), false);
+        assertThat(service.mysqlRevision()).isEqualTo(first);
+        service.disconnect("mysql");
+        String disconnected = service.mysqlRevision();
+        assertThat(disconnected).isNotEqualTo(first);
+        service.mysql(config(), true);
+        assertThat(service.mysqlRevision()).isNotEqualTo(first).isNotEqualTo(disconnected);
+        var restarted = new PluginConnections(new PluginVault(root.toString()), mock(NotionClient.class), mock(MysqlClient.class));
+        assertThat(restarted.mysqlRevision()).isEqualTo(service.mysqlRevision());
+    }
+
     @Test void vaultPersistsEncryptedCredentialsAndDisconnectRemovesThem() throws Exception {
         var vault = new PluginVault(root.toString());
         var service = new PluginConnections(vault, mock(NotionClient.class), mock(MysqlClient.class));

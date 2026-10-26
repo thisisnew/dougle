@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
@@ -18,6 +18,87 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
+  it('대화의 운영 조회 중 탐색·설정·Workspace 변경을 잠그고 완료 뒤 해제한다', async () => {
+    let finish!: (value: unknown) => void
+    api.mockImplementation(async path => {
+      if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
+      if (path === '/plugins') return new Promise(resolve => { finish = resolve })
+      if (path === '/plugins/datadog/one') return { configured: false, site: null, revision: null }
+      return []
+    })
+    render(<App />)
+    await screen.findByRole('heading', { name: 'Dougle' })
+    await userEvent.click(screen.getByRole('button', { name: '운영 자료 조회' }))
+    await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeDisabled())
+    for (const name of ['대화', '자료', '질문 기록', 'Workspace 생성']) expect(screen.getByRole('button', { name })).toBeDisabled()
+    expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeDisabled()
+    await act(async () => finish({ mysqlConnected: false }))
+    await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeEnabled())
+    expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeEnabled()
+    expect(api.mock.calls.filter(([, options]) => options?.method === 'POST').every(([path]) => /^\/ai\/providers\/[^/]+\/connection$/.test(path))).toBe(true)
+    expect(api.mock.calls.some(([path]) => path.includes('answer-jobs') || path.includes('investigations'))).toBe(false)
+  })
+
+  it('팀 설정 적용 뒤 Workspace 세션을 갱신하고 자동 동기화는 요청하지 않는다', async () => {
+    let finish!: () => void
+    let imported = false
+    const settings = { version: 1, workspaceName: '공유 팀', pollIntervalSeconds: 3600, sources: [] }
+    api.mockImplementation(async path => {
+      if (path === '/session') return { workspaces: imported ? [workspace, { ...workspace, id: 'imported', name: '새 팀' }] : [workspace], activeWorkspaceId: 'one' }
+      if (path === '/team-settings/import-preview') return { settings, entries: [], workspaceNameConflict: false, needsWorkspaceRename: false, applySupported: false, limitation: '' }
+      if (path === '/team-settings/import-plan') return { previewId: 'plan', digest: 'digest', workspaceName: '새 팀', sourcesToCreate: 0, reconnectSourceIndices: [], pollingEnabled: false, expiresAt: '2099-01-01T00:00:00Z', limitation: '' }
+      if (path === '/team-settings/import-apply') {
+        await new Promise<void>(resolve => { finish = resolve })
+        imported = true
+        return { workspaceId: 'imported', sourceIds: [], reconnectSourceIndices: [], pollingEnabled: false }
+      }
+      return []
+    })
+    render(<App />)
+    await screen.findByRole('heading', { name: 'Dougle' })
+    await userEvent.click(screen.getByRole('button', { name: '설정' }))
+    await userEvent.click(screen.getByRole('button', { name: '팀 설정' }))
+    await userEvent.upload(screen.getByLabelText('팀 설정 JSON 파일'), new File([JSON.stringify(settings)], 'synthetic.json', { type: 'application/json' }))
+    await screen.findByRole('region', { name: '팀 설정 미리보기' })
+    await userEvent.type(screen.getByLabelText('새 Workspace 이름'), '새 팀')
+    await userEvent.click(screen.getByRole('button', { name: '적용 계획 확인' }))
+    await userEvent.click(await screen.findByRole('checkbox', { name: '새 Workspace 생성과 위 자료 등록을 확인했습니다.' }))
+    await userEvent.dblClick(screen.getByRole('button', { name: '새 Workspace에 적용' }))
+    expect(screen.getByRole('button', { name: '설정으로' })).toBeDisabled()
+    expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeDisabled()
+    expect(api.mock.calls.filter(([path]) => path === '/session')).toHaveLength(1)
+    expect(api.mock.calls.filter(([path]) => path === '/team-settings/import-apply')).toHaveLength(1)
+    await act(async () => finish())
+    await screen.findByRole('region', { name: '팀 설정 적용 결과' })
+    await waitFor(() => expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeEnabled())
+    expect(api.mock.calls.filter(([path]) => path === '/session')).toHaveLength(2)
+    await userEvent.click(screen.getByRole('combobox', { name: 'Workspace 선택' }))
+    expect(await screen.findByRole('option', { name: '새 팀' })).toBeVisible()
+    expect(api.mock.calls.some(([path]) => path.endsWith('/sync') || path.endsWith('/answer-jobs'))).toBe(false)
+  }, 15000)
+
+  it('팀 설정은 설정에서 열고 내보내는 동안 탐색과 Workspace 전환을 잠근다', async () => {
+    let finish!: () => void
+    vi.mocked(downloadApi).mockImplementationOnce(() => new Promise(resolve => { finish = resolve }))
+    api.mockImplementation(async path => path === '/session' ? { workspaces: [workspace], activeWorkspaceId: 'one' } : [])
+    render(<App />)
+    await screen.findByRole('heading', { name: 'Dougle' })
+    expect(screen.queryByRole('button', { name: '팀 설정' })).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: '설정' }))
+    await userEvent.click(screen.getByRole('button', { name: '팀 설정' }))
+    expect(screen.getByRole('heading', { name: '팀 설정' })).toBeVisible()
+    await userEvent.click(screen.getByRole('button', { name: '팀 설정 JSON 다운로드' }))
+    for (const name of ['대화', '자료', '질문 기록', '설정', 'Workspace 생성', '설정으로']) {
+      expect(screen.getByRole('button', { name })).toBeDisabled()
+    }
+    expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeDisabled()
+    expect(downloadApi).toHaveBeenCalledWith('/team-settings/export/one', 'dougle-team-settings.json')
+    await act(async () => finish())
+    await waitFor(() => expect(screen.getByRole('button', { name: '설정으로' })).toBeEnabled())
+    await userEvent.click(screen.getByRole('button', { name: '설정으로' }))
+    expect(screen.getByRole('heading', { name: '설정' })).toBeVisible()
+  }, 15000)
+
   it('Workspace가 없어도 플러그인 목록과 연결 설정을 연다', async () => {
     api.mockImplementation(async path => path === '/session' ? { workspaces: [], activeWorkspaceId: null } : [])
     render(<App />)
@@ -95,7 +176,7 @@ describe('Workspace와 자료 탐색기', () => {
     await userEvent.click(screen.getByRole('button', { name: '질문 기록' }))
     expect(screen.getByRole('heading', { name: '질문 기록', level: 1 })).toBeVisible()
     expect(await screen.findByText('질문 기록이 없습니다.')).toBeVisible()
-    expect(api.mock.calls.some(([path]) => path.includes('/evidence-bundles'))).toBe(false)
+    expect(api.mock.calls.some(([path]) => path.includes('/chat-threads'))).toBe(false)
     await userEvent.click(screen.getByRole('button', { name: '대화' }))
     expect(screen.getByRole('heading', { name: '대화', level: 1 })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Workspace 만들기' })).toBeVisible()
@@ -187,14 +268,14 @@ describe('Workspace와 자료 탐색기', () => {
     const question = { id: 'saved', question: '저장된 가상 질문', createdAt: workspace.createdAt }
     api.mockImplementation(async path => {
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
-      if (path.endsWith('/evidence-bundles')) return [question]
+      if (path.endsWith('/chat-threads')) return [question]
       return []
     })
     render(<App />)
     await screen.findByRole('heading', { name: 'Dougle' })
     expect(screen.queryByRole('region', { name: '최근 질문' })).not.toBeInTheDocument()
     expect(screen.queryByText(question.question)).not.toBeInTheDocument()
-    expect(api.mock.calls.some(([path]) => path.endsWith('/evidence-bundles'))).toBe(false)
+    expect(api.mock.calls.some(([path]) => path.endsWith('/chat-threads'))).toBe(false)
     await userEvent.click(screen.getByRole('button', { name: '질문 기록' }))
     expect(await screen.findByRole('button', { name: question.question })).toBeVisible()
     expect(screen.getAllByRole('listitem')).toHaveLength(1)

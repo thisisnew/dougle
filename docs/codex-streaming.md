@@ -68,6 +68,21 @@ CLI가 토큰 갱신·캐시·메타데이터를 이 폴더에 쓸 수 있습니
 
 ## 검증 기록
 
+### 2026-10-26 후속 소스: 내용 없는 스트림 진단
+
+실제 E05 variant0의 세 번째 답변은 120초 뒤 `WAIT_RESPONSE`, stdout 24,623바이트, stderr 0바이트로 실패했다. **원인은 미확정**이다. `WAIT_RESPONSE`는 `turn/start` 응답 접수 이후 상태이며, 바이트 수만으로 최종 완료 알림 수신·무시, 제공자 지연, 로컬 콜백 정체를 구별할 수 없다. 아래 후속 진단을 과거 실패에 소급 적용하거나 해결 증거로 취급하지 않는다.
+
+- 기존 transport/phase/바이트 진단 뒤에 선택적 `appStream=AppStream[...]`을 추가한다. 필드 순서는 `phase`, `turnAccepted`, `messages`, `deltas`, `completedMessages`, `matchedCompletions`, `ignoredBindings`, `otherNotifications`, `protocolInvalid`, `pendingLineBytes`, `callbackActive`로 고정한다.
+- `phase`는 `NONE`, `TURN_ACCEPTED`, `MESSAGE_STARTED`, `TEXT_DELTA`, `MESSAGE_COMPLETED`, `TURN_COMPLETION_RECEIVED`, `COMPLETED`, `PROTOCOL_INVALID` 중 하나다. 그 외 필드는 boolean 또는 정수이며 이벤트 카운터는 1,048,576에서 포화하고 대기 중인 줄은 최대 262,144바이트로 표시한다.
+- 메시지/델타/메시지 완료는 일치한 범위의 agent message 처리 횟수다. `matchedCompletions`는 thread/turn이 일치한 `turn/completed` 수신 횟수이지 성공 횟수가 아니다. 완료 상태·최종 후보·순서 검사는 그대로 유지한다. `ignoredBindings`는 누락 또는 불일치한 범위로 무시한 알림 수다.
+- `pendingLineBytes`는 아직 줄바꿈으로 닫히지 않은 입력을, `callbackActive`는 로컬 텍스트 전달 콜백 실행 중 여부를 구별한다. `protocolInvalid`는 세션/스트림 처리 실패 표식이며 제공자 귀책을 확정하지 않는다. 단일 진단만으로 정체 원인을 단정하지 않는다.
+- 원문 알림·prompt·thread/turn/item ID·추론·인증 키를 새 진단에 저장하거나 출력하지 않는다. 기존 6인자 typed diagnostic 생성자와 그 요약 문자열은 호환 유지한다. 실패는 실패로 남고 120초 제한·자동 재시도 금지·엄격한 파서 정책은 바꾸지 않았다.
+- 관련 오프라인 검사 **58개 통과, 실패/건너뜀 0개**: `CodexAppServerTest` 19, `CodexAppServerSessionTest` 8, `CodexTextStreamTest` 14, `ProcessDiagnosticsTest` 6, `CliPlanTransportTest` 8, `ArchitectureContractTest` 3. 새 가상 CLI 시간 초과 사례는 1.5초 제한으로 범위 불일치 완료, 줄바꿈 누락, 잘못된 완료, 콜백 정체와 프로세스/임시 폴더 정리를 검사한다. 합성 프로필과 가상 CLI만 사용했으며 실제 인증·네트워크·AI 실행이나 E05 원인 재현 검증이 아니다. 로그: `/tmp/dougle-e05-bounded-diagnostics.log`.
+
+완료 생명주기 참고: [공식 Codex App Server 문서](https://learn.chatgpt.com/docs/app-server). 이 후속 검사는 새 JAR·설치본 검증을 뜻하지 않으며, 아래 수치는 초기 구현 당시 기록이다. 서로 중복 합산하지 않는다.
+
+### 초기 구현 검증
+
 - 로컬 `codex-cli 0.163.0`에서 **인증 없는 새 임시 프로필로 initialize/config/read만** 실행했습니다. 답변 생성 요청은 보내지 않았습니다.
 - 이 확인에서 strict config가 거부한 오래된 `tools.view_image` 설정을 `--disable view_image`로 바꿨습니다. 생성되는 CLI 캐시 이름과 실제 설정 응답도 대조했습니다.
 - 새 프로세스 테스트 14개: opt-in 연결, 임시/최종 출력, 조기 알림, 위험 설정·도구·승인 요청 거절, 취소/자식 정리, 시간/출력 한도, 인증 파일 보존, 재실행.

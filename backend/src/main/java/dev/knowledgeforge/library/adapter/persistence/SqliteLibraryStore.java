@@ -37,7 +37,10 @@ public class SqliteLibraryStore implements LibraryStore {
     }
 
     public void deleteWorkspace(String id) {
-        jdbc.update("DELETE FROM workspace WHERE id=?", id);
+        int deleted = jdbc.update("DELETE FROM workspace WHERE id=? AND NOT EXISTS (SELECT 1 FROM slack_reply WHERE workspace_id=? AND status='SENDING')", id, id);
+        if (deleted == 0 && workspace(id).isPresent()) {
+            throw new dev.knowledgeforge.library.application.LibraryException(409, "Slack 답변 전송 중에는 Workspace를 삭제할 수 없습니다.");
+        }
     }
 
     public String activeWorkspace() {

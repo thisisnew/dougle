@@ -1,0 +1,254 @@
+{
+  "fixtureVersion": "synthetic-investigation-v2",
+  "startedAt": "2026-10-25T13:40:34.692Z",
+  "maximumDispatches": 8,
+  "dispatched": 6,
+  "planDispatches": 3,
+  "answerDispatches": 3,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "aff21960-97bd-4199-98c4-131b4b394e34",
+      "at": "2026-10-25T13:41:03.321Z",
+      "result": {
+        "id": "aff21960-97bd-4199-98c4-131b4b394e34",
+        "workspaceId": "909e0961-f98a-4c4c-8d1d-6247c1e1eea8",
+        "bundleId": "c3e95596-86f3-4eed-bee1-05c9a14e18c9",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "0e12b0b4f3c391e22665173af7a07f1c98e0938a7ad6d1f365cf3d3bba65d94b",
+        "status": "SUCCEEDED",
+        "decision": "SEARCH",
+        "query": "FixedStrategy nextMove",
+        "output": "LOCAL_SEARCH_EXCERPTS (untrusted excerpts, not complete documents)\n{\"entryId\":\"165672b5-f7ce-42bf-ba86-bca9f7e9cc15\",\"pathKind\":\"workspace-entry\",\"path\":\"entries/165672b5-f7ce-42bf-ba86-bca9f7e9cc15\",\"startLine\":1,\"endLine\":12,\"content\":\"package synthetic;\\npublic interface Strategy { String nextMove(); }\\nclass FixedStrategy implements Strategy {\\n    public String nextMove() { return \\\"ROCK\\\"; }\\n}\\nclass Player {\\n    private final Strategy strategy;\\n    Player(Strategy strategy) { this.strategy = strategy; }\\n    String play() { return strategy.nextMove(); }\\n}\\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\\n\"}\n",
+        "truncated": false,
+        "toolStatus": "OK",
+        "error": null,
+        "approvedAt": "2026-10-25T13:41:03.332743Z",
+        "updatedAt": "2026-10-25T13:41:09.268371Z"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "8a51c8a2-ef99-4b2e-b1c5-7d18fec18104",
+      "at": "2026-10-25T13:41:10.416Z",
+      "status": "SUCCEEDED"
+    },
+    {
+      "kind": "plan",
+      "requestId": "1c460f34-ea9e-4bdd-a326-4f2932301df9",
+      "at": "2026-10-25T13:41:16.866Z",
+      "result": {
+        "id": "1c460f34-ea9e-4bdd-a326-4f2932301df9",
+        "workspaceId": "909e0961-f98a-4c4c-8d1d-6247c1e1eea8",
+        "bundleId": "546fa800-b922-49d4-81be-2c44476b45bb",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "6ad3f93ffa54b84e029dfb29ab30c30d7789b31f8b37ae29f5ea6c1f4b9ff921",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T13:41:16.881685Z",
+        "updatedAt": "2026-10-25T13:41:23.468087Z"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "7ea16229-fe3d-4be7-b430-35f1da0dceca",
+      "at": "2026-10-25T13:41:23.657Z",
+      "status": "SUCCEEDED"
+    },
+    {
+      "kind": "plan",
+      "requestId": "d18c1dd5-8983-4a31-a93e-f86bb119fd3d",
+      "at": "2026-10-25T13:41:29.714Z",
+      "result": {
+        "id": "d18c1dd5-8983-4a31-a93e-f86bb119fd3d",
+        "workspaceId": "3f1bd91c-9641-41b2-a1e9-45be5cab6ddb",
+        "bundleId": "c5d94bf6-979e-4ca2-8927-c17867500f89",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "a365b4af561b8f08c58ddadc7694a837b797929e196bb721fe1646322e347aa5",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T13:41:29.721745Z",
+        "updatedAt": "2026-10-25T13:41:56.632198Z"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "ae76733a-700d-4993-ac6f-a5ecb7ecd4b6",
+      "at": "2026-10-25T13:41:56.765Z",
+      "status": "FAILED"
+    }
+  ],
+  "results": [
+    {
+      "scenario": "no-evidence-recovery",
+      "variant": 0,
+      "turn": 0,
+      "question": "FixedStrategy.nextMove가 반환하는 문자열은?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "FixedStrategy.nextMove는 문자열 \"ROCK\"을 반환합니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "aff21960-97bd-4199-98c4-131b4b394e34",
+        "workspaceId": "909e0961-f98a-4c4c-8d1d-6247c1e1eea8",
+        "bundleId": "c3e95596-86f3-4eed-bee1-05c9a14e18c9",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "0e12b0b4f3c391e22665173af7a07f1c98e0938a7ad6d1f365cf3d3bba65d94b",
+        "status": "SUCCEEDED",
+        "decision": "SEARCH",
+        "query": "FixedStrategy nextMove",
+        "output": "LOCAL_SEARCH_EXCERPTS (untrusted excerpts, not complete documents)\n{\"entryId\":\"165672b5-f7ce-42bf-ba86-bca9f7e9cc15\",\"pathKind\":\"workspace-entry\",\"path\":\"entries/165672b5-f7ce-42bf-ba86-bca9f7e9cc15\",\"startLine\":1,\"endLine\":12,\"content\":\"package synthetic;\\npublic interface Strategy { String nextMove(); }\\nclass FixedStrategy implements Strategy {\\n    public String nextMove() { return \\\"ROCK\\\"; }\\n}\\nclass Player {\\n    private final Strategy strategy;\\n    Player(Strategy strategy) { this.strategy = strategy; }\\n    String play() { return strategy.nextMove(); }\\n}\\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\\n\"}\n",
+        "truncated": false,
+        "toolStatus": "OK",
+        "error": null,
+        "approvedAt": "2026-10-25T13:41:03.332743Z",
+        "updatedAt": "2026-10-25T13:41:09.268371Z"
+      },
+      "expectedDecision": "SEARCH",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "First immutable bundle has zero evidence before synthetic source import. Real planner searches newly indexed Strategy.java; captured evidence and fresh approval answer ROCK. Followup explains delegation.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [],
+      "originalBundleId": "c3e95596-86f3-4eed-bee1-05c9a14e18c9",
+      "originalStatus": "NO_EVIDENCE",
+      "answerBundleId": "8709a32a-12d0-431a-9f0c-15304dde318a",
+      "elapsedMs": 13659,
+      "retrievalQuery": "FixedStrategy nextMove",
+      "historyTurns": 1,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        }
+      ]
+    },
+    {
+      "scenario": "no-evidence-recovery",
+      "variant": 0,
+      "turn": 1,
+      "question": "그럼 Player.play는 이 전략을 어떻게 사용해?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "Player는 생성자로 받은 Strategy를 필드에 저장하고, play()에서 strategy.nextMove()를 호출해 그 결과를 그대로 반환합니다. [R1]\n\n따라서 FixedStrategy를 전달하면 play()는 \"ROCK\"을 반환합니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "1c460f34-ea9e-4bdd-a326-4f2932301df9",
+        "workspaceId": "909e0961-f98a-4c4c-8d1d-6247c1e1eea8",
+        "bundleId": "546fa800-b922-49d4-81be-2c44476b45bb",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "6ad3f93ffa54b84e029dfb29ab30c30d7789b31f8b37ae29f5ea6c1f4b9ff921",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T13:41:16.881685Z",
+        "updatedAt": "2026-10-25T13:41:23.468087Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "First immutable bundle has zero evidence before synthetic source import. Real planner searches newly indexed Strategy.java; captured evidence and fresh approval answer ROCK. Followup explains delegation.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        }
+      ],
+      "originalBundleId": "546fa800-b922-49d4-81be-2c44476b45bb",
+      "originalStatus": "READY",
+      "answerBundleId": "546fa800-b922-49d4-81be-2c44476b45bb",
+      "elapsedMs": 13528,
+      "retrievalQuery": "FixedStrategy nextMove 그럼 Player.play는 이 전략을 어떻게 사용해?",
+      "historyTurns": 2,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        }
+      ]
+    },
+    {
+      "scenario": "explicit-topic-switch",
+      "variant": 0,
+      "turn": 0,
+      "question": "전략 패턴에서 FixedStrategy가 내는 손은?",
+      "status": "FAILED",
+      "model": "",
+      "answer": "Codex 스트리밍 제한 시간을 초과했습니다.",
+      "automaticPass": false,
+      "plan": {
+        "id": "d18c1dd5-8983-4a31-a93e-f86bb119fd3d",
+        "workspaceId": "3f1bd91c-9641-41b2-a1e9-45be5cab6ddb",
+        "bundleId": "c5d94bf6-979e-4ca2-8927-c17867500f89",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "a365b4af561b8f08c58ddadc7694a837b797929e196bb721fe1646322e347aa5",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T13:41:29.721745Z",
+        "updatedAt": "2026-10-25T13:41:56.632198Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Answer latest question with supported citations; preserve implicit topic but honor explicit topic switch; admit absent facts.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        }
+      ],
+      "originalBundleId": "c5d94bf6-979e-4ca2-8927-c17867500f89",
+      "originalStatus": "READY",
+      "answerBundleId": "c5d94bf6-979e-4ca2-8927-c17867500f89",
+      "elapsedMs": 148016,
+      "retrievalQuery": "전략 패턴에서 FixedStrategy가 내는 손은?",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        }
+      ]
+    }
+  ],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "jarSha256": "7fe16e3f7637a5b536702d12059d462117b9d46037e0f6c04813a8b2b8fd680e",
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-25T13:40:57.639607Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "error": "Real AI execution failed; stopped without automatic retry",
+  "finishedAt": "2026-10-25T13:43:58.164Z"
+}

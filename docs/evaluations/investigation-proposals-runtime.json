@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "evidenceType": "synthetic-cli-operational-proposals-runtime",
+  "exitCode": 0,
+  "sourceRevision": "11e7750acff964080a2193329584399ca4da964c",
+  "sourceTree": "dirty concurrent worktree; JAR hash identifies tested artifact",
+  "logSha256": "d66041dce7883b923fd9892073283c118b0581972c23b2080e40055b5efa1a25",
+  "cleanup": {
+    "backendExited": true,
+    "temporaryDirectoriesRemoved": true,
+    "jarHashUnchanged": true
+  },
+  "runtime": {
+    "status": "PASS",
+    "mode": "simulated",
+    "fixtureOnly": true,
+    "fixtureVersion": "investigation-proposals-v1",
+    "executedAt": "2026-10-25T21:42:48.544Z",
+    "jarSha256": "675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489",
+    "scriptSha256": "467dcefddd55318954839b34bf59ae273798b115a40f1a0cd576fcafc5999e57",
+    "fixtureSha256": "73ff6764677743ff820a6328587c5eab5de8f4361d91f74f9d4a9eedfee17804",
+    "fakeGenerationCalls": {
+      "search": 1,
+      "answer": 1,
+      "cancelled": 1,
+      "mysqlProposal": 1,
+      "datadogProposal": 1,
+      "total": 5
+    },
+    "realAiCalls": 0,
+    "proposals": [
+      {
+        "jobId": "d900ea52-2168-47a1-a733-23778e62455e",
+        "decision": "PROPOSE_MYSQL_READ",
+        "proposal": {
+          "jobId": "d900ea52-2168-47a1-a733-23778e62455e",
+          "workspaceId": "8419cc92-d649-4ee1-9c74-7126b05205a9",
+          "bundleId": "6d2f8881-a471-4605-ac85-7dacaf7cbe06",
+          "kind": "MYSQL_READ",
+          "requiredFields": [
+            "table",
+            "columns",
+            "equalities",
+            "limit"
+          ],
+          "executionAllowed": false
+        }
+      },
+      {
+        "jobId": "325d78a3-33a1-4179-bdf8-e34f0663dd59",
+        "decision": "PROPOSE_DATADOG_LOGS",
+        "proposal": {
+          "jobId": "325d78a3-33a1-4179-bdf8-e34f0663dd59",
+          "workspaceId": "8419cc92-d649-4ee1-9c74-7126b05205a9",
+          "bundleId": "18342ac3-b85e-4f15-ab1e-d18065ee90c2",
+          "kind": "DATADOG_LOGS",
+          "requiredFields": [
+            "environment",
+            "service",
+            "indexes",
+            "from",
+            "to",
+            "limit"
+          ],
+          "executionAllowed": false
+        }
+      }
+    ],
+    "checks": [
+      "SEARCH capture still creates immutable evidence",
+      "SEARCH tool-proposal rejected",
+      "proposal exact DTO without scope",
+      "proposal capture rejected",
+      "cross-workspace access rejected",
+      "completed proposal persisted",
+      "same-request replay and restart do not regenerate",
+      "MySQL and Datadog remain unconfigured",
+      "no new answer or generation jobs from proposals"
+    ],
+    "acceptanceUpdated": false,
+    "limitation": "Explicit synthetic prompt markers drive a fake CLI, not model reasoning or semantic intent evaluation. No DB/log execute endpoint is called and no operational connection is configured. This is not an OS network sandbox or real AI acceptance evidence."
+  }
+}

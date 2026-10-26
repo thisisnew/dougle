@@ -48,6 +48,7 @@ public class GitRunner {
                 "-c", "credential.helper=", "-c", "protocol.file.allow=never", "-c", "protocol.ext.allow=never",
                 "-c", "http.followRedirects=false", "-c", "http.sslVerify=true", "-c", "core.fsmonitor=false",
                 "-c", "init.templateDir="));
+        validateReadCommand(arguments);
         command.addAll(List.of(arguments));
         ProcessBuilder builder = new ProcessBuilder(command).directory(directory.toFile());
         restrictEnvironment(builder.environment());
@@ -57,6 +58,25 @@ public class GitRunner {
                     + (inheritedPath.isBlank() ? "" : java.io.File.pathSeparator + inheritedPath));
         }
         return builder;
+    }
+
+    private static void validateReadCommand(String[] arguments) {
+        if (arguments == null || java.util.Arrays.stream(arguments).anyMatch(java.util.Objects::isNull)) {
+            throw new IllegalArgumentException("Unsupported read-only Git command");
+        }
+        var values = List.of(arguments);
+        boolean allowed = values.equals(List.of("--version")) || values.equals(List.of("rev-parse", "HEAD"));
+        if (arguments.length == 3 && arguments[2].matches("[a-f0-9]{40}")) {
+            allowed |= arguments[0].equals("ls-tree") && arguments[1].equals("-rz")
+                    || arguments[0].equals("cat-file") && List.of("-s", "blob").contains(arguments[1]);
+        }
+        if (arguments.length == 9) {
+            allowed |= values.subList(0, 7).equals(List.of("clone", "--quiet", "--no-checkout", "--filter=blob:none",
+                    "--depth=1", "--single-branch", "--"))
+                    && arguments[7].matches("https://github\\.com/[A-Za-z0-9_-]+/[A-Za-z0-9_.-]+\\.git")
+                    && arguments[8].equals("repository");
+        }
+        if (!allowed) throw new IllegalArgumentException("Unsupported read-only Git command");
     }
 
     static void restrictEnvironment(java.util.Map<String, String> environment) {

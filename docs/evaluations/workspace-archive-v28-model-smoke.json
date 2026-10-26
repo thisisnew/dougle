@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "caseIds": [
+    "E50"
+  ],
+  "evidenceType": "synthetic-local-runtime-partial-acceptance",
+  "sourceRevision": "11e7750acff964080a2193329584399ca4da964c",
+  "sourceTree": "dirty concurrent worktree; exact artifact identity is jarSha256, not revision alone",
+  "platform": {
+    "platform": "darwin",
+    "arch": "x86_64"
+  },
+  "exitCode": 0,
+  "logSha256": "7973399fe9ed24eefbb636cf56d1fc0b44434e6d686ddd6db336a708f4d4b529",
+  "modelAssets": {
+    "model.onnx": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88",
+    "tokenizer.json": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39",
+    "reranker.onnx": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b",
+    "reranker-tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+  },
+  "cleanup": {
+    "backendExited": true,
+    "temporaryDirectoriesRemoved": true,
+    "jarHashUnchanged": true
+  },
+  "acceptanceDecision": "No E49/E50 acceptance promotion; exact-text index rebuild boundary only. See transfer-acceptance-evidence.md for remaining criteria.",
+  "runtime": {
+    "status": "PASS",
+    "mode": "simulated",
+    "fixtureOnly": true,
+    "fixtureVersion": "workspace-archive-smoke-v2",
+    "executedAt": "2026-10-25T21:24:49.775Z",
+    "jarSha256": "276e56fd38d1720cb0bde17072bd2b14ab63233d7fb6e356e82d32bd782b6f22",
+    "scriptSha256": "7d0eb9a1cb24dcd719d0e0fab4733147ac380901b89e6f108bb417c1cab3ffa2",
+    "checks": [
+      "authenticated preview, explicit new workspace apply, no activation, same-request idempotency",
+      "file bytes, local analysis, two-turn history digest rebinding, historical answer only",
+      "local model READY, index queue drained, original text/fresh scoped search ID: first import",
+      "export and second import preserve supported catalog data",
+      "local model READY, index queue drained, original text/fresh scoped search ID: roundtrip import",
+      "unsupported version, traversal, unknown fields, false quote, checksum rejection without workspace creation",
+      "Slack disconnected/empty and browser job list empty; no connection or browser launch",
+      "local model READY, index queue drained, original text/fresh scoped search ID: restart",
+      "durable restart receipt, expired stage rejection, deleted-workspace no recreation",
+      "local model READY, index queue drained, original text/fresh scoped search ID: after other workspace deletion"
+    ],
+    "indexVerification": {
+      "enabled": true,
+      "status": "PASS",
+      "observations": [
+        {
+          "phase": "first import",
+          "workspaceId": "4363e109-ea0f-4e0a-a431-465d016a6436",
+          "entryId": "d4250b0f-873b-4413-85a0-d940742327cc",
+          "textHash": "c50e8c4f2c3c010c5369d5d15e3f4f9acf256125ed59f93af6ac497c0232e8a2",
+          "modelState": "READY",
+          "pendingIndexChanges": 0
+        },
+        {
+          "phase": "roundtrip import",
+          "workspaceId": "89822f92-5344-474c-9332-c0ee12172ea7",
+          "entryId": "4fb6d86e-409c-4032-bca1-d7354ac1a307",
+          "textHash": "c50e8c4f2c3c010c5369d5d15e3f4f9acf256125ed59f93af6ac497c0232e8a2",
+          "modelState": "READY",
+          "pendingIndexChanges": 0
+        },
+        {
+          "phase": "restart",
+          "workspaceId": "4363e109-ea0f-4e0a-a431-465d016a6436",
+          "entryId": "d4250b0f-873b-4413-85a0-d940742327cc",
+          "textHash": "c50e8c4f2c3c010c5369d5d15e3f4f9acf256125ed59f93af6ac497c0232e8a2",
+          "modelState": "READY",
+          "pendingIndexChanges": 0
+        },
+        {
+          "phase": "after other workspace deletion",
+          "workspaceId": "89822f92-5344-474c-9332-c0ee12172ea7",
+          "entryId": "4fb6d86e-409c-4032-bca1-d7354ac1a307",
+          "textHash": "c50e8c4f2c3c010c5369d5d15e3f4f9acf256125ed59f93af6ac497c0232e8a2",
+          "modelState": "READY",
+          "pendingIndexChanges": 0
+        }
+      ]
+    },
+    "acceptanceUpdated": false,
+    "limitation": "Synthetic local runtime only; answers are fabricated archive records, never AI output. Opt-in local model READY, drained index queue and exact fixture text/fresh-ID search checked; broader semantic search quality is not evaluated. No external accounts, browser navigation, Slack events, cross-account transfer, migration from historical user data, or E50 acceptance completion. External AI commands are disabled; local models are read only when explicitly supplied, no prepare/download endpoint is called. This is not an OS network sandbox."
+  }
+}

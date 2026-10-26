@@ -59,6 +59,18 @@ export function useQuestionAttachments(workspaceId: string) {
     } catch (reason) { if (mounted.current && !controller.signal.aborted) setError((reason as Error).message) }
     finally { if (pending.current === controller) { pending.current = null; if (mounted.current) setUploading(false) } }
   }
+  function adopt(item: QuestionAttachment) {
+    if (pending.current || !mounted.current) return false
+    if (!item.id || item.mediaType !== 'text/plain' || !Number.isSafeInteger(item.size) || item.size <= 0 || item.size > 5 * 1024 * 1024) {
+      setError('조회 결과 첨부 정보를 확인하지 못했습니다.'); return false
+    }
+    if (current.current.some(value => value.id === item.id)) return true
+    if (current.current.length >= 4 || current.current.reduce((sum, value) => sum + value.size, 0) + item.size > 10 * 1024 * 1024) {
+      setError('첨부 한도를 초과했습니다. 기존 첨부를 제거한 뒤 다시 시도하세요.'); return false
+    }
+    current.current = [...current.current, item]; setItems(current.current); setError('')
+    return true
+  }
   function cancel() { pending.current?.abort(); pending.current = null; setUploading(false) }
-  return { items, uploading, error, add, remove, reset, cancel }
+  return { items, uploading, error, add, adopt, remove, reset, cancel }
 }

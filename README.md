@@ -9,7 +9,9 @@ Dougle은 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI�
 
 ## 설치하기
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.16-preview.1)**
+공개 설치본은 **0.1.20**입니다. 개발 중인0.1.22 후보는 아직 배포하지 않습니다. [설치 안내와 검증 범위](docs/macos-install.md).
+
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.20-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
@@ -19,7 +21,7 @@ Dougle은 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI�
 
 연결한 자료는 **동기화 아이콘**으로 한 번에 갱신합니다. 자동 갱신은 **설정 → Workspace 관리**에서 켜고 끕니다. [자료·설정 안내](docs/library-simplification.md)
 
-로컬 0.1.20 작업본은 **설정 → 플러그인**에서 Notion·Jira/Confluence의 브라우저 승인 연결과 MySQL 접속 설정·연결 테스트·DB 구조 수집을 제공합니다. 다국어 검색 엔진은 설치 파일에 기본 포함됩니다. 공개 다운로드 0.1.16에는 아직 포함되지 않습니다. [연결 방법과 지원 범위](docs/plugins.md)
+**설정 → 플러그인**에서 Notion·Jira/Confluence의 브라우저 승인 연결과 MySQL 접속 설정·연결 테스트·DB 구조 수집을 제공합니다. 다국어 검색 엔진은 설치 파일에 기본 포함됩니다. [연결 방법과 지원 범위](docs/plugins.md)
 
 질문에만 참고할 이미지·문서는 질문창 **+**로 첨부하세요. [첨부 사용법](docs/question-attachments.md)
 
@@ -43,3 +45,5 @@ Java·Git·Codex 실행 도구는 앱에 포함되어 있습니다. GitHub 자�
 ## 더 알아보기
 
 [사용 방법](docs/chat-first.md) · [검색 원리](docs/internal-search.md) · [설계도](docs/design-map.md) · [개발 환경](docs/development.md) · [전체 문서](docs/README.md)
+
+현재 개발 중인 실무 전문가 기능은 연속 대화, 범위를 확인한 DB·로그 조회, Slack 문의 연동과 자료 이전을 포함합니다. 설치 파일의 지원 범위와 개발 소스는 다를 수 있습니다. [구현·검증 상태](docs/expert-implementation.md)와 [50개 인수 기준](docs/expert-adoption.md)에서 실제 검증과 남은 항목을 구분합니다.

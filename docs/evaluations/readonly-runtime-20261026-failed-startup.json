@@ -1,0 +1,43 @@
+{
+  "fixtureVersion": "readonly-slack-receipts-v1",
+  "failureHistoryPreserved": true,
+  "recordedAt": "2026-10-26T10:13:11Z",
+  "jarSha256": "5cd81269031769b8c65af4a3cfc136dcd562e30a0c3e91f255f6a959f4a9bd0d",
+  "harnessSha256": "fe79c199708700d7c370af3946c457888b226cc0457b267c7077e136a776fbba",
+  "result": "FAILED_STARTUP",
+  "exitCode": 1,
+  "error": "Backend failed/aborted; no application logs echoed",
+  "log": "/tmp/dougle-022-readonly-runtime.log",
+  "checksPassed": [],
+  "diagnosticLimitation": "Initial harness drained stderr without retaining startup diagnostics. A bounded redacted diagnostic retry established a missing harness environment variable, not an application policy failure.",
+  "diagnosticRetry": {
+    "result": "FAILED_STARTUP",
+    "exitCode": 1,
+    "log": "/tmp/dougle-022-readonly-runtime-attempt2.log",
+    "error": "java.lang.IllegalStateException: Desktop mode requires absolute FORGE_DATA_DIR",
+    "fix": "Add only FORGE_DATA_DIR pointing to the existing harness-private data directory; retain the loopback-only sandbox without fallback."
+  },
+  "sandboxRetry": {
+    "result": "FAILED_STARTUP",
+    "exitCode": 1,
+    "log": "/tmp/dougle-022-readonly-runtime-attempt3.log",
+    "error": "Tomcat protocol handler start failed: java.net.SocketException: Operation not permitted",
+    "diagnosis": "Profile initially denied network-bind. Adding an explicit localhost-only bind rule did not resolve the failure; the exact socket operation still needs diagnosis. External network remains denied. No application policy checks passed."
+  },
+  "bindRuleRetry": {
+    "result": "FAILED_STARTUP",
+    "exitCode": 1,
+    "log": "/tmp/dougle-022-readonly-runtime-attempt4.log",
+    "error": "Tomcat protocol handler start failed: java.net.SocketException: Operation not permitted"
+  },
+  "bindDiagnosticRetry": {
+    "result": "FAILED_STARTUP",
+    "exitCode": 1,
+    "log": "/tmp/dougle-022-readonly-runtime-attempt5.log",
+    "error": "java.net.SocketException: Operation not permitted at sun.nio.ch.Net.bind0 / ServerSocketChannelImpl.netBind",
+    "nextDiagnostic": "Force IPv4 sockets to match the application's explicit 127.0.0.1 bind; keep the exact same loopback-only sandbox."
+  },
+  "cleanup": "No Java/sandbox-exec process or harness temporary directory remained after each failed startup.",
+  "networkPolicy": "macOS loopback-only sandbox requested; no unsandboxed fallback",
+  "limits": "No successful artifact runtime validation; no E35 promotion. No credentials, external AI, user DB, installation, packaging or JAR writes."
+}

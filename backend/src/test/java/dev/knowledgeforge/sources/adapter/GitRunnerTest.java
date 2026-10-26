@@ -70,4 +70,35 @@ class GitRunnerTest {
                 .containsExactlyInAnyOrder("GIT_TERMINAL_PROMPT", "GIT_CONFIG_NOSYSTEM", "GIT_CONFIG_GLOBAL");
         assertThat(command.environment()).containsEntry("GIT_TERMINAL_PROMPT", "0");
     }
+
+    @Test
+    void onlyExactCollectionCommandsCanReachProcessCreation() throws Exception {
+        var runner = new GitRunner();
+        String object = "a".repeat(40);
+        for (String[] arguments : List.of(
+                new String[] {"ls-tree", "-rz", object},
+                new String[] {"cat-file", "-s", object},
+                new String[] {"cat-file", "blob", object},
+                new String[] {"clone", "--quiet", "--no-checkout", "--filter=blob:none", "--depth=1",
+                        "--single-branch", "--", "https://github.com/synthetic/fixture.git", "repository"})) {
+            assertThat(runner.command(directory, arguments).command()).endsWith(arguments);
+        }
+    }
+
+    @Test
+    void rejectsWritesAliasesHelpersAndUncontrolledCloneArgumentsBeforeLaunch() {
+        var runner = new GitRunner();
+        for (String[] arguments : List.of(
+                new String[] {"push", "origin", "HEAD"}, new String[] {"commit", "-am", "change"},
+                new String[] {"config", "alias.read", "!touch marker"}, new String[] {"reset", "--hard"},
+                new String[] {"-c", "alias.read=!touch marker", "read"},
+                new String[] {"cat-file", "--filters", "HEAD:file"}, new String[] {"rev-parse", "--git-dir"},
+                new String[] {"clone", "--quiet", "--no-checkout", "--filter=blob:none", "--depth=1",
+                        "--single-branch", "--", "https://github.com.attacker.test/synthetic/fixture.git", "repository"},
+                new String[] {"clone", "--quiet", "--no-checkout", "--filter=blob:none", "--depth=1",
+                        "--single-branch", "--", "https://github.com/synthetic/fixture.git", "../original"})) {
+            assertThatThrownBy(() -> runner.command(directory, arguments))
+                    .isInstanceOf(IllegalArgumentException.class).hasMessageContaining("read-only");
+        }
+    }
 }

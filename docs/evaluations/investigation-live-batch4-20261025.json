@@ -1,0 +1,46 @@
+{
+  "fixtureVersion": "synthetic-investigation-v2",
+  "startedAt": "2026-10-25T13:44:10.310Z",
+  "maximumDispatches": 8,
+  "dispatched": 1,
+  "planDispatches": 1,
+  "answerDispatches": 0,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "29d47273-f456-41f7-a5b5-977ba8c9d944",
+      "at": "2026-10-25T13:44:32.742Z",
+      "result": {
+        "id": "29d47273-f456-41f7-a5b5-977ba8c9d944",
+        "workspaceId": "2a6ad9c3-4371-4bee-aa25-0be821eef5a5",
+        "bundleId": "0cefbc5b-5e23-4067-b789-f765c924f5e5",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "66a9a76a9c90ba0d18f1e827b1c0df1dae10628d14aa8fffb37a54a24bda1dd5",
+        "status": "FAILED",
+        "decision": null,
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": "검색 계획 시간 한도 90초를 초과했습니다. 새 동의가 필요합니다.",
+        "approvedAt": "2026-10-25T13:44:32.754488Z",
+        "updatedAt": "2026-10-25T13:46:02.913971Z"
+      }
+    }
+  ],
+  "results": [],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "harnessSha256": "201c5e2adae7f0c5a0ece3a150e777cb61e9a48a91709c48ae72a589bc56f3f6",
+  "fixtureSha256": "804dcb1c2e6fdd2680036d4a334a08fe8d250a3fe3dc7ff49cb3627dd09fa8e5",
+  "jarSha256": "7fe16e3f7637a5b536702d12059d462117b9d46037e0f6c04813a8b2b8fd680e",
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-25T13:44:29.803373Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "error": "검색 계획 시간 한도 90초를 초과했습니다. 새 동의가 필요합니다.\n+ actual - expected\n\n+ 'FAILED'\n- 'SUCCEEDED'\n",
+  "finishedAt": "2026-10-25T13:46:04.926Z"
+}

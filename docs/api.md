@@ -1,5 +1,20 @@
 # API
 
+## 최우선 정책: 외부 업무 시스템 읽기 전용
+
+사용자 승인·과거 승인·재시작 여부와 무관하게 Slack 게시, 외부 DB 변경, 브라우저 업무 변경은 금지합니다. 로컬 Workspace/대화/근거/색인/설정 저장은 유지합니다. HTTP 메서드가 아니라 외부 효과를 기준으로 판단하며, UI 제거와 별개로 직접 API·dispatcher/transport 경계에서도 차단해야 합니다. [현재 정책과 아직 필요한 검증](external-readonly-policy.md)을 따릅니다. 아래의 과거 아티팩트 동작 설명은 차단 구현 완료나 새 릴리스 허가가 아닙니다.
+
+## 전문가 작업본 (DB v28, 미배포)
+
+기존 데스크톱 세션·Origin·Workspace 소유권 검증을 유지합니다. 이 경로를 추가했다는 사실은 실제 회사 서비스 연결이나 전체 인수 완료를 의미하지 않습니다.
+
+- `GET /api/workspaces/{workspaceId}/investigation-plans/jobs/{id}/tool-proposal`: 완료된 수동 조회 제안만 반환합니다. `jobId/workspaceId/bundleId/kind/requiredFields/executionAllowed`이며 마지막 값은 항상 false입니다. `kind`는 `MYSQL_READ` 또는 `DATADOG_LOGS`; 조회 범위나 자격 증명을 생성하지 않습니다. 미완료·SEARCH/STOP 작업은409, 소유권/근거 없음은404입니다. 조회만으로 AI·운영 도구·연결 상태 조회를 실행하지 않습니다.
+- 계획의 V4 binding은 SEARCH/STOP 외에 위 수동 제안을 허용합니다. 제안은 검색 결과가 아니므로 계획 작업의 `capture`로 답변 근거를 만들 수 없습니다. 이전 binding의 동의는 새 미리보기가 필요합니다.
+- `/api/workspaces/{workspaceId}/mysql-investigations`와 `/datadog-investigations`: `POST /preview`, `POST /{id}/execute`, `GET /{id}`, `POST /{id}/cancel`. 대상/조건을 직접 지정하고 별도 일회 동의 후 조회합니다. 결과는 자동 AI 전송하지 않습니다. [권한·길이·시간 제한](plugins.md)을 따릅니다.
+- `POST /api/workspaces/{workspaceId}/operational-captures/preview`: `{provider: "MYSQL"|"DATADOG", resultId}`로 서버에 보관된 완료 결과와 승인 범위를 정확한 저장용 텍스트로 미리 봅니다. 클라이언트가 결과 행이나 범위를 덮어쓸 수 없습니다.
+- `POST /api/workspaces/{workspaceId}/operational-captures/{id}/capture`: `{requestId,digest,approved:true}`로 미리보기와 동일한 로컬 질문 첨부를 저장합니다. `GET /{id}`는 영수증 확인만 합니다. 결과·범위·연결·TTL을 재검증하며 저장 실패를 자동 재실행하지 않습니다. 이후 AI 전송은 사용자의 별도 질문 동작입니다.
+- Slack의 과거 `/api/slack/workspaces/{workspaceId}/replies` 전송 계약은 폐기됐습니다. 전송 UI와 외부 dispatch를 제거/차단하고, 저장된 영수증의 소유권 제한 GET 조회만 유지하는 것이 현재 요구입니다. 과거 preview/execute/승인/uncertain 확인으로 발송을 허용하지 않습니다. [역사적 설계](slack-reply-runtime.md)는 이력 보존용이며, 새 거부 응답/구현 검증은 담당자 결과 전까지 미확정입니다.
+
 ## 수집 진행·로컬 검색 준비 (DB v25)
 
 - `GET /api/workspaces/{workspaceId}/sources/{sourceId}/progress`: 실제 stage/file/completed/total/cancellable. 전체량 미확정은 total=0이며 예상 시간을 생성하지 않습니다.

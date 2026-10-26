@@ -1,0 +1,62 @@
+{
+  "version": "0.1.21",
+  "date": "2026-10-26",
+  "releaseStatus": "BLOCKED_NONRELEASED_SNAPSHOT",
+  "blocker": "User now requires external business systems to be strictly read-only. This immutable snapshot still contains Slack-send capability. Do not install or publish it; package checks do not establish compliance with the new policy.",
+  "backendJarSha256": "675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489",
+  "build": {
+    "mode": "scripts/package-macos.sh --skip-verify; sequential Intel then ARM; no Maven or backend JAR writes",
+    "hostJdk": "~/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home",
+    "armJdk": ".tools/apple-silicon/amazon-corretto-21.jdk/Contents/Home",
+    "intelExitCode": 0,
+    "armExitCode": 0,
+    "armReleaseCompileSeconds": 302,
+    "intelLog": "/tmp/dougle-021-intel-package.log",
+    "armLog": "/tmp/dougle-021-arm-package.log",
+    "armVerificationLog": "/tmp/dougle-021-arm-verification.log"
+  },
+  "verification": {
+    "bothDmgIntegrityArchitectureDeepStrictSignature": "PASS",
+    "bothUpdaterCryptographicSignatureAndSignedVersion": "PASS",
+    "bothExtractedUpdaterAppVersionArchitectureSignatureJar": "PASS",
+    "bothReadOnlyMountedDmgVersionAndExactJarMatch": "PASS",
+    "intelBundleSignatureAndJarIntactAfterArmBuild": "PASS",
+    "backendJarPreserved": "PASS",
+    "allSixVersion020ArtifactHashesPreserved": "PASS",
+    "nativeCargoTests": "NOT_RUN",
+    "armRuntime": "NOT_RUN; cross-built on Intel, static checks only",
+    "appleNotarization": "NOT_DONE; ad-hoc app signatures only"
+  },
+  "intelNativeHostSmoke": {
+    "source": "Parent-run harness; docs/native-host-report.json",
+    "log": "/tmp/dougle-021-native-host.log",
+    "exitCode": 0,
+    "startupMs": 20237,
+    "checks": ["isolated HOME and minimal PATH", "bundled Java/API session protection", "duplicate backend rejection", "restart with same synthetic database", "Java cleanup after native termination"],
+    "limits": "No user database, real AI, Finder/Gatekeeper acceptance, or ARM runtime validation."
+  },
+  "artifactSha256": {
+    "Knowledge.Forge_0.1.21_arm64.app.tar.gz": "0cfa6950d5a8938a27b697f0c506c918101008f4c42fe84ad42e59d48a2e80a3",
+    "Knowledge.Forge_0.1.21_arm64.app.tar.gz.sig": "a6df5694229051688f5fdbe05b5ace76cd1544b673fc2e1d70138174689a432e",
+    "Knowledge.Forge_0.1.21_arm64.dmg": "06839bf433475503eb9428818146deb82d141cfe313159b546e81fc09876ef0f",
+    "Knowledge.Forge_0.1.21_x86_64.app.tar.gz": "2872aaf811d94e674456f1038a407ee2b5a8314ddf755154a028ef24789375b7",
+    "Knowledge.Forge_0.1.21_x86_64.app.tar.gz.sig": "151f6ecbd48a103525e503a94c2e674f86327ed511839a9dc5cf154ea440f7ee",
+    "Knowledge.Forge_0.1.21_x86_64.dmg": "a1950c1e1f664cc98058dd7c12828116faf8b8e25770d4cce7b376916d45554a"
+  },
+  "preserved020Sha256": {
+    "Knowledge.Forge_0.1.20_x86_64.app.tar.gz.sig": "6adaaa4e40fc23be93fe813ca5ee13232239af029e101ccb63191296e0ce4d39",
+    "Knowledge.Forge_0.1.20_x86_64.dmg": "afb7e031ee789d6c91d211d2f578d63ceb76fd53530de1f01006f374f8779165",
+    "Knowledge.Forge_0.1.20_x86_64.app.tar.gz": "a497e2ca1b99232e358839d78a3ed73a932467fa91d57552e48d4966ba086da2",
+    "Knowledge.Forge_0.1.20_arm64.dmg": "5cdd8ebee1b28f741facecc4be66ee28335b2a64741a4de512dcab38ce895423",
+    "Knowledge.Forge_0.1.20_arm64.app.tar.gz.sig": "bb981e78d01a00bd1cdd80739ff5b96728b274c679dfdd008ef6b9796660d522",
+    "Knowledge.Forge_0.1.20_arm64.app.tar.gz": "0349047fed077b71ef6df4b99f44137b443123be741cd98124b766f85d286ec3"
+  },
+  "installation": "NOT_PERFORMED; installer helper deferred under superseding read-only policy; no publication or external write calls",
+  "futureInstallReviewRequirements": [
+    "Require a newly approved policy-compliant package and pin its exact version, DMG and JAR hashes; do not reuse this snapshot approval.",
+    "Read-only mount and verify signed replacement before stopping only the exact owned installed app; wait for its backend to exit without killing unrelated Java processes.",
+    "Back up old app and closed database/WAL/SHM outside Git in a private 0700 directory without reading credentials or changing unrelated data.",
+    "Validate same-filesystem staged replacement and use an atomic app swap with rollback; never run the old .20 helper.",
+    "Obtain separate installation approval and user notice before any installed-app or database changes."
+  ]
+}

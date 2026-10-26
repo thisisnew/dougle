@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "mode": "simulated",
+  "fixtureOnly": true,
+  "scope": "Restored typed operational proposal UI handoff with unconfigured providers; not filled query execution",
+  "artifact": {
+    "jarSha256": "675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489",
+    "scriptSha256": "c72b73547fbad8bb523204745cf30f1fc990ab8bdef96ef92df49e776a4995cc",
+    "fixtureSha256": "73ff6764677743ff820a6328587c5eab5de8f4361d91f74f9d4a9eedfee17804",
+    "fixtureVersion": "investigation-proposals-v2"
+  },
+  "runtime": {
+    "completedAt": "2026-10-25T21:52:57.181Z",
+    "searchModelsEnabled": true,
+    "modelReadyBeforeInitialQueries": true,
+    "modelReadyAfterRestart": true,
+    "workspaceId": "16fabbf7-beea-441a-999e-88ebf9dffbaa",
+    "proposals": [
+      {
+        "kind": "MYSQL_READ",
+        "threadId": "41ab9a52-9864-4629-9946-171af6ab7289",
+        "bundleId": "333644cc-0ebb-42b8-897e-dc5d543d1681",
+        "jobId": "cad04d49-cbef-419d-8fbd-5517694bdaab"
+      },
+      {
+        "kind": "DATADOG_LOGS",
+        "threadId": "05741940-9938-48c9-ba56-b1ec31a9f8c0",
+        "bundleId": "aa87be01-5b66-4b6f-ae5d-b28c2072b90a",
+        "jobId": "ff54de7e-2ba2-4a7f-8367-466247114000"
+      }
+    ]
+  },
+  "browserQa": {
+    "source": "Parent-reported Ego TaskSpace12; screenshot viewed by parent, file hash verified by this agent",
+    "checks": [
+      "Restored MySQL proposal explicit click displays MySQL setup-only guidance",
+      "Switching history to Datadog clears the previous operational panel",
+      "Explicitly expanding/opening Datadog proposal displays Datadog setup-only guidance",
+      "No operational execution or real AI reported"
+    ],
+    "viewportWidth": 1777,
+    "scrollWidth": 1777,
+    "screenshot": {
+      "path": "docs/screenshots/operational-proposal-handoff.png",
+      "sha256": "95a01501f44fa28f6a3e7c61882c7ef96c2492e4c8ec7cdc01e14608929eeba0"
+    }
+  },
+  "callCounts": {
+    "verification": "Read isolated fixture call files after browser QA and before cleanup",
+    "beforeQa": 5,
+    "afterQa": 5,
+    "search": 1,
+    "answer": 1,
+    "cancelled": 1,
+    "mysqlProposal": 1,
+    "datadogProposal": 1,
+    "realAiCalls": 0
+  },
+  "cleanup": {
+    "verifiedAt": "2026-10-25T21:59:36Z",
+    "ownershipVerifiedBeforeSignal": true,
+    "signal": "SIGTERM",
+    "harnessPid": 57050,
+    "backendPid": 57688,
+    "toolSession": "16716",
+    "exitCode": 0,
+    "bothProcessesExited": true,
+    "temporaryDirectoryRemoved": true,
+    "jarHashUnchanged": true
+  },
+  "acceptanceUpdated": false,
+  "limitations": [
+    "Synthetic CLI output is not real AI intent classification.",
+    "Both operational providers were unconfigured; no filled query form, operational approval/execution, or operational result capture was exercised in this browser QA.",
+    "No external service or account validation; not an OS network sandbox.",
+    "No expert acceptance case was promoted."
+  ]
+}

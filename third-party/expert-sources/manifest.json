@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "audited_on": "2026-10-25",
+  "status": "provenance-and-license-only; no runtime or skills adopted",
+  "acquisition": "Unauthenticated public GitHub HTTPS GET using curl; full commit pins; no upstream code persisted or executed; no dependency installation or credential inspection.",
+  "notice_search": "GitHub recursive Git trees returned truncated=false for all four commits. Case-insensitive LICENSE*, NOTICE*, COPYING*, THIRD_PARTY* basename search found only the files listed here. Does not cover inline headers, submodules, downloaded dependencies or release contents.",
+  "audit_document": "docs/expert-upstream-audit.md",
+  "sources": [
+    {
+      "repository": "https://github.com/HolmesGPT/holmesgpt",
+      "commit": "6a50c178e9c8099c8fa242cd76a9334155ee9f0f",
+      "commit_url": "https://github.com/HolmesGPT/holmesgpt/commit/6a50c178e9c8099c8fa242cd76a9334155ee9f0f",
+      "license": "Apache-2.0",
+      "notice": "No separately named NOTICE found in pinned recursive tree",
+      "adoption_scope": "Investigated engine/adapter candidate; runtime blocked",
+      "files": [
+        {
+          "upstream_path": "LICENSE",
+          "local_path": "third-party/expert-sources/holmesgpt/LICENSE",
+          "sha256": "4e8d756a1bc4796e15973df082cf72b91f5e61fec4ec68d6799104670c108d08",
+          "source_url": "https://raw.githubusercontent.com/HolmesGPT/holmesgpt/6a50c178e9c8099c8fa242cd76a9334155ee9f0f/LICENSE"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/aws-samples/sample-multi-account-agentic-incident-response",
+      "commit": "eadba8b51669293e628fde9d50dc500eece3eef0",
+      "commit_url": "https://github.com/aws-samples/sample-multi-account-agentic-incident-response/commit/eadba8b51669293e628fde9d50dc500eece3eef0",
+      "license": "MIT-0",
+      "notice": "NOTICE and THIRD_PARTY_LICENSES.md preserved",
+      "adoption_scope": "Procedure adaptation candidate only",
+      "files": [
+        {
+          "upstream_path": "LICENSE",
+          "local_path": "third-party/expert-sources/aws-multi-account-incident-response/LICENSE",
+          "sha256": "5025c7bbedbc8da868b6dce2ab689225b3f33c43b3f03368b0a331809b6ada26",
+          "source_url": "https://raw.githubusercontent.com/aws-samples/sample-multi-account-agentic-incident-response/eadba8b51669293e628fde9d50dc500eece3eef0/LICENSE"
+        },
+        {
+          "upstream_path": "NOTICE",
+          "local_path": "third-party/expert-sources/aws-multi-account-incident-response/NOTICE",
+          "sha256": "428217284d836bde58d8e05f108a98e11b278c0d667df43e212760589f44b623",
+          "source_url": "https://raw.githubusercontent.com/aws-samples/sample-multi-account-agentic-incident-response/eadba8b51669293e628fde9d50dc500eece3eef0/NOTICE"
+        },
+        {
+          "upstream_path": "THIRD_PARTY_LICENSES.md",
+          "local_path": "third-party/expert-sources/aws-multi-account-incident-response/THIRD_PARTY_LICENSES.md",
+          "sha256": "57b5c44b9f8db4d6af7effa79c7dea6ced4490b674df7d007a6e53f98cc4f439",
+          "source_url": "https://raw.githubusercontent.com/aws-samples/sample-multi-account-agentic-incident-response/eadba8b51669293e628fde9d50dc500eece3eef0/THIRD_PARTY_LICENSES.md"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "commit_url": "https://github.com/obra/superpowers/commit/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "license": "MIT",
+      "notice": "No separately named NOTICE found in pinned recursive tree",
+      "adoption_scope": "Systematic-debugging procedure candidate only",
+      "files": [
+        {
+          "upstream_path": "LICENSE",
+          "local_path": "third-party/expert-sources/superpowers/LICENSE",
+          "sha256": "a37e0e9697144819e1d965176ac4ae5bc3fa02d11e7812036bbcadf6dafe2400",
+          "source_url": "https://raw.githubusercontent.com/obra/superpowers/2ce8aa15d05bd57213e6f746f953aafb7ded7a8b/LICENSE"
+        }
+      ]
+    },
+    {
+      "repository": "https://github.com/itbench-hub/ITBench",
+      "commit": "e35270629b336ea3170c912edf3c4632eba877eb",
+      "commit_url": "https://github.com/itbench-hub/ITBench/commit/e35270629b336ea3170c912edf3c4632eba877eb",
+      "license": "Apache-2.0",
+      "notice": "No separately named NOTICE found in pinned recursive tree",
+      "adoption_scope": "Isolated evaluation design candidate only",
+      "files": [
+        {
+          "upstream_path": "LICENSE",
+          "local_path": "third-party/expert-sources/itbench/LICENSE",
+          "sha256": "c74e7f77c5eb3eeb5ace72d1ab58093bdbd3946e9e99b3be5679573f554d2107",
+          "source_url": "https://raw.githubusercontent.com/itbench-hub/ITBench/e35270629b336ea3170c912edf3c4632eba877eb/LICENSE"
+        }
+      ]
+    }
+  ],
+  "dependency_inspection": {
+    "repository": "https://github.com/BerriAI/litellm",
+    "version": "1.89.0",
+    "tag_commit": "2978a92bdb26db9676b3a265ee09078aa252e258",
+    "purpose": "Authentication source inspection only; no dependency vendored",
+    "limitation": "Tag source inspected; wheel-to-tag equivalence and complete transitive licensing not verified"
+  }
+}

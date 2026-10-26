@@ -87,7 +87,7 @@ public class ProviderLoginAdapter implements ProviderLogin {
     private void execute(Status started, Provider provider) {
         Path directory = null;
         Process owned = null;
-        var executor = Executors.newVirtualThreadPerTaskExecutor();
+        var executor = Executors.newFixedThreadPool(2);
         var descendants = java.util.concurrent.ConcurrentHashMap.<ProcessHandle>newKeySet();
         try {
             directory = Files.createTempDirectory("forge-login-");

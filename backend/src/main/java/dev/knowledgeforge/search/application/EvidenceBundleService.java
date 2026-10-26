@@ -5,6 +5,7 @@ import dev.knowledgeforge.library.application.LibraryStore;
 import dev.knowledgeforge.search.domain.EvidenceBundle;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EvidenceBundleService {
@@ -57,5 +58,15 @@ public class EvidenceBundleService {
     public void delete(String workspaceId, String id) {
         get(workspaceId, id);
         store.delete(workspaceId, id);
+    }
+
+    @Transactional
+    public void deleteIndependent(String workspaceId, String id) {
+        var bundle = get(workspaceId, id);
+        if (bundle.payload().chatContext() != null || list(workspaceId).stream().map(summary -> get(workspaceId, summary.id()))
+                .anyMatch(candidate -> candidate.payload().chatContext() != null && candidate.payload().chatContext().threadId().equals(id))) {
+            throw new LibraryException(409, "연속 대화의 질문은 대화 기록에서 함께 삭제하세요.");
+        }
+        delete(workspaceId, id);
     }
 }

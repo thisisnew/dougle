@@ -1,5 +1,9 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
+## Slack 답변 영수증 (DB v28 작업본)
+
+`slack_reply`는 사용자가 확인한 본문과 수신 항목·Workspace·채널·스레드 범위를 고정하고 미리보기/실행 요청 ID를 각각 중복 없이 보관한다. 전송 횟수는 0 또는 1이며 실행 전에 SENDING으로 기록한다. 시작 시 남아 있는 SENDING은 UNCERTAIN으로 바꾸고 자동 전송하지 않는다. Slack 자체의 정확히 한 번 전달을 보증하는 상태가 아니다. SENDING이 있는 Workspace의 삭제는 원자적으로 거부한다. 이 테이블에는 인증 토큰을 저장하지 않는다. v28 서비스/UI는 통합 작업 중이며 실제 Slack 전송 검증은 별도다.
+
 ## 수집 복구 (DB v25)
 
 `source_analysis_checkpoint`는 source/path/content hash별 완료 분석을 보관합니다. 중단 뒤 같은 파일의 분석을 재사용하며 변경된 파일에는 적용하지 않습니다. `source_file_failure`는 경로별 제외 원인을 저장합니다. 실패 경로의 이전 원본을 보존하고 정상 파일만 발행합니다. 두 테이블은 Source 삭제 시 함께 삭제됩니다. [수집·검색 변경](ingestion-retrieval-upgrade.md).
@@ -94,6 +98,12 @@ flowchart LR
 마이그레이션의 실제 테이블과 대조한 파일:
 `backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java`.
 
+## 추가 검색 계획·팀 설정 가져오기 (DB v26)
+
+- `investigation_plan`: 별도 검색 계획 미리보기의 불변 요청문·범위 해시·제공자·모델·만료와 일회 승인 소비, 작업 상태·검색어·로컬 결과를 저장합니다. 기존 답변 승인과 구별하며 새 근거로 다시 답변할 때는 새 답변 승인이 필요합니다. Workspace/근거 삭제 시 함께 삭제합니다. 재시작 시 미완료 계획은 실패 처리하고 재실행하지 않습니다.
+- `team_settings_import_receipt`: 가져오기 요청 ID·계획 ID·해시·적용 결과를 저장합니다. 요청 재전송은 같은 결과를 반환하고, 계획 ID의 유일 제약으로 다른 요청 ID를 이용한 재적용을 막습니다. 생성된 Workspace 삭제 뒤에도 재생성되지 않도록 영수증을 보존합니다. 인증정보·자료 본문은 포함하지 않습니다.
+- 두 테이블은 v25 → v26 트랜잭션 마이그레이션으로 생성하며 기존 자료·대화·승인 테이블을 재작성하지 않습니다. 이전 버전 앱으로 새 DB를 열 수 없으므로 다운그레이드로 복구하지 않습니다.
+
 ## 반드시 구분할 것
 - 업데이트 정보(`updates/preview.json`)와 공개 키는 앱 배포 모델입니다. SQLite 테이블이나 지식 버전이 아니며 개인 서명 키는 빌드 PC에만 둡니다. 다운로드·설치 확인과 AI 전송 승인은 별개입니다.
 - `ProviderLogin.Status`는 메모리 작업(PENDING → AUTHENTICATED/FAILED/CANCELLED/TIMED_OUT)입니다. 토큰/로그인 이력을 SQLite에 추가하지 않으며 DB v21은 유지합니다.
@@ -107,3 +117,10 @@ flowchart LR
 ## Workspace 관리 화면 (0.1.11)
 
 대화·자료 화면과 Workspace 관리를 분리했습니다. 왼쪽 Workspace 관리 아이콘 → 전체 목록 → 삭제 대상 이름 확인 → 명시적 삭제 순서입니다. 삭제 요청은 화면의 현재 선택이 아니라 확인한 Workspace ID에 묶입니다. 비활성 Workspace를 삭제해도 현재 대화 선택은 바뀌지 않습니다. 기존 Workspace 모델과 API·DB v21은 그대로입니다. `App.tsx`와 `App.test.tsx`에서 활성/비활성 삭제·취소 경로를 대조합니다.
+# DB v27 브라우저 조사
+
+`browser_investigation`은 Workspace·불변 근거·정확한 HTTPS 페이지/GET 경로 범위를 일회 승인에 묶고 요청 ID, 진행 상태, 제한된 캡처 결과를 보관한다. Workspace/근거 삭제는 해당 조사 기록도 삭제한다. 재시작 중 미완료 실행은 실패 처리하며 자동 재실행하지 않는다. 브라우저 인증 정보·사용자 프로필은 저장하지 않는다.
+
+`workspace_archive_import_receipt`는 자료·대화 ZIP 가져오기의 요청 ID와 미리보기 ID를 각각 한 번만 적용하고 결과를 보관한다. 가져온 Workspace를 삭제하거나 앱을 다시 시작해도 같은 요청을 다시 적용하지 않는다. 인증/실행 승인은 이전하지 않는다.
+
+`slack_inbox_route`는 채널별 Workspace 배치, `slack_inbox_item`은 수신 메시지·명시적 대화 저장 결과, `slack_inbox_seen`은 이벤트 중복 방지 시각, `slack_inbox_thread`는 Slack 스레드와 대화의 연결을 보관한다. Workspace 연결 행은 해당 Workspace 삭제와 함께 지워지며 수신 자체로 AI 호출이나 답변 게시를 하지 않는다. 인증 토큰은 이 테이블에 저장하지 않는다.

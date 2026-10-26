@@ -1,0 +1,379 @@
+{
+  "fixtureVersion": "synthetic-investigation-v3",
+  "startedAt": "2026-10-25T14:23:14.188Z",
+  "maximumDispatches": 12,
+  "scenarios": [
+    "strategy-followup"
+  ],
+  "variants": 3,
+  "dispatched": 6,
+  "planDispatches": 3,
+  "answerDispatches": 3,
+  "dispatches": [
+    {
+      "kind": "plan",
+      "requestId": "9e6cc69a-4d3a-4ba8-9774-f535d275a0fd",
+      "at": "2026-10-25T14:23:47.312Z",
+      "scenario": "strategy-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "전략 패턴 예제 설명해줘",
+      "result": {
+        "id": "9e6cc69a-4d3a-4ba8-9774-f535d275a0fd",
+        "workspaceId": "92f69f40-161b-4f1c-8c23-0c7ab838cbb2",
+        "bundleId": "16c6c459-e0e9-4d62-98e2-fcac4b3225cc",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "52584757c989564a551ab48cd3e4e9a4b47c71402133f8d790dac4e48bed366a",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T14:23:47.329626Z",
+        "updatedAt": "2026-10-25T14:23:53.070484Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "4e4f66d2-7ba4-47ab-a9ed-c1e634494b74",
+      "at": "2026-10-25T14:23:53.180Z",
+      "scenario": "strategy-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "전략 패턴 예제 설명해줘",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "6dc64492-2900-4307-8c78-032964905b8d",
+      "at": "2026-10-25T14:24:02.393Z",
+      "scenario": "strategy-followup",
+      "variant": 0,
+      "turn": 1,
+      "question": "어느쪽을 중점적으로 보면돼?",
+      "result": {
+        "id": "6dc64492-2900-4307-8c78-032964905b8d",
+        "workspaceId": "92f69f40-161b-4f1c-8c23-0c7ab838cbb2",
+        "bundleId": "990e1041-423a-48b6-8942-015e0a6a2d01",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "c6ad907189fb79ae3bf23af4d3438bc4be36092bed7cfe1b869368fee4c779cd",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T14:24:02.408226Z",
+        "updatedAt": "2026-10-25T14:24:07.189696Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "b3d95956-3a09-415b-b3df-9ccf6cb737e3",
+      "at": "2026-10-25T14:24:07.346Z",
+      "scenario": "strategy-followup",
+      "variant": 0,
+      "turn": 1,
+      "question": "어느쪽을 중점적으로 보면돼?",
+      "status": "SUCCEEDED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "plan",
+      "requestId": "6cc9f931-1069-43b3-ad08-ccbdb4e0d658",
+      "at": "2026-10-25T14:24:17.893Z",
+      "scenario": "strategy-followup",
+      "variant": 1,
+      "turn": 0,
+      "question": "Strategy 예제의 구성은?",
+      "result": {
+        "id": "6cc9f931-1069-43b3-ad08-ccbdb4e0d658",
+        "workspaceId": "92f69f40-161b-4f1c-8c23-0c7ab838cbb2",
+        "bundleId": "0337a7f1-fb7b-45ad-85f8-47d138ad3c6d",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "235240aa8900fb537bb1e2b37daa114d7504860c786e92725d303aca63929d63",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T14:24:17.903879Z",
+        "updatedAt": "2026-10-25T14:24:23.522430Z"
+      },
+      "diagnostic": {
+        "transport": "CODEX_EXEC",
+        "outcome": "SUCCEEDED",
+        "phase": "COMPLETED",
+        "deadline": "UNOBSERVED"
+      }
+    },
+    {
+      "kind": "answer",
+      "requestId": "a0f08a8c-e8f5-402e-a25c-2063deb0272b",
+      "at": "2026-10-25T14:24:23.744Z",
+      "scenario": "strategy-followup",
+      "variant": 1,
+      "turn": 0,
+      "question": "Strategy 예제의 구성은?",
+      "status": "FAILED",
+      "diagnostic": {
+        "transport": "CODEX_APP_SERVER",
+        "outcome": "FAILED",
+        "phase": "WAIT_RESPONSE",
+        "deadline": "APP_SERVER"
+      }
+    }
+  ],
+  "results": [
+    {
+      "scenario": "strategy-followup",
+      "variant": 0,
+      "turn": 0,
+      "question": "전략 패턴 예제 설명해줘",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "Strategy는 손 선택 동작인 nextMove()를 정의하는 인터페이스입니다. FixedStrategy는 이를 구현하며 항상 \"ROCK\"을 반환합니다. [R1]\n\nPlayer는 생성자로 Strategy를 받아 저장하고, play()에서 strategy.nextMove()를 호출해 손 선택을 위임합니다. 즉, 손을 선택하는 동작을 Strategy 구현체에 맡기는 구조입니다. [R1]\n\n예를 들어 new Player(new FixedStrategy()).play()를 호출하면 \"ROCK\"이 반환됩니다. 코드는 Strategy → FixedStrategy → Player.play() 순서로 보면 이해하기 쉽습니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "9e6cc69a-4d3a-4ba8-9774-f535d275a0fd",
+        "workspaceId": "92f69f40-161b-4f1c-8c23-0c7ab838cbb2",
+        "bundleId": "16c6c459-e0e9-4d62-98e2-fcac4b3225cc",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "52584757c989564a551ab48cd3e4e9a4b47c71402133f8d790dac4e48bed366a",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T14:23:47.329626Z",
+        "updatedAt": "2026-10-25T14:23:53.070484Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Answer latest question with supported citations; preserve implicit topic but honor explicit topic switch; admit absent facts.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        }
+      ],
+      "originalBundleId": "16c6c459-e0e9-4d62-98e2-fcac4b3225cc",
+      "originalStatus": "READY",
+      "answerBundleId": "16c6c459-e0e9-4d62-98e2-fcac4b3225cc",
+      "threadId": "c7bb253e-0d23-435a-8e93-4ecf1cb7a836",
+      "elapsedMs": 14329,
+      "retrievalQuery": "전략 패턴 예제 설명해줘",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        }
+      ]
+    },
+    {
+      "scenario": "strategy-followup",
+      "variant": 0,
+      "turn": 1,
+      "question": "어느쪽을 중점적으로 보면돼?",
+      "status": "SUCCEEDED",
+      "model": "",
+      "answer": "Player의 생성자와 play()를 중점적으로 보세요. 생성자로 Strategy를 받아 저장하고, play()에서 strategy.nextMove()를 호출해 손 선택을 위임하는 부분이 핵심입니다. [R1]\n\nStrategy의 nextMove() 선언과 FixedStrategy가 이를 구현해 \"ROCK\"을 반환하는 코드를 함께 보면, 인터페이스와 실제 동작이 어떻게 연결되는지 이해할 수 있습니다. [R1]",
+      "automaticPass": true,
+      "plan": {
+        "id": "6dc64492-2900-4307-8c78-032964905b8d",
+        "workspaceId": "92f69f40-161b-4f1c-8c23-0c7ab838cbb2",
+        "bundleId": "990e1041-423a-48b6-8942-015e0a6a2d01",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "c6ad907189fb79ae3bf23af4d3438bc4be36092bed7cfe1b869368fee4c779cd",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T14:24:02.408226Z",
+        "updatedAt": "2026-10-25T14:24:07.189696Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Answer latest question with supported citations; preserve implicit topic but honor explicit topic switch; admit absent facts.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        },
+        {
+          "label": "R2",
+          "title": "Singleton.java",
+          "quote": "package synthetic;\nclass Singleton {\n    private static final Singleton INSTANCE = new Singleton();\n    private Singleton() {}\n    static Singleton getInstance() { return INSTANCE; }\n}\n// 싱글턴 인스턴스를 반환한다. Strategy의 구현체가 아니다.\n"
+        },
+        {
+          "label": "R3",
+          "title": "NightState.java",
+          "quote": "package synthetic;\nclass NightState {\n    String alarm() { return \"NIGHT_ALERT\"; }\n}\n// 상태 패턴의 야간 경보 예제다. 전략 패턴의 손 선택과는 별개다.\n// 야간 경보 문자열은 NIGHT_ALERT이며 주간 전환 시간은 정의하지 않았다.\n"
+        },
+        {
+          "label": "R4",
+          "title": "receipt.md",
+          "quote": "# 가상 입하 업무\n이 문서는 테스트를 위한 가상 회사의 업무 정의다.\n입하 완료 조건은 모든 입하 항목의 검수가 끝나고 각 항목의 검수 수량이 예정 수량과 일치하는 것이다.\n입하 완료 시 ReceiptService.complete가 receipt_header의 status를 RECEIVED로 바꾸고 receipt_item에 accepted_qty를 저장한다.\n입하 예정 상태는 EXPECTED, 검수 중은 INSPECTING, 완료는 RECEIVED다.\n이 문서에는 실제 특정 건의 상태, 장애 원인, 운영 로그가 없다."
+        },
+        {
+          "label": "R5",
+          "title": "shipping.md",
+          "quote": "# 가상 출하 업무\n출하와 입하는 서로 다른 업무다. 출하 확정은 shipment_header에 SHIPPED 상태를 기록한다.\n이 문서는 입하 상태나 receipt_header의 완료 조건을 정의하지 않는다."
+        }
+      ],
+      "originalBundleId": "990e1041-423a-48b6-8942-015e0a6a2d01",
+      "originalStatus": "READY",
+      "answerBundleId": "990e1041-423a-48b6-8942-015e0a6a2d01",
+      "threadId": "c7bb253e-0d23-435a-8e93-4ecf1cb7a836",
+      "elapsedMs": 16310,
+      "retrievalQuery": "전략 패턴 예제 설명해줘 어느쪽을 중점적으로 보면돼?",
+      "historyTurns": 1,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        },
+        {
+          "label": "R2",
+          "title": "Singleton.java",
+          "quote": "package synthetic;\nclass Singleton {\n    private static final Singleton INSTANCE = new Singleton();\n    private Singleton() {}\n    static Singleton getInstance() { return INSTANCE; }\n}\n// 싱글턴 인스턴스를 반환한다. Strategy의 구현체가 아니다.\n"
+        },
+        {
+          "label": "R3",
+          "title": "NightState.java",
+          "quote": "package synthetic;\nclass NightState {\n    String alarm() { return \"NIGHT_ALERT\"; }\n}\n// 상태 패턴의 야간 경보 예제다. 전략 패턴의 손 선택과는 별개다.\n// 야간 경보 문자열은 NIGHT_ALERT이며 주간 전환 시간은 정의하지 않았다.\n"
+        },
+        {
+          "label": "R4",
+          "title": "receipt.md",
+          "quote": "# 가상 입하 업무\n이 문서는 테스트를 위한 가상 회사의 업무 정의다.\n입하 완료 조건은 모든 입하 항목의 검수가 끝나고 각 항목의 검수 수량이 예정 수량과 일치하는 것이다.\n입하 완료 시 ReceiptService.complete가 receipt_header의 status를 RECEIVED로 바꾸고 receipt_item에 accepted_qty를 저장한다.\n입하 예정 상태는 EXPECTED, 검수 중은 INSPECTING, 완료는 RECEIVED다.\n이 문서에는 실제 특정 건의 상태, 장애 원인, 운영 로그가 없다."
+        },
+        {
+          "label": "R5",
+          "title": "shipping.md",
+          "quote": "# 가상 출하 업무\n출하와 입하는 서로 다른 업무다. 출하 확정은 shipment_header에 SHIPPED 상태를 기록한다.\n이 문서는 입하 상태나 receipt_header의 완료 조건을 정의하지 않는다."
+        }
+      ]
+    },
+    {
+      "scenario": "strategy-followup",
+      "variant": 1,
+      "turn": 0,
+      "question": "Strategy 예제의 구성은?",
+      "status": "FAILED",
+      "model": "",
+      "answer": "Codex 답변 생성 단계에서 제한 시간을 초과했습니다.",
+      "automaticPass": false,
+      "plan": {
+        "id": "6cc9f931-1069-43b3-ad08-ccbdb4e0d658",
+        "workspaceId": "92f69f40-161b-4f1c-8c23-0c7ab838cbb2",
+        "bundleId": "0337a7f1-fb7b-45ad-85f8-47d138ad3c6d",
+        "provider": "CODEX",
+        "requestedModel": "",
+        "digest": "235240aa8900fb537bb1e2b37daa114d7504860c786e92725d303aca63929d63",
+        "status": "SUCCEEDED",
+        "decision": "STOP",
+        "query": null,
+        "output": null,
+        "truncated": false,
+        "toolStatus": null,
+        "error": null,
+        "approvedAt": "2026-10-25T14:24:17.903879Z",
+        "updatedAt": "2026-10-25T14:24:23.522430Z"
+      },
+      "expectedDecision": "STOP",
+      "decisionMatchesExpectation": true,
+      "manualCriteria": "Answer latest question with supported citations; preserve implicit topic but honor explicit topic switch; admit absent facts.",
+      "manualVerdict": "NOT_REVIEWED",
+      "originalEvidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        },
+        {
+          "label": "R2",
+          "title": "NightState.java",
+          "quote": "package synthetic;\nclass NightState {\n    String alarm() { return \"NIGHT_ALERT\"; }\n}\n// 상태 패턴의 야간 경보 예제다. 전략 패턴의 손 선택과는 별개다.\n// 야간 경보 문자열은 NIGHT_ALERT이며 주간 전환 시간은 정의하지 않았다.\n"
+        }
+      ],
+      "originalBundleId": "0337a7f1-fb7b-45ad-85f8-47d138ad3c6d",
+      "originalStatus": "READY",
+      "answerBundleId": "0337a7f1-fb7b-45ad-85f8-47d138ad3c6d",
+      "threadId": "9b24d079-53f1-492b-97aa-b883539159a2",
+      "elapsedMs": 126768,
+      "retrievalQuery": "Strategy 예제의 구성은?",
+      "historyTurns": 0,
+      "evidence": [
+        {
+          "label": "R1",
+          "title": "Strategy.java",
+          "quote": "package synthetic;\npublic interface Strategy { String nextMove(); }\nclass FixedStrategy implements Strategy {\n    public String nextMove() { return \"ROCK\"; }\n}\nclass Player {\n    private final Strategy strategy;\n    Player(Strategy strategy) { this.strategy = strategy; }\n    String play() { return strategy.nextMove(); }\n}\n// 전략 패턴 예제: Player는 생성자로 받은 Strategy에 손 선택을 위임한다.\n// FixedStrategy는 항상 ROCK을 반환한다. 확인 순서는 Strategy, FixedStrategy, Player.play다.\n"
+        },
+        {
+          "label": "R2",
+          "title": "NightState.java",
+          "quote": "package synthetic;\nclass NightState {\n    String alarm() { return \"NIGHT_ALERT\"; }\n}\n// 상태 패턴의 야간 경보 예제다. 전략 패턴의 손 선택과는 별개다.\n// 야간 경보 문자열은 NIGHT_ALERT이며 주간 전환 시간은 정의하지 않았다.\n"
+        }
+      ]
+    }
+  ],
+  "observedModelId": null,
+  "scope": "Real model; isolated synthetic documents; no operational tools or user database. Dispatch counts include uncertain acceptance, not proven provider invocations. Automatic checks require manual review.",
+  "harnessSha256": "a91b5153b644f6cc6b19dcf03a35c8a1d74f297bb19c0055149d080ab5c09b6e",
+  "fixtureSha256": "8f92d01a08428893c1f4a47e27184a9e2dd7b9274581af251878738357b238d6",
+  "jarSha256": "1ddab26fc24c41a1a25ab8cc351d98659cccefdace8a0b697f54048a20f8afe0",
+  "connection": {
+    "provider": "CODEX",
+    "state": "AUTHENTICATED",
+    "checkedAt": "2026-10-25T14:23:42.691481Z",
+    "remoteConnection": "NOT_CHECKED"
+  },
+  "error": "Real AI execution failed; stopped without automatic retry",
+  "finishedAt": "2026-10-25T14:26:25.796Z"
+}
