@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.23",
+  "verifiedAt": "2026-10-26T12:38:19.698Z",
+  "status": "PASS_SCOPED_SUPERSEDED_SNAPSHOT",
+  "disposition": "DO_NOT_INSTALL_OR_PUBLISH",
+  "reason": "User subsequently required removal of the manual operational-query UI. This .23 snapshot predates that removal; .24 requires a new JAR and separate package authorization.",
+  "backend": {
+    "path": "backend/target/knowledge-forge-0.1.0.jar",
+    "sha256": "fc3fab555cc948b7452b68f4f2b7fd55f108c0ae912abdba058bd79de7318119",
+    "unchangedThroughoutPackaging": true
+  },
+  "prerequisiteTests": {
+    "source": "Parent-reported; not rerun by packaging agent",
+    "java": {
+      "run": 1015,
+      "passed": 1008,
+      "skipped": 7,
+      "failures": 0,
+      "excludedFixtureClasses": 2
+    },
+    "ui": {
+      "passed": 673,
+      "build": "PASS"
+    },
+    "logs": [
+      "/tmp/dougle-023-backend-full.log",
+      "/tmp/dougle-023-jar-build.log"
+    ]
+  },
+  "builds": {
+    "order": [
+      "x86_64",
+      "arm64"
+    ],
+    "exitCodes": [
+      0,
+      0
+    ],
+    "mode": "--skip-verify",
+    "javaVersion": "21.0.10",
+    "hostJdk": "$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home",
+    "armJdk": ".tools/apple-silicon/amazon-corretto-21.jdk/Contents/Home",
+    "cargoBuildJobs": 2,
+    "commands": [
+      "FORGE_MACOS_TARGET= FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify",
+      "FORGE_MACOS_TARGET=aarch64-apple-darwin FORGE_PACKAGE_JAVA_HOME=\"$HOME/Library/Java/JavaVirtualMachines/corretto-21.0.10/Contents/Home\" FORGE_TARGET_JAVA_HOME=\"$PWD/.tools/apple-silicon/amazon-corretto-21.jdk/Contents/Home\" CARGO_BUILD_JOBS=2 bash scripts/package-macos.sh --skip-verify"
+    ],
+    "logs": [
+      "/tmp/dougle-023-intel-package.log",
+      "/tmp/dougle-023-arm-package.log"
+    ],
+    "noMavenOrBackendJarWrites": true
+  },
+  "staticVerification": {
+    "result": "PASS_BOTH_CPUS",
+    "commands": [
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.23_x86_64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.23_x86_64.app.tar.gz 0.1.23 x86_64",
+      "bash scripts/verify-macos-package.sh --static-only release/Knowledge.Forge_0.1.23_arm64.dmg",
+      "bash scripts/verify-macos-update.sh release/Knowledge.Forge_0.1.23_arm64.app.tar.gz 0.1.23 arm64"
+    ],
+    "checks": [
+      "DMG integrity and copied app strict/deep signature",
+      "Bundled search model verification: x86_64 271132230 bytes, arm64 271132231 bytes",
+      "Cryptographic updater archive signature and signed version",
+      "Extracted updater app CPU, version and byte-identical pinned JAR",
+      "Read-only mounted DMGs exact version 0.1.23, identifier dev.knowledgeforge.desktop, expected CPU and byte-identical pinned JAR",
+      "Final Intel app signature/JAR intact after ARM packaging"
+    ],
+    "evidence": "Intel verification exit0 retained in agent tool transcript; ARM verification exit0 also logged at /tmp/dougle-023-arm-verification.log. Direct DMG pin checks exit0 retained in tool transcript.",
+    "limits": [
+      "Application signing is ad-hoc; not Apple notarization or Gatekeeper acceptance.",
+      "ARM static only; no ARM hardware runtime claim."
+    ]
+  },
+  "artifactsSha256": {
+    "release/Knowledge.Forge_0.1.23_arm64.app.tar.gz": "d71fefebe9fd5e6fd2b769164b34357b95ff1a0eb98d638266b543e31858863d",
+    "release/Knowledge.Forge_0.1.23_arm64.app.tar.gz.sig": "b8aaa87e3477bf265003c6089932749f9fc03b6768cb699c996ef40134a08f5e",
+    "release/Knowledge.Forge_0.1.23_arm64.dmg": "e65e97a13f664c705405f670dce35728600ea86f6ed5c3d49ce77ec1413200d4",
+    "release/Knowledge.Forge_0.1.23_x86_64.app.tar.gz": "b930dc298ba454986ff3d806e470e685c6a201c58ce67702307c0a41dc7434aa",
+    "release/Knowledge.Forge_0.1.23_x86_64.app.tar.gz.sig": "fc5012fa1c823ad303fc31343ab56600de445583d1c087a5b724715decadff6b",
+    "release/Knowledge.Forge_0.1.23_x86_64.dmg": "7aff531cb5062717ee361ac1ac9e124c01fbf85a6629269193878784d1adf659"
+  },
+  "preservation": {
+    "result": "PASS",
+    "oldReleaseAssetCount": 18,
+    "oldVersions": [
+      "0.1.20",
+      "0.1.21",
+      "0.1.22"
+    ],
+    "sha256": {
+      "backend/target/knowledge-forge-0.1.0.jar": "fc3fab555cc948b7452b68f4f2b7fd55f108c0ae912abdba058bd79de7318119",
+      "release/Knowledge.Forge_0.1.20_arm64.app.tar.gz": "0349047fed077b71ef6df4b99f44137b443123be741cd98124b766f85d286ec3",
+      "release/Knowledge.Forge_0.1.20_arm64.app.tar.gz.sig": "bb981e78d01a00bd1cdd80739ff5b96728b274c679dfdd008ef6b9796660d522",
+      "release/Knowledge.Forge_0.1.20_arm64.dmg": "5cdd8ebee1b28f741facecc4be66ee28335b2a64741a4de512dcab38ce895423",
+      "release/Knowledge.Forge_0.1.20_x86_64.app.tar.gz": "a497e2ca1b99232e358839d78a3ed73a932467fa91d57552e48d4966ba086da2",
+      "release/Knowledge.Forge_0.1.20_x86_64.app.tar.gz.sig": "6adaaa4e40fc23be93fe813ca5ee13232239af029e101ccb63191296e0ce4d39",
+      "release/Knowledge.Forge_0.1.20_x86_64.dmg": "afb7e031ee789d6c91d211d2f578d63ceb76fd53530de1f01006f374f8779165",
+      "release/Knowledge.Forge_0.1.21_arm64.app.tar.gz": "0cfa6950d5a8938a27b697f0c506c918101008f4c42fe84ad42e59d48a2e80a3",
+      "release/Knowledge.Forge_0.1.21_arm64.app.tar.gz.sig": "a6df5694229051688f5fdbe05b5ace76cd1544b673fc2e1d70138174689a432e",
+      "release/Knowledge.Forge_0.1.21_arm64.dmg": "06839bf433475503eb9428818146deb82d141cfe313159b546e81fc09876ef0f",
+      "release/Knowledge.Forge_0.1.21_x86_64.app.tar.gz": "2872aaf811d94e674456f1038a407ee2b5a8314ddf755154a028ef24789375b7",
+      "release/Knowledge.Forge_0.1.21_x86_64.app.tar.gz.sig": "151f6ecbd48a103525e503a94c2e674f86327ed511839a9dc5cf154ea440f7ee",
+      "release/Knowledge.Forge_0.1.21_x86_64.dmg": "a1950c1e1f664cc98058dd7c12828116faf8b8e25770d4cce7b376916d45554a",
+      "release/Knowledge.Forge_0.1.22_arm64.app.tar.gz": "bae46b4a602c8c4bb0c71429d7a7032869ea42f021288ad9a6623247175f1f2a",
+      "release/Knowledge.Forge_0.1.22_arm64.app.tar.gz.sig": "9324ccc4b5ef9a0df9960906dd3a0e53da38989b1da31b0e3ff8939b31318218",
+      "release/Knowledge.Forge_0.1.22_arm64.dmg": "75193e672166d490988348c45720c6c6bcf9ab2822e4b6fd5a0bb9ac85238838",
+      "release/Knowledge.Forge_0.1.22_x86_64.app.tar.gz": "cb1f0a5a576c393db41b08f7af52f15a29d72e716ac082b40b3560e3b5a15179",
+      "release/Knowledge.Forge_0.1.22_x86_64.app.tar.gz.sig": "4b018ca498c18d0355769768682492fa43667d87ca5c448f650da0609e540bfd",
+      "release/Knowledge.Forge_0.1.22_x86_64.dmg": "f226368aca2e04ab7c53d2aeea0d4d89c05426e359031054fe2f448469ca942c"
+    },
+    "installedApp": {
+      "path": "/Applications/Knowledge Forge.app",
+      "version": "0.1.22",
+      "regularFilesHashedBeforeAndAfter": 375,
+      "allMatched": true,
+      "manifest": "/tmp/dougle-023-installed-preserved.sha256",
+      "scope": "Installed application regular-file hashes only; not user database contents or credentials. No installed-app modification or termination by packaging agent."
+    },
+    "totalSuccessfulHashChecks": 394,
+    "log": "/tmp/dougle-023-preservation-verification.log",
+    "aggregateChecksums": "Package scripts intentionally updated release/SHA256SUMS and architecture aggregate files; old versioned artifacts preserved."
+  },
+  "intelRuntimeEvidence": {
+    "source": "Parent executed against finalized immutable Intel bundle; packaging agent reviewed resulting logs.",
+    "nativeHost": {
+      "result": "PASS",
+      "startupMs": 40673,
+      "measuredAt": "2026-10-26T12:27:30.469Z",
+      "log": "/tmp/dougle-023-native-host.log",
+      "checks": [
+        "Isolated HOME/minimal PATH",
+        "Bundled Java startup and API session protection",
+        "Private stable app data",
+        "Duplicate backend rejection",
+        "Java cleanup after native termination",
+        "Restart on same synthetic DB"
+      ]
+    },
+    "webkitReact": {
+      "result": "PASS",
+      "log": "/tmp/dougle-023-native-react-runtime.log",
+      "harness": "desktop/src-tauri/target/debug/examples/runtime_smoke",
+      "harnessSha256": "e34fd11a50ad53da6cb80a5e54c18461405dc99ae81475cbc65e8fbface9845e",
+      "scope": "Existing unchanged harness: Workspace/AI buttons, Korean names/errors, same-origin local mutations, upload/download/search, local publication/relations, polling OFF, source metadata and CLI settings; no inference."
+    },
+    "limits": "No real AI/user database or external business writes exercised by these smokes. No claim of absence of ambient tools. Not complete E46/E47 or expert acceptance."
+  },
+  "handoff": {
+    "buildCargoSharedResourceLease": "RELEASED",
+    "backendTargetPreservationRequirement": "RELEASED after completed hash and byte-comparison checks",
+    "installedVersion": "0.1.22 remains installed; no .23 installation",
+    "next": "Only metadata bump to .24 authorized; await parent's new immutable JAR hash and package authorization.",
+    "publicRelease": "HOLD; no upload or feed promotion",
+    "acceptance": "No acceptance promotion; prior actual AI timeout root cause remains unconfirmed."
+  }
+}

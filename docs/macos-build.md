@@ -1,5 +1,7 @@
 # Mac 설치형 빌드
 
+증분 빌드에서도 이전 Vite 자산을 남기지 않도록 Maven initialize가 `target/classes/static`만 지운 뒤 현재 `frontend/dist`를 복사한다. Java class 출력은 이 단계에서 삭제하지 않는다. `package-macos.sh`는 staging 전에 `verify-frontend-bundle.mjs`로 JAR의 static 파일 목록과 바이트가 dist와 정확히 일치하는지 확인한다. 누락/중복/오래된 자산이 있으면 skip-verify 모드에서도 패키징을 중단한다. 직접 `resources:resources` goal만 호출하면 lifecycle initialize를 건너뛰므로 표준 lifecycle 빌드를 사용한다.
+
 현재는 개발 중인 **로컬 미리보기 배포**입니다. Apple Developer ID 서명·공증 완료 제품이 아닙니다.
 공증은 사용자 요청으로 이번 범위에서 제외합니다. Apple Silicon 네이티브/교차 빌드는 [ARM 가이드](apple-silicon.md)를 따릅니다.
 대상 CPU의 앱과 Java를 함께 묶으며 DMG 이름도 실제 바이너리 아키텍처로 결정합니다.

@@ -1,0 +1,53 @@
+{
+  "caseIds": ["E50"],
+  "mode": "simulated",
+  "fixtureOnly": true,
+  "fixtureVersion": "e50-independent-v1",
+  "jarSha256": "b5b59534ed02f1ad342a64d55f6e40cff03947997af2c07340b5b9bd85473d47",
+  "javaSha256": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+  "modelHashes": {
+    "model.onnx": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88",
+    "tokenizer.json": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39",
+    "reranker.onnx": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b",
+    "reranker-tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+  },
+  "checks": [],
+  "acceptanceUpdated": false,
+  "aiCalls": 0,
+  "limitation": "Synthetic independent data roots on one Intel host, not different OS accounts or historical application packages. No full attachment transfer, semantic ranking evaluation, or E50 acceptance promotion.",
+  "status": "FAIL",
+  "failedPhase": "initialization",
+  "errorType": "AssertionError",
+  "diagnostics": {
+    "checkpoint": "start-ready-wait",
+    "steps": [
+      "preflight-platform", "preflight-jar-path", "preflight-java-path", "preflight-model-path",
+      "preflight-jar-hash", "preflight-java-hash", "preflight-model-hashes", "preflight-private-root",
+      "copy-artifact", "protect-artifact-copy", "verify-artifact-copy",
+      "instance-directories-a", "instance-directories-b", "verify-independent-roots",
+      "start-state-a", "start-artifact-hashes", "start-java-hash", "start-sandbox-profile",
+      "start-sandbox-spawn", "start-session-input", "start-ready-wait"
+    ],
+    "child": {
+      "instance": "A", "spawned": true, "ready": false, "exitCode": null,
+      "signal": "SIGABRT", "spawnError": null, "stdinError": null, "categories": []
+    },
+    "http": null
+  },
+  "error": {
+    "type": "AssertionError", "operator": "==", "code": "ERR_ASSERTION",
+    "frames": [
+      {"file": "e50-independent-archive.mjs", "line": 121},
+      {"file": "e50-archive-fixtures.mjs", "line": 77},
+      {"file": "e50-independent-archive.mjs", "line": 120},
+      {"file": "e50-independent-archive.mjs", "line": 219},
+      {"file": "e50-independent-archive.mjs", "line": 20}
+    ]
+  },
+  "assetsUnchanged": true,
+  "temporaryRemoved": true,
+  "executedAt": "2026-10-26T12:58:17.603Z",
+  "scriptSha256": "4a6fd510d0f320323fd77a4408f86c98c1eb312eae7affba751413a3e5ea5e00",
+  "fixturesSha256": "910120304ecc71d04934f6f40f07d7ebd39758eeb8612e64ef10d09409917f26",
+  "diagnosticsSha256": "f919c1a6761f34bda22a91af91e46498501ee34cab5b9422034dd95741224099"
+}

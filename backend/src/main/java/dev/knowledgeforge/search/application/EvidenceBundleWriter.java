@@ -37,12 +37,23 @@ public class EvidenceBundleWriter {
     }
 
     @Transactional
+    public EvidenceBundle captureConversation(String workspaceId, String question, List<SearchIndex.Hit> hits,
+                                               List<String> attachmentIds, ChatContext context) {
+        return capture(workspaceId, question, List.of(), false, hits, attachmentIds, context, true);
+    }
+
+    @Transactional
     public EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge, List<SearchIndex.Hit> hits, List<String> attachmentIds) {
         return capture(workspaceId, question, domains, includeKnowledge, hits, attachmentIds, null);
     }
 
     @Transactional
     public EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge, List<SearchIndex.Hit> hits, List<String> attachmentIds, ChatContext chatContext) {
+        return capture(workspaceId, question, domains, includeKnowledge, hits, attachmentIds, chatContext, false);
+    }
+
+    private EvidenceBundle capture(String workspaceId, String question, List<String> domains, boolean includeKnowledge,
+                                    List<SearchIndex.Hit> hits, List<String> attachmentIds, ChatContext chatContext, boolean strictSelection) {
         if (library.workspace(workspaceId).isEmpty()) throw new LibraryException(404, "Workspace를 찾을 수 없습니다.");
         if (bundles.list(workspaceId).size() >= 100) throw new LibraryException(409, "근거 묶음은 Workspace당 최대 100개입니다. 불필요한 묶음을 삭제하세요.");
         List<Item> items = new ArrayList<>();
@@ -65,6 +76,10 @@ public class EvidenceBundleWriter {
             Item item = null;
             String label = "R" + (items.size() + 1);
             var current = catalog.document("KNOWLEDGE".equals(hit.kind()) ? "knowledge:" + hit.cardId() : hit.entryId()).orElse(null);
+            boolean selectable = hit.bodyMatch() && items.size() < 5 && used < maxCharacters;
+            if (strictSelection && (!"ORIGINAL".equals(hit.kind()) || current != null && !current.workspaceId().equals(workspaceId))) {
+                throw new LibraryException(409, "검색한 자료의 범위를 확인하지 못했습니다. 다시 질문해 주세요.");
+            }
             if (current == null || !current.workspaceId().equals(workspaceId)) reason = "REMOVED";
             else if (!domains.isEmpty() && current.domains().stream().noneMatch(domains::contains)) reason = "SCOPE_CHANGED";
             else if (!hit.bodyMatch()) reason = "NO_BODY_MATCH";
@@ -99,6 +114,9 @@ public class EvidenceBundleWriter {
                             null, hit.textHash(), hit.startLine(), hit.endLine(), hit.snippet(), List.copyOf(supports));
                 }
             } else reason = "UNSUPPORTED";
+            if (strictSelection && selectable && ("REMOVED".equals(reason) || "INDEX_CHANGED".equals(reason))) {
+                throw new LibraryException(409, "선택할 검색 자료가 변경되거나 삭제되었습니다. 다시 질문해 주세요.");
+            }
             if (item != null) {
                 int characters = item.quote().length() + item.supports().stream().mapToInt(value -> value.quote().length()).sum();
                 var candidate = new ArrayList<>(items);

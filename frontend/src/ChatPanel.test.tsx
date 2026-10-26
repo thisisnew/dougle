@@ -17,7 +17,6 @@ const prepared = { bundleId: 'bundle', bundleDigest: 'digest', provider: 'CODEX'
 const approved = { id: 'approval', bundleId: 'bundle', digest: 'preview', provider: 'CODEX', requestedModel: 'fixture-model' }
 const completed = { id: 'job', bundleId: 'bundle', approvalId: 'approval', status: 'SUCCEEDED', provider: 'CODEX', requestedModel: 'fixture-model', answer: '가상 답변 [R1]', error: null }
 const thread = { id: 'thread', workspaceId: 'one', bundles: [bundle], jobs: [{ ...completed, workspaceId: 'one' }] }
-const capturedAttachment = { id: 'captured-file', name: 'mysql-result.txt', mediaType: 'text/plain', size: 120, characters: 120, truncated: false }
 beforeEach(() => {
   api.mockReset(); vi.clearAllMocks(); vi.restoreAllMocks()
   for (const key of Object.keys(sessionStorage)) if (key.startsWith('dougle.chat-submission.')) sessionStorage.removeItem(key)
@@ -87,80 +86,17 @@ it('각 턴의 생략 표시는 해당 묶음에만 붙고 다른 대화로 전�
   expect(api.mock.calls.every(([, options]) => !options?.method || options.method === 'GET')).toBe(true)
 })
 
-it('계획의 수동 조회 제안을 명시적으로 열고 직접 입력·승인·첨부한 뒤 같은 대화로 보낸다', async () => {
-  const attachment = { ...capturedAttachment, size: 9, characters: 9 }
-  api.mockImplementation(async (path, options) => {
+it.each(['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'])('계획 %s 결과는 양식이나 자동 조회를 열지 않는다', async decision => {
+  api.mockImplementation(async path => {
     if (path.endsWith('/chat-threads/thread')) return thread
-    if (path.includes('/investigation-plans/jobs?')) return [{ id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ' }]
-    if (path.endsWith('/tool-proposal')) return { jobId: 'plan', workspaceId: 'one', bundleId: 'bundle', kind: 'MYSQL_READ', requiredFields: ['table', 'columns', 'equalities', 'limit'], executionAllowed: false }
-    if (path === '/plugins') return { mysqlConnected: true }
-    if (path === '/plugins/datadog/one') return { configured: false, site: null, revision: null }
-    if (path.endsWith('/mysql-investigations/preview')) return { id: 'read', workspaceId: 'one', connection: 'synthetic', database: 'fixture', expiresAt: '2099-01-01', maxBytes: 1000, timeoutSeconds: 10 }
-    if (path.endsWith('/mysql-investigations/read/execute')) return { id: 'read', status: 'SUCCEEDED', output: 'synthetic', rows: 1, truncated: false }
-    if (path.endsWith('/operational-captures/preview')) return { id: 'capture', digest: 'a'.repeat(64), text: 'synthetic', bytes: 9, truncated: false, expiresAt: '2099-01-01', sessionOnly: true }
-    if (path.endsWith('/operational-captures/capture/capture')) return { id: 'capture', status: 'CAPTURED', attachment, contentHash: 'b'.repeat(64), externalCalls: 0 }
-    if (path.endsWith('/chat-threads') && options?.method === 'POST') return { ...bundle, id: 'next', payload: { ...bundle.payload, status: 'NO_EVIDENCE', items: [] } }
-    if (options?.method === 'DELETE') return undefined
+    if (path.includes('/investigation-plans/jobs?')) return [{ id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision }]
     throw new Error('Unexpected request: ' + path)
   })
   render(<ChatPanel {...props} selectedId="thread" />)
   fireEvent.click(await screen.findByRole('button', { name: '자료 더 찾아보기' }))
-  const open = await screen.findByRole('button', { name: '조회 양식 열기' })
-  expect(api.mock.calls.some(([path]) => path === '/plugins')).toBe(false)
-  fireEvent.click(open)
-  fireEvent.click(await screen.findByRole('button', { name: 'DB 데이터 조회' }))
-  for (const label of ['테이블', '조회할 열 (쉼표로 구분)', '조건 열', '일치하는 값']) expect(screen.getByLabelText(label)).toHaveValue('')
-  expect(api.mock.calls.some(([path]) => path.includes('mysql-investigations'))).toBe(false)
-  for (const [label, value] of [['테이블', 'receipts'], ['조회할 열 (쉼표로 구분)', 'id'], ['조건 열', 'id'], ['일치하는 값', 'synthetic']]) {
-    fireEvent.change(screen.getByLabelText(label), { target: { value } })
-  }
-  fireEvent.click(screen.getByRole('button', { name: '조회 범위 확인' }))
-  fireEvent.click(await screen.findByRole('button', { name: '이 DB에서 조회' }))
-  fireEvent.click(await screen.findByRole('button', { name: '첨부 내용 미리보기' }))
-  fireEvent.click(await screen.findByRole('checkbox', { name: '표시된 내용에 비밀정보가 없는지 확인했으며 새 질문 첨부로 저장합니다.' }))
-  fireEvent.click(screen.getByRole('button', { name: '저장하고 새 질문에 첨부' }))
-  await screen.findByRole('button', { name: 'mysql-result.txt 첨부 제거' })
-  expect(api.mock.calls.some(([path]) => /answer|approval/.test(path))).toBe(false)
-  fireEvent.change(screen.getByRole('textbox', { name: '질문' }), { target: { value: '이 실제 조회 결과를 확인해 줘' } })
-  fireEvent.click(screen.getByRole('button', { name: '질문 보내기' }))
-  await waitFor(() => expect(api.mock.calls.some(([path, options]) => path.endsWith('/chat-threads') && options?.method === 'POST')).toBe(true))
-  const sent = api.mock.calls.find(([path, options]) => path.endsWith('/chat-threads') && options?.method === 'POST')!
-  expect(JSON.parse(sent[1]!.body as string)).toMatchObject({ threadId: 'thread', parentBundleId: 'bundle', attachmentIds: ['captured-file'] })
-})
-
-it('다른 질문으로 이동하면 이전 제안 응답으로 운영 도구를 열지 않는다', async () => {
-  let finish!: (value: unknown) => void
-  api.mockImplementation(async path => {
-    if (path.endsWith('/chat-threads/thread')) return thread
-    if (path.includes('/investigation-plans/jobs?')) return [{ id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ' }]
-    if (path.endsWith('/tool-proposal')) return new Promise(resolve => { finish = resolve })
-    throw new Error('Unexpected request: ' + path)
-  })
-  const view = render(<ChatPanel {...props} selectedId="thread" />)
-  fireEvent.click(await screen.findByRole('button', { name: '자료 더 찾아보기' }))
-  fireEvent.click(await screen.findByRole('button', { name: '조회 양식 열기' }))
-  view.rerender(<ChatPanel {...props} selectedId={null} />)
-  await act(async () => finish({ jobId: 'plan', workspaceId: 'one', bundleId: 'bundle', kind: 'MYSQL_READ', requiredFields: ['table', 'columns', 'equalities', 'limit'], executionAllowed: false }))
-  expect(api.mock.calls.some(([path]) => path === '/plugins')).toBe(false)
-  expect(screen.getByRole('button', { name: '운영 자료 조회' })).toHaveAttribute('aria-expanded', 'false')
-})
-
-it('조회 결과 첨부는 작성창에만 놓고 질문 전송 전에는 AI를 호출하지 않는다', async () => {
-  api.mockResolvedValue(undefined)
-  const staged = vi.fn()
-  render(<ChatPanel {...props} stagedAttachment={{ workspaceId: 'one', attachment: capturedAttachment }} onAttachmentStaged={staged} />)
-  expect(await screen.findByText('mysql-result.txt')).toBeVisible()
-  expect(staged).toHaveBeenCalledTimes(1)
-  expect(api).not.toHaveBeenCalled()
-  expect(screen.getByRole('button', { name: '질문 보내기' })).toBeDisabled()
-})
-
-it('다른 Workspace 조회 결과를 질문에 첨부하지 않는다', () => {
-  const staged = vi.fn()
-  render(<ChatPanel {...props} stagedAttachment={{ workspaceId: 'other', attachment: capturedAttachment }} onAttachmentStaged={staged} />)
-  expect(screen.queryByText('mysql-result.txt')).not.toBeInTheDocument()
-  expect(staged).not.toHaveBeenCalled()
-  expect(api).not.toHaveBeenCalled()
+  expect(await screen.findByText('운영 조회 제안 · 실행하지 않음')).toBeVisible()
+  for (const name of ['운영 자료 조회', '조회 양식 열기', 'DB 데이터 조회', '이 자료로 다시 답변']) expect(screen.queryByRole('button', { name })).not.toBeInTheDocument()
+  expect(api.mock.calls.map(([path]) => path)).toEqual(['/workspaces/one/chat-threads/thread', '/workspaces/one/investigation-plans/jobs?bundleId=bundle'])
 })
 
 it('추가 검색 근거는 새 대화 턴으로 고정하고 별도 답변 승인으로 전송한다', async () => {

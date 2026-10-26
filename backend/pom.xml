@@ -34,6 +34,16 @@
       <resource><directory>../frontend/dist</directory><targetPath>static</targetPath></resource>
     </resources>
     <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId><artifactId>maven-clean-plugin</artifactId>
+      <executions><execution>
+        <id>clean-frontend-assets</id><phase>initialize</phase><goals><goal>clean</goal></goals>
+        <configuration>
+          <excludeDefaultDirectories>true</excludeDefaultDirectories>
+          <filesets><fileset><directory>${project.build.outputDirectory}/static</directory><followSymlinks>false</followSymlinks></fileset></filesets>
+        </configuration>
+      </execution></executions>
+    </plugin>
     <plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId></plugin>
   </plugins></build>
 </project>

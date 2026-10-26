@@ -1,0 +1,37 @@
+{
+  "actualRunTimestamp": "2026-10-26T12:28:08.394Z",
+  "fixtureVersion": "readonly-slack-receipts-v1",
+  "authorizedHarnessInvocations": 1,
+  "exitCode": 0,
+  "rawReport": "docs/evaluations/readonly-runtime-fc3fab55-20261026.json",
+  "rawStdout": "/tmp/dougle-readonly-fc3fab55-20261026.raw.json",
+  "stderrLog": "/tmp/dougle-readonly-fc3fab55-20261026.log",
+  "stderrBytes": 0,
+  "jarPath": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/knowledge-forge.jar",
+  "jarSha256BeforeAndAfter": "fc3fab555cc948b7452b68f4f2b7fd55f108c0ae912abdba058bd79de7318119",
+  "harnessSha256BeforeAndAfter": "6e8c0dbbadc0ad2757f6451f2a0ed93d71cb54938e34385539c18b31b9547747",
+  "javaExecutable": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/runtime/bin/java",
+  "javaExecutableFileType": "Mach-O 64-bit executable x86_64",
+  "networkRestrictions": {
+    "sandbox": "(version 1) (allow default) (deny network*) (allow network-bind (local ip \"localhost:*\")) (allow network-inbound (local ip \"localhost:*\")) (allow network-outbound (remote ip \"localhost:*\"))",
+    "javaOption": "-Djava.net.preferIPv4Stack=true",
+    "proxy": "Rejecting loopback JVM HTTP(S) proxy; observed request count 0, not a global transport-attempt count",
+    "unsandboxedFallback": false
+  },
+  "checks": {
+    "deniedRequestsWith403ReadOnlyDetail": 300,
+    "repeatedRequestIds": true,
+    "restarts": 2,
+    "legacyReceiptStates": ["PREVIEW", "SENT", "UNCERTAIN"],
+    "legacyRowsUnchangedIncludingDispatchCounts": true,
+    "legacyListAndDetailAvailable": true,
+    "answerGenerationInvestigationJobRows": 0
+  },
+  "cleanup": {
+    "ownedBackendTerminatedAndAwaitedBeforeSqliteAccessAndCleanup": true,
+    "remainingReadonlyRuntimeTemporaryDirectories": 0,
+    "remainingHarnessOrOwnedBackendProcessesObserved": 0,
+    "unrelatedProcessesUserDataCredentialsAndSharedModelsUntouched": true
+  },
+  "limits": "One approved invocation of the unchanged harness using the .23 Intel bundle JAR and its bundled Java. Synthetic HTTP/API and isolated SQLite/restart verification only; not native GUI, receipt UI, internal Java dispatch invocation, local draft/copy, whole-product E35 acceptance, real Slack, credentials, external AI or user DB verification. No builds, product/JAR writes, package writes, installation, publication, retries or acceptance-inventory promotion. Older evidence preserved."
+}

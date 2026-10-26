@@ -89,11 +89,15 @@ public class AnswerJobService {
     }
     public List<AnswerJob> list(String workspaceId) { requireWorkspace(workspaceId); return store.list(workspaceId); }
 
-    public synchronized Partial partial(String workspaceId, String id) {
+    public Partial partial(String workspaceId, String id) {
+        AnswerJob observed;
+        synchronized (this) { observed = active; }
         var job = get(workspaceId, id);
-        String text = active != null && active.id().equals(id) && active.workspaceId().equals(workspaceId)
-                && job.status().equals("RUNNING") && !cancelled ? partialText : "";
-        return new Partial(workspaceId, id, job.bundleId(), text, true);
+        synchronized (this) {
+            String text = active != null && active == observed && active.id().equals(id) && active.workspaceId().equals(workspaceId)
+                    && job.status().equals("RUNNING") && !cancelled ? partialText : "";
+            return new Partial(workspaceId, id, job.bundleId(), text, true);
+        }
     }
 
     private synchronized void receiveText(AnswerJob job, String text) {
@@ -162,11 +166,18 @@ public class AnswerJobService {
     }
 
     @Scheduled(fixedDelay = 500)
-    public synchronized void cancelInvalidatedRequest() {
-        if (worker == null || cancelled) return;
-        var approval = approvals.find(active.bundleId()).orElse(null);
-        if (store.find(active.workspaceId(), active.id()).isEmpty() || approval == null
-                || !approval.id().equals(active.approvalId()) || approval.revokedAt() != null) stop();
+    public void cancelInvalidatedRequest() {
+        AnswerJob observed;
+        synchronized (this) {
+            if (worker == null || cancelled) return;
+            observed = active;
+        }
+        var approval = approvals.find(observed.bundleId()).orElse(null);
+        boolean invalidated = store.find(observed.workspaceId(), observed.id()).isEmpty() || approval == null
+                || !approval.id().equals(observed.approvalId()) || approval.revokedAt() != null;
+        synchronized (this) {
+            if (active == observed && worker != null && !cancelled && invalidated) stop();
+        }
     }
 
     @PreDestroy

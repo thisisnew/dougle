@@ -53,18 +53,34 @@ function BrowserInvestigationSession({ workspaceId, bundleId, disabled = false }
       && (!active(previous) || statusOrder(value.status) < statusOrder(previous.status)) ? previous : value)
   }
 
-  async function act(action: () => Promise<void>) {
+  async function act(action: (signal: AbortSignal) => Promise<void>) {
     if (locked.current || disabled) return
     locked.current = true; setBusy(true); setMessage('')
-    try { await action() }
-    catch (error) { if (!lifetime.current.signal.aborted) setMessage((error as Error).message) }
-    finally { locked.current = false; if (!lifetime.current.signal.aborted) setBusy(false) }
+    const owner = lifetime.current.signal
+    const controller = new AbortController()
+    const abort = () => controller.abort()
+    owner.addEventListener('abort', abort, { once: true })
+    let rejectAborted!: () => void
+    const aborted = new Promise<never>((_resolve, reject) => {
+      rejectAborted = () => reject(new Error('요청 시간이 초과되었습니다. 접수 여부를 다시 확인해 주세요.'))
+      controller.signal.addEventListener('abort', rejectAborted, { once: true })
+    })
+    const deadline = setTimeout(abort, pollDeadlineMs)
+    if (owner.aborted) abort()
+    try { await Promise.race([owner.aborted ? Promise.resolve() : action(controller.signal), aborted]) }
+    catch (error) { if (!owner.aborted) setMessage((error as Error).message) }
+    finally {
+      clearTimeout(deadline)
+      owner.removeEventListener('abort', abort)
+      controller.signal.removeEventListener('abort', rejectAborted)
+      locked.current = false
+      if (!owner.aborted) setBusy(false)
+    }
   }
 
   async function show() {
     setOpen(true)
-    await act(async () => {
-      const signal = lifetime.current.signal
+    await act(async signal => {
       const capability = await request<{ status: string; message: string }>(`${base}/capability`, { signal })
       if (signal.aborted) return
       setAvailable(capability.status === 'AVAILABLE')
@@ -76,8 +92,7 @@ function BrowserInvestigationSession({ workspaceId, bundleId, disabled = false }
   }
 
   async function prepare() {
-    await act(async () => {
-      const signal = lifetime.current.signal
+    await act(async signal => {
       const value = await request<Preview>(`${base}/preview`, { method: 'POST', signal,
         body: JSON.stringify({ bundleId, url, allowedGetPaths: paths.split('\n').map(path => path.trim()).filter(Boolean) }) })
       if (!signal.aborted) { setPreview(value); setJob(null) }
@@ -87,14 +102,13 @@ function BrowserInvestigationSession({ workspaceId, bundleId, disabled = false }
   async function start() {
     if (!preview || active(job)) return
     const value = submission ?? { requestId: crypto.randomUUID(), bundleId, digest: preview.digest, approved: true as const }
-    await act(async () => {
+    await act(async signal => {
       setSubmission(value)
-      const signal = lifetime.current.signal
       try {
         const result = await request<Job>(`${base}/jobs`, { method: 'POST', signal, body: JSON.stringify(value) })
         if (!signal.aborted) { acceptJob(checked(result)); setSubmission(null); setPreview(null) }
       } catch (error) {
-        if (error instanceof ApiError && [400, 403, 404, 409, 410, 413, 422].includes(error.status)) {
+        if (!signal.aborted && error instanceof ApiError && [400, 403, 404, 409, 410, 413, 422].includes(error.status)) {
           setSubmission(null); setPreview(null)
         }
         throw error
@@ -135,9 +149,8 @@ function BrowserInvestigationSession({ workspaceId, bundleId, disabled = false }
 
   async function cancel() {
     if (!job) return
-    await act(async () => {
+    await act(async signal => {
       pollEpoch.current++
-      const signal = lifetime.current.signal
       const value = await request<Job>(`${base}/jobs/${encodeURIComponent(job.id)}/cancel`, { method: 'POST', signal })
       if (!signal.aborted) acceptJob(checked(value))
     })

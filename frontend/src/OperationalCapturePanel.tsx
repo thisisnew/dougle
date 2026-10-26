@@ -53,10 +53,16 @@ function ScopedOperationalCapturePanel({ workspaceId, provider, resultId, disabl
     const abort = () => operation.abort()
     signal.addEventListener('abort', abort, { once: true })
     const deadline = setTimeout(abort, 15000)
+    const interrupted = new Promise<never>((_, reject) => {
+      operation.signal.addEventListener('abort', () => reject(new Error('캡처 요청 시간이 초과되었습니다.')), { once: true })
+    })
     let captured: QuestionAttachment | null = null
     try {
       if (action === 'preview') {
-        const next = await request<Preview>(`${base}/preview`, { method: 'POST', signal: operation.signal, body: JSON.stringify({ provider, resultId }) })
+        const next = await Promise.race([
+          request<Preview>(`${base}/preview`, { method: 'POST', signal: operation.signal, body: JSON.stringify({ provider, resultId }) }),
+          interrupted,
+        ])
         if (signal.aborted) return
         if (operation.signal.aborted) throw new Error('캡처 요청 시간이 초과되었습니다.')
         if (!next.id || !/^[a-f0-9]{64}$/.test(next.digest) || typeof next.text !== 'string' || !Number.isSafeInteger(next.bytes)
@@ -67,8 +73,11 @@ function ScopedOperationalCapturePanel({ workspaceId, provider, resultId, disabl
         setPreview(next); setApproved(false); submission.current = null
       } else if (preview) {
         submission.current ??= crypto.randomUUID()
-        const next = await request<Receipt>(`${base}/${encodeURIComponent(preview.id)}${action === 'capture' ? '/capture' : ''}`,
-          action === 'capture' ? { method: 'POST', signal: operation.signal, body: JSON.stringify({ requestId: submission.current, digest: preview.digest, approved: true }) } : { signal: operation.signal })
+        const next = await Promise.race([
+          request<Receipt>(`${base}/${encodeURIComponent(preview.id)}${action === 'capture' ? '/capture' : ''}`,
+            action === 'capture' ? { method: 'POST', signal: operation.signal, body: JSON.stringify({ requestId: submission.current, digest: preview.digest, approved: true }) } : { signal: operation.signal }),
+          interrupted,
+        ])
         if (signal.aborted) return
         if (operation.signal.aborted) throw new Error('캡처 요청 시간이 초과되었습니다.')
         if (next.id !== preview.id || next.externalCalls !== 0) {

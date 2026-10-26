@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { ApiError, request } from './api'
 import { Button } from './components/ui/button'
 import type { ConnectionIndicator } from './connectionIndicator'
-import { checkedOperationalProposal, type OperationalToolProposal } from './operationalToolProposal'
 
 type Preview = { digest: string; prompt: string; characters: number; maxCalls: number; provider: string; requestedModel: string }
 type Job = { id: string; workspaceId: string; bundleId: string; status: string; decision?: string | null; query?: string | null; output?: string | null; error?: string | null; truncated?: boolean; toolStatus?: string | null }
@@ -21,9 +20,8 @@ function excerpts(output: string | null | undefined): { content: string; startLi
   })
 }
 
-export default function InvestigationPanel({ workspaceId, bundleId, connection, disabled, onAnswer, onOpenOperationalTool }: {
+export default function InvestigationPanel({ workspaceId, bundleId, connection, disabled, onAnswer }: {
   workspaceId: string; bundleId: string; connection: ConnectionIndicator | null; disabled: boolean; onAnswer?: (jobId: string) => Promise<void>
-  onOpenOperationalTool?: (proposal: OperationalToolProposal) => void
 }) {
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -33,8 +31,6 @@ export default function InvestigationPanel({ workspaceId, bundleId, connection, 
   const [submission, setSubmission] = useState<Submission | null>(null)
   const locked = useRef(false)
   const lifetime = useRef(new AbortController())
-  const current = useRef({ workspaceId, bundleId, disabled, onOpenOperationalTool })
-  current.current = { workspaceId, bundleId, disabled, onOpenOperationalTool }
   const base = `/workspaces/${encodeURIComponent(workspaceId)}/investigation-plans`
   const connected = connection?.state === 'AUTHENTICATED'
   const matches = excerpts(job?.output)
@@ -113,35 +109,20 @@ export default function InvestigationPanel({ workspaceId, bundleId, connection, 
     finally { locked.current = false; if (!signal.aborted) setBusy(false) }
   }
 
-  async function openProposal() {
-    if (!proposed || !job || locked.current || disabled || !onOpenOperationalTool) return
-    locked.current = true; setBusy(true); setError('')
-    const signal = lifetime.current.signal
-    try {
-      const proposal = checkedOperationalProposal(await request<unknown>(`${base}/jobs/${encodeURIComponent(job.id)}/tool-proposal`, { signal }))
-      if (signal.aborted || current.current.disabled || current.current.workspaceId !== workspaceId || current.current.bundleId !== bundleId) return
-      if (proposal.workspaceId !== workspaceId || proposal.bundleId !== bundleId || proposal.jobId !== job.id
-          || `PROPOSE_${proposal.kind}` !== job.decision) throw new Error('운영 조회 제안의 대상이 다릅니다.')
-      current.current.onOpenOperationalTool?.(proposal)
-    } catch (reason) { if (!signal.aborted) setError((reason as Error).message) }
-    finally { locked.current = false; if (!signal.aborted) setBusy(false) }
-  }
-
   return <section className="chat-investigation" aria-label="추가 자료 검색">
     {!open ? <Button variant="ghost" size="sm" disabled={disabled || !connected} onClick={() => void prepare()}>자료 더 찾아보기</Button>
       : <>
         {busy && <p role="status">확인 중…</p>}
         {error && <p role="alert">{error}</p>}
         {preview && <>
-          <p>현재 질문과 근거를 AI에 한 번 보내 로컬 검색어 또는 수동 운영 조회 제안을 정합니다. 로컬 자료는 최대 한 번 검색하며 운영 DB·로그는 조회하지 않습니다. 제안의 조회 범위는 직접 입력하고 별도로 승인해야 합니다.</p>
+          <p>현재 질문과 근거를 AI에 한 번 보내 추가 검색 필요 여부를 확인합니다. 로컬 자료는 최대 한 번 검색하며 운영 DB·로그는 조회하지 않습니다. 운영 조회 제안이 반환되어도 실행하지 않습니다.</p>
           <details><summary>전송 내용 확인</summary><pre>{preview.prompt}</pre></details>
           <Button variant="outline" disabled={busy || disabled || !connected} onClick={() => void start()}>{submission ? '접수 상태 확인' : '검색 시작'}</Button>
         </>}
         {job && <>
           {active(job) ? <p role="status">추가 자료를 찾고 있어요. <Button variant="ghost" disabled={busy} onClick={() => void cancel()}>취소</Button></p>
-            : <p>{proposed ? '수동 조회 제안 · 아직 조회하지 않음' : job.decision === 'STOP' || job.status === 'STOPPED' ? '추가 검색을 진행하지 않았습니다.' : job.status === 'SUCCEEDED' ? '자료 검색 완료' : job.status === 'CANCELLED' ? '검색 취소됨' : '자료 검색을 완료하지 못했습니다.'}</p>}
-          {proposed && <><p>{job.decision === 'PROPOSE_MYSQL_READ' ? 'MySQL 데이터' : 'Datadog 로그'} 조회를 제안합니다. 연결 가능 여부는 확인하지 않았으며 대상·조건은 직접 입력해야 합니다.</p>
-            {onOpenOperationalTool && <Button variant="outline" disabled={busy || disabled} onClick={() => void openProposal()}>조회 양식 열기</Button>}</>}
+            : <p>{proposed ? '운영 조회 제안 · 실행하지 않음' : job.decision === 'STOP' || job.status === 'STOPPED' ? '추가 검색을 진행하지 않았습니다.' : job.status === 'SUCCEEDED' ? '자료 검색 완료' : job.status === 'CANCELLED' ? '검색 취소됨' : '자료 검색을 완료하지 못했습니다.'}</p>}
+          {proposed && <p>수동 운영 조회는 제공하지 않습니다. DB·로그 조회는 실행되지 않았습니다.</p>}
           {job.query && <p>검색어: {job.query}</p>}
           {job.error && <p role="alert">{job.error}</p>}
           {job.toolStatus === 'EMPTY' && <p>추가로 일치하는 자료가 없습니다.</p>}

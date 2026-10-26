@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { request } from './api'
 import { Button } from './components/ui/button'
-import DatadogReadPanel from './DatadogReadPanel'
-import type { QuestionAttachment } from './useQuestionAttachments'
 
 const sites = ['US1', 'US3', 'US5', 'EU1', 'AP1', 'AP2', 'UK1'] as const
 type Site = typeof sites[number]
 type Status = { configured: boolean; site: Site | null; revision: string | null }
 export type DatadogPanelProps = {
   workspaceId: string | null; disabled?: boolean; onBusyChange?: (busy: boolean) => void; onChanged?: () => void
-  onCaptured?: (workspaceId: string, attachment: QuestionAttachment) => void
 }
 
 export default function DatadogPanel(props: DatadogPanelProps) {
@@ -17,7 +14,7 @@ export default function DatadogPanel(props: DatadogPanelProps) {
     : <section aria-label="Datadog"><h2>Datadog</h2><p>Workspace를 선택한 뒤 Datadog 연결을 설정하세요.</p></section>
 }
 
-function WorkspaceDatadogPanel({ workspaceId, disabled = false, onBusyChange, onChanged, onCaptured }:
+function WorkspaceDatadogPanel({ workspaceId, disabled = false, onBusyChange, onChanged }:
   DatadogPanelProps & { workspaceId: string }) {
   const [status, setStatus] = useState<Status | null>(null)
   const [admin, setAdmin] = useState(false)
@@ -27,7 +24,6 @@ function WorkspaceDatadogPanel({ workspaceId, disabled = false, onBusyChange, on
   const [busy, setBusy] = useState('상태 확인 중…')
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
-  const [readBusy, setReadBusy] = useState(false)
   const locked = useRef(false)
   const lifetime = useRef<AbortController | null>(null)
   const base = `/plugins/datadog/${encodeURIComponent(workspaceId)}`
@@ -41,10 +37,10 @@ function WorkspaceDatadogPanel({ workspaceId, disabled = false, onBusyChange, on
       .finally(() => { if (!controller.signal.aborted) setBusy('') })
     return () => { controller.abort() }
   }, [base])
-  useEffect(() => { onBusyChange?.(!!busy || readBusy); return () => onBusyChange?.(false) }, [busy, readBusy, onBusyChange])
+  useEffect(() => { onBusyChange?.(!!busy); return () => onBusyChange?.(false) }, [busy, onBusyChange])
 
   async function configure(action: 'save' | 'disconnect') {
-    if (disabled || busy || readBusy || locked.current || !lifetime.current) return
+    if (disabled || busy || locked.current || !lifetime.current) return
     if (action === 'save' && (!site || !validKey(apiKey) || !validKey(applicationKey))) return
     locked.current = true; setBusy(action === 'save' ? '관리자 연결 저장 중…' : '연결 해제 중…'); setError(''); setMessage('')
     const signal = lifetime.current.signal
@@ -67,7 +63,7 @@ function WorkspaceDatadogPanel({ workspaceId, disabled = false, onBusyChange, on
     } finally { locked.current = false; if (!signal.aborted) setBusy('') }
   }
 
-  const controlsDisabled = disabled || !!busy || readBusy
+  const controlsDisabled = disabled || !!busy
   return <section className="source-form" aria-label="Datadog">
     <h2>Datadog</h2>
     <p>브라우저 간편 연결(OAuth)은 아직 제공되지 않습니다. 관리자 연결로 API 키와 읽기 권한이 있는 Application 키를 설정할 수 있습니다.</p>
@@ -91,8 +87,6 @@ function WorkspaceDatadogPanel({ workspaceId, disabled = false, onBusyChange, on
     {busy && <p role="status">{busy}</p>}
     {error && <p role="alert">{error}</p>}
     {message && <p role="status">{message}</p>}
-    {status?.configured && status.revision && <DatadogReadPanel key={status.revision} workspaceId={workspaceId}
-      revision={status.revision} disabled={disabled || !!busy} onBusyChange={setReadBusy} onCaptured={onCaptured} />}
   </section>
 }
 

@@ -199,3 +199,63 @@ it('failed replacement preview discards the previous approval instead of saving 
   expect(screen.queryByRole('button', { name: '저장하고 새 질문에 첨부' })).not.toBeInTheDocument()
   expect(callback).not.toHaveBeenCalled()
 })
+
+it('a save that ignores abort still releases the request lock and only reconciles through GET', async () => {
+  const busy = vi.fn()
+  const view = render(<OperationalCapturePanel {...props} onBusyChange={busy} />)
+  await approve()
+  let complete!: (value: unknown) => void
+  api.mockImplementationOnce(() => new Promise(resolve => { complete = resolve }))
+  vi.useFakeTimers()
+  try {
+    fireEvent.click(screen.getByRole('button', { name: '저장하고 새 질문에 첨부' }))
+    const signal = api.mock.calls.at(-1)![1]!.signal!
+    await act(async () => { await vi.advanceTimersByTimeAsync(15000) })
+    expect(signal.aborted).toBe(true)
+    expect(screen.getByRole('button', { name: '저장 결과 확인' })).toBeEnabled()
+    expect(screen.queryByRole('button', { name: '저장하고 새 질문에 첨부' })).not.toBeInTheDocument()
+    expect(busy).toHaveBeenLastCalledWith(true)
+    await act(async () => complete(receipt))
+    expect(callback).not.toHaveBeenCalled()
+    expect(api).toHaveBeenCalledTimes(2)
+    let completeRecovery!: (value: unknown) => void
+    api.mockImplementationOnce(() => new Promise(resolve => { completeRecovery = resolve }))
+    fireEvent.click(screen.getByRole('button', { name: '저장 결과 확인' }))
+    await act(async () => { await vi.advanceTimersByTimeAsync(15000) })
+    expect(screen.getByRole('button', { name: '저장 결과 확인' })).toBeEnabled()
+    await act(async () => completeRecovery(receipt))
+    expect(callback).not.toHaveBeenCalled()
+    api.mockResolvedValueOnce(receipt)
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: '저장 결과 확인' })))
+    expect(api).toHaveBeenCalledTimes(4)
+    for (const [path, options] of api.mock.calls.slice(2)) {
+      expect(path).toBe(`${base}/${preview.id}`)
+      expect(options?.method).toBeUndefined()
+      expect(options?.body).toBeUndefined()
+    }
+    expect(api.mock.calls.filter(([path]) => path.endsWith('/capture'))).toHaveLength(1)
+    expect(callback).toHaveBeenCalledExactlyOnceWith(props.workspaceId, attachment)
+    expect(busy).toHaveBeenLastCalledWith(false)
+  } finally { view.unmount(); vi.useRealTimers() }
+})
+
+it('a preview that ignores abort releases navigation and cannot install its late approval', async () => {
+  const busy = vi.fn()
+  let complete!: (value: unknown) => void
+  api.mockImplementationOnce(() => new Promise(resolve => { complete = resolve }))
+  const view = render(<OperationalCapturePanel {...props} onBusyChange={busy} />)
+  vi.useFakeTimers()
+  try {
+    fireEvent.click(screen.getByRole('button', { name: '첨부 내용 미리보기' }))
+    expect(busy).toHaveBeenLastCalledWith(true)
+    await act(async () => { await vi.advanceTimersByTimeAsync(15000) })
+    expect(screen.getByRole('alert')).toHaveTextContent('시간이 초과')
+    expect(screen.getByRole('button', { name: '첨부 내용 미리보기' })).toBeEnabled()
+    expect(busy).toHaveBeenLastCalledWith(false)
+    await act(async () => complete(preview))
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('저장할 정확한 내용')).not.toBeInTheDocument()
+    expect(callback).not.toHaveBeenCalled()
+    expect(api).toHaveBeenCalledTimes(1)
+  } finally { view.unmount(); vi.useRealTimers() }
+})

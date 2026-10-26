@@ -30,6 +30,7 @@ if [[ "$mode" == verify ]]; then
 fi
 jar="$repo_root/backend/target/knowledge-forge-0.1.0.jar"
 [[ -f "$jar" ]] || { echo 'Build the application first: bash scripts/build.sh' >&2; exit 1; }
+node "$repo_root/scripts/verify-frontend-bundle.mjs" "$jar" "$repo_root/frontend/dist"
 resources="$repo_root/desktop/src-tauri/resources"
 [[ ! -L "$resources" && ! -L "$resources/runtime" && ! -L "$resources/knowledge-forge.jar" ]] || { echo 'Refusing symlinked staging paths.' >&2; exit 1; }
 mkdir -p "$resources"

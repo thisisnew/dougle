@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, expect, it, vi } from 'vitest'
 import DatadogPanel from './DatadogPanel'
+import DatadogReadPanel from './DatadogReadPanel'
 import { ApiError, request } from './api'
 
 vi.mock('./api', async importOriginal => ({ ...await importOriginal<typeof import('./api')>(), request: vi.fn() }))
@@ -40,6 +41,8 @@ it('requires workspace and hides manual keys; never implies OAuth or verified ac
   expect(screen.getByText(/OAuth.*아직 제공되지/)).toBeVisible()
   expect(screen.queryByLabelText('Datadog API 키')).toBeNull()
   expect(api).toHaveBeenCalledTimes(1)
+  expect(screen.queryByLabelText('환경')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '조회 미리보기' })).not.toBeInTheDocument()
 })
 
 it('manual configuration is explicit, clears keys and makes no log call', async () => {
@@ -63,13 +66,13 @@ it('manual configuration is explicit, clears keys and makes no log call', async 
 })
 
 it('previews exact scope, executes only explicit consent and renders bounded escaped output', async () => {
-  api.mockResolvedValueOnce(status).mockResolvedValueOnce(preview)
+  api.mockResolvedValueOnce(preview)
     .mockResolvedValueOnce({ ...empty, status: 'OK', output: '<script>synthetic</script>', rows: 1, truncated: true })
-  render(<DatadogPanel workspaceId="workspace" />)
+  render(<DatadogReadPanel workspaceId="workspace" revision={status.revision} disabled={false} onBusyChange={() => {}} />)
   await prepare()
-  expect(api).toHaveBeenCalledTimes(2)
-  expect(api.mock.calls[1][0]).toBe('/workspaces/workspace/datadog-investigations/preview')
-  expect(JSON.parse(api.mock.calls[1][1]!.body as string)).toEqual(query)
+  expect(api).toHaveBeenCalledTimes(1)
+  expect(api.mock.calls[0][0]).toBe('/workspaces/workspace/datadog-investigations/preview')
+  expect(JSON.parse(api.mock.calls[0][1]!.body as string)).toEqual(query)
   expect(screen.getByRole('button', { name: '승인한 로그 조회' })).toBeDisabled()
   expect(screen.getByText(/앱 세션에서만/)).toBeVisible()
   execute()
@@ -77,14 +80,14 @@ it('previews exact scope, executes only explicit consent and renders bounded esc
   expect(screen.getByText('<script>synthetic</script>')).toBeVisible()
   expect(document.querySelector('script')).toBeNull()
   expect(screen.getByText(/일부 로그만 표시/)).toBeVisible()
-  expect(api.mock.calls[2][0]).toBe('/workspaces/workspace/datadog-investigations/preview/execute')
-  expect(JSON.parse(api.mock.calls[2][1]!.body as string)).toEqual({ approved: true, requestId: expect.any(String) })
+  expect(api.mock.calls[1][0]).toBe('/workspaces/workspace/datadog-investigations/preview/execute')
+  expect(JSON.parse(api.mock.calls[1][1]!.body as string)).toEqual({ approved: true, requestId: expect.any(String) })
   expect(api.mock.calls.some(([path]) => path.includes('answer') || path.includes('attachments'))).toBe(false)
 })
 
 it('scope edits invalidate approval and wildcard or future windows cannot preview', async () => {
-  api.mockResolvedValueOnce(status).mockResolvedValueOnce(preview)
-  render(<DatadogPanel workspaceId="workspace" />)
+  api.mockResolvedValueOnce(preview)
+  render(<DatadogReadPanel workspaceId="workspace" revision={status.revision} disabled={false} onBusyChange={() => {}} />)
   await prepare()
   fireEvent.click(screen.getByLabelText('표시한 범위의 일회 로그 조회를 승인합니다.'))
   fireEvent.change(screen.getByLabelText('서비스'), { target: { value: '*' } })
@@ -93,42 +96,42 @@ it('scope edits invalidate approval and wildcard or future windows cannot previe
   fireEvent.change(screen.getByLabelText('서비스'), { target: { value: 'orders' } })
   fireEvent.change(screen.getByLabelText('조회 종료 (UTC)'), { target: { value: '2099-01-01T12:00' } })
   expect(screen.getByRole('button', { name: '조회 미리보기' })).toBeDisabled()
-  expect(api).toHaveBeenCalledTimes(2)
+  expect(api).toHaveBeenCalledTimes(1)
 })
 
 it('lost execution response uses receipt GET without replay or leaking error details', async () => {
-  api.mockResolvedValueOnce(status).mockResolvedValueOnce(preview).mockRejectedValueOnce(new Error('secret-token'))
+  api.mockResolvedValueOnce(preview).mockRejectedValueOnce(new Error('secret-token'))
     .mockResolvedValueOnce(empty)
-  render(<DatadogPanel workspaceId="workspace" />)
+  render(<DatadogReadPanel workspaceId="workspace" revision={status.revision} disabled={false} onBusyChange={() => {}} />)
   await prepare(); execute()
   await screen.findByText(/자동 재실행하지 않습니다/)
   expect(screen.queryByText('secret-token')).toBeNull()
   expect(screen.getByLabelText('환경')).toBeDisabled()
   fireEvent.click(screen.getByRole('button', { name: '조회 상태 확인' }))
   await screen.findByText('조건에 맞는 로그가 없습니다.')
-  expect(api.mock.calls[3][0]).toBe('/workspaces/workspace/datadog-investigations/preview')
-  expect(api.mock.calls[3][1]?.method).toBeUndefined()
+  expect(api.mock.calls[2][0]).toBe('/workspaces/workspace/datadog-investigations/preview')
+  expect(api.mock.calls[2][1]?.method).toBeUndefined()
   expect(api.mock.calls.filter(([path]) => path.endsWith('/execute'))).toHaveLength(1)
 })
 
 it('cancels on actual endpoint while execute is pending and discards no receipt', async () => {
   let finish!: (value: unknown) => void
-  api.mockResolvedValueOnce(status).mockResolvedValueOnce(preview)
+  api.mockResolvedValueOnce(preview)
     .mockImplementationOnce(() => new Promise(resolve => { finish = resolve })).mockResolvedValueOnce(undefined)
-  render(<DatadogPanel workspaceId="workspace" />)
+  render(<DatadogReadPanel workspaceId="workspace" revision={status.revision} disabled={false} onBusyChange={() => {}} />)
   await prepare(); execute()
   fireEvent.click(screen.getByRole('button', { name: '로그 조회 취소' }))
   await screen.findByText(/취소를 요청했습니다/)
-  expect(api.mock.calls[3][0]).toBe('/workspaces/workspace/datadog-investigations/preview/cancel')
-  expect(api.mock.calls[3][1]?.method).toBe('POST')
+  expect(api.mock.calls[2][0]).toBe('/workspaces/workspace/datadog-investigations/preview/cancel')
+  expect(api.mock.calls[2][1]?.method).toBe('POST')
   await act(async () => finish({ ...empty, status: 'CANCELLED' }))
   expect(screen.getByText('로그 조회가 취소되었습니다.')).toBeVisible()
 })
 
 it('restart or expiry fails closed and permits a fresh preview without retrying execution', async () => {
-  api.mockResolvedValueOnce(status).mockResolvedValueOnce(preview).mockRejectedValueOnce(new Error('lost'))
+  api.mockResolvedValueOnce(preview).mockRejectedValueOnce(new Error('lost'))
     .mockRejectedValueOnce(new ApiError('restarted', 404))
-  render(<DatadogPanel workspaceId="workspace" />)
+  render(<DatadogReadPanel workspaceId="workspace" revision={status.revision} disabled={false} onBusyChange={() => {}} />)
   await prepare(); execute()
   await screen.findByText(/자동 재실행하지 않습니다/)
   fireEvent.click(screen.getByRole('button', { name: '조회 상태 확인' }))
@@ -140,30 +143,30 @@ it('restart or expiry fails closed and permits a fresh preview without retrying 
 it('workspace change drops manual key state and old scoped controls', async () => {
   api.mockResolvedValue(status)
   const view = render(<DatadogPanel workspaceId="one" />)
-  await screen.findByLabelText('환경')
+  await screen.findByText(/연결 정보 저장됨/)
   fireEvent.click(screen.getByRole('button', { name: '관리자 연결' }))
   fireEvent.change(screen.getByLabelText('Datadog API 키'), { target: { value: 'synthetic_api_key_0000' } })
   const signal = api.mock.calls[0][1]?.signal
   view.rerender(<DatadogPanel workspaceId="two" />)
-  await screen.findByLabelText('환경')
+  await screen.findByText(/연결 정보 저장됨/)
   expect(signal?.aborted).toBe(true)
   expect(screen.queryByLabelText('Datadog API 키')).toBeNull()
-  expect(screen.getByLabelText('환경')).toHaveValue('')
+  expect(screen.queryByLabelText('환경')).not.toBeInTheDocument()
 })
 
 it('expired preview never executes', async () => {
-  api.mockResolvedValueOnce(status).mockResolvedValueOnce({ ...preview, expiresAt: '2000-01-01T00:00:00Z' })
-  render(<DatadogPanel workspaceId="workspace" />)
+  api.mockResolvedValueOnce({ ...preview, expiresAt: '2000-01-01T00:00:00Z' })
+  render(<DatadogReadPanel workspaceId="workspace" revision={status.revision} disabled={false} onBusyChange={() => {}} />)
   await prepare(); execute()
   expect(await screen.findByText(/미리보기가 만료되었습니다/)).toBeVisible()
-  expect(api).toHaveBeenCalledTimes(2)
+  expect(api).toHaveBeenCalledTimes(1)
 })
 
 it('PREVIEW receipt after a lost execute response remains locked until cancellation is confirmed', async () => {
-  api.mockResolvedValueOnce(status).mockResolvedValueOnce(preview).mockRejectedValueOnce(new Error('lost'))
+  api.mockResolvedValueOnce(preview).mockRejectedValueOnce(new Error('lost'))
     .mockResolvedValueOnce({ ...empty, status: 'PREVIEW' }).mockResolvedValueOnce(undefined)
     .mockResolvedValueOnce({ ...empty, status: 'CANCELLED' })
-  render(<DatadogPanel workspaceId="workspace" />)
+  render(<DatadogReadPanel workspaceId="workspace" revision={status.revision} disabled={false} onBusyChange={() => {}} />)
   await prepare(); execute()
   await screen.findByText(/자동 재실행하지 않습니다/)
   fireEvent.click(screen.getByRole('button', { name: '조회 상태 확인' }))

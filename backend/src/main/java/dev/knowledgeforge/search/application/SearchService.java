@@ -70,6 +70,14 @@ public class SearchService {
         }
     }
 
+    public List<SearchIndex.Hit> searchQuestionCandidates(String workspaceId, String query) {
+        if (workspaceId == null || workspaceId.isBlank() || query == null || query.isBlank() || query.length() > 256) {
+            throw new LibraryException(400, "로컬 검색 범위 또는 질문이 올바르지 않습니다.");
+        }
+        if (!index.questionReady()) throw new LibraryException(503, "자료 검색을 준비하고 있습니다. 잠시 후 다시 질문해 주세요.");
+        return index.searchQuestion(workspaceId, query.strip(), List.of(), false);
+    }
+
     private List<SearchIndex.Hit> find(String workspaceId, String query, List<String> domains, boolean includeKnowledge, boolean naturalQuestion) {
         if (library.workspace(workspaceId).isEmpty()) throw new LibraryException(404, "Workspace를 찾을 수 없습니다.");
         if (query == null || query.isBlank() || query.length() > 256 || domains.size() > 20) {

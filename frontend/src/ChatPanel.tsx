@@ -7,12 +7,10 @@ import { activeAnswerJob, type AnswerJob } from './answerJobEvents'
 import { sendChatAnswer, type ChatSubmission } from './sendChatAnswer'
 import { readChatSubmission, saveChatSubmission, removeChatSubmission } from './chatSubmissionStorage'
 import AnswerJobsPanel from './AnswerJobsPanel'
-import { attachmentAccept, useQuestionAttachments, type QuestionAttachment } from './useQuestionAttachments'
+import { attachmentAccept, useQuestionAttachments } from './useQuestionAttachments'
 import Wordmark from './Wordmark'
 import InvestigationPanel from './InvestigationPanel'
 import BrowserInvestigationPanel from './BrowserInvestigationPanel'
-import OperationalToolsPanel from './OperationalToolsPanel'
-import { checkedOperationalProposal, type OperationalToolOpenRequest, type OperationalToolProposal } from './operationalToolProposal'
 
 type Summary = { id: string; question: string }
 type Bundle = { id: string; workspaceId: string; digest: string; payload: { question: string; status: string; chatContext?: { threadId: string; extractive?: unknown } | null;
@@ -57,23 +55,16 @@ export function QuestionHistory({ workspaceId, revision, selectedId, onSelect }:
   </section>
 }
 
-export default function ChatPanel({ workspaceId, selectedId, connection, onCreated, searchState = 'READY', stagedAttachment, onAttachmentStaged, onOperationalBusyChange }: {
+export default function ChatPanel({ workspaceId, selectedId, connection, onCreated, searchState = 'READY' }: {
   workspaceId: string; selectedId: string | null; connection: ConnectionIndicator | null;
   onCreated: (id: string) => void; onConnect: () => void; onSources: () => void
   searchState?: string
-  stagedAttachment?: { workspaceId: string; attachment: QuestionAttachment } | null
-  onAttachmentStaged?: () => void
-  onOperationalBusyChange?: (busy: boolean) => void
 }) {
   const [question, setQuestion] = useState('')
   const [bundle, setBundle] = useState<Bundle | null>(null)
   const [job, setJob] = useState<AnswerJob | null>(null)
   const [previousTurns, setPreviousTurns] = useState<{ bundle: Bundle; job: AnswerJob | null; fresh: boolean }[]>([])
   const [busy, setBusy] = useState(false)
-  const [operationalBusy, setOperationalBusy] = useState(false)
-  const [operationalOpen, setOperationalOpen] = useState<OperationalToolOpenRequest | null>(null)
-  const [pendingCapture, setPendingCapture] = useState<QuestionAttachment | null>(null)
-  const pendingCaptureRef = useRef<QuestionAttachment | null>(null)
   const [submission, setSubmission] = useState<ChatSubmission | null>(null)
   const [canAbandonAnswer, setCanAbandonAnswer] = useState(false)
   const [fresh, setFresh] = useState(false)
@@ -87,26 +78,11 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
   const captureRequest = useRef<{ jobId: string; requestId: string } | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
   const attachments = useQuestionAttachments(workspaceId)
-  const adopted = useRef<string | null>(null)
   const base = `/workspaces/${encodeURIComponent(workspaceId)}`
   const connected = connection?.state === 'AUTHENTICATED'
   const searchReady = searchState === 'READY'
   const pendingAnswer = !!bundle && !job && bundle.payload.status !== 'NO_EVIDENCE' && bundle.payload.items.length > 0
     && bundle.payload.items.every(item => ['ORIGINAL', 'ATTACHMENT_IMAGE', 'ATTACHMENT_TEXT'].includes(item.kind))
-  const operationalContext = useRef({ workspaceId, bundleId: bundle?.id, blocked: false })
-  operationalContext.current = { workspaceId, bundleId: bundle?.id,
-    blocked: busy || operationalBusy || pendingAnswer || activeAnswerJob(job) || attachments.uploading || attachments.items.length >= 4 || !!pendingCapture }
-  useEffect(() => { setOperationalOpen(null) }, [workspaceId, bundle?.id, selectedId])
-
-  function openOperationalTool(value: OperationalToolProposal) {
-    const context = operationalContext.current
-    if (context.blocked) return
-    try {
-      const proposal = checkedOperationalProposal(value)
-      if (proposal.workspaceId !== context.workspaceId || proposal.bundleId !== context.bundleId) return
-      setOperationalOpen({ requestId: crypto.randomUUID(), proposal })
-    } catch { setError('운영 조회 제안의 대상과 형식을 확인하지 못했습니다.') }
-  }
   useEffect(() => {
     if (created.current === selectedId && selectedId) { created.current = null; return }
     created.current = null
@@ -144,31 +120,6 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     return () => controller.abort()
   }, [base, selectedId, workspaceId])
   useEffect(() => () => pending.current?.abort(), [])
-  useEffect(() => {
-    onOperationalBusyChange?.(operationalBusy)
-    return () => onOperationalBusyChange?.(false)
-  }, [operationalBusy, onOperationalBusyChange])
-  useEffect(() => () => {
-    if (pendingCaptureRef.current) void request(`${base}/attachments/${encodeURIComponent(pendingCaptureRef.current.id)}`, { method: 'DELETE' }).catch(() => {})
-  }, [base])
-
-  function stageCapture(attachment: QuestionAttachment) {
-    if (attachments.adopt(attachment)) {
-      pendingCaptureRef.current = null; setPendingCapture(null)
-    } else {
-      pendingCaptureRef.current = attachment; setPendingCapture(attachment)
-    }
-  }
-
-  useEffect(() => {
-    if (!stagedAttachment || stagedAttachment.workspaceId !== workspaceId || busy || locked.current
-        || adopted.current === stagedAttachment.attachment.id) return
-    if (attachments.adopt(stagedAttachment.attachment)) {
-      adopted.current = stagedAttachment.attachment.id
-      onAttachmentStaged?.()
-    }
-  }, [stagedAttachment, workspaceId, busy, attachments, onAttachmentStaged])
-
   async function requestAnswer(value: Bundle, controller: AbortController) {
     let submissionStarted = false
     let storageChecked = false
@@ -226,7 +177,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
 
   async function submit(event: FormEvent) {
     event.preventDefault()
-    if (locked.current || operationalBusy || pendingCapture || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !connected || !searchReady || !question.trim()) return
+    if (locked.current || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !connected || !searchReady || !question.trim()) return
     if (connection?.provider !== 'CODEX' && attachments.items.some(item => item.mediaType.startsWith('image/'))) {
       setError('이미지 질문은 Codex를 선택해 주세요.'); return
     }
@@ -317,44 +268,30 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       {current && !busy && pendingAnswer && canAbandonAnswer && !submission && !job && <Button variant="outline" onClick={() => void abandonAnswer()}>새 대화로 다시 질문</Button>}
       {!bundle.payload.items.length && <p>질문과 관련된 내용을 찾지 못했어요.</p>}
       {current && ((job && !activeAnswerJob(job)) || (!job && !bundle.payload.items.length)) && <InvestigationPanel key={`${workspaceId}:${bundle.id}`}
-        workspaceId={workspaceId} bundleId={bundle.id} connection={connection} disabled={busy || operationalBusy || !searchReady} onAnswer={answerInvestigation} onOpenOperationalTool={openOperationalTool} />}
+        workspaceId={workspaceId} bundleId={bundle.id} connection={connection} disabled={busy || !searchReady} onAnswer={answerInvestigation} />}
       {current && !busy && (!job || !activeAnswerJob(job)) && <BrowserInvestigationPanel key={`browser:${workspaceId}:${bundle.id}`}
-        workspaceId={workspaceId} bundleId={bundle.id} disabled={busy || operationalBusy} />}
+        workspaceId={workspaceId} bundleId={bundle.id} disabled={busy} />}
 
     </div>})}
     {busy && sentQuestion && <div className="chat-thread"><h2 className="question-bubble">{sentQuestion}</h2><p role="status" className="chat-thinking">확인해보겠습니다<span aria-hidden="true">…</span></p></div>}
-    <OperationalToolsPanel key={`${workspaceId}:${bundle?.id ?? 'none'}`} workspaceId={workspaceId}
-      currentBundleId={bundle?.id ?? null} openRequest={operationalOpen}
-      onOpenRequestHandled={requestId => setOperationalOpen(current => current?.requestId === requestId ? null : current)}
-      disabled={busy || pendingAnswer || activeAnswerJob(job) || attachments.uploading || attachments.items.length >= 4 || !!pendingCapture}
-      onBusyChange={setOperationalBusy} onCaptured={(scope, attachment) => {
-        if (scope === workspaceId) stageCapture(attachment)
-      }} />
-    {pendingCapture && <div role="status"><p>조회 결과는 저장되었습니다. 기존 첨부를 제거한 뒤 다시 첨부하세요.</p>
-      <Button variant="outline" disabled={busy || operationalBusy || attachments.uploading} onClick={() => stageCapture(pendingCapture)}>조회 결과 다시 첨부</Button>
-      <Button variant="ghost" disabled={busy || operationalBusy || attachments.uploading} onClick={() => {
-        void request(`${base}/attachments/${encodeURIComponent(pendingCapture.id)}`, { method: 'DELETE' }).catch(() => {})
-        pendingCaptureRef.current = null; setPendingCapture(null)
-      }}>조회 결과 제외</Button>
-    </div>}
     <form className="chat-composer" onSubmit={event => void submit(event)} onDragOver={event => { if (event.dataTransfer.types.includes('Files')) event.preventDefault() }} onDrop={event => {
       if (!event.dataTransfer.files.length) return
-      event.preventDefault(); if (!busy && !operationalBusy) void attachments.add(Array.from(event.dataTransfer.files))
+      event.preventDefault(); if (!busy) void attachments.add(Array.from(event.dataTransfer.files))
     }}>
       <label className="sr-only" htmlFor="chat-question">질문</label>
       {!searchReady && connected && <p role="status" className="chat-thinking">{searchState === 'ERROR' ? '검색 준비에 실패했습니다. 앱을 다시 실행해 주세요.' : '자료 검색을 준비하고 있어요…'}</p>}
-      <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || !searchReady || busy || operationalBusy}
+      <textarea id="chat-question" rows={3} maxLength={256} value={question} disabled={!connected || !searchReady || busy}
         placeholder={!connected ? 'AI를 연결해 주세요' : !searchReady ? '검색 준비가 끝나면 질문할 수 있어요' : '더글한테 물어보기'} onChange={event => setQuestion(event.target.value)}
         onPaste={event => { if (event.clipboardData.files.length) { event.preventDefault(); void attachments.add(Array.from(event.clipboardData.files)) } }}
         onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); event.currentTarget.form?.requestSubmit() } }} />
-      <input ref={fileInput} type="file" className="sr-only" aria-label="질문에 첨부할 파일" multiple accept={attachmentAccept} disabled={busy || operationalBusy || attachments.uploading} onChange={event => { void attachments.add(Array.from(event.target.files ?? [])); event.target.value = '' }} />
+      <input ref={fileInput} type="file" className="sr-only" aria-label="질문에 첨부할 파일" multiple accept={attachmentAccept} disabled={busy || attachments.uploading} onChange={event => { void attachments.add(Array.from(event.target.files ?? [])); event.target.value = '' }} />
       {attachments.items.length > 0 && <ul className="question-attachments" aria-label="이 질문의 첨부 파일">{attachments.items.map(item => <li key={item.id}>
         {item.mediaType.startsWith('image/') ? <ImageIcon aria-hidden="true" /> : <FileText aria-hidden="true" />}<span title={item.name}>{item.name}{item.truncated && <small>처음 {item.characters.toLocaleString()}자만 사용</small>}</span>
-        <Button type="button" variant="ghost" size="icon" aria-label={`${item.name} 첨부 제거`} disabled={busy || operationalBusy || attachments.uploading} onClick={() => void attachments.remove(item.id)}><X /></Button>
+        <Button type="button" variant="ghost" size="icon" aria-label={`${item.name} 첨부 제거`} disabled={busy || attachments.uploading} onClick={() => void attachments.remove(item.id)}><X /></Button>
       </li>)}</ul>}
       {attachments.uploading && <p role="status">첨부 파일을 읽고 있어요.<Button type="button" variant="ghost" onClick={attachments.cancel}>첨부 중단</Button></p>}
       {attachments.error && <p role="alert">{attachments.error}</p>}
-      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || operationalBusy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || !searchReady || busy || operationalBusy || !!pendingCapture || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
+      <div className="composer-actions"><Button variant="ghost" type="button" size="icon" aria-label="파일 첨부" title="이미지·문서 첨부 · 최대 4개, 각각 5 MiB" disabled={busy || attachments.uploading || attachments.items.length >= 4} onClick={() => fileInput.current?.click()}><Plus /></Button><Button type="submit" size="icon" aria-label="질문 보내기" disabled={!connected || !searchReady || busy || pendingAnswer || activeAnswerJob(job) || attachments.uploading || !question.trim()}><ArrowUp /></Button></div>
     </form>
   </section>
 }

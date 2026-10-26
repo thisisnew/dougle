@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.22",
+  "installedAtLocal": "2026-10-26T20:55:28+09:00",
+  "platform": "darwin",
+  "architecture": "x86_64",
+  "destination": "/Applications/Knowledge Forge.app",
+  "previousVersion": "0.1.20",
+  "dmgSha256": "f226368aca2e04ab7c53d2aeea0d4d89c05426e359031054fe2f448469ca942c",
+  "jarSha256": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
+  "verification": {
+    "dmgHashMatched": true,
+    "mountedReadOnly": true,
+    "mountedAndInstalledSignatureChecksPassed": true,
+    "installedVersionMatched": true,
+    "nativeProcessObserved": true,
+    "bundledJavaProcessObserved": true,
+    "databaseSchemaVersion": 28,
+    "unauthenticatedWorkspaceHttpStatus": 403
+  },
+  "backup": {
+    "directory": "~/Library/Application Support/Dougle Local Backups/pre-0.1.22-20261026-205528",
+    "directoryMode": "0700",
+    "databaseFileMode": "0600",
+    "includes": ["previous app bundle", "SQLite database", "SQLite WAL", "SQLite SHM"],
+    "credentialsCopied": false,
+    "fullDataDirectoryBackup": false
+  },
+  "scope": "User-authorized local test installation only. No company content inspected; only database schema metadata checked. No automatic AI request or external business operation performed by the installer.",
+  "publicReleasePublished": false,
+  "updateFeedPromoted": false,
+  "limitations": [
+    "Intermittent AI response timeout remains unresolved.",
+    "Full expert acceptance is incomplete.",
+    "No Apple Silicon hardware execution or clean second-Mac verification.",
+    "Ad-hoc signature is not Apple notarization or Gatekeeper acceptance.",
+    "Restore requires the previous app and matching pre-migration database; do not open schema v28 with the old app."
+  ]
+}

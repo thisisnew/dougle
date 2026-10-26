@@ -1,0 +1,28 @@
+{
+  "caseIds": [
+    "E50"
+  ],
+  "mode": "simulated",
+  "fixtureOnly": true,
+  "fixtureVersion": "e50-independent-v1",
+  "jarSha256": "967cd7e710a8a39c81bd6d13906677f89cc80799424370d659b91feef723d188",
+  "javaSha256": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+  "modelHashes": {
+    "model.onnx": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88",
+    "tokenizer.json": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39",
+    "reranker.onnx": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b",
+    "reranker-tokenizer.json": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+  },
+  "checks": [],
+  "acceptanceUpdated": false,
+  "aiCalls": 0,
+  "limitation": "Synthetic independent data roots on one Intel host, not different OS accounts or historical application packages. No full attachment transfer, semantic ranking evaluation, or E50 acceptance promotion.",
+  "status": "FAIL",
+  "failedPhase": "initialization",
+  "errorType": "AssertionError",
+  "assetsUnchanged": true,
+  "temporaryRemoved": true,
+  "executedAt": "2026-10-26T12:41:47.044Z",
+  "scriptSha256": "b97411ce5b9081b331be2b2fb1e1c24e9529425d19989ccfa46c99d218583862",
+  "fixturesSha256": "910120304ecc71d04934f6f40f07d7ebd39758eeb8612e64ef10d09409917f26"
+}

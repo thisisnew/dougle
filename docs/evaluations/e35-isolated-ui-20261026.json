@@ -1,0 +1,3523 @@
+{
+  "version": 1,
+  "criterion": "E35",
+  "result": "SCOPED_CHECKS_COMPLETED_PENDING_ACCEPTANCE_REVIEW",
+  "mode": "manual",
+  "artifactSha256": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
+  "startedAt": "2026-10-26T12:10:38.404Z",
+  "checkpoints": [
+    {
+      "checkpointId": "07eb5c48-82c3-46a6-b8a6-afc9363413d3",
+      "artifactSha256": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
+      "phase": "initial",
+      "verdict": "PASS",
+      "reviewer": "PARENT",
+      "observed": [
+        "threeExactReceiptBodies",
+        "historicalStatusesOnly",
+        "noOutgoingReplyControls",
+        "emptyWorkspaceNoStaleReceipt",
+        "returnedWorkspaceReceiptsPreserved"
+      ],
+      "screenshotPath": "docs/screenshots/e35-initial.png",
+      "trace": [
+        {
+          "method": "GET",
+          "path": "/",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/index-BTnKW-vD.css",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/index-BwHXe1tu.js",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/session",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/favicon.ico",
+          "action": "READ",
+          "status": 404
+        },
+        {
+          "method": "GET",
+          "path": "/assets/dougle-mascot-transparent-BO725UxM.png",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/api/ai/providers/CODEX/connection",
+          "action": "BLOCK_CONNECTION",
+          "status": 409
+        },
+        {
+          "method": "GET",
+          "path": "/api/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/entries",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/plugins",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-preview",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-sent",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-uncertain",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "PUT",
+          "path": "/api/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/active",
+          "action": "LOCAL_SWITCH",
+          "status": 204
+        },
+        {
+          "method": "GET",
+          "path": "/api/session",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/entries",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/dougle-mascot-transparent-BO725UxM.png",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/plugins",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "PUT",
+          "path": "/api/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/active",
+          "action": "LOCAL_SWITCH",
+          "status": 204
+        },
+        {
+          "method": "GET",
+          "path": "/api/session",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/entries",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/plugins",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-uncertain",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        }
+      ],
+      "reviewedAt": "2026-10-26T12:18:49.313Z"
+    },
+    {
+      "checkpointId": "4f4d6e94-6996-4e70-8797-00d2a934f4f7",
+      "artifactSha256": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
+      "phase": "restart",
+      "verdict": "PASS",
+      "reviewer": "PARENT",
+      "observed": [
+        "threeExactReceiptBodies",
+        "historicalStatusesOnly",
+        "noOutgoingReplyControls",
+        "emptyWorkspaceNoStaleReceipt",
+        "returnedWorkspaceReceiptsPreserved"
+      ],
+      "screenshotPath": "docs/screenshots/e35-restart.png",
+      "trace": [
+        {
+          "method": "GET",
+          "path": "/",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/index-BwHXe1tu.js",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/index-BTnKW-vD.css",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/session",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/dougle-mascot-transparent-BO725UxM.png",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/api/ai/providers/CODEX/connection",
+          "action": "BLOCK_CONNECTION",
+          "status": 409
+        },
+        {
+          "method": "GET",
+          "path": "/api/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/entries",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/favicon.ico",
+          "action": "READ",
+          "status": 404
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/plugins",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-preview",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-sent",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-uncertain",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "PUT",
+          "path": "/api/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/active",
+          "action": "LOCAL_SWITCH",
+          "status": 204
+        },
+        {
+          "method": "GET",
+          "path": "/api/session",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/entries",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/dougle-mascot-transparent-BO725UxM.png",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/plugins",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/287a84cb-a05a-4b35-818e-42ec362cfa4e/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "PUT",
+          "path": "/api/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/active",
+          "action": "LOCAL_SWITCH",
+          "status": 204
+        },
+        {
+          "method": "GET",
+          "path": "/api/session",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/entries",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/assets/dougle-mascot-transparent-BO725UxM.png",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/plugins",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/replies/synthetic-legacy-uncertain",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox-count",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/search-model",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/status",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/routes",
+          "action": "READ",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/slack/workspaces/f4f5b0cc-6bbc-4e0c-a1af-570c711cbd96/inbox",
+          "action": "READ",
+          "status": 200
+        }
+      ],
+      "reviewedAt": "2026-10-26T12:21:26.456Z"
+    }
+  ],
+  "backendPids": [
+    97025,
+    97240,
+    1581
+  ],
+  "externalBusinessCallsAuthorized": 0,
+  "actualAiCalls": 0,
+  "limits": "Synthetic legacy receipts, including SENT; no actual Slack account/send. Bundled React through a restricted loopback bridge, not native WebKit. No whole-criterion promotion. Direct internal dispatch requires separate source/test evidence. Proxy count cannot count blocked transport attempts.",
+  "receiptRowsUnchanged": true,
+  "inboxRowsUnchanged": true,
+  "jobRows": 0,
+  "deniedRequests": 240,
+  "restarts": 2,
+  "observedProxyRequests": 0,
+  "networkPolicy": "macOS sandbox loopback-only; rejecting HTTP(S) proxy; UI CSP self-only; bridge narrow route allowlist",
+  "jarUnchanged": true,
+  "ownedBackendStopped": true,
+  "ownedTemporaryRemoved": true,
+  "finishedAt": "2026-10-26T12:21:28.216Z",
+  "harnessSha256": "add1b67cbb9fff0e02daafde76f86efdad7b2ef1543557eaf558982dec3d72af",
+  "sharedHelperSha256": "6e8c0dbbadc0ad2757f6451f2a0ed93d71cb54938e34385539c18b31b9547747"
+}

@@ -8,6 +8,8 @@
 - 지식 문서, 질문 첨부, 이전 형식 보관함, 고정 문맥 요청이 있는 Workspace는 거부합니다. 실패·취소를 포함한 미완료 답변 작업이나 수집 중인 Source가 있어도 거부합니다. 지원하지 않는 항목을 몰래 생략한 전체 백업을 만들지 않습니다.
 - 지식/첨부 근거, 분류 범위가 있는 근거, 삭제·이름 변경된 자료 및 현재 파일/추출문 해시·인용 행과 맞지 않는 과거 근거를 거부합니다. 로컬 문서 분석 결과가 환경에 따라 달라져도 가져오기가 거부될 수 있습니다.
 - 연결 위치·Source ID·인증·실행 승인·원격 연결 설정은 옮기지 않습니다. 검색 제외 기록과 앱 설정도 복사하지 않습니다. 답변은 완료 이력으로만 저장하며 실행 가능한 승인을 복원하지 않습니다.
+- 완료 답변의 `requestedModel=""`는 제공자 기본 모델 선택을 뜻하는 유효한 기록입니다. 이 값은 CODEX/CLAUDE 모두 빈 문자열 그대로 왕복 보존하며 실제 모델 ID를 추정하거나 채우지 않습니다. 기본 모델 답변 때문에 전체 대화 내보내기가 거부되던 검증 오류를 수정했습니다. null·공백만 있는 값·기존 120자 제한 초과는 계속 거부합니다.
+- MySQL/Datadog 조회에서 로컬 질문 첨부로 저장한 운영 근거도 현재 형식의 질문 첨부 제한을 받습니다. 해당 첨부가 있는 Workspace는 내보내기를 명시적으로 거부하며 첨부를 빼고 성공한 것처럼 처리하지 않습니다. 첨부 지원이나 이전 용량 확대를 구현한 것은 아닙니다.
 - ZIP 최대 9 MiB, 개별 파일 1 MiB, 전체 아카이브 내용(목록 JSON 포함) 8 MiB, 자료는 폴더 포함 63개, 질문/답변 각각 100개입니다. 목록 JSON도 개별 문서 제한을 받으므로 긴 대화는 이보다 일찍 제한에 도달할 수 있습니다. 질문당 근거·이전 문맥 각각 최대 5개입니다.
 - 새 Workspace 이름은 최대 20자입니다. 미리보기는 메모리에 최대 4개, 10분 또는 백엔드 재시작까지 유지됩니다.
 
@@ -32,6 +34,10 @@ UI 검증: `cd frontend && npm test -- src/WorkspaceArchivePanel.test.tsx`.
 백엔드 검증: `bash scripts/maven.sh '-Dtest=WorkspaceArchiveIntegrationTest,TransferArchiveCodecTest' test`.
 합성 자료 테스트는 실제 패키지 런타임·외부 서비스·전체 Workspace 이전 인수 통과를 뜻하지 않습니다.
 
+2026-10-26 기본 모델 호환성 수정 후 `WorkspaceArchiveIntegrationTest,TransferArchiveCodecTest,CredentialArchiveTest` 표적 실행은 **47개 통과 / 실패 0 / 오류 0 / 건너뜀 0**입니다. 로그: `/tmp/dougle-archive-default-model-tests.log`. 추가 회귀 4건은 CODEX/CLAUDE 기본 모델 답변의 두 차례 내보내기·가져오기와 다중 턴 문맥/답변 보존, 잘못된 모델 메타데이터 거부, 합성 운영 텍스트 첨부의 명시적 내보내기 거부와 원본 보존을 검사합니다. 승인 복원·AI 실행·실제 운영 조회는 하지 않았습니다.
+
+동일 실행 로그에는 백그라운드 검색 갱신의 단일 연결 풀 대기 시간 초과가 기록됐습니다. 테스트 실패로 집계되지는 않았지만 무오류 런타임으로 보고하지 않습니다. 이번 수정은 아카이브 검증에 한정하며 검색 스케줄러를 변경하지 않았습니다. Maven `test`만 실행했으며 설치된 .22 또는 JAR/패키지를 다시 작성하지 않았습니다.
+
 ## 임시 런타임 스모크
 
 하네스만 검사: `node scripts/workspace-archive-smoke.mjs --self-test`.
@@ -50,4 +56,18 @@ v1 스모크는 JAR SHA-256 `1ddab26fc24c41a1a25ab8cc351d98659cccefdace8a0b697f5
 
 첫 가져오기·왕복 가져오기·재시작·다른 Workspace 삭제 뒤, 각각 모델 상태 `READY`를 기다린 후 **이 실행의 임시 DB만** `sqlite3 -readonly`로 열어 `search_outbox`가 0인지 확인합니다. 이어 실제 Workspace 검색 API로 합성 원문을 검색하고 모든 hit가 새로 가져온 자료 ID·원본 종류·추출문 해시·원문을 반환하는지 검사합니다. 다른 Workspace/삭제된 자료 ID나 외부 Source 연결이 나타나면 실패합니다. 상태 오류는 즉시 실패하며 모델/큐·검색 폴링은 각각 120초 제한(진행 중 HTTP 최대 20초, SQLite 최대 3초 별도)을 적용합니다. 결과의 `indexVerification`은 비활성화 시 `SKIPPED`, opt-in 전체 완료 시에만 `PASS`입니다.
 
-v2 준비 검사: 구문, ZIP/manifest/CRC, 잘못된 검색 ID·해시·본문·Source 거부, 폴링 제한/오류 즉시 종료 자체 검사 통과. **모델 opt-in 런타임은 아직 실행하지 않았습니다.** 이 모드의 성공도 해당 합성 자료의 색인/검색 경계만 증명하며 일반 의미 검색 품질·외부 계정·전체 E50 통과를 뜻하지 않습니다.
+v2 준비 당시 구문, ZIP/manifest/CRC, 잘못된 검색 ID·해시·본문·Source 거부, 폴링 제한/오류 즉시 종료 자체 검사를 통과했습니다. 이후 `2026-10-25T21:24:49.775Z` 모델 opt-in 실행은 JAR `276e56fd38d1720cb0bde17072bd2b14ab63233d7fb6e356e82d32bd782b6f22`에서 10개 그룹(색인 관측 4회 포함)을 통과했습니다. 보존 증거는 `docs/evaluations/workspace-archive-v28-model-smoke.json`입니다. 이는 해당 합성 자료의 색인/검색 경계만 증명하며 일반 의미 검색 품질·외부 계정·전체 E50 통과를 뜻하지 않습니다. .23/.24 검증으로 이월하지 않습니다.
+
+### 독립 A/B 데이터 루트 하네스 — 실행 대기
+
+2026-10-26 추가한 `scripts/e50-independent-archive.mjs`는 별도 임시 DB A/B에서 다중 턴 v2 문맥, 빈 기본 모델 기록, 새 자료 ID, 원본 바이트, 재시작 영수증, 왕복 검색 및 손상 입력 거부를 검사하도록 준비했습니다. 합성 운영 텍스트 첨부는 지원되는 이전으로 취급하지 않고 내보내기 거부와 원본 보존을 검사합니다. 같은 호스트의 독립 DB이지 다른 사용자 계정 검증은 아닙니다.
+
+소스 가드 검사만 실행: `node --test scripts/e50-independent-archive.test.mjs` (11개 통과). Java/백엔드 런타임은 실행하지 않았습니다. 수동 운영 조회 UI 제거 뒤 부모의 새 .24 JAR 동결과 런타임/모델 경로 사용 조율을 기다립니다. .23 SHA-256 `fc3fab555cc948b7452b68f4f2b7fd55f108c0ae912abdba058bd79de7318119`는 역사적 스냅샷 식별자이며 이 하네스의 실행 결과가 아닙니다.
+
+승인 후에만 다음 명령의 자리표시자를 명시적으로 대체합니다. backend target 또는 설치된 JAR를 암묵적으로 선택하지 않습니다.
+
+```sh
+node scripts/e50-independent-archive.mjs --run-approved-artifact --jar /approved/frozen.jar --sha256 FULL_APPROVED_SHA256 --java /approved/runtime/bin/java --models /approved/models
+```
+
+하네스는 JAR를 임시 위치에 복사하고 전체 SHA-256을 확인합니다. macOS sandbox-exec로 백엔드 네트워크를 loopback으로 제한하고 파일 쓰기를 해당 임시 루트에 제한하며 실패 시 비격리 fallback은 없습니다. 이 샌드박스의 실제 기동 호환성은 아직 미검증입니다. AI 명령은 `/usr/bin/false`, HTTP는 로컬 아카이브/자료/문맥/검색 allowlist만 허용하고 모델 다운로드·외부 업무 API를 호출하지 않습니다. 설치된 Java/모델은 읽기와 전후 해시 비교만 하므로 실행 중 설치 변경은 조율해야 합니다. 종료 시 소유 프로세스·임시 데이터 정리와 자산 불변 여부를 보고하며 세션 토큰/원본 백엔드 로그는 출력하지 않습니다. 기존 결과 JSON과 E50 NOT_RUN 판정은 변경하지 않습니다.

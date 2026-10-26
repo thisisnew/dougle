@@ -227,3 +227,65 @@ it('retries a timed-out poll only after that request has settled', async () => {
   expect(polls).toBe(2)
   expect(screen.getByText('브라우저 조사 완료')).toBeVisible()
 })
+
+it('releases a stalled capability request without accepting its late response', async () => {
+  vi.useFakeTimers()
+  let complete!: (value: unknown) => void
+  const pending = new Promise(done => { complete = done })
+  let signal: AbortSignal | undefined
+  api.mockImplementation(async (_path, options) => { signal = options?.signal as AbortSignal; return pending })
+  render(<BrowserInvestigationPanel {...props} />)
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: '브라우저 화면 조사' })) })
+  expect(screen.getByRole('button', { name: '접기' })).toBeDisabled()
+  await act(async () => { await vi.advanceTimersByTimeAsync(10000) })
+  expect(signal?.aborted).toBe(true)
+  expect(screen.getByRole('button', { name: '접기' })).toBeEnabled()
+  expect(screen.getByText(/요청 시간이 초과/)).toBeVisible()
+  await act(async () => { complete({ status: 'AVAILABLE', message: 'late' }) })
+  expect(screen.queryByLabelText('화면 URL')).toBeNull()
+  expect(api).toHaveBeenCalledTimes(1)
+})
+
+it('preserves timed-out submission identity for explicit recovery and discards late completion', async () => {
+  const pending = deferredJob()
+  const original = api.getMockImplementation()!
+  let posts = 0
+  let signal: AbortSignal | undefined
+  api.mockImplementation(async (path, options) => {
+    if (path.endsWith('/jobs') && options?.method === 'POST' && ++posts === 1) {
+      signal = options.signal as AbortSignal
+      return pending.promise
+    }
+    return original(path, options)
+  })
+  render(<BrowserInvestigationPanel {...props} />)
+  await prepare()
+  vi.useFakeTimers()
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: '이 범위로 브라우저 조사 시작' })) })
+  await act(async () => { await vi.advanceTimersByTimeAsync(10000) })
+  expect(signal?.aborted).toBe(true)
+  expect(posts).toBe(1)
+  expect(screen.getByRole('button', { name: '접수 상태 확인' })).toBeEnabled()
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: '접수 상태 확인' })) })
+  expect(screen.getByText('브라우저 조사 완료')).toBeVisible()
+  const calls = api.mock.calls.filter(([path, options]) => path.endsWith('/jobs') && options?.method === 'POST')
+  expect(calls).toHaveLength(2)
+  expect(calls[0][1]!.body).toBe(calls[1][1]!.body)
+  await act(async () => { pending.resolve({ ...job, status: 'FAILED' }); await vi.advanceTimersByTimeAsync(0) })
+  expect(screen.getByText('브라우저 조사 완료')).toBeVisible()
+  expect(vi.getTimerCount()).toBe(0)
+})
+
+it('aborts a stalled action and clears its deadline on unmount', async () => {
+  vi.useFakeTimers()
+  let signal: AbortSignal | undefined
+  api.mockImplementation(async (_path, options) => {
+    signal = options?.signal as AbortSignal
+    return new Promise(() => {})
+  })
+  const view = render(<BrowserInvestigationPanel {...props} />)
+  await act(async () => { fireEvent.click(screen.getByRole('button', { name: '브라우저 화면 조사' })) })
+  await act(async () => { view.unmount() })
+  expect(signal?.aborted).toBe(true)
+  expect(vi.getTimerCount()).toBe(0)
+})

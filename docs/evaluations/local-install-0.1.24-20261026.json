@@ -1,0 +1,45 @@
+{
+  "version": "0.1.24",
+  "installedAtLocal": "2026-10-26T22:22:25+09:00",
+  "architecture": "x86_64",
+  "destination": "/Applications/Knowledge Forge.app",
+  "previousVersion": "0.1.22",
+  "jarSha256": "b5b59534ed02f1ad342a64d55f6e40cff03947997af2c07340b5b9bd85473d47",
+  "dmgSha256": "5866609cf38a72658a6c9e67bde6c9dcedf153b97cdd20b0511b6c2ada20310d",
+  "verification": {
+    "readOnlyDmgMount": true,
+    "mountedStagedAndInstalledCodesign": true,
+    "versionAndJarMatched": true,
+    "packagedFrontendExactFilesAndBytes": true,
+    "nativeProcessObserved": 18927,
+    "bundledJavaProcessObserved": 18984,
+    "observedLoopbackPort": 51709,
+    "databaseSchemaVersion": 28,
+    "unauthenticatedWorkspaceStatus": 403
+  },
+  "backup": {
+    "directory": "~/Library/Application Support/Dougle Local Backups/pre-0.1.24-20261026-222222",
+    "directoryMode": "0700",
+    "databaseMode": "0600",
+    "includes": ["previous app", "SQLite database", "WAL and SHM when present"],
+    "credentialsCopied": false,
+    "fullDataDirectoryBackup": false
+  },
+  "scope": "Manual operational-query UI removed; connection settings and internal read-only adapters retained. User business rows and credentials were not inspected. Graceful native termination and Java exit preceded the DB backup.",
+  "isolatedChecks": {
+    "nativeHostLog": "/tmp/dougle-024-native-host.log",
+    "nativeStartupMs": 23736,
+    "webkitLog": "/tmp/dougle-024-native-react-runtime.log",
+    "screenshots": ["docs/screenshots/chat-without-manual-query.png", "docs/screenshots/plugins-without-manual-query.png"],
+    "browser": "Ego TaskSpace15, private synthetic HOME/DB and fake CLI, loopback-only sandbox. Synthetic inference count0; task and owned backend closed. First launch failed due to IPv6 sandbox bind; corrected with preferIPv4Stack without removing sandbox. Screenshots reviewed from packaged JAR web mode, not user data."
+  },
+  "limitations": [
+    "Next bounded-conversation-retrieval source is not in this artifact.",
+    "Full conversational investigation and 50-case acceptance remain incomplete.",
+    "Actual provider timeout root cause remains unconfirmed.",
+    "No ARM hardware execution or clean second-Mac acceptance.",
+    "Ad-hoc signing is not Apple notarization."
+  ],
+  "publicReleasePublished": false,
+  "updateFeedPromoted": false
+}

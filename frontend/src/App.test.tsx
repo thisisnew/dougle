@@ -18,25 +18,28 @@ const file = { id: 'file', workspaceId: 'one', parentId: null, name: 'notes.md',
 beforeEach(() => { api.mockReset(); vi.mocked(downloadApi).mockClear() })
 
 describe('Workspace와 자료 탐색기', () => {
-  it('대화의 운영 조회 중 탐색·설정·Workspace 변경을 잠그고 완료 뒤 해제한다', async () => {
-    let finish!: (value: unknown) => void
+  it('manual queries are absent while plugin connections remain available', async () => {
     api.mockImplementation(async path => {
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
-      if (path === '/plugins') return new Promise(resolve => { finish = resolve })
-      if (path === '/plugins/datadog/one') return { configured: false, site: null, revision: null }
+      if (path === '/plugins') return { mysqlConnected: true, mysql: null }
+      if (path === '/plugins/datadog/one') return { configured: true, site: 'EU1', revision: 'revision' }
       return []
     })
     render(<App />)
     await screen.findByRole('heading', { name: 'Dougle' })
-    await userEvent.click(screen.getByRole('button', { name: '운영 자료 조회' }))
-    await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeDisabled())
-    for (const name of ['대화', '자료', '질문 기록', 'Workspace 생성']) expect(screen.getByRole('button', { name })).toBeDisabled()
-    expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeDisabled()
-    await act(async () => finish({ mysqlConnected: false }))
-    await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeEnabled())
-    expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeEnabled()
-    expect(api.mock.calls.filter(([, options]) => options?.method === 'POST').every(([path]) => /^\/ai\/providers\/[^/]+\/connection$/.test(path))).toBe(true)
-    expect(api.mock.calls.some(([path]) => path.includes('answer-jobs') || path.includes('investigations'))).toBe(false)
+    expect(screen.queryByRole('button', { name: '운영 자료 조회' })).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: '설정' }))
+    await userEvent.click(screen.getByRole('button', { name: '플러그인' }))
+    expect(await screen.findByRole('button', { name: 'MySQL 연결 설정' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Slack 문의' })).toBeEnabled()
+    expect(screen.queryByRole('button', { name: 'DB 데이터 조회' })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('테이블')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: '조회 범위 확인' })).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Datadog 연결' }))
+    expect(await screen.findByText(/연결 정보 저장됨/)).toBeVisible()
+    expect(screen.getByRole('button', { name: '관리자 연결' })).toBeEnabled()
+    for (const label of ['테이블', '환경', '서비스', '조회할 열 (쉼표로 구분)']) expect(screen.queryByLabelText(label)).not.toBeInTheDocument()
+    expect(api.mock.calls.some(([path]) => /investigations|operational-captures|tool-proposal/.test(path))).toBe(false)
   })
 
   it('팀 설정 적용 뒤 Workspace 세션을 갱신하고 자동 동기화는 요청하지 않는다', async () => {

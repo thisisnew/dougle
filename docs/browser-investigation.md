@@ -11,6 +11,13 @@ access, evidence-bundle mutation, automatic follow-up, or answer generation occu
 
 API base: `/api/workspaces/{workspaceId}/browser-investigations`.
 
+Availability/history, preview, submission and cancellation actions have a ten-second UI
+deadline. A stalled transport releases the controls even if it ignores abort; late
+responses cannot replace current state. Submission timeout is an unknown outcome, not
+proof of failure: explicit reception checking reuses the same request ID and approval,
+with no automatic resubmission. Unmount aborts the action and clears its deadline.
+This source change follows the locally installed 0.1.22 candidate and is not yet packaged.
+
 - `GET /capability`: `{status: AVAILABLE|SETUP_REQUIRED,message}`.
 - `POST /preview {bundleId,url,allowedGetPaths}`: `{bundleId,digest,scope,expiresAt,maxAiCalls:0,limits}`.
 - `POST /jobs {requestId,bundleId,digest,approved:true}`: HTTP 202, Job.

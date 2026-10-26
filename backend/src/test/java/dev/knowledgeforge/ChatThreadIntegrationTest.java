@@ -138,8 +138,8 @@ class ChatThreadIntegrationTest {
         var note = search.searchQuestion(workspace, "비밀번호 지시문", List.of(), false).stream().filter(hit -> hit.name().equals("note.md")).toList();
         assertThat(policy).hasSize(1);
         assertThat(note).hasSize(1);
-        doReturn(note).when(search).searchQuestion(workspace, previous + " " + question, List.of(), false);
-        doReturn(policy).when(search).searchQuestion(workspace, question, List.of(), false);
+        doReturn(note).when(search).searchQuestionCandidates(workspace, previous + " " + question);
+        doReturn(policy).when(search).searchQuestionCandidates(workspace, question);
         var next = threads.create(workspace, new Create("policy-next", first.payload().chatContext().threadId(), first.id(), question, List.of()));
         assertThat(next.payload().items().getFirst().title()).isEqualTo("policy.md");
         assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly(question, previous);
@@ -346,16 +346,16 @@ class ChatThreadIntegrationTest {
     void chainedAmbiguousFollowupNeverReintroducesAnAccumulatedRoot() {
         var first = threads.create(workspace, new Create("chain-first", null, null, "Strategy", List.of()));
         String question = "Which aspect?";
-        doReturn(List.of()).when(search).searchQuestion(workspace, question, List.of(), false);
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, question);
         var second = threads.create(workspace, new Create("chain-second", first.payload().chatContext().threadId(), first.id(), question, List.of()));
         assertThat(second.payload().chatContext().extractive().retrievalQueries()).containsExactly(question, "Strategy");
         String next = "Could you elaborate?";
-        doReturn(List.of()).when(search).searchQuestion(workspace, next, List.of(), false);
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, next);
         org.mockito.Mockito.clearInvocations(search);
         var third = threads.create(workspace, new Create("chain-third", first.payload().chatContext().threadId(), second.id(), next, List.of()));
         assertThat(third.payload().status()).isEqualTo("NO_EVIDENCE");
         assertThat(third.payload().chatContext().extractive().retrievalQueries()).containsExactly(next, question);
-        org.mockito.Mockito.verify(search, org.mockito.Mockito.never()).searchQuestion(workspace, "Strategy", List.of(), false);
+        org.mockito.Mockito.verify(search, org.mockito.Mockito.never()).searchQuestionCandidates(workspace, "Strategy");
     }
 
     @Test
@@ -364,7 +364,7 @@ class ChatThreadIntegrationTest {
         var unrelated = search.searchQuestion(workspace, "NightState", List.of(), false);
         assertThat(unrelated).isNotEmpty();
         String followup = "어느쪽을 중점적으로 보면돼?";
-        doReturn(unrelated).when(search).searchQuestion(workspace, followup, List.of(), false);
+        doReturn(unrelated).when(search).searchQuestionCandidates(workspace, followup);
         var next = threads.create(workspace, new Create("distractor-next", first.payload().chatContext().threadId(), first.id(), followup, List.of()));
         assertThat(next.payload().items()).extracting(EvidenceBundle.Item::title).contains("NightState.java", "Strategy.java");
         assertThat(next.payload().items().getFirst().title()).isEqualTo("NightState.java");

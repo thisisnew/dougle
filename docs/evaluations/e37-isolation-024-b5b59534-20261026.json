@@ -1,0 +1,64 @@
+{
+  "criterion": "E37",
+  "result": "FAILED_OR_INCOMPLETE",
+  "mode": "simulated",
+  "artifactSha256": "b5b59534ed02f1ad342a64d55f6e40cff03947997af2c07340b5b9bd85473d47",
+  "startedAt": "2026-10-26T13:12:59.181Z",
+  "observations": [],
+  "backendPids": [
+    15901
+  ],
+  "aiDispatches": 0,
+  "limitations": [
+    "Seeded terminal jobs are not AI/browser executions",
+    "Populated MySQL/Datadog/operational capture memory state deferred",
+    "No UI checkpoint or full E37 verdict"
+  ],
+  "javaSha256": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
+  "models": {
+    "directory": "/Applications/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "architecture": "x86_64",
+    "files": [
+      {
+        "name": "model.onnx",
+        "size": 118346824,
+        "sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88"
+      },
+      {
+        "name": "tokenizer.json",
+        "size": 17082730,
+        "sha256": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39"
+      },
+      {
+        "name": "reranker.onnx",
+        "size": 118620016,
+        "sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+      },
+      {
+        "name": "reranker-tokenizer.json",
+        "size": 17082660,
+        "sha256": "62c24cdc13d4c9952d63718d6c9fa4c287974249e16b7ade6d5a85e7bbb75626"
+      }
+    ],
+    "verifiedAt": "2026-10-26T13:13:07.283Z"
+  },
+  "snapshotJar": "/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/dougle-e37-runtime-SMysY1/frozen-0.1.24.jar",
+  "sandboxProfileSha256": "8befba71aec36328fb019b50128c560093d53547196303884c917021964d6de5",
+  "networkAndFiles": "Existing E50 strict file allowlist and loopback-only network; no fallback or added permission",
+  "startup": {
+    "exitCode": null,
+    "signal": "SIGABRT",
+    "stdoutBytes": 0,
+    "stderrBytes": 0,
+    "ready": false
+  },
+  "failure": "Backend startup failed/aborted: No recognized startup diagnostic; raw application output withheld",
+  "ownedBackendStopped": true,
+  "observedProxyRequests": 0,
+  "snapshotHashUnchanged": true,
+  "sourceHashUnchanged": true,
+  "javaUnchanged": true,
+  "ownedTemporaryRemoved": true,
+  "finishedAt": "2026-10-26T13:13:12.876Z",
+  "harnessSha256": "f781e6569a3829d3dde9e03fbbb6102611efefb642e0707181c3a6b5b636e207"
+}

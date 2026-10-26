@@ -70,6 +70,7 @@ class WorkspaceArchiveIntegrationTest {
     @Autowired JdbcTemplate jdbc;
     @Autowired dev.knowledgeforge.search.application.SearchService search;
     @Autowired MockMvc mvc;
+    @Autowired dev.knowledgeforge.attachment.application.AttachmentService attachments;
     @MockitoSpyBean WorkspaceArchivePersistence persistence;
     final JsonMapper json = JsonMapper.builder().build();
     final TransferArchiveCodec codec = new TransferArchiveCodec();
@@ -212,6 +213,77 @@ class WorkspaceArchiveIntegrationTest {
         store.deleteWorkspace(result.workspaceId());
         assertThat(archives.apply(request)).isEqualTo(result);
         assertThat(store.workspace(result.workspaceId())).isEmpty();
+    }
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = { "CODEX", "CLAUDE" })
+    void defaultModelAnswersRoundTripWithoutInventingModelOrDroppingMultiTurnHistory(String provider) throws Exception {
+        var fixture = fixture();
+        jdbc.update("UPDATE answer_job SET provider=?,requested_model='' WHERE workspace_id=?", provider, fixture.workspaceId());
+        var original = threads.get(fixture.workspaceId(), fixture.first().payload().chatContext().threadId());
+        var firstArchive = archives.exportArchive(fixture.workspaceId());
+        var catalog = json.readTree(codec.read(firstArchive).documents().get(WorkspaceArchiveService.CATALOG_KEY));
+        assertThat(catalog.path("threads").get(0).path("turns").get(0).path("answers").get(0).path("model").asString()).isEmpty();
+        for (int round = 0; round < 2; round++) {
+            var preview = archives.preview(firstArchive, name());
+            var imported = archives.apply(new WorkspaceArchiveService.Apply(UUID.randomUUID().toString(), preview.previewId(), preview.digest()));
+            var restored = threads.get(imported.workspaceId(), imported.threadIds().getFirst());
+            assertThat(restored.bundles()).extracting(bundle -> bundle.payload().question())
+                    .containsExactlyElementsOf(original.bundles().stream().map(bundle -> bundle.payload().question()).toList());
+            var first = restored.bundles().getFirst();
+            var followup = restored.bundles().getLast().payload().chatContext();
+            assertThat(followup.parentBundleId()).isEqualTo(first.id());
+            assertThat(followup.history()).containsExactly(new EvidenceBundle.ChatTurn(first.id(), first.digest(),
+                    first.payload().question(), "Synthetic completed answer."));
+            assertThat(restored.jobs()).singleElement().satisfies(job -> {
+                assertThat(job.provider()).isEqualTo(provider);
+                assertThat(job.requestedModel()).isEmpty();
+                assertThat(job.answer()).isEqualTo(original.jobs().getFirst().answer());
+                assertThat(job.status()).isEqualTo("SUCCEEDED");
+            });
+            assertThat(jdbc.queryForObject("SELECT count(*) FROM answer_approval WHERE bundle_id IN (SELECT id FROM evidence_bundle WHERE workspace_id=?)",
+                    Integer.class, imported.workspaceId())).isZero();
+            firstArchive = archives.exportArchive(imported.workspaceId());
+        }
+        assertThat(jobs.list(fixture.workspaceId()).getFirst().requestedModel()).isEmpty();
+    }
+
+    @Test
+    void defaultModelCompatibilityDoesNotAcceptNullWhitespaceOrOversizedModelMetadata() throws Exception {
+        var fixture = fixture();
+        var documents = codec.read(archives.exportArchive(fixture.workspaceId())).documents();
+        int before = count("workspace");
+        for (String model : new String[] { null, " ", "\t", "m".repeat(121) }) {
+            var catalog = json.readTree(documents.get(WorkspaceArchiveService.CATALOG_KEY));
+            var answer = (tools.jackson.databind.node.ObjectNode) catalog.path("threads").get(0).path("turns").get(0).path("answers").get(0);
+            if (model == null) answer.putNull("model"); else answer.put("model", model);
+            var changed = new HashMap<>(documents);
+            changed.put(WorkspaceArchiveService.CATALOG_KEY, json.writeValueAsBytes(catalog));
+            byte[] archive = codec.write(changed);
+            assertThatThrownBy(() -> archives.preview(archive, name()))
+                    .isInstanceOf(dev.knowledgeforge.library.application.LibraryException.class);
+        }
+        assertThat(count("workspace")).isEqualTo(before);
+    }
+
+    @Test
+    void attachedOperationalTextBlocksExportWithoutSilentlyDroppingEvidenceOrChangingSource() {
+        var fixture = fixture();
+        search.refresh();
+        byte[] text = "Synthetic operational read\nservice=example\nresult=healthy\n".getBytes(StandardCharsets.UTF_8);
+        var attachment = attachments.upload(fixture.workspaceId(), "datadog-synthetic.txt", text);
+        var thread = threads.get(fixture.workspaceId(), fixture.first().payload().chatContext().threadId());
+        var attached = threads.create(fixture.workspaceId(), new ChatThreadService.Create("operational-archive", thread.id(),
+                thread.bundles().getLast().id(), "Explain synthetic operational evidence", List.of(attachment.id())));
+        var before = attachments.get(fixture.workspaceId(), attachment.id());
+        int workspaces = count("workspace");
+        assertThat(before.bundleId()).isEqualTo(attached.id());
+        assertThatThrownBy(() -> archives.exportArchive(fixture.workspaceId()))
+                .isInstanceOf(dev.knowledgeforge.library.application.LibraryException.class).hasMessageContaining("첨부");
+        assertThat(attachments.get(fixture.workspaceId(), attachment.id()).content()).isEqualTo(text);
+        assertThat(attachments.get(fixture.workspaceId(), attachment.id()).bundleId()).isEqualTo(attached.id());
+        assertThat(bundles.find(fixture.workspaceId(), attached.id())).contains(attached);
+        assertThat(count("workspace")).isEqualTo(workspaces);
     }
 
     @Test

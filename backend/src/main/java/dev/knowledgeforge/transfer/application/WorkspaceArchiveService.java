@@ -347,7 +347,8 @@ public class WorkspaceArchiveService {
                 }
                 for (var answer : turn.answers()) {
                     if (++answerCount > 100 || !Set.of("CODEX", "CLAUDE").contains(answer.provider())) throw invalid("답변 제공자 또는 개수 제한을 확인하세요.");
-                    text(answer.model(), 120); text(answer.text(), 200_000); Instant.parse(answer.createdAt()); Instant.parse(answer.updatedAt());
+                    if (!"".equals(answer.model())) text(answer.model(), 120);
+                    text(answer.text(), 200_000); Instant.parse(answer.createdAt()); Instant.parse(answer.updatedAt());
                 }
                 var synthetic = archiveBundle(turn, threadId, parent);
                 var history = turn.history().stream().map(old -> {

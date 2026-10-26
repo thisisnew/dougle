@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, expect, it, vi } from 'vitest'
 import InvestigationPanel from './InvestigationPanel'
 import { ApiError, request } from './api'
@@ -8,55 +8,19 @@ const api = vi.mocked(request)
 const props = { workspaceId: 'workspace', bundleId: 'bundle', connection: { provider: 'CODEX' as const, state: 'AUTHENTICATED', model: 'fixture' }, disabled: false }
 const preview = { digest: 'digest', prompt: '가상 질문과 고정 근거', characters: 12, maxCalls: 1, provider: 'CODEX', requestedModel: 'fixture' }
 const job = { id: 'job', workspaceId: 'workspace', bundleId: 'bundle', status: 'SUCCEEDED', query: 'Strategy', output: '<script>untrusted</script>' }
-const proposal = { jobId: 'job', workspaceId: 'workspace', bundleId: 'bundle', kind: 'MYSQL_READ',
-  requiredFields: ['table', 'columns', 'equalities', 'limit'], executionAllowed: false }
 const proposalJob = { ...job, decision: 'PROPOSE_MYSQL_READ', query: null, output: null }
 beforeEach(() => { api.mockReset() })
 
-it('복원된 제안은 조회하지 않고 명시적 클릭 후 검증된 제안만 전달한다', async () => {
-  const onOpen = vi.fn()
-  api.mockResolvedValueOnce([proposalJob]).mockResolvedValueOnce(proposal)
-  render(<InvestigationPanel {...props} onOpenOperationalTool={onOpen} onAnswer={vi.fn()} />)
+it.each(['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'])('restores %s without a query or handoff', async decision => {
+  api.mockResolvedValueOnce([{ ...proposalJob, decision }])
+  render(<InvestigationPanel {...props} onAnswer={vi.fn()} />)
   expect(api).not.toHaveBeenCalled()
   fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
-  const button = await screen.findByRole('button', { name: '조회 양식 열기' })
-  expect(screen.getByText('수동 조회 제안 · 아직 조회하지 않음')).toBeVisible()
-  expect(screen.queryByText('자료 검색 완료')).not.toBeInTheDocument()
+  expect(await screen.findByText('운영 조회 제안 · 실행하지 않음')).toBeVisible()
+  expect(screen.getByText('수동 운영 조회는 제공하지 않습니다. DB·로그 조회는 실행되지 않았습니다.')).toBeVisible()
+  expect(screen.queryByRole('button', { name: '조회 양식 열기' })).not.toBeInTheDocument()
   expect(screen.queryByRole('button', { name: '이 자료로 다시 답변' })).not.toBeInTheDocument()
-  expect(api).toHaveBeenCalledTimes(1); expect(onOpen).not.toHaveBeenCalled()
-  fireEvent.click(button); fireEvent.click(button)
-  await waitFor(() => expect(onOpen).toHaveBeenCalledExactlyOnceWith(proposal))
-  expect(api).toHaveBeenCalledTimes(2)
-  expect(api.mock.calls[1][0]).toBe('/workspaces/workspace/investigation-plans/jobs/job/tool-proposal')
-  expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
-})
-
-it.each([
-  { ...proposal, workspaceId: 'other' }, { ...proposal, bundleId: 'old' }, { ...proposal, jobId: 'old' },
-  { ...proposal, executionAllowed: true }, { ...proposal, scope: 'production' },
-  { ...proposal, requiredFields: ['guessedTable'] },
-  { ...proposal, kind: 'DATADOG_LOGS', requiredFields: ['environment', 'service', 'indexes', 'from', 'to', 'limit'] },
-])('변경된 대상 또는 범위가 있는 제안을 전달하지 않는다: %j', async invalid => {
-  const onOpen = vi.fn()
-  api.mockResolvedValueOnce([proposalJob]).mockResolvedValueOnce(invalid)
-  render(<InvestigationPanel {...props} onOpenOperationalTool={onOpen} />)
-  fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
-  fireEvent.click(await screen.findByRole('button', { name: '조회 양식 열기' }))
-  await screen.findByRole('alert')
-  expect(onOpen).not.toHaveBeenCalled()
-})
-
-it.each(['disabled', 'bundle', 'unmount'])('제안 GET 이후 %s 변경이면 늦은 응답을 무시한다', async change => {
-  const onOpen = vi.fn()
-  let complete!: (value: unknown) => void
-  api.mockResolvedValueOnce([proposalJob]).mockReturnValueOnce(new Promise(resolve => { complete = resolve }))
-  const view = render(<InvestigationPanel {...props} onOpenOperationalTool={onOpen} />)
-  fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
-  fireEvent.click(await screen.findByRole('button', { name: '조회 양식 열기' }))
-  if (change === 'unmount') view.unmount()
-  else view.rerender(<InvestigationPanel {...props} disabled={change === 'disabled'} bundleId={change === 'bundle' ? 'other' : props.bundleId} onOpenOperationalTool={onOpen} />)
-  await act(async () => complete(proposal))
-  expect(onOpen).not.toHaveBeenCalled()
+  expect(api).toHaveBeenCalledExactlyOnceWith('/workspaces/workspace/investigation-plans/jobs?bundleId=bundle', expect.objectContaining({ signal: expect.any(AbortSignal) }))
 })
 
 async function prepare() {

@@ -10,7 +10,9 @@
 - [x] Slack 연결 생존 확인·삭제된 대화 연결 복구·기존 답장 영수증 조회 구현 및 가상/로컬 회귀. `SlackHeartbeatTest`, `SlackInboxIntegrationTest`, `SlackThreadRecoveryControllerTest`, `SlackReplyPanel.test.tsx`로 확인했으며 실제 회사 Slack 인수는 남는다. 새 답장 전송은 금지한다.
 - [x] Slack 본문의 알려진 인증정보 패턴을 질문 채택·AI 미리보기·아카이브 경계에서 거부하는 회귀. `CredentialContentGuardTest`, `CredentialPreviewTest`, `CredentialArchiveTest`를 포함한다. 모든 개인정보·이미지·난독화된 비밀 탐지를 보증하지 않는다.
 - [ ] 실제 AI 답변의 간헐적120초 시간 초과 원인 분류·수정 및 후속 대화 재검증. 자동 재전송이나 시간 제한 완화로 가리지 않는다.
-- [ ] 검증된 소스의 GitHub 반영과 별도 설치·배포 판정.0.1.22 Intel/ARM 후보 생성 및 Intel 네이티브 검사는 완료했으나 설치·공개·업데이트 피드 승격은 보류한다.
+- [ ] 검증된 소스의 GitHub 반영과 별도 설치·배포 판정.0.1.24 Intel 로컬 시험 설치 완료. 양 CPU 패키지 검증 완료(ARM은 정적 검사만), 공개·업데이트 피드 승격은 보류한다.
+- [x] 수동 운영 조회 화면 제거 및 연결 설정 유지.0.1.24 설치본에 반영했다.
+- [ ] 자연 대화의 운영 조사 통합. 제한된 로컬 검색 경로는 다음 후보 소스의 집중 회귀117개·독립 검토를 통과했으나 설치되지 않았다. 모호한 범위 확인과 DB/로그 자동 조회는 아직 연결하지 않았다.
 - [ ] 실제 회사 서비스·Apple Silicon 실기기·사람 대비 조사 효율 검증.
 
 ## 수집·검색 개선 (2026-10-25)

@@ -82,3 +82,12 @@ smoke 모델은 fake CLI이며 실제 외부 AI 검증이 아닙니다.
 UI 변경은 없으며 이번에는 브라우저 수동 QA를 추가 실행하지 않았습니다.
 작은 가상 자료 검색의 최신 측정값은 `performance-phase3-foundation.json`에 기록했습니다.
 이는 SSE 지연/동시 부하나 실제 AI 성능 측정이 아닙니다.
+
+### 2026-10-26 후속: 답변 작업 조회 경합
+
+`AnswerJobService`의 partial 조회와 주기적 승인 재검증이 DB 조회 중 같은 monitor를 점유하면 스트림 콜백과 취소 진입도 기다리는 경합을 가짜 제공자·latch로 지연한 저장소 조회로 재현했습니다. 수정 전 네 회귀가 모두 실패했고, 해당 조회만 monitor 밖으로 옮겼습니다. 조회 전후 활성 작업의 객체 동일성을 확인해 이전 작업의 늦은 검증이나 RUNNING 조회가 다음 작업을 취소하거나 다음 작업의 임시 답변을 노출하지 않도록 합니다. 삭제 후 같은 요청 ID를 새 승인으로 재사용하는 경우도 구분합니다.
+
+- 좁은 회귀 `AnswerJobContentionTest` **7개 통과, 실패/skip 0**. 로그: `/tmp/dougle-answer-contention-next-job.log`.
+- 앞선 서비스/SSE 통합 포함 28개 통과와 중복 합산하지 않습니다. 후속 전체 회귀·새 JAR·설치본 검증을 뜻하지 않습니다.
+- `cancel()`의 DB 조회와 `stop()`의 DB 갱신은 여전히 monitor 안에 있고, `stop()`은 갱신 후 interrupt합니다. 제출·최종 저장 트랜잭션의 직렬화/CAS도 유지합니다. 모든 DB 지연·lock starvation·취소 지연 제거 또는 응답 시간 상한을 보장하지 않습니다.
+- 영구 교착이나 기존 실제 AI timeout의 원인을 입증한 것이 아닙니다. 실제 AI 호출 없이 검사했으며 스트림 이벤트 의미·모델 effort·timeout·재시도 정책은 변경하지 않았습니다.
