@@ -1,5 +1,7 @@
 # Historical explicit Slack replies (superseded, unreleased v28)
 
+> 이 문서는 과거 구현 이력입니다. 2026-10-27 사용자 요청으로 Slack 문의·연결·수신함·알림 및 관련 실행/API를 제거했습니다. 현재 지원 기능이나 설치 안내로 사용하지 않습니다.
+
 **Superseded on 2026-10-26:** the latest user policy forbids all external business-system mutations, including Slack posting even with explicit approval. Remove/block outbound UI and backend dispatch; preserve existing receipts for scoped read-only access. No preview, execute, uncertainty acknowledgment or restart may re-enable posting. [Current policy and release hold](external-readonly-policy.md).
 
 Everything below describes the former outbound-capable implementation, **not current permission, requirements or usage guidance**. Keep it as historical design/receipt evidence; its mocked tests do not satisfy the replacement E35 zero-transmission criterion. Do not install/publish the old 0.1.21/675a7c59 snapshot. Read-only enforcement must be separately implemented and verified; this documentation does not assert that work complete.

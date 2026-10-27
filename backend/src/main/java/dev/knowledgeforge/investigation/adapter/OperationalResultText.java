@@ -1,6 +1,5 @@
 package dev.knowledgeforge.investigation.adapter;
 
-import dev.knowledgeforge.plugins.adapter.DatadogLogRedactor;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -19,7 +18,7 @@ public final class OperationalResultText {
             text = bounded.text();
             clipped = bounded.truncated();
         }
-        text = DatadogLogRedactor.redact(text, List.of());
+        text = OperationalTextRedactor.redact(text, List.of());
         if (text.length() > 1400) {
             int end = Character.isHighSurrogate(text.charAt(1399)) ? 1399 : 1400;
             text = text.substring(0, end);
@@ -73,7 +72,7 @@ public final class OperationalResultText {
     }
 
     public static Text snapshot(String provider, String resultId, String capturedAt, int rows, String output, boolean truncated, Text provenance) {
-        String redacted = DatadogLogRedactor.redact(output, List.of()).replace("\r\n", "\n").replace('\r', '\n');
+        String redacted = OperationalTextRedactor.redact(output, List.of()).replace("\r\n", "\n").replace('\r', '\n');
         var clean = new StringBuilder();
         redacted.codePoints().forEach(point -> {
             if (Character.isISOControl(point) && point != '\n' && point != '\t') clean.append(' ');

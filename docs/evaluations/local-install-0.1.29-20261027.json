@@ -1,0 +1,31 @@
+{
+  "version": "0.1.29",
+  "verifiedAt": "2026-10-27T13:58:50.686Z",
+  "backup": "/Users/thisisnew/Library/Application Support/Dougle Local Backups/pre-0.1.29-20261027-225523",
+  "jarSha256": "4b9a60bb4bf0549b77e784da31e258277341be17869134b2e076f2d5f56bbd15",
+  "dmgSha256": "1d7a5754d12ced14c44673ffbce2cf18560b2fb9fb11bb4cd4fd01ea96fb6aa5",
+  "nativePid": "24577",
+  "javaPid": "24714",
+  "port": "50850",
+  "schemaVersion": 29,
+  "rootHttpStatus": 200,
+  "unauthenticatedApiStatus": 403,
+  "codesignVerified": true,
+  "dmgReadOnlyMounted": true,
+  "dmgJarMatchedInstalled": true,
+  "updaterSignatureAndVersionVerified": true,
+  "credentialsCopied": false,
+  "businessRowsRead": false,
+  "newAiCalls": 0,
+  "publicFeedChanged": false,
+  "notarized": false,
+  "architecture": "x86_64",
+  "scope": "Slack inquiries/notifications/connection and Datadog connection/read adapters and APIs removed; Notion/Atlassian/MySQL retained",
+  "cachedPackagingResources": "Existing Intel Java/Codex/Git/search resources reused; architecture and bundled Git dependencies verified; new JAR, native version, signature, updater archive and DMG built.",
+  "limitations": [
+    "No ARM runtime or fresh Mac acceptance",
+    "Search19/large-file5/conversation5 failures remain; removed operational25 excluded rather than passed",
+    "Browser screenshot uses isolated private HOME and packaged JAR; not an external provider test"
+  ],
+  "screenshot": "plugins-removed-20261027.png"
+}

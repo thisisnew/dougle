@@ -10,7 +10,7 @@
 
 [제거된 팀 설정 기능의 내부 이력](team-settings.md)
 
-[제거된 제한형 ZIP 이전의 내부 이력](workspace-archive.md) · [Slack 수신함](slack-inbox-runtime.md) · [격리 브라우저 조사](browser-investigation.md)
+[제거된 제한형 ZIP 이전의 내부 이력](workspace-archive.md) · [제거된 Slack 수신함의 과거 이력](slack-inbox-runtime.md) · [격리 브라우저 조사](browser-investigation.md)
 
 [실제 계획 AI·추가 검색·후속 답변 검증](evaluations/investigation-live-v3-20261025-review.md)
 

@@ -59,7 +59,7 @@ it('uncertain planning preserves its request for explicit reconciliation rather 
   vi.mocked(sendConversationPlan).mockImplementationOnce(async (_workspace, _bundle, _provider, _model, _signal, remember) => {
     remember(submission)
     throw new Error('접수 불확실')
-  }).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_DATADOG_LOGS' })
+  }).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ' })
   api.mockResolvedValueOnce(bundle)
   render(<ChatPanel {...props} />)
   await userEvent.type(screen.getByRole('textbox'), '가상 업무 오류{Enter}')
@@ -153,8 +153,8 @@ it('retries failed history plan reconciliation by GET only and never falls back 
 })
 
 it('takes business clarification in the same composer and replans a new turn bound to the original issue', async () => {
-  const proposal = { ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_DATADOG_LOGS', toolStatus: 'PENDING_SCOPE' }
-  const scope = { jobId: 'plan', scopeId: 'scope', revision: 1, workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'DATADOG_LOGS', expiresAt: '2099-01-01T00:00:00Z', sessionOnly: true, executionAllowed: false, internalResolutionRequired: true, questions: [{ topic: 'ENVIRONMENT', prompt: '어느 환경에서 발생한 현상인지 알려 주세요.' }] }
+  const proposal = { ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ', toolStatus: 'PENDING_SCOPE' }
+  const scope = { jobId: 'plan', scopeId: 'scope', revision: 1, workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'MYSQL_READ', expiresAt: '2099-01-01T00:00:00Z', sessionOnly: true, executionAllowed: false, internalResolutionRequired: true, questions: [{ topic: 'ENVIRONMENT', prompt: '어느 환경에서 발생한 현상인지 알려 주세요.' }] }
   const followup = { ...bundle, id: 'clarified', payload: { ...bundle.payload, question: '운영 환경, 오늘 오전 10시 한국 시간', items: [], status: 'NO_EVIDENCE' } }
   vi.mocked(readConversationPlan).mockResolvedValueOnce(proposal)
   api.mockImplementation(async path => {
@@ -398,7 +398,7 @@ it('각 턴의 생략 표시는 해당 묶음에만 붙고 다른 대화로 전�
   expect(api.mock.calls.every(([, options]) => !options?.method || options.method === 'GET')).toBe(true)
 })
 
-it.each(['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'])('계획 %s 결과는 양식이나 자동 조회를 열지 않는다', async decision => {
+it.each(['PROPOSE_MYSQL_READ'])('계획 %s 결과는 양식이나 자동 조회를 열지 않는다', async decision => {
   api.mockImplementation(async path => {
     if (path.endsWith('/chat-threads/thread')) return thread
     if (path.includes('/investigation-plans/jobs?')) return [{ id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision }]

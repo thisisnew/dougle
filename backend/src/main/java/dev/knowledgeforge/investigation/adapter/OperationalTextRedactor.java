@@ -1,9 +1,9 @@
-package dev.knowledgeforge.plugins.adapter;
+package dev.knowledgeforge.investigation.adapter;
 
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-public final class DatadogLogRedactor {
+public final class OperationalTextRedactor {
     private static final Pattern CREDENTIAL = Pattern.compile("(?i)([\\\"']?(?:password|passwd|secret|token|api[_-]?key|application[_-]?key|authorization|cookie|set-cookie)[\\\"']?\\s*[:=]\\s*)(?:\\\"[^\\\"]*\\\"|'[^']*'|[^\\s,;]+)");
     private static final Pattern BEARER = Pattern.compile("(?i)\\b(Bearer|Basic)\\s+[A-Za-z0-9+/_.=-]+");
     private static final Pattern URL = Pattern.compile("(?i)https?://[^\\s\\\"'<>]+");
@@ -12,7 +12,7 @@ public final class DatadogLogRedactor {
     private static final Pattern HEADER = Pattern.compile("(?im)\\b(?:authorization|cookie|set-cookie)\\s*:\\s*[^\\r\\n]*");
     private static final Pattern PRIVATE_KEY = Pattern.compile("(?s)-----BEGIN [^-]*PRIVATE KEY-----.*?(?:-----END [^-]*PRIVATE KEY-----|\\z)");
 
-    private DatadogLogRedactor() {}
+    private OperationalTextRedactor() {}
 
     public static String redact(String text, Collection<String> knownSecrets) {
         String result = text == null ? "" : text;

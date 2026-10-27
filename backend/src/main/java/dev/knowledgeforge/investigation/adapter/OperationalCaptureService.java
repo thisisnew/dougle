@@ -28,7 +28,6 @@ public class OperationalCaptureService {
     private record Snapshot(String status, String output, int rows, boolean truncated, String capturedAt, OperationalResultText.Text provenance) {}
 
     private final MysqlInvestigationService mysql;
-    private final DatadogInvestigationService datadog;
     private final AttachmentService attachments;
     private final LibraryStore library;
     private final Clock clock;
@@ -36,10 +35,10 @@ public class OperationalCaptureService {
     private final JsonMapper json = new JsonMapper();
     private final Map<String, Pending> pending = new HashMap<>();
 
-    public OperationalCaptureService(MysqlInvestigationService mysql, DatadogInvestigationService datadog,
+    public OperationalCaptureService(MysqlInvestigationService mysql,
                                      AttachmentService attachments, LibraryStore library, Clock clock,
                                      PlatformTransactionManager transactions) {
-        this.mysql = mysql; this.datadog = datadog; this.attachments = attachments; this.library = library; this.clock = clock;
+        this.mysql = mysql; this.attachments = attachments; this.library = library; this.clock = clock;
         transaction = new TransactionTemplate(transactions);
         transaction.setTimeout(10);
     }
@@ -150,10 +149,7 @@ public class OperationalCaptureService {
         if (input.provider() == Provider.MYSQL) {
             var result = mysql.result(workspaceId, input.resultId());
             snapshot = new Snapshot(result.status(), result.output(), result.rows(), result.truncated(), result.capturedAt(), mysql.provenance(workspaceId, input.resultId()));
-        } else {
-            var result = datadog.result(workspaceId, input.resultId());
-            snapshot = new Snapshot(result.status(), result.output(), result.rows(), result.truncated(), result.capturedAt(), datadog.provenance(workspaceId, input.resultId()));
-        }
+        } else throw new LibraryException(410, "제거된 연결 기능입니다.");
         String success = input.provider() == Provider.MYSQL ? "SUCCEEDED" : "OK";
         if (snapshot.provenance() == null || !success.equals(snapshot.status()) || snapshot.output() == null || snapshot.output().isBlank()
                 || snapshot.rows() < 0 || snapshot.rows() > 50 || snapshot.output().getBytes(StandardCharsets.UTF_8).length > 16384) {

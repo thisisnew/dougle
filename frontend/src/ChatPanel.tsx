@@ -271,7 +271,7 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
     if (controller.signal.aborted) return
     if (planSubmission.current) removePlanSubmission(planScope, decision.id)
     setPlanPending(false)
-    if (decision.status === 'SUCCEEDED' && ['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'].includes(decision.decision ?? '')) {
+    if (decision.status === 'SUCCEEDED' && ['PROPOSE_MYSQL_READ'].includes(decision.decision ?? '')) {
       setPlan(decision)
       return
     }

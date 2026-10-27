@@ -1,5 +1,7 @@
 # Slack inbox runtime contract
 
+> 이 문서는 과거 구현 이력입니다. 2026-10-27 사용자 요청으로 Slack 문의·연결·수신함·알림 및 관련 실행/API를 제거했습니다. 현재 지원 기능이나 설치 안내로 사용하지 않습니다.
+
 The parent-owned unreleased v27 migration installs the four tables in
 `slack-persistence-schema.sql`; no Slack constructor runs DDL.
 

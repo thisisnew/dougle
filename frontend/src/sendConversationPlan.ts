@@ -24,7 +24,7 @@ export async function readConversationPlan(workspaceId: string, bundleId: string
   if (!Array.isArray(values) || values.some(value => !value || value.workspaceId !== workspaceId || value.bundleId !== bundleId
     || !value.id || !value.digest || !['CODEX', 'CLAUDE'].includes(value.provider)
     || !['QUEUED', 'RUNNING', 'CANCELLING', 'SUCCEEDED', 'STOPPED', 'FAILED', 'CANCELLED'].includes(value.status)
-    || (value.status === 'SUCCEEDED' && !['SEARCH', 'STOP', 'PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'].includes(value.decision ?? '')))) {
+    || (value.status === 'SUCCEEDED' && !['SEARCH', 'STOP', 'PROPOSE_MYSQL_READ'].includes(value.decision ?? '')))) {
     throw new Error('조사 접수 상태를 확인하지 못했습니다.')
   }
   return values.at(-1) ?? null
@@ -48,7 +48,7 @@ export async function sendConversationPlan(workspaceId: string, bundleId: string
     if (!value || value.workspaceId !== workspaceId || value.bundleId !== bundleId || value.id !== submission.requestId
       || value.provider !== submission.provider || value.requestedModel !== submission.requestedModel || value.digest !== submission.digest
       || !['QUEUED', 'RUNNING', 'CANCELLING', 'SUCCEEDED', 'STOPPED', 'FAILED', 'CANCELLED'].includes(value.status)) throw new Error('조사 대상 또는 상태가 다릅니다.')
-    if (value.status === 'SUCCEEDED' && !['SEARCH', 'STOP', 'PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'].includes(value.decision ?? '')) {
+    if (value.status === 'SUCCEEDED' && !['SEARCH', 'STOP', 'PROPOSE_MYSQL_READ'].includes(value.decision ?? '')) {
       throw new Error('조사 결과를 확인하지 못했습니다.')
     }
     return value

@@ -4,9 +4,7 @@ import dev.knowledgeforge.investigation.domain.PlanDecision;
 import dev.knowledgeforge.investigation.domain.PendingOperationalScope;
 import dev.knowledgeforge.security.application.CredentialContentGuard;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -46,10 +44,9 @@ public final class PlanDecisionParser {
                     }
                     yield new PlanDecision.Stop();
                 }
-                case "PROPOSE_MYSQL_READ", "PROPOSE_DATADOG_LOGS" -> {
+                case "PROPOSE_MYSQL_READ" -> {
                     if (!root.has("query") || !root.path("query").isNull()) throw new IllegalArgumentException();
-                    var tool = root.path("decision").asString().equals("PROPOSE_MYSQL_READ")
-                            ? PlanDecision.OperationalTool.MYSQL_READ : PlanDecision.OperationalTool.DATADOG_LOGS;
+                    var tool = PlanDecision.OperationalTool.MYSQL_READ;
                     yield new PlanDecision.Propose(tool, candidatePresent ? candidate(tool, root.path("candidate")) : null);
                 }
                 default -> throw new IllegalArgumentException();
@@ -79,14 +76,7 @@ public final class PlanDecisionParser {
             }
             return new PendingOperationalScope.Mysql(text(node, "table"), strings(node, "columns"), equalities, integer(node, "limit"));
         }
-        fields(node, Set.of("environment", "service", "indexes", "from", "to", "timeZone", "limit"));
-        var indexes = strings(node, "indexes");
-        if (indexes != null && new HashSet<>(indexes).size() != indexes.size()) throw new IllegalArgumentException();
-        String from = text(node, "from");
-        String to = text(node, "to");
-        return new PendingOperationalScope.Datadog(text(node, "environment"), text(node, "service"),
-                indexes == null ? null : Set.copyOf(indexes), from == null ? null : Instant.parse(from),
-                to == null ? null : Instant.parse(to), text(node, "timeZone"), integer(node, "limit"));
+        throw new IllegalArgumentException("Removed operational tool");
     }
 
     private static void fields(JsonNode node, Set<String> allowed) {

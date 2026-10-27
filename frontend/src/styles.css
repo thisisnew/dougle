@@ -196,7 +196,6 @@ dt { color: #97a28d; }
 .team-settings-page p, .team-settings-page small { line-height: 1.6; overflow-wrap: anywhere; }
 .mysql-read-panel { margin-top: 20px; }
 .operational-plugins { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
-.slack-inbox-indicator { border-radius: 999px; padding: 2px 6px; font-size: 10px; line-height: 1.3; background: #edf4ff; color: #2868b9; white-space: nowrap; }
 .mysql-read-panel .source-form { margin-top: 12px; }
 .mysql-read-panel fieldset { display: grid; gap: 12px; padding: 0; border: 0; }
 .mysql-read-panel pre { max-height: 320px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }

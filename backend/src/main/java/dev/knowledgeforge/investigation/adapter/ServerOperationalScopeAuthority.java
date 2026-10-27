@@ -6,7 +6,6 @@ import dev.knowledgeforge.investigation.domain.PendingOperationalScope.Binding;
 import dev.knowledgeforge.investigation.domain.PlanDecision.OperationalTool;
 import dev.knowledgeforge.library.application.LibraryException;
 import dev.knowledgeforge.library.application.LibraryStore;
-import dev.knowledgeforge.plugins.adapter.DatadogConnections;
 import dev.knowledgeforge.plugins.adapter.PluginConnections;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +15,12 @@ public class ServerOperationalScopeAuthority implements OperationalScopeClarific
     private final LibraryStore library;
     private final ChatThreadService threads;
     private final PluginConnections mysql;
-    private final DatadogConnections datadog;
 
     public ServerOperationalScopeAuthority(LibraryStore library, ChatThreadService threads,
-                                           PluginConnections mysql, DatadogConnections datadog) {
+                                           PluginConnections mysql) {
         this.library = library;
         this.threads = threads;
         this.mysql = mysql;
-        this.datadog = datadog;
     }
 
     @Override
@@ -41,10 +38,7 @@ public class ServerOperationalScopeAuthority implements OperationalScopeClarific
                 var metadata = mysql.mysqlScopeMetadata();
                 yield new Binding(workspaceId, threadId, parentBundleId, tool, metadata.revision(), metadata.generation());
             }
-            case DATADOG_LOGS -> {
-                var metadata = datadog.scopeMetadata(workspaceId);
-                yield new Binding(workspaceId, threadId, parentBundleId, tool, metadata.revision(), metadata.generation());
-            }
+            case DATADOG_LOGS -> throw new LibraryException(410, "제거된 연결 기능입니다.");
         };
     }
 }

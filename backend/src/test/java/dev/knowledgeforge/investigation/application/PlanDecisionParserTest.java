@@ -18,11 +18,10 @@ class PlanDecisionParserTest {
                 """);
         assertEquals(new dev.knowledgeforge.investigation.domain.PendingOperationalScope.Mysql(
                 "orders", java.util.List.of("id"), java.util.Map.of("id", "fixture"), 20), parsed.candidate());
-        var logs = (PlanDecision.Propose) parser.parse("""
+        rejects("""
                 {"decision":"PROPOSE_DATADOG_LOGS","query":null,"candidate":{
                   "environment":null,"service":null,"indexes":null,"from":null,"to":null,"timeZone":null,"limit":null}}
                 """);
-        assertEquals(7, logs.candidate().missingFields().size());
         assertEquals(new PlanDecision.Stop(), parser.parse("{\"decision\":\"STOP\",\"query\":null,\"candidate\":null}"));
     }
 
@@ -43,7 +42,7 @@ class PlanDecisionParserTest {
 
     @Test
     void operationalProposalsHaveNoScopeAndRetainStrictOutputLimits() {
-        for (var tool : PlanDecision.OperationalTool.values()) {
+        for (var tool : java.util.List.of(PlanDecision.OperationalTool.MYSQL_READ)) {
             String proposal = "{\"decision\":\"PROPOSE_" + tool.name() + "\",\"query\":null}";
             assertEquals(new PlanDecision.Propose(tool), parser.parse(proposal));
             rejects(proposal.replace("null", "\"production\""));

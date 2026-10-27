@@ -127,7 +127,6 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
         if (!"SUCCEEDED".equals(job.status())) throw new LibraryException(409, "완료된 수동 조회 제안만 확인할 수 있습니다.");
         PlanDecision.OperationalTool kind;
         if ("PROPOSE_MYSQL_READ".equals(job.decision())) kind = PlanDecision.OperationalTool.MYSQL_READ;
-        else if ("PROPOSE_DATADOG_LOGS".equals(job.decision())) kind = PlanDecision.OperationalTool.DATADOG_LOGS;
         else throw new LibraryException(409, "수동 운영 조회 제안이 아닙니다.");
         return OperationalToolProposal.from(job, kind);
     }
@@ -140,7 +139,7 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
         var job = get(workspaceId, id);
         bundles.get(workspaceId, job.bundleId());
         if (!"SUCCEEDED".equals(job.status()) || !"PENDING_SCOPE".equals(job.toolStatus())
-                || !("PROPOSE_MYSQL_READ".equals(job.decision()) || "PROPOSE_DATADOG_LOGS".equals(job.decision()))) {
+                || !"PROPOSE_MYSQL_READ".equals(job.decision())) {
             throw new LibraryException(409, "대화에서 확인할 조회 범위 후보가 없습니다. 새 계획을 준비하세요.");
         }
         var scope = scopes.get(workspaceId, job.output());

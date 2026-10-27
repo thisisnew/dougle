@@ -7,8 +7,6 @@ import dev.knowledgeforge.investigation.domain.PendingOperationalScope.Origin;
 import dev.knowledgeforge.investigation.domain.PlanDecision.OperationalTool;
 import dev.knowledgeforge.library.application.LibraryException;
 import dev.knowledgeforge.library.application.LibraryService;
-import dev.knowledgeforge.plugins.adapter.DatadogConnections;
-import dev.knowledgeforge.plugins.adapter.DatadogLogsClient;
 import dev.knowledgeforge.plugins.adapter.MysqlClient;
 import dev.knowledgeforge.plugins.adapter.NotionClient;
 import dev.knowledgeforge.plugins.adapter.PluginConnections;
@@ -43,12 +41,10 @@ class ServerOperationalScopeAuthorityIntegrationTest {
     @Autowired ChatThreadService threads;
     @Autowired LibraryService library;
     @Autowired PluginConnections mysql;
-    @Autowired DatadogConnections datadog;
     @Autowired JdbcTemplate jdbc;
     @MockitoBean ConversationRetrieval retrieval;
     @MockitoBean MysqlClient mysqlClient;
     @MockitoBean NotionClient notionClient;
-    @MockitoBean DatadogLogsClient logsClient;
     private String workspace;
     private EvidenceBundle parent;
     private OperationalScopeClarification scopes;
@@ -64,7 +60,7 @@ class ServerOperationalScopeAuthorityIntegrationTest {
     }
 
     @AfterEach void noExternalExecution() {
-        verifyNoInteractions(notionClient, logsClient);
+        verifyNoInteractions(notionClient);
         verify(mysqlClient, never()).schema(any());
     }
 
@@ -81,17 +77,15 @@ class ServerOperationalScopeAuthorityIntegrationTest {
     private void connect(OperationalTool tool) {
         if (tool == OperationalTool.MYSQL_READ) mysql.mysql(new MysqlClient.Config(
                 "localhost", 3306, "fixture", "reader", "synthetic-password", "DISABLED"), true);
-        else datadog.save(workspace, new DatadogLogsClient.Config(DatadogLogsClient.Site.EU1,
-                "synthetic_api_key_0000000000000000", "synthetic_app_key_0000000000000000"));
+
     }
     private void disconnect(OperationalTool tool) {
         if (tool == OperationalTool.MYSQL_READ) mysql.disconnect("mysql");
-        else datadog.disconnect(workspace);
     }
 
     @Test void realAuthorityIsProxiedAndDisconnectedBindingIsServerDerivedAndNonAuthorizing() {
         assertThat(org.springframework.aop.support.AopUtils.isAopProxy(authority)).isTrue();
-        for (var tool : OperationalTool.values()) {
+        for (var tool : List.of(OperationalTool.MYSQL_READ)) {
             var scope = open(tool);
             assertThat(scope.binding().connectionRevision()).isNull();
             assertThat(scope.binding().connectionGeneration()).isNotBlank();
@@ -117,7 +111,7 @@ class ServerOperationalScopeAuthorityIntegrationTest {
     }
 
     @Test void realMetadataDetectsUnobservedNoneConnectedNoneForBothTools() {
-        for (var tool : OperationalTool.values()) {
+        for (var tool : List.of(OperationalTool.MYSQL_READ)) {
             var scope = open(tool);
             connect(tool);
             disconnect(tool);
@@ -131,7 +125,7 @@ class ServerOperationalScopeAuthorityIntegrationTest {
     }
 
     @Test void realConnectionRotationRequiresFreshProposalAndNeverRunsReadTools() {
-        for (var tool : OperationalTool.values()) {
+        for (var tool : List.of(OperationalTool.MYSQL_READ)) {
             connect(tool);
             var scope = open(tool);
             connect(tool);

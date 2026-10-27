@@ -17,7 +17,7 @@ export function checkedOperationalProposal(value: unknown): OperationalToolPropo
       || ![proposal.jobId, proposal.workspaceId, proposal.bundleId].every(id => typeof id === 'string' && id.length > 0 && id.length <= 128)
       || proposal.executionAllowed !== false) return invalid()
   const fields = proposal.kind === 'MYSQL_READ' ? ['table', 'columns', 'equalities', 'limit']
-    : proposal.kind === 'DATADOG_LOGS' ? ['environment', 'service', 'indexes', 'from', 'to', 'limit'] : null
+    : null
   if (!fields || !Array.isArray(proposal.requiredFields) || JSON.stringify(proposal.requiredFields) !== JSON.stringify(fields)) return invalid()
   return proposal
 }

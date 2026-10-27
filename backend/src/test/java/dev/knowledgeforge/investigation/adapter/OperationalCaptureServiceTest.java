@@ -40,7 +40,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 class OperationalCaptureServiceTest {
     @TempDir Path root;
     private final MysqlInvestigationService mysql = mock(MysqlInvestigationService.class);
-    private final DatadogInvestigationService datadog = mock(DatadogInvestigationService.class);
     private final LibraryStore library = mock(LibraryStore.class);
     private final DocumentAnalyzer analyzer = mock(DocumentAnalyzer.class);
     private final Clock clock = mock(Clock.class);
@@ -54,20 +53,18 @@ class OperationalCaptureServiceTest {
     @BeforeEach
     void prepare() {
         when(mysql.provenance(eq("workspace"), anyString())).thenReturn(new OperationalResultText.Text("{\"database\":\"fixture\",\"table\":\"receipts\"}", false));
-        when(datadog.provenance(eq("workspace"), anyString())).thenReturn(new OperationalResultText.Text("{\"environment\":\"test\",\"service\":\"orders\",\"timezone\":\"UTC\"}", false));
         var data = new DriverManagerDataSource("jdbc:sqlite:" + root.resolve("capture.db"));
         jdbc = new JdbcTemplate(data);
         jdbc.execute("CREATE TABLE question_attachment(id TEXT PRIMARY KEY, workspace_id TEXT, bundle_id TEXT, name TEXT, media_type TEXT, content BLOB, content_hash TEXT, extracted_text TEXT, truncated INTEGER, created_at TEXT)");
         jdbc.execute("CREATE TABLE evidence_bundle(id TEXT PRIMARY KEY,workspace_id TEXT,question TEXT,status TEXT,used_characters INTEGER,payload_json TEXT,digest TEXT,created_at TEXT)");
         transactions = new DataSourceTransactionManager(data);
         attachments = spy(new AttachmentService(new JdbcAttachmentStore(jdbc), new LocalAttachmentReader(analyzer), library));
-        service = new OperationalCaptureService(mysql, datadog, attachments, library, clock, transactions);
+        service = new OperationalCaptureService(mysql, attachments, library, clock, transactions);
         when(clock.instant()).thenReturn(now);
         when(library.workspace("workspace")).thenReturn(Optional.of(new Workspace("workspace", "fixture", "now")));
         when(library.workspace("other")).thenReturn(Optional.of(new Workspace("other", "other", "now")));
         when(mysql.result(eq("workspace"), anyString())).thenAnswer(invocation ->
                 new MysqlInvestigationService.Result(invocation.getArgument(1), "SUCCEEDED", "[{\"status\":\"READY\"}]", 1, false, now.toString()));
-        when(datadog.result("workspace", "result")).thenReturn(new DatadogInvestigationService.Result("result", "OK", "synthetic log", 1, false, now.toString()));
     }
 
     private OperationalCaptureService.Start start(OperationalCaptureService.Preview preview) {
@@ -84,7 +81,7 @@ class OperationalCaptureServiceTest {
         assertEquals(preview.bytes(), preview.text().getBytes(StandardCharsets.UTF_8).length);
         assertEquals("PREVIEW", service.get("workspace", preview.id()).status());
         assertEquals(0, count());
-        verifyNoInteractions(analyzer, datadog);
+        verifyNoInteractions(analyzer);
         verify(mysql, never()).execute(any(), any(), any(), anyBoolean());
     }
 
@@ -105,21 +102,14 @@ class OperationalCaptureServiceTest {
         assertThrows(LibraryException.class, () -> service.capture("workspace", preview.id(),
                 new OperationalCaptureService.Start("different-request-1234", preview.digest(), true)));
         assertEquals(1, count());
-        verifyNoInteractions(analyzer, datadog);
+        verifyNoInteractions(analyzer);
         verify(mysql, never()).execute(any(), any(), any(), anyBoolean());
     }
 
     @Test
-    void datadogCaptureIsLocalAndPreservesScopeAndTruncation() {
-        when(datadog.result("workspace", "result")).thenReturn(new DatadogInvestigationService.Result("result", "OK", "가😀".repeat(2000), 1, true, now.toString()));
-        var preview = service.preview("workspace", new OperationalCaptureService.Input(OperationalCaptureService.Provider.DATADOG, "result"));
-        assertTrue(preview.truncated());
-        assertTrue(preview.text().contains("일부만 보관: 예"));
-        assertTrue(preview.text().contains("\"environment\":\"test\""));
-        assertTrue(preview.text().contains("\"timezone\":\"UTC\""));
-        assertTrue(preview.text().length() <= 3000);
-        assertEquals("CAPTURED", service.capture("workspace", preview.id(), start(preview)).status());
-        verify(datadog, never()).execute(any(), any(), any(), anyBoolean());
+    void removedDatadogCaptureIsRejected() {
+        assertEquals(410, assertThrows(LibraryException.class, () -> service.preview("workspace",
+                new OperationalCaptureService.Input(OperationalCaptureService.Provider.DATADOG, "result"))).status());
         verifyNoInteractions(mysql, analyzer);
     }
 
@@ -215,7 +205,7 @@ class OperationalCaptureServiceTest {
             var query = new dev.knowledgeforge.plugins.adapter.MysqlReadClient.Request("receipts", java.util.List.of("id"), java.util.Map.of("id", config.password()), 10);
             var approved = actual.preview("workspace", query);
             actual.execute("workspace", approved.id(), "synthetic-query-1234", true);
-            var capture = new OperationalCaptureService(actual, datadog, attachments, library, clock, transactions);
+            var capture = new OperationalCaptureService(actual, attachments, library, clock, transactions);
             var preview = capture.preview("workspace", new OperationalCaptureService.Input(OperationalCaptureService.Provider.MYSQL, approved.id()));
             assertTrue(preview.text().contains("\"database\":\"fixture\""));
             assertTrue(preview.text().contains("\"table\":\"receipts\""));
@@ -232,35 +222,7 @@ class OperationalCaptureServiceTest {
         }
     }
 
-    @Test
-    void actualDatadogServiceScopeIncludingUtcWindowSurvivesExactAttachmentCapture() {
-        var connections = mock(dev.knowledgeforge.plugins.adapter.DatadogConnections.class);
-        var client = mock(dev.knowledgeforge.plugins.adapter.DatadogLogsClient.class);
-        var config = new dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Config(dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Site.EU1,
-                "synthetic_api_key_0000", "synthetic_app_key_0000");
-        when(connections.require("workspace", "fixture-revision")).thenReturn(config);
-        when(client.read(any(), any(), any(), any())).thenReturn(new dev.knowledgeforge.plugins.adapter.DatadogLogsClient.Result("synthetic log", 1, false));
-        var actual = new DatadogInvestigationService(connections, client, clock);
-        var query = new DatadogInvestigationService.Query("fixture-revision", "test", "orders", java.util.Set.of("fixture-index"), now.minusSeconds(600), now, 20);
-        var approved = actual.preview("workspace", query);
-        actual.execute("workspace", approved.id(), "synthetic-query-1234", true);
-        var capture = new OperationalCaptureService(mysql, actual, attachments, library, clock, transactions);
-        var preview = capture.preview("workspace", new OperationalCaptureService.Input(OperationalCaptureService.Provider.DATADOG, approved.id()));
-        assertTrue(preview.text().contains("\"environment\":\"test\""));
-        assertTrue(preview.text().contains("\"service\":\"orders\""));
-        assertTrue(preview.text().contains("\"indexes\":[\"fixture-index\"]"));
-        assertTrue(preview.text().contains("\"from\":\"2026-10-25T11:50:00Z\""));
-        assertTrue(preview.text().contains("\"to\":\"2026-10-25T12:00:00Z\""));
-        assertTrue(preview.text().contains("\"timezone\":\"UTC\""));
-        assertFalse(preview.text().contains(config.apiKey()));
-        assertFalse(preview.text().contains(config.applicationKey()));
-        var receipt = capture.capture("workspace", preview.id(), start(preview));
-        assertEquals("CAPTURED", receipt.status());
-        var stored = attachments.get("workspace", receipt.attachment().id());
-        assertArrayEquals(preview.text().getBytes(StandardCharsets.UTF_8), stored.content());
-        assertEquals(preview.text(), stored.text());
-        verify(client, times(1)).read(any(), any(), any(), any());
-    }
+
 
     @Test
     void revocationAfterUploadRollsBackAndNeverReturnsAttachmentOrRawError() {
@@ -290,7 +252,7 @@ class OperationalCaptureServiceTest {
         }).when(attachments).upload(anyString(), anyString(), any());
         assertEquals("FAILED", service.capture("workspace", preview.id(), start(preview)).status());
         assertEquals(0, count());
-        var restarted = new OperationalCaptureService(mysql, datadog, attachments, library, clock, transactions);
+        var restarted = new OperationalCaptureService(mysql, attachments, library, clock, transactions);
         assertThrows(LibraryException.class, () -> restarted.get("workspace", preview.id()));
     }
 

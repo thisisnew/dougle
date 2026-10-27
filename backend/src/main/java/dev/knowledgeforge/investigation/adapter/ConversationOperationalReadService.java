@@ -36,7 +36,6 @@ public class ConversationOperationalReadService {
 
     private final ConversationOperationalScopeAccess scopes;
     private final MysqlInvestigationService mysql;
-    private final DatadogInvestigationService datadog;
     private final OperationalCaptureService captures;
     private final AttachmentService attachments;
     private final Clock clock;
@@ -49,9 +48,9 @@ public class ConversationOperationalReadService {
     private record CommittedCapture(String workspaceId, CaptureReceipt receipt) {}
 
     public ConversationOperationalReadService(ConversationOperationalScopeAccess scopes, MysqlInvestigationService mysql,
-                                               DatadogInvestigationService datadog, OperationalCaptureService captures,
+                                               OperationalCaptureService captures,
                                                AttachmentService attachments, Clock clock) {
-        this.scopes = scopes; this.mysql = mysql; this.datadog = datadog; this.captures = captures;
+        this.scopes = scopes; this.mysql = mysql; this.captures = captures;
         this.attachments = attachments; this.clock = clock;
     }
 
@@ -95,16 +94,6 @@ public class ConversationOperationalReadService {
                         + query.equalities().entrySet().stream().map(entry -> entry.getKey() + " = " + entry.getValue())
                         .collect(java.util.stream.Collectors.joining(", "))
                         + "\n가져올 항목: " + String.join(", ", query.columns()) + "\n최대 " + query.limit() + "행";
-                expiresAt = preview.expiresAt(); maxRows = query.limit(); maxBytes = preview.maxBytes(); timeout = preview.timeoutSeconds();
-            } else if (scope.candidate() instanceof PendingOperationalScope.Datadog candidate) {
-                var query = new DatadogInvestigationService.Query(scope.binding().connectionRevision(), candidate.environment(),
-                        candidate.service(), candidate.indexes(), candidate.from(), candidate.to(), candidate.limit());
-                var preview = datadog.preview(workspaceId, query);
-                underlyingId = preview.id();
-                queryPreview = "Datadog · " + candidate.environment() + " / " + candidate.service()
-                        + "\n기간(UTC): " + candidate.from() + " ~ " + candidate.to()
-                        + "\n사용자 시간대: " + candidate.timeZone() + "\n인덱스: "
-                        + String.join(", ", candidate.indexes().stream().sorted().toList()) + "\n최대 " + candidate.limit() + "개 로그";
                 expiresAt = preview.expiresAt(); maxRows = query.limit(); maxBytes = preview.maxBytes(); timeout = preview.timeoutSeconds();
             } else throw incomplete();
             String id = UUID.randomUUID().toString();
@@ -160,12 +149,7 @@ public class ConversationOperationalReadService {
                 var value = mysql.execute(workspaceId, operation.underlyingId, input.requestId(), true,
                         () -> current(operation, budget));
                 observed = state(operation, value.status(), value.output(), value.rows(), value.truncated(), value.capturedAt());
-            } else {
-                var value = datadog.execute(workspaceId, operation.underlyingId, input.requestId(), true,
-                        () -> current(operation, budget));
-                observed = state(operation, "OK".equals(value.status()) ? "SUCCEEDED" : value.status(),
-                        value.output(), value.rows(), value.truncated(), value.capturedAt());
-            }
+            } else throw incomplete();
             current(operation, budget);
         } catch (RuntimeException failure) {
             observed = state(operation, failure instanceof LibraryException ? "DENIED" : "FAILED");
@@ -318,11 +302,11 @@ public class ConversationOperationalReadService {
 
     private void cancelUnderlying(Pending operation) {
         if (operation.preview.tool() == OperationalTool.MYSQL_READ) mysql.cancel(operation.preview.workspaceId(), operation.underlyingId);
-        else datadog.cancel(operation.preview.workspaceId(), operation.underlyingId);
+
     }
 
     private OperationalCaptureService.Provider provider(Pending operation) {
-        return operation.preview.tool() == OperationalTool.MYSQL_READ ? OperationalCaptureService.Provider.MYSQL : OperationalCaptureService.Provider.DATADOG;
+        return OperationalCaptureService.Provider.MYSQL;
     }
 
     private Result result(Pending operation) {

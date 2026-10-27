@@ -1,0 +1,172 @@
+{
+  "changedAt": "2026-10-27T13:49:07.461Z",
+  "reason": "User removed Slack inquiries and Datadog connections; exclusions are not repairs or passes",
+  "baseline": "acceptance-remaining-20261027.json",
+  "summary": {
+    "PASS": 0,
+    "PARTIAL": 921,
+    "FAIL": 29,
+    "BLOCKED": 0,
+    "NOT_RUN": 25,
+    "EXCLUDED": 25
+  },
+  "excluded": [
+    {
+      "id": "T0901",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0902",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0903",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0904",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0905",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0906",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0907",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0908",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0909",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0910",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0911",
+      "previousStatus": "FAIL",
+      "checkStatus": "FAIL"
+    },
+    {
+      "id": "T0912",
+      "previousStatus": "FAIL",
+      "checkStatus": "FAIL"
+    },
+    {
+      "id": "T0913",
+      "previousStatus": "FAIL",
+      "checkStatus": "FAIL"
+    },
+    {
+      "id": "T0914",
+      "previousStatus": "FAIL",
+      "checkStatus": "FAIL"
+    },
+    {
+      "id": "T0915",
+      "previousStatus": "FAIL",
+      "checkStatus": "FAIL"
+    },
+    {
+      "id": "T0916",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0917",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0918",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0919",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0920",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0921",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0922",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0923",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0924",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    },
+    {
+      "id": "T0925",
+      "previousStatus": "PARTIAL",
+      "checkStatus": "PASS"
+    }
+  ],
+  "remainingFailures": [
+    "T0161",
+    "T0162",
+    "T0163",
+    "T0164",
+    "T0165",
+    "T0626",
+    "T0627",
+    "T0628",
+    "T0629",
+    "T0630",
+    "T0632",
+    "T0657",
+    "T0662",
+    "T0676",
+    "T0678",
+    "T0679",
+    "T0680",
+    "T0682",
+    "T0731",
+    "T0732",
+    "T0733",
+    "T0734",
+    "T0735",
+    "T0747",
+    "T0780",
+    "T0785",
+    "T0790",
+    "T0795",
+    "T0800"
+  ],
+  "newAiCalls": 0
+}

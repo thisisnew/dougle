@@ -10,22 +10,17 @@ import { request } from './api'
 import { plugins, pluginForUrl, type PluginId } from './plugins'
 import type { Source } from './SourcePanel'
 import BrowserPluginConnect from './BrowserPluginConnect'
-import SlackPanel from './SlackPanel'
-import DatadogPanel from './DatadogPanel'
 
 type Mysql = { host: string; port: number; database: string; username: string; password: string; sslMode: string }
 type Connections = { notionConnected: boolean; atlassianConnected?: boolean; mysqlConnected: boolean; mysql: Mysql | null }
 const emptyMysql: Mysql = { host: 'localhost', port: 3306, database: '', username: '', password: '', sslMode: 'VERIFY_IDENTITY' }
-type Props = { initialPlugin?: PluginId | null; workspaceId?: string | null; onBusyChange?: (busy: boolean) => void; onChanged?: () => void;
-  onConversationSaved?: (workspaceId: string, threadId: string, bundleId: string) => void }
+type Props = { initialPlugin?: PluginId | null; workspaceId?: string | null; onBusyChange?: (busy: boolean) => void; onChanged?: () => void }
 
-export default function PluginPanel({ initialPlugin = null, workspaceId, onBusyChange, onChanged, onConversationSaved }: Props) {
+export default function PluginPanel({ initialPlugin = null, workspaceId, onBusyChange, onChanged }: Props) {
   const [selected, setSelected] = useState<PluginId | null>(initialPlugin)
   const [connections, setConnections] = useState<Connections | null>(null)
   const [mysql, setMysql] = useState<Mysql>(emptyMysql)
   const [busy, setBusy] = useState(false)
-  const [operationalBusy, setOperationalBusy] = useState(false)
-  const [operational, setOperational] = useState<'SLACK' | 'DATADOG' | null>(null)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const plugin = plugins.find(item => item.id === selected)
@@ -39,11 +34,10 @@ export default function PluginPanel({ initialPlugin = null, workspaceId, onBusyC
     }).catch(reason => { if (!abort.signal.aborted) setError(reason.message) })
     return () => abort.abort()
   }, [])
-  useEffect(() => { onBusyChange?.(busy || operationalBusy); return () => onBusyChange?.(false) }, [busy, operationalBusy, onBusyChange])
+  useEffect(() => { onBusyChange?.(busy); return () => onBusyChange?.(false) }, [busy, onBusyChange])
 
   function open(id: PluginId | null) {
-    if (busy || operationalBusy) return
-    setOperational(null)
+    if (busy) return
     setSelected(id); setMysql(connections?.mysql || emptyMysql); setError(''); setMessage('')
   }
   function changeMysql(field: keyof Mysql, value: string | number) {
@@ -103,14 +97,8 @@ export default function PluginPanel({ initialPlugin = null, workspaceId, onBusyC
       <div className={`plugin-icon ${item.id.toLowerCase()}`} aria-hidden="true">{item.id === 'ATLASSIAN' ? <><img src={jiraIcon} alt="" /><img src={confluenceIcon} alt="" /></> : <img src={item.id === 'NOTION' ? notionIcon : mysqlIcon} alt="" />}</div>
       <div className="plugin-details"><h2>{item.name}</h2></div>
       <span className="plugin-state">{!connections ? '확인 중' : isConnected(item.id) ? '연결됨' : '연결 안 됨'}</span>
-      <Button variant="outline" disabled={busy || operationalBusy} onClick={() => open(item.id)} aria-label={`${item.name} 연결 설정`}><Plug size={16} />연결 설정</Button>
+      <Button variant="outline" disabled={busy} onClick={() => open(item.id)} aria-label={`${item.name} 연결 설정`}><Plug size={16} />연결 설정</Button>
     </article>)}</div>
-    {!plugin && <div className="operational-plugins">
-      <Button variant="outline" disabled={busy || operationalBusy} onClick={() => setOperational(operational === 'SLACK' ? null : 'SLACK')}>Slack 문의</Button>
-      <Button variant="outline" disabled={busy || operationalBusy} onClick={() => setOperational(operational === 'DATADOG' ? null : 'DATADOG')}>Datadog 연결</Button>
-    </div>}
-    {!plugin && operational === 'SLACK' && <SlackPanel workspaceId={workspaceId} onBusyChange={setOperationalBusy} onConversationSaved={onConversationSaved} />}
-    {!plugin && operational === 'DATADOG' && <DatadogPanel workspaceId={workspaceId ?? null} disabled={busy} onBusyChange={setOperationalBusy} onChanged={onChanged} />}
     <Dialog.Root open={!!plugin} onOpenChange={value => { if (!value) open(null) }}>
       <Dialog.Portal><Dialog.Overlay className="dialog-overlay" /><Dialog.Content className="dialog-content plugin-dialog" aria-describedby={undefined} onEscapeKeyDown={event => { if (busy) event.preventDefault() }} onPointerDownOutside={event => { if (busy) event.preventDefault() }}>
         <Dialog.Title>{plugin?.name} 연결</Dialog.Title>

@@ -57,10 +57,10 @@ class CliPlanTransportTest {
         assertThat(parsed.path("type").asString()).isEqualTo("object");
         assertThat(parsed.path("additionalProperties").asBoolean()).isFalse();
         assertThat(parsed.path("required").toString()).isEqualTo("[\"decision\",\"query\",\"candidate\"]");
-        assertThat(parsed.path("properties").path("candidate").path("anyOf").size()).isEqualTo(3);
+        assertThat(parsed.path("properties").path("candidate").path("anyOf").size()).isEqualTo(2);
         assertThat(parsed.path("properties").path("query").path("type").toString()).isEqualTo("[\"string\",\"null\"]");
         assertThat(parsed.path("properties").path("decision").path("enum").toString())
-                .isEqualTo("[\"SEARCH\",\"STOP\",\"PROPOSE_MYSQL_READ\",\"PROPOSE_DATADOG_LOGS\"]");
+                .isEqualTo("[\"SEARCH\",\"STOP\",\"PROPOSE_MYSQL_READ\"]");
         assertThat(parsed.has("anyOf") || parsed.has("oneOf")).isFalse();
         var flags = Files.readAllLines(arguments);
         assertThat(flags).containsSequence("--model", "selected-model");

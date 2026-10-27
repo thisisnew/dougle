@@ -73,9 +73,9 @@ public class InvestigationPlanPreview {
                 Resolve the original user's operational investigation using ONLY the captured immutable evidence and conversation below.
                 This is ONE final planning call, with ZERO tool calls. SEARCH is forbidden. Do not answer the question,
                 run commands, read files, access network, or invent missing evidence. There is no recursive continuation.
-                Return {"decision":"STOP","query":null,"candidate":null}, or PROPOSE_MYSQL_READ / PROPOSE_DATADOG_LOGS
+                Return {"decision":"STOP","query":null,"candidate":null}, or PROPOSE_MYSQL_READ
                 with query:null and a typed candidate. MySQL fields: table, columns, equalities (array of {column,value}), limit.
-                Datadog fields: environment, service, indexes, from, to, timeZone, limit. Unresolved fields must be null.
+                Unresolved fields must be null.
                 Propose only for explicit user intent to investigate actual records or operational incidents, never for code explanations.
                 Ground fields in user statements or captured evidence. Do not guess tables, columns, indexes, environment,
                 timezone, limits or connection availability. Ask no technical forms. Business ambiguity concerns environment/time.

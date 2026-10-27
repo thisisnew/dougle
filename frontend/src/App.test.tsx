@@ -22,7 +22,6 @@ describe('Workspace와 자료 탐색기', () => {
     api.mockImplementation(async path => {
       if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
       if (path === '/plugins') return { mysqlConnected: true, mysql: null }
-      if (path === '/plugins/datadog/one') return { configured: true, site: 'EU1', revision: 'revision' }
       return []
     })
     render(<App />)
@@ -31,13 +30,12 @@ describe('Workspace와 자료 탐색기', () => {
     await userEvent.click(screen.getByRole('button', { name: '설정' }))
     await userEvent.click(screen.getByRole('button', { name: '플러그인' }))
     expect(await screen.findByRole('button', { name: 'MySQL 연결 설정' })).toBeEnabled()
-    expect(screen.getByRole('button', { name: 'Slack 문의' })).toBeEnabled()
+    expect(screen.queryByRole('button', { name: 'Slack 문의' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'DB 데이터 조회' })).not.toBeInTheDocument()
     expect(screen.queryByLabelText('테이블')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '조회 범위 확인' })).not.toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Datadog 연결' }))
-    expect(await screen.findByText(/연결 정보 저장됨/)).toBeVisible()
-    expect(screen.getByRole('button', { name: '관리자 연결' })).toBeEnabled()
+    expect(screen.queryByRole('button', { name: 'Datadog 연결' })).not.toBeInTheDocument()
+    expect(api.mock.calls.some(([path]) => /slack|datadog/i.test(path))).toBe(false)
     for (const label of ['테이블', '환경', '서비스', '조회할 열 (쉼표로 구분)']) expect(screen.queryByLabelText(label)).not.toBeInTheDocument()
     expect(api.mock.calls.some(([path]) => /investigations|operational-captures|tool-proposal/.test(path))).toBe(false)
   })

@@ -36,10 +36,9 @@ class ConversationOperationalReadServiceTest {
     };
     private final ConversationOperationalScopeAccess scopes = mock(ConversationOperationalScopeAccess.class);
     private final MysqlInvestigationService mysql = mock(MysqlInvestigationService.class);
-    private final DatadogInvestigationService datadog = mock(DatadogInvestigationService.class);
     private final OperationalCaptureService captures = mock(OperationalCaptureService.class);
     private final AttachmentService attachments = mock(AttachmentService.class);
-    private final ConversationOperationalReadService service = new ConversationOperationalReadService(scopes, mysql, datadog, captures, attachments, clock);
+    private final ConversationOperationalReadService service = new ConversationOperationalReadService(scopes, mysql, captures, attachments, clock);
     private final PendingOperationalScope.Mysql candidate = new PendingOperationalScope.Mysql("receipts", List.of("id", "status"), Map.of("id", "SYN-1"), 10);
     private final AtomicReference<PendingOperationalScope> current = new AtomicReference<>();
     private final ConversationOperationalReadService.Input input = new ConversationOperationalReadService.Input("scope", 1);
@@ -70,7 +69,7 @@ class ConversationOperationalReadServiceTest {
         assertEquals(preview, service.preview("workspace", input));
         verify(mysql).preview("workspace", new MysqlReadClient.Request("receipts", List.of("id", "status"), Map.of("id", "SYN-1"), 10));
         verify(mysql, never()).execute(any(), any(), any(), anyBoolean(), any(Runnable.class));
-        verifyNoInteractions(datadog, captures);
+        verifyNoInteractions(captures);
     }
 
     @Test
@@ -81,7 +80,7 @@ class ConversationOperationalReadServiceTest {
             current.set(scope(value, "generation", "parent", 1));
             assertThrows(LibraryException.class, () -> service.preview("workspace", input));
         }
-        verifyNoInteractions(mysql, datadog, captures);
+        verifyNoInteractions(mysql, captures);
     }
 
     @Test
@@ -91,7 +90,7 @@ class ConversationOperationalReadServiceTest {
         assertThrows(LibraryException.class, () -> service.preview("other", input));
         time.set(now.plusSeconds(600));
         assertThrows(LibraryException.class, () -> service.preview("workspace", input));
-        verifyNoInteractions(mysql, datadog, captures);
+        verifyNoInteractions(mysql, captures);
     }
 
     @Test
@@ -203,21 +202,11 @@ class ConversationOperationalReadServiceTest {
     }
 
     @Test
-    void datadogUsesAuthoritativeRevisionAndNormalizesSuccessfulStatus() {
-        var candidate = new PendingOperationalScope.Datadog("synthetic", "receipt-demo", Set.of("fixture"),
-                now.minusSeconds(300), now, "Asia/Seoul", 5);
-        current.set(scope(candidate, "generation", "parent", 1));
-        when(datadog.preview(eq("workspace"), any())).thenAnswer(invocation -> new DatadogInvestigationService.Preview(
-                "logs-preview", "workspace", "US1", invocation.getArgument(1), now.plusSeconds(600).toString(), 16384, 10, true));
-        when(datadog.execute(any(), any(), any(), anyBoolean(), any(Runnable.class))).thenReturn(new DatadogInvestigationService.Result(
-                "logs-preview", "OK", "synthetic log", 1, true, now.toString()));
-        var preview = service.preview("workspace", input);
-        assertTrue(preview.queryPreview().contains("Asia/Seoul"));
-        verify(datadog).preview("workspace", new DatadogInvestigationService.Query("connection", "synthetic", "receipt-demo", Set.of("fixture"), now.minusSeconds(300), now, 5));
-        var result = service.execute("workspace", preview.id(), start(preview));
-        assertEquals("SUCCEEDED", result.status());
-        assertTrue(result.truncated());
-        verifyNoInteractions(mysql);
+    void removedDatadogScopeCannotExecute() {
+        current.set(scope(new PendingOperationalScope.Datadog("synthetic", "receipt-demo", Set.of("fixture"),
+                now.minusSeconds(300), now, "Asia/Seoul", 5), "generation", "parent", 1));
+        assertThrows(LibraryException.class, () -> service.preview("workspace", input));
+        verifyNoInteractions(mysql, captures);
     }
 
     @Test
@@ -255,7 +244,7 @@ class ConversationOperationalReadServiceTest {
     @Test
     void restartDoesNotRecreateOrReplayPreviousApproval() {
         var preview = service.preview("workspace", input);
-        var restarted = new ConversationOperationalReadService(scopes, mysql, datadog, captures, attachments, clock);
+        var restarted = new ConversationOperationalReadService(scopes, mysql, captures, attachments, clock);
         try {
             assertEquals(404, assertThrows(LibraryException.class, () -> restarted.execute("workspace", preview.id(), start(preview))).status());
             assertEquals(404, assertThrows(LibraryException.class, () -> restarted.captureReceipt("workspace", preview.id())).status());
@@ -280,7 +269,7 @@ class ConversationOperationalReadServiceTest {
         var capture = service.capturePreview("workspace", preview.id());
         assertThrows(LibraryException.class, () -> service.capture("workspace", preview.id(),
                 new ConversationOperationalReadService.Start("capture-request-1234", capture.digest(), true)));
-        clearInvocations(scopes, mysql, datadog, captures);
+        clearInvocations(scopes, mysql, captures);
         time.set(now.plusSeconds(1000));
         var receipt = service.captureReceipt("workspace", preview.id());
         assertEquals("CAPTURED", receipt.status());
@@ -288,7 +277,7 @@ class ConversationOperationalReadServiceTest {
         assertEquals(attachment.summary(), receipt.attachment());
         assertEquals(0, receipt.externalCalls());
         assertThrows(LibraryException.class, () -> service.captureReceipt("other", preview.id()));
-        verifyNoInteractions(scopes, mysql, datadog, captures);
+        verifyNoInteractions(scopes, mysql, captures);
         when(attachments.get("workspace", "attachment")).thenThrow(new LibraryException(404, "removed"));
         assertThrows(LibraryException.class, () -> service.captureReceipt("workspace", preview.id()));
     }

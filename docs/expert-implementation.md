@@ -1,5 +1,9 @@
 # 실무 전문가 구현 진행
 
+## 최신 범위 변경 — 2026-10-27
+
+사용자 요청으로 Slack 문의/알림/연결과 Datadog 연결/조회 실행기를 제거했다. Intel0.1.29에 반영했으며 기존 자료·대화는 보존한다. Notion·Jira/Confluence·MySQL은 유지한다. 아래 관련 구현 설명은 과거 이력이다. [제거 범위와 검증](evaluations/integrations-removal-20261027.md), [현재 설치](evaluations/local-install-0.1.29-20261027.json).
+
 ## 2026-10-27 현재 기준
 
 설치된0.1.27은 수동 입력 양식 대신 텍스트 질문의 계획·추가 검색·고정 근거 답변과 서버 범위에 묶인 읽기 전용 조회를 연결한다. [설치](evaluations/local-install-0.1.27-20261027.json). 이전0.1.26 실제 AI의4턴 정정/이어 질문/재시작 검증은 [별도 기록](evaluations/context-live-026-b1-20261027-review.md)에서 모두 적합했으나 단일 변형이며 전체 전문가 인수나 과거 timeout 원인 해결은 아니다.

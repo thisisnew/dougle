@@ -46,8 +46,9 @@ export default function InvestigationPanel({ workspaceId, bundleId, threadId, co
   const lifetime = useRef(new AbortController())
   const base = `/workspaces/${encodeURIComponent(workspaceId)}/investigation-plans`
   const connected = connection?.state === 'AUTHENTICATED'
-  const matches = excerpts(job?.output)
-  const proposed = job?.status === 'SUCCEEDED' && ['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'].includes(job.decision ?? '')
+  const removed = job?.decision === 'PROPOSE_DATADOG_LOGS'
+  const matches = removed ? [] : excerpts(job?.output)
+  const proposed = job?.status === 'SUCCEEDED' && ['PROPOSE_MYSQL_READ'].includes(job.decision ?? '')
 
   useEffect(() => { if (initialJob) { setJob(initialJob); setOpen(true) } }, [initialJob])
   useEffect(() => { busyCallback.current?.(busy || reading || active(job)) }, [busy, reading, job?.status])
@@ -60,7 +61,7 @@ export default function InvestigationPanel({ workspaceId, bundleId, threadId, co
 
   function checked(value: Job): Job {
     if (value.workspaceId !== workspaceId || value.bundleId !== bundleId) throw new Error('조사 대상이 다릅니다.')
-    if (continuationRoot && value.status === 'SUCCEEDED' && !['STOP', 'PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'].includes(value.decision ?? '')) {
+    if (continuationRoot && value.status === 'SUCCEEDED' && !['STOP', 'PROPOSE_MYSQL_READ'].includes(value.decision ?? '')) {
       throw new Error('추가 범위 확인에서 허용하지 않은 작업입니다. 자료를 다시 검색하거나 조회하지 않습니다.')
     }
     return value
@@ -170,15 +171,15 @@ export default function InvestigationPanel({ workspaceId, bundleId, threadId, co
         {busy && <p role="status">확인 중…</p>}
         {error && <p role="alert">{error}</p>}
         {preview && <>
-          {continuationRoot ? <p>찾은 자료와 원래 질문을 AI에 한 번 보내 조회 범위를 확인합니다. 이 질문에서는 한 번만 확인하며, 추가 검색이나 DB·로그 조회는 실행하지 않습니다.</p>
-            : <p>현재 질문과 근거를 AI에 한 번 보내 추가 검색 필요 여부를 확인합니다. 로컬 자료는 최대 한 번 검색하며 운영 DB·로그는 조회하지 않습니다. 운영 조회 제안이 반환되어도 실행하지 않습니다.</p>}
+          {continuationRoot ? <p>찾은 자료와 원래 질문을 AI에 한 번 보내 조회 범위를 확인합니다. 이 질문에서는 한 번만 확인하며, 추가 검색이나 DB 조회는 실행하지 않습니다.</p>
+            : <p>현재 질문과 근거를 AI에 한 번 보내 추가 검색 필요 여부를 확인합니다. 로컬 자료는 최대 한 번 검색하며 운영 DB는 조회하지 않습니다. 운영 조회 제안이 반환되어도 실행하지 않습니다.</p>}
           <details><summary>전송 내용 확인</summary><pre>{preview.prompt}</pre></details>
           <Button variant="outline" disabled={busy || disabled || !connected} onClick={() => void start()}>{submission ? '접수 상태 확인' : continuationRoot ? '찾은 자료로 조회 범위 확인' : '검색 시작'}</Button>
         </>}
         {job && <>
           {active(job) ? <p role="status">추가 자료를 찾고 있어요. <Button variant="ghost" disabled={busy} onClick={() => void cancel()}>취소</Button></p>
-            : <p>{proposed ? '운영 조회 제안 · 실행하지 않음' : job.decision === 'STOP' || job.status === 'STOPPED' ? '추가 검색을 진행하지 않았습니다.' : job.status === 'SUCCEEDED' ? '자료 검색 완료' : job.status === 'CANCELLED' ? '검색 취소됨' : '자료 검색을 완료하지 못했습니다.'}</p>}
-          {proposed && !scope && <p>DB·로그 조회는 아직 실행되지 않았습니다.</p>}
+            : <p>{removed ? '제거된 연결 기능의 기록입니다.' : proposed ? '운영 조회 제안 · 실행하지 않음' : job.decision === 'STOP' || job.status === 'STOPPED' ? '추가 검색을 진행하지 않았습니다.' : job.status === 'SUCCEEDED' ? '자료 검색 완료' : job.status === 'CANCELLED' ? '검색 취소됨' : '자료 검색을 완료하지 못했습니다.'}</p>}
+          {proposed && !scope && <p>DB 조회는 아직 실행되지 않았습니다.</p>}
           {scope && scope.questions.map(question => <p key={question.topic}>{question.prompt}</p>)}
           {scope && scope.questions.length > 0 && <p>아래 대화 입력창에 답해 주세요. 처음 질문과 함께 확인하겠습니다.</p>}
           {scope && !scope.questions.length && scope.internalResolutionRequired && <p>아직 조회할 자료를 확인하지 못했습니다. 원본은 조회하지 않았습니다.</p>}
@@ -190,7 +191,7 @@ export default function InvestigationPanel({ workspaceId, bundleId, threadId, co
           {job.error && <p role="alert">{job.error}</p>}
           {job.toolStatus === 'EMPTY' && <p>추가로 일치하는 자료가 없습니다.</p>}
           {job.truncated && <p>검색 결과가 많아 일부만 확인했습니다. 질문의 범위를 좁혀 다시 찾아 주세요.</p>}
-          {job.output && !proposed && <details open><summary>검색 결과 · 답변으로 검증되지 않은 자료</summary>
+          {job.output && !proposed && !removed && <details open><summary>검색 결과 · 답변으로 검증되지 않은 자료</summary>
             {matches.length ? matches.map((match, index) => <div key={index}><p>자료 {index + 1} · {match.startLine}–{match.endLine}행</p><pre>{match.content}</pre></div>)
               : <pre>{job.output}</pre>}
           </details>}

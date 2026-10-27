@@ -72,13 +72,13 @@ it('does not offer answer capture for a truncated local search', async () => {
   expect(api).toHaveBeenCalledTimes(1)
 })
 
-it.each(['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'])('restores %s without a query or handoff', async decision => {
+it.each(['PROPOSE_MYSQL_READ'])('restores %s without a query or handoff', async decision => {
   api.mockResolvedValueOnce([{ ...proposalJob, decision }])
   render(<InvestigationPanel {...props} onAnswer={vi.fn()} />)
   expect(api).not.toHaveBeenCalled()
   fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
   expect(await screen.findByText('운영 조회 제안 · 실행하지 않음')).toBeVisible()
-  expect(screen.getByText('DB·로그 조회는 아직 실행되지 않았습니다.')).toBeVisible()
+  expect(screen.getByText('DB 조회는 아직 실행되지 않았습니다.')).toBeVisible()
   expect(screen.queryByRole('button', { name: '조회 양식 열기' })).not.toBeInTheDocument()
   expect(screen.queryByRole('button', { name: '이 자료로 다시 답변' })).not.toBeInTheDocument()
   expect(api).toHaveBeenCalledExactlyOnceWith('/workspaces/workspace/investigation-plans/jobs?bundleId=bundle', expect.objectContaining({ signal: expect.any(AbortSignal) }))
@@ -89,7 +89,7 @@ async function prepare() {
   await screen.findByRole('button', { name: '검색 시작' })
 }
 
-it.each(['PROPOSE_MYSQL_READ', 'PROPOSE_DATADOG_LOGS'])('does not present the pending %s scope identifier as evidence', async decision => {
+it.each(['PROPOSE_MYSQL_READ'])('does not present the pending %s scope identifier as evidence', async decision => {
   api.mockResolvedValueOnce([{ ...proposalJob, decision, toolStatus: 'PENDING_SCOPE', output: 'private-scope-id' }])
   render(<InvestigationPanel {...props} onAnswer={vi.fn()} />)
   fireEvent.click(screen.getByRole('button', { name: '자료 더 찾아보기' }))
@@ -108,7 +108,7 @@ it('열기 전에는 조회도 실행도 하지 않고 명시적 시작 전에 A
   expect(api.mock.calls.map(([path]) => path)).toEqual([
     '/workspaces/workspace/investigation-plans/jobs?bundleId=bundle', '/workspaces/workspace/investigation-plans/preview',
   ])
-  expect(screen.getByText(/운영 DB·로그는 조회하지 않습니다/)).toBeVisible()
+  expect(screen.getByText(/운영 DB는 조회하지 않습니다/)).toBeVisible()
 })
 
 it('승인한 검색을 한 번 제출하고 결과를 실행 가능한 HTML이나 검증된 답변으로 취급하지 않는다', async () => {
@@ -221,4 +221,14 @@ it('실패한 계획은 재실행하지 않고 명시적으로 새 미리보기�
   await screen.findByRole('button', { name: '검색 시작' })
   expect(api.mock.calls.filter(([path, options]) => path.endsWith('/jobs') && options?.method === 'POST')).toHaveLength(0)
   expect(api.mock.calls.filter(([path]) => path.endsWith('/preview'))).toHaveLength(1)
+})
+
+it("does not revive a retired Datadog plan or expose its scope as evidence", async () => {
+  api.mockResolvedValueOnce([{ ...proposalJob, decision: "PROPOSE_DATADOG_LOGS", toolStatus: "PENDING_SCOPE", output: "retired-scope" }])
+  render(<InvestigationPanel {...props} onAnswer={vi.fn()} />)
+  fireEvent.click(screen.getByRole("button", { name: "자료 더 찾아보기" }))
+  expect(await screen.findByText("제거된 연결 기능의 기록입니다.")).toBeVisible()
+  expect(screen.queryByText("retired-scope")).not.toBeInTheDocument()
+  expect(screen.queryByRole("button", { name: "이 자료로 다시 답변" })).not.toBeInTheDocument()
+  expect(api).toHaveBeenCalledTimes(1)
 })

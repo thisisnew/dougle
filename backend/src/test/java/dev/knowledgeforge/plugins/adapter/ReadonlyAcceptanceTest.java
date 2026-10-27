@@ -4,8 +4,6 @@ import dev.knowledgeforge.investigation.domain.ConstrainedToolExecutor;
 import dev.knowledgeforge.investigation.domain.ReadOnlyTool;
 import dev.knowledgeforge.investigation.domain.ToolExecution;
 import dev.knowledgeforge.library.application.LibraryException;
-import dev.knowledgeforge.plugins.slack.adapter.SlackHttp;
-import dev.knowledgeforge.plugins.slack.adapter.SlackReplyHttpTransport;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -83,14 +81,6 @@ class ReadonlyAcceptanceTest {
                 for (String table : List.of("orders; UPDATE orders SET state='DONE'", "orders FOR UPDATE", "DELETE FROM orders", "CALL mutate()")) {
                     assertThatThrownBy(() -> new MysqlReadClient.Request(table, List.of("id"), Map.of(), 1)).isInstanceOf(IllegalArgumentException.class);
                 }
-            } else if (fixture == 1) {
-                var slack = new SlackHttp();
-                try {
-                    for (String method : List.of("chat.postMessage", "chat.update", "chat.delete", "reactions.add", "conversations.mark")) {
-                        assertThatThrownBy(() -> slack.post(method, "synthetic-token")).isInstanceOf(IllegalArgumentException.class);
-                    }
-                    assertThatThrownBy(() -> new SlackReplyHttpTransport().post(null, input)).isInstanceOf(LibraryException.class);
-                } finally { slack.close(); }
             } else if (fixture == 2) {
                 for (var provider : BrowserProvider.values()) for (String tool : List.of("notion-update-page", "notion-delete-page", "createJiraIssue", "updateConfluencePage")) {
                     String body = new JsonMapper().writeValueAsString(Map.of("jsonrpc", "2.0", "id", "synthetic", "method", "tools/call",
