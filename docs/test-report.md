@@ -1,5 +1,7 @@
 # Phase 1 검증 결과
 
+2026-10-27 첫100개 주소·탭 **경계 검사** 실행 결과는 [별도 보고서](evaluations/acceptance-routing-20261027.md)다. 전체 인수는 PARTIAL100/NOT_RUN900이며 실제 수집·검색 완료로 승격하지 않는다. 아래0/1000은 명세 작성 당시 기록이다.
+
 2026-10-27 최신 사용자 동선 인수는 [1,000개 명세](acceptance-1000.md)와 [구조화 케이스](acceptance-1000.json)를 따른다. 아직 실행0/1000이며 아래 Phase1 기록과 합산하지 않는다. 실제 검색 실패 기준선은 [별도 결과](evaluations/retrieval-baseline-027-20261027.md)에 보존한다.
 
 문맥 미리보기의 검증 범위는 [전용 보고서](conversation-context.md)에 기록합니다. 실제 외부 모델 호출과 구분합니다.

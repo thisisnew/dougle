@@ -1,5 +1,11 @@
 # Dougle — 이어서 작업하기
 
+## 첫100개 경계 실행 및 수정 — 2026-10-27
+
+[실행 보고서](docs/evaluations/acceptance-routing-20261027.md), [ID별 결과](docs/evaluations/acceptance-routing-20261027.json). T0001–T0100에 UI80/API20 경계 검사를 실행했다. 정규화 전 UI16/API4 실패를 재현해 query/fragment/대문자/443 루트 주소를 수정했고, 보강 검사에서 발견한 multiline paste 등록 시도4개도 차단했다. 최종 경계100통과지만 **전체 인수 PARTIAL100/NOT_RUN900/PASS0**이다. 실제 원격 본문/검색/설치본 E2E가 아니며 소스 수정은 미패키징·미설치다. 현재 앱0.1.27 유지.
+
+전체 Java1157실행/1141통과/10기존 fixture오류/6skip, 대상Java72통과. 전체UI790은 paste guard 전; 최종관련142통과/빌드. Node 첫166중1실패·단독 재검사15중1실패·최종직렬166통과를 모두 보존한다. 경계 runner opt-in과 결과 ledger는 보고서를 따른다. 다음은 실제 수집/검색 인수이며 이전 검색 실패는 해결하지 않았다. 아래0/1000은 명세 작성 당시 기록이다.
+
 ## 인수 명세 재작성 — 1,000개 (2026-10-27)
 
 사용자 지적으로 잘못된 탭/주소 같은 기본 사용 동선을 충분히 검증하지 않았음을 확인했다. [1,000개 명세](docs/acceptance-1000.md), [동일 ID의 구조화 JSON](docs/acceptance-1000.json)을 작성했다. 40영역×구체 입력5종×조작5종의 파라미터화 케이스이며 실행은 **0/1000, 전부 NOT_RUN/SPEC_ONLY**다. 기존 단위/54검색 통과를 승계하지 않는다. `node --test scripts/acceptance-catalog.test.mjs`는 개수·고유 ID·필수 필드·생성 문서 일치4개만 검증한다. 전체 Node163통과는 인수1000개 실행이 아니다.

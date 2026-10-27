@@ -1,0 +1,282 @@
+[
+  {
+    "suite": "R01",
+    "fixture": "R01-F1",
+    "input": "https://github.com/thisisnew/study-gof-23-design-pattern",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/thisisnew/study-gof-23-design-pattern",
+    "caseIds": {
+      "web": "T0001",
+      "github": "T0002",
+      "roundtrip": "T0003",
+      "api": "T0004",
+      "retry": "T0005"
+    }
+  },
+  {
+    "suite": "R01",
+    "fixture": "R01-F2",
+    "input": "https://github.com/example/repo.git",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo.git",
+    "caseIds": {
+      "web": "T0006",
+      "github": "T0007",
+      "roundtrip": "T0008",
+      "api": "T0009",
+      "retry": "T0010"
+    }
+  },
+  {
+    "suite": "R01",
+    "fixture": "R01-F3",
+    "input": "https://github.com/example/repo/",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo/",
+    "caseIds": {
+      "web": "T0011",
+      "github": "T0012",
+      "roundtrip": "T0013",
+      "api": "T0014",
+      "retry": "T0015"
+    }
+  },
+  {
+    "suite": "R01",
+    "fixture": "R01-F4",
+    "input": "  https://github.com/example/repo  ",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo",
+    "caseIds": {
+      "web": "T0016",
+      "github": "T0017",
+      "roundtrip": "T0018",
+      "api": "T0019",
+      "retry": "T0020"
+    }
+  },
+  {
+    "suite": "R01",
+    "fixture": "R01-F5",
+    "input": "https://github.com/example/repo-name_2.0",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo-name_2.0",
+    "caseIds": {
+      "web": "T0021",
+      "github": "T0022",
+      "roundtrip": "T0023",
+      "api": "T0024",
+      "retry": "T0025"
+    }
+  },
+  {
+    "suite": "R02",
+    "fixture": "R02-F1",
+    "input": "https://example.org/guide",
+    "expectedKind": "URL",
+    "expectedLocation": "https://example.org/guide",
+    "caseIds": {
+      "web": "T0026",
+      "github": "T0027",
+      "roundtrip": "T0028",
+      "api": "T0029",
+      "retry": "T0030"
+    }
+  },
+  {
+    "suite": "R02",
+    "fixture": "R02-F2",
+    "input": "https://github.com/example/repo/blob/main/src/App.java",
+    "expectedKind": "URL",
+    "expectedLocation": "https://github.com/example/repo/blob/main/src/App.java",
+    "caseIds": {
+      "web": "T0031",
+      "github": "T0032",
+      "roundtrip": "T0033",
+      "api": "T0034",
+      "retry": "T0035"
+    }
+  },
+  {
+    "suite": "R02",
+    "fixture": "R02-F3",
+    "input": "https://github.com/example/repo/issues/12",
+    "expectedKind": "URL",
+    "expectedLocation": "https://github.com/example/repo/issues/12",
+    "caseIds": {
+      "web": "T0036",
+      "github": "T0037",
+      "roundtrip": "T0038",
+      "api": "T0039",
+      "retry": "T0040"
+    }
+  },
+  {
+    "suite": "R02",
+    "fixture": "R02-F4",
+    "input": "https://github.com/example/repo/pull/7",
+    "expectedKind": "URL",
+    "expectedLocation": "https://github.com/example/repo/pull/7",
+    "caseIds": {
+      "web": "T0041",
+      "github": "T0042",
+      "roundtrip": "T0043",
+      "api": "T0044",
+      "retry": "T0045"
+    }
+  },
+  {
+    "suite": "R02",
+    "fixture": "R02-F5",
+    "input": "https://raw.githubusercontent.com/example/repo/main/App.java",
+    "expectedKind": "URL",
+    "expectedLocation": "https://raw.githubusercontent.com/example/repo/main/App.java",
+    "caseIds": {
+      "web": "T0046",
+      "github": "T0047",
+      "roundtrip": "T0048",
+      "api": "T0049",
+      "retry": "T0050"
+    }
+  },
+  {
+    "suite": "R03",
+    "fixture": "R03-F1",
+    "input": "https://github.com/example/repo/tree/main",
+    "expectedKind": "URL",
+    "expectedLocation": "https://github.com/example/repo/tree/main",
+    "caseIds": {
+      "web": "T0051",
+      "github": "T0052",
+      "roundtrip": "T0053",
+      "api": "T0054",
+      "retry": "T0055"
+    }
+  },
+  {
+    "suite": "R03",
+    "fixture": "R03-F2",
+    "input": "https://github.com/example/repo?tab=readme-ov-file",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo",
+    "caseIds": {
+      "web": "T0056",
+      "github": "T0057",
+      "roundtrip": "T0058",
+      "api": "T0059",
+      "retry": "T0060"
+    }
+  },
+  {
+    "suite": "R03",
+    "fixture": "R03-F3",
+    "input": "https://github.com/example/repo#readme",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo",
+    "caseIds": {
+      "web": "T0061",
+      "github": "T0062",
+      "roundtrip": "T0063",
+      "api": "T0064",
+      "retry": "T0065"
+    }
+  },
+  {
+    "suite": "R03",
+    "fixture": "R03-F4",
+    "input": "https://GITHUB.com/example/repo",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo",
+    "caseIds": {
+      "web": "T0066",
+      "github": "T0067",
+      "roundtrip": "T0068",
+      "api": "T0069",
+      "retry": "T0070"
+    }
+  },
+  {
+    "suite": "R03",
+    "fixture": "R03-F5",
+    "input": "https://github.com:443/example/repo",
+    "expectedKind": "GITHUB",
+    "expectedLocation": "https://github.com/example/repo",
+    "caseIds": {
+      "web": "T0071",
+      "github": "T0072",
+      "roundtrip": "T0073",
+      "api": "T0074",
+      "retry": "T0075"
+    }
+  },
+  {
+    "suite": "R04",
+    "fixture": "R04-F1",
+    "input": "https://github.com@127.0.0.1/private",
+    "expectedKind": null,
+    "expectedLocation": null,
+    "caseIds": {
+      "web": "T0076",
+      "github": "T0077",
+      "roundtrip": "T0078",
+      "api": "T0079",
+      "retry": "T0080"
+    }
+  },
+  {
+    "suite": "R04",
+    "fixture": "R04-F2",
+    "input": "file:///etc/passwd",
+    "expectedKind": null,
+    "expectedLocation": null,
+    "caseIds": {
+      "web": "T0081",
+      "github": "T0082",
+      "roundtrip": "T0083",
+      "api": "T0084",
+      "retry": "T0085"
+    }
+  },
+  {
+    "suite": "R04",
+    "fixture": "R04-F3",
+    "input": "javascript:alert(document.cookie)",
+    "expectedKind": null,
+    "expectedLocation": null,
+    "caseIds": {
+      "web": "T0086",
+      "github": "T0087",
+      "roundtrip": "T0088",
+      "api": "T0089",
+      "retry": "T0090"
+    }
+  },
+  {
+    "suite": "R04",
+    "fixture": "R04-F4",
+    "input": "git@github.com:example/repo.git",
+    "expectedKind": null,
+    "expectedLocation": null,
+    "caseIds": {
+      "web": "T0091",
+      "github": "T0092",
+      "roundtrip": "T0093",
+      "api": "T0094",
+      "retry": "T0095"
+    }
+  },
+  {
+    "suite": "R04",
+    "fixture": "R04-F5",
+    "input": "https://github.com/example/repo\n--upload-pack=evil",
+    "expectedKind": null,
+    "expectedLocation": null,
+    "caseIds": {
+      "web": "T0096",
+      "github": "T0097",
+      "roundtrip": "T0098",
+      "api": "T0099",
+      "retry": "T0100"
+    }
+  }
+]
