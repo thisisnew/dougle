@@ -1,0 +1,1676 @@
+{
+  "version": "0.1.27",
+  "artifactHash": "b647ff9815037ddef3780246d712a944d4534a43060f881cdcbab8c2e6f3a612",
+  "harnessSha256": "d651de97f160e22ee2c7630e199064e917d1fb9f201330469de1403c1b46fc65",
+  "startedAt": "2026-10-27T09:30:25.002Z",
+  "finishedAt": "2026-10-27T09:32:35.538Z",
+  "summary": {
+    "passed": 40,
+    "failed": 7,
+    "queries": 54
+  },
+  "cleanup": {
+    "childExited": true,
+    "temporaryDataRemoved": true
+  },
+  "checks": [
+    {
+      "id": "file-and-nested-folder-ingestion",
+      "status": "PASS",
+      "detail": {
+        "status": "READY",
+        "revision": "7d228f6659f17abca8afb9d8f904c1b38d277850d60a042defe7f715de0b6599",
+        "sourceId": "7c6a7710-3d5a-47c1-accd-35ae9906f629"
+      },
+      "elapsedMs": 2631
+    },
+    {
+      "id": "file:strategy-exact",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": false,
+        "hitAt5": true
+      },
+      "elapsedMs": 227
+    },
+    {
+      "id": "file:strategy-korean",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 94
+    },
+    {
+      "id": "file:strategy-paraphrase",
+      "status": "FAIL",
+      "error": "Expected evidence/abstention missing",
+      "elapsedMs": 103
+    },
+    {
+      "id": "file:strategy-colloquial",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 100
+    },
+    {
+      "id": "file:operation-exact",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 93
+    },
+    {
+      "id": "file:operation-paraphrase",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 99
+    },
+    {
+      "id": "file:badge-cross-language",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 94
+    },
+    {
+      "id": "file:badge-interpretation",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 97
+    },
+    {
+      "id": "file:negative-moon",
+      "status": "FAIL",
+      "error": "Expected evidence/abstention missing",
+      "elapsedMs": 90
+    },
+    {
+      "id": "file:negative-pizza",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": null,
+        "hitAt5": null
+      },
+      "elapsedMs": 92
+    },
+    {
+      "id": "folder:strategy-exact",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 90
+    },
+    {
+      "id": "folder:strategy-korean",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 89
+    },
+    {
+      "id": "folder:strategy-paraphrase",
+      "status": "FAIL",
+      "error": "Expected evidence/abstention missing",
+      "elapsedMs": 108
+    },
+    {
+      "id": "folder:strategy-colloquial",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 97
+    },
+    {
+      "id": "folder:operation-exact",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 93
+    },
+    {
+      "id": "folder:operation-paraphrase",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 111
+    },
+    {
+      "id": "folder:badge-cross-language",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 97
+    },
+    {
+      "id": "folder:badge-interpretation",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "hitAt5": true
+      },
+      "elapsedMs": 98
+    },
+    {
+      "id": "folder:negative-moon",
+      "status": "FAIL",
+      "error": "Expected evidence/abstention missing",
+      "elapsedMs": 94
+    },
+    {
+      "id": "folder:negative-pizza",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": null,
+        "hitAt5": null
+      },
+      "elapsedMs": 91
+    },
+    {
+      "id": "folder-edit-rename-delete-resync",
+      "status": "PASS",
+      "detail": {
+        "revision": "6f87384556c94d7c480a234bfd9789679a81046814b1811d76a845183b8e7c10"
+      },
+      "elapsedMs": 378
+    },
+    {
+      "id": "design-pattern:query-0",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "precisionReturned": 1
+      },
+      "elapsedMs": 752
+    },
+    {
+      "id": "design-pattern:query-1",
+      "status": "FAIL",
+      "error": "Expected source path missing",
+      "elapsedMs": 690
+    },
+    {
+      "id": "design-pattern:query-2",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "precisionReturned": 1
+      },
+      "elapsedMs": 782
+    },
+    {
+      "id": "github:design-pattern",
+      "status": "PASS",
+      "detail": {
+        "status": "READY",
+        "revision": "b675f8f1342f1bddaa96c613875841a407306bcd"
+      },
+      "elapsedMs": 18188
+    },
+    {
+      "id": "study-gof-23-design-pattern:query-0",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "precisionReturned": 1
+      },
+      "elapsedMs": 907
+    },
+    {
+      "id": "study-gof-23-design-pattern:query-1",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "precisionReturned": 1
+      },
+      "elapsedMs": 677
+    },
+    {
+      "id": "study-gof-23-design-pattern:query-2",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "precisionReturned": 0.4
+      },
+      "elapsedMs": 788
+    },
+    {
+      "id": "study-gof-23-design-pattern:query-3",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "precisionReturned": 1
+      },
+      "elapsedMs": 916
+    },
+    {
+      "id": "study-gof-23-design-pattern:query-4",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true,
+        "precisionReturned": 1
+      },
+      "elapsedMs": 680
+    },
+    {
+      "id": "same-file:0",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 57
+    },
+    {
+      "id": "same-file:1",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 56
+    },
+    {
+      "id": "same-file:2",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 55
+    },
+    {
+      "id": "same-folder:0",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 50
+    },
+    {
+      "id": "same-folder:1",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 59
+    },
+    {
+      "id": "same-folder:2",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 56
+    },
+    {
+      "id": "same-url:0",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 53
+    },
+    {
+      "id": "same-url:1",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 51
+    },
+    {
+      "id": "same-url:2",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 59
+    },
+    {
+      "id": "same-github:0",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 637
+    },
+    {
+      "id": "same-github:1",
+      "status": "FAIL",
+      "error": "Same-source answer-bearing evidence missing",
+      "elapsedMs": 678
+    },
+    {
+      "id": "same-github:2",
+      "status": "PASS",
+      "detail": {
+        "hitAt1": true
+      },
+      "elapsedMs": 677
+    },
+    {
+      "id": "github:study-gof-23-design-pattern",
+      "status": "PASS",
+      "detail": {
+        "status": "READY",
+        "revision": "fd98bd00d958e23f8b3f05c379b2747da92e8d68"
+      },
+      "elapsedMs": 64889
+    },
+    {
+      "id": "web-public-manifesto",
+      "status": "PASS",
+      "detail": {
+        "status": "READY",
+        "revision": "4d8a84a0b38f90d82b8d8547d2699fd793c3ae7515ea225d13b5134a34f47299"
+      },
+      "elapsedMs": 1802
+    },
+    {
+      "id": "notion-without-connection",
+      "status": "PASS",
+      "detail": {
+        "status": "ERROR",
+        "error": "Notion 연결이 필요합니다. 플러그인에서 Notion을 연결해 주세요."
+      },
+      "elapsedMs": 19
+    },
+    {
+      "id": "notion-fresh-snapshot-retrieval",
+      "status": "FAIL",
+      "error": "Notion answer-bearing evidence recall\n\n9 !== 10\n",
+      "elapsedMs": 17120
+    }
+  ],
+  "retrieval": [
+    {
+      "route": "file",
+      "id": "strategy-exact",
+      "question": "Strategy 예제",
+      "hitAt1": false,
+      "hitAt5": true,
+      "precisionReturned": 0.3333333333333333,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 227,
+      "hits": [
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "title": "Strategy.java",
+          "path": "Strategy.java",
+          "startLine": 1,
+          "endLine": 4
+        },
+        {
+          "title": "State.java",
+          "path": "State.java",
+          "startLine": 1,
+          "endLine": 2
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "strategy-korean",
+      "question": "전략 패턴 예제 좀 보여줘",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 93,
+      "hits": [
+        {
+          "title": "Strategy.java",
+          "path": "Strategy.java",
+          "startLine": 1,
+          "endLine": 4
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "strategy-paraphrase",
+      "question": "선택 알고리즘을 외부에서 전달하는 코드는 어디야?",
+      "hitAt1": false,
+      "hitAt5": false,
+      "precisionReturned": null,
+      "evidencePresent": false,
+      "negativeAbstention": null,
+      "elapsedMs": 102,
+      "hits": []
+    },
+    {
+      "route": "file",
+      "id": "strategy-colloquial",
+      "question": "전략패턴 어떻게짜냐",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 100,
+      "hits": [
+        {
+          "title": "Strategy.java",
+          "path": "Strategy.java",
+          "startLine": 1,
+          "endLine": 4
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "operation-exact",
+      "question": "월평균 수기 보정 건수는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 92,
+      "hits": [
+        {
+          "title": "가상 업무.md",
+          "path": "가상 업무.md",
+          "startLine": 1,
+          "endLine": 3
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "operation-paraphrase",
+      "question": "한 달에 사람이 직접 고치는 센서 값이 몇 건이야?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 99,
+      "hits": [
+        {
+          "title": "가상 업무.md",
+          "path": "가상 업무.md",
+          "startLine": 1,
+          "endLine": 3
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "badge-cross-language",
+      "question": "AMBER 배지는 언제 만료돼?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 93,
+      "hits": [
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "badge-interpretation",
+      "question": "AMBER는 시간이 지나면 저절로 갱신되는 거야?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 96,
+      "hits": [
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "negative-moon",
+      "question": "달 표면의 중력은 얼마인가?",
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": 0,
+      "evidencePresent": null,
+      "negativeAbstention": false,
+      "elapsedMs": 89,
+      "hits": [
+        {
+          "title": "State.java",
+          "path": "State.java",
+          "startLine": 1,
+          "endLine": 2
+        },
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "file",
+      "id": "negative-pizza",
+      "question": "피자 만드는 방법은?",
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true,
+      "elapsedMs": 89,
+      "hits": []
+    },
+    {
+      "route": "folder",
+      "id": "strategy-exact",
+      "question": "Strategy 예제",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 0.5,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 89,
+      "hits": [
+        {
+          "title": "Strategy.java",
+          "path": "patterns/Strategy.java",
+          "startLine": 1,
+          "endLine": 4
+        },
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "strategy-korean",
+      "question": "전략 패턴 예제 좀 보여줘",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 88,
+      "hits": [
+        {
+          "title": "Strategy.java",
+          "path": "patterns/Strategy.java",
+          "startLine": 1,
+          "endLine": 4
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "strategy-paraphrase",
+      "question": "선택 알고리즘을 외부에서 전달하는 코드는 어디야?",
+      "hitAt1": false,
+      "hitAt5": false,
+      "precisionReturned": null,
+      "evidencePresent": false,
+      "negativeAbstention": null,
+      "elapsedMs": 108,
+      "hits": []
+    },
+    {
+      "route": "folder",
+      "id": "strategy-colloquial",
+      "question": "전략패턴 어떻게짜냐",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 96,
+      "hits": [
+        {
+          "title": "Strategy.java",
+          "path": "patterns/Strategy.java",
+          "startLine": 1,
+          "endLine": 4
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "operation-exact",
+      "question": "월평균 수기 보정 건수는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 92,
+      "hits": [
+        {
+          "title": "가상 업무.md",
+          "path": "가상 업무.md",
+          "startLine": 1,
+          "endLine": 3
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "operation-paraphrase",
+      "question": "한 달에 사람이 직접 고치는 센서 값이 몇 건이야?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 110,
+      "hits": [
+        {
+          "title": "가상 업무.md",
+          "path": "가상 업무.md",
+          "startLine": 1,
+          "endLine": 3
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "badge-cross-language",
+      "question": "AMBER 배지는 언제 만료돼?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 96,
+      "hits": [
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "badge-interpretation",
+      "question": "AMBER는 시간이 지나면 저절로 갱신되는 거야?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 97,
+      "hits": [
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "negative-moon",
+      "question": "달 표면의 중력은 얼마인가?",
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": 0,
+      "evidencePresent": null,
+      "negativeAbstention": false,
+      "elapsedMs": 93,
+      "hits": [
+        {
+          "title": "State.java",
+          "path": "distractors/State.java",
+          "startLine": 1,
+          "endLine": 2
+        },
+        {
+          "title": "policy.txt",
+          "path": "policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "folder",
+      "id": "negative-pizza",
+      "question": "피자 만드는 방법은?",
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true,
+      "elapsedMs": 90,
+      "hits": []
+    },
+    {
+      "route": "folder-after-edit",
+      "id": "updated-policy",
+      "question": "AMBER 배지 만료 기간",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 75,
+      "hits": [
+        {
+          "title": "renamed-policy.txt",
+          "path": "renamed-policy.txt",
+          "startLine": 1,
+          "endLine": 1
+        }
+      ]
+    },
+    {
+      "route": "folder-after-edit",
+      "id": "deleted-strategy",
+      "question": "Strategy",
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": 0,
+      "evidencePresent": null,
+      "negativeAbstention": false,
+      "elapsedMs": 60,
+      "hits": [
+        {
+          "title": "가상 업무.md",
+          "path": "가상 업무.md",
+          "startLine": 1,
+          "endLine": 3
+        }
+      ]
+    },
+    {
+      "route": "design-pattern",
+      "id": "G-0",
+      "question": "팩토리 메서드 패턴 예제",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 750,
+      "hits": [
+        {
+          "title": "Main.java",
+          "path": "FactoryMethodPattern/src/factory/Main.java",
+          "startLine": 1,
+          "endLine": 20
+        },
+        {
+          "title": "Timon.java",
+          "path": "FactoryMethodPattern/src/factory/Timon.java",
+          "startLine": 1,
+          "endLine": 18
+        },
+        {
+          "title": "ShoppingMall.java",
+          "path": "FactoryMethodPattern/src/factory/ShoppingMall.java",
+          "startLine": 1,
+          "endLine": 17
+        },
+        {
+          "title": "Koupang.java",
+          "path": "FactoryMethodPattern/src/factory/Koupang.java",
+          "startLine": 1,
+          "endLine": 18
+        },
+        {
+          "title": "Shopping.java",
+          "path": "FactoryMethodPattern/src/factory/Shopping.java",
+          "startLine": 1,
+          "endLine": 9
+        }
+      ]
+    },
+    {
+      "route": "design-pattern",
+      "id": "G-1",
+      "question": "객체를 만드는 코드는 어디야?",
+      "hitAt1": false,
+      "hitAt5": false,
+      "precisionReturned": 0,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 689,
+      "hits": [
+        {
+          "title": "Instance.java",
+          "path": "SingletonPattern/src/Singleton/Instance.java",
+          "startLine": 1,
+          "endLine": 9
+        }
+      ]
+    },
+    {
+      "route": "design-pattern",
+      "id": "G-2",
+      "question": "싱글턴 예제 보여줘",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 781,
+      "hits": [
+        {
+          "title": "Main.java",
+          "path": "SingletonPattern/src/Singleton/Main.java",
+          "startLine": 1,
+          "endLine": 19
+        },
+        {
+          "title": "Instance.java",
+          "path": "SingletonPattern/src/Singleton/Instance.java",
+          "startLine": 1,
+          "endLine": 9
+        },
+        {
+          "title": "Singleton.java",
+          "path": "SingletonPattern/src/Singleton3/Singleton.java",
+          "startLine": 1,
+          "endLine": 14
+        },
+        {
+          "title": "Singleton.java",
+          "path": "SingletonPattern/src/Singleton2/Singleton.java",
+          "startLine": 1,
+          "endLine": 23
+        },
+        {
+          "title": "MultiThread.java",
+          "path": "SingletonPattern/src/Singleton2/MultiThread.java",
+          "startLine": 1,
+          "endLine": 27
+        }
+      ]
+    },
+    {
+      "route": "study-gof-23-design-pattern",
+      "id": "G-0",
+      "question": "전략패턴 예제좀",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 906,
+      "hits": [
+        {
+          "title": "ProbStrategy.java",
+          "path": "design-patten/src/part10/strategy/ProbStrategy.java",
+          "startLine": 1,
+          "endLine": 56
+        },
+        {
+          "title": "Hand.java",
+          "path": "design-patten/src/part10/strategy/Hand.java",
+          "startLine": 1,
+          "endLine": 46
+        },
+        {
+          "title": "Main.java",
+          "path": "design-patten/src/part10/strategy/Main.java",
+          "startLine": 1,
+          "endLine": 33
+        },
+        {
+          "title": "Player.java",
+          "path": "design-patten/src/part10/strategy/Player.java",
+          "startLine": 1,
+          "endLine": 44
+        },
+        {
+          "title": "WinningStrategy.java",
+          "path": "design-patten/src/part10/strategy/WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "study-gof-23-design-pattern",
+      "id": "G-1",
+      "question": "전략패턴 어떻게짜냐",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 676,
+      "hits": [
+        {
+          "title": "ProbStrategy.java",
+          "path": "design-patten/src/part10/strategy/ProbStrategy.java",
+          "startLine": 1,
+          "endLine": 56
+        },
+        {
+          "title": "Player.java",
+          "path": "design-patten/src/part10/strategy/Player.java",
+          "startLine": 1,
+          "endLine": 44
+        },
+        {
+          "title": "Main.java",
+          "path": "design-patten/src/part10/strategy/Main.java",
+          "startLine": 1,
+          "endLine": 33
+        },
+        {
+          "title": "WinningStrategy.java",
+          "path": "design-patten/src/part10/strategy/WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        },
+        {
+          "title": "Hand.java",
+          "path": "design-patten/src/part10/strategy/Hand.java",
+          "startLine": 1,
+          "endLine": 46
+        }
+      ]
+    },
+    {
+      "route": "study-gof-23-design-pattern",
+      "id": "G-2",
+      "question": "알고리즘을 교체하는 예제",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 0.4,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 787,
+      "hits": [
+        {
+          "title": "ProbStrategy.java",
+          "path": "design-patten/src/part10/strategy/ProbStrategy.java",
+          "startLine": 1,
+          "endLine": 56
+        },
+        {
+          "title": "Main.java",
+          "path": "design-patten/src/part10/strategy/Main.java",
+          "startLine": 1,
+          "endLine": 33
+        },
+        {
+          "title": "Main.java",
+          "path": "design-patten/src/part14/chainofresponsibility/Main.java",
+          "startLine": 1,
+          "endLine": 18
+        },
+        {
+          "title": "Gamer.java",
+          "path": "design-patten/src/part18/memento/Gamer.java",
+          "startLine": 1,
+          "endLine": 78
+        },
+        {
+          "title": "Main.java",
+          "path": "design-patten/src/part21/proxy/Main.java",
+          "startLine": 1,
+          "endLine": 11
+        }
+      ]
+    },
+    {
+      "route": "study-gof-23-design-pattern",
+      "id": "G-3",
+      "question": "Strategy 인터페이스의 구현체는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 915,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "design-patten/src/part10/strategy/WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        },
+        {
+          "title": "Strategy.java",
+          "path": "design-patten/src/part10/strategy/Strategy.java",
+          "startLine": 1,
+          "endLine": 6
+        },
+        {
+          "title": "ProbStrategy.java",
+          "path": "design-patten/src/part10/strategy/ProbStrategy.java",
+          "startLine": 1,
+          "endLine": 56
+        },
+        {
+          "title": "Player.java",
+          "path": "design-patten/src/part10/strategy/Player.java",
+          "startLine": 1,
+          "endLine": 44
+        },
+        {
+          "title": "Hand.java",
+          "path": "design-patten/src/part10/strategy/Hand.java",
+          "startLine": 1,
+          "endLine": 46
+        }
+      ]
+    },
+    {
+      "route": "study-gof-23-design-pattern",
+      "id": "G-4",
+      "question": "손을 선택하는 전략은 어떻게 사용해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 679,
+      "hits": [
+        {
+          "title": "ProbStrategy.java",
+          "path": "design-patten/src/part10/strategy/ProbStrategy.java",
+          "startLine": 1,
+          "endLine": 56
+        },
+        {
+          "title": "Hand.java",
+          "path": "design-patten/src/part10/strategy/Hand.java",
+          "startLine": 1,
+          "endLine": 46
+        },
+        {
+          "title": "WinningStrategy.java",
+          "path": "design-patten/src/part10/strategy/WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-file",
+      "id": "SAME-0",
+      "question": "WinningStrategy는 어떻게 동작해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 55,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-file",
+      "id": "SAME-1",
+      "question": "직전 판에서 이겼으면 같은 손을 다시 내는 코드는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 55,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-file",
+      "id": "SAME-2",
+      "question": "승패에 따라 다음 손을 선택하는 전략을 설명해줘",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 54,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-folder",
+      "id": "SAME-0",
+      "question": "WinningStrategy는 어떻게 동작해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 49,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-folder",
+      "id": "SAME-1",
+      "question": "직전 판에서 이겼으면 같은 손을 다시 내는 코드는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 57,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-folder",
+      "id": "SAME-2",
+      "question": "승패에 따라 다음 손을 선택하는 전략을 설명해줘",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 55,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-url",
+      "id": "SAME-0",
+      "question": "WinningStrategy는 어떻게 동작해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 50,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-url",
+      "id": "SAME-1",
+      "question": "직전 판에서 이겼으면 같은 손을 다시 내는 코드는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 50,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-url",
+      "id": "SAME-2",
+      "question": "승패에 따라 다음 손을 선택하는 전략을 설명해줘",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 57,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-github",
+      "id": "SAME-0",
+      "question": "WinningStrategy는 어떻게 동작해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 636,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "design-patten/src/part10/strategy/WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        }
+      ]
+    },
+    {
+      "route": "same-github",
+      "id": "SAME-1",
+      "question": "직전 판에서 이겼으면 같은 손을 다시 내는 코드는?",
+      "hitAt1": false,
+      "hitAt5": false,
+      "precisionReturned": 0,
+      "evidencePresent": false,
+      "negativeAbstention": null,
+      "elapsedMs": 677,
+      "hits": [
+        {
+          "title": "Main.java",
+          "path": "design-patten/src/part10/strategy/Main.java",
+          "startLine": 1,
+          "endLine": 33
+        },
+        {
+          "title": "Hand.java",
+          "path": "design-patten/src/part10/strategy/Hand.java",
+          "startLine": 1,
+          "endLine": 46
+        }
+      ]
+    },
+    {
+      "route": "same-github",
+      "id": "SAME-2",
+      "question": "승패에 따라 다음 손을 선택하는 전략을 설명해줘",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 0.3333333333333333,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 676,
+      "hits": [
+        {
+          "title": "WinningStrategy.java",
+          "path": "design-patten/src/part10/strategy/WinningStrategy.java",
+          "startLine": 1,
+          "endLine": 28
+        },
+        {
+          "title": "ProbStrategy.java",
+          "path": "design-patten/src/part10/strategy/ProbStrategy.java",
+          "startLine": 1,
+          "endLine": 56
+        },
+        {
+          "title": "Main.java",
+          "path": "design-patten/src/part10/strategy/Main.java",
+          "startLine": 1,
+          "endLine": 33
+        }
+      ]
+    },
+    {
+      "route": "public-web",
+      "id": "W-0",
+      "question": "애자일 선언은 문서보다 무엇을 중요하게 생각해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 166,
+      "hits": [
+        {
+          "title": "page.html",
+          "path": "page.html",
+          "startLine": 1,
+          "endLine": 334
+        }
+      ]
+    },
+    {
+      "route": "public-web",
+      "id": "W-1",
+      "question": "계획을 따르는 것과 변화 대응 중 무엇을 더 중요하게 생각해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": null,
+      "negativeAbstention": null,
+      "elapsedMs": 159,
+      "hits": [
+        {
+          "title": "page.html",
+          "path": "page.html",
+          "startLine": 1,
+          "endLine": 334
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-0",
+      "question": "폭포수모델은 누가처음 만든거냐",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1468,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 11,
+          "endLine": 58
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-1",
+      "question": "워터폴 방식의 시초로 소개된 사람은 누구야?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": false,
+      "negativeAbstention": null,
+      "elapsedMs": 1444,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 175,
+          "endLine": 178
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-2",
+      "question": "칸반으로 업무가 밀리는 곳을 확인하는 이유가 뭐야?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1653,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 78,
+          "endLine": 140
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-3",
+      "question": "지속적으로 개선한다는 일본식 용어는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1629,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 48,
+          "endLine": 90
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-4",
+      "question": "스크럼이라는 말은 어디서 왔어?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1606,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 68,
+          "endLine": 124
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-5",
+      "question": "XP에서 테스트를 먼저 작성하는 방식은?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1552,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 48,
+          "endLine": 90
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-6",
+      "question": "빌드가 너무 오래 걸려. 자료에서는 어느 정도를 권장해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1554,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 125,
+          "endLine": 169
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-7",
+      "question": "사용자 스토리와 요구사항은 어떻게 달라?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1462,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 68,
+          "endLine": 124
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-8",
+      "question": "배포할 것을 줄이고 더 자주 내보내라는 이유는?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1537,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 125,
+          "endLine": 169
+        }
+      ]
+    },
+    {
+      "route": "notion-snapshot-upload",
+      "id": "N-9",
+      "question": "백로그를 얼마나 쌓아두는 게 좋다고 해?",
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null,
+      "elapsedMs": 1511,
+      "hits": [
+        {
+          "title": "Agile.md",
+          "path": "Agile.md",
+          "startLine": 125,
+          "endLine": 169
+        }
+      ]
+    }
+  ],
+  "sameSource": {
+    "url": "https://raw.githubusercontent.com/thisisnew/study-gof-23-design-pattern/fd98bd00d958e23f8b3f05c379b2747da92e8d68/design-patten/src/part10/strategy/WinningStrategy.java",
+    "sha256": "d505d9f63288b95ec85b953aa80f4b2dd2e8c2183631874280a8f246759b5156",
+    "bytes": 525
+  },
+  "rawReports": {
+    "runtime.json": "47fccbed039c77818d27ce26ba150811e3ce08ec439718e293fe6abd7108ea94",
+    "runtime-b2.json": "06147f8ae71c3b0d2d21c13845955266693046c480b51151f34cadce1b77cafb",
+    "runtime-b3.json": "f6150b70e712fcd4b63b9e603e04e400d344aef894254507532413fe960174a6",
+    "answers-flexibility.json": "438073a31b15bbff2331194d827a2553a091bdd55821bf3c93ef17b85522c4a5"
+  },
+  "review": {
+    "automatedFailures": 7,
+    "confirmedFailureChecks": 6,
+    "ambiguousGroundTruthChecks": [
+      "design-pattern:query-1"
+    ],
+    "notes": [
+      "객체를 만드는 코드 may legitimately refer to Singleton Instance.java; factory-only expectation is too narrow. Do not count as confirmed product defect.",
+      "Same-file/folder/URL contain one file; same-github contains the repository and a distractor. This is not an equal-corpus route experiment.",
+      "Negative retrieval results are not evidence of hallucinated answers.",
+      "Notion live OAuth was not tested; snapshot was fetched separately and uploaded."
+    ],
+    "liveAnswerReview": {
+      "calls": 6,
+      "acceptable": 5,
+      "failedUtility": 1,
+      "noUnsupportedClaimsObserved": true,
+      "independentQuestions": true,
+      "results": [
+        {
+          "id": "flex-01",
+          "verdict": "PASS",
+          "reason": "Identifies the person qualified by source."
+        },
+        {
+          "id": "flex-02",
+          "verdict": "PASS",
+          "reason": "Corrects false premise, distinguishes quotation attribution and source limitations."
+        },
+        {
+          "id": "flex-03",
+          "verdict": "PASS",
+          "reason": "Grounded argument about small releases, no invented team-specific savings."
+        },
+        {
+          "id": "flex-04",
+          "verdict": "PASS",
+          "reason": "Abstains on unavailable incident cause/rate; irrelevant bibliography was retrieved."
+        },
+        {
+          "id": "flex-05",
+          "verdict": "FAIL",
+          "reason": "Honest but unnecessarily unanswerable: bibliography selected instead of explicit no-universal-method passage."
+        },
+        {
+          "id": "flex-06",
+          "verdict": "PASS",
+          "reason": "Interprets backlog guidance without converting it into unconditional deletion rule."
+        }
+      ]
+    }
+  }
+}
