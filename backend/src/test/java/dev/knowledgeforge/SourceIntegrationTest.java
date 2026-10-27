@@ -47,6 +47,20 @@ class SourceIntegrationTest {
     }
 
     @TempDir Path fixture;
+    @Test
+    void linkRegistrationUsesAddressKindWithoutCollecting() {
+        String workspace = library.createWorkspace("링크 분류").id();
+        for (String selected : List.of("URL", "GITHUB")) {
+            var repository = sources.create(workspace, "저장소 " + selected, selected, " https://github.com/example/repo.git/ ", "");
+            assertThat(repository.kind()).isEqualTo("GITHUB");
+            for (String address : List.of("https://example.org/page", "https://github.com/example/repo/blob/main/App.java",
+                    "https://github.com/example/repo/issues/1", "https://github.com/example/repo/tree/main")) {
+                assertThat(sources.create(workspace, "페이지 " + selected + " " + address.hashCode(), selected, address, "").kind()).isEqualTo("URL");
+            }
+        }
+        verifyNoInteractions(remote);
+    }
+
     @Autowired SourceService sources;
     @Autowired LibraryService library;
     @Autowired SearchService search;

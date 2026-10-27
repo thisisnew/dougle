@@ -251,6 +251,26 @@ it.each(['웹 링크', 'GitHub'])('%s는 Enter로 연속 등록하고 추가 영
   expect(address).toBeVisible()
 })
 
+it.each([
+  ['웹 링크', 'https://github.com/example/repo', 'GITHUB'],
+  ['GitHub', 'https://example.org/guide', 'URL'],
+  ['GitHub', 'https://github.com/example/repo/issues/12', 'URL'],
+  ['GitHub', 'https://github.com/example/repo/blob/main/App.java', 'URL'],
+])('%s에서 %s를 %s로 등록하고 동기화한다', async (tab, address, expectedKind) => {
+  api.mockImplementation(async (_path, options) => options?.method === 'POST' ? source : [])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
+  await userEvent.click(screen.getByRole('button', { name: tab }))
+  await userEvent.type(screen.getByLabelText(`${tab} 주소`), address)
+  expect(screen.getByRole('status')).toHaveTextContent(expectedKind === 'GITHUB' ? 'GitHub 저장소로 추가합니다.' : '웹페이지로 추가합니다.')
+  await userEvent.click(screen.getByRole('button', { name: '추가' }))
+  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' })))
+  const registrations = api.mock.calls.filter(([path, options]) => path === '/workspaces/one/sources' && options?.method === 'POST')
+  expect(registrations).toHaveLength(1)
+  expect(JSON.parse(registrations[0][1]!.body as string)).toMatchObject({ kind: expectedKind, location: address })
+  expect(screen.getByRole('button', { name: expectedKind === 'GITHUB' ? 'GitHub' : '웹 링크' })).toHaveAttribute('aria-pressed', 'true')
+})
+
 it('등록 날짜를 표시하고 과거 자료의 날짜는 추측하지 않는다', async () => {
   api.mockResolvedValue([source, { ...source, id: 'legacy', name: '이전 자료', createdAt: null }])
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)

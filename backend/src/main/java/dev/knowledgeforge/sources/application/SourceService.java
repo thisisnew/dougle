@@ -52,6 +52,11 @@ public class SourceService {
         if (location == null || location.isBlank() || location.length() > 2048) {
             throw new LibraryException(400, "수집 위치를 입력하세요.");
         }
+        if ("URL".equals(kind) || "GITHUB".equals(kind)) {
+            String address = location.strip();
+            kind = address.matches("https://github\\.com/[A-Za-z0-9_-]+/[A-Za-z0-9_.-]+/?")
+                    && !address.matches(".*/\\.{1,2}/?") ? "GITHUB" : "URL";
+        }
         collector(kind).validate(location.strip());
         Source source = new Source(UUID.randomUUID().toString(), workspaceId, name.strip(), kind, location.strip(),
                 domain.strip(), "NEW", null, null, null, null, false, 3600, null, 0, 0, null);

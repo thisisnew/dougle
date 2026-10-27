@@ -6,6 +6,7 @@ import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
 import { hasFolderPicker, selectFolder } from './folderPicker'
 import { sourceName } from './sourceName'
+import { sourceKindForLocation } from './sourceKind'
 import DeleteConfirmation from './DeleteConfirmation'
 import MaterialWarning from './MaterialWarning'
 import SourceSyncProgress from './SourceSyncProgress'
@@ -156,6 +157,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   }
 
   async function createSource(sourceKind: string, sourceLocation: string) {
+    sourceKind = sourceKindForLocation(sourceKind, sourceLocation)
     let name: string
     try { name = sourceName(sourceKind, sourceLocation) }
     catch { setError('올바른 주소를 입력해 주세요.'); return }
@@ -169,6 +171,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         signal,
       })
       if (signal.aborted) return
+      setKind(sourceKind)
       setActiveSource(source.id)
       let synced: Source
       try { synced = await request<Source>(`${base}/sources/${source.id}/sync`, { method: 'POST', signal }) }
@@ -302,6 +305,9 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
           <Button type="submit" variant="ghost" size="icon" aria-label="추가" title="추가" aria-busy={busy === 'create'} disabled={!!busy || uploading || !location.trim()}>{busy === 'create' ? <span className="upload-spinner" aria-hidden="true" /> : <ArrowRight aria-hidden="true" />}</Button>
         </div>}
       </div>
+      {location.trim() && sourceKindForLocation(kind, location) !== kind && <p role="status">
+        {sourceKindForLocation(kind, location) === 'GITHUB' ? 'GitHub 저장소로 추가합니다.' : '웹페이지로 추가합니다. GitHub 개별 링크는 저장소 전체를 수집하지 않습니다.'}
+      </p>}
     </form>}
     {renderLibrary ? renderLibrary(sources, sourceRows) : sourceRows}
     {!manageOnly && <><form className="search-form" onSubmit={event => void search(event)}>
