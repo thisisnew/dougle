@@ -5,7 +5,21 @@ import java.util.List;
 public interface SearchIndex extends AutoCloseable {
     record Document(String id, String workspaceId, String name, String text, String symbols,
                     String sourceId, String domain, String path, String kind, String cardId,
-                    Integer version, List<String> domains, List<Integer> boundaries) {
+                    Integer version, List<String> domains, List<Integer> boundaries, List<String> textParts) {
+        public Document(String id, String workspaceId, String name, String text, String symbols,
+                        String sourceId, String domain, String path, String kind, String cardId,
+                        Integer version, List<String> domains, List<Integer> boundaries) {
+            this(id, workspaceId, name, text, symbols, sourceId, domain, path, kind, cardId, version, domains,
+                    boundaries, List.of());
+        }
+        public String textHash() {
+            return textParts.isEmpty() ? dev.knowledgeforge.search.domain.ContentDigest.of(text)
+                    : dev.knowledgeforge.search.domain.ContentDigest.ofParts(textParts);
+        }
+        public Iterable<dev.knowledgeforge.search.domain.TextChunks.Chunk> chunks(int limit) {
+            return textParts.isEmpty() ? new dev.knowledgeforge.search.domain.TextChunks(text, limit, boundaries)
+                    : new dev.knowledgeforge.search.domain.StreamingTextChunks(textParts, limit);
+        }
         public Document(String id, String workspaceId, String name, String text, String symbols,
                         String sourceId, String domain, String path, String kind, String cardId,
                         Integer version, List<String> domains) {

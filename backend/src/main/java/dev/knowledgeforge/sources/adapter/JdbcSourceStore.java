@@ -119,7 +119,11 @@ public class JdbcSourceStore implements SourceStore {
 
     public Map<String, String> fileHashes(String workspaceId, String id) {
         Map<String, String> hashes = new HashMap<>();
-        jdbc.query("SELECT relative_path,content_hash FROM entry WHERE workspace_id=? AND source_id=? AND kind='FILE'",
+        jdbc.query("""
+                SELECT e.relative_path,CASE WHEN d.error LIKE '%앞부분만 검색%' THEN NULL ELSE e.content_hash END AS content_hash
+                FROM entry e LEFT JOIN extracted_document d ON d.entry_id=e.id
+                WHERE e.workspace_id=? AND e.source_id=? AND e.kind='FILE'
+                """,
                 result -> { hashes.put(result.getString("relative_path"), result.getString("content_hash")); }, workspaceId, id);
         return hashes;
     }
@@ -164,19 +168,31 @@ public class JdbcSourceStore implements SourceStore {
         });
     }
 
+    @Transactional(readOnly = true)
     public Optional<Analysis> checkpoint(String sourceId, String path, String hash) {
         return jdbc.query("SELECT analysis_json FROM source_analysis_checkpoint WHERE source_id=? AND path=? AND content_hash=?",
                 (result, row) -> tools.jackson.databind.json.JsonMapper.builder().build()
-                        .readValue(result.getString(1), Analysis.class), sourceId, path, hash).stream().findFirst();
+                        .readValue(result.getString(1), Analysis.class), sourceId, path, hash).stream().findFirst()
+                .map(metadata -> new Analysis(metadata.text(), metadata.mediaType(), metadata.status(), metadata.error(),
+                        metadata.symbols(), dev.knowledgeforge.ingestion.adapter.JdbcTextParts.checkpoint(jdbc, sourceId, path)));
     }
 
     public boolean persistentCheckpoints() { return true; }
 
+    @Transactional
     public void checkpoint(String sourceId, String path, String hash, Analysis analysis) {
-        jdbc.update("""
-                INSERT INTO source_analysis_checkpoint(source_id,path,content_hash,analysis_json) VALUES(?,?,?,?)
-                ON CONFLICT(source_id,path) DO UPDATE SET content_hash=excluded.content_hash,analysis_json=excluded.analysis_json
-                """, sourceId, path, hash, tools.jackson.databind.json.JsonMapper.builder().build().writeValueAsString(analysis));
+        try (analysis) {
+            jdbc.update("""
+                    INSERT INTO source_analysis_checkpoint(source_id,path,content_hash,analysis_json) VALUES(?,?,?,?)
+                    ON CONFLICT(source_id,path) DO UPDATE SET content_hash=excluded.content_hash,analysis_json=excluded.analysis_json
+                    """, sourceId, path, hash, tools.jackson.databind.json.JsonMapper.builder().build().writeValueAsString(analysis));
+            jdbc.update("DELETE FROM source_analysis_text_part WHERE source_id=? AND path=?", sourceId, path);
+            for (int ordinal = 0; ordinal < analysis.parts().size(); ordinal++) {
+                if (Thread.currentThread().isInterrupted()) throw new java.util.concurrent.CancellationException();
+                jdbc.update("INSERT INTO source_analysis_text_part(source_id,path,ordinal,text) VALUES(?,?,?,?)",
+                        sourceId, path, ordinal, analysis.parts().get(ordinal));
+            }
+        }
     }
 
     @Transactional
@@ -256,7 +272,11 @@ public class JdbcSourceStore implements SourceStore {
                 .map(item -> item.getKey() + ": " + item.getValue()).collect(java.util.stream.Collectors.joining(" · "));
         int searchable = jdbc.queryForObject("""
                 SELECT count(*) FROM entry e JOIN extracted_document d ON d.entry_id=e.id
-                WHERE e.source_id=? AND d.status IN ('READY','PARTIAL') AND length(trim(d.text))>0
+                WHERE e.source_id=? AND d.status IN ('READY','PARTIAL')
+                AND (length(trim(d.text))>0 OR EXISTS (
+                    SELECT 1 FROM extracted_text_part part
+                    WHERE part.entry_id=e.id AND length(trim(part.text))>0
+                ))
                 """, Integer.class, source.id());
         if (!failures.isEmpty() && searchable == 0) {
             fail(source.id(), "검색 가능한 자료가 없습니다. " + failureSummary);

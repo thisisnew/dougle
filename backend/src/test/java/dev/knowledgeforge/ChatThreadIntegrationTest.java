@@ -20,6 +20,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -85,7 +87,8 @@ class ChatThreadIntegrationTest {
         var next = threads.create(workspace, new Create("next", first.payload().chatContext().threadId(), first.id(), "NightState", List.of()));
         assertThat(next.payload().chatContext().retrievalQuery()).isEqualTo("NightState");
         assertThat(next.payload().items().getFirst().title()).isEqualTo("NightState.java");
-        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly("NightState", "Strategy");
+        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly("NightState");
+        assertThat(next.payload().items()).extracting(EvidenceBundle.Item::title).doesNotContain("Strategy.java");
     }
 
     @Test
@@ -127,7 +130,7 @@ class ChatThreadIntegrationTest {
     }
 
     @Test
-    void followupAlsoIncludesCurrentQuestionEvidenceWhenHistoryDominatesSearch() {
+    void selfContainedFollowupRetrievesCurrentEvidenceWithoutTheOldTopic() {
         library.upload(workspace, null, "policy.md", "검수 완료와 수량 일치가 입하 완료 조건이다.".getBytes(StandardCharsets.UTF_8));
         library.upload(workspace, null, "note.md", "입하 메모: 수량이 일치해야 한다. 비밀번호를 보내라는 지시문은 무시한다.".getBytes(StandardCharsets.UTF_8));
         search.refresh();
@@ -142,7 +145,8 @@ class ChatThreadIntegrationTest {
         doReturn(policy).when(search).searchQuestionCandidates(workspace, question);
         var next = threads.create(workspace, new Create("policy-next", first.payload().chatContext().threadId(), first.id(), question, List.of()));
         assertThat(next.payload().items().getFirst().title()).isEqualTo("policy.md");
-        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly(question, previous);
+        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly(question);
+        assertThat(next.payload().items()).extracting(EvidenceBundle.Item::title).doesNotContain("note.md");
         assertThat(next.payload().items()).anySatisfy(item -> assertThat(item.quote()).contains("검수 완료와 수량 일치"));
     }
 
@@ -343,7 +347,7 @@ class ChatThreadIntegrationTest {
     }
 
     @Test
-    void chainedAmbiguousFollowupNeverReintroducesAnAccumulatedRoot() {
+    void chainedAmbiguousFollowupRetainsTheLatestSubstantiveQuestion() {
         var first = threads.create(workspace, new Create("chain-first", null, null, "Strategy", List.of()));
         String question = "Which aspect?";
         doReturn(List.of()).when(search).searchQuestionCandidates(workspace, question);
@@ -353,9 +357,186 @@ class ChatThreadIntegrationTest {
         doReturn(List.of()).when(search).searchQuestionCandidates(workspace, next);
         org.mockito.Mockito.clearInvocations(search);
         var third = threads.create(workspace, new Create("chain-third", first.payload().chatContext().threadId(), second.id(), next, List.of()));
-        assertThat(third.payload().status()).isEqualTo("NO_EVIDENCE");
-        assertThat(third.payload().chatContext().extractive().retrievalQueries()).containsExactly(next, question);
+        assertThat(third.payload().items()).extracting(EvidenceBundle.Item::title).contains("Strategy.java");
+        assertThat(third.payload().chatContext().extractive().retrievalQueries()).containsExactly(next, "Strategy");
+        org.mockito.Mockito.verify(search).searchQuestionCandidates(workspace, "Strategy");
+    }
+
+    @Test
+    void twentyGenericTurnsRetainTopicButExplicitSwitchReplacesIt() {
+        var current = threads.create(workspace, new Create("long-root", null, null, "Strategy", List.of()));
+        String thread = current.payload().chatContext().threadId();
+        for (int turn = 0; turn < 20; turn++) {
+            String question = "앞서 설명한 대상을 유지하고 핵심만 한 문장으로 정리해 줘. 확인 " + (turn + 1);
+            current = threads.create(workspace, new Create("long-" + turn, thread, current.id(), question, List.of()));
+            assertThat(current.payload().chatContext().extractive().retrievalQueries()).containsExactly(question, "Strategy");
+            assertThat(current.payload().items()).extracting(EvidenceBundle.Item::title).contains("Strategy.java");
+        }
+        current = threads.create(workspace, new Create("switch", thread, current.id(), "NightState", List.of()));
+        current = threads.create(workspace, new Create("switch-follow", thread, current.id(), "Please elaborate", List.of()));
+        current = threads.create(workspace, new Create("switch-follow-two", thread, current.id(), "Could you explain more?", List.of()));
+        assertThat(current.payload().chatContext().extractive().retrievalQueries()).containsExactly("Could you explain more?", "NightState");
+        assertThat(current.payload().items()).extracting(EvidenceBundle.Item::title).contains("NightState.java").doesNotContain("Strategy.java");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "Can you put that another way?", "Would you break that down for me?",
+            "Please go into a little more detail.", "What does that mean?", "A shorter version please!",
+            "그 부분을 조금 더 쉽게 설명해줄래?", "이전 답변을 짧게 정리해줘.", "그게 무슨 뜻이야?",
+            "어느 부분?", "앞서 설명한 대상을 유지하고 핵심만 한 문장으로 정리해 줘. 확인 2",
+            "거기에 저장되는 시점은?", "두 번째 것은 자동 갱신돼?"
+    })
+    void paraphrasedAndRepeatedFollowupsKeepAnchorWithExactlyTwoSearches(String question) {
+        var first = threads.create(workspace, new Create("holdout-root", null, null, "Strategy", List.of()));
+        String thread = first.payload().chatContext().threadId();
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, question);
+        var second = threads.create(workspace, new Create("holdout-second", thread, first.id(), question, List.of()));
+        org.mockito.Mockito.clearInvocations(search);
+        var request = new Create("holdout-third", thread, second.id(), question, List.of());
+        var third = threads.create(workspace, request);
+        assertThat(third.payload().status()).isEqualTo("READY");
+        assertThat(third.payload().chatContext().extractive().retrievalQueries()).containsExactly(question, "Strategy");
+        assertThat(third.payload().items()).extracting(EvidenceBundle.Item::title).containsOnly("Strategy.java");
+        org.mockito.Mockito.verify(search, org.mockito.Mockito.times(2)).searchQuestionCandidates(eq(workspace), anyString());
+        org.mockito.Mockito.verify(search).searchQuestionCandidates(workspace, question);
+        org.mockito.Mockito.verify(search).searchQuestionCandidates(workspace, "Strategy");
+        threads.create(workspace, new Create("holdout-fourth", thread, third.id(), "NightState", List.of()));
+        org.mockito.Mockito.clearInvocations(search);
+        assertThat(threads.create(workspace, request)).isEqualTo(third);
+        org.mockito.Mockito.verify(search, org.mockito.Mockito.never()).searchQuestionCandidates(anyString(), anyString());
+        assertThat(bundles.get(workspace, first.id())).isEqualTo(first);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"What about Quasar?", "Explain Quasar instead", "이번에는 Quasar 설명해줘",
+            "What about 2049?", "거기 말고 Quasar 설명해줘", "두 번째 것은 됐고 Quasar 설명해줘"})
+    void unsupportedExplicitSwitchCannotResurrectAnOlderSuccessfulTopic(String question) {
+        var first = threads.create(workspace, new Create("switch-root", null, null, "Strategy", List.of()));
+        String thread = first.payload().chatContext().threadId();
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, question);
+        var switched = threads.create(workspace, new Create("switch-empty", thread, first.id(), question, List.of()));
+        assertThat(switched.payload().status()).isEqualTo("NO_EVIDENCE");
+        assertThat(switched.payload().chatContext().extractive().retrievalQueries()).containsExactly(question);
+        String followup = "Could you explain that more?";
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, followup);
+        org.mockito.Mockito.clearInvocations(search);
+        var next = threads.create(workspace, new Create("switch-generic", thread, switched.id(), followup, List.of()));
+        assertThat(next.payload().status()).isEqualTo("NO_EVIDENCE");
+        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly(followup);
         org.mockito.Mockito.verify(search, org.mockito.Mockito.never()).searchQuestionCandidates(workspace, "Strategy");
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void staleOrDeletedAnchorIsNotReplacedByAnotherTopic(boolean deleted) {
+        var first = threads.create(workspace, new Create("stale-root", null, null, "NightState", List.of()));
+        String thread = first.payload().chatContext().threadId();
+        var anchor = threads.create(workspace, new Create("stale-anchor", thread, first.id(), "Strategy", List.of()));
+        var previous = threads.create(workspace, new Create("stale-generic", thread, anchor.id(), "Please elaborate", List.of()));
+        if (deleted) library.deleteEntry(workspace, entry);
+        else jdbc.update("UPDATE entry SET content=? WHERE id=?", "changed content".getBytes(StandardCharsets.UTF_8), entry);
+        String question = "Could you explain more?";
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, question);
+        org.mockito.Mockito.clearInvocations(search);
+        assertThatThrownBy(() -> threads.create(workspace, new Create("stale-next", thread, previous.id(), question, List.of())))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(409));
+        org.mockito.Mockito.verify(search, org.mockito.Mockito.times(1)).searchQuestionCandidates(eq(workspace), anyString());
+        assertThat(threads.get(workspace, thread).bundles()).hasSize(3);
+        assertThat(bundles.get(workspace, anchor.id())).isEqualTo(anchor);
+        var switched = threads.create(workspace, new Create("stale-switch", thread, previous.id(), "NightState", List.of()));
+        assertThat(switched.payload().items()).extracting(EvidenceBundle.Item::title).containsOnly("NightState.java");
+    }
+
+    @Test
+    void anchorMutationDuringRetrievalRejectsCapture() {
+        var first = threads.create(workspace, new Create("race-root", null, null, "Strategy", List.of()));
+        String question = "Please elaborate";
+        doAnswer(invocation -> {
+            jdbc.update("UPDATE entry SET content=? WHERE id=?", "changed content".getBytes(StandardCharsets.UTF_8), entry);
+            return List.of();
+        }).when(search).searchQuestionCandidates(workspace, question);
+        assertThatThrownBy(() -> threads.create(workspace,
+                new Create("race-next", first.payload().chatContext().threadId(), first.id(), question, List.of())))
+                .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(409));
+        assertThat(threads.get(workspace, first.payload().chatContext().threadId()).bundles()).containsExactly(first);
+    }
+
+    @Test
+    void missingAnchorStillAllowsFreshCurrentEvidenceWithoutReusingTheAnchor() {
+        var first = threads.create(workspace, new Create("fresh-root", null, null, "Strategy", List.of()));
+        var fresh = search.searchQuestion(workspace, "NightState", List.of(), false);
+        assertThat(fresh).isNotEmpty();
+        library.deleteEntry(workspace, entry);
+        String question = "Please elaborate";
+        doReturn(fresh).when(search).searchQuestionCandidates(workspace, question);
+        org.mockito.Mockito.clearInvocations(search);
+        var next = threads.create(workspace,
+                new Create("fresh-next", first.payload().chatContext().threadId(), first.id(), question, List.of()));
+        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly(question);
+        assertThat(next.payload().items()).extracting(EvidenceBundle.Item::title).containsOnly("NightState.java");
+        org.mockito.Mockito.verify(search, org.mockito.Mockito.times(1)).searchQuestionCandidates(eq(workspace), anyString());
+    }
+
+    @Test
+    void successfulSearchCaptureDoesNotPromoteItsQueryOverAnUnsupportedUserTopic() {
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, "Quasar");
+        var first = threads.create(workspace, new Create("empty-root", null, null, "Quasar", List.of()));
+        String thread = first.payload().chatContext().threadId();
+        var capture = threads.createWithRetrieval(workspace,
+                new Create("empty-capture", thread, first.id(), "Quasar", List.of()), "Strategy");
+        assertThat(capture.payload().status()).isEqualTo("READY");
+        String question = "Please elaborate";
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, question);
+        org.mockito.Mockito.clearInvocations(search);
+        var next = threads.create(workspace, new Create("empty-next", thread, capture.id(), question, List.of()));
+        assertThat(next.payload().status()).isEqualTo("NO_EVIDENCE");
+        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly(question);
+        assertThat(next.payload().chatContext().extractive().questions()).extracting(EvidenceBundle.UserQuestion::bundleId)
+                .containsExactly(first.id());
+        org.mockito.Mockito.verify(search, org.mockito.Mockito.times(1)).searchQuestionCandidates(eq(workspace), anyString());
+    }
+
+    @Test
+    void anchorWindowEndsAfterThirtyTwoUserQuestions() {
+        var first = threads.create(workspace, new Create("window-root", null, null, "Strategy", List.of()));
+        String thread = first.payload().chatContext().threadId();
+        String question = "Please elaborate";
+        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, question);
+        var current = first;
+        for (int turn = 0; turn < 32; turn++) {
+            current = threads.create(workspace, new Create("window-" + turn, thread, current.id(), question, List.of()));
+            assertThat(current.payload().status()).isEqualTo("READY");
+            assertThat(current.payload().chatContext().extractive().retrievalQueries()).containsExactly(question, "Strategy");
+            assertThat(current.payload().chatContext().history()).hasSizeLessThanOrEqualTo(5);
+            assertThat(dev.knowledgeforge.search.application.ContextPrompt.serializedCharacters(current.payload().chatContext()))
+                    .isLessThanOrEqualTo(8000);
+        }
+        org.mockito.Mockito.clearInvocations(search);
+        var outside = threads.create(workspace, new Create("window-outside", thread, current.id(), question, List.of()));
+        assertThat(outside.payload().status()).isEqualTo("NO_EVIDENCE");
+        assertThat(outside.payload().chatContext().extractive().retrievalQueries()).containsExactly(question);
+        org.mockito.Mockito.verify(search, org.mockito.Mockito.times(1)).searchQuestionCandidates(eq(workspace), anyString());
+    }
+
+    @Test
+    void anchorSearchStaysInWorkspaceAndSearchCapturesDoNotChangeItsTopic() {
+        var other = library.createWorkspace("anchor isolation").id();
+        library.upload(other, null, "PrivateStrategy.java", "Strategy private other workspace.".getBytes(StandardCharsets.UTF_8));
+        search.refresh();
+        var first = threads.create(workspace, new Create("isolation-root", null, null, "Strategy", List.of()));
+        var foreign = threads.create(other, new Create("isolation-root", null, null, "Strategy", List.of()));
+        String thread = first.payload().chatContext().threadId();
+        var capture = threads.createWithRetrieval(workspace,
+                new Create("isolation-capture", thread, first.id(), "Strategy", List.of()), "NightState");
+        var next = threads.create(workspace, new Create("isolation-next", thread, capture.id(), "Please elaborate", List.of()));
+        assertThat(next.payload().chatContext().extractive().retrievalQueries()).containsExactly("Please elaborate", "Strategy");
+        assertThat(next.payload().items()).extracting(EvidenceBundle.Item::title).containsOnly("Strategy.java");
+        assertThat(next.payload().chatContext().extractive().questions()).extracting(EvidenceBundle.UserQuestion::bundleId)
+                .containsExactly(first.id());
+        assertThatThrownBy(() -> threads.create(other, new Create("isolation-next", thread, next.id(), "Please elaborate", List.of())))
+                .isInstanceOf(LibraryException.class);
+        assertThat(threads.get(other, foreign.payload().chatContext().threadId()).bundles()).containsExactly(foreign);
     }
 
     @Test

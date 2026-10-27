@@ -471,6 +471,23 @@ describe('Workspace와 자료 탐색기', () => {
     expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toHaveTextContent(workspace.name)
   })
 
+  it('큰 자료의 앞부분 미리보기와 전체 검색을 구분한다', async () => {
+    const user = userEvent.setup()
+    const reason = '큰 문서는 추출문 앞부분만 미리 봅니다. 검색은 전체 추출문을 사용합니다.'
+    api.mockImplementation(async path => {
+      if (path === '/session') return { workspaces: [workspace], activeWorkspaceId: 'one' }
+      if (path.endsWith('/preview')) return { supported: true, text: '가상 문서의 앞부분', reason }
+      if (path.endsWith('/sources')) return []
+      return [file]
+    })
+    render(<App />)
+    await user.click(await screen.findByRole('button', { name: '자료' }))
+    await user.click(await screen.findByRole('button', { name: 'notes.md' }))
+    expect(await screen.findByText(reason)).toBeInTheDocument()
+    expect(screen.getByText('가상 문서의 앞부분')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '원본 다운로드' })).toBeEnabled()
+  })
+
   it('HTML 원문을 실행하지 않고 텍스트로 표시한다', async () => {
     const user = userEvent.setup()
     api.mockImplementation(async path => {

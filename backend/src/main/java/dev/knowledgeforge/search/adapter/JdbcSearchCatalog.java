@@ -27,12 +27,15 @@ public class JdbcSearchCatalog implements SearchCatalog {
             FROM entry e JOIN extracted_document d ON d.entry_id=e.id LEFT JOIN source s ON s.id=e.source_id
             WHERE d.status IN ('READY','PARTIAL')
             """;
-    private static final RowMapper<SearchIndex.Document> DOCUMENT = (result, row) -> new SearchIndex.Document(
+    private SearchIndex.Document document(java.sql.ResultSet result, int row) throws java.sql.SQLException {
+        return new SearchIndex.Document(
             result.getString("id"), result.getString("workspace_id"), result.getString("name"), result.getString("text"),
             result.getString("symbols"), result.getString("source_id"), result.getString("domain"), result.getString("path"),
             "ORIGINAL", null, null, List.of(result.getString("domain")),
             java.util.Arrays.stream(result.getString("boundaries").split(",")).filter(value -> !value.isBlank())
-                    .map(Integer::valueOf).distinct().sorted().toList());
+                    .map(Integer::valueOf).distinct().sorted().toList(),
+            dev.knowledgeforge.ingestion.adapter.JdbcTextParts.document(jdbc, result.getString("id")));
+    }
     private final JdbcTemplate jdbc;
 
     public JdbcSearchCatalog(JdbcTemplate jdbc) {
@@ -41,7 +44,7 @@ public class JdbcSearchCatalog implements SearchCatalog {
 
     @Transactional(readOnly = true)
     public void each(Consumer<SearchIndex.Document> consumer) {
-        jdbc.query(SELECT, (RowCallbackHandler) result -> consumer.accept(DOCUMENT.mapRow(result, 0)));
+        jdbc.query(SELECT, (RowCallbackHandler) result -> consumer.accept(document(result, 0)));
         jdbc.query(PUBLISHED, (RowCallbackHandler) result -> consumer.accept(published(result)));
     }
 
@@ -56,7 +59,13 @@ public class JdbcSearchCatalog implements SearchCatalog {
             return jdbc.query(PUBLISHED + " AND c.id=?", (result, row) -> published(result),
                     id.substring("knowledge:".length())).stream().findFirst();
         }
-        return jdbc.query(SELECT + " AND e.id=?", DOCUMENT, id).stream().findFirst();
+        return jdbc.query(SELECT + " AND e.id=?", (RowMapper<SearchIndex.Document>) this::document, id).stream().findFirst();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void withDocument(String id, Consumer<SearchIndex.Document> consumer, Runnable missing) {
+        document(id).ifPresentOrElse(consumer, missing);
     }
 
     private SearchIndex.Document published(java.sql.ResultSet result) throws java.sql.SQLException {

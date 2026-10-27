@@ -5,6 +5,7 @@ import dev.knowledgeforge.investigation.domain.ReadOnlyTool;
 import dev.knowledgeforge.investigation.domain.ToolExecution;
 import dev.knowledgeforge.library.application.LibraryStore;
 import dev.knowledgeforge.search.application.SearchService;
+import dev.knowledgeforge.search.application.EvidenceSourceStore;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -14,20 +15,26 @@ public final class LocalWorkspaceSearchTool implements ReadOnlyTool<LocalSearchQ
     private final SearchService search;
     private final LibraryStore library;
     private final ToolExecution.Binding binding;
-    private final dev.knowledgeforge.knowledge.application.KnowledgeStore knowledge;
+    private final EvidenceSourceStore sources;
     private final java.util.function.Consumer<List<dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry>> snapshot;
 
     public LocalWorkspaceSearchTool(SearchService search, LibraryStore library, String workspaceId) {
-        this(search, library, workspaceId, null, null);
+        this(search, library, workspaceId, (EvidenceSourceStore) null, null);
     }
 
     LocalWorkspaceSearchTool(SearchService search, LibraryStore library, String workspaceId,
                             dev.knowledgeforge.knowledge.application.KnowledgeStore knowledge,
                             java.util.function.Consumer<List<dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry>> snapshot) {
+        this(search, library, workspaceId, EvidenceSourceStore.legacy(knowledge), snapshot);
+    }
+
+    LocalWorkspaceSearchTool(SearchService search, LibraryStore library, String workspaceId,
+                            EvidenceSourceStore sources,
+                            java.util.function.Consumer<List<dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry>> snapshot) {
         this.search = Objects.requireNonNull(search);
         this.library = Objects.requireNonNull(library);
         binding = binding(workspaceId);
-        this.knowledge = knowledge;
+        this.sources = sources;
         this.snapshot = snapshot;
     }
 
@@ -94,31 +101,37 @@ public final class LocalWorkspaceSearchTool implements ReadOnlyTool<LocalSearchQ
             if (!"ORIGINAL".equals(hit.kind()) || !hit.bodyMatch()) continue;
             if (!identifiers.add(hit.entryId())) continue;
             if (result.size() >= 5) break;
-            var material = knowledge.material(binding.workspace(), hit.entryId()).orElseThrow();
-            if (!List.of("READY", "PARTIAL").contains(material.analysisStatus())
-                    || !dev.knowledgeforge.search.domain.ContentDigest.of(material.text()).equals(hit.textHash())) {
-                throw new IllegalStateException("Search evidence changed");
-            }
-            int end = Math.min(768, hit.snippet().length());
-            if (end < hit.snippet().length() && Character.isLowSurrogate(hit.snippet().charAt(end))) end--;
-            String excerpt = hit.snippet().substring(0, end);
-            var lines = material.text().split("\n", -1);
-            if (excerpt.isBlank() || hit.startLine() < 1 || hit.endLine() < hit.startLine() || hit.endLine() > lines.length
-                    || !String.join("\n", java.util.Arrays.copyOfRange(lines, hit.startLine() - 1, hit.endLine()))
-                            .concat(hit.endLine() < lines.length ? "\n" : "").contains(excerpt)) {
-                throw new IllegalStateException("Invalid evidence window");
-            }
-            var window = new dev.knowledgeforge.search.domain.EvidenceWindow(excerpt, hit.startLine(), hit.startLine()
-                    + (int) excerpt.chars().limit(Math.max(0, excerpt.length() - 1)).filter(value -> value == '\n').count());
-            characters += window.text().length();
+            var entry = sources.withMaterial(binding.workspace(), hit.entryId(), found -> inspect(hit, found.orElseThrow(), context));
+            characters += entry.hit().snippet().length();
             if (characters > 12000) throw new IllegalStateException("Snapshot evidence budget");
-            var frozen = new dev.knowledgeforge.search.application.SearchIndex.Hit(hit.entryId(), "", null, "", null,
-                    window.text(), 0, window.startLine(), window.endLine(), true, "ORIGINAL", null, null,
-                    List.of(), "CURRENT", hit.textHash());
-            result.add(new dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry(frozen,
-                    dev.knowledgeforge.search.domain.ContentDigest.of(material.content())));
+            result.add(entry);
         }
         return List.copyOf(result);
+    }
+
+    private dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry inspect(
+            dev.knowledgeforge.search.application.SearchIndex.Hit hit,
+            dev.knowledgeforge.search.domain.EvidenceMaterial material, ToolExecution.Context context) {
+        context.checkpoint();
+        if (!List.of("READY", "PARTIAL").contains(material.analysisStatus())
+                || !material.textHash().equals(hit.textHash())) {
+            throw new IllegalStateException("Search evidence changed");
+        }
+        if (hit.snippet() == null) throw new IllegalStateException("Invalid evidence window");
+        int end = Math.min(768, hit.snippet().length());
+        if (end < hit.snippet().length() && Character.isLowSurrogate(hit.snippet().charAt(end))) end--;
+        String excerpt = hit.snippet().substring(0, end);
+        int endLine = hit.startLine() + (int) excerpt.chars().limit(Math.max(0, excerpt.length() - 1))
+                .filter(value -> value == '\n').count();
+        var window = material.window(excerpt, hit.startLine(), endLine, 768, true);
+        if (window == null || hit.endLine() < endLine) {
+            throw new IllegalStateException("Invalid evidence window");
+        }
+        context.checkpoint();
+        var frozen = new dev.knowledgeforge.search.application.SearchIndex.Hit(hit.entryId(), "", null, "", null,
+                window.text(), 0, window.startLine(), window.endLine(), true, "ORIGINAL", null, null,
+                List.of(), "CURRENT", hit.textHash());
+        return new dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry(frozen, material.contentHash());
     }
 
     private void requireWorkspace() {

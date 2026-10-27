@@ -256,12 +256,16 @@ public class ChatThreadService {
         boolean missingPrior = false;
         if (retrievalOverride != null && !snapshotSearch && !retrieval.equals(request.question().strip())) {
             retrievalQueries.add(request.question().strip());
-        } else if (retrievalOverride == null && !questions.isEmpty() && !questions.getLast().question().equals(retrieval)) {
-            var previousQuestion = questions.getLast();
-            if (validator.check(workspaceId, previousQuestion.bundleId()).eligible()) {
-                retrievalQueries.add(previousQuestion.question());
-            } else if (!"NO_EVIDENCE".equals(bundles.get(workspaceId, previousQuestion.bundleId()).payload().status())) {
-                missingPrior = true;
+        } else if (retrievalOverride == null && FollowupQuestion.referential(retrieval)) {
+            for (int position = questions.size() - 1; position >= Math.max(0, questions.size() - 32); position--) {
+                var previousQuestion = questions.get(position);
+                if (FollowupQuestion.referential(previousQuestion.question())) continue;
+                if (validator.check(workspaceId, previousQuestion.bundleId()).eligible()) {
+                    retrievalQueries.add(previousQuestion.question());
+                } else if (!"NO_EVIDENCE".equals(bundles.get(workspaceId, previousQuestion.bundleId()).payload().status())) {
+                    missingPrior = true;
+                }
+                break;
             }
         }
         var selection = ContextPrompt.select(questions, history, retrievalQueries, retrievalOverride != null);

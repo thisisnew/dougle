@@ -46,6 +46,68 @@ class LocalSearchSnapshotTest {
     }
 
     @Test
+    @Timeout(30)
+    void streamedEndSectionPublishesExactBoundedSnapshotWithoutLegacyMaterial() {
+        var sources = mock(dev.knowledgeforge.search.application.EvidenceSourceStore.class, CALLS_REAL_METHODS);
+        var streaming = new LocalToolExecutorFactory(search, library, knowledge, clock, sources);
+        String block = ("x".repeat(1023) + "\n").repeat(64);
+        String quote = "Final synthetic procedure\n" + "amber valve ".repeat(80);
+        int blocks = 1600;
+        List<String> parts = new java.util.AbstractList<>() {
+            public int size() { return blocks + 2; }
+            public String get(int index) {
+                java.util.Objects.checkIndex(index, size());
+                return index < blocks ? block : index == blocks ? quote.substring(0, 20) : quote.substring(20);
+            }
+        };
+        String id = UUID.randomUUID().toString();
+        var material = new dev.knowledgeforge.search.domain.EvidenceMaterial(id, null, null, null, "fixture",
+                "READY", ContentDigest.of("synthetic raw content"), "prefix only", parts);
+        int firstLine = blocks * 64 + 1;
+        var selected = new SearchIndex.Hit(id, "fixture", null, "", null, quote, 1, firstLine, firstLine + 1,
+                true, "ORIGINAL", null, null, List.of(), "CURRENT", material.textHash());
+        when(sources.material("workspace", id)).thenReturn(Optional.of(material));
+        when(search.searchQuestion("workspace", "question", List.of(), false)).thenReturn(List.of(selected));
+        var largeBudget = new ToolExecution.Budget(1, Duration.ofSeconds(20), Duration.ofSeconds(20), 6000, 6000);
+        var result = streaming.search("workspace", job, "question", largeBudget, new ToolExecution.Cancellation());
+        assertThat(result.status()).isEqualTo(ToolExecution.Status.OK);
+        var entry = streaming.snapshot("workspace", job, "question").entries().getFirst();
+        assertThat(entry.hit().snippet()).isEqualTo(quote.substring(0, 768));
+        assertThat(entry.hit().startLine()).isEqualTo(firstLine);
+        assertThat(entry.hit().endLine()).isEqualTo(firstLine + 1);
+        assertThat(entry.contentHash()).isEqualTo(material.contentHash());
+        var emitted = new tools.jackson.databind.json.JsonMapper().readTree(result.output().lines().skip(1).findFirst().orElseThrow());
+        assertThat(emitted.get("content").asString()).isEqualTo(entry.hit().snippet());
+        assertThatThrownBy(() -> streaming.snapshot("other", job, "question")).isInstanceOf(LibraryException.class);
+        assertThatThrownBy(() -> streaming.snapshot("workspace", job, "changed")).isInstanceOf(LibraryException.class);
+        verifyNoInteractions(knowledge);
+    }
+
+    @Test
+    void streamingStoreCannotCrossWorkspaceOrPublishStaleOrForgedEvidence() {
+        var sources = mock(dev.knowledgeforge.search.application.EvidenceSourceStore.class, CALLS_REAL_METHODS);
+        var streaming = new LocalToolExecutorFactory(search, library, knowledge, clock, sources);
+        String id = UUID.randomUUID().toString();
+        var material = new dev.knowledgeforge.search.domain.EvidenceMaterial(id, null, null, null, "fixture",
+                "READY", "raw hash", "preview", List.of("prefix\n", "actual tail"));
+        when(library.workspace("other")).thenReturn(Optional.of(new Workspace("other", "fixture", "now")));
+        for (String scope : List.of("other", "workspace")) {
+            for (String snippet : List.of("actual tail", "forged")) {
+                String hash = snippet.equals("actual tail") && scope.equals("workspace") ? "stale" : material.textHash();
+                var selected = new SearchIndex.Hit(id, "fixture", null, "", null, snippet, 1, 2, 2, true,
+                        "ORIGINAL", null, null, List.of(), "CURRENT", hash);
+                when(search.searchQuestion(scope, "question", List.of(), false)).thenReturn(List.of(selected));
+                when(sources.material("workspace", id)).thenReturn(Optional.of(material));
+                assertThat(streaming.search(scope, job, "question", budget, new ToolExecution.Cancellation()).status())
+                        .isEqualTo(ToolExecution.Status.FAILED);
+                assertThatThrownBy(() -> streaming.snapshot(scope, job, "question")).isInstanceOf(LibraryException.class);
+            }
+        }
+        verify(sources, times(2)).material("other", id);
+        verifyNoInteractions(knowledge);
+    }
+
+    @Test
     void fiveNormalHitsFitBudgetAndSnapshotIsExactTypedEmittedEvidence() {
         var hits = java.util.stream.IntStream.range(0, 5).mapToObj(index -> hit("x".repeat(900), true)).toList();
         when(search.searchQuestion("workspace", "question", List.of(), false)).thenReturn(hits);

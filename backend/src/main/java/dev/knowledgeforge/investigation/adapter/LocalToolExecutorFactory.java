@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 public class LocalToolExecutorFactory implements dev.knowledgeforge.investigation.application.LocalInvestigationTools {
     private final SearchService search;
     private final LibraryStore library;
-    private final dev.knowledgeforge.knowledge.application.KnowledgeStore knowledge;
+    private final dev.knowledgeforge.search.application.EvidenceSourceStore sources;
     private final java.time.Clock clock;
     private record Key(String workspaceId, String jobId) {}
     private final java.util.Map<Key, dev.knowledgeforge.search.application.LocalSearchSnapshot> snapshots = new java.util.HashMap<>();
     private final java.util.Set<Key> running = new java.util.HashSet<>();
 
-    @org.springframework.beans.factory.annotation.Autowired
     public LocalToolExecutorFactory(SearchService search, LibraryStore library,
                                     dev.knowledgeforge.knowledge.application.KnowledgeStore knowledge) {
         this(search, library, knowledge, java.time.Clock.systemUTC());
@@ -25,9 +24,22 @@ public class LocalToolExecutorFactory implements dev.knowledgeforge.investigatio
 
     LocalToolExecutorFactory(SearchService search, LibraryStore library,
                              dev.knowledgeforge.knowledge.application.KnowledgeStore knowledge, java.time.Clock clock) {
+        this(search, library, knowledge, clock, dev.knowledgeforge.search.application.EvidenceSourceStore.legacy(knowledge));
+    }
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public LocalToolExecutorFactory(SearchService search, LibraryStore library,
+                                    dev.knowledgeforge.knowledge.application.KnowledgeStore knowledge,
+                                    dev.knowledgeforge.search.application.EvidenceSourceStore sources) {
+        this(search, library, knowledge, java.time.Clock.systemUTC(), sources);
+    }
+
+    LocalToolExecutorFactory(SearchService search, LibraryStore library,
+                             dev.knowledgeforge.knowledge.application.KnowledgeStore knowledge, java.time.Clock clock,
+                             dev.knowledgeforge.search.application.EvidenceSourceStore sources) {
         this.search = search;
         this.library = library;
-        this.knowledge = knowledge;
+        this.sources = sources;
         this.clock = clock;
     }
 
@@ -53,7 +65,7 @@ public class LocalToolExecutorFactory implements dev.knowledgeforge.investigatio
         }
         var inspected = new java.util.concurrent.atomic.AtomicReference<List<dev.knowledgeforge.search.application.LocalSearchSnapshot.Entry>>();
         try (var executor = new ConstrainedToolExecutor(List.of(new LocalWorkspaceSearchTool(search, library, workspaceId,
-                knowledge, inspected::set)), LocalWorkspaceSearchTool.binding(workspaceId), budget, cancellation)) {
+                sources, inspected::set)), LocalWorkspaceSearchTool.binding(workspaceId), budget, cancellation)) {
             var result = executor.execute(new ToolExecution.Invocation<>(LocalWorkspaceSearchTool.ID,
                     LocalWorkspaceSearchTool.binding(workspaceId), input));
             synchronized (this) {

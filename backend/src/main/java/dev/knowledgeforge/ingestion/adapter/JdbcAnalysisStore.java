@@ -18,17 +18,25 @@ public class JdbcAnalysisStore implements AnalysisStore {
     @Override
     @Transactional
     public void save(String entryId, Analysis analysis) {
-        jdbc.update("""
-                INSERT INTO extracted_document(entry_id,text,media_type,status,error) VALUES(?,?,?,?,?)
-                ON CONFLICT(entry_id) DO UPDATE SET text=excluded.text,media_type=excluded.media_type,
-                status=excluded.status,error=excluded.error
-                """, entryId, analysis.text(), analysis.mediaType(), analysis.status(), analysis.error());
-        jdbc.update("DELETE FROM symbol WHERE entry_id=?", entryId);
-        for (Analysis.Symbol symbol : analysis.symbols()) {
-            jdbc.update("INSERT INTO symbol(entry_id,name,kind,line,signature) VALUES(?,?,?,?,?)",
-                    entryId, symbol.name(), symbol.kind(), symbol.line(), symbol.signature());
+        try (analysis) {
+            jdbc.update("""
+                    INSERT INTO extracted_document(entry_id,text,media_type,status,error) VALUES(?,?,?,?,?)
+                    ON CONFLICT(entry_id) DO UPDATE SET text=excluded.text,media_type=excluded.media_type,
+                    status=excluded.status,error=excluded.error
+                    """, entryId, analysis.text(), analysis.mediaType(), analysis.status(), analysis.error());
+            jdbc.update("DELETE FROM extracted_text_part WHERE entry_id=?", entryId);
+            for (int ordinal = 0; ordinal < analysis.parts().size(); ordinal++) {
+                if (Thread.currentThread().isInterrupted()) throw new java.util.concurrent.CancellationException();
+                jdbc.update("INSERT INTO extracted_text_part(entry_id,ordinal,text) VALUES(?,?,?)",
+                        entryId, ordinal, analysis.parts().get(ordinal));
+            }
+            jdbc.update("DELETE FROM symbol WHERE entry_id=?", entryId);
+            for (Analysis.Symbol symbol : analysis.symbols()) {
+                jdbc.update("INSERT INTO symbol(entry_id,name,kind,line,signature) VALUES(?,?,?,?,?)",
+                        entryId, symbol.name(), symbol.kind(), symbol.line(), symbol.signature());
+            }
+            jdbc.update("INSERT INTO search_outbox(entry_id) VALUES(?)", entryId);
         }
-        jdbc.update("INSERT INTO search_outbox(entry_id) VALUES(?)", entryId);
     }
 
     @Override
@@ -58,7 +66,7 @@ public class JdbcAnalysisStore implements AnalysisStore {
                 result.getString("status"), result.getString("error"), jdbc.query(
                 "SELECT name,kind,line,signature FROM symbol WHERE entry_id=? ORDER BY line,name",
                 (symbol, index) -> new Analysis.Symbol(symbol.getString("name"), symbol.getString("kind"),
-                        symbol.getInt("line"), symbol.getString("signature")), entryId)),
+                        symbol.getInt("line"), symbol.getString("signature")), entryId), JdbcTextParts.document(jdbc, entryId)),
                 workspaceId, entryId).stream().findFirst();
     }
 }

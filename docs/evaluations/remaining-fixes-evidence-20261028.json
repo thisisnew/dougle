@@ -1,0 +1,644 @@
+{
+  "verifiedAt": "2026-10-27T15:16:31.065Z",
+  "version": "0.1.30",
+  "jarSha256": "2315f6343980550e3adbe68d07e302f672216c4b727e19b19341f6598da1f673",
+  "baseline": "integrations-removal-scope-20261027.json",
+  "summary": {
+    "PASS": 0,
+    "PARTIAL": 950,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT_RUN": 25,
+    "EXCLUDED": 25
+  },
+  "scope": "Repair overlay: 29 earlier observed failures no longer reproduced in tested layers; not 1000 end-to-end passes",
+  "aiBudget": {
+    "previous": 111,
+    "newCalls": 70,
+    "cumulative": 181,
+    "maximum": 200
+  },
+  "regressions": [
+    {
+      "id": "T0626",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "0c90b054b09dd9fc9d66e3e573ae899dd2eb0b079e003c18c02f5cf6b2b3f426",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0627",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "0c90b054b09dd9fc9d66e3e573ae899dd2eb0b079e003c18c02f5cf6b2b3f426",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0628",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "0c90b054b09dd9fc9d66e3e573ae899dd2eb0b079e003c18c02f5cf6b2b3f426",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0629",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "0c90b054b09dd9fc9d66e3e573ae899dd2eb0b079e003c18c02f5cf6b2b3f426",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0630",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "0c90b054b09dd9fc9d66e3e573ae899dd2eb0b079e003c18c02f5cf6b2b3f426",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0632",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "7651c8465b9e36899653ecb0d0d06a262fb91c206ee175abe990ef0309831897",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0657",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "f69028eeae58d90a03f25a5edbb3c720c7b199ef59d119b8de42bb8eb98e59e4",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0662",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "a9aba2bf043d7c8b2c6114e155c86dd9a6c11e964589dd7b58c1c3c9cf6dd068",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0676",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "d77c7a70aaa45913726d8a269fa044106128b631151a6a18106a089eb9a44230",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0678",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "d77c7a70aaa45913726d8a269fa044106128b631151a6a18106a089eb9a44230",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0679",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "d77c7a70aaa45913726d8a269fa044106128b631151a6a18106a089eb9a44230",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0680",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "d77c7a70aaa45913726d8a269fa044106128b631151a6a18106a089eb9a44230",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0682",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "915a57216df3c19a502f118ca0437cc079dad5c228a97788fe15b9e0b085b4b0",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "none"
+      ]
+    },
+    {
+      "id": "T0731",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "9e51f2af7d8a1145049fcd19bc876af468d6f72ffa0d5f611de09b0bc8c9bc3d",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "FOUR_INGESTION_ROUTES_REQUIRED"
+      ]
+    },
+    {
+      "id": "T0732",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "9e51f2af7d8a1145049fcd19bc876af468d6f72ffa0d5f611de09b0bc8c9bc3d",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "FOUR_INGESTION_ROUTES_REQUIRED"
+      ]
+    },
+    {
+      "id": "T0733",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "9e51f2af7d8a1145049fcd19bc876af468d6f72ffa0d5f611de09b0bc8c9bc3d",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "FOUR_INGESTION_ROUTES_REQUIRED"
+      ]
+    },
+    {
+      "id": "T0734",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "9e51f2af7d8a1145049fcd19bc876af468d6f72ffa0d5f611de09b0bc8c9bc3d",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "FOUR_INGESTION_ROUTES_REQUIRED"
+      ]
+    },
+    {
+      "id": "T0735",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "9e51f2af7d8a1145049fcd19bc876af468d6f72ffa0d5f611de09b0bc8c9bc3d",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "FOUR_INGESTION_ROUTES_REQUIRED"
+      ]
+    },
+    {
+      "id": "T0747",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_BUNDLED_MODEL_AND_LUCENE_SYNTHETIC_CORPUS",
+      "fixtureHash": "502f3a27eb27a2a0871765aaa570d9c4bcc6deae75b74fd03112541ef66aacab",
+      "remaining": [
+        "UI/answer evidence assembly not executed",
+        "DELETE_AND_IMMUTABLE_HISTORY_REQUIRED"
+      ]
+    },
+    {
+      "id": "T0161",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_STREAMING_ANALYZER_AND_LEXICAL_INDEX_SYNTHETIC_FILES",
+      "fixtureHash": "5730f19ccdc748db2351c6ad83ba48cf116a423bbe7435125b495b76adf048c8",
+      "remaining": [
+        "UI upload/database registration",
+        "Actual application restart",
+        "Semantic search and answers",
+        "NFC/NFD collision handling and PDF reading-order require separate checks"
+      ]
+    },
+    {
+      "id": "T0162",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_STREAMING_ANALYZER_AND_LEXICAL_INDEX_SYNTHETIC_FILES",
+      "fixtureHash": "5730f19ccdc748db2351c6ad83ba48cf116a423bbe7435125b495b76adf048c8",
+      "remaining": [
+        "UI upload/database registration",
+        "Actual application restart",
+        "Semantic search and answers",
+        "NFC/NFD collision handling and PDF reading-order require separate checks"
+      ]
+    },
+    {
+      "id": "T0163",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_STREAMING_ANALYZER_AND_LEXICAL_INDEX_SYNTHETIC_FILES",
+      "fixtureHash": "5730f19ccdc748db2351c6ad83ba48cf116a423bbe7435125b495b76adf048c8",
+      "remaining": [
+        "UI upload/database registration",
+        "Actual application restart",
+        "Semantic search and answers",
+        "NFC/NFD collision handling and PDF reading-order require separate checks"
+      ]
+    },
+    {
+      "id": "T0164",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_STREAMING_ANALYZER_AND_LEXICAL_INDEX_SYNTHETIC_FILES",
+      "fixtureHash": "5730f19ccdc748db2351c6ad83ba48cf116a423bbe7435125b495b76adf048c8",
+      "remaining": [
+        "UI upload/database registration",
+        "Actual application restart",
+        "Semantic search and answers",
+        "NFC/NFD collision handling and PDF reading-order require separate checks"
+      ]
+    },
+    {
+      "id": "T0165",
+      "checkStatus": "PASS",
+      "status": "PARTIAL",
+      "scope": "REAL_STREAMING_ANALYZER_AND_LEXICAL_INDEX_SYNTHETIC_FILES",
+      "fixtureHash": "5730f19ccdc748db2351c6ad83ba48cf116a423bbe7435125b495b76adf048c8",
+      "remaining": [
+        "UI upload/database registration",
+        "Actual application restart",
+        "Semantic search and answers",
+        "NFC/NFD collision handling and PDF reading-order require separate checks"
+      ]
+    }
+  ],
+  "actualAi": [
+    {
+      "rawReportSha256": "9cf9b16381dfdfd731b331ad9f00f71fc456bfafd1d05c6580640ce82f8b33a1",
+      "dispatches": 22,
+      "completedAt": "2026-10-27T15:03:00.626Z",
+      "cases": [
+        {
+          "id": "T0780",
+          "checkStatus": "PASS",
+          "status": "PARTIAL",
+          "completedLongTurns": 20,
+          "remaining": [
+            "Human semantic and claim-by-claim citation review",
+            "Native UI tab/reopen flows",
+            "No planning-model dispatch; actual answer pipeline tested"
+          ],
+          "manualVerdict": "NOT_REVIEWED",
+          "agentReview": "All answers and evidence reviewed; grounded in synthetic notes. Not human acceptance.",
+          "uniqueAnswers": [
+            {
+              "answer": "이 예제에서 전략 패턴은 선택 알고리즘을 교체하는 구조입니다. Player는 선택 작업을 strategy.choose()에 위임합니다. [R1]\n\nStrategy 인터페이스를 먼저 확인하고, Player의 위임 부분과 WinningStrategy 구현을 중심으로 보면 됩니다. 다만 제공된 근거에 실제 코드가 없어 구체적인 선택 로직은 설명할 수 없습니다. [R1]",
+              "turns": [
+                1
+              ]
+            },
+            {
+              "answer": "전략 패턴은 Player가 선택 작업을 strategy.choose()에 위임하여 선택 알고리즘을 교체하는 구조입니다. [R1]",
+              "turns": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21
+              ]
+            },
+            {
+              "answer": "Strategy 인터페이스를 먼저 보고, Player가 strategy.choose()에 위임하는 부분과 WinningStrategy 구현을 중점적으로 보면 됩니다. [R2]",
+              "turns": [
+                22
+              ]
+            }
+          ],
+          "finalQuestion": "어느 쪽을 중점적으로 보면 돼?",
+          "finalEvidence": [
+            {
+              "label": "R1",
+              "title": "singleton.md",
+              "quote": "Singleton은 인스턴스를 하나만 제공한다. private 생성자와 정적 getInstance()를 중점적으로 본다.",
+              "textHash": "40123b0772f50d65d5d081c0b7a4a059703af2c8ca62d9cafe97458a33c780c6"
+            },
+            {
+              "label": "R2",
+              "title": "strategy.md",
+              "quote": "Strategy는 선택 알고리즘을 교체한다. Strategy 인터페이스를 먼저 보고 Player가 strategy.choose()에 위임하는 부분과 WinningStrategy 구현을 중점적으로 본다. State나 Singleton 예제는 별개다.",
+              "textHash": "f3c02c39d2ca0fe81693a05d5aa170fc418f2d6da609f923588e30e315eb7bbe"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rawReportSha256": "67023980e5e095fbe5971909b08962e54c7d251f71bda4d443ebcd1830772529",
+      "dispatches": 48,
+      "completedAt": "2026-10-27T15:08:21.285Z",
+      "cases": [
+        {
+          "id": "T0785",
+          "checkStatus": "PASS",
+          "status": "PARTIAL",
+          "completedLongTurns": 10,
+          "remaining": [
+            "Human semantic and claim-by-claim citation review",
+            "Native UI tab/reopen flows",
+            "No planning-model dispatch; actual answer pipeline tested",
+            "Short regression only: 10 of the specified 20 generic turns; full long-conversation acceptance not completed"
+          ],
+          "manualVerdict": "NOT_REVIEWED",
+          "agentReview": "All answers and evidence reviewed; grounded in synthetic notes. Not human acceptance.",
+          "uniqueAnswers": [
+            {
+              "answer": "입하 정보는 inbound_receipt 테이블에 저장됩니다. [R1]",
+              "turns": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            },
+            {
+              "answer": "입하 정보의 저장 시점과 트랜잭션 시점은 제공된 문서에 명시되어 있지 않아 확인할 수 없습니다. [R1]",
+              "turns": [
+                12
+              ]
+            }
+          ],
+          "finalQuestion": "거기에 저장되는 시점은?",
+          "finalEvidence": [
+            {
+              "label": "R1",
+              "title": "inbound.md",
+              "quote": "입하 정보는 inbound_receipt 테이블에 저장한다. 저장 시점과 트랜잭션 시점은 이 문서에 없다.",
+              "textHash": "6cc735920fe1769cf2a3cf562094c1907599c69700858b994a1083824bdc97e5"
+            },
+            {
+              "label": "R2",
+              "title": "badges.md",
+              "quote": "BLUE 배지는 72시간, AMBER 배지는 24시간 유효하다. AMBER는 자동 갱신되지 않으며 담당자의 수동 승인이 필요하다.",
+              "textHash": "a2fe884c298e73856913f6ca4de6d8efb31ea9f6c421fd5bdf55574179ee4c76"
+            }
+          ]
+        },
+        {
+          "id": "T0790",
+          "checkStatus": "PASS",
+          "status": "PARTIAL",
+          "completedLongTurns": 10,
+          "remaining": [
+            "Human semantic and claim-by-claim citation review",
+            "Native UI tab/reopen flows",
+            "No planning-model dispatch; actual answer pipeline tested",
+            "Short regression only: 10 of the specified 20 generic turns; full long-conversation acceptance not completed"
+          ],
+          "manualVerdict": "NOT_REVIEWED",
+          "agentReview": "All answers and evidence reviewed; grounded in synthetic notes. Not human acceptance.",
+          "uniqueAnswers": [
+            {
+              "answer": "입하 수기 보정은 월평균 120건이고, 장비 교체는 분기 3건입니다. [R1]\n\n수기 보정과 장비 교체는 서로 다른 업무입니다. 구체적인 업무 내용의 차이는 제공된 근거에 없습니다. [R1]",
+              "turns": [
+                1
+              ]
+            },
+            {
+              "answer": "입하 수기 보정은 월평균 120건, 장비 교체는 분기 3건이며 서로 다른 업무입니다. [R1]",
+              "turns": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            },
+            {
+              "answer": "입하 수기 보정은 월평균 120건입니다. [R1]",
+              "turns": [
+                12
+              ]
+            }
+          ],
+          "finalQuestion": "아니 교체 말고 수기 보정이야",
+          "finalEvidence": [
+            {
+              "label": "R1",
+              "title": "correction.md",
+              "quote": "입하 수기 보정은 월평균 120건이다. 장비 교체는 분기 3건이다. 수기 보정과 장비 교체는 다른 업무다.",
+              "textHash": "032aee35ebc818d9e415689ff8a2c5d928c5cbbcf9e1856d4f3c7829fdb2a1ff"
+            }
+          ]
+        },
+        {
+          "id": "T0795",
+          "checkStatus": "PASS",
+          "status": "PARTIAL",
+          "completedLongTurns": 10,
+          "remaining": [
+            "Human semantic and claim-by-claim citation review",
+            "Native UI tab/reopen flows",
+            "No planning-model dispatch; actual answer pipeline tested",
+            "Short regression only: 10 of the specified 20 generic turns; full long-conversation acceptance not completed"
+          ],
+          "manualVerdict": "NOT_REVIEWED",
+          "agentReview": "All answers and evidence reviewed; grounded in synthetic notes. Not human acceptance.",
+          "uniqueAnswers": [
+            {
+              "answer": "BLUE 배지는 72시간 동안 유효합니다. [R1]\n\nAMBER 배지는 24시간 동안 유효하며, 자동 갱신되지 않고 담당자의 수동 승인이 필요합니다. [R1]",
+              "turns": [
+                1
+              ]
+            },
+            {
+              "answer": "BLUE 배지는 72시간, AMBER 배지는 24시간 유효하며, AMBER는 자동 갱신되지 않고 담당자의 수동 승인이 필요합니다. [R1]",
+              "turns": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            },
+            {
+              "answer": "두 번째인 AMBER 배지는 자동 갱신되지 않으며, 담당자의 수동 승인이 필요합니다. [R1]",
+              "turns": [
+                12
+              ]
+            }
+          ],
+          "finalQuestion": "두 번째 것은 자동 갱신돼?",
+          "finalEvidence": [
+            {
+              "label": "R1",
+              "title": "badges.md",
+              "quote": "BLUE 배지는 72시간, AMBER 배지는 24시간 유효하다. AMBER는 자동 갱신되지 않으며 담당자의 수동 승인이 필요하다.",
+              "textHash": "a2fe884c298e73856913f6ca4de6d8efb31ea9f6c421fd5bdf55574179ee4c76"
+            }
+          ]
+        },
+        {
+          "id": "T0800",
+          "checkStatus": "PASS",
+          "status": "PARTIAL",
+          "completedLongTurns": 10,
+          "remaining": [
+            "Human semantic and claim-by-claim citation review",
+            "Native UI tab/reopen flows",
+            "No planning-model dispatch; actual answer pipeline tested",
+            "Short regression only: 10 of the specified 20 generic turns; full long-conversation acceptance not completed"
+          ],
+          "manualVerdict": "NOT_REVIEWED",
+          "agentReview": "All answers and evidence reviewed; grounded in synthetic notes. Not human acceptance.",
+          "uniqueAnswers": [
+            {
+              "answer": "전략 패턴은 선택 알고리즘을 교체하는 패턴입니다. 제공된 예제에서는 Player가 선택 작업을 strategy.choose()에 위임합니다. [R1]\n\n예제를 이해하려면 Strategy 인터페이스를 먼저 살펴본 뒤, Player의 위임 부분과 WinningStrategy 구현을 중심으로 보면 됩니다. [R1]",
+              "turns": [
+                1
+              ]
+            },
+            {
+              "answer": "전략 패턴은 선택 작업을 Strategy에 위임해 선택 알고리즘을 교체하는 패턴입니다. [R1]",
+              "turns": [
+                2,
+                3
+              ]
+            },
+            {
+              "answer": "전략 패턴은 Player가 선택 작업을 Strategy에 위임해 선택 알고리즘을 교체하는 패턴입니다. [R1]",
+              "turns": [
+                4,
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "answer": "전략 패턴은 Player가 선택 작업을 Strategy의 choose()에 위임해 선택 알고리즘을 교체하는 패턴입니다. [R1]",
+              "turns": [
+                9
+              ]
+            },
+            {
+              "answer": "전략 패턴은 Player가 선택 작업을 strategy.choose()에 위임해 선택 알고리즘을 교체하는 패턴입니다. [R1]",
+              "turns": [
+                10,
+                11
+              ]
+            },
+            {
+              "answer": "싱글턴은 인스턴스를 하나만 제공하는 패턴이며, private 생성자와 정적 getInstance()가 핵심입니다. [R1]",
+              "turns": [
+                12
+              ]
+            }
+          ],
+          "finalQuestion": "이제 싱글턴 이야기하자",
+          "finalEvidence": [
+            {
+              "label": "R1",
+              "title": "singleton.md",
+              "quote": "Singleton은 인스턴스를 하나만 제공한다. private 생성자와 정적 getInstance()를 중점적으로 본다.",
+              "textHash": "40123b0772f50d65d5d081c0b7a4a059703af2c8ca62d9cafe97458a33c780c6"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "java": {
+      "total": 1124,
+      "passed": 1099,
+      "skipped": 25,
+      "failures": 0
+    },
+    "ui": {
+      "passed": 760,
+      "scope": "630 default + 130 distinct opt-in"
+    },
+    "node": {
+      "passed": 172
+    },
+    "search": {
+      "passed": 150,
+      "additionalHeldOutQueries": 8
+    },
+    "fileAcceptance": {
+      "passed": 100
+    },
+    "nativeHost": "../native-host-report.json"
+  },
+  "limits": [
+    "Four conversation variants ran 10 generic followups, not 20; T0780 ran 20",
+    "Human semantic review outstanding; agent review is not human acceptance",
+    "New Mac 25 NOT_RUN; ARM runtime untested",
+    "Slack/Datadog 25 EXCLUDED, not passed",
+    "No company services or public feed promotion"
+  ],
+  "logDigests": {
+    "dougle-remaining-java-final.log": "e0c7fb48e6266c4bf8a0411f38bc4820691b5078e17bbf943162597a04716f10",
+    "dougle-search-final-candidate.log": "7e8e8112f05c698a974a0b5acdeea051d0ce2de926366a8f612b94dfd814e70d",
+    "dougle-large-file-recheck.log": "54bfe312624ab11092f4fa754efab1ef750af5ca38772e305c52e6d8ba125f88",
+    "dougle-stream-scope-recheck.log": "bf95cf7b7b6bdfe5c5b07dbe92d44f63746ec2061d45155a25b23b2c6467ab48",
+    "dougle-remaining-ui.log": "77e9fe0bdaf225a5edcc5a67bb6f37d3e0bd07886d6ce7c0a3f1d576ca7f9ed8",
+    "dougle-remaining-ui-optin.log": "9dd0807886d938925de98fac7f21bfeb6f4801f64fb430a5fd65cce0b30d783e",
+    "dougle-remaining-ui-sync.log": "90444ab2bcf81ba9a5f19f7e917d15ea8e983ea44a32fe4a76203fabd94ca8e7",
+    "dougle-remaining-node.log": "e012bc6edf3214a6899960dced6c68c5513737938e87f13af6bc81f70b8325ca"
+  }
+}

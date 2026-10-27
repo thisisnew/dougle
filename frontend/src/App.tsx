@@ -297,7 +297,7 @@ export default function App() {
                   <div className="preview-heading"><span>자료 미리보기</span>{selected && <Button variant="ghost" size="icon" aria-label="미리보기 닫기" onClick={() => setSelected(null)}><X /></Button>}</div>
                   <div className="preview-content"><FileText size={28} /><h2>{selected.name}</h2><div className="tag">보관된 원본</div><dl><dt>파일 크기</dt><dd>{formatSize(selected.size)}</dd><dt>추가한 날짜</dt><dd>{new Date(selected.createdAt).toLocaleString('ko-KR')}</dd></dl>
                     <Button variant="outline" size="sm" onClick={() => void downloadApi(`${entryPath(activeId!, selected.id)}/content`, selected.name).catch(reason => setError(reason.message))}><Download /> 원본 다운로드</Button>
-                    <h3>내용</h3>{!preview ? <p role="status">미리보기를 불러오는 중…</p> : preview.supported ? <pre>{preview.text || '(빈 파일)'}</pre> : <p>{preview.reason}</p>}
+                    <h3>내용</h3>{!preview ? <p role="status">미리보기를 불러오는 중…</p> : preview.supported ? <>{preview.reason && <p>{preview.reason}</p>}<pre>{preview.text || '(빈 파일)'}</pre></> : <p>{preview.reason}</p>}
                     <AnalysisPanel key={selected.id} workspaceId={activeId!} entryId={selected.id} />
                   </div>
                 </aside>}

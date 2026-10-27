@@ -41,7 +41,7 @@ public class DatabaseConfiguration {
         JdbcTemplate jdbc = new JdbcTemplate(source);
         jdbc.execute("PRAGMA journal_mode=WAL");
         int version = jdbc.queryForObject("PRAGMA user_version", Integer.class);
-        if (version > 29) {
+        if (version > 30) {
             source.close();
             throw new IllegalStateException("Database schema is newer than this application.");
         }
@@ -659,6 +659,27 @@ public class DatabaseConfiguration {
                                 )
                                 """);
                         jdbc.execute("PRAGMA user_version=29");
+                    });
+        }
+        if (version < 30) {
+            new org.springframework.transaction.support.TransactionTemplate(
+                    new org.springframework.jdbc.datasource.DataSourceTransactionManager(source))
+                    .executeWithoutResult(status -> {
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS extracted_text_part (
+                                  entry_id TEXT NOT NULL REFERENCES extracted_document(entry_id) ON DELETE CASCADE,
+                                  ordinal INTEGER NOT NULL, text TEXT NOT NULL, PRIMARY KEY(entry_id,ordinal)
+                                )
+                                """);
+                        jdbc.execute("""
+                                CREATE TABLE IF NOT EXISTS source_analysis_text_part (
+                                  source_id TEXT NOT NULL, path TEXT NOT NULL, ordinal INTEGER NOT NULL, text TEXT NOT NULL,
+                                  PRIMARY KEY(source_id,path,ordinal),
+                                  FOREIGN KEY(source_id,path) REFERENCES source_analysis_checkpoint(source_id,path) ON DELETE CASCADE
+                                )
+                                """);
+                        jdbc.update("DELETE FROM source_analysis_checkpoint WHERE analysis_json LIKE '%앞부분만 검색%'");
+                        jdbc.execute("PRAGMA user_version=30");
                     });
         }
         jdbc.update("UPDATE slack_reply SET status='UNCERTAIN',failure_code='RESTART',updated_at=? WHERE status='SENDING'", java.time.Instant.now().toString());

@@ -297,6 +297,10 @@ public class WorkspaceArchiveService {
                 if (bytes == null || bytes.length > TransferArchiveCodec.MAX_DOCUMENT_BYTES) throw invalid("자료 내용이 없거나 너무 큽니다.");
                 fileKeys.add(material.key());
                 var analysis = analyzer.analyze(material.name(), bytes);
+                if (analysis.textTruncated()) {
+                    analysis.close();
+                    throw invalid("이 아카이브 형식은 큰 추출문을 지원하지 않습니다. 원본 자료를 별도로 등록하세요.");
+                }
                 CredentialContentGuard.requireSafe(analysis.text());
                 prepared.put(material.key(), analysis);
             }

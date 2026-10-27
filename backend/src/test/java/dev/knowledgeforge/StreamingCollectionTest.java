@@ -26,10 +26,10 @@ class StreamingCollectionTest {
         try (var snapshot = new LocalFolderCollector().collect(directory.toString())) {
             captured = snapshot.files().getFirst();
             assertThat(captured.size()).isEqualTo(size);
-            try (var input = captured.open()) {
-                var result = new TikaJavaAnalyzer().analyzeStream("large.txt", input);
+            try (var input = captured.open(); var result = new TikaJavaAnalyzer().analyzeStream("large.txt", input)) {
                 assertThat(result.status()).isEqualTo("READY");
-                assertThat(result.text()).endsWith("FINAL_SYNTHETIC_EVIDENCE");
+                assertThat(result.textParts().getLast().stripTrailing()).endsWith("FINAL_SYNTHETIC_EVIDENCE");
+                assertThat(result.textParts().stream().mapToLong(String::length).sum()).isGreaterThan(13_000_000);
             }
             assertThat(Files.size(original)).isEqualTo(size);
         }

@@ -33,6 +33,7 @@ class SearchAcceptanceTest {
     private TextEmbedding cached;
     private final JsonMapper mapper = new JsonMapper();
     private final List<Map<String, Object>> results = new ArrayList<>();
+    private final Map<String, Map<String, Float>> rerankerScores = new LinkedHashMap<>();
 
     @BeforeAll void prepare() {
         model = new LocalSearchModel(System.getenv("FORGE_VERIFY_SEARCH_MODEL_DIR"));
@@ -45,7 +46,9 @@ class SearchAcceptanceTest {
                 return vectors.computeIfAbsent(question + "\u0000" + text, key -> model.encode(text, question));
             }
             public float relevance(String question, String text) {
-                return relevance.computeIfAbsent(question + "\u0000" + text, key -> model.relevance(question, text));
+                float score = relevance.computeIfAbsent(question + "\u0000" + text, key -> model.relevance(question, text));
+                rerankerScores.computeIfAbsent(question, key -> new LinkedHashMap<>()).put(text, score);
+                return score;
             }
         };
     }
@@ -69,6 +72,7 @@ class SearchAcceptanceTest {
     }
 
     private void execute(JsonNode fixture) throws Exception {
+        rerankerScores.clear();
         String id = fixture.path("id").asText();
         int action = fixture.path("action").asInt();
         long start = System.nanoTime();
@@ -115,6 +119,12 @@ class SearchAcceptanceTest {
             result.put("paths", hits.stream().map(SearchIndex.Hit::path).toList());
             result.put("snippets", hits.stream().map(SearchIndex.Hit::snippet).toList());
             result.put("scores", hits.stream().map(SearchIndex.Hit::score).toList());
+            result.put("candidateScores", new LinkedHashMap<>(rerankerScores.getOrDefault(fixture.path("question").asText(), Map.of())));
+            var semanticMethod = LuceneSearchIndex.class.getDeclaredMethod("semantic", String.class, String.class, List.class, boolean.class);
+            semanticMethod.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            var semanticHits = (List<SearchIndex.Hit>) semanticMethod.invoke(index, "one", fixture.path("question").asText(), List.of(), false);
+            result.put("semanticScores", semanticHits.stream().map(hit -> Map.of("path", hit.path(), "score", hit.score())).toList());
             assertThat(hits).extracting(SearchIndex.Hit::entryId).doesNotContain("private");
             assertThat(hits).allSatisfy(hit -> assertThat(hit.snippet()).doesNotContain("PRIVATE_ONLY_MARKER"));
             String remaining = fixture.path("remaining").asText("");

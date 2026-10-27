@@ -44,9 +44,13 @@ class LibraryIntegrationTest {
         assertThat(jdbc.queryForObject("SELECT length(content) FROM entry WHERE id=?", Long.class, entryId))
                 .isEqualTo((long) content.length);
         assertThat(jdbc.queryForObject("SELECT text FROM extracted_document WHERE entry_id=?", String.class, entryId))
-                .endsWith("FINALUPLOADMARKER");
+                .hasSizeLessThanOrEqualTo(64 * 1024);
+        var parts = dev.knowledgeforge.ingestion.adapter.JdbcTextParts.document(jdbc, entryId);
+        assertThat(parts.stream().mapToLong(String::length).sum()).isGreaterThan(13_000_000);
+        assertThat(parts.getLast().stripTrailing()).endsWith("FINALUPLOADMARKER");
         mvc.perform(get("/api/workspaces/" + workspaceId + "/search").param("query", "FINALUPLOADMARKER"))
-                .andExpect(status().isOk()).andExpect(jsonPath("$[0].entryId").value(entryId));
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].entryId").value(entryId))
+                .andExpect(jsonPath("$[0].snippet", org.hamcrest.Matchers.containsString("FINALUPLOADMARKER")));
     }
 
     @Test

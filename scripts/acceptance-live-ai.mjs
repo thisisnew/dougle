@@ -16,6 +16,8 @@ assert(['conversation', 'images'].includes(suite))
 if (suite === 'images') assert(process.env.FORGE_ACCEPTANCE_IMAGES, 'Owned synthetic PNG directory required')
 const selectedCases = process.env.FORGE_ACCEPTANCE_CASES?.split(',')
 if (selectedCases) assert(selectedCases.length > 0 && selectedCases.every(id => /^T\d{4}$/.test(id)))
+const longTurns = Number(process.env.FORGE_ACCEPTANCE_LONG_TURNS ?? 20)
+assert(Number.isInteger(longTurns) && longTurns >= 2 && longTurns <= 20, 'Long conversation regression must execute 2–20 turns')
 const root = process.cwd()
 const resources = '/Applications/Knowledge Forge.app/Contents/Resources/resources'
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-acceptance-live-'))
@@ -235,9 +237,13 @@ try {
         }
         if (action === 3) await answer(prefix, '온실과 무관한 싱글턴 정의를 알려줘', result)
         if (action === 4) {
-          for (let number = 0; number < 20; number++) {
+          result.requestedLongTurns = longTurns
+          result.completedLongTurns = 0
+          if (longTurns < 20) result.remaining.push(`Short regression only: ${longTurns} of the specified 20 generic turns; full long-conversation acceptance not completed`)
+          for (let number = 0; number < longTurns; number++) {
             previous = await answer(prefix, `앞서 설명한 대상을 유지하고 핵심만 한 문장으로 정리해 줘. 확인 ${number + 1}`, result, previous)
             assert.equal(previous.status, 'SUCCEEDED', 'Long conversation turn failed')
+            result.completedLongTurns++
           }
         }
         const final = await answer(prefix, follow, result, previous)

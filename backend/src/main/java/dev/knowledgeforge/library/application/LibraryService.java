@@ -155,7 +155,8 @@ public class LibraryService {
         var extracted = analyses.find(workspaceId, id);
         if (extracted.isPresent() && "application/pdf".equals(extracted.get().mediaType())) {
             var document = extracted.get();
-            if (!document.text().isBlank()) return new Preview(document.text(), true, null);
+            if (!document.text().isBlank() || document.textTruncated()) return new Preview(document.text(), true,
+                    document.textTruncated() ? "큰 문서는 추출문 앞부분만 미리 봅니다. 검색은 전체 추출문을 사용합니다." : null);
             return new Preview(null, false, "PDF에서 읽을 수 있는 텍스트가 없습니다. 스캔된 문서는 텍스트 인식이 필요합니다.");
         }
         if (entry.size() > 1024 * 1024) {
@@ -197,7 +198,7 @@ public class LibraryService {
         }
         var analysis = analyzer.analyze(entry.name(), store.content(id));
         analyses.save(id, analysis);
-        return analysis;
+        return analyses.find(workspaceId, id).orElseThrow();
     }
 
     public dev.knowledgeforge.ingestion.domain.Analysis analysis(String workspaceId, String id) {

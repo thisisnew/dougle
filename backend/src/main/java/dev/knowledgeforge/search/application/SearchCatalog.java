@@ -9,6 +9,9 @@ public interface SearchCatalog {
     void each(Consumer<SearchIndex.Document> consumer);
     List<Change> changes();
     Optional<SearchIndex.Document> document(String id);
+    default void withDocument(String id, Consumer<SearchIndex.Document> consumer, Runnable missing) {
+        document(id).ifPresentOrElse(consumer, missing);
+    }
     void acknowledge(long sequence);
     boolean exists(String workspaceId, SearchIndex.Hit hit);
 }

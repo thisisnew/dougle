@@ -111,10 +111,11 @@ class FileAcceptanceTest {
             try (var observer = ProcessingProgress.observe(steps::add); var input = Files.newInputStream(fixture.path())) {
                 analysis = analyzer.analyzeStream(fixture.path().getFileName().toString(), input);
             }
+            try (analysis) {
             result.put("bytes", Files.size(fixture.path()));
             result.put("analysisStatus", analysis.status());
             result.put("analysisError", analysis.error());
-            result.put("extractedCharacters", analysis.text().length());
+            result.put("extractedCharacters", analysis.textParts().stream().mapToLong(String::length).sum());
             result.put("progressEvents", steps.size());
             result.put("lastProgress", steps.isEmpty() ? null : steps.getLast());
             assertThat(Files.getLastModifiedTime(fixture.path())).isEqualTo(before);
@@ -123,19 +124,26 @@ class FileAcceptanceTest {
                 assertThat(analysis.error()).isNotBlank();
             } else {
                 assertThat(analysis.status()).isIn("READY", "PARTIAL");
-                for (String marker : fixture.markers()) assertThat(containsMarker(analysis.text(), marker)).as("Extracted body must include %s", marker).isTrue();
+                for (String marker : fixture.markers()) assertThat(containsMarker(analysis.textParts(), marker)).as("Extracted body must include %s", marker).isTrue();
                 if (fixtureIndex == 4) assertThat(analysis.text()).doesNotContain("BLUE36", "WRONG_SCRIPT");
                 if (fixtureIndex == 15) assertThat(analysis.text()).doesNotStartWith("\ufeff");
             }
             if (action == 2) {
-                try (var input = Files.newInputStream(fixture.path())) {
-                    assertThat(analyzer.analyzeStream(fixture.path().getFileName().toString(), input)).isEqualTo(analysis);
+                try (var input = Files.newInputStream(fixture.path());
+                     var repeated = analyzer.analyzeStream(fixture.path().getFileName().toString(), input)) {
+                    assertThat(repeated.status()).isEqualTo(analysis.status());
+                    assertThat(repeated.error()).isEqualTo(analysis.error());
+                    assertThat(repeated.mediaType()).isEqualTo(analysis.mediaType());
+                    assertThat(repeated.symbols()).isEqualTo(analysis.symbols());
+                    assertThat(dev.knowledgeforge.search.domain.ContentDigest.ofParts(repeated.textParts()))
+                            .isEqualTo(dev.knowledgeforge.search.domain.ContentDigest.ofParts(analysis.textParts()));
                 }
             }
             if (!fixture.unreadable() && (action == 1 || action == 3 || action == 4)) {
                 Path indexDirectory = directory.resolve(id + "-index");
                 try (var index = new LuceneSearchIndex(indexDirectory.toString())) {
-                    index.put(new SearchIndex.Document("target", "one", fixture.path().getFileName().toString(), analysis.text(), "", "synthetic", "", fixture.path().getFileName().toString()));
+                    index.put(new SearchIndex.Document("target", "one", fixture.path().getFileName().toString(), analysis.text(), "", "synthetic", "", fixture.path().getFileName().toString(),
+                            "ORIGINAL", null, null, List.of(""), List.of(), analysis.parts()));
                     if (action == 4) {
                         for (int number = 0; number < 50; number++) index.put(new SearchIndex.Document("noise-" + number, "one", "noise" + number + ".txt", "Unrelated garden observations " + number, "", "noise", "", "noise" + number + ".txt"));
                     }
@@ -148,6 +156,7 @@ class FileAcceptanceTest {
                 }
             }
             result.put("checkStatus", "PASS");
+            }
             result.put("status", "PARTIAL");
         } catch (Throwable failure) {
             result.put("checkStatus", "FAIL");
@@ -174,6 +183,22 @@ class FileAcceptanceTest {
     private boolean containsMarker(String text, String marker) {
         return java.util.regex.Pattern.compile("(?<![A-Za-z0-9_])" + java.util.regex.Pattern.quote(marker)
                 + "(?![A-Za-z0-9_])").matcher(text).find();
+    }
+
+    private boolean containsMarker(List<String> parts, String marker) {
+        var pattern = java.util.regex.Pattern.compile("(?<![A-Za-z0-9_])" + java.util.regex.Pattern.quote(marker)
+                + "(?![A-Za-z0-9_])");
+        String tail = "";
+        for (int index = 0; index < parts.size(); index++) {
+            String window = tail + parts.get(index);
+            var matches = pattern.matcher(window);
+            while (matches.find()) {
+                if ((matches.start() > 0 || index == 0)
+                        && (matches.end() < window.length() || index == parts.size() - 1)) return true;
+            }
+            tail = window.substring(Math.max(0, window.length() - marker.length() - 2));
+        }
+        return false;
     }
 
     @org.junit.jupiter.api.Test void markerBoundariesRejectNumericSuffixesButAllowKoreanParticles() {

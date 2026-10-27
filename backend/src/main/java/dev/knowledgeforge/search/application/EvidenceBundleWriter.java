@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class EvidenceBundleWriter {
     private final KnowledgeStore knowledge;
+    private final EvidenceSourceStore sources;
     private final PublicationStore publications;
     private final LibraryStore library;
     private final EvidenceBundleStore bundles;
@@ -23,7 +24,14 @@ public class EvidenceBundleWriter {
 
     public EvidenceBundleWriter(KnowledgeStore knowledge, PublicationStore publications, LibraryStore library, EvidenceBundleStore bundles, SearchCatalog catalog,
                                 dev.knowledgeforge.attachment.application.AttachmentService attachments) {
+        this(knowledge, publications, library, bundles, catalog, attachments, EvidenceSourceStore.legacy(knowledge));
+    }
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public EvidenceBundleWriter(KnowledgeStore knowledge, PublicationStore publications, LibraryStore library, EvidenceBundleStore bundles, SearchCatalog catalog,
+                                dev.knowledgeforge.attachment.application.AttachmentService attachments, EvidenceSourceStore sources) {
         this.knowledge = knowledge;
+        this.sources = sources;
         this.publications = publications;
         this.library = library;
         this.bundles = bundles;
@@ -97,26 +105,19 @@ public class EvidenceBundleWriter {
             else if (items.size() >= 5) reason = "ITEM_LIMIT";
             else if (used >= maxCharacters) reason = extractive ? "CONTEXT_PROMPT_LIMIT" : "CHARACTER_LIMIT";
             else if ("ORIGINAL".equals(hit.kind())) {
-                var material = knowledge.material(workspaceId, hit.entryId()).orElse(null);
+                var material = sources.material(workspaceId, hit.entryId()).orElse(null);
                 if (material == null) reason = "REMOVED";
                 else if (!List.of("READY", "PARTIAL").contains(material.analysisStatus())
-                        || !ContentDigest.of(material.text()).equals(hit.textHash())) reason = "INDEX_CHANGED";
+                        || !material.textHash().equals(hit.textHash())) reason = "INDEX_CHANGED";
+                else if (hit.snippet() != null && hit.snippet().length() > maxCharacters - used) {
+                    reason = extractive ? "CONTEXT_PROMPT_LIMIT" : "CHARACTER_LIMIT";
+                }
                 else {
-                    if (inspectedWindow) {
-                        var lines = material.text().split("\n", -1);
-                        if (hit.snippet() == null || hit.snippet().isBlank() || hit.startLine() < 1
-                                || hit.endLine() < hit.startLine() || hit.endLine() > lines.length
-                                || !String.join("\n", java.util.Arrays.copyOfRange(lines, hit.startLine() - 1, hit.endLine()))
-                                        .concat(hit.endLine() < lines.length ? "\n" : "").contains(hit.snippet())
-                                || hit.endLine() != hit.startLine() + (int) hit.snippet().chars()
-                                        .limit(Math.max(0, hit.snippet().length() - 1)).filter(value -> value == '\n').count()) {
-                            throw new LibraryException(409, "검토한 검색 인용문을 원문에서 확인하지 못했습니다.");
-                        }
-                    }
-                    var window = inspectedWindow ? new dev.knowledgeforge.search.domain.EvidenceWindow(hit.snippet(), hit.startLine(), hit.endLine())
-                            : dev.knowledgeforge.search.domain.EvidenceWindow.around(material.text(), hit.snippet(), hit.startLine(), hit.endLine(), maxCharacters - used);
-                    item = new Item(label, hit.kind(), hit.entryId(), null, null, material.name(), material.sourceId(),
-                        material.path() == null ? material.name() : material.path(), material.revision(), ContentDigest.of(material.content()),
+                    var window = material.window(hit.snippet(), hit.startLine(), hit.endLine(), maxCharacters - used, inspectedWindow);
+                    if (window == null && inspectedWindow) throw new LibraryException(409, "검토한 검색 인용문을 원문에서 확인하지 못했습니다.");
+                    if (window == null) reason = "INDEX_CHANGED";
+                    else item = new Item(label, hit.kind(), hit.entryId(), null, null, material.name(), material.sourceId(),
+                        material.path() == null ? material.name() : material.path(), material.revision(), material.contentHash(),
                         hit.textHash(), window.startLine(), window.endLine(), window.text(), List.of());
                 }
             } else if ("KNOWLEDGE".equals(hit.kind())) {

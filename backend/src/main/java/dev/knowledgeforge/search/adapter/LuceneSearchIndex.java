@@ -36,6 +36,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LuceneSearchIndex implements SearchIndex {
     private static final FieldType BODY = bodyFieldType();
+    private static final java.util.regex.Pattern TECHNICAL_QUESTION = java.util.regex.Pattern.compile(
+            "(?iu)코드|인터페이스|생성자|함수|메서드|필드|호출|구현|실행|클래스|소스|알고리즘|패턴|테이블|\\b(?:api|code|class|interface|constructor|method|field|function|implementation)\\b");
 
     private static FieldType bodyFieldType() {
         var type = new FieldType(TextField.TYPE_STORED);
@@ -75,7 +77,7 @@ public class LuceneSearchIndex implements SearchIndex {
         } catch (IOException exception) { throw new UncheckedIOException(exception); }
     }
 
-    private String expectedFormat() { return embeddings.ready() ? "chunks-v2-e5" : "chunks-v1-keyword"; }
+    private String expectedFormat() { return embeddings.ready() ? "chunks-v3-e5" : "chunks-v1-keyword"; }
 
     public boolean questionReady() { return !embeddings.preparing(); }
 
@@ -91,17 +93,17 @@ public class LuceneSearchIndex implements SearchIndex {
     }
 
     public void put(SearchIndex.Document value) {
-        String textHash = ContentDigest.of(value.text());
+        String textHash = value.textHash();
         float[] titleVector = embeddings.ready() ? embeddings.encode((value.path() + " " + value.name())
                 .replaceAll("([a-z])([A-Z])", "$1 $2").replaceAll("[^\\p{L}\\p{N}]+", " "), false) : null;
         Iterable<org.apache.lucene.document.Document> documents = () -> {
-            var chunks = new dev.knowledgeforge.search.domain.TextChunks(value.text(), embeddings.ready() ? 768 : 2400, value.boundaries()).iterator();
+            var chunks = value.chunks(embeddings.ready() ? 768 : 2400).iterator();
             return new java.util.Iterator<>() {
                 public boolean hasNext() { return chunks.hasNext(); }
                 public org.apache.lucene.document.Document next() {
                     var chunk = chunks.next();
                     dev.knowledgeforge.ingestion.application.ProcessingProgress.report("SPLITTING", value.name(),
-                            chunk.offset(), value.text().length());
+                            chunk.offset(), value.textParts().isEmpty() ? value.text().length() : 0);
                     return document(value, chunk, textHash, titleVector);
                 }
             };
@@ -134,7 +136,7 @@ public class LuceneSearchIndex implements SearchIndex {
             document.add(new StoredField("meaningTitleVector", bytes.array()));
         }
         if (embeddings.ready() && !chunk.text().isBlank()) {
-            float[] vector = embeddings.encode(value.path() + "\n" + chunk.text(), false);
+            float[] vector = embeddings.encode(SearchRepresentation.of(value.path(), chunk.text()), false);
             if (vector != null) document.add(new org.apache.lucene.document.KnnFloatVectorField("meaning", vector,
                     org.apache.lucene.index.VectorSimilarityFunction.COSINE));
         }
@@ -161,9 +163,13 @@ public class LuceneSearchIndex implements SearchIndex {
         if (!embeddings.ready()) return lexical;
         var semantic = semantic(workspaceId, question, domains, includeKnowledge);
         var hits = new java.util.LinkedHashMap<String, Hit>();
-        for (Hit hit : semantic.stream().limit(16).toList()) {
+        var repetitions = new java.util.HashMap<String, Integer>();
+        for (Hit hit : semantic) {
+            String structure = hit.snippet().replaceAll("\\p{N}+", "#").replaceAll("\\s+", " ");
+            if (repetitions.merge(structure, 1, Integer::sum) > 2) continue;
             String key = hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()) + ":" + hit.startLine();
             hits.put(key, hit);
+            if (hits.size() >= 24) break;
         }
         for (Hit hit : lexical.stream().limit(8).toList()) {
             String key = hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()) + ":" + hit.startLine();
@@ -172,7 +178,7 @@ public class LuceneSearchIndex implements SearchIndex {
         var candidates = hits.values();
         var reranked = new java.util.ArrayList<Hit>();
         for (Hit hit : candidates) {
-            float score = embeddings.relevance(question, hit.path() + "\n" + hit.snippet());
+            float score = embeddings.relevance(question, SearchRepresentation.of(hit.path(), hit.snippet()));
             if (!Float.isFinite(score)) score = hit.score();
             reranked.add(new Hit(hit.entryId(), hit.name(), hit.sourceId(), hit.domain(), hit.path(), hit.snippet(), score,
                     hit.startLine(), hit.endLine(), hit.bodyMatch(), hit.kind(), hit.cardId(), hit.version(), hit.domains(),
@@ -180,15 +186,24 @@ public class LuceneSearchIndex implements SearchIndex {
         }
         reranked.sort(java.util.Comparator.comparingDouble(Hit::score).reversed());
         float best = reranked.isEmpty() ? 0 : reranked.getFirst().score();
-        var semanticDocuments = new HashSet<String>();
+        var semanticScores = new java.util.HashMap<String, Float>();
         for (Hit hit : semantic) {
-            if (hit.score() >= 0.90f) semanticDocuments.add(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()));
+            semanticScores.merge(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()) + ":" + hit.startLine(), hit.score(), Math::max);
         }
         Set<String> included = new HashSet<>();
-        return reranked.stream().filter(hit -> hit.score() >= best * 0.15f && (hit.score() >= 0.005f
-                        || best < 0.005f && hit.score() >= 0.0001f
-                        && semanticDocuments.contains(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()))))
+        return reranked.stream().filter(hit -> hit.score() >= best * 0.10f && relevant(question, hit,
+                        semanticScores.getOrDefault(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()) + ":" + hit.startLine(), 0f)))
                 .filter(hit -> included.add(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()))).toList();
+    }
+
+    private boolean relevant(String question, Hit hit, float similarity) {
+        if (hit.score() >= 0.5f) return true;
+        if (hit.path().toLowerCase(java.util.Locale.ROOT).endsWith(".java")) {
+            boolean technical = TECHNICAL_QUESTION.matcher(question).find();
+            return hit.score() >= 0.0001f && similarity >= 0.90f
+                    || technical && hit.score() >= 0.005f && similarity >= 0.88f;
+        }
+        return hit.score() >= 0.03f && similarity >= 0.89f || hit.score() >= 0.005f && similarity >= 0.91f;
     }
 
     private List<Hit> semantic(String workspaceId, String question, List<String> domains, boolean includeKnowledge) {
@@ -200,7 +215,7 @@ public class LuceneSearchIndex implements SearchIndex {
         if (!domains.isEmpty()) filter.add(new TermInSetQuery("domain", domains.stream().map(BytesRef::new).toList()), BooleanClause.Occur.FILTER);
         try (var reader = DirectoryReader.open(writer)) {
             var searcher = new IndexSearcher(reader);
-            var matches = searcher.search(new org.apache.lucene.search.KnnFloatVectorQuery("meaning", vector, 40, filter.build()), 40);
+            var matches = searcher.search(new org.apache.lucene.search.KnnFloatVectorQuery("meaning", vector, 128, filter.build()), 128);
             List<Hit> results = new ArrayList<>();
             for (var match : matches.scoreDocs) {
                 var document = searcher.storedFields().document(match.doc);

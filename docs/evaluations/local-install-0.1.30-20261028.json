@@ -1,0 +1,38 @@
+{
+  "version": "0.1.30",
+  "verifiedAt": "2026-10-27T15:17:06.808Z",
+  "backup": "/Users/thisisnew/Library/Application Support/Dougle Local Backups/pre-0.1.30-20261028-001506",
+  "jarSha256": "2315f6343980550e3adbe68d07e302f672216c4b727e19b19341f6598da1f673",
+  "nativePid": "39312",
+  "javaPid": "39375",
+  "port": "53921",
+  "schemaVersion": 30,
+  "rootHttpStatus": 200,
+  "unauthenticatedApiStatus": 403,
+  "codesignVerified": true,
+  "dmgReadOnlyMounted": true,
+  "dmgJarMatchedInstalled": true,
+  "updaterSignatureAndVersionVerified": true,
+  "credentialsCopied": false,
+  "businessRowsRead": false,
+  "newAiCallsDuringInstall": 0,
+  "publicFeedChanged": false,
+  "notarized": false,
+  "architecture": "x86_64",
+  "artifacts": {
+    "Knowledge.Forge_0.1.30_x86_64.dmg": "6e63ab535816d1aa8cb16094e421554179369a92ab61ce8d62af5d57e471182d",
+    "Knowledge.Forge_0.1.30_x86_64.app.tar.gz": "519fbe5797f8aa3203fc266ccfd5314c2b6a7ab87ceede0cfa53eb1c44c89e89",
+    "Knowledge.Forge_0.1.30_x86_64.app.tar.gz.sig": "cdb63ea9d50324f3c89e43dfb8a7b4ea51c19377d922ae3db9dae99016611745",
+    "Knowledge.Forge_0.1.30_arm64.dmg": "197a559be5f77d5c66a574f51895e3a2b592c544d1a24b3dba27353958ff0cfd",
+    "Knowledge.Forge_0.1.30_arm64.app.tar.gz": "7459fbc9cb3896fc116911be9e8c7190d85b15f4166906e76498166392802e9a",
+    "Knowledge.Forge_0.1.30_arm64.app.tar.gz.sig": "4e46c098748272898a7171c6ed7d3272952a273b422079d71c34c2ca1744fe40"
+  },
+  "scope": "Search candidate diversity/structural projection; followup topic retention; DB v30 streaming extraction, full-source evidence and preview warning",
+  "limits": [
+    "ARM package statically verified, no ARM runtime or fresh Mac acceptance",
+    "Four actual-AI conversation variants tested with 10 rather than 20 generic followups",
+    "Old truncated uploaded files need reanalysis/reupload; truncated source files need next sync",
+    "Raw upload BLOB and parser internal memory are not globally streaming"
+  ],
+  "nativeSmoke": "../native-host-report.json"
+}

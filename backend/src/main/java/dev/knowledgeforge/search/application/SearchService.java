@@ -46,7 +46,7 @@ public class SearchService {
         var changes = catalog.changes();
         while (!changes.isEmpty()) {
             for (var change : changes) {
-                catalog.document(change.entryId()).ifPresentOrElse(index::put, () -> index.remove(change.entryId()));
+                catalog.withDocument(change.entryId(), index::put, () -> index.remove(change.entryId()));
             }
             index.commit();
             catalog.acknowledge(changes.getLast().sequence());

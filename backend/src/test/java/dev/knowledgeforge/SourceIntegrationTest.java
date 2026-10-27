@@ -47,6 +47,53 @@ class SourceIntegrationTest {
     }
 
     @TempDir Path fixture;
+
+    @Autowired dev.knowledgeforge.conversation.application.ChatThreadService threads;
+    @Autowired dev.knowledgeforge.search.application.EvidenceBundleValidator evidenceValidator;
+
+    @Test
+    void streamedFolderTailBecomesValidatedEvidenceAndRefreshInvalidatesIt() throws Exception {
+        String workspace = library.createWorkspace("streamed workflow").id();
+        Path file = fixture.resolve("large-note.txt");
+        Files.writeString(file, "Synthetic observations.\n".repeat(150_000) + "ZEPHYR final procedure: inspect the amber valve.");
+        Source source = local(workspace, "streamed notes", "");
+        assertThat(sources.sync(workspace, source.id(), search::refresh).status()).isEqualTo("READY");
+        var bundle = threads.create(workspace, new dev.knowledgeforge.conversation.application.ChatThreadService.Create(
+                "stream-tail-question", null, null, "ZEPHYR", List.of()));
+        assertThat(bundle.payload().items()).hasSize(1);
+        assertThat(bundle.payload().items().getFirst().quote()).contains("ZEPHYR final procedure");
+        assertThat(evidenceValidator.check(workspace, bundle.id()).eligible()).isTrue();
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM extracted_text_part", Integer.class)).isGreaterThan(1);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM source_analysis_text_part WHERE source_id=?", Integer.class, source.id())).isZero();
+        Files.writeString(file, "Replacement synthetic content without the previous procedure.");
+        assertThat(sources.sync(workspace, source.id(), search::refresh).status()).isEqualTo("READY");
+        assertThat(evidenceValidator.check(workspace, bundle.id()).eligible()).isFalse();
+        assertThat(search.searchQuestion(workspace, "ZEPHYR", List.of(), false)).isEmpty();
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM extracted_text_part", Integer.class)).isZero();
+    }
+
+    @Test
+    void searchableTailAfterBlankLargePrefixKeepsFailedSiblingAsPartial() throws Exception {
+        String workspace = library.createWorkspace("빈 앞부분과 뒤쪽 근거").id();
+        Files.writeString(fixture.resolve("broken.txt"), "synthetic unreadable sibling");
+        Files.writeString(fixture.resolve("large.txt"), "synthetic streamed fixture");
+        String blank = " ".repeat(64 * 1024);
+        var parts = new java.util.ArrayList<String>(java.util.Collections.nCopies(32, blank));
+        parts.add("FINAL_SYNTHETIC_EVIDENCE");
+        doReturn(new Analysis(blank, "text/plain", "READY", null, List.of(), parts))
+                .when(analyzer).analyzeStream(eq("large.txt"), any(java.io.InputStream.class));
+        doReturn(new Analysis("", "text/plain", "ERROR", "synthetic unreadable sibling", List.of()))
+                .when(analyzer).analyzeStream(eq("broken.txt"), any(java.io.InputStream.class));
+        Source source = local(workspace, "뒤쪽 근거", "");
+        var synchronizedSource = sources.sync(workspace, source.id());
+        assertThat(synchronizedSource.status()).isEqualTo("PARTIAL");
+        assertThat(synchronizedSource.error()).contains("broken.txt").doesNotContain("검색 가능한 자료가 없습니다");
+        String entry = entryId(source.id(), "large.txt");
+        assertThat(jdbc.queryForObject("SELECT length(trim(text)) FROM extracted_document WHERE entry_id=?", Integer.class, entry)).isZero();
+        assertThat(jdbc.queryForObject("SELECT text FROM extracted_text_part WHERE entry_id=? ORDER BY ordinal DESC LIMIT 1", String.class, entry))
+                .isEqualTo("FINAL_SYNTHETIC_EVIDENCE");
+    }
+
     @Test
     void linkRegistrationUsesAddressKindWithoutCollecting() {
         String workspace = library.createWorkspace("링크 분류").id();

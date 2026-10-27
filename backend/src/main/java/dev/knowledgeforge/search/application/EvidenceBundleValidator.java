@@ -16,14 +16,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class EvidenceBundleValidator {
     private final EvidenceBundleService bundles;
     private final KnowledgeStore knowledge;
+    private final EvidenceSourceStore sources;
     private final PublicationStore publications;
     private final SearchCatalog catalog;
     private final dev.knowledgeforge.attachment.application.AttachmentService attachments;
 
     public EvidenceBundleValidator(EvidenceBundleService bundles, KnowledgeStore knowledge,
                                    PublicationStore publications, SearchCatalog catalog, dev.knowledgeforge.attachment.application.AttachmentService attachments) {
+        this(bundles, knowledge, publications, catalog, attachments, EvidenceSourceStore.legacy(knowledge));
+    }
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public EvidenceBundleValidator(EvidenceBundleService bundles, KnowledgeStore knowledge,
+                                   PublicationStore publications, SearchCatalog catalog, dev.knowledgeforge.attachment.application.AttachmentService attachments,
+                                   EvidenceSourceStore sources) {
         this.bundles = bundles;
         this.knowledge = knowledge;
+        this.sources = sources;
         this.publications = publications;
         this.catalog = catalog;
         this.attachments = attachments;
@@ -49,13 +58,13 @@ public class EvidenceBundleValidator {
     }
 
     private BundleValidation.Item original(String workspaceId, EvidenceBundle bundle, EvidenceBundle.Item item) {
-        var material = knowledge.currentMaterial(workspaceId, item.entryId(), item.sourceId(), item.path()).orElse(null);
+        var material = sources.currentMaterial(workspaceId, item.entryId(), item.sourceId(), item.path()).orElse(null);
         if (material == null) return result(item, "MISSING");
         String status;
         if (!Objects.equals(material.sourceId(), item.sourceId()) || !material.name().equals(item.title())) status = "ORIGIN_CHANGED";
         else if (!List.of("READY", "PARTIAL").contains(material.analysisStatus())) status = "ANALYSIS_UNAVAILABLE";
-        else if (!ContentDigest.of(material.content()).equals(item.contentHash())) status = "CONTENT_CHANGED";
-        else if (!ContentDigest.of(material.text()).equals(item.textHash())) status = "TEXT_CHANGED";
+        else if (!material.contentHash().equals(item.contentHash())) status = "CONTENT_CHANGED";
+        else if (!material.textHash().equals(item.textHash())) status = "TEXT_CHANGED";
         else if (!inScope(workspaceId, material.entryId(), bundle.payload().domains())) status = "SCOPE_CHANGED";
         else status = "CURRENT";
         return new BundleValidation.Item(item.label(), status, material.entryId(), material.revision(), List.of());
