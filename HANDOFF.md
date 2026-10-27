@@ -1,5 +1,9 @@
 # Dougle — 이어서 작업하기
 
+## 실제 AI 승인200회·후속225개 실행 — 2026-10-27
+
+사용자가 실제 AI 상한을200회로 승인했다. 합성 자료만 전송했으며 private budget `/tmp/dougle-acceptance-ai-budget-20261027.json`에75회 예약했다. 재검증은 이 journal을 유지하고 중복/초과 호출하지 않는다. 실제50개 자동 검사45통과/5실패, 최종 의미 리뷰 미완료. 긴 대화5개는 두 번째 일반 후속 질문에서 NO_EVIDENCE; 20턴 완료가 아니다. Notion/OAuth/MySQL/readonly/UI/Slack·로그175개 추가 중170통과/5실패(요청 ID 로그 필터). 누적 **PARTIAL869/FAIL76/NOT_RUN55/PASS0**, [보고서](docs/evaluations/acceptance-remaining-20261027.md). 제품 수정·설치·피드 변경은 아직 없다. 남은 DNS5/이미지25/새 Mac25 및 전체 E2E/기존76실패 수정·재검증을 계속해야 한다. 현재 작업 완료 보고가 아니다. 새 실행기·합성 답변 아티팩트는 저장했으며 실제 계정/회사 DB는 건드리지 않았다.
+
 ## 동기화 상태25개 추가 — 2026-10-27 밤
 
 `SyncProgressAcceptanceTest` 실행19통과/6실패. 추가620개 ID와 이전100개를 합쳐 **PARTIAL654/FAIL66/NOT_RUN280/PASS0**다. T0578은 큰 파일 취소 뒤 재시도가 손상 오류/PARTIAL로 남는 현상을 재현했다(Tika가 취소를 감싼 뒤 ERROR checkpoint로 저장되는 경로 조사 필요). T0591–T0595는 정상 문서0개인데 PARTIAL로 표시된다. 분석 진입 latch로 실제 SourceService/SQLite·중복 sync/poll·metadata 차단·취소·이전 성공 시각·서비스 재생성을 검사했으며 UI 탭/hover/실제 재시작/분할 단계 전체는 미검증이다. 로그 `/tmp/dougle-sync-progress-25.log`, 최신 [보고서](docs/evaluations/acceptance-remaining-20261027.md). Node 전체171통과와 ledger/catalog7통과 확인. 제품·설치본·외부 AI는 변경/실행하지 않았다. 남은280개는 보고서 ID 목록을 따른다. 아래595개 집계는 직전 체크포인트다.

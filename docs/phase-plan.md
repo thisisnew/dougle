@@ -1,5 +1,9 @@
 # Phase 완료 기준과 현재 상태
 
+## 실제 AI 및 연결·UI 후속 — 2026-10-27
+
+845개 추가 ID에 부분 검사, 이전100개 포함 **PARTIAL869/FAIL76/NOT_RUN55/PASS0**. 실제 AI 상한200회 승인,75회 예약으로50개 자동 검사45통과/5실패; 의미 리뷰와 계획/UI 포함 최종 인수는 별도다. Notion/OAuth/MySQL/readonly/UI/Slack·로그175개 중170통과/5실패. 긴 대화 검색과 요청 ID 로그 필터 실패를 추가했고 제품 수정은 아직이다. [최신 범위/미실행 목록](evaluations/acceptance-remaining-20261027.md)을 따른다. 설치0.1.27과 공개/피드는 유지한다.
+
 ## 동기화 상태·동시성 추가 — 2026-10-27 밤
 
 추가620개 ID 부분 검증, 이전100개 포함 **PARTIAL654/FAIL66/NOT_RUN280/PASS0**. 상태25개 중19통과/6실패: 큰 텍스트 취소 후 재시도 오류1, 검색 가능한 파일0개인데 PARTIAL5. [최신 보고서](evaluations/acceptance-remaining-20261027.md). 실제 SourceService/SQLite/분석기 경계 검사이며 UI 이동 차단·실제 재시작은 여전히 미검증이다. 제품/설치/피드 유지. 아래595개 집계는 이전 단계다.

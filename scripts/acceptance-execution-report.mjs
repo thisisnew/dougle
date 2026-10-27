@@ -41,9 +41,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   assert.equal(process.argv[2], '--write', 'Use --write after all probe runners finish')
   const root = fileURLToPath(new URL('../', import.meta.url))
   const json = relative => JSON.parse(readFileSync(new URL('../' + relative, import.meta.url), 'utf8'))
-  const batches = ['file', 'folder', 'web', 'search', 'library-workflow', 'git', 'web-boundary', 'folder-failure', 'sync-progress'].map(name => ({ name,
+  const batches = ['file', 'folder', 'web', 'search', 'library-workflow', 'git', 'web-boundary', 'folder-failure', 'sync-progress', 'notion', 'oauth', 'mysql', 'readonly', 'sync-entry', 'update-ui', 'operational'].map(name => ({ name,
     cases: json(`backend/target/${name}-acceptance-results.json`) }))
-  assert.deepEqual(batches.map(batch => batch.cases.length), [100, 50, 50, 150, 75, 100, 45, 25, 25])
+  assert.deepEqual(batches.map(batch => batch.cases.length), [100, 50, 50, 150, 75, 100, 45, 25, 25, 25, 25, 25, 25, 25, 25, 25])
+  const live = json('docs/evaluations/acceptance-live-ai-20261027.json')
+  assert.equal(live.cases.length, 50)
+  batches.push({ name: 'live-ai', cases: live.cases })
   const probes = batches.flatMap(batch => batch.cases.map(original => {
     const item = { ...original }
     if (item.expectedManifest) {
@@ -64,13 +67,22 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       ...['FileAcceptanceTest', 'FolderAcceptanceTest', 'WebAcceptanceTest', 'SearchAcceptanceTest', 'LibraryWorkflowAcceptanceTest', 'GitAcceptanceTest', 'FolderFailureAcceptanceTest', 'SyncProgressAcceptanceTest']
         .map(name => `backend/src/test/java/dev/knowledgeforge/${name}.java`),
       'backend/src/test/java/dev/knowledgeforge/sources/adapter/WebBoundaryAcceptanceTest.java',
+      ...['Notion', 'Oauth', 'Mysql', 'Readonly', 'Operational'].map(name =>
+        `backend/src/test/java/dev/knowledgeforge/plugins/adapter/${name}AcceptanceTest.java`),
+      'frontend/src/SyncEntryAcceptance.test.tsx', 'frontend/src/UpdateAcceptance.test.tsx',
+      'scripts/acceptance-live-ai.mjs', 'docs/evaluations/acceptance-live-ai-20261027.json',
       'docs/fixtures/search-acceptance.json', 'scripts/search-acceptance-fixtures.mjs',
     ].map(path => [path, createHash('sha256').update(readFileSync(new URL('../' + path, import.meta.url))).digest('hex')])),
     installedVersion: '0.1.27 unchanged; source tests, not installed-app acceptance',
     newCaseProbeCount: probes.length,
     newProbeSummary: summarize(cases.filter(item => probes.some(probe => probe.id === item.id))),
     summary,
+    actualAi: { maximumCalls: live.maximumCalls, callsReserved: live.callsReserved,
+      report: 'docs/evaluations/acceptance-live-ai-20261027.json', manualVerdict: 'NOT_REVIEWED' },
     harnessErrors: [
+      'Initial live AI startup omitted FORGE_DATA_DIR; two attempts failed before any AI dispatch. Fixed private absolute data directory; final batch completed with 75 reserved calls.',
+      'MySQL JSON oracle compared serialized emoji rather than decoded fields; corrected test oracle and reran all 25 against the owned server.',
+      'OAuth fixture incorrectly used AutoCloseable, then expected denial callback HTTP400 rather than HTTP200 with CANCELLED. Corrected harness; final 25 passed without weakening disconnected/token-exchange assertions.',
       'Initial search run: truncated generated JSON contained Warning; zero cases executed. Regenerated fixture artifact and reran.',
       'Initial file run: instance TempDir unavailable in BeforeAll; zero cases executed. Changed to static TempDir and reran.',
       'Existing AnswerPartialIntegrationTest/QuestionAttachmentIntegrationTest fixture workspace names exceeded 20 characters. Shortened test names without changing application validation.',
@@ -89,7 +101,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       'Web boundary: actual reader/collector with mocked HTTP client. Five production 25-second deadlines execute against cancellation-aware synthetic transport, not a real stalled socket. DNS-rebinding IDs T0491–T0495 remain unexecuted.',
       'Folder failures: owned chmod/sparse oversized/corrupt PDF/disappearing fixtures, actual collector/analyzer/lexical index. SourceService state, UI and persisted retry are not covered.',
       'Sync progress: real SourceService/SQLite/analyzer with test latches at analyzer entry; cancellation/retry, metadata mutation rejection, concurrent sync/poll and service reconstruction. No UI navigation/focus/hover or actual process restart. Inner splitting stage sequence not sampled.',
-      'No actual AI requests, external business writes, user credentials copy, app installation, public release or update-feed change.',
+      'Actual AI: 50 synthetic cases, 75 reserved dispatches, 45 automatic checks passed and 5 failed. These are not 45 fully accepted cases. Long conversation stops at the second generic follow-up; later requested turns never execute. Planning/UI are excluded; semantic review remains separate.',
+      'Notion/OAuth: actual adapters/session/vault/callback, provider and browser transport mocked. No real account authorization or recursive Notion collection claim.',
+      'MySQL: owned temporary MySQL 8.4 server with SELECT-only fixture account, real JDBC. No company DB, NL interpretation, approval UI or timezone conversion.',
+      'Readonly/operational: policy boundaries and Slack mocked-provider inbox, Datadog real HTTP adapter against loopback. Five request-ID filtering failures. No company service or actual AI operational decision.',
+      'Sync entry/update: real React components with mocked API/native IPC. Native updater smoke ran separately on synthetic packages; not a real application upgrade or native UI acceptance.',
+      'No external business writes, user credentials copy, app installation, public release or update-feed change. Dedicated existing AI profile used only by CLI; synthetic documents only.',
       'Intel host only. ARM/fresh Mac and approved company services are not available to these runners. They remain unexecuted, not passed.',
     ],
     batches: batches.map(batch => ({ name: batch.name, summary: summarize(batch.cases), count: batch.cases.length })),
