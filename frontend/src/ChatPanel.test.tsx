@@ -274,8 +274,8 @@ it('keeps the original turn identity when an automatic search capture resolves i
   expect(turns[0].querySelector('.question-bubble')).toHaveTextContent(bundle.payload.question)
   expect(turns[0].querySelector('button')).toBeNull()
   expect(screen.queryByRole('button', { name: '답변 받기' })).not.toBeInTheDocument()
-  expect(screen.getAllByRole('button', { name: '브라우저 화면 조사' })).toHaveLength(1)
-  expect(screen.getAllByRole('button', { name: '찾은 자료로 조회 범위 확인' })).toHaveLength(1)
+  expect(screen.queryByRole('button', { name: '브라우저 화면 조사' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '찾은 자료로 조회 범위 확인' })).not.toBeInTheDocument()
   expect(sendConversationPlan).toHaveBeenCalledTimes(1)
   expect(api.mock.calls.filter(([path]) => path.endsWith('/answer-jobs'))).toHaveLength(1)
   expect(captured.payload.chatContext.parentBundleId).toBe(bundle.id)
@@ -299,13 +299,14 @@ it('renders a search capture as materials rather than a duplicate user question 
   expect(view.container.querySelectorAll('.chat-thread')).toHaveLength(4)
   expect(screen.getAllByRole('heading', { name: bundle.payload.question })).toHaveLength(1)
   expect(screen.getAllByRole('heading', { name: followup.payload.question })).toHaveLength(1)
-  expect(screen.getAllByRole('button', { name: '브라우저 화면 조사' })).toHaveLength(1)
-  expect(await screen.findByRole('button', { name: '찾은 자료로 조회 범위 확인' })).toBeEnabled()
+  expect(screen.queryByRole('button', { name: '브라우저 화면 조사' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '찾은 자료로 조회 범위 확인' })).not.toBeInTheDocument()
   expect(sendConversationPlan).not.toHaveBeenCalled()
   expect(api.mock.calls.every(([, options]) => !options?.method)).toBe(true)
 })
 
 it('ready scope approval captures bounded evidence and answers in the same thread without using the draft or its attachments', async () => {
+  vi.mocked(readConversationPlan).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'PROPOSE_MYSQL_READ', toolStatus: 'PENDING_SCOPE', output: 'scope' })
   const scope = { jobId: 'plan', scopeId: 'scope', revision: 1, workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'MYSQL_READ', expiresAt: '2099-01-01T00:00:00Z', sessionOnly: true, executionAllowed: false, internalResolutionRequired: false, questions: [] }
   const read = { id: 'read', workspaceId: 'one', threadId: 'thread', parentBundleId: 'bundle', tool: 'MYSQL_READ', sessionOnly: true, scopeId: 'scope', scopeRevision: 1, digest: 'read-digest', queryPreview: 'synthetic scope', expiresAt: scope.expiresAt, maxRows: 10, maxBytes: 4096, timeoutSeconds: 10 }
   const next = { ...bundle, id: 'operational-bundle', digest: 'operational-digest', payload: { ...bundle.payload, items: [{ ...bundle.payload.items[0], kind: 'ATTACHMENT_TEXT' }] } }
@@ -324,7 +325,6 @@ it('ready scope approval captures bounded evidence and answers in the same threa
     throw new Error('Unexpected request: ' + path)
   })
   render(<ChatPanel {...props} selectedId="thread" />)
-  fireEvent.click(await screen.findByRole('button', { name: '자료 더 찾아보기' }))
   fireEvent.click(await screen.findByRole('button', { name: '조회 범위 확인' }))
   expect(api.mock.calls.some(([path]) => path.endsWith('/execute'))).toBe(false)
   await waitFor(() => expect(screen.getByRole('textbox')).toBeEnabled())
@@ -398,20 +398,23 @@ it('각 턴의 생략 표시는 해당 묶음에만 붙고 다른 대화로 전�
   expect(api.mock.calls.every(([, options]) => !options?.method || options.method === 'GET')).toBe(true)
 })
 
-it.each(['PROPOSE_MYSQL_READ'])('계획 %s 결과는 양식이나 자동 조회를 열지 않는다', async decision => {
+it.each(['PROPOSE_MYSQL_READ'] as const)('계획 %s 결과는 양식이나 자동 조회를 열지 않는다', async decision => {
+  vi.mocked(readConversationPlan).mockResolvedValueOnce({ ...planBinding, id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision })
   api.mockImplementation(async path => {
     if (path.endsWith('/chat-threads/thread')) return thread
     if (path.includes('/investigation-plans/jobs?')) return [{ id: 'plan', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision }]
     throw new Error('Unexpected request: ' + path)
   })
   render(<ChatPanel {...props} selectedId="thread" />)
-  fireEvent.click(await screen.findByRole('button', { name: '자료 더 찾아보기' }))
   expect(await screen.findByText('운영 조회 제안 · 실행하지 않음')).toBeVisible()
   for (const name of ['운영 자료 조회', '조회 양식 열기', 'DB 데이터 조회', '이 자료로 다시 답변']) expect(screen.queryByRole('button', { name })).not.toBeInTheDocument()
-  expect(api.mock.calls.map(([path]) => path)).toEqual(['/workspaces/one/chat-threads/thread', '/workspaces/one/investigation-plans/jobs?bundleId=bundle'])
+  expect(screen.queryByRole('button', { name: '접기' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '자료 더 찾아보기' })).not.toBeInTheDocument()
+  expect(api.mock.calls.map(([path]) => path)).toEqual(['/workspaces/one/chat-threads/thread'])
 })
 
-it('추가 검색 근거는 새 대화 턴으로 고정하고 별도 답변 승인으로 전송한다', async () => {
+it('복원한 추가 검색 근거는 새 대화 턴으로 고정하고 별도 답변 승인으로 전송한다', async () => {
+  vi.mocked(readConversationPlan).mockResolvedValueOnce({ ...planBinding, id: 'plan-job', workspaceId: 'one', bundleId: 'bundle', status: 'SUCCEEDED', decision: 'SEARCH', toolStatus: 'OK', query: 'Strategy', output: '추가 자료 발췌' })
   const captured = { ...bundle, id: 'captured', digest: 'captured-digest', payload: { ...bundle.payload, items: [{ ...bundle.payload.items[0], title: '추가 검색 자료' }] } }
   api.mockImplementation(async (path, options) => {
     if (path.endsWith('/chat-threads/thread')) return thread
@@ -426,8 +429,6 @@ it('추가 검색 근거는 새 대화 턴으로 고정하고 별도 답변 승�
     return { ...completed, id: 'new-answer', approvalId: 'new-approval', bundleId: 'captured', answer: '추가 자료로 답변 [R1]' }
   })
   render(<ChatPanel {...props} selectedId="thread" />)
-  fireEvent.click(await screen.findByRole('button', { name: '자료 더 찾아보기' }))
-  fireEvent.click(await screen.findByRole('button', { name: '검색 시작' }))
   fireEvent.click(await screen.findByRole('button', { name: '이 자료로 다시 답변' }))
   expect(await screen.findByText('추가 자료로 답변 [R1]')).toBeVisible()
   expect(screen.getByText('가상 답변 [R1]')).toBeVisible()
@@ -1071,7 +1072,8 @@ it('검색 결과가 없으면 짧은 안내만 표시한다', async () => {
   expect(screen.queryByRole('button', { name: '자료 확인' })).not.toBeInTheDocument()
   expect(screen.queryByText(/자료를 확인하거나 질문을 바꿔/)).not.toBeInTheDocument()
   expect(screen.queryByText(/답변의 근거가 될 자료가 없어요/)).not.toBeInTheDocument()
-  expect(screen.getByRole('button', { name: '자료 더 찾아보기' })).toBeEnabled()
+  expect(screen.queryByRole('button', { name: '자료 더 찾아보기' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '브라우저 화면 조사' })).not.toBeInTheDocument()
   expect(api.mock.calls.some(([path]) => path.includes('investigation-plans'))).toBe(false)
 })
 

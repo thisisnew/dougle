@@ -200,7 +200,7 @@ export default function InvestigationPanel({ workspaceId, bundleId, threadId, co
           {!active(job) && !continuationRoot && <Button variant="ghost" disabled={busy || reading || disabled || !connected} onClick={() => void prepare(true)}>새 검색 계획 확인</Button>}
         </>}
         {!busy && !preview && !job && <Button variant="outline" onClick={() => void prepare()}>다시 확인</Button>}
-        <Button variant="ghost" disabled={busy || reading} onClick={() => setOpen(false)}>접기</Button>
+        {!initialJob && <Button variant="ghost" disabled={busy || reading} onClick={() => setOpen(false)}>접기</Button>}
       </>}
   </section>
 }

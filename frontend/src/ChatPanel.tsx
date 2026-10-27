@@ -10,7 +10,6 @@ import AnswerJobsPanel from './AnswerJobsPanel'
 import { attachmentAccept, useQuestionAttachments } from './useQuestionAttachments'
 import Wordmark from './Wordmark'
 import InvestigationPanel from './InvestigationPanel'
-import BrowserInvestigationPanel from './BrowserInvestigationPanel'
 import type { ConversationCapture, ConversationScope } from './ConversationReadPanel'
 import { readConversationPlan, sendConversationPlan, type ConversationPlan, type PlanSubmission } from './sendConversationPlan'
 import { readPlanSubmission, savePlanSubmission, removePlanSubmission } from './planSubmissionStorage'
@@ -443,12 +442,10 @@ export default function ChatPanel({ workspaceId, selectedId, connection, onCreat
       {current && !busy && canAbandonPlan && <Button variant="outline" onClick={abandonPlan}>질문 수정하기</Button>}
       {current && !busy && pendingAnswer && canAbandonAnswer && !submission && !job && <Button variant="outline" onClick={() => void abandonAnswer()}>새 대화로 다시 질문</Button>}
       {!bundle.payload.items.length && <p>질문과 관련된 내용을 찾지 못했어요.</p>}
-      {current && !planPending && (plan || (job && !activeAnswerJob(job)) || (!job && !bundle.payload.items.length)) && <InvestigationPanel key={`${workspaceId}:${bundle.id}`}
+      {current && !planPending && plan && <InvestigationPanel key={`${workspaceId}:${bundle.id}`}
         workspaceId={workspaceId} bundleId={bundle.id} threadId={threadId.current ?? undefined} connection={connection} disabled={busy || !searchReady}
         continuationRoot={searchCaptureRoot(bundle)} initialJob={plan} onPlanChange={setPlan}
         onScope={setClarification} onAnswer={answerInvestigation} onCaptured={answerOperational} onBusyChange={setInvestigating} />}
-      {current && !busy && (!job || !activeAnswerJob(job)) && <BrowserInvestigationPanel key={`browser:${workspaceId}:${bundle.id}`}
-        workspaceId={workspaceId} bundleId={bundle.id} disabled={busy || investigating || activePlan || planPending} />}
 
     </div>})}
     {busy && sentQuestion && <div className="chat-thread"><h2 className="question-bubble">{sentQuestion}</h2><p role="status" className="chat-thinking">확인해보겠습니다<span aria-hidden="true">…</span></p></div>}
