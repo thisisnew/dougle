@@ -50,7 +50,7 @@ class AnswerPartialIntegrationTest {
 
     @BeforeEach
     void prepare() {
-        workspace = library.createWorkspace("synthetic stream " + UUID.randomUUID()).id();
+        workspace = library.createWorkspace("stream " + UUID.randomUUID().toString().substring(0, 12)).id();
         library.upload(workspace, null, "fixture.txt", "synthetic telescope".getBytes(java.nio.charset.StandardCharsets.UTF_8));
         search.refresh(); bundleId = bundles.create(workspace, "telescope", List.of(), false).id();
         var preview = previews.prepare(workspace, bundleId, "CLAUDE", "fixture");

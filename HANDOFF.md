@@ -1,5 +1,11 @@
 # Dougle — 이어서 작업하기
 
+## 남은900개 실행 작업 — 2026-10-27 저녁
+
+[추가 실행 보고서](docs/evaluations/acceptance-remaining-20261027.md), [ID별 ledger](docs/evaluations/acceptance-remaining-20261027.json). 새425개 ID에 부분 계층 실행기를 추가했다. **900개 완료가 아니다.** 기존100개 경계와 합쳐525개 ID에 관측이 있으며475개는 실행기/환경 준비부터 남는다. 기존 단위 통과를 나머지 ID에 대입하지 않는다. 파일/폴더/웹/실제 동봉 검색 엔진/SQLite 대화·자료 변경·Workspace 격리를 실행했으나 네이티브 UI·전체 E2E·실제 AI·회사 서비스·ARM 인수를 뜻하지 않는다.
+
+검색19/파일11/웹10개 실패를 재현했다. 생성자 주입 구어체 누락·무관 근거·100MiB32M자 상한·CSV/PDF 구절 누락·로그인/CAPTCHA READY 문제가 남는다. 테스트 oracle/예외 계층 오류는 보고서에서 분리한다. 전체Java1526:1481통과/40실패/5skip; UI791/Node171통과. 후속 파일/자료 workflow 재검사는 중복 합산하지 않는다. 제품 코드·설치본0.1.27·공개 피드는 변경하지 않았다. 실제 AI 최대40회 합성 자료 승인 요청만 했고 호출하지 않았다. 다음 범위는 보고서의 미실행475개이며 특히 GitHub100·폴더 부분 실패25가 아직 남는다.
+
 ## 첫100개 경계 실행 및 수정 — 2026-10-27
 
 [실행 보고서](docs/evaluations/acceptance-routing-20261027.md), [ID별 결과](docs/evaluations/acceptance-routing-20261027.json). T0001–T0100에 UI80/API20 경계 검사를 실행했다. 정규화 전 UI16/API4 실패를 재현해 query/fragment/대문자/443 루트 주소를 수정했고, 보강 검사에서 발견한 multiline paste 등록 시도4개도 차단했다. 최종 경계100통과지만 **전체 인수 PARTIAL100/NOT_RUN900/PASS0**이다. 실제 원격 본문/검색/설치본 E2E가 아니며 소스 수정은 미패키징·미설치다. 현재 앱0.1.27 유지.

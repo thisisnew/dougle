@@ -49,7 +49,7 @@ class QuestionAttachmentIntegrationTest {
     @BeforeEach
     void prepare() {
         jdbc.update("DELETE FROM workspace");
-        workspace = library.createWorkspace("synthetic attachments").id();
+        workspace = library.createWorkspace("test attachments").id();
     }
     byte[] text(String value) { return value.getBytes(StandardCharsets.UTF_8); }
     void fails(int status, Runnable action) {

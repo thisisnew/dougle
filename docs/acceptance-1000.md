@@ -2,7 +2,7 @@
 
 **아래 NOT_RUN은 실행 전 명세의 초기값이다. 현재 실행 결과는 별도 보고서에서 관리하며 자동 테스트 구현 완료를 뜻하지 않는다.**
 
-[현재 실행 결과](evaluations/acceptance-routing-20261027.md)
+[현재 실행 결과](evaluations/acceptance-remaining-20261027.md) · [첫100개 경계 검사](evaluations/acceptance-routing-20261027.md)
 
 40개 영역 × 영역별 구체 입력5종 × 적용 조작5종. 파라미터화된1000개이며 독립 설계1000종/실행1000회라고 주장하지 않는다.
 

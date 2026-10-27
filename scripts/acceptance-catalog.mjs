@@ -88,7 +88,7 @@ export function renderMarkdown(catalog) {
   const lines = [
     '# Dougle 인수 테스트 1,000개', '',
     '**아래 NOT_RUN은 실행 전 명세의 초기값이다. 현재 실행 결과는 별도 보고서에서 관리하며 자동 테스트 구현 완료를 뜻하지 않는다.**', '',
-    '[현재 실행 결과](evaluations/acceptance-routing-20261027.md)', '',
+    '[현재 실행 결과](evaluations/acceptance-remaining-20261027.md) · [첫100개 경계 검사](evaluations/acceptance-routing-20261027.md)', '',
     catalog.design, '',
     '## 실행 규칙', '',
     ...safetyRules.map(rule => '- ' + rule), '',
