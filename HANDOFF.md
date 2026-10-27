@@ -1,5 +1,9 @@
 # Dougle — 이어서 작업하기
 
+## 동기화 상태25개 추가 — 2026-10-27 밤
+
+`SyncProgressAcceptanceTest` 실행19통과/6실패. 추가620개 ID와 이전100개를 합쳐 **PARTIAL654/FAIL66/NOT_RUN280/PASS0**다. T0578은 큰 파일 취소 뒤 재시도가 손상 오류/PARTIAL로 남는 현상을 재현했다(Tika가 취소를 감싼 뒤 ERROR checkpoint로 저장되는 경로 조사 필요). T0591–T0595는 정상 문서0개인데 PARTIAL로 표시된다. 분석 진입 latch로 실제 SourceService/SQLite·중복 sync/poll·metadata 차단·취소·이전 성공 시각·서비스 재생성을 검사했으며 UI 탭/hover/실제 재시작/분할 단계 전체는 미검증이다. 로그 `/tmp/dougle-sync-progress-25.log`, 최신 [보고서](docs/evaluations/acceptance-remaining-20261027.md). Node 전체171통과와 ledger/catalog7통과 확인. 제품·설치본·외부 AI는 변경/실행하지 않았다. 남은280개는 보고서 ID 목록을 따른다. 아래595개 집계는 직전 체크포인트다.
+
 ## 후속 수집 경계170개 — 2026-10-27 밤
 
 Git100(85통과/10실패/5예외), 웹 HTTP 경계45(45통과), 폴더 부분 실패25(20통과/5예외)를 실제 실행했다. 추가595개 ID + 이전100개 경계 = **PARTIAL635/FAIL60/NOT_RUN305/PASS0**. [실행 보고서](docs/evaluations/acceptance-remaining-20261027.md)의 계층/대역/미검증 구분을 유지한다. Git LFS·서브모듈·잘못된 UTF-8와 폴더 파일 삭제 race20개 실패를 추가 재현했으며 제품 수정은 아직 없다. 공개 GitHub2개는 고정 커밋 읽기만 수행했고 기업 시스템 쓰기/실제 AI/설치/피드는 변경하지 않았다. 웹25초 취소5회는 실제 타이머+대역 전송이며 실제 TLS/DNS/느린 소켓 검사는 아니다. 다음305개는 DNS5·Notion/OAuth50·동기화50·AI/대화50·readonly/운영/브라우저/설치150이며, 부분 검사 통과도 전체 E2E 완료가 아니다. 아래425개/475개 수치는 이전 체크포인트다.

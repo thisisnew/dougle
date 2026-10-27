@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-27T12:10:50.364Z",
-  "baseCommit": "68c47dd9a47a2ca6d5c944baa499ae595c02b112",
+  "generatedAt": "2026-10-27T12:14:10.299Z",
+  "baseCommit": "008f76acda1cdfd10b7a9a120730067f3a7b1bbb",
   "productTree": "b9e7922c6d5efd654934551fff92133051c85161",
   "runnerHashes": {
     "backend/src/test/java/dev/knowledgeforge/FileAcceptanceTest.java": "533b23771646d041b1613f075553f14e075e210591eb93bc3ffa82c540bb135b",
@@ -11,25 +11,26 @@
     "backend/src/test/java/dev/knowledgeforge/LibraryWorkflowAcceptanceTest.java": "92f8107add23d04198b8c03926e23306d3184b2afcc62f49cb66644a7dba4571",
     "backend/src/test/java/dev/knowledgeforge/GitAcceptanceTest.java": "db6ee9e87636ab31be799f5032c83e157c41803e9d3bee03e0927b42ed7741d3",
     "backend/src/test/java/dev/knowledgeforge/FolderFailureAcceptanceTest.java": "6ec8d715b0a1619c77c8d7409b13dbe8a61559fe932dedd0f3b960eeaff2d07e",
+    "backend/src/test/java/dev/knowledgeforge/SyncProgressAcceptanceTest.java": "1ed72a6d14fd8b1149930a66f789e92b372ec55c2456838e2961b79a3b455cc3",
     "backend/src/test/java/dev/knowledgeforge/sources/adapter/WebBoundaryAcceptanceTest.java": "6c0551dbcb60fa857022f841b30eae5084e353ebab047d8c42d94da457e286b0",
     "docs/fixtures/search-acceptance.json": "b352ed24802a514e754de46588a21fd8fc81466e23c53919e2936d895526a2e5",
     "scripts/search-acceptance-fixtures.mjs": "255dde7b7fc4bbf62ae73671c5218094b2d8f69debfa75b17a0fbdc641831700"
   },
   "installedVersion": "0.1.27 unchanged; source tests, not installed-app acceptance",
-  "newCaseProbeCount": 595,
+  "newCaseProbeCount": 620,
   "newProbeSummary": {
     "PASS": 0,
-    "PARTIAL": 535,
-    "FAIL": 60,
+    "PARTIAL": 554,
+    "FAIL": 66,
     "BLOCKED": 0,
     "NOT_RUN": 0
   },
   "summary": {
     "PASS": 0,
-    "PARTIAL": 635,
-    "FAIL": 60,
+    "PARTIAL": 654,
+    "FAIL": 66,
     "BLOCKED": 0,
-    "NOT_RUN": 305
+    "NOT_RUN": 280
   },
   "harnessErrors": [
     "Initial search run: truncated generated JSON contained Warning; zero cases executed. Regenerated fixture artifact and reran.",
@@ -49,6 +50,7 @@
     "Git: two public repositories fetched at pinned revisions; actual collector/blob reads with mocked API and local clone transport. Not production remote registration or semantic search. LFS, submodule and encoding failures remain.",
     "Web boundary: actual reader/collector with mocked HTTP client. Five production 25-second deadlines execute against cancellation-aware synthetic transport, not a real stalled socket. DNS-rebinding IDs T0491–T0495 remain unexecuted.",
     "Folder failures: owned chmod/sparse oversized/corrupt PDF/disappearing fixtures, actual collector/analyzer/lexical index. SourceService state, UI and persisted retry are not covered.",
+    "Sync progress: real SourceService/SQLite/analyzer with test latches at analyzer entry; cancellation/retry, metadata mutation rejection, concurrent sync/poll and service reconstruction. No UI navigation/focus/hover or actual process restart. Inner splitting stage sequence not sampled.",
     "No actual AI requests, external business writes, user credentials copy, app installation, public release or update-feed change.",
     "Intel host only. ARM/fresh Mac and approved company services are not available to these runners. They remain unexecuted, not passed."
   ],
@@ -136,6 +138,17 @@
         "PASS": 0,
         "PARTIAL": 20,
         "FAIL": 5,
+        "BLOCKED": 0,
+        "NOT_RUN": 0
+      },
+      "count": 25
+    },
+    {
+      "name": "sync-progress",
+      "summary": {
+        "PASS": 0,
+        "PARTIAL": 19,
+        "FAIL": 6,
         "BLOCKED": 0,
         "NOT_RUN": 0
       },
@@ -9990,228 +10003,854 @@
     },
     {
       "id": "T0576",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:12:57.041605Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:12:59.702157Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 6810,
+      "suite": "Y02"
     },
     {
       "id": "T0577",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:03.858352Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:04.951957Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 4049,
+      "suite": "Y02"
     },
     {
       "id": "T0578",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:07.909672Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "cancelledStatus": "ERROR",
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. healthy0.txt: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:08.254874Z",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "org.opentest4j.AssertionFailedError: \nexpected: \"READY\"\n but was: \"PARTIAL\"",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 357,
+      "suite": "Y02"
     },
     {
       "id": "T0579",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:08.273567Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:09.147740Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 2988,
+      "suite": "Y02"
     },
     {
       "id": "T0580",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:11.264174Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:12.157413Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 2981,
+      "suite": "Y02"
     },
     {
       "id": "T0581",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:14.247100Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:14.586562Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy1.txt",
+          "completed": 1,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy2.txt",
+          "completed": 2,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy3.txt",
+          "completed": 3,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy4.txt",
+          "completed": 4,
+          "total": 5,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 428,
+      "suite": "Y02"
     },
     {
       "id": "T0582",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:14.677314Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:14.944214Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy1.txt",
+          "completed": 1,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy2.txt",
+          "completed": 2,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy3.txt",
+          "completed": 3,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy4.txt",
+          "completed": 4,
+          "total": 5,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 352,
+      "suite": "Y02"
     },
     {
       "id": "T0583",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:15.031292Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "cancelledStatus": "ERROR",
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:15.378402Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 5,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 442,
+      "suite": "Y02"
     },
     {
       "id": "T0584",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:15.476666Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:15.781133Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy1.txt",
+          "completed": 1,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy2.txt",
+          "completed": 2,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy3.txt",
+          "completed": 3,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy4.txt",
+          "completed": 4,
+          "total": 5,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 397,
+      "suite": "Y02"
     },
     {
       "id": "T0585",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:15.876913Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:16.132508Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy1.txt",
+          "completed": 1,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy2.txt",
+          "completed": 2,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy3.txt",
+          "completed": 3,
+          "total": 5,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy4.txt",
+          "completed": 4,
+          "total": 5,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 342,
+      "suite": "Y02"
     },
     {
       "id": "T0586",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:16.220753Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:16.399667Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 2,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 1,
+          "total": 2,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 316,
+      "suite": "Y02"
     },
     {
       "id": "T0587",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:16.538663Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:16.710924Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 2,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 1,
+          "total": 2,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 258,
+      "suite": "Y02"
     },
     {
       "id": "T0588",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:16.799483Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "cancelledStatus": "ERROR",
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:16.973318Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 2,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 254,
+      "suite": "Y02"
     },
     {
       "id": "T0589",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:17.055120Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:17.192467Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 2,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 1,
+          "total": 2,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 322,
+      "suite": "Y02"
     },
     {
       "id": "T0590",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:17.379416Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:17.535707Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 2,
+          "cancellable": true
+        },
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 1,
+          "total": 2,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 274,
+      "suite": "Y02"
     },
     {
       "id": "T0591",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:17.654990Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:17.762631Z",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "org.opentest4j.AssertionFailedError: [Zero searchable files must not be represented as partial success] \nexpected: \"ERROR\"\n but was: \"PARTIAL\"",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 109,
+      "suite": "Y02"
     },
     {
       "id": "T0592",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:17.768344Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:17.894672Z",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "org.opentest4j.AssertionFailedError: [Zero searchable files must not be represented as partial success] \nexpected: \"ERROR\"\n but was: \"PARTIAL\"",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 127,
+      "suite": "Y02"
     },
     {
       "id": "T0593",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:17.897842Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "cancelledStatus": "ERROR",
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:17.992501Z",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "org.opentest4j.AssertionFailedError: [Zero searchable files must not be represented as partial success] \nexpected: \"ERROR\"\n but was: \"PARTIAL\"",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 96,
+      "suite": "Y02"
     },
     {
       "id": "T0594",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:17.996038Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:18.115339Z",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "org.opentest4j.AssertionFailedError: [Zero searchable files must not be represented as partial success] \nexpected: \"ERROR\"\n but was: \"PARTIAL\"",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 121,
+      "suite": "Y02"
     },
     {
       "id": "T0595",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:18.119542Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "PARTIAL",
+      "sourceError": "1개 파일 확인이 필요합니다. broken.pdf: 파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.",
+      "syncedAt": "2026-10-27T12:13:18.224572Z",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "org.opentest4j.AssertionFailedError: [Zero searchable files must not be represented as partial success] \nexpected: \"ERROR\"\n but was: \"PARTIAL\"",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "broken.pdf",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 106,
+      "suite": "Y02"
     },
     {
       "id": "T0596",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:18.227392Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "ERROR",
+      "sourceError": "수집에 실패했습니다. 위치·접근 권한·네트워크·크기 제한을 확인하세요. (IOException)",
+      "syncedAt": "2026-10-27T12:13:18.353185Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 231,
+      "suite": "Y02"
     },
     {
       "id": "T0597",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:18.460118Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "ERROR",
+      "sourceError": "수집에 실패했습니다. 위치·접근 권한·네트워크·크기 제한을 확인하세요. (IOException)",
+      "syncedAt": "2026-10-27T12:13:18.569284Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 195,
+      "suite": "Y02"
     },
     {
       "id": "T0598",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:18.656501Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "cancelledStatus": "ERROR",
+      "sourceStatus": "READY",
+      "sourceError": null,
+      "syncedAt": "2026-10-27T12:13:19.009314Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 448,
+      "suite": "Y02"
     },
     {
       "id": "T0599",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:19.105985Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "ERROR",
+      "sourceError": "수집에 실패했습니다. 위치·접근 권한·네트워크·크기 제한을 확인하세요. (IOException)",
+      "syncedAt": "2026-10-27T12:13:19.262639Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 322,
+      "suite": "Y02"
     },
     {
       "id": "T0600",
-      "suite": "Y02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:13:19.429298Z",
+      "scope": "REAL_SOURCE_SERVICE_SQLITE_COLLECTOR_ANALYZER_WITH_BOUNDED_ANALYZER_LATCH",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Native UI navigation locks, hover/focus, visible stage order and ETA",
+        "Process shutdown/restart; service reconstruction only",
+        "Large-file inner splitting progress not sampled; analyzer boundary only",
+        "No actual AI or external business connections"
+      ],
+      "sourceStatus": "ERROR",
+      "sourceError": "수집에 실패했습니다. 위치·접근 권한·네트워크·크기 제한을 확인하세요. (IOException)",
+      "syncedAt": "2026-10-27T12:13:19.552810Z",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "analysisProgress": [
+        {
+          "stage": "EXTRACTING",
+          "file": "healthy0.txt",
+          "completed": 0,
+          "total": 1,
+          "cancellable": true
+        }
+      ],
+      "elapsedMillis": 278,
+      "suite": "Y02"
     },
     {
       "id": "T0601",

@@ -41,9 +41,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   assert.equal(process.argv[2], '--write', 'Use --write after all probe runners finish')
   const root = fileURLToPath(new URL('../', import.meta.url))
   const json = relative => JSON.parse(readFileSync(new URL('../' + relative, import.meta.url), 'utf8'))
-  const batches = ['file', 'folder', 'web', 'search', 'library-workflow', 'git', 'web-boundary', 'folder-failure'].map(name => ({ name,
+  const batches = ['file', 'folder', 'web', 'search', 'library-workflow', 'git', 'web-boundary', 'folder-failure', 'sync-progress'].map(name => ({ name,
     cases: json(`backend/target/${name}-acceptance-results.json`) }))
-  assert.deepEqual(batches.map(batch => batch.cases.length), [100, 50, 50, 150, 75, 100, 45, 25])
+  assert.deepEqual(batches.map(batch => batch.cases.length), [100, 50, 50, 150, 75, 100, 45, 25, 25])
   const probes = batches.flatMap(batch => batch.cases.map(original => {
     const item = { ...original }
     if (item.expectedManifest) {
@@ -61,7 +61,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     baseCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
     productTree: execFileSync('git', ['rev-parse', 'HEAD:backend/src/main'], { cwd: root, encoding: 'utf8' }).trim(),
     runnerHashes: Object.fromEntries([
-      ...['FileAcceptanceTest', 'FolderAcceptanceTest', 'WebAcceptanceTest', 'SearchAcceptanceTest', 'LibraryWorkflowAcceptanceTest', 'GitAcceptanceTest', 'FolderFailureAcceptanceTest']
+      ...['FileAcceptanceTest', 'FolderAcceptanceTest', 'WebAcceptanceTest', 'SearchAcceptanceTest', 'LibraryWorkflowAcceptanceTest', 'GitAcceptanceTest', 'FolderFailureAcceptanceTest', 'SyncProgressAcceptanceTest']
         .map(name => `backend/src/test/java/dev/knowledgeforge/${name}.java`),
       'backend/src/test/java/dev/knowledgeforge/sources/adapter/WebBoundaryAcceptanceTest.java',
       'docs/fixtures/search-acceptance.json', 'scripts/search-acceptance-fixtures.mjs',
@@ -88,6 +88,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       'Git: two public repositories fetched at pinned revisions; actual collector/blob reads with mocked API and local clone transport. Not production remote registration or semantic search. LFS, submodule and encoding failures remain.',
       'Web boundary: actual reader/collector with mocked HTTP client. Five production 25-second deadlines execute against cancellation-aware synthetic transport, not a real stalled socket. DNS-rebinding IDs T0491–T0495 remain unexecuted.',
       'Folder failures: owned chmod/sparse oversized/corrupt PDF/disappearing fixtures, actual collector/analyzer/lexical index. SourceService state, UI and persisted retry are not covered.',
+      'Sync progress: real SourceService/SQLite/analyzer with test latches at analyzer entry; cancellation/retry, metadata mutation rejection, concurrent sync/poll and service reconstruction. No UI navigation/focus/hover or actual process restart. Inner splitting stage sequence not sampled.',
       'No actual AI requests, external business writes, user credentials copy, app installation, public release or update-feed change.',
       'Intel host only. ARM/fresh Mac and approved company services are not available to these runners. They remain unexecuted, not passed.',
     ],
