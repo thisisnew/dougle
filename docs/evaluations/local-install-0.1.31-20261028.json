@@ -1,0 +1,42 @@
+{
+  "version": "0.1.31",
+  "verifiedAt": "2026-10-27T21:55:10.277Z",
+  "backup": "/Users/thisisnew/Library/Application Support/Dougle Local Backups/pre-0.1.31-final-20261028-065431",
+  "previous030Backup": "/Users/thisisnew/Library/Application Support/Dougle Local Backups/pre-0.1.31-20261028-064240",
+  "jarSha256": "68d34fd79b961fd7cf5d2a61ccdc547dd5b4723d40762d49a2af99145f74ca14",
+  "nativePid": "47114",
+  "javaPid": "47185",
+  "port": "58187",
+  "schemaVersion": 30,
+  "rootHttpStatus": 200,
+  "unauthenticatedApiStatus": 403,
+  "codesignVerified": true,
+  "frontendMatchesDist": true,
+  "credentialsCopied": false,
+  "businessRowsRead": false,
+  "newAiCalls": 0,
+  "publicFeedChanged": false,
+  "notarized": false,
+  "architecture": "x86_64",
+  "scope": "Remove manual chat investigation entry buttons; keep existing plan execution and approvals; no search-speed implementation",
+  "validation": {
+    "chatPanel": 106,
+    "uiDefault": 630,
+    "uiOptIn": 130,
+    "node": {
+      "total": 172,
+      "passed": 171,
+      "failed": 1,
+      "reason": "Protocol-counter synthetic child watchdog timeout, repeated on serial retry; unrelated code and timeout unchanged"
+    },
+    "java": "No backend source changes; packaged with skipTests; previous 0.1.30 regression is not a new run"
+  },
+  "screenshot": "chat-actions-removed-20261028.png",
+  "screenshotScope": "Built UI with synthetic API; no live AI or user data",
+  "draftRelease": "v0.1.31-preview.1",
+  "limitations": [
+    "ARM runtime and new Mac acceptance not performed",
+    "Apple notarization excluded",
+    "Search performance measurement/optimization remains separate"
+  ]
+}

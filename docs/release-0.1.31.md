@@ -8,4 +8,4 @@ Intel 및 Apple Silicon용 DMG, 서명된 업데이트 파일과 체크섬을 �
 
 이전 버전에서 본문이 잘린 자료는 다시 동기화하거나 재분석/재업로드해야 합니다. 전체1,000개 인수 완료나 검색 속도 개선을 의미하지 않습니다.
 
-[검증 기록](evaluations/chat-actions-20261028.md).
+[검증 기록](https://github.com/thisisnew/dougle/blob/main/docs/evaluations/chat-actions-20261028.md).
