@@ -271,6 +271,21 @@ it.each([
   expect(screen.getByRole('button', { name: expectedKind === 'GITHUB' ? 'GitHub' : '웹 링크' })).toHaveAttribute('aria-pressed', 'true')
 })
 
+it('여러 줄 주소 붙여넣기는 이전 주소도 비우고 제출 전에 차단한다', async () => {
+  api.mockResolvedValue([])
+  const user = userEvent.setup()
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  await user.click(screen.getByRole('button', { name: '자료 추가' }))
+  await user.click(screen.getByRole('button', { name: '웹 링크' }))
+  const address = screen.getByLabelText('웹 링크 주소')
+  await user.type(address, 'https://example.org/previous')
+  await user.paste('https://github.com/example/repo\n--upload-pack=evil')
+  expect(address).toHaveValue('')
+  expect(screen.getByRole('alert')).toHaveTextContent('주소는 한 줄로 입력해 주세요.')
+  expect(screen.getByRole('button', { name: '추가' })).toBeDisabled()
+  expect(api.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(0)
+})
+
 it('등록 날짜를 표시하고 과거 자료의 날짜는 추측하지 않는다', async () => {
   api.mockResolvedValue([source, { ...source, id: 'legacy', name: '이전 자료', createdAt: null }])
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)

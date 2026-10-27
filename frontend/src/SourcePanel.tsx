@@ -6,7 +6,7 @@ import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
 import { hasFolderPicker, selectFolder } from './folderPicker'
 import { sourceName } from './sourceName'
-import { sourceKindForLocation } from './sourceKind'
+import { sourceAddress, sourceKindForLocation } from './sourceKind'
 import DeleteConfirmation from './DeleteConfirmation'
 import MaterialWarning from './MaterialWarning'
 import SourceSyncProgress from './SourceSyncProgress'
@@ -157,7 +157,9 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   }
 
   async function createSource(sourceKind: string, sourceLocation: string) {
-    sourceKind = sourceKindForLocation(sourceKind, sourceLocation)
+    const resolved = sourceAddress(sourceKind, sourceLocation)
+    sourceKind = resolved.kind
+    sourceLocation = resolved.location
     let name: string
     try { name = sourceName(sourceKind, sourceLocation) }
     catch { setError('올바른 주소를 입력해 주세요.'); return }
@@ -301,7 +303,13 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
           <ArrowRight className="source-target-arrow" aria-hidden="true" />
         </Button> : <div className="source-target-control source-address-target">
           {kind === 'GITHUB' ? <Github size={18} aria-hidden="true" /> : <Link size={18} aria-hidden="true" />}
-          <input type="url" required maxLength={2048} aria-label={kind === 'GITHUB' ? 'GitHub 주소' : '웹 링크 주소'} disabled={!!busy || uploading} value={location} onChange={event => setLocation(event.target.value)} placeholder={kind === 'GITHUB' ? 'GitHub 주소 입력' : '웹 링크 입력'} />
+          <input type="url" required maxLength={2048} aria-label={kind === 'GITHUB' ? 'GitHub 주소' : '웹 링크 주소'} disabled={!!busy || uploading} value={location} onChange={event => setLocation(event.target.value)} onPaste={event => {
+            if (/[\u0000-\u001f\u007f]/.test(event.clipboardData.getData('text').trim())) {
+              event.preventDefault()
+              setLocation('')
+              setError('주소는 한 줄로 입력해 주세요.')
+            }
+          }} placeholder={kind === 'GITHUB' ? 'GitHub 주소 입력' : '웹 링크 입력'} />
           <Button type="submit" variant="ghost" size="icon" aria-label="추가" title="추가" aria-busy={busy === 'create'} disabled={!!busy || uploading || !location.trim()}>{busy === 'create' ? <span className="upload-spinner" aria-hidden="true" /> : <ArrowRight aria-hidden="true" />}</Button>
         </div>}
       </div>
