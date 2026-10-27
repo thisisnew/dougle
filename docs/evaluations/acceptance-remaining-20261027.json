@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-27T11:48:25.660Z",
-  "baseCommit": "55276bca6846d453c5bebc1ee0fd3d5a4479b2e0",
+  "generatedAt": "2026-10-27T12:10:50.364Z",
+  "baseCommit": "68c47dd9a47a2ca6d5c944baa499ae595c02b112",
   "productTree": "b9e7922c6d5efd654934551fff92133051c85161",
   "runnerHashes": {
     "backend/src/test/java/dev/knowledgeforge/FileAcceptanceTest.java": "533b23771646d041b1613f075553f14e075e210591eb93bc3ffa82c540bb135b",
@@ -9,24 +9,27 @@
     "backend/src/test/java/dev/knowledgeforge/WebAcceptanceTest.java": "b2bd633b1d3f7ea0a568790ea7cbc743edffe29f4e61f3220e269bf9047eecca",
     "backend/src/test/java/dev/knowledgeforge/SearchAcceptanceTest.java": "e31b6a5561e57563066c4fd6dbb75f8e11503e2d43f7f99365f8c2cd08b71c24",
     "backend/src/test/java/dev/knowledgeforge/LibraryWorkflowAcceptanceTest.java": "92f8107add23d04198b8c03926e23306d3184b2afcc62f49cb66644a7dba4571",
+    "backend/src/test/java/dev/knowledgeforge/GitAcceptanceTest.java": "db6ee9e87636ab31be799f5032c83e157c41803e9d3bee03e0927b42ed7741d3",
+    "backend/src/test/java/dev/knowledgeforge/FolderFailureAcceptanceTest.java": "6ec8d715b0a1619c77c8d7409b13dbe8a61559fe932dedd0f3b960eeaff2d07e",
+    "backend/src/test/java/dev/knowledgeforge/sources/adapter/WebBoundaryAcceptanceTest.java": "6c0551dbcb60fa857022f841b30eae5084e353ebab047d8c42d94da457e286b0",
     "docs/fixtures/search-acceptance.json": "b352ed24802a514e754de46588a21fd8fc81466e23c53919e2936d895526a2e5",
     "scripts/search-acceptance-fixtures.mjs": "255dde7b7fc4bbf62ae73671c5218094b2d8f69debfa75b17a0fbdc641831700"
   },
   "installedVersion": "0.1.27 unchanged; source tests, not installed-app acceptance",
-  "newCaseProbeCount": 425,
+  "newCaseProbeCount": 595,
   "newProbeSummary": {
     "PASS": 0,
-    "PARTIAL": 385,
-    "FAIL": 40,
+    "PARTIAL": 535,
+    "FAIL": 60,
     "BLOCKED": 0,
     "NOT_RUN": 0
   },
   "summary": {
     "PASS": 0,
-    "PARTIAL": 485,
-    "FAIL": 40,
+    "PARTIAL": 635,
+    "FAIL": 60,
     "BLOCKED": 0,
-    "NOT_RUN": 475
+    "NOT_RUN": 305
   },
   "harnessErrors": [
     "Initial search run: truncated generated JSON contained Warning; zero cases executed. Regenerated fixture artifact and reran.",
@@ -43,6 +46,9 @@
     "Web: mocked HTTP, real URL collector/analyzer and lexical search. No real TLS/redirect/DNS/browser/semantic answer validation.",
     "Search: actual bundled model with memoized deterministic embeddings/relevance. Synthetic corpus directly indexed. Fifty garden distractors are easier/different than specified near-keyword distractors. Four ingestion routes, immutable histories, answer abstention and full evidence assembly remain unverified.",
     "Library workflow: real Spring/SQLite/lexical search, direct services rather than UI. No process restart, delayed HTTP response race or real AI. Stored answer jobs are synthetic fixtures.",
+    "Git: two public repositories fetched at pinned revisions; actual collector/blob reads with mocked API and local clone transport. Not production remote registration or semantic search. LFS, submodule and encoding failures remain.",
+    "Web boundary: actual reader/collector with mocked HTTP client. Five production 25-second deadlines execute against cancellation-aware synthetic transport, not a real stalled socket. DNS-rebinding IDs T0491–T0495 remain unexecuted.",
+    "Folder failures: owned chmod/sparse oversized/corrupt PDF/disappearing fixtures, actual collector/analyzer/lexical index. SourceService state, UI and persisted retry are not covered.",
     "No actual AI requests, external business writes, user credentials copy, app installation, public release or update-feed change.",
     "Intel host only. ARM/fresh Mac and approved company services are not available to these runners. They remain unexecuted, not passed."
   ],
@@ -101,6 +107,39 @@
         "NOT_RUN": 0
       },
       "count": 75
+    },
+    {
+      "name": "git",
+      "summary": {
+        "PASS": 0,
+        "PARTIAL": 85,
+        "FAIL": 15,
+        "BLOCKED": 0,
+        "NOT_RUN": 0
+      },
+      "count": 100
+    },
+    {
+      "name": "web-boundary",
+      "summary": {
+        "PASS": 0,
+        "PARTIAL": 45,
+        "FAIL": 0,
+        "BLOCKED": 0,
+        "NOT_RUN": 0
+      },
+      "count": 45
+    },
+    {
+      "name": "folder-failure",
+      "summary": {
+        "PASS": 0,
+        "PARTIAL": 20,
+        "FAIL": 5,
+        "BLOCKED": 0,
+        "NOT_RUN": 0
+      },
+      "count": 25
     }
   ],
   "cases": [
@@ -4546,1128 +4585,2690 @@
     },
     {
       "id": "T0276",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:21.391693Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 2774,
+      "suite": "D03"
     },
     {
       "id": "T0277",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:24.176375Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "baselineRevision": "b46a440254102d1549d32dbb26fabe0d5e314d2663ac9003f010900e05ee3daf",
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 521,
+      "suite": "D03"
     },
     {
       "id": "T0278",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:24.699726Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 1473,
+      "suite": "D03"
     },
     {
       "id": "T0279",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:26.174382Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 459,
+      "suite": "D03"
     },
     {
       "id": "T0280",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:26.636245Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 490,
+      "suite": "D03"
     },
     {
       "id": "T0281",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:27.128473Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "256 MiB가 넘는 파일은 나눠 등록하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 380,
+      "suite": "D03"
     },
     {
       "id": "T0282",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:27.511698Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "baselineRevision": "b46a440254102d1549d32dbb26fabe0d5e314d2663ac9003f010900e05ee3daf",
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "256 MiB가 넘는 파일은 나눠 등록하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 543,
+      "suite": "D03"
     },
     {
       "id": "T0283",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:28.057168Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "256 MiB가 넘는 파일은 나눠 등록하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 1401,
+      "suite": "D03"
     },
     {
       "id": "T0284",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:29.460551Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "256 MiB가 넘는 파일은 나눠 등록하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 410,
+      "suite": "D03"
     },
     {
       "id": "T0285",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:29.872912Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 9,
+      "collectionFailures": {
+        "unavailable.txt": "256 MiB가 넘는 파일은 나눠 등록하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 484,
+      "suite": "D03"
     },
     {
       "id": "T0286",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:30.358620Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 1,
+      "collectionFailures": {},
+      "analysisFailures": 1,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 279,
+      "suite": "D03"
     },
     {
       "id": "T0287",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:30.639608Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "baselineRevision": "306e1f29f89aab0b41e4785b89c4591e8d1b833e57c95dbbee0d04e8c53bb9a9",
+      "readyFiles": 1,
+      "collectionFailures": {},
+      "analysisFailures": 1,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 216,
+      "suite": "D03"
     },
     {
       "id": "T0288",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:30.857650Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 1,
+      "collectionFailures": {},
+      "analysisFailures": 1,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 650,
+      "suite": "D03"
     },
     {
       "id": "T0289",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:31.509503Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 1,
+      "collectionFailures": {},
+      "analysisFailures": 1,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 221,
+      "suite": "D03"
     },
     {
       "id": "T0290",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:31.732159Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 1,
+      "collectionFailures": {},
+      "analysisFailures": 1,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 209,
+      "suite": "D03"
     },
     {
       "id": "T0291",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:31.943256Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "java.nio.file.NoSuchFileException: /private/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/junit-15511470333100642834/T0291/unavailable.txt",
+      "elapsedMillis": 12,
+      "suite": "D03"
     },
     {
       "id": "T0292",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:31.962554Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "baselineRevision": "b46a440254102d1549d32dbb26fabe0d5e314d2663ac9003f010900e05ee3daf",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "java.nio.file.NoSuchFileException: /private/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/junit-15511470333100642834/T0292/unavailable.txt",
+      "elapsedMillis": 15,
+      "suite": "D03"
     },
     {
       "id": "T0293",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:31.979574Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "java.nio.file.NoSuchFileException: /private/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/junit-15511470333100642834/T0293/unavailable.txt",
+      "elapsedMillis": 9,
+      "suite": "D03"
     },
     {
       "id": "T0294",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:31.991616Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "java.nio.file.NoSuchFileException: /private/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/junit-15511470333100642834/T0294/unavailable.txt",
+      "elapsedMillis": 9,
+      "suite": "D03"
     },
     {
       "id": "T0295",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:32.004567Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "java.nio.file.NoSuchFileException: /private/var/folders/2r/c1wp_v_j5zd0zkhlcr4h09r00000gn/T/junit-15511470333100642834/T0295/unavailable.txt",
+      "elapsedMillis": 10,
+      "suite": "D03"
     },
     {
       "id": "T0296",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:32.018067Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 0,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 64,
+      "suite": "D03"
     },
     {
       "id": "T0297",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:32.083993Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "baselineRevision": "805baff9082d6f6b6bae811e676d6770e49c14a4263ee30299865c04bf486d84",
+      "readyFiles": 0,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 68,
+      "suite": "D03"
     },
     {
       "id": "T0298",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:32.153962Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 0,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 192,
+      "suite": "D03"
     },
     {
       "id": "T0299",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:32.348234Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 0,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 82,
+      "suite": "D03"
     },
     {
       "id": "T0300",
-      "suite": "D03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:09:32.431427Z",
+      "scope": "REAL_FOLDER_COLLECTOR_ANALYZER_LEXICAL_INDEX_OWNED_FAILURE_FIXTURES",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "SourceService persistence and UI error/hover",
+        "Concurrent clicks, app restart and actual AI answers",
+        "Recovery is repaired fixture collection, not persisted source retry"
+      ],
+      "readyFiles": 0,
+      "collectionFailures": {
+        "unavailable.txt": "파일 읽기 실패 · 접근 권한을 확인하고 다시 동기화하세요."
+      },
+      "analysisFailures": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "elapsedMillis": 80,
+      "suite": "D03"
     },
     {
       "id": "T0301",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:15.523973Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fd98bd00d958e23f8b3f05c379b2747da92e8d68",
+      "actualCount": 78,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 3389,
+      "manifestHash": "6478fe14a9aa256e4090963ba2ff3cb0e582f9365af48173cb2a44c6a041c9ef",
+      "expectedCount": 78,
+      "suite": "G01"
     },
     {
       "id": "T0302",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:18.923836Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fd98bd00d958e23f8b3f05c379b2747da92e8d68",
+      "actualCount": 78,
+      "analyzedJavaFiles": 78,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 3545,
+      "manifestHash": "6478fe14a9aa256e4090963ba2ff3cb0e582f9365af48173cb2a44c6a041c9ef",
+      "expectedCount": 78,
+      "suite": "G01"
     },
     {
       "id": "T0303",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:22.471201Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fd98bd00d958e23f8b3f05c379b2747da92e8d68",
+      "actualCount": 78,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 2802,
+      "manifestHash": "6478fe14a9aa256e4090963ba2ff3cb0e582f9365af48173cb2a44c6a041c9ef",
+      "expectedCount": 78,
+      "suite": "G01"
     },
     {
       "id": "T0304",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:25.275824Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fd98bd00d958e23f8b3f05c379b2747da92e8d68",
+      "actualCount": 78,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 2934,
+      "manifestHash": "6478fe14a9aa256e4090963ba2ff3cb0e582f9365af48173cb2a44c6a041c9ef",
+      "expectedCount": 78,
+      "suite": "G01"
     },
     {
       "id": "T0305",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:28.211654Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fd98bd00d958e23f8b3f05c379b2747da92e8d68",
+      "actualCount": 78,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 2711,
+      "manifestHash": "6478fe14a9aa256e4090963ba2ff3cb0e582f9365af48173cb2a44c6a041c9ef",
+      "expectedCount": 78,
+      "suite": "G01"
     },
     {
       "id": "T0306",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:30.924358Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "b675f8f1342f1bddaa96c613875841a407306bcd",
+      "actualCount": 18,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 770,
+      "manifestHash": "ac4a173ab8fcdf0e0ef9f217643732e25dcccfe2bf5c998b58690db745f2d46d",
+      "expectedCount": 18,
+      "suite": "G01"
     },
     {
       "id": "T0307",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:31.696702Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "b675f8f1342f1bddaa96c613875841a407306bcd",
+      "actualCount": 18,
+      "analyzedJavaFiles": 18,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 806,
+      "manifestHash": "ac4a173ab8fcdf0e0ef9f217643732e25dcccfe2bf5c998b58690db745f2d46d",
+      "expectedCount": 18,
+      "suite": "G01"
     },
     {
       "id": "T0308",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:32.504697Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "b675f8f1342f1bddaa96c613875841a407306bcd",
+      "actualCount": 18,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 789,
+      "manifestHash": "ac4a173ab8fcdf0e0ef9f217643732e25dcccfe2bf5c998b58690db745f2d46d",
+      "expectedCount": 18,
+      "suite": "G01"
     },
     {
       "id": "T0309",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:33.296109Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "b675f8f1342f1bddaa96c613875841a407306bcd",
+      "actualCount": 18,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 1131,
+      "manifestHash": "ac4a173ab8fcdf0e0ef9f217643732e25dcccfe2bf5c998b58690db745f2d46d",
+      "expectedCount": 18,
+      "suite": "G01"
     },
     {
       "id": "T0310",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:34.429059Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "b675f8f1342f1bddaa96c613875841a407306bcd",
+      "actualCount": 18,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 785,
+      "manifestHash": "ac4a173ab8fcdf0e0ef9f217643732e25dcccfe2bf5c998b58690db745f2d46d",
+      "expectedCount": 18,
+      "suite": "G01"
     },
     {
       "id": "T0311",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:35.216442Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fefd341fe01c64c24eb45af1b4facbf0870bf615",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 237,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0312",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:35.455541Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fefd341fe01c64c24eb45af1b4facbf0870bf615",
+      "actualCount": 3,
+      "analyzedJavaFiles": 3,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 231,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0313",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:35.688483Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fefd341fe01c64c24eb45af1b4facbf0870bf615",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 263,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0314",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:35.953689Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fefd341fe01c64c24eb45af1b4facbf0870bf615",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 516,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0315",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:36.471776Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fefd341fe01c64c24eb45af1b4facbf0870bf615",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 244,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0316",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:36.717922Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fa9f8e5f40a56709609f6382886adae8979802c1",
+      "actualCount": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 120,
+      "manifestHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "expectedCount": 0,
+      "suite": "G01"
     },
     {
       "id": "T0317",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:36.839319Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fa9f8e5f40a56709609f6382886adae8979802c1",
+      "actualCount": 0,
+      "analyzedJavaFiles": 0,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 119,
+      "manifestHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "expectedCount": 0,
+      "suite": "G01"
     },
     {
       "id": "T0318",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:36.960268Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fa9f8e5f40a56709609f6382886adae8979802c1",
+      "actualCount": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 121,
+      "manifestHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "expectedCount": 0,
+      "suite": "G01"
     },
     {
       "id": "T0319",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:37.083648Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fa9f8e5f40a56709609f6382886adae8979802c1",
+      "actualCount": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 274,
+      "manifestHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "expectedCount": 0,
+      "suite": "G01"
     },
     {
       "id": "T0320",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:37.359261Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "fa9f8e5f40a56709609f6382886adae8979802c1",
+      "actualCount": 0,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 120,
+      "manifestHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "expectedCount": 0,
+      "suite": "G01"
     },
     {
       "id": "T0321",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:37.480666Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 241,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0322",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:37.723372Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "analyzedJavaFiles": 3,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 232,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0323",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:37.957326Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 221,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0324",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:38.179566Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 383,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0325",
-      "suite": "G01",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:38.564370Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 223,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G01"
     },
     {
       "id": "T0326",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:38.788720Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 225,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0327",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:39.015173Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "analyzedJavaFiles": 3,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 263,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0328",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:39.279789Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 227,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0329",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:39.508880Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 381,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0330",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:39.891177Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 224,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0331",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:40.116467Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Revision mismatch rejected; subsequent success-dependent flow and UI not exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 105,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0332",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:40.223347Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Revision mismatch rejected; subsequent success-dependent flow and UI not exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 104,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0333",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:40.329413Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Revision mismatch rejected; subsequent success-dependent flow and UI not exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 104,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0334",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:40.435277Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Revision mismatch rejected; subsequent success-dependent flow and UI not exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 100,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0335",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:40.537450Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "Revision mismatch rejected; subsequent success-dependent flow and UI not exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 105,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0336",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:40.644339Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 228,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0337",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:40.874300Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "analyzedJavaFiles": 3,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 224,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0338",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:41.100038Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 228,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0339",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:41.329423Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 381,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0340",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:41.711485Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "66c43ebcb2eb884728b0ca88285dccfbef4e93ff",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 223,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0341",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:41.936371Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "85d46455ac5cb39cc55488f1b23e63770b999324",
+      "actualCount": 5,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 300,
+      "manifestHash": "bd7f263a13c4526d52943299546e5b01d5786b5f632aebd8352401df22df32fd",
+      "expectedCount": 5,
+      "suite": "G02"
     },
     {
       "id": "T0342",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:42.237830Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "85d46455ac5cb39cc55488f1b23e63770b999324",
+      "actualCount": 5,
+      "analyzedJavaFiles": 5,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 293,
+      "manifestHash": "bd7f263a13c4526d52943299546e5b01d5786b5f632aebd8352401df22df32fd",
+      "expectedCount": 5,
+      "suite": "G02"
     },
     {
       "id": "T0343",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:42.532699Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "85d46455ac5cb39cc55488f1b23e63770b999324",
+      "actualCount": 5,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 296,
+      "manifestHash": "bd7f263a13c4526d52943299546e5b01d5786b5f632aebd8352401df22df32fd",
+      "expectedCount": 5,
+      "suite": "G02"
     },
     {
       "id": "T0344",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:42.830265Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "85d46455ac5cb39cc55488f1b23e63770b999324",
+      "actualCount": 5,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 467,
+      "manifestHash": "bd7f263a13c4526d52943299546e5b01d5786b5f632aebd8352401df22df32fd",
+      "expectedCount": 5,
+      "suite": "G02"
     },
     {
       "id": "T0345",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:43.298985Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "85d46455ac5cb39cc55488f1b23e63770b999324",
+      "actualCount": 5,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 303,
+      "manifestHash": "bd7f263a13c4526d52943299546e5b01d5786b5f632aebd8352401df22df32fd",
+      "expectedCount": 5,
+      "suite": "G02"
     },
     {
       "id": "T0346",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:43.602978Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3bead9265d050d90a7a2240bda5ac6626c207c35",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 231,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0347",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:43.835031Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3bead9265d050d90a7a2240bda5ac6626c207c35",
+      "actualCount": 3,
+      "analyzedJavaFiles": 3,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 239,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0348",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:44.075688Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3bead9265d050d90a7a2240bda5ac6626c207c35",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 235,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0349",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:44.311666Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3bead9265d050d90a7a2240bda5ac6626c207c35",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 381,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0350",
-      "suite": "G02",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:44.694079Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3bead9265d050d90a7a2240bda5ac6626c207c35",
+      "actualCount": 3,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 222,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G02"
     },
     {
       "id": "T0351",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:44.917749Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "9e4626f3b7885389f212d4e9ec8972d28854be35",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[LFS pointers must not be published as searchable source bodies] \nExpecting no elements of:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@4c18621b,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@39c385d6,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@1cec219f,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@692e028d]\nto satisfy the given assertions requirements but these elements did:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@4c18621b]",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 274,
+      "manifestHash": "72f4dea7d71c482d1e1f2d9c907f7b378c11b0343973d8fc3921649a97d9c0ad",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0352",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:45.199719Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "9e4626f3b7885389f212d4e9ec8972d28854be35",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[LFS pointers must not be published as searchable source bodies] \nExpecting no elements of:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@1640190a,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@2a2843ec,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@2042ccce,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@20de05e5]\nto satisfy the given assertions requirements but these elements did:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@1640190a]",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 261,
+      "manifestHash": "72f4dea7d71c482d1e1f2d9c907f7b378c11b0343973d8fc3921649a97d9c0ad",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0353",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:45.462923Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "9e4626f3b7885389f212d4e9ec8972d28854be35",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[LFS pointers must not be published as searchable source bodies] \nExpecting no elements of:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@73d3e555,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@2b037cfc,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@44924587,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@18460128]\nto satisfy the given assertions requirements but these elements did:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@73d3e555]",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 261,
+      "manifestHash": "72f4dea7d71c482d1e1f2d9c907f7b378c11b0343973d8fc3921649a97d9c0ad",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0354",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:45.725694Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "9e4626f3b7885389f212d4e9ec8972d28854be35",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[LFS pointers must not be published as searchable source bodies] \nExpecting no elements of:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@4cfa8227,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@78226c36,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@3f685162,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@11f406f8]\nto satisfy the given assertions requirements but these elements did:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@4cfa8227]",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 258,
+      "manifestHash": "72f4dea7d71c482d1e1f2d9c907f7b378c11b0343973d8fc3921649a97d9c0ad",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0355",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:45.985184Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "9e4626f3b7885389f212d4e9ec8972d28854be35",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[LFS pointers must not be published as searchable source bodies] \nExpecting no elements of:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@1bc776b7,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@475646d4,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@a0f53fc,\n    dev.knowledgeforge.sources.domain.CollectedSnapshot$File@3db972d2]\nto satisfy the given assertions requirements but these elements did:\n  [dev.knowledgeforge.sources.domain.CollectedSnapshot$File@1bc776b7]",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 261,
+      "manifestHash": "72f4dea7d71c482d1e1f2d9c907f7b378c11b0343973d8fc3921649a97d9c0ad",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0356",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:46.248038Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "e87208e1759da0643a0758f48018945f8ac7e1b2",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "Git 심볼릭 링크·서브모듈은 수집하지 않습니다.",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 134,
+      "manifestHash": "bea999790e0a17853bd922d290fcd6c4bf83e907b3fb8a6729933f0c6d7cf900",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0357",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:46.384014Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "e87208e1759da0643a0758f48018945f8ac7e1b2",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "Git 심볼릭 링크·서브모듈은 수집하지 않습니다.",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 129,
+      "manifestHash": "bea999790e0a17853bd922d290fcd6c4bf83e907b3fb8a6729933f0c6d7cf900",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0358",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:46.515242Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "e87208e1759da0643a0758f48018945f8ac7e1b2",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "Git 심볼릭 링크·서브모듈은 수집하지 않습니다.",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 124,
+      "manifestHash": "bea999790e0a17853bd922d290fcd6c4bf83e907b3fb8a6729933f0c6d7cf900",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0359",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:46.641439Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "e87208e1759da0643a0758f48018945f8ac7e1b2",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "Git 심볼릭 링크·서브모듈은 수집하지 않습니다.",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 133,
+      "manifestHash": "bea999790e0a17853bd922d290fcd6c4bf83e907b3fb8a6729933f0c6d7cf900",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0360",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:46.776776Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "e87208e1759da0643a0758f48018945f8ac7e1b2",
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "Git 심볼릭 링크·서브모듈은 수집하지 않습니다.",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 128,
+      "manifestHash": "bea999790e0a17853bd922d290fcd6c4bf83e907b3fb8a6729933f0c6d7cf900",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0361",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:46.906673Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d093a992813a40d7779bbc9bb5ec1566cf289394",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 265,
+      "manifestHash": "b3d40f56a0721faadda75dbf6929c2fe205a0fe054668c5e6eb238fa046a7339",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0362",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:47.172848Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d093a992813a40d7779bbc9bb5ec1566cf289394",
+      "actualCount": 4,
+      "analyzedJavaFiles": 3,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 286,
+      "manifestHash": "b3d40f56a0721faadda75dbf6929c2fe205a0fe054668c5e6eb238fa046a7339",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0363",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:47.460180Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d093a992813a40d7779bbc9bb5ec1566cf289394",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 264,
+      "manifestHash": "b3d40f56a0721faadda75dbf6929c2fe205a0fe054668c5e6eb238fa046a7339",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0364",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:47.726021Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d093a992813a40d7779bbc9bb5ec1566cf289394",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 418,
+      "manifestHash": "b3d40f56a0721faadda75dbf6929c2fe205a0fe054668c5e6eb238fa046a7339",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0365",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:48.145571Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d093a992813a40d7779bbc9bb5ec1566cf289394",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 259,
+      "manifestHash": "b3d40f56a0721faadda75dbf6929c2fe205a0fe054668c5e6eb238fa046a7339",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0366",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:48.406308Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "57a3efc94c4a9a46d5bf3ec4a32ad7e7aecf5994",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 345,
+      "manifestHash": "f0f47d2eb5c5903f9ee7c80051b653f7219eaeb6d7f4ac2287c61569f1f5d574",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0367",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:48.752954Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "57a3efc94c4a9a46d5bf3ec4a32ad7e7aecf5994",
+      "actualCount": 4,
+      "analyzedJavaFiles": 4,
+      "codeQuestionScope": "Extraction only; semantic question retrieval still required",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 465,
+      "manifestHash": "f0f47d2eb5c5903f9ee7c80051b653f7219eaeb6d7f4ac2287c61569f1f5d574",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0368",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:49.220123Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "57a3efc94c4a9a46d5bf3ec4a32ad7e7aecf5994",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 407,
+      "manifestHash": "f0f47d2eb5c5903f9ee7c80051b653f7219eaeb6d7f4ac2287c61569f1f5d574",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0369",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:49.628238Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "57a3efc94c4a9a46d5bf3ec4a32ad7e7aecf5994",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 609,
+      "manifestHash": "f0f47d2eb5c5903f9ee7c80051b653f7219eaeb6d7f4ac2287c61569f1f5d574",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0370",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:50.238774Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "57a3efc94c4a9a46d5bf3ec4a32ad7e7aecf5994",
+      "actualCount": 4,
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 3,
+      "cloneCalls": 1,
+      "elapsedMillis": 402,
+      "manifestHash": "f0f47d2eb5c5903f9ee7c80051b653f7219eaeb6d7f4ac2287c61569f1f5d574",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0371",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:50.642035Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3a1ed3222bde745b02cfb53409d0dc90646c4144",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[Invalid UTF-8 must not silently become READY with replacement characters] \nExpecting actual:\n  \"READY\"\nnot to be equal to:\n  \"READY\"\n",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 263,
+      "manifestHash": "304be8b8fedeedc5d456198ee3ef5fb5284a76b3cffa02eb3024c8f985b3fe17",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0372",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:50.907378Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3a1ed3222bde745b02cfb53409d0dc90646c4144",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[Invalid UTF-8 must not silently become READY with replacement characters] \nExpecting actual:\n  \"READY\"\nnot to be equal to:\n  \"READY\"\n",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 256,
+      "manifestHash": "304be8b8fedeedc5d456198ee3ef5fb5284a76b3cffa02eb3024c8f985b3fe17",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0373",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:51.165443Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3a1ed3222bde745b02cfb53409d0dc90646c4144",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[Invalid UTF-8 must not silently become READY with replacement characters] \nExpecting actual:\n  \"READY\"\nnot to be equal to:\n  \"READY\"\n",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 265,
+      "manifestHash": "304be8b8fedeedc5d456198ee3ef5fb5284a76b3cffa02eb3024c8f985b3fe17",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0374",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:51.431846Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3a1ed3222bde745b02cfb53409d0dc90646c4144",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[Invalid UTF-8 must not silently become READY with replacement characters] \nExpecting actual:\n  \"READY\"\nnot to be equal to:\n  \"READY\"\n",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 257,
+      "manifestHash": "304be8b8fedeedc5d456198ee3ef5fb5284a76b3cffa02eb3024c8f985b3fe17",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0375",
-      "suite": "G03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:51.690516Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "3a1ed3222bde745b02cfb53409d0dc90646c4144",
+      "actualCount": 4,
+      "status": "FAIL",
+      "checkStatus": "FAIL",
+      "failure": "[Invalid UTF-8 must not silently become READY with replacement characters] \nExpecting actual:\n  \"READY\"\nnot to be equal to:\n  \"READY\"\n",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 268,
+      "manifestHash": "304be8b8fedeedc5d456198ee3ef5fb5284a76b3cffa02eb3024c8f985b3fe17",
+      "expectedCount": 4,
+      "suite": "G03"
     },
     {
       "id": "T0376",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:51.959763Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0377",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:51.961142Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 226,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0378",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.188933Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 5,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0379",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.189885Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 221,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0380",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.412610Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0381",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.413378Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 403",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0382",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.414142Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 403",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 225,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0383",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.640896Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 403",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 5,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0384",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.641938Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 403",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 221,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0385",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.864181Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 403",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0386",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.865065Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0387",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:52.865902Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 221,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0388",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.087934Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 5,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0389",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.088779Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 1,
+      "elapsedMillis": 219,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0390",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.308716Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "aa3da91cb312769ca700499ae4e6a01d27144d1a",
+      "injectedFailure": "원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 0,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0391",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.309517Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic clone connection closed",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 1,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0392",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.311414Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic clone connection closed",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 226,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0393",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.538622Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic clone connection closed",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 5,
+      "cloneCalls": 5,
+      "elapsedMillis": 3,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0394",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.542509Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic clone connection closed",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 217,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0395",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.761071Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic clone connection closed",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0396",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.762848Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic Git executable unavailable",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0397",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.764465Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic Git executable unavailable",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 226,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0398",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.991988Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic Git executable unavailable",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 5,
+      "cloneCalls": 5,
+      "elapsedMillis": 3,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0399",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:53.996185Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic Git executable unavailable",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 2,
+      "cloneCalls": 2,
+      "elapsedMillis": 231,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0400",
-      "suite": "G04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T11:54:54.228403Z",
+      "scope": "REAL_GITHUB_COLLECTOR_GIT_BLOBS_WITH_LOCAL_CLONE_TRANSPORT",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI/SourceService persistence/auto-sync/error presentation",
+        "Semantic code questions and pinned answer provenance",
+        "Concurrent clicks, Retry-After and live GitHub failure injection",
+        "Owner identity requires SourceService; equal-time revision fixture not separately exercised"
+      ],
+      "revision": "d6f250746098fb45ebd5e18c0b3d7859d6223dc9",
+      "injectedFailure": "synthetic Git executable unavailable",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "remoteAdapterCalls": 1,
+      "cloneCalls": 1,
+      "elapsedMillis": 0,
+      "manifestHash": "c29f8d554a97dfcbffc433645fc10039225b6269f4cae4911db24de10420990d",
+      "expectedCount": 3,
+      "suite": "G04"
     },
     {
       "id": "T0401",
@@ -6676,363 +8277,889 @@
     },
     {
       "id": "T0451",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:42.350993Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1276,
+      "suite": "W03"
     },
     {
       "id": "T0452",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.640251Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 14,
+      "suite": "W03"
     },
     {
       "id": "T0453",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.657766Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 3,
+      "suite": "W03"
     },
     {
       "id": "T0454",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.665724Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 404",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 10,
+      "suite": "W03"
     },
     {
       "id": "T0455",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.679373Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 404",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W03"
     },
     {
       "id": "T0456",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.684235Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 401",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W03"
     },
     {
       "id": "T0457",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.688595Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 403",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W03"
     },
     {
       "id": "T0458",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.693592Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 401",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 3,
+      "suite": "W03"
     },
     {
       "id": "T0459",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.699414Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 403",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W03"
     },
     {
       "id": "T0460",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.703423Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 401",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W03"
     },
     {
       "id": "T0461",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.707791Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W03"
     },
     {
       "id": "T0462",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.710832Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W03"
     },
     {
       "id": "T0463",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.715461Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W03"
     },
     {
       "id": "T0464",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.719040Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 429",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W03"
     },
     {
       "id": "T0465",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.722143Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 원격 서버 HTTP 오류: 429",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W03"
     },
     {
       "id": "T0466",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.724957Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "SSLHandshakeException: synthetic certificate mismatch",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W03"
     },
     {
       "id": "T0467",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.728321Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "SSLHandshakeException: synthetic certificate mismatch",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W03"
     },
     {
       "id": "T0468",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.732282Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "SSLHandshakeException: synthetic certificate mismatch",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 3,
+      "suite": "W03"
     },
     {
       "id": "T0469",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.737409Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "SSLHandshakeException: synthetic certificate mismatch",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W03"
     },
     {
       "id": "T0470",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.740727Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "SSLHandshakeException: synthetic certificate mismatch",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W03"
     },
     {
       "id": "T0471",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:06:43.743427Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "deadlineMillis": 25026,
+      "observedFailure": "InterruptedIOException: synthetic transport observed cancellation",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 25028,
+      "suite": "W03"
     },
     {
       "id": "T0472",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:07:08.775629Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "deadlineMillis": 25020,
+      "observedFailure": "InterruptedIOException: synthetic transport observed cancellation",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 25023,
+      "suite": "W03"
     },
     {
       "id": "T0473",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:07:33.802566Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "deadlineMillis": 25017,
+      "observedFailure": "InterruptedIOException: synthetic transport observed cancellation",
+      "retryLimit": "One actual deadline tested; five sequential deadlines not repeated",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 25020,
+      "suite": "W03"
     },
     {
       "id": "T0474",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:07:58.825663Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "deadlineMillis": 25012,
+      "observedFailure": "InterruptedIOException: synthetic transport observed cancellation",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 25015,
+      "suite": "W03"
     },
     {
       "id": "T0475",
-      "suite": "W03",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:23.843749Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "deadlineMillis": 25015,
+      "observedFailure": "InterruptedIOException: synthetic transport observed cancellation",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 25018,
+      "suite": "W03"
     },
     {
       "id": "T0476",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.866673Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "finalUri": "https://example.net/final.txt",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.net/final.txt"
+      ],
+      "elapsedMillis": 45,
+      "suite": "W04"
     },
     {
       "id": "T0477",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.913938Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "finalUri": "https://example.net/final.txt",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 3,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.net/final.txt"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W04"
     },
     {
       "id": "T0478",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.916723Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "finalUri": "https://example.net/final.txt",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.net/final.txt"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W04"
     },
     {
       "id": "T0479",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.919430Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "finalUri": "https://example.net/final.txt",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 3,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.net/final.txt",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 4,
+      "suite": "W04"
     },
     {
       "id": "T0480",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.925121Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "finalUri": "https://example.net/final.txt",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.net/final.txt"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0481",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.929279Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 리다이렉트 한도(3회)를 초과했습니다.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 4,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0482",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.933345Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 리다이렉트 한도(3회)를 초과했습니다.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop"
+      ],
+      "elapsedMillis": 4,
+      "suite": "W04"
     },
     {
       "id": "T0483",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.939834Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 리다이렉트 한도(3회)를 초과했습니다.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 20,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop"
+      ],
+      "elapsedMillis": 5,
+      "suite": "W04"
     },
     {
       "id": "T0484",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.946630Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 리다이렉트 한도(3회)를 초과했습니다.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0485",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.950453Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 리다이렉트 한도(3회)를 초과했습니다.",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 4,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/loop",
+        "https://example.org/start",
+        "https://example.org/loop"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0486",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.954292Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 19,
+      "suite": "W04"
     },
     {
       "id": "T0487",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.975408Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W04"
     },
     {
       "id": "T0488",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.978719Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 3,
+      "suite": "W04"
     },
     {
       "id": "T0489",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.983459Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0490",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.988101Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 3,
+      "suite": "W04"
     },
     {
       "id": "T0491",
@@ -7081,48 +9208,110 @@
     },
     {
       "id": "T0496",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.992852Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0497",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.996436Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0498",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:48.999960Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 5,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 2,
+      "suite": "W04"
     },
     {
       "id": "T0499",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:49.003722Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 2,
+      "requestedDestinations": [
+        "https://example.org/start",
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W04"
     },
     {
       "id": "T0500",
-      "suite": "W04",
-      "status": "NOT_RUN",
+      "startedAt": "2026-10-27T12:08:49.006860Z",
+      "scope": "REAL_HTTP_READER_URL_COLLECTOR_WITH_MOCKED_TRANSPORT_AND_REAL_DEADLINE",
       "fullAcceptancePassed": false,
       "remaining": [
-        "No case-specific execution evidence yet; existing regression tests are not substituted for this case."
-      ]
+        "UI guidance, hover and SourceService persisted error state",
+        "Actual TLS handshake/socket response termination and DNS rebinding",
+        "Semantic search, simultaneous clicks and process restart"
+      ],
+      "observedFailure": "LibraryException: 사용자정보·fragment가 없는 공개 HTTPS URL(443)을 입력하세요.",
+      "hoverScope": "Failure object checked; hover not exercised",
+      "status": "PARTIAL",
+      "checkStatus": "PASS",
+      "transportCalls": 1,
+      "requestedDestinations": [
+        "https://example.org/start"
+      ],
+      "elapsedMillis": 1,
+      "suite": "W04"
     },
     {
       "id": "T0501",

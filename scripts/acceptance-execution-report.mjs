@@ -41,9 +41,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   assert.equal(process.argv[2], '--write', 'Use --write after all probe runners finish')
   const root = fileURLToPath(new URL('../', import.meta.url))
   const json = relative => JSON.parse(readFileSync(new URL('../' + relative, import.meta.url), 'utf8'))
-  const batches = ['file', 'folder', 'web', 'search', 'library-workflow'].map(name => ({ name,
+  const batches = ['file', 'folder', 'web', 'search', 'library-workflow', 'git', 'web-boundary', 'folder-failure'].map(name => ({ name,
     cases: json(`backend/target/${name}-acceptance-results.json`) }))
-  assert.deepEqual(batches.map(batch => batch.cases.length), [100, 50, 50, 150, 75])
+  assert.deepEqual(batches.map(batch => batch.cases.length), [100, 50, 50, 150, 75, 100, 45, 25])
   const probes = batches.flatMap(batch => batch.cases.map(original => {
     const item = { ...original }
     if (item.expectedManifest) {
@@ -61,8 +61,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     baseCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
     productTree: execFileSync('git', ['rev-parse', 'HEAD:backend/src/main'], { cwd: root, encoding: 'utf8' }).trim(),
     runnerHashes: Object.fromEntries([
-      ...['FileAcceptanceTest', 'FolderAcceptanceTest', 'WebAcceptanceTest', 'SearchAcceptanceTest', 'LibraryWorkflowAcceptanceTest']
+      ...['FileAcceptanceTest', 'FolderAcceptanceTest', 'WebAcceptanceTest', 'SearchAcceptanceTest', 'LibraryWorkflowAcceptanceTest', 'GitAcceptanceTest', 'FolderFailureAcceptanceTest']
         .map(name => `backend/src/test/java/dev/knowledgeforge/${name}.java`),
+      'backend/src/test/java/dev/knowledgeforge/sources/adapter/WebBoundaryAcceptanceTest.java',
       'docs/fixtures/search-acceptance.json', 'scripts/search-acceptance-fixtures.mjs',
     ].map(path => [path, createHash('sha256').update(readFileSync(new URL('../' + path, import.meta.url))).digest('hex')])),
     installedVersion: '0.1.27 unchanged; source tests, not installed-app acceptance',
@@ -84,6 +85,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       'Web: mocked HTTP, real URL collector/analyzer and lexical search. No real TLS/redirect/DNS/browser/semantic answer validation.',
       'Search: actual bundled model with memoized deterministic embeddings/relevance. Synthetic corpus directly indexed. Fifty garden distractors are easier/different than specified near-keyword distractors. Four ingestion routes, immutable histories, answer abstention and full evidence assembly remain unverified.',
       'Library workflow: real Spring/SQLite/lexical search, direct services rather than UI. No process restart, delayed HTTP response race or real AI. Stored answer jobs are synthetic fixtures.',
+      'Git: two public repositories fetched at pinned revisions; actual collector/blob reads with mocked API and local clone transport. Not production remote registration or semantic search. LFS, submodule and encoding failures remain.',
+      'Web boundary: actual reader/collector with mocked HTTP client. Five production 25-second deadlines execute against cancellation-aware synthetic transport, not a real stalled socket. DNS-rebinding IDs T0491–T0495 remain unexecuted.',
+      'Folder failures: owned chmod/sparse oversized/corrupt PDF/disappearing fixtures, actual collector/analyzer/lexical index. SourceService state, UI and persisted retry are not covered.',
       'No actual AI requests, external business writes, user credentials copy, app installation, public release or update-feed change.',
       'Intel host only. ARM/fresh Mac and approved company services are not available to these runners. They remain unexecuted, not passed.',
     ],
