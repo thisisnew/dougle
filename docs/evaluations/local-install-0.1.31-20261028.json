@@ -38,5 +38,20 @@
     "ARM runtime and new Mac acceptance not performed",
     "Apple notarization excluded",
     "Search performance measurement/optimization remains separate"
-  ]
+  ],
+  "dmgReadOnlyMounted": true,
+  "dmgJarMatchedInstalled": true,
+  "updaterSignatureAndVersionVerified": true,
+  "architectureChecks": {
+    "x86_64": "static package + local installed runtime",
+    "arm64": "static only"
+  },
+  "artifacts": {
+    "Knowledge.Forge_0.1.31_arm64.dmg": "5f0a998bd1ce64d70e68c83b1981bec8929126919a0f6d416ba2c91cc1b2343d",
+    "Knowledge.Forge_0.1.31_x86_64.dmg": "61708b7d75bbd311b1f1cadf71c924bb60ffe534f832151801544df1d7b094b9",
+    "Knowledge.Forge_0.1.31_arm64.app.tar.gz": "ce835ea32c8860a244449a66ecde7ec3c6fdc66d7f2b0f23b149a9e1dd757217",
+    "Knowledge.Forge_0.1.31_x86_64.app.tar.gz": "97256f19b7c6c58a92819d817dcd299244c2b71291b06ffbc9caccac9f3a4016",
+    "Knowledge.Forge_0.1.31_arm64.app.tar.gz.sig": "83bf42a5e0874a0eed3cd93643323da155a8a6380b930ee9f9fca5d89255cbe8",
+    "Knowledge.Forge_0.1.31_x86_64.app.tar.gz.sig": "43cae0797a756a29114efd84c26c43114103bf1b5b3fe826f02f865452cbeb8a"
+  }
 }
