@@ -11,6 +11,11 @@ assert.equal(process.env.FORGE_ACCEPTANCE_LIVE, 'approved-200-synthetic')
 assert(process.env.FORGE_ACCEPTANCE_PROFILE, 'Existing dedicated app profile required; credentials are never copied')
 assert(process.env.FORGE_ACCEPTANCE_REPORT, 'A new private report path is required')
 assert(process.env.FORGE_ACCEPTANCE_BUDGET, 'Shared budget journal required')
+const suite = process.env.FORGE_ACCEPTANCE_SUITE ?? 'conversation'
+assert(['conversation', 'images'].includes(suite))
+if (suite === 'images') assert(process.env.FORGE_ACCEPTANCE_IMAGES, 'Owned synthetic PNG directory required')
+const selectedCases = process.env.FORGE_ACCEPTANCE_CASES?.split(',')
+if (selectedCases) assert(selectedCases.length > 0 && selectedCases.every(id => /^T\d{4}$/.test(id)))
 const root = process.cwd()
 const resources = '/Applications/Knowledge Forge.app/Contents/Resources/resources'
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-acceptance-live-'))
@@ -42,6 +47,7 @@ const limit = setTimeout(() => shutdown.abort(), 100 * 60 * 1000)
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => shutdown.abort())
 
 function allowed(path, method) {
+  if (method === 'DELETE') return /^\/workspaces\/[a-zA-Z0-9-]+\/chat-threads\/[a-zA-Z0-9-]+$/.test(path)
   if (method === 'GET') return ['/session', '/search-model'].includes(path)
     || /^\/workspaces\/[a-zA-Z0-9-]+\/(chat-threads(?:\/[a-zA-Z0-9-]+)?|answer-jobs\/[a-zA-Z0-9-]+)$/.test(path)
   return method === 'POST' && (['/workspaces', '/ai/providers/CODEX/connection'].includes(path)
@@ -102,14 +108,24 @@ async function provision(name, documents) {
   assert.equal(synced.status, 'READY', synced.error)
   return prefix
 }
-async function answer(prefix, question, result, previous) {
+async function uploadImage(prefix, fixture, variant) {
+  const bytes = await readFile(resolve(process.env.FORGE_ACCEPTANCE_IMAGES, `${fixture}-${variant}.png`))
+  const form = new FormData()
+  form.append('file', new Blob([bytes], { type: 'image/png' }), 'synthetic-screen.png')
+  const response = await fetch(base + '/api' + prefix + '/attachments', { method: 'POST', redirect: 'error',
+    headers: { 'X-Forge-Session': token, 'X-Forge-Client': '1' }, body: form,
+    signal: AbortSignal.any([shutdown.signal, AbortSignal.timeout(30000)]) })
+  assert(response.ok, `Synthetic image upload failed: ${response.status}`)
+  return { attachment: await response.json(), sha256: createHash('sha256').update(bytes).digest('hex') }
+}
+async function answer(prefix, question, result, previous, attachmentIds = []) {
   const bundle = await api(prefix + '/chat-threads', 'POST', { question, requestId: randomUUID(),
-    threadId: previous?.threadId, parentBundleId: previous?.bundleId })
+    threadId: previous?.threadId, parentBundleId: previous?.bundleId, attachmentIds })
   const turn = { question, bundleId: bundle.id, threadId: bundle.payload.chatContext.threadId,
     context: bundle.payload.chatContext, evidence: bundle.payload.items, status: bundle.payload.status, answer: '' }
   result.turns.push(turn)
   await save()
-  if (!bundle.payload.items.length) return turn
+  if (!bundle.payload.items.length && !attachmentIds.length) return turn
   const path = prefix + '/evidence-bundles/' + bundle.id
   const preview = await api(path + '/answer-preview', 'POST', { provider: 'CODEX' })
   const approved = await api(path + '/answer-approval', 'POST', { provider: 'CODEX', requestedModel: preview.requestedModel,
@@ -159,15 +175,43 @@ try {
   assert.equal(connection.state, 'AUTHENTICATED', 'Existing app login unavailable; no credentials copied or login launched')
 } catch (error) { setupFailure = String(error); report.setupFailure = setupFailure; report.startupDiagnostic = logs.replaceAll(token ?? 'unused-token', '[REDACTED]') }
 try {
-  for (const baseId of [751, 776]) for (let fixture = 0; fixture < 5; fixture++) for (let action = 0; action < 5; action++) {
+  for (const baseId of suite === 'images' ? [926] : [751, 776]) for (let fixture = 0; fixture < 5; fixture++) for (let action = 0; action < 5; action++) {
     const id = `T${String(baseId + fixture * 5 + action).padStart(4, '0')}`
+    if (selectedCases && !selectedCases.includes(id)) continue
     const result = { id, startedAt: new Date().toISOString(), scope: 'ACTUAL_AI_LOCAL_APP_HTTP_SYNTHETIC_DOCUMENTS', fullAcceptancePassed: false,
       remaining: ['Human semantic and claim-by-claim citation review', 'Native UI tab/reopen flows', 'No planning-model dispatch; actual answer pipeline tested'], turns: [], manualVerdict: 'NOT_REVIEWED' }
     report.results.push(result)
     if (setupFailure) { result.status = 'BLOCKED'; result.checkStatus = 'BLOCKED'; result.reason = setupFailure; await save(); continue }
     try {
       shutdown.signal.throwIfAborted()
-      if (baseId === 751) {
+      if (baseId === 926) {
+        result.scope = 'ACTUAL_AI_ATTACHMENT_HTTP_SYNTHETIC_SCREENSHOTS_NO_BROWSER_OR_OPERATIONAL_PLANNING'
+        result.remaining.push('Actual screenshot intent router, browser navigation and operational tool selection',
+          'Image-only uses the explicit confirm-image question, not empty UI submission', 'Semantic/OCR accuracy needs manual review')
+        const workspace = await api('/workspaces', 'POST', { name: id })
+        const prefix = `/workspaces/${workspace.id}`
+        const uploaded = await uploadImage(prefix, fixture, action === 3 ? 1 : 0)
+        result.imageSha256 = uploaded.sha256
+        result.attachmentId = uploaded.attachment.id
+        const question = action === 0 ? '첨부한 이미지를 확인해 주세요.'
+          : action === 2 ? '이 캡처의 오류 원인을 조사하려면 무엇을 확인해야 해? 보이는 사실과 가설을 구분해 줘.'
+          : '이 화면의 용어와 동작을 설명해 줘. 보이지 않는 값은 추정하지 말아 줘.'
+        const turn = await answer(prefix, question, result, undefined, [uploaded.attachment.id])
+        assert.equal(turn.status, 'SUCCEEDED')
+        assert(turn.answer.length > 0)
+        assert(!/삭제했습니다|전송했습니다|게시했습니다/.test(turn.answer), 'Must not claim external writes')
+        if (action === 4) {
+          await api(prefix + '/chat-threads/' + turn.threadId, 'DELETE')
+          const threads = await api(prefix + '/chat-threads')
+          assert(!JSON.stringify(threads).includes(turn.threadId), 'Deleted thread remains in history')
+          const replacement = await uploadImage(prefix, (fixture + 1) % 5, 0)
+          assert.notEqual(replacement.attachment.id, uploaded.attachment.id)
+          const next = await answer(prefix, '새로 첨부한 화면만 설명해 줘.', result, undefined, [replacement.attachment.id])
+          assert.equal(next.status, 'SUCCEEDED')
+          assert.notEqual(next.threadId, turn.threadId)
+          assert.equal(next.context.history.length, 0)
+        }
+      } else if (baseId === 751) {
         const [question, text, expected] = notes[fixture]
         let documents = { 'primary.md': text, 'context.md': '가상 평가용 애자일 일반 노트다. 실제 회사 데이터는 포함하지 않는다.' }
         if (action === 1) documents = Object.fromEntries(Object.entries(documents).reverse())

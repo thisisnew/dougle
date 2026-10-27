@@ -1,0 +1,30 @@
+{
+  "version": "0.1.28",
+  "installedAt": "2026-10-27T13:23:17.980Z",
+  "backup": "/Users/thisisnew/Library/Application Support/Dougle Local Backups/pre-0.1.28-20261027-222303",
+  "jarSha256": "a2255ce7135ddecc8803b84e20906f7156cdecf52de1d8ebafe45a626d0208ed",
+  "previousNative": "78391",
+  "previousJava": "78400",
+  "credentialsCopied": false,
+  "businessRowsRead": false,
+  "healthVerified": true,
+  "rootHttpStatus": 200,
+  "unauthenticatedApiStatus": 403,
+  "nativePid": "17678",
+  "javaPid": "17682",
+  "port": "49931",
+  "schemaVersion": 29,
+  "codesignVerified": true,
+  "dmgSha256": "ce19aa5b7b62f8b5ad65601409c11b6f324ac71587bfbea84b64e5b03f853960",
+  "dmgReadOnlyMounted": true,
+  "dmgJarMatchedInstalled": true,
+  "updaterSignatureAndVersionVerified": true,
+  "notarized": false,
+  "publicFeedChanged": false,
+  "notes": [
+    "Final backend JAR restaged into the not-running packaged app after the image redaction fix; bundle re-signed, updater archive re-signed with app-version binding, and DMG regenerated and verified.",
+    "Previous exact native/Java processes exited before SQLite/WAL/SHM backup. Existing credential directories were not copied; no business rows were read.",
+    "Isolated native startup/restart/duplicate process tests passed. Not a fresh macOS account, Gatekeeper or ARM acceptance test.",
+    "Remaining acceptance failures and unexecuted new-Mac cases are recorded separately; this local preview is not a public release."
+  ]
+}

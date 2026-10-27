@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import tools.jackson.databind.json.JsonMapper;
 
 public class AnswerOutput {
+    private static final java.util.regex.Pattern INLINE_CITATION = java.util.regex.Pattern.compile("\\[R\\s*\\d");
     public static String validate(String raw, EvidenceBundle bundle) {
         try {
             if (raw == null || raw.length() > 65536) throw new IllegalArgumentException();
@@ -25,7 +26,7 @@ public class AnswerOutput {
                         || claim.path("text").asString().length() > 2000 || !claim.path("evidenceIds").isArray()
                         || claim.path("evidenceIds").isEmpty() || claim.path("evidenceIds").size() > 20) throw new IllegalArgumentException();
                 String text = claim.path("text").asString();
-                if (text.contains("[R")) throw new IllegalArgumentException();
+                if (INLINE_CITATION.matcher(text).find()) throw new IllegalArgumentException();
                 var citations = new java.util.LinkedHashSet<String>();
                 for (var id : claim.path("evidenceIds")) {
                     if (!id.isString() || !allowed.contains(id.asString())) throw new IllegalArgumentException();

@@ -75,7 +75,9 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             boolean truncated = false;
             String javaText = null;
             if (name.endsWith(".java")) {
-                var reader = new java.io.InputStreamReader(content, StandardCharsets.UTF_8);
+                var reader = new java.io.InputStreamReader(content, StandardCharsets.UTF_8.newDecoder()
+                        .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+                        .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT));
                 var builder = new StringBuilder();
                 char[] buffer = new char[16 * 1024];
                 for (int count; (count = reader.read(buffer)) != -1;) {
@@ -130,10 +132,21 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             }
             return new Analysis(text, metadata.get("Content-Type"), truncated ? "PARTIAL" : status,
                     truncated ? "텍스트가 길어 앞부분만 검색합니다. 파일을 나눠 등록하세요." : error, List.copyOf(symbols));
+        } catch (WebContent.AccessRequiredException exception) {
+            return new Analysis("", "text/html", "ERROR", exception.getMessage(), List.of());
         } catch (java.util.concurrent.CancellationException exception) {
             throw exception;
         } catch (Exception exception) {
             if (Thread.currentThread().isInterrupted()) throw new java.util.concurrent.CancellationException();
+            var visited = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<Throwable, Boolean>());
+            for (Throwable cause = exception; cause != null && visited.add(cause); cause = cause.getCause()) {
+                if (cause instanceof java.util.concurrent.CancellationException cancellation) throw cancellation;
+                if (cause instanceof java.io.InterruptedIOException) {
+                    var cancellation = new java.util.concurrent.CancellationException("분석이 중단되었습니다.");
+                    cancellation.initCause(cause);
+                    throw cancellation;
+                }
+            }
             return new Analysis("", metadata.get("Content-Type"), "ERROR",
                     "파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.", List.of());
         }

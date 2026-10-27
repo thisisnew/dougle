@@ -178,11 +178,16 @@ class GitAcceptanceTest {
             } else {
                 try (var initial = collector.collect(address)) {
                     assertThat(initial.revision()).isEqualTo(fixture.original());
-                    assertThat(initial.files().stream().map(CollectedSnapshot.File::path).sorted()).containsExactlyElementsOf(fixture.manifest());
+                    var searchableManifest = fixture.manifest().stream()
+                            .filter(path -> number != 10 || !path.equals("large.java"))
+                            .filter(path -> number != 11 || !path.equals("external-module")).toList();
+                    assertThat(initial.files().stream().map(CollectedSnapshot.File::path).sorted()).containsExactlyElementsOf(searchableManifest);
                     result.put("actualCount", initial.files().size());
+                    if (number == 11) assertThat(initial.failures()).containsKey("external-module");
                     if (number == 0) assertThat(initial.files()).anySatisfy(file -> assertThat(file.path()).endsWith("strategy/WinningStrategy.java"));
                     if (number == 1) assertThat(initial.files()).noneSatisfy(file -> assertThat(file.path()).contains("/strategy/"));
                     if (number == 10) {
+                        assertThat(initial.failures()).containsKey("large.java");
                         assertThat(initial.files()).as("LFS pointers must not be published as searchable source bodies")
                                 .noneSatisfy(file -> assertThat(file.path()).isEqualTo("large.java"));
                     }
@@ -206,8 +211,16 @@ class GitAcceptanceTest {
                     } else if (action == 2) {
                         int before = clones.get();
                         var same = collector.collect(address, initial);
-                        assertThat(same).isSameAs(initial);
-                        assertThat(clones.get()).isEqualTo(before);
+                        if (initial.failures().isEmpty()) {
+                            assertThat(same).isSameAs(initial);
+                            assertThat(clones.get()).isEqualTo(before);
+                        } else {
+                            assertThat(same.revision()).isEqualTo(initial.revision());
+                            assertThat(same.failures()).isEqualTo(initial.failures());
+                            assertThat(same.files()).extracting(CollectedSnapshot.File::hash)
+                                    .containsExactlyElementsOf(initial.files().stream().map(CollectedSnapshot.File::hash).toList());
+                            assertThat(clones.get()).isEqualTo(before + 1);
+                        }
                     } else if (action == 3) {
                         revision.set(fixture.next());
                         try (var changed = collector.collect(address, initial)) {
@@ -222,7 +235,14 @@ class GitAcceptanceTest {
                         remoteFailure.set(new LibraryException(502, "원격 서버 HTTP 오류: 503"));
                         assertThatThrownBy(() -> collector.collect(address, initial)).isInstanceOf(LibraryException.class);
                         remoteFailure.set(null);
-                        assertThat(collector.collect(address, initial)).isSameAs(initial);
+                        var recovered = collector.collect(address, initial);
+                        if (initial.failures().isEmpty()) assertThat(recovered).isSameAs(initial);
+                        else {
+                            assertThat(recovered.revision()).isEqualTo(initial.revision());
+                            assertThat(recovered.failures()).isEqualTo(initial.failures());
+                            assertThat(recovered.files()).extracting(CollectedSnapshot.File::hash)
+                                    .containsExactlyElementsOf(initial.files().stream().map(CollectedSnapshot.File::hash).toList());
+                        }
                         for (var file : initial.files()) try (var input = file.open()) { assertThat(input.read()).isGreaterThanOrEqualTo(-1); }
                     }
                 }

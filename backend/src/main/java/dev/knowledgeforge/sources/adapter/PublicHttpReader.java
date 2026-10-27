@@ -23,9 +23,14 @@ public class PublicHttpReader implements RemoteReader, AutoCloseable {
             java.util.concurrent.Executors.newSingleThreadScheduledExecutor(Thread.ofPlatform().daemon().factory());
 
     public PublicHttpReader() {
+        this(org.apache.hc.client5.http.SystemDefaultDnsResolver.INSTANCE);
+    }
+
+    PublicHttpReader(DnsResolver resolver) {
         var manager = PoolingHttpClientConnectionManagerBuilder.create().setDnsResolver(new DnsResolver() {
             public InetAddress[] resolve(String host) throws UnknownHostException {
-                InetAddress[] addresses = InetAddress.getAllByName(host);
+                InetAddress[] addresses = resolver.resolve(host);
+                if (addresses == null || addresses.length == 0) throw new UnknownHostException("Empty DNS response rejected");
                 for (InetAddress address : addresses) {
                     if (!publicAddress(address)) throw new UnknownHostException("Non-public destination rejected");
                 }

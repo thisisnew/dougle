@@ -260,7 +260,7 @@ public class LuceneSearchIndex implements SearchIndex {
                 var document = searcher.storedFields().document(match.doc);
                 if ((requireAllTerms || !embeddings.ready()) && !included.add(document.get("id"))) continue;
                 String text = document.get("text");
-                int offset = firstBodyOffset(reader, match.doc, queryTerms);
+                int offset = bestBodyOffset(reader, match.doc, queryTerms);
                 int start = requireAllTerms ? Math.max(0, offset - 70) : 0;
                 if (start > 0 && Character.isLowSurrogate(text.charAt(start))) start--;
                 int end = Math.min(text.length(), start + (requireAllTerms ? 320 : 2400));
@@ -284,11 +284,12 @@ public class LuceneSearchIndex implements SearchIndex {
         }
     }
 
-    private int firstBodyOffset(DirectoryReader reader, int documentId, Set<String> queryTerms) throws IOException {
+    private int bestBodyOffset(DirectoryReader reader, int documentId, Set<String> queryTerms) throws IOException {
         var vectors = reader.termVectors().get(documentId, "text");
         if (vectors == null) return -1;
         var iterator = vectors.iterator();
-        int first = Integer.MAX_VALUE;
+        record Occurrence(String term, int offset) {}
+        var occurrences = new ArrayList<Occurrence>();
         for (String term : queryTerms) {
             if (!iterator.seekExact(new BytesRef(term))) continue;
             var positions = iterator.postings(null, PostingsEnum.OFFSETS);
@@ -296,10 +297,29 @@ public class LuceneSearchIndex implements SearchIndex {
             for (int occurrence = 0; occurrence < positions.freq(); occurrence++) {
                 positions.nextPosition();
                 int offset = positions.startOffset();
-                if (offset >= 0) first = Math.min(first, offset);
+                if (offset >= 0) occurrences.add(new Occurrence(term, offset));
             }
         }
-        return first == Integer.MAX_VALUE ? -1 : first;
+        occurrences.sort(java.util.Comparator.comparingInt(Occurrence::offset));
+        int bestOffset = -1;
+        int bestCount = 0;
+        int bestSpan = Integer.MAX_VALUE;
+        for (int start = 0; start < occurrences.size(); start++) {
+            var matched = new HashSet<String>();
+            int offset = occurrences.get(start).offset();
+            for (int end = start; end < occurrences.size(); end++) {
+                var occurrence = occurrences.get(end);
+                int span = occurrence.offset() - offset;
+                if (span > 240) break;
+                matched.add(occurrence.term());
+                if (matched.size() > bestCount || matched.size() == bestCount && span < bestSpan) {
+                    bestCount = matched.size();
+                    bestSpan = span;
+                    bestOffset = offset;
+                }
+            }
+        }
+        return bestOffset;
     }
 
     @PreDestroy

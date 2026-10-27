@@ -15,6 +15,15 @@ class AnalyzerTest {
     private final TikaJavaAnalyzer analyzer = new TikaJavaAnalyzer();
 
     @Test
+    void loginInstructionsAreNotMistakenForAnAuthenticationWall() {
+        var analysis = analyzer.analyze("guide.html", ("<html><body><main><h1>Sign in</h1>"
+                + "<p>This guide explains the password field and CAPTCHA configuration.</p>"
+                + "</main></body></html>").getBytes(StandardCharsets.UTF_8));
+        assertThat(analysis.status()).isEqualTo("READY");
+        assertThat(analysis.text()).contains("configuration");
+    }
+
+    @Test
     void respectsDeclaredWebCharacterEncoding() {
         var analysis = analyzer.analyze("legacy.html", "<html><head><meta charset='EUC-KR'></head><body><main>가상 관측 기록</main></body></html>"
                 .getBytes(java.nio.charset.Charset.forName("EUC-KR")));
@@ -50,6 +59,26 @@ class AnalyzerTest {
         assertThat(analysis.status()).isEqualTo("PARTIAL");
         assertThat(analysis.text()).contains("Broken");
         assertThat(analysis.symbols()).isEmpty();
+    }
+
+    @Test
+    void invalidUtf8JavaIsNotIndexedWithReplacementCharacters() {
+        var analysis = analyzer.analyze("Invalid.java", new byte[]{'/', '/', (byte) 0xc3, 0x28});
+        assertThat(analysis.status()).isEqualTo("ERROR");
+        assertThat(analysis.text()).isEmpty();
+    }
+
+    @Test
+    void wrappedParserCancellationDoesNotBecomeAnErrorCheckpoint() throws Exception {
+        try (var observation = dev.knowledgeforge.ingestion.application.ProcessingProgress.observe(step -> {
+            throw new java.util.concurrent.CancellationException("synthetic cancellation");
+        })) {
+            org.assertj.core.api.Assertions.assertThatThrownBy(() -> analyzer.analyze("large.txt",
+                    "synthetic text ".repeat(100_000).getBytes(StandardCharsets.UTF_8)))
+                    .isInstanceOf(java.util.concurrent.CancellationException.class);
+        }
+        assertThat(analyzer.analyze("valid.txt", "recovered evidence".getBytes(StandardCharsets.UTF_8)).status())
+                .isEqualTo("READY");
     }
 
     @Test

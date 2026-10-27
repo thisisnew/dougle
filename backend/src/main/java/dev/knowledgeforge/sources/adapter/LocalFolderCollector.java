@@ -61,8 +61,17 @@ public class LocalFolderCollector implements Collector {
                 dev.knowledgeforge.ingestion.application.ProcessingProgress.report("READING",
                         root.relativize(file).toString(), files.size(), 0);
                 if (CollectionLimits.excluded(file.getFileName().toString())) return FileVisitResult.CONTINUE;
-                if (!attributes.isRegularFile() || Files.isSymbolicLink(file) || !file.toRealPath().startsWith(root)) {
+                if (!attributes.isRegularFile() || Files.isSymbolicLink(file)) {
                     throw new LibraryException(400, "심볼릭 링크·특수 파일은 수집하지 않습니다.");
+                }
+                try {
+                    if (!file.toRealPath().startsWith(root)) {
+                        throw new LibraryException(400, "연결한 폴더 밖의 파일은 수집하지 않습니다.");
+                    }
+                } catch (NoSuchFileException | AccessDeniedException exception) {
+                    failures.put(root.relativize(file).toString().replace('\\', '/'),
+                            "파일이 이동·삭제되었거나 읽을 수 없습니다. 위치·권한을 확인하고 다시 동기화하세요.");
+                    return FileVisitResult.CONTINUE;
                 }
                 if (attributes.size() > CollectionLimits.MAX_DOCUMENT) {
                     failures.put(root.relativize(file).toString().replace('\\', '/'), "256 MiB가 넘는 파일은 나눠 등록하세요.");

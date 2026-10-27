@@ -86,6 +86,11 @@ public class GithubCollector implements Collector {
             if (List.of(path.split("/")).stream().anyMatch(CollectionLimits::excluded)) continue;
             CollectionLimits.path(path);
             String[] metadata = parts[0].strip().split("\\s+");
+            if (metadata.length == 3 && metadata[0].equals("160000") && metadata[1].equals("commit")
+                    && metadata[2].matches("[a-f0-9]{40}")) {
+                failures.put(path, "서브모듈은 별도 GitHub 저장소로 연결하세요.");
+                continue;
+            }
             if (metadata.length != 3 || !metadata[0].matches("100(644|755)") || !metadata[1].equals("blob")
                     || !metadata[2].matches("[a-f0-9]{40}")) {
                 throw new LibraryException(400, "Git 심볼릭 링크·서브모듈은 수집하지 않습니다.");
@@ -116,6 +121,13 @@ public class GithubCollector implements Collector {
                     throw new LibraryException(502, "Git blob 크기 또는 해시가 일치하지 않습니다.");
                 }
                 cached.put(metadata[2], content);
+            }
+            if (content.size() <= 1024 && new String(content.content(), StandardCharsets.UTF_8)
+                    .matches("(?s)version https://git-lfs\\.github\\.com/spec/v1\\r?\\n.*\\boid sha256:[a-f0-9]{64}\\r?\\n.*\\bsize [0-9]+\\s*")) {
+                failures.put(path, "Git LFS 원본이 필요합니다. 내려받은 원본 파일을 추가하세요.");
+                cached.remove(metadata[2]);
+                if (previous == null || !previous.files().contains(content)) content.close();
+                continue;
             }
             if (!content.path().equals(path)) {
                 try (var input = content.open()) {

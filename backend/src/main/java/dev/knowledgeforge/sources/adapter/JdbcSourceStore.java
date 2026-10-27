@@ -251,13 +251,22 @@ public class JdbcSourceStore implements SourceStore {
         jdbc.update("DELETE FROM source_file_failure WHERE source_id=?", source.id());
         failures.forEach((path, reason) -> jdbc.update(
                 "INSERT INTO source_file_failure(source_id,path,reason) VALUES(?,?,?)", source.id(), path, reason));
+        String failureSummary = failures.isEmpty() ? null : failures.size() + "개 파일 확인이 필요합니다. "
+                + failures.entrySet().stream().sorted(Map.Entry.comparingByKey()).limit(3)
+                .map(item -> item.getKey() + ": " + item.getValue()).collect(java.util.stream.Collectors.joining(" · "));
+        int searchable = jdbc.queryForObject("""
+                SELECT count(*) FROM entry e JOIN extracted_document d ON d.entry_id=e.id
+                WHERE e.source_id=? AND d.status IN ('READY','PARTIAL') AND length(trim(d.text))>0
+                """, Integer.class, source.id());
+        if (!failures.isEmpty() && searchable == 0) {
+            fail(source.id(), "검색 가능한 자료가 없습니다. " + failureSummary);
+            return;
+        }
         jdbc.update("""
                 UPDATE source SET status=?,revision=?,error=?,synced_at=?,consecutive_failures=0,
                   next_poll_at=CASE WHEN polling_enabled=1 THEN ? + poll_interval_seconds * 1000 ELSE NULL END WHERE id=?
                 """, failures.isEmpty() ? "READY" : "PARTIAL", snapshot.revision(),
-                failures.isEmpty() ? null : failures.size() + "개 파일 확인이 필요합니다. "
-                        + failures.entrySet().stream().sorted(Map.Entry.comparingByKey()).limit(3)
-                        .map(item -> item.getKey() + ": " + item.getValue()).collect(java.util.stream.Collectors.joining(" · ")),
+                failureSummary,
                 clock.instant().toString(), clock.millis(), source.id());
         for (var file : snapshot.files()) {
             jdbc.update("DELETE FROM source_analysis_checkpoint WHERE source_id=? AND path=?", source.id(), file.path());

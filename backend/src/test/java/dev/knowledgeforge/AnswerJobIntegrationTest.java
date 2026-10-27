@@ -278,6 +278,16 @@ class AnswerJobIntegrationTest {
     }
 
     @Test
+    void redactionMarkersAreLiteralTextNotEmbeddedCitationIds() {
+        assertThat(AnswerOutput.validate(VALID.replace("가상 관측 결과입니다.",
+                "고객과 요청 ID는 [REDACTED]로 가려져 있습니다."), bundle))
+                .contains("[REDACTED]", "[R1]");
+        for (String embedded : List.of("[R1]", "[R99/E1]", "[R 1]", "[R2")) {
+            fails(502, () -> AnswerOutput.validate(VALID.replace("가상 관측 결과입니다.", embedded), bundle));
+        }
+    }
+
+    @Test
     void publishedAnswerMustCiteUnderlyingSupportNotPublishedParent() {
         var card = knowledge.create(workspace, "telescope", "synthetic telescope [E1]",
                 List.of(new dev.knowledgeforge.knowledge.domain.Knowledge.Citation(entry, 1, 1))).card();

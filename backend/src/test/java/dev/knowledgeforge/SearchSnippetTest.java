@@ -10,6 +10,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SearchSnippetTest {
     @Test
+    void repeatedPrefixesDoNotHideTheSpecificNumberInTheSnippet() throws Exception {
+        try (var index = new LuceneSearchIndex(data.toString())) {
+            String text = "PAGE993 synthetic filler observation\n".repeat(13) + "PAGE1000 final policy\n";
+            put(index, "one", "workspace", "", "pages", text, "");
+            assertThat(index.search("workspace", "PAGE1000", List.of()).getFirst().snippet()).contains("PAGE1000");
+        }
+    }
+
+    @Test
     void preservesSemanticFormatAfterAsynchronousModelRestart() throws Exception {
         var ready = new java.util.concurrent.atomic.AtomicBoolean(true);
         var model = new dev.knowledgeforge.search.application.TextEmbedding() {

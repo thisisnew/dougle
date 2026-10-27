@@ -187,7 +187,8 @@ class SourceIntegrationTest {
         }
         mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
                         .contentType("application/json").content("{\"name\":\"가상 큰 폴더\",\"kind\":\"LOCAL_FOLDER\",\"location\":\"" + fixture + "\",\"sync\":true}"))
-                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("PARTIAL"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("ERROR"))
+                .andExpect(jsonPath("$.syncedAt").isEmpty())
                 .andExpect(jsonPath("$.error").value(org.hamcrest.Matchers.containsString("256 MiB")));
         assertThat(sources.list(workspace)).hasSize(1);
     }
