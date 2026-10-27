@@ -53,5 +53,55 @@
     "Knowledge.Forge_0.1.31_x86_64.app.tar.gz": "97256f19b7c6c58a92819d817dcd299244c2b71291b06ffbc9caccac9f3a4016",
     "Knowledge.Forge_0.1.31_arm64.app.tar.gz.sig": "83bf42a5e0874a0eed3cd93643323da155a8a6380b930ee9f9fca5d89255cbe8",
     "Knowledge.Forge_0.1.31_x86_64.app.tar.gz.sig": "43cae0797a756a29114efd84c26c43114103bf1b5b3fe826f02f865452cbeb8a"
+  },
+  "github": {
+    "releaseId": 426023984,
+    "tag": "v0.1.31-preview.1",
+    "draft": true,
+    "verifiedAt": "2026-10-27T22:08:15.225Z",
+    "assets": [
+      {
+        "name": "Knowledge.Forge_0.1.31_arm64.app.tar.gz",
+        "size": 565826531,
+        "sha256": "ce835ea32c8860a244449a66ecde7ec3c6fdc66d7f2b0f23b149a9e1dd757217",
+        "matchesLocal": true
+      },
+      {
+        "name": "Knowledge.Forge_0.1.31_arm64.app.tar.gz.sig",
+        "size": 436,
+        "sha256": "83bf42a5e0874a0eed3cd93643323da155a8a6380b930ee9f9fca5d89255cbe8",
+        "matchesLocal": true
+      },
+      {
+        "name": "Knowledge.Forge_0.1.31_arm64.dmg",
+        "size": 592671977,
+        "sha256": "5f0a998bd1ce64d70e68c83b1981bec8929126919a0f6d416ba2c91cc1b2343d",
+        "matchesLocal": true
+      },
+      {
+        "name": "Knowledge.Forge_0.1.31_x86_64.app.tar.gz",
+        "size": 569722226,
+        "sha256": "97256f19b7c6c58a92819d817dcd299244c2b71291b06ffbc9caccac9f3a4016",
+        "matchesLocal": true
+      },
+      {
+        "name": "Knowledge.Forge_0.1.31_x86_64.app.tar.gz.sig",
+        "size": 436,
+        "sha256": "43cae0797a756a29114efd84c26c43114103bf1b5b3fe826f02f865452cbeb8a",
+        "matchesLocal": true
+      },
+      {
+        "name": "Knowledge.Forge_0.1.31_x86_64.dmg",
+        "size": 600304221,
+        "sha256": "61708b7d75bbd311b1f1cadf71c924bb60ffe534f832151801544df1d7b094b9",
+        "matchesLocal": true
+      },
+      {
+        "name": "SHA256SUMS-0.1.31",
+        "size": 633,
+        "sha256": "8bf1133717d242c3eb38d73e65780c2a720c1782974d87394a17498515516330",
+        "matchesLocal": true
+      }
+    ]
   }
 }
