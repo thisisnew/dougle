@@ -11,7 +11,7 @@ Dougle은 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI�
 
 공개 설치본은 **0.1.20**입니다. 개발 중인0.1.22 후보는 아직 배포하지 않습니다. [설치 안내와 검증 범위](docs/macos-install.md).
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.20-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.31-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
