@@ -7,7 +7,8 @@ import { resolve, join } from 'node:path'
 import { tmpdir } from 'node:os'
 
 const resources = resolve(process.argv[2])
-const automatic = process.argv.includes('--auto-discovery')
+const profileAlias = process.argv.includes('--profile-alias')
+const automatic = profileAlias || process.argv.includes('--auto-discovery')
 const temporary = await mkdtemp(join(tmpdir(), 'dougle-fresh-install-'))
 const home = join(temporary, 'home'), data = join(temporary, 'data')
 await mkdir(home)
@@ -15,6 +16,11 @@ const cli = join(home, automatic ? '.nvm/versions/node/v22/bin' : '.local/bin')
 await mkdir(cli, { recursive: true })
 await writeFile(join(cli, 'company-codex'), '#!/bin/sh\n[ "$*" = "login status" ] || exit 99\necho "Logged in using ChatGPT"\n', { mode: 0o700 })
 await writeFile(join(cli, 'company-claude'), '#!/bin/sh\ncase "$*" in\n"auth --help") printf "  status   show status\\n";;\n"auth status") printf \'{"loggedIn":true}\\n\';;\n*) exit 99;;\nesac\n', { mode: 0o700 })
+if (profileAlias) {
+  await rm(join(cli, 'company-claude'))
+  await writeFile(join(cli, 'claude'), '#!/bin/sh\n[ "$CLAUDE_CONFIG_DIR" = "$HOME/Company Profile" ] || exit 41\ncase "$*" in\n"auth --help") printf "  status show status\\n";;\n"auth status") printf \'{"loggedIn":true}\\n\';;\n*) exit 99;;\nesac\n', { mode: 0o700 })
+  await writeFile(join(home, '.zshrc'), 'alias company-claude=\'CLAUDE_CONFIG_DIR="$HOME/Company Profile" claude\'\n')
+}
 const pause = () => new Promise(done => setTimeout(done, 150))
 let child, base, token, logs = ''
 const checks = []
@@ -67,6 +73,7 @@ try {
   console.log('PASS clean HOME startup and session protection')
   if (automatic) {
     const settings = await api('/ai/launch-settings')
+    if (profileAlias) assert(settings.activeClaudeCommand.startsWith('dougle-alias-'), 'profile alias must be selected at startup')
     const selected = {}
     for (const provider of ['CODEX', 'CLAUDE']) {
       const discovered = await api('/ai/launch-settings/discovered/' + provider)
@@ -82,7 +89,7 @@ try {
   }
   for (const provider of ['CODEX', 'CLAUDE']) {
     assert.equal((await api('/ai/providers/' + provider + '/connection', 'POST')).state, automatic ? 'AUTHENTICATED' : 'TOOL_UNAVAILABLE')
-    if (automatic) assert((await api('/ai/launch-settings/discovered/' + provider)).some(item => item.path === join(cli, 'company-' + provider.toLowerCase())))
+    if (automatic) assert((await api('/ai/launch-settings/discovered/' + provider)).some(item => item.name === 'company-' + provider.toLowerCase()))
   }
   checks.push(automatic ? 'both-company-tools-discovered-under-minimal-finder-path' : 'missing-both-ai-tools-does-not-block-library')
   let previousModelState = null
@@ -102,10 +109,14 @@ try {
   checks.push('upload-and-korean-concept-search-without-inference')
   const settings = await api('/ai/launch-settings')
   if (automatic) {
+    const claudeCommand = profileAlias
+      ? (await api('/ai/launch-settings/discovered/CLAUDE')).find(item => item.name === 'company-claude')?.path
+      : join(cli, 'company-claude')
+    assert(claudeCommand)
     assert(['', join(cli, 'company-codex')].includes(settings.saved.codexPath))
-    assert(['', join(cli, 'company-claude')].includes(settings.saved.claudePath))
+    assert(['', claudeCommand].includes(settings.saved.claudePath))
     assert.equal(settings.activeCodexCommand, join(cli, 'company-codex'))
-    assert.equal(settings.activeClaudeCommand, join(cli, 'company-claude'))
+    assert.equal(settings.activeClaudeCommand, claudeCommand)
   } else {
     const saved = await api('/ai/launch-settings', 'PUT', { codexPath: 'company-codex', claudePath: 'company-claude', acknowledged: true, expectedRevision: settings.saved.revision })
     assert.equal(saved.saved.codexPath, join(cli, 'company-codex'))

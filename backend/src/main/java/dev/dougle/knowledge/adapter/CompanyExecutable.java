@@ -28,6 +28,7 @@ final class CompanyExecutable {
 
     static String resolve(String value, List<Path> directories) {
         if (value.isEmpty()) return value;
+        if (ShellAliasLaunch.known(value)) return value;
         if (value.length() > 4096 || value.codePoints().anyMatch(Character::isISOControl)) throw invalid();
         try {
             Path input = Path.of(value);

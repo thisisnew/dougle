@@ -50,18 +50,22 @@ public class ProviderConnectionAdapter implements ProviderConnection {
                 if (help.exit() != 0 || !java.util.regex.Pattern.compile("(?m)^\\s+status(?:\\s|$)").matcher(help.stdout()).find()) {
                     return status(provider, "UNSUPPORTED");
                 }
-                return status(provider, classify(provider, run(List.of(executable, "auth", "status"), directory, false)));
+                return resultStatus(provider, run(List.of(executable, "auth", "status"), directory, false));
             }
             List<String> command = codexStreamHome.isBlank() ? List.of(executable, "login", "status")
                     : List.of(executable, "--config", "cli_auth_credentials_store=\"file\"", "login", "status");
-            return status(provider, classify(provider, run(command, directory, !codexStreamHome.isBlank())));
+            return resultStatus(provider, run(command, directory, !codexStreamHome.isBlank()));
         } catch (java.io.FileNotFoundException exception) {
             return status(provider, "TOOL_UNAVAILABLE");
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            return status(provider, "CHECK_FAILED");
+            return failed(provider, "INTERRUPTED");
+        } catch (java.util.concurrent.TimeoutException exception) {
+            return failed(provider, "TIMED_OUT");
+        } catch (IllegalArgumentException exception) {
+            return failed(provider, "LAUNCH_CONFIGURATION_CHANGED");
         } catch (Exception exception) {
-            return status(provider, "CHECK_FAILED");
+            return failed(provider, "PROCESS_CHECK_FAILED");
         } finally {
             if (directory != null) {
                 try (var paths = Files.walk(directory)) {
@@ -92,6 +96,16 @@ public class ProviderConnectionAdapter implements ProviderConnection {
         return new Status(provider.name(), state, Instant.now().toString(), "NOT_CHECKED");
     }
 
+    private Status failed(Provider provider, String reason) {
+        return new Status(provider.name(), "CHECK_FAILED", Instant.now().toString(), "NOT_CHECKED", reason);
+    }
+
+    private Status resultStatus(Provider provider, Result result) {
+        String state = classify(provider, result);
+        if (!state.equals("CHECK_FAILED")) return status(provider, state);
+        return failed(provider, result.exit() == 0 ? "AUTH_RESPONSE_UNRECOGNIZED" : "AUTH_STATUS_REJECTED");
+    }
+
     private Result run(List<String> command, Path directory, boolean privateProfile) throws Exception {
         var builder = new ProcessBuilder(command).directory(directory.toFile());
         builder.environment().keySet().retainAll(Set.of("PATH", "HOME", "USER", "LOGNAME", "TMPDIR", "LANG", "LC_ALL",
@@ -101,6 +115,7 @@ public class ProviderConnectionAdapter implements ProviderConnection {
             CodexProfile.configure(builder, CodexProfile.prepare(codexStreamHome), directory);
         }
         Process process;
+        ShellAliasLaunch.apply(builder);
         try { process = builder.start(); }
         catch (IOException exception) { throw new java.io.FileNotFoundException("Provider executable unavailable"); }
         var executor = Executors.newFixedThreadPool(2);

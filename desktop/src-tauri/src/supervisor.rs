@@ -89,9 +89,6 @@ impl Backend {
                 data.join("codex-profile").display()
             ));
         }
-        if let Some(claude) = installed_claude() {
-            command.arg(format!("--forge.ai.claude-command={}", claude.display()));
-        }
         command.arg(format!(
             "--forge.git-home={}",
             bundled_git(resources)?.display()
@@ -209,33 +206,6 @@ fn bundled_git(resources: &Path) -> Result<std::path::PathBuf, &'static str> {
     Ok(root)
 }
 
-fn installed_claude() -> Option<std::path::PathBuf> {
-    let mut directories = Vec::new();
-    if let Some(home) = std::env::var_os("HOME") {
-        let home = std::path::PathBuf::from(home);
-        directories.push(home.join(".local/bin"));
-        directories.push(home.join(".npm-global/bin"));
-    }
-    directories.push(std::path::PathBuf::from("/opt/homebrew/bin"));
-    directories.push(std::path::PathBuf::from("/usr/local/bin"));
-    if let Some(path) = std::env::var_os("PATH") {
-        directories.extend(std::env::split_paths(&path));
-    }
-    find_claude(&directories)
-}
-
-fn find_claude(directories: &[std::path::PathBuf]) -> Option<std::path::PathBuf> {
-    use std::os::unix::fs::PermissionsExt;
-    directories
-        .iter()
-        .filter(|directory| directory.is_absolute())
-        .find_map(|directory| {
-            let binary = directory.join("claude");
-            let metadata = std::fs::metadata(&binary).ok()?;
-            (metadata.is_file() && metadata.permissions().mode() & 0o111 != 0).then_some(binary)
-        })
-}
-
 fn bundled_codex(resources: &Path) -> Result<Option<std::path::PathBuf>, &'static str> {
     let file = resources.join("resources/ai/codex");
     if !file.exists() {
@@ -314,29 +284,6 @@ mod tests {
         std::os::unix::fs::symlink("/bin/sh", &helper).unwrap();
         assert!(super::bundled_git(&root).is_err());
         std::fs::remove_dir_all(&root).unwrap();
-    }
-
-    #[test]
-    fn discovers_only_executable_claude_in_absolute_directories() {
-        use std::os::unix::fs::PermissionsExt;
-        let root = std::env::temp_dir().join(format!(
-            "dougle-discovery-{}-{:?}",
-            std::process::id(),
-            std::time::SystemTime::now()
-        ));
-        std::fs::create_dir_all(&root).unwrap();
-        assert!(super::find_claude(&[root.clone()]).is_none());
-        let binary = root.join("claude");
-        std::fs::write(&binary, "synthetic fixture, never execute").unwrap();
-        std::fs::set_permissions(&binary, std::fs::Permissions::from_mode(0o600)).unwrap();
-        assert!(super::find_claude(&[root.clone()]).is_none());
-        std::fs::set_permissions(&binary, std::fs::Permissions::from_mode(0o700)).unwrap();
-        assert_eq!(super::find_claude(&[root.clone()]), Some(binary.clone()));
-        assert!(super::find_claude(&[std::path::PathBuf::from(".")]).is_none());
-        std::fs::remove_file(&binary).unwrap();
-        std::fs::create_dir(&binary).unwrap();
-        assert!(super::find_claude(&[root.clone()]).is_none());
-        std::fs::remove_dir_all(root).unwrap();
     }
 
     #[test]

@@ -211,6 +211,7 @@ public class CliCuratorModel implements CuratorModel {
         if (!codexStreamHome.isBlank() && command.contains("--output-last-message")) {
             CodexProfile.configure(builder, CodexProfile.validate(Path.of(codexStreamHome), true), directory);
         }
+        ShellAliasLaunch.apply(builder);
         Process process = builder.start();
         var diagnostics = new ProcessDiagnostics(command.contains("--output-last-message") ? Transport.CODEX_EXEC : Transport.CLI_EXEC);
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();

@@ -8,6 +8,16 @@ import { request } from './api'
 
 vi.mock('./api', () => ({ request: vi.fn() }))
 const api = vi.mocked(request)
+it('연결 실패 시 자동 탐색하고 별도 도구 찾기 버튼을 요구하지 않는다', async () => {
+  api.mockResolvedValueOnce({ provider: 'CODEX', state: 'CHECK_FAILED', reason: 'AUTH_RESPONSE_UNRECOGNIZED', checkedAt: '', remoteConnection: 'NOT_CHECKED' })
+    .mockResolvedValueOnce([{ name: 'office', path: 'dougle-alias-synthetic' }])
+  render(<ProviderConnectionPanel onClose={vi.fn()} />)
+  expect(screen.queryByRole('button', { name: '다른 AI 도구 찾기' })).not.toBeInTheDocument()
+  await userEvent.click(screen.getByRole('button', { name: '연결' }))
+  expect(await screen.findByRole('button', { name: 'office 사용' })).toBeVisible()
+  expect(screen.getByText(/인증 응답을 해석하지 못했습니다/)).toBeVisible()
+  expect(api.mock.calls.some(([, options]) => options?.method === 'PUT')).toBe(false)
+})
 it.each(['CODEX', 'CLAUDE'] as const)('offers trusted company executable configuration for %s', async provider => {
   localStorage.setItem('forge.ai.provider', provider)
   api.mockImplementation(async path => path === '/ai/launch-settings'

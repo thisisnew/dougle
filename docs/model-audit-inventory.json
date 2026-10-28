@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 684,
-  "testOrFixtureFiles": 259,
+  "totalFiles": 686,
+  "testOrFixtureFiles": 260,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -1052,14 +1052,15 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/CliCuratorModel.java",
-      "sha256": "b81b428546c09c31eaa3ef76c30411b036f0708de65f4827167c4a63d0829946",
-      "lines": 311,
+      "sha256": "8bc9f9bad8a816daaaf4dff0b601b7b60f23a332598b73bcb108b30bb894808c",
+      "lines": 312,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/knowledge/adapter/CliCuratorModelTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CliPlanTransportTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerTest.java",
-        "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1088,7 +1089,7 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/CliProcessPath.java",
-      "sha256": "f420f7dfa53c6768907cd2e6bc3266c4312ea290f61e92d6d76bf211a48635c5",
+      "sha256": "89ab67afe1ff65861fe84e89c82862eca649c5946a77d4a275b0cbf465f40abf",
       "lines": 34,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -1097,8 +1098,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/CodexAppServer.java",
-      "sha256": "efe8060afe7c03c4acbb60ad326f4f6bd348fc597dd602f0da2b6354cc12581d",
-      "lines": 182,
+      "sha256": "6948e11b13c38fdf414b4cb9a83a8d60927e0e21e6b53561efcfe9fa067c931a",
+      "lines": 183,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerSessionTest.java",
@@ -1135,11 +1136,12 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/CompanyExecutable.java",
-      "sha256": "215644987c045db04ba499fecb0ba96cf11f7ed27d3c54e36a403d9e1c69c286",
-      "lines": 51,
+      "sha256": "91a9b941da8678cf1bdbfd649813feabc4bf9e7edb7f58e08a0339bf246f9a1b",
+      "lines": 52,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "backend/src/test/java/dev/dougle/knowledge/adapter/CompanyExecutableTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/CompanyExecutableTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1165,17 +1167,18 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/InstalledCliDiscovery.java",
-      "sha256": "08a628a36a69f89f1daa48d6a2e239431f18da2ff201cda5e68064e61f8b50f8",
-      "lines": 108,
+      "sha256": "b769b677415f8f7554d61070ea9e17cadd6f6ae49749a9eae43a5038e8036fc2",
+      "lines": 112,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/JdbcCliLaunchStore.java",
-      "sha256": "3e8dd753f0540bc46a257a3d9f316e9868f21323ce45587288a5a31baecdd928",
-      "lines": 41,
+      "sha256": "a591f6c27ca447f307ccf3c693dc24b2a8d617c12c0a027bab8dab1cbe7ae328",
+      "lines": 42,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -1262,12 +1265,13 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapter.java",
-      "sha256": "825025d050b7518fe553a4609250d81d7893c5313cf41c304c0edf26261c2bd6",
-      "lines": 137,
+      "sha256": "ed007ce47c10a4f762814d67e73b0686023417ba78bc8021abe16bcae63ec07d",
+      "lines": 152,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
-        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1279,12 +1283,13 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/ProviderLoginAdapter.java",
-      "sha256": "4b0bd075fdbc9671a7321afa04fb1fc92500b5893b1770079bab292d6ecaefd0",
-      "lines": 162,
+      "sha256": "5de4161df5a3156abd513bd4e1664ca37e55a1b4beedce0baedc0d5ea3383a35",
+      "lines": 163,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
-        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1302,6 +1307,15 @@
       "lexicalTestReferences": []
     },
     {
+      "path": "backend/src/main/java/dev/dougle/knowledge/adapter/ShellAliasLaunch.java",
+      "sha256": "0385059cdb52ace3897eea158422f1e4169f68c5c4b4c29be83eb4477f653ee7",
+      "lines": 115,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
+      ]
+    },
+    {
       "path": "backend/src/main/java/dev/dougle/knowledge/application/CliDiagnostics.java",
       "sha256": "92919f6cfdce85843979377305b4132a6c5f80942e13f2ccffee7e2bc278b1a3",
       "lines": 7,
@@ -1314,11 +1328,12 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/application/CliDiscovery.java",
-      "sha256": "3ebcd25b079d9666e1342a6b6397bd7dd931a318184815bbc7440526a4216eff",
-      "lines": 16,
+      "sha256": "f50a974782056922d5af07db22ac1ee82824956d18fdbe16ee2a3ee6f282e377",
+      "lines": 18,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
-        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1330,7 +1345,8 @@
         "backend/src/test/java/dev/dougle/CliLaunchIntegrationTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
-        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1364,7 +1380,8 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
-        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1390,6 +1407,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CliProcessPathTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialPreviewTest.java"
       ]
     },
@@ -1522,14 +1540,15 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/application/ProviderConnection.java",
-      "sha256": "f9696537e0ba318cb219e0644dcb59642ccd5057fe9b9603f9aba81a5debc41f",
-      "lines": 6,
+      "sha256": "94dcdc8e2c1b37f76f106fa78eedffbbeef2fd10cc10bdd70d11bb0de1b42850",
+      "lines": 10,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/ProviderConnectionIntegrationTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "frontend/src/ProviderConnectionPanel.test.tsx"
       ]
     },
@@ -1556,7 +1575,8 @@
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/ProviderConnectionIntegrationTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
-        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java"
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java"
       ]
     },
     {
@@ -1924,6 +1944,7 @@
         "backend/src/test/java/dev/dougle/investigation/adapter/LocalWorkspaceSearchIntegrationTest.java",
         "backend/src/test/java/dev/dougle/investigation/application/OperationalScopeClarificationTest.java",
         "backend/src/test/java/dev/dougle/investigation/domain/PendingOperationalScopeTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginConnectionsTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/GitRunnerTest.java",
         "backend/src/test/java/dev/dougle/transfer/domain/TransferArchiveCodecTest.java",
@@ -2957,6 +2978,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerSessionTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CompanyExecutableTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LargeFileIngestionTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginReaderTest.java",
@@ -3234,6 +3256,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LargeFileIngestionTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginConnectionsTest.java",
@@ -4027,8 +4050,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
-      "sha256": "d15c33b190bff1b8949cfa52bcc509065ee40aaa473b2173376fb2c746814935",
-      "lines": 83,
+      "sha256": "225d815f4623ab9cbc47cf27c9e686ea592aadf6cd5911dc203a16b619f5d51d",
+      "lines": 86,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -4043,6 +4066,13 @@
       "path": "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java",
       "sha256": "bfcb8df90bbfe356d69d83d25c7f6bbd444ab608f182a5cde061cbcc1bbaadd7",
       "lines": 55,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
+      "sha256": "e87cbc704616e077e3886342dad66c61cf879df1b102286a863bd7da3e230e57",
+      "lines": 133,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -4266,14 +4296,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "08c0a0f43d57c6fab90940298941b7d813eabb1d008541089b21b971d9f7bbb4",
+      "sha256": "7eff136583ea61d2f120480f992c6d4eb326840e00fe92de53abbfaf49627b82",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "b94a042e0159bbd19e4cee354dc7ea0ad192e6ab098b3967d0e7985ff8add7b0",
+      "sha256": "8cc6f9744ea3a6eda55a37046f0f2af2523970a145487a704ecf63eb6cc21e14",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -4289,7 +4319,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "5d94d0cc7e64536f51086a78c4315547bf1df67b4d801414199a3d1697bca8f3",
+      "sha256": "07fe07106963fa4d64ca9ff1cdd58f0626c80e3c72538015f6d9294536ff3d98",
       "lines": 27,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -4326,6 +4356,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerSessionTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexTextStreamTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginConnectionsTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/OauthAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialArchiveTest.java",
@@ -4754,8 +4785,8 @@
     },
     {
       "path": "desktop/src-tauri/src/supervisor.rs",
-      "sha256": "dc74c9e748e6d2013ae4eb9ee2053b7a0779700db7fe6902d216f42dc98a9289",
-      "lines": 489,
+      "sha256": "d6b30e1c52a658204a2dbebcfb44c3be52bdc770ef3f972fad3cb20c34fa83bb",
+      "lines": 436,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "desktop/src-tauri/examples/git_smoke.rs",
@@ -4775,7 +4806,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "684f8af15633d3b755917290206abc35463fd19433900662925f1f7faa02494c",
+      "sha256": "3e190de84ca2f331f7655755e3cf047dfd8e196c33cc4216e3fbc71272e9e512",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -4941,6 +4972,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProcessDiagnosticsTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginConnectionsTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/NotionAcceptanceTest.java",
@@ -5422,15 +5454,15 @@
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.test.tsx",
-      "sha256": "704c303d55e6c90482b3109e57c60b5d073f6bdd57fb8ddca9d01f93464014fc",
-      "lines": 190,
+      "sha256": "abc5f84c39ed18a42363326169a89138c48b9aaf0f80dae2ac193d23fca6106b",
+      "lines": 200,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.tsx",
-      "sha256": "456e50799d276acaf7d41bf8130833c01bd793dfc95e4dd0a707d7c6ef05d570",
-      "lines": 148,
+      "sha256": "9957add63c5c1abd1ef4adc061d70ed0d192206c90ce59adeb70c46e022fcd96",
+      "lines": 153,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/ProviderConnectionPanel.test.tsx"
@@ -5826,6 +5858,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LargeFileIngestionTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LegacyDatabaseMigrationTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
@@ -6607,6 +6640,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerSessionTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexTextStreamTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginConnectionsTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/OauthAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialArchiveTest.java",
@@ -6812,6 +6846,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LargeFileIngestionTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LegacyDatabaseMigrationTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
@@ -7307,8 +7342,8 @@
     },
     {
       "path": "scripts/fresh-install-smoke.mjs",
-      "sha256": "7cba69933924f6d79b8e25a5485962d8f23816c4a13d0bb141837dad4534f8ca",
-      "lines": 126,
+      "sha256": "727d49a10b2b0d8b348c336f1332f06d5396bb131b1348f08f3e4c98467a6304",
+      "lines": 133,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -7499,6 +7534,7 @@
         "backend/src/test/java/dev/dougle/investigation/domain/ConstrainedToolExecutorTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/ShellAliasLaunchTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginConnectionsTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/MysqlAcceptanceTest.java",

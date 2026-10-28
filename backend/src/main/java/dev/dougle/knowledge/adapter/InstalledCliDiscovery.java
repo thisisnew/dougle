@@ -60,7 +60,11 @@ public class InstalledCliDiscovery implements CliDiscovery {
                     content = new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
                 }
                 var aliases = java.util.regex.Pattern.compile("(?m)^\\s*alias\\s+([A-Za-z0-9][A-Za-z0-9._-]*)=(['\"])([^\\r\\n]+)\\2\\s*$").matcher(content);
-                while (aliases.find()) addForwarder(candidates, directories, name, aliases.group(1), aliases.group(3));
+                while (aliases.find()) {
+                    String alias = ShellAliasLaunch.register(name, aliases.group(1), aliases.group(3), home, directories);
+                    if (alias != null) candidates.put(Path.of(alias), new Candidate(aliases.group(1), alias));
+                    else addForwarder(candidates, directories, name, aliases.group(1), aliases.group(3));
+                }
                 var functions = java.util.regex.Pattern.compile("(?m)^(?:function\\s+)?([A-Za-z0-9][A-Za-z0-9._-]*)\\s*\\(\\)\\s*\\{\\s*(?:command\\s+|exec\\s+)?([^;{}\\r\\n]+)\\s+\"\\$@\"\\s*;?\\s*\\}\\s*$").matcher(content);
                 while (functions.find()) addForwarder(candidates, directories, name, functions.group(1), functions.group(2));
             } catch (java.io.IOException | SecurityException exception) { }

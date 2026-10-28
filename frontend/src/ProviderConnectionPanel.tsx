@@ -7,14 +7,20 @@ import { loadModel, saveModel, requestedModel, modelPresets, type ModelChoice } 
 import CliLaunchPanel from './CliLaunchPanel'
 import InstalledCliChoices from './InstalledCliChoices'
 
-type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string }
+type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string; reason?: string }
 type Login = { id: string; provider: Provider; state: 'PENDING' | 'AUTHENTICATED' | 'FAILED' | 'CANCELLED' | 'TIMED_OUT' }
 const messages: Record<string, string> = {
   AUTHENTICATED: '로그인 상태를 확인했습니다. 근거를 선택하고 질문할 수 있습니다.',
   LOGIN_REQUIRED: '로그인이 필요합니다. 아래 버튼을 누르면 기본 브라우저에서 로그인합니다.',
   TOOL_UNAVAILABLE: 'AI 실행 도구를 찾지 못했습니다.',
   UNSUPPORTED: '현재 실행 도구는 안전한 인증 확인을 지원하지 않습니다. 연결 완료로 표시하지 않습니다.',
-  CHECK_FAILED: '연결 상태를 확인하지 못했습니다. 잠시 후 다시 확인해 주세요.',
+  CHECK_FAILED: '인증 상태를 확인하지 못했습니다. 회사 계정 설정이나 실행 도구의 인증 응답을 확인해야 합니다.',
+}
+const failureMessages: Record<string, string> = {
+  TIMED_OUT: '인증 확인 시간이 초과됐습니다. 회사 네트워크나 VPN 연결을 확인해 주세요.',
+  AUTH_RESPONSE_UNRECOGNIZED: '실행 도구의 인증 응답을 해석하지 못했습니다. 회사용 실행 설정과 도구 버전을 확인해야 합니다.',
+  AUTH_STATUS_REJECTED: '실행 도구가 인증 확인에 실패했습니다. 터미널에서 사용하는 계정 설정이 필요한지 확인해야 합니다.',
+  LAUNCH_CONFIGURATION_CHANGED: '실행 설정이 변경됐습니다. 사용할 계정을 다시 선택해 주세요.',
 }
 
 export default function ProviderConnectionPanel({ onClose, onConnectionChange, checkOnOpen = false, initialConnection }: { onClose: () => void; onConnectionChange?: (value: ConnectionIndicator) => void; checkOnOpen?: boolean; initialConnection?: ConnectionIndicator | null }) {
@@ -130,10 +136,9 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
     }}>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
     <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected || choosingTool || restartRequired} onClick={() => void check()}>{restartRequired ? '앱을 다시 열어 주세요' : busy ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
     {!['UNCHECKED', 'AUTHENTICATED', 'TOOL_UNAVAILABLE'].includes(indicatorState) && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
-    {status && !['AUTHENTICATED', 'TOOL_UNAVAILABLE'].includes(status.state) && <p>{messages[status.state]}</p>}
-    {(status?.state === 'TOOL_UNAVAILABLE' || discoveryOpen) && <InstalledCliChoices key={provider} provider={provider} unavailable={true} disabled={busy || loggingIn} onPendingChange={setChoosingTool}
+    {status && !['AUTHENTICATED', 'TOOL_UNAVAILABLE'].includes(status.state) && <p>{failureMessages[status.reason ?? ''] ?? messages[status.state]}</p>}
+    {(['TOOL_UNAVAILABLE', 'CHECK_FAILED', 'UNSUPPORTED'].includes(status?.state ?? '') || discoveryOpen) && <InstalledCliChoices key={provider} provider={provider} unavailable={true} disabled={busy || loggingIn} onPendingChange={setChoosingTool}
       onRestartRequired={() => { setRestartRequired(true); setStatus(null); setDiscoveryOpen(true) }} />}
-    {!discoveryOpen && status?.state !== 'TOOL_UNAVAILABLE' && <Button variant="ghost" disabled={busy || loggingIn || choosingTool} onClick={() => setDiscoveryOpen(true)}>다른 AI 도구 찾기</Button>}
     <details><summary>고급 설정</summary><Button className="company-launch-button" variant="ghost" disabled={busy || loggingIn || choosingTool} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button></details>
     {launchSettingsOpen && <CliLaunchPanel initialProvider={provider} onClose={() => setLaunchSettingsOpen(false)} />}
     {error && <p role="alert">{error}</p>}

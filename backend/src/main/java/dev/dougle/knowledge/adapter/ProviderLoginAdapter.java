@@ -104,6 +104,7 @@ public class ProviderLoginAdapter implements ProviderLogin {
             }
             synchronized (this) {
                 if (closed || !status(started.id()).state().equals("PENDING")) return;
+                ShellAliasLaunch.apply(builder);
                 owned = builder.start();
                 process = owned;
             }

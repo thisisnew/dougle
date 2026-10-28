@@ -28,6 +28,7 @@ public class JdbcCliLaunchStore implements CliLaunchStore {
 
     private void validate(String value) {
         if (value.isEmpty()) return;
+        if (ShellAliasLaunch.known(value)) return;
         try {
             Path path = Path.of(value);
             if (value.length() > 4096 || value.contains(java.io.File.pathSeparator) || value.codePoints().anyMatch(Character::isISOControl)

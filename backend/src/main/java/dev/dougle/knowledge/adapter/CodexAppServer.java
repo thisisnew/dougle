@@ -101,6 +101,7 @@ final class CodexAppServer {
         builder.environment().put("XDG_CONFIG_HOME", directory.toString());
         builder.environment().put("TMPDIR", directory.toString());
         builder.environment().put("CODEX_HOME", profile.toString());
+        ShellAliasLaunch.apply(builder);
         Process process = builder.start();
         Set<ProcessHandle> descendants = java.util.concurrent.ConcurrentHashMap.newKeySet();
         var executor = Executors.newFixedThreadPool(2);
