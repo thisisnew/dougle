@@ -22,14 +22,14 @@ public class UrlCollector implements Collector {
     }
     public String kind() { return "URL"; }
     public boolean usesPreviousSnapshot() { return true; }
-    public void validate(String location) { PublicHttpReader.validate(location); }
+    public void validate(String location) { WebSourcePolicy.validate(location); }
 
     public CollectedSnapshot collect(String location) throws Exception {
         return collect(location, null);
     }
 
     public CollectedSnapshot collect(String location, CollectedSnapshot previous) throws Exception {
-        var uri = PublicHttpReader.validate(location);
+        var uri = WebSourcePolicy.validate(location);
         var provider = PluginProvider.forWebLink(uri).orElse(null);
         if (provider == PluginProvider.ATLASSIAN || (provider == PluginProvider.NOTION && browser.connected(dev.dougle.plugins.adapter.BrowserProvider.NOTION))) {
             return browser.collect(dev.dougle.plugins.adapter.BrowserProvider.valueOf(provider.name()), location);
@@ -39,6 +39,7 @@ public class UrlCollector implements Collector {
         }
         var response = previous != null && previous.validators() != null
                 ? remote.read(uri, previous.validators()) : remote.read(uri);
+        WebSourcePolicy.validate(response.uri().toString());
         if (response.notModified()) {
             if (previous == null || previous.validators() == null || !response.uri().toString().equals(previous.validators().uri())) {
                 throw new LibraryException(502, "304 응답에 대응하는 저장 원본이 없습니다.");

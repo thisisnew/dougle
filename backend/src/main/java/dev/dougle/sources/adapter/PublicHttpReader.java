@@ -100,7 +100,7 @@ public class PublicHttpReader implements RemoteReader, AutoCloseable {
     }
 
     public Response read(URI requested, HttpValidators validators) throws Exception {
-        return read(requested, validators, null);
+        return read(requested, validators, null, false);
     }
 
     public Response readGithub(URI requested, String token) throws Exception {
@@ -108,12 +108,13 @@ public class PublicHttpReader implements RemoteReader, AutoCloseable {
             throw new LibraryException(400, "GitHub 읽기 요청 주소가 올바르지 않습니다.");
         }
         if (token != null && !token.matches("[A-Za-z0-9_]{20,255}")) throw new LibraryException(400, "GitHub 토큰 형식을 확인하세요.");
-        return read(requested, null, token);
+        return read(requested, null, token, true);
     }
 
-    private Response read(URI requested, HttpValidators validators, String token) throws Exception {
+    private Response read(URI requested, HttpValidators validators, String token, boolean githubRequest) throws Exception {
         URI uri = validate(requested.toString());
         for (int redirects = 0; redirects <= 3; redirects++) {
+            if (!githubRequest) WebSourcePolicy.validate(uri.toString());
             HttpGet request = new HttpGet(uri);
             request.setHeader("User-Agent", "Dougle/0.2");
             request.setHeader("Accept", "*/*");

@@ -10,7 +10,7 @@ import DeleteConfirmation from './DeleteConfirmation'
 import MaterialWarning from './MaterialWarning'
 import SourceSyncProgress from './SourceSyncProgress'
 import { readMaterialSync, recordMaterialSync } from './materialSync'
-import { type PluginId } from './plugins'
+import { pluginForUrl, type PluginId } from './plugins'
 import type { RelationSeed } from './RelationPanel'
 const RelationPanel = lazy(() => import('./RelationPanel'))
 const AnswerHistoryPanel = lazy(() => import('./AnswerHistoryPanel'))
@@ -32,6 +32,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const [sources, setSources] = useState<Source[]>([])
   const [formOpen, setFormOpen] = useState(false)
   const [kind, setKind] = useState(onUpload ? 'FILE' : 'LOCAL_FOLDER')
+  const [webLocation, setWebLocation] = useState('')
   const [busy, setBusy] = useState('')
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
@@ -59,8 +60,8 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   const latestSources = useRef(sources)
   const latestChanged = useRef(onChanged)
   useEffect(() => { latestSources.current = sources; latestChanged.current = onChanged }, [sources, onChanged])
-  const watching = sources.some(source => (!['URL', 'GITHUB'].includes(source.kind) && source.pollingEnabled) || source.status === 'SYNCING')
-  const canSync = sources.some(source => !['URL', 'GITHUB'].includes(source.kind)) || (syncUploads && hasMaterials)
+  const watching = sources.some(source => (source.kind !== 'GITHUB' && source.pollingEnabled) || source.status === 'SYNCING')
+  const canSync = sources.some(source => source.kind !== 'GITHUB') || (syncUploads && hasMaterials)
   const collecting = sources.some(source => source.status === 'SYNCING')
   const syncing = busy === 'sync-all' || busy === 'create' || uploading || collecting
   const syncedAt = [lastSync, ...sources.map(source => source.syncedAt)].filter((value): value is string => !!value && Number.isFinite(Date.parse(value)))
@@ -148,7 +149,17 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
   }
 
   async function createSource(sourceKind: string, sourceLocation: string) {
-    if (sourceKind !== 'LOCAL_FOLDER') return
+    if (!['LOCAL_FOLDER', 'URL'].includes(sourceKind)) return
+    if (sourceKind === 'URL') {
+      try {
+        const address = new URL(sourceLocation.trim())
+        const host = address.hostname.toLowerCase().replace(/\.+$/, '')
+        if (['github.com', 'githubusercontent.com'].some(domain => host === domain || host.endsWith(`.${domain}`))) {
+          setError('GitHub 연결은 지원하지 않습니다. 내려받은 소스코드의 로컬 폴더를 선택하세요.'); return
+        }
+        if (address.protocol !== 'https:' || address.username || address.password || address.hash || (address.port && address.port !== '443')) throw new Error()
+      } catch { setError('사용자정보·fragment가 없는 HTTPS 주소를 입력해 주세요.'); return }
+    }
     let name: string
     try { name = sourceName(sourceKind, sourceLocation) }
     catch { setError('올바른 주소를 입력해 주세요.'); return }
@@ -213,7 +224,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
           setSyncLog(log => [...log, '실패 · 보관한 파일'].slice(-5))
         }
       }
-      for (const source of sources.filter(item => !['URL', 'GITHUB'].includes(item.kind))) {
+      for (const source of sources.filter(item => item.kind !== 'GITHUB')) {
         if (signal.aborted || stopSync.current) return
         setActiveSource(source.id)
         setSyncStep(`${source.name} · 자료 수집·분석 중…`)
@@ -244,11 +255,11 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     const analysisError = source.status === 'PARTIAL' ? source.error : source.rootEntryId ? analysisFailures[source.rootEntryId] : undefined
     const failed = source.status === 'ERROR' || !!sourceErrors[source.id]
     const requiresConnection = /연결이 필요|원격 서버 HTTP 오류: (401|403)|GitHub 인증|SSO 승인|GitHub 조회가 거부|저장소가 없거나 접근 권한/.test(sourceErrors[source.id] || source.error || '')
-    const archived = ['URL', 'GITHUB'].includes(source.kind)
-    const requiredPlugin = failed && requiresConnection && source.kind === 'MYSQL' ? 'MYSQL' : null
+    const archived = source.kind === 'GITHUB'
+    const requiredPlugin = failed && requiresConnection ? source.kind === 'MYSQL' ? 'MYSQL' : source.kind === 'URL' ? pluginForUrl(source.location) : null : null
     return <li key={source.id}>
     <div className="source-info">
-      <div className={`material-name${failed || analysisError ? ' has-warning' : ''}`}><button className="source-open" disabled={!source.rootEntryId || !!busy} onClick={() => source.rootEntryId && onSelect(source.rootEntryId)}><SourceIcon size={18} aria-hidden="true" /><strong>{source.name}</strong></button>{(failed || analysisError) && <MaterialWarning name={source.name} error={failed ? sourceErrors[source.id] || source.error : analysisError} label={requiredPlugin ? '연결 필요' : failed ? '동기화 실패' : '분석 실패'} onAction={requiredPlugin && onPluginConnect && !syncing && !busy && !picking ? () => onPluginConnect(requiredPlugin) : undefined} />}</div>
+      <div className={`material-name${failed || analysisError ? ' has-warning' : ''}`}><button className="source-open" disabled={!source.rootEntryId || !!busy} onClick={() => source.rootEntryId && onSelect(source.rootEntryId)}><SourceIcon size={18} aria-hidden="true" /><strong>{source.name}</strong></button>{(failed || analysisError) && <MaterialWarning name={source.name} kind={source.kind} error={failed ? sourceErrors[source.id] || source.error : analysisError} label={requiredPlugin ? '연결 필요' : failed ? '동기화 실패' : '분석 실패'} onAction={requiredPlugin && onPluginConnect && !syncing && !busy && !picking ? () => onPluginConnect(requiredPlugin) : undefined} />}</div>
       <span>{sourceKinds[source.kind] || source.kind} · {archived ? '보관 자료 · 직접 연결 종료' : requiresConnection ? '연결 필요' : analysisError && !failed ? '일부 처리' : states[failed ? 'ERROR' : source.status] || source.status}</span>
       <details><summary>상세 정보</summary><small>{source.location}</small>
         {source.syncedAt && <small>최근 동기화 {new Date(source.syncedAt).toLocaleString('ko-KR')}</small>}
@@ -272,15 +283,16 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     </section>}
     {error && !deleting && <p role="alert" className="modal-error">{error}</p>}
     {deleting && <DeleteConfirmation name={sources.find(source => source.id === deleting)?.name ?? ''} busy={!!busy} error={error} onCancel={() => { setDeleting(null); setError('') }} onConfirm={() => void mutate(deleting, () => request(`${base}/sources/${deleting}`, { method: 'DELETE', signal: mutationAbort.current?.signal }))} />}
-    {formOpen && <form onSubmit={event => event.preventDefault()} className="source-form">
+    {formOpen && <form onSubmit={event => { event.preventDefault(); if (kind === 'URL' && !busy && !picking && !uploading) void createSource('URL', webLocation) }} className="source-form">
       <div className="source-kind-options" role="group" aria-label="자료 종류">
         {[
           ...(onUpload ? [{ value: 'FILE', label: '파일', icon: FileText }] : []),
           { value: 'LOCAL_FOLDER', label: '폴더', icon: FolderInput },
+          { value: 'URL', label: '웹 링크', icon: Link },
         ].map(({ value, label, icon: Icon }) => <button key={value} type="button" aria-pressed={kind === value} disabled={picking || !!busy || uploading} onClick={() => { setKind(value); setError('') }}><Icon size={17} aria-hidden="true" />{label}</button>)}
       </div>
       <div className="source-add-target">
-        <Button type="button" variant="outline" className="source-target-control source-picker-button"
+        {kind === 'URL' ? <div className="source-target-control source-address-target"><Link aria-hidden="true" /><input aria-label="웹 URL" type="url" required maxLength={2048} placeholder="https://" value={webLocation} disabled={!!busy || uploading || picking} onChange={event => setWebLocation(event.target.value)} /><Button type="submit" size="icon" aria-label="추가" disabled={!webLocation.trim() || !!busy || uploading || picking}><ArrowRight aria-hidden="true" /></Button></div> : <Button type="button" variant="outline" className="source-target-control source-picker-button"
           disabled={uploading || picking || !!busy || (kind === 'LOCAL_FOLDER' && !hasFolderPicker())}
           aria-busy={uploading || picking || busy === 'create'}
           title={kind === 'LOCAL_FOLDER' && !hasFolderPicker() ? '설치한 앱에서 선택할 수 있습니다' : undefined}
@@ -288,7 +300,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
           {uploading || busy === 'create' ? <span className="upload-spinner" aria-hidden="true" /> : kind === 'FILE' ? <FileText aria-hidden="true" /> : <FolderInput aria-hidden="true" />}
           <span>{uploading || busy === 'create' ? '추가 중…' : picking ? '선택 중…' : kind === 'FILE' ? '파일 선택' : '폴더 선택'}</span>
           <ArrowRight className="source-target-arrow" aria-hidden="true" />
-        </Button>
+        </Button>}
       </div>
     </form>}
     {renderLibrary ? renderLibrary(sources, sourceRows) : sourceRows}

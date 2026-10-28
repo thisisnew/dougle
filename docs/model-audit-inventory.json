@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 688,
-  "testOrFixtureFiles": 261,
+  "totalFiles": 692,
+  "testOrFixtureFiles": 264,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -1871,6 +1871,7 @@
         "backend/src/test/java/dev/dougle/security/application/CredentialArchiveTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialContentGuardTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialPreviewTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
@@ -2728,7 +2729,7 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/adapter/JdbcSourceStore.java",
-      "sha256": "28dfa06b8799eee063da0bf88e024c4ca780308ad9b47706351d4ea6500cfd02",
+      "sha256": "53d79f870a29cb04394ed17d58ab49b12995c8ca44fbf810dfa913d0d4b67ffb",
       "lines": 315,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -2738,15 +2739,16 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/adapter/LocalFolderCollector.java",
-      "sha256": "95029b37bc0839adbbba5262abb4878b45eb9f8c04b527cee06c6f0f2ff54be2",
-      "lines": 119,
+      "sha256": "0a9c62df8b5318b1676006def8c15028571fdf21c0f01e866a4f7d2a00bfa6e6",
+      "lines": 147,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/CollectorTest.java",
         "backend/src/test/java/dev/dougle/FolderAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/FolderFailureAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/StreamingCollectionTest.java",
-        "backend/src/test/java/dev/dougle/TeamSettingsServiceTest.java"
+        "backend/src/test/java/dev/dougle/TeamSettingsServiceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java"
       ]
     },
     {
@@ -2765,8 +2767,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/adapter/PublicHttpReader.java",
-      "sha256": "7e7292a52ab2bd2d060e1af93874efecac48e060f6e429ba2a31fba984eef824",
-      "lines": 191,
+      "sha256": "1fa2d013b4550132150d54b1512e44fd74d3e8da2f54b106558d158a984eaa49",
+      "lines": 192,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/CollectorTest.java",
@@ -2777,8 +2779,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/adapter/SourceController.java",
-      "sha256": "5e86d2ec55ac58dc39f7946fd8751b73138933838ea93d0181b71662ffed80dc",
-      "lines": 111,
+      "sha256": "8d8821ed368b0924f199c792609c837f3a628d904e1359eb953a094a91a40ecb",
+      "lines": 113,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/SourceIntegrationTest.java",
@@ -2787,13 +2789,22 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/adapter/UrlCollector.java",
-      "sha256": "f5cfb14b1f31825fdff0dcb534495fbee85b48808613b5d878095cfc397f735b",
-      "lines": 55,
+      "sha256": "d312736ad290a46653424bad89d8507cdeaf0defab25ff5f095a9f2f8f5d06e7",
+      "lines": 56,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/CollectorTest.java",
         "backend/src/test/java/dev/dougle/WebAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java"
+      ]
+    },
+    {
+      "path": "backend/src/main/java/dev/dougle/sources/adapter/WebSourcePolicy.java",
+      "sha256": "c0f8977d8c750ddc47e4b8e1e102b2ea8ef13683e5b1486e2862df44586d961f",
+      "lines": 19,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/sources/adapter/WebSourcePolicyTest.java"
       ]
     },
     {
@@ -2812,6 +2823,7 @@
         "backend/src/test/java/dev/dougle/TeamSettingsServiceTest.java",
         "backend/src/test/java/dev/dougle/TextChunksTest.java",
         "backend/src/test/java/dev/dougle/WebAcceptanceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java"
       ]
     },
@@ -2858,8 +2870,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/application/SourceService.java",
-      "sha256": "743ac09f0177cafafcb16f19e040ca429abae8c37ee61ce11b97d4fa65826f86",
-      "lines": 253,
+      "sha256": "f8ee6c81058a05aeb720b22c4bf8753a57a03a72b5434fac65d5e7e3ad7cb918",
+      "lines": 254,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/BundleValidationIntegrationTest.java",
@@ -3009,9 +3021,11 @@
         "backend/src/test/java/dev/dougle/plugins/domain/PluginProviderTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialArchiveTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/DnsRebindingAcceptanceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/WebSourcePolicyTest.java",
         "backend/src/test/java/dev/dougle/sources/application/SourcePollingTest.java",
         "backend/src/test/java/dev/dougle/transfer/domain/TransferArchiveCodecTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
@@ -3295,6 +3309,7 @@
         "backend/src/test/java/dev/dougle/security/application/CredentialArchiveTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialContentGuardTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialPreviewTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
@@ -3323,6 +3338,7 @@
         "scripts/readonly-runtime-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/team-settings-smoke.mjs",
         "scripts/updater-smoke.mjs",
         "scripts/upgrade-smoke.mjs",
@@ -3416,10 +3432,12 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/CollectorTest.java",
-      "sha256": "3d439c5b8375084d4f6ade8c3be814a25b4332be27ff06883ea8aca5da53c779",
-      "lines": 308,
+      "sha256": "97407b1f246f0dd620304ee938c3732bfd3cefced167530e2ce2d2a93317953e",
+      "lines": 314,
       "kind": "test-or-fixture",
-      "lexicalTestReferences": []
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java"
+      ]
     },
     {
       "path": "backend/src/test/java/dev/dougle/ConversationIntegrationTest.java",
@@ -3493,8 +3511,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/FolderAcceptanceTest.java",
-      "sha256": "ccf60bc6e557d023d15b87dfa47a91e9f36ce01aa2339b580c381e4fb05f4c69",
-      "lines": 184,
+      "sha256": "3cb1e221e2629366d4af7d7f284d2d7850ca3fcd0f7cb983742d3ca36c2155a0",
+      "lines": 183,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -3570,15 +3588,15 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/PluginIntegrationTest.java",
-      "sha256": "acc9ae1a4a6f0b3971a02e159095aeb52f8e9571b376594e9388bc02b15fb02f",
+      "sha256": "deee83f1ebef3b503d1b9735b8b3fcfc8f55190131af30f07c3c89a3fc5179a4",
       "lines": 102,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "backend/src/test/java/dev/dougle/PollingIntegrationTest.java",
-      "sha256": "5602d0247bd9ce504d9c8d516567733b46722733f7aab5b5803344017355c531",
-      "lines": 161,
+      "sha256": "beae100be61424b2b254f7910d9ea8b230d19b9e332b9ae1b3e26797163d0bd0",
+      "lines": 163,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -3675,8 +3693,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/SourceIntegrationTest.java",
-      "sha256": "2f74d724e26716156e52f0693aed17d564615ee4548d611afcd6e962fa9afcc0",
-      "lines": 850,
+      "sha256": "12141dda5d621878dd2fbb095773362eb3a4d29fe77a5183626711c457990a1b",
+      "lines": 882,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -4274,15 +4292,22 @@
       "lexicalTestReferences": []
     },
     {
+      "path": "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
+      "sha256": "412157ccbda2f55285d8901b837da79ca9c2b834b39583db4c6073e14e5dc640",
+      "lines": 43,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
-      "sha256": "6130f10209ef566e2f44a477952e0afc38d2f90d0c216585c7f04b8d0435302d",
-      "lines": 174,
+      "sha256": "5804eca273f569611e66ce5af823b57a31d1deea47c8f93691b5f475a3f4169c",
+      "lines": 190,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
-      "sha256": "d3a8e82e2a1b952224dcc0e6f54363f023958a8b89642bfccbc6dbe7fe5a0860",
+      "sha256": "45f371133546d7e584a1b24b9399198d6691c2d529776514aea4506123b5f122",
       "lines": 53,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
@@ -4291,6 +4316,13 @@
       "path": "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
       "sha256": "3699707eba5e1d25e004ae2cf4785fc4cd9567c971fc02f7389b77693c652e81",
       "lines": 172,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/test/java/dev/dougle/sources/adapter/WebSourcePolicyTest.java",
+      "sha256": "820e49b6361ace7b7a6582cb7b6d36bccd00633c0183d375f02bb07bdc1365f7",
+      "lines": 19,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -4328,14 +4360,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "0cdd0b602f8b9556845b604f262e9eaf26be5bfad2e66be9a2e782511d73acfb",
+      "sha256": "995845650f3e109348acce06618ae743b60211a3e79852715e8c9ffc66adff9f",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "49688cbe000ef5b5c1525bb222911f82d74c798d1e57ad2cfbea799d02fc2842",
+      "sha256": "1d90d4c1869b74a2777c99c1c40d63928cb044998bd83ff88782763e38ed0f05",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -4351,7 +4383,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "33a8cf5eea6139c10410ff4a5b9385c6681ad2ca2924d0bacaf6093eb4773801",
+      "sha256": "bacd855b6b0eebd33c1aca0672745e9d12c08e58379bfc6f5882f80bf929e175",
       "lines": 27,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -4583,6 +4615,7 @@
         "backend/src/test/java/dev/dougle/security/application/CredentialContentGuardTest.java",
         "backend/src/test/java/dev/dougle/security/application/CredentialPreviewTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/GitRunnerTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
@@ -4744,6 +4777,7 @@
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/WebSourcePolicyTest.java",
         "backend/src/test/java/dev/dougle/sources/application/SourcePollingTest.java",
         "backend/src/test/java/dev/dougle/transfer/domain/TransferArchiveCodecTest.java",
         "desktop/src-tauri/examples/git_smoke.rs",
@@ -4757,6 +4791,7 @@
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourceMetadataEditor.test.tsx",
+        "frontend/src/SourceMvp.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/SyncEntryAcceptance.test.tsx",
         "frontend/src/UpdateAcceptance.test.tsx",
@@ -4780,6 +4815,7 @@
         "scripts/polling-smoke.mjs",
         "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/team-settings-smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
@@ -4840,7 +4876,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "35dcae960254754a8f41a9250147c41cee288a8ddcb67b4023200eb8642ec005",
+      "sha256": "3a7e390ac59d9686d767bc264a0a0815bc51ed9b3e0eeb3061d356db45d6f84f",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -4865,6 +4901,7 @@
         "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
         "scripts/published-update-smoke.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
     },
@@ -5360,15 +5397,15 @@
     },
     {
       "path": "frontend/src/MaterialWarning.test.tsx",
-      "sha256": "e73d24722a04bf59f2b32f43e0f7139fde2d006f6949bf1b8fd638605b3242e6",
-      "lines": 50,
+      "sha256": "938cd50b02a238ab36adebcd62a310a93701397ac4d43d30ea555da314b566af",
+      "lines": 59,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/MaterialWarning.tsx",
-      "sha256": "0717f389aae38b06e0b99805daea24e2f42a65cd0ec9c43c3c02990917a0f91e",
-      "lines": 90,
+      "sha256": "29c46ad85ee3f9c0a3642cca5003ce11cea4a485c46cbb9030b401cfa23d80b0",
+      "lines": 99,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/LibraryIntegrationTest.java",
@@ -5604,22 +5641,22 @@
     },
     {
       "path": "frontend/src/SourceMvp.test.tsx",
-      "sha256": "a073b341b5c271dc3eed1bf715ba2973cb76bf052dcfd55a70e13a2136205382",
-      "lines": 62,
+      "sha256": "3a68a41da149f671573cd32848baa29a803b6a3c7f78fc1281287de628bb4e98",
+      "lines": 92,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/SourcePanel.test.tsx",
-      "sha256": "59097d4a819d2bb53a92081c0fea89c64d0ae3e7b41d9cce0208df3b32b700c5",
+      "sha256": "6c023895e4c842d1dde25b3e6b66d7470996b006d72ed163806a9f16e6b50275",
       "lines": 438,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/SourcePanel.tsx",
-      "sha256": "fc044b8162bc93665dda4f0abf5005350531fdbaadcc82842326a9a393f042a2",
-      "lines": 319,
+      "sha256": "2a5b50ceb94b4ca5665aa717a5e11b66d778e889c498bfc2f9982f8108958e72",
+      "lines": 331,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/SourceMvp.test.tsx",
@@ -5918,9 +5955,11 @@
         "backend/src/test/java/dev/dougle/security/application/CredentialPreviewTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/DnsRebindingAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/GitRunnerTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/WebSourcePolicyTest.java",
         "backend/src/test/java/dev/dougle/sources/application/SourcePollingTest.java",
         "backend/src/test/java/dev/dougle/transfer/domain/TransferArchiveCodecTest.java",
         "desktop/src-tauri/examples/git_smoke.rs",
@@ -5993,6 +6032,7 @@
         "scripts/readonly-runtime-smoke.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/team-settings-smoke.mjs",
         "scripts/upgrade-smoke.mjs",
         "scripts/workspace-archive-smoke.mjs"
@@ -6245,6 +6285,7 @@
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/WebSourcePolicyTest.java",
         "backend/src/test/java/dev/dougle/sources/application/SourcePollingTest.java",
         "backend/src/test/java/dev/dougle/transfer/domain/TransferArchiveCodecTest.java",
         "desktop/src-tauri/examples/git_smoke.rs",
@@ -6258,6 +6299,7 @@
         "frontend/src/EvidenceBundlePanel.test.tsx",
         "frontend/src/RelationPanel.test.tsx",
         "frontend/src/SourceMetadataEditor.test.tsx",
+        "frontend/src/SourceMvp.test.tsx",
         "frontend/src/SourcePanel.test.tsx",
         "frontend/src/SyncEntryAcceptance.test.tsx",
         "frontend/src/UpdateAcceptance.test.tsx",
@@ -6281,6 +6323,7 @@
         "scripts/polling-smoke.mjs",
         "scripts/published-update-smoke.mjs",
         "scripts/smoke.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/team-settings-smoke.mjs",
         "scripts/updater-smoke.mjs"
       ]
@@ -6908,9 +6951,11 @@
         "backend/src/test/java/dev/dougle/security/application/CredentialPreviewTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/DnsRebindingAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/GitRunnerTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/LocalFolderCollectorTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/PublicHttpReaderTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/SourceMvpBoundaryTest.java",
         "backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java",
+        "backend/src/test/java/dev/dougle/sources/adapter/WebSourcePolicyTest.java",
         "backend/src/test/java/dev/dougle/sources/application/SourcePollingTest.java",
         "backend/src/test/java/dev/dougle/transfer/domain/TransferArchiveCodecTest.java",
         "desktop/src-tauri/examples/runtime_smoke.rs",
@@ -7625,6 +7670,7 @@
         "scripts/readonly-runtime-smoke.test.mjs",
         "scripts/relations-smoke.mjs",
         "scripts/smoke.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/team-settings-smoke.mjs",
         "scripts/updater-smoke.mjs",
         "scripts/workspace-archive-smoke.mjs"
@@ -7676,6 +7722,13 @@
         "scripts/upgrade-smoke.mjs",
         "scripts/workspace-archive-smoke.mjs"
       ]
+    },
+    {
+      "path": "scripts/source-recovery-smoke.mjs",
+      "sha256": "0a97f71ec5c5a451b2e5b5447c5a87a141d53b6ff091a21de915034364a9d416",
+      "lines": 77,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
     },
     {
       "path": "scripts/stage-codex.sh",

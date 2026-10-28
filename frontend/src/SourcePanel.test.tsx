@@ -60,7 +60,7 @@ it.each([
   const row = await screen.findByRole('button', { name: '가상 연구' })
   await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
   expect(row.querySelector('svg')).toHaveClass(icon)
-  if (kind === 'LOCAL_FOLDER') expect(screen.getByRole('button', { name: label }).querySelector('svg')).toHaveClass(icon)
+  if (kind === 'LOCAL_FOLDER' || kind === 'URL') expect(screen.getByRole('button', { name: label }).querySelector('svg')).toHaveClass(icon)
   else expect(screen.queryByRole('button', { name: label })).not.toBeInTheDocument()
 })
 

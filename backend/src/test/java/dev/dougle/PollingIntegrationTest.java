@@ -68,7 +68,9 @@ class PollingIntegrationTest {
         settings(true, 60, 0);
         time(now + 60001);
         assertThat(store.due(2)).hasSize(1);
-        for (String kind : java.util.List.of("URL", "GITHUB")) {
+        jdbc.update("UPDATE source SET kind='URL' WHERE id=?", source.id());
+        assertThat(store.due(2)).hasSize(1);
+        for (String kind : java.util.List.of("GITHUB")) {
             jdbc.update("UPDATE source SET kind=? WHERE id=?", kind, source.id());
             assertThat(store.due(2)).isEmpty();
             assertThat(store.find(source.workspaceId(), source.id())).isPresent();

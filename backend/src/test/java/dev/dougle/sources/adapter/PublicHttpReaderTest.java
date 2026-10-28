@@ -11,6 +11,22 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class PublicHttpReaderTest {
+    @Test
+    @SuppressWarnings("unchecked")
+    void webRedirectToGithubIsBlockedBeforeSecondRequest() throws Exception {
+        CloseableHttpClient client = mock(CloseableHttpClient.class);
+        when(client.execute(any(ClassicHttpRequest.class), any(HttpClientResponseHandler.class))).thenAnswer(invocation -> {
+            var response = new BasicClassicHttpResponse(302);
+            response.addHeader("Location", "https://github.com/org/repo");
+            HttpClientResponseHandler<Object> handler = invocation.getArgument(1);
+            return handler.handleResponse(response);
+        });
+        try (var reader = new PublicHttpReader(client)) {
+            assertThatThrownBy(() -> reader.read(URI.create("https://example.org/document")))
+                    .hasMessageContaining("GitHub 연결은 지원하지 않습니다");
+        }
+        verify(client, times(1)).execute(any(ClassicHttpRequest.class), any(HttpClientResponseHandler.class));
+    }
     @org.junit.jupiter.params.ParameterizedTest
     @org.junit.jupiter.params.provider.ValueSource(ints = {301, 302, 307, 308, 401, 403, 404, 429, 500})
     @SuppressWarnings("unchecked")

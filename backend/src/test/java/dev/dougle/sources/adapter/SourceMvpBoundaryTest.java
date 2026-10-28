@@ -26,7 +26,7 @@ class SourceMvpBoundaryTest {
                 new SourceController.Registration("Source", kind, "https://github.com/company/repo", "", true))).status());
         verifyNoInteractions(sources, search);
     }
-    @ParameterizedTest @ValueSource(strings = {"URL", "GITHUB"})
+    @ParameterizedTest @ValueSource(strings = {"GITHUB"})
     void preservesArchiveAndRejectsResyncAndPolling(String kind) {
         var saved = archived(kind);
         when(sources.list("workspace")).thenReturn(List.of(saved));

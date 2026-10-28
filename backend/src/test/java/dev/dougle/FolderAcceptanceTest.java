@@ -95,14 +95,13 @@ class FolderAcceptanceTest {
             if (fixture == 6 || fixture == 7) {
                 try (var snapshot = collector.collect(root.toString())) {
                     assertThat(snapshot.files()).noneSatisfy(file -> assertThat(file.path()).isIn("outside.txt", "cycle"));
-                } catch (dev.dougle.library.application.LibraryException failure) {
-                    result.put("safeRejection", failure.getMessage());
-                    assertThat(failure.getMessage()).contains("심볼릭");
+                    assertThat(snapshot.files()).hasSize(manifest.size());
+                    assertThat(snapshot.failures()).hasSize(1);
                 }
                 assertThat(fingerprint(root)).isEqualTo(before);
                 result.put("status", "PARTIAL");
                 result.put("checkStatus", "PASS");
-                result.put("remaining", List.of("Collector rejects entire folder rather than collecting healthy siblings", "Action " + action + " cannot reach successful baseline; retry/UI/search not executed"));
+                result.put("remaining", List.of("Action " + action + " retry/UI/search not executed by this collector-only scenario"));
                 return;
             }
             collect(root, manifest, result);

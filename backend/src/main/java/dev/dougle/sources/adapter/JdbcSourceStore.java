@@ -100,7 +100,7 @@ public class JdbcSourceStore implements SourceStore {
     }
 
     public List<Source> due(int limit) {
-        return jdbc.query("SELECT * FROM source WHERE kind IN ('LOCAL_FOLDER','MYSQL') AND polling_enabled=1 AND next_poll_at<=? AND status!='SYNCING' ORDER BY next_poll_at,id LIMIT ?",
+        return jdbc.query("SELECT * FROM source WHERE kind IN ('LOCAL_FOLDER','MYSQL','URL') AND polling_enabled=1 AND next_poll_at<=? AND status!='SYNCING' ORDER BY next_poll_at,id LIMIT ?",
                 SOURCE, clock.millis(), limit);
     }
 

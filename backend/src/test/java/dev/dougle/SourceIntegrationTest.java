@@ -100,8 +100,7 @@ class SourceIntegrationTest {
         for (String selected : List.of("URL", "GITHUB")) {
             var repository = sources.create(workspace, "저장소 " + selected, selected, " https://github.com/example/repo.git/ ", "");
             assertThat(repository.kind()).isEqualTo("GITHUB");
-            for (String address : List.of("https://example.org/page", "https://github.com/example/repo/blob/main/App.java",
-                    "https://github.com/example/repo/issues/1", "https://github.com/example/repo/tree/main")) {
+            for (String address : List.of("https://example.org/page")) {
                 assertThat(sources.create(workspace, "페이지 " + selected + " " + address.hashCode(), selected, address, "").kind()).isEqualTo("URL");
             }
         }
@@ -188,7 +187,7 @@ class SourceIntegrationTest {
 
     @Test void archivedRemoteMaterialsRemainSearchableAfterDeniedSync() throws Exception {
         Files.writeString(fixture.resolve("archived.txt"), "archived unique telescope evidence");
-        for (String kind : List.of("URL", "GITHUB")) {
+        for (String kind : List.of("GITHUB")) {
             String workspace = library.createWorkspace("보관 자료 " + kind).id();
             Source original = sources.create(workspace, "보관 자료", "LOCAL_FOLDER", fixture.toString(), "");
             Source collected = sources.sync(workspace, original.id(), search::refresh);
@@ -202,26 +201,59 @@ class SourceIntegrationTest {
     }
 
     @Test
-    void notionUrlRegistrationIsRemovedWithoutCollectingAppShell() throws Exception {
+    void notionUrlRegistrationRequiresConnectionWithoutCollectingAppShell() throws Exception {
         String workspace = library.createWorkspace("플러그인 안내").id();
         mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
                         .contentType("application/json").content("{\"name\":\"가상 페이지\",\"kind\":\"URL\",\"location\":\"https://app.notion.com/p/synthetic\",\"sync\":true}"))
-                .andExpect(status().isBadRequest());
-        assertThat(sources.list(workspace)).isEmpty();
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("ERROR"));
+        assertThat(sources.list(workspace)).hasSize(1);
         verifyNoInteractions(remote);
         assertThat(search.search(workspace, "Notion", List.of())).isEmpty();
     }
 
     @Test
-    void urlRegistrationIsRejectedWithoutRemoteReads() throws Exception {
+    void urlRegistrationCollectsAndIndexesWebDocument() throws Exception {
         String workspace = library.createWorkspace("첫 웹 동기화").id();
         URI uri = URI.create("https://example.org/automatic");
         when(remote.read(uri)).thenReturn(new RemoteReader.Response(uri, "text/plain", "가상 온실 기록".getBytes(StandardCharsets.UTF_8)));
         mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
                         .contentType("application/json").content("{\"name\":\"가상 링크\",\"kind\":\"URL\",\"location\":\"" + uri + "\",\"sync\":true}"))
-                .andExpect(status().isBadRequest());
-        assertThat(search.search(workspace, "온실", List.of())).isEmpty();
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("READY"));
+        assertThat(search.search(workspace, "온실", List.of())).isNotEmpty();
+        verify(remote).read(uri);
+    }
+
+    @Test void githubWebRegistrationIsRejectedBeforeCollection() throws Exception {
+        String workspace = library.createWorkspace("GitHub 차단").id();
+        for (String address : List.of("https://github.com/example/repo", "https://github.com/example/repo/blob/main/file", "https://api.github.com/repos/example/repo", "https://raw.githubusercontent.com/example/repo/main/file")) {
+            mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
+                    .contentType("application/json").content("{\"name\":\"코드\",\"kind\":\"URL\",\"location\":\"" + address + "\",\"sync\":true}"))
+                    .andExpect(status().isBadRequest());
+        }
+        assertThat(sources.list(workspace)).isEmpty();
         verifyNoInteractions(remote);
+    }
+
+    @Test void confluenceRegistrationExplainsMissingConnectionWithoutIndexingLoginPage() throws Exception {
+        String workspace = library.createWorkspace("Confluence 연결 안내").id();
+        mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1")
+                .contentType("application/json").content("{\"name\":\"팀 문서\",\"kind\":\"URL\",\"location\":\"https://synthetic.atlassian.net/wiki/spaces/TEAM/pages/123\",\"sync\":true}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("ERROR"))
+                .andExpect(jsonPath("$.error").value(org.hamcrest.Matchers.containsString("연결이 필요")));
+        assertThat(search.search(workspace, "팀 문서", List.of())).isEmpty();
+        verifyNoInteractions(remote);
+    }
+
+    @Test void folderWithSymlinkStillIndexesHealthyFilesAndKeepsOriginalUntouched() throws Exception {
+        String workspace = library.createWorkspace("혼합 코드 폴더").id();
+        Files.writeString(fixture.resolve("notes.txt"), "SYNTHETIC_HEALTHY_TELESCOPE");
+        Files.createSymbolicLink(fixture.resolve("cycle"), fixture);
+        Source source = sources.create(workspace, "코드", "LOCAL_FOLDER", fixture.toString(), "");
+        Source result = sources.sync(workspace, source.id(), search::refresh);
+        assertThat(result.status()).isEqualTo("PARTIAL");
+        assertThat(result.error()).contains("cycle").contains("심볼릭");
+        assertThat(search.search(workspace, "SYNTHETIC_HEALTHY_TELESCOPE", List.of())).isNotEmpty();
+        assertThat(Files.isSymbolicLink(fixture.resolve("cycle"))).isTrue();
     }
 
     @Test
@@ -699,7 +731,7 @@ class SourceIntegrationTest {
     }
 
     @Test
-    void failedResyncPreservesRevisionContentsAndSearchResults() throws Exception {
+    void partialResyncPreservesHealthyContentsAndSearchResults() throws Exception {
         String workspaceId = library.createWorkspace("오류 복구").id();
         Files.writeString(fixture.resolve("notes.md"), "별자리 관측 기록");
         Source first = sources.sync(workspaceId, local(workspaceId, "원본", "").id());
@@ -707,9 +739,9 @@ class SourceIntegrationTest {
         Files.createSymbolicLink(fixture.resolve("link"), fixture.resolve("notes.md"));
         Source failed = sources.sync(workspaceId, first.id());
         search.refresh();
-        assertThat(failed.status()).isEqualTo("ERROR");
+        assertThat(failed.status()).isEqualTo("PARTIAL");
         assertThat(failed.revision()).isEqualTo(first.revision());
-        assertThat(failed.syncedAt()).isEqualTo(first.syncedAt());
+        assertThat(failed.syncedAt()).isNotNull();
         assertThat(failed.error()).contains("심볼릭");
         assertThat(search.search(workspaceId, "별자리", List.of())).hasSize(1);
     }

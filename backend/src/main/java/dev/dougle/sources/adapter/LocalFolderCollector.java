@@ -21,6 +21,12 @@ public class LocalFolderCollector implements Collector {
             throw new LibraryException(400, "연결할 폴더를 선택하세요.");
         }
         Path requested = Path.of(location).normalize();
+        if (!Files.exists(requested, LinkOption.NOFOLLOW_LINKS)) {
+            throw new LibraryException(400, "폴더가 없거나 접근할 수 없습니다. 폴더 위치와 macOS의 Dougle 파일 접근 권한을 확인하세요.");
+        }
+        if (!Files.isReadable(requested)) {
+            throw new LibraryException(400, "폴더 읽기 권한이 없습니다. macOS 시스템 설정에서 Dougle의 파일 및 폴더 접근 권한을 확인하세요.");
+        }
         if (Files.isSymbolicLink(requested) || !Files.isDirectory(requested, LinkOption.NOFOLLOW_LINKS)) {
             throw new LibraryException(400, "폴더를 선택하세요. PDF 등 개별 파일은 ‘자료 추가 → 파일’을 이용하세요. 기존 연결이 잘못됐다면 올바른 폴더로 새로 연결하세요.");
         }
@@ -50,7 +56,7 @@ public class LocalFolderCollector implements Collector {
                 budget();
                 if (!directory.equals(root)) {
                     if (CollectionLimits.excluded(directory.getFileName().toString())) return FileVisitResult.SKIP_SUBTREE;
-                    CollectionLimits.path(root.relativize(directory).toString().replace('\\', '/'));
+                    if (!supported(directory)) return FileVisitResult.SKIP_SUBTREE;
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -61,8 +67,10 @@ public class LocalFolderCollector implements Collector {
                 dev.dougle.ingestion.application.ProcessingProgress.report("READING",
                         root.relativize(file).toString(), files.size(), 0);
                 if (CollectionLimits.excluded(file.getFileName().toString())) return FileVisitResult.CONTINUE;
+                if (!supported(file)) return FileVisitResult.CONTINUE;
                 if (!attributes.isRegularFile() || Files.isSymbolicLink(file)) {
-                    throw new LibraryException(400, "심볼릭 링크·특수 파일은 수집하지 않습니다.");
+                    failures.put(root.relativize(file).toString(), "심볼릭 링크·특수 파일은 읽지 않습니다. 필요한 원본의 실제 폴더를 연결하세요.");
+                    return FileVisitResult.CONTINUE;
                 }
                 try {
                     if (!file.toRealPath().startsWith(root)) {
@@ -104,8 +112,28 @@ public class LocalFolderCollector implements Collector {
                 budget();
                 if (file.equals(root)) throw exception;
                 String path = root.relativize(file).toString().replace('\\', '/');
-                CollectionLimits.path(path);
                 failures.put(path, "접근할 수 없습니다. 읽기 권한을 확인하고 다시 동기화하세요.");
+                return FileVisitResult.CONTINUE;
+            }
+
+            private boolean supported(Path path) {
+                String relative = root.relativize(path).toString();
+                try {
+                    CollectionLimits.path(relative);
+                    return true;
+                } catch (LibraryException exception) {
+                    failures.put(relative, exception.getMessage());
+                    return false;
+                }
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path directory, IOException exception) throws IOException {
+                budget();
+                if (exception != null) {
+                    if (directory.equals(root)) throw exception;
+                    failures.put(root.relativize(directory).toString(), "폴더를 끝까지 읽지 못했습니다. 읽기 권한을 확인하고 다시 동기화하세요.");
+                }
                 return FileVisitResult.CONTINUE;
             }
         });

@@ -3,9 +3,13 @@ import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 export function shortMaterialError(error?: string | null) {
+  if (/개 파일을 읽지 못했습니다/.test(error || '')) return '일부 파일을 읽지 못했습니다. 이전 자료는 유지됩니다.'
+  if (/폴더 깊이|지원하지 않는 파일 경로/.test(error || '')) return '처리할 수 없는 폴더 깊이 또는 파일 이름입니다.'
+  if (/심볼릭 링크|특수 파일/.test(error || '')) return '바로가기·특수 파일은 수집하지 않습니다.'
+  if (/Jira.*Confluence.*연결/.test(error || '')) return 'Jira · Confluence 연결이 필요합니다.'
+  if (/로컬 폴더 수집 실패/.test(error || '')) return '로컬 폴더를 읽지 못했습니다.'
   if (/개 파일 확인이 필요/.test(error || '')) return '일부 파일을 확인해 주세요.'
   if (/텍스트가 길어|큰 소스 파일|Java 구문/.test(error || '')) return '자료의 일부만 분석했습니다.'
-  if (/개 파일을 읽지 못했습니다/.test(error || '')) return '일부 파일을 읽지 못했습니다. 이전 자료는 유지됩니다.'
   if (/256 MiB/.test(error || '')) return '파일당 256 MiB 처리 한도를 초과했습니다.'
   if (/Notion 페이지 접근/.test(error || '')) return 'Notion 페이지 접근 권한이 없습니다.'
   if (/Notion.*너무/.test(error || '')) return 'Notion 페이지 수집 한도를 초과했습니다.'
@@ -35,7 +39,11 @@ export function shortMaterialError(error?: string | null) {
   return '자료를 읽지 못했습니다. 다시 동기화해 주세요.'
 }
 
-export function materialErrorHelp(error?: string | null) {
+export function materialErrorHelp(error?: string | null, kind?: string) {
+  if (/개 파일 확인이 필요|개 파일을 읽지 못했습니다/.test(error || '')) return error!.slice(0, 500)
+  if (/폴더 깊이|지원하지 않는 파일 경로/.test(error || '')) return '해당 하위 폴더를 별도로 연결하거나 파일 이름을 확인하세요. 정상 파일은 계속 수집합니다.'
+  if (/심볼릭 링크|특수 파일/.test(error || '')) return '바로가기 대신 원본 파일이 있는 실제 폴더를 연결하세요. 다른 정상 파일은 계속 수집합니다.'
+  if (/로컬 폴더 수집 실패|macOS/.test(error || '')) return error!.slice(0, 500)
   if (/개 파일 확인이 필요|텍스트가 길어|큰 소스 파일|Java 구문/.test(error || '')) return error!.slice(0, 500)
   if (/개 파일을 읽지 못했습니다/.test(error || '')) return error!.slice(0, 500)
   if (/256 MiB/.test(error || '')) return '256 MiB가 넘는 원본은 더 작은 파일로 나눠 등록해 주세요.'
@@ -54,13 +62,14 @@ export function materialErrorHelp(error?: string | null) {
   if (/크기|개수|용량|총 .*제한/.test(error || '')) return '필요한 파일만 모은 작은 폴더로 나눠 추가해 주세요. 파일당 256 MiB, 자료당 20,000개·총 8 GiB까지 지원합니다.'
   if (/추출 가능한 텍스트|텍스트가 없|텍스트 추출/.test(error || '')) return '텍스트가 선택되는 PDF나 문서로 변환해 다시 추가해 주세요.'
   if (/404|not found|찾을 수 없|존재하지 않|디렉터리|directory/i.test(error || '')) return '이동·삭제된 자료인지 확인하고, 위치가 바뀌었다면 삭제 후 다시 추가해 주세요.'
-  if (/40[13]|권한|permission|denied|인증/i.test(error || '')) return '앱의 폴더 접근 권한을 허용하거나 공개된 링크·저장소를 추가해 주세요.'
+  if (/40[13]|권한|permission|denied|인증/i.test(error || '')) return kind === 'LOCAL_FOLDER' ? 'macOS 시스템 설정 → 개인정보 보호 및 보안 → 파일 및 폴더에서 Dougle의 접근 권한과 원본 폴더의 읽기 권한을 확인하세요.' : '자료 접근 권한을 확인하고, 인증이 필요한 문서는 해당 플러그인을 연결해 주세요.'
   if (/암호|encrypted|password/i.test(error || '')) return '암호를 해제한 복사본을 다시 추가해 주세요.'
   if (/HTTPS|URL|주소/.test(error || '')) return '브라우저에서 열리는 HTTPS 주소를 복사해 다시 추가해 주세요.'
+  if (kind === 'LOCAL_FOLDER') return '폴더 위치, macOS 시스템 설정의 Dougle 파일 및 폴더 접근 권한과 로컬 저장 공간을 확인하세요. 로컬 폴더 수집에는 인터넷이나 AI 연결이 필요하지 않습니다.'
   return '인터넷 연결과 자료 위치를 확인한 뒤 동기화를 다시 눌러 주세요.'
 }
 
-export default function MaterialWarning({ name, error, label = '동기화 실패', onAction }: { name: string; error?: string | null; label?: string; onAction?: () => void }) {
+export default function MaterialWarning({ name, error, kind, label = '동기화 실패', onAction }: { name: string; error?: string | null; kind?: string; label?: string; onAction?: () => void }) {
   const reason = shortMaterialError(error)
   const id = useId()
   const anchor = useRef<HTMLButtonElement>(null)
@@ -86,5 +95,5 @@ export default function MaterialWarning({ name, error, label = '동기화 실패
     onMouseEnter={() => setOpen(true)} onMouseLeave={() => { if (document.activeElement !== anchor.current) setOpen(false) }}
     onFocus={() => setOpen(true)} onBlur={() => setOpen(false)} onClick={() => { if (onAction) onAction(); else setOpen(true) }} onKeyDown={event => { if (event.key === 'Escape') setOpen(false) }}>
     <CircleAlert size={17} aria-hidden="true" />
-  </button>{open && createPortal(<span ref={tooltip} id={id} role="tooltip" className={`material-error-tooltip${position.above ? ' above' : ''}`} style={{ left: position.left, top: position.top }}><strong>{reason}</strong><span>{materialErrorHelp(error)}</span></span>, document.body)}</>
+  </button>{open && createPortal(<span ref={tooltip} id={id} role="tooltip" className={`material-error-tooltip${position.above ? ' above' : ''}`} style={{ left: position.left, top: position.top }}><strong>{reason}</strong><span>{materialErrorHelp(error, kind)}</span></span>, document.body)}</>
 }

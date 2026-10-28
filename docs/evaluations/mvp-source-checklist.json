@@ -1,5 +1,5 @@
 {
-  "scope": "Remove web URL and GitHub URL direct connections; preserve cached materials and conversations",
+  "scope": "Historical 0.1.32 removal checklist; web URL removal superseded by 0.1.36. See docs/release-0.1.36-report.md. GitHub remains blocked.",
   "status": "PASS_WITH_DECLARED_LIMITATIONS",
   "checks": [
     {

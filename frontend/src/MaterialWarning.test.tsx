@@ -3,6 +3,15 @@ import { expect, it } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import MaterialWarning, { materialErrorHelp, shortMaterialError } from './MaterialWarning'
 
+it('explains local folder failures without suggesting a network dependency', () => {
+  expect(materialErrorHelp('unknown', 'LOCAL_FOLDER')).toContain('로컬 폴더 수집에는 인터넷이나 AI 연결이 필요하지 않습니다')
+  expect(shortMaterialError('폴더 깊이는 16단계 이하여야 합니다.')).toContain('폴더 깊이')
+  expect(materialErrorHelp('심볼릭 링크·특수 파일')).toContain('실제 폴더')
+  expect(materialErrorHelp('AccessDeniedException', 'LOCAL_FOLDER')).toContain('macOS 시스템 설정')
+  expect(materialErrorHelp('AccessDeniedException', 'LOCAL_FOLDER')).not.toContain('링크')
+  expect(materialErrorHelp('1개 파일을 읽지 못했습니다. shortcut: 심볼릭 링크는 읽지 않습니다.', 'LOCAL_FOLDER')).toContain('shortcut')
+})
+
 it.each([
   ['HTTP 404 /private/path', '자료를 찾을 수 없습니다.'],
   ['HTTP 403', '접근 권한을 확인해 주세요.'],

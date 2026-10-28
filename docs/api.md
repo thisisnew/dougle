@@ -1,6 +1,12 @@
 # API
 
-## 0.1.32 회사 연결 작업본
+## 0.1.36 자료 연결
+
+`POST /api/workspaces/{workspaceId}/sources`는 LOCAL_FOLDER, URL, MYSQL을 허용한다. URL은 공개 HTTPS(443, 사용자정보·fragment 없음)이며 GitHub 주소와 파일 링크를 거부한다. `sync:true` 또는 별도 `/sources/{id}/sync`로 수집한다. UI 등록은 곧바로 동기화를 요청한다. Confluence Cloud 인증이 없으면 Source ERROR와 연결 안내를 반환하고 로그인 페이지를 색인하지 않는다. GitHub 보관 자료의 수동 동기화와 폴링 활성화는 400, 스케줄러는 제외한다. GitHub 인증 API는 제거된 상태다.
+
+로컬 폴더의 개별 읽기/미지원 경로 실패는 `PARTIAL`과 실패 요약을 반환하고 정상 파일을 검색에 반영한다. 루트 접근 실패는 `ERROR`로 이전 자료를 보존한다. 파일당256MiB·총8GiB·2만개 및 경로 제한은 유지한다. 실제 회사 Mac 권한 오류와 실제 Confluence SSO는 가상 테스트 결과로 보증하지 않는다.
+
+## 0.1.32 회사 연결 작업본 (이전 이력)
 
 - `GET /api/plugins/github`: 로컬 인증 저장 여부 `{configured}`만 반환한다. 토큰이나 현재 원격 인증 성공을 반환하지 않는다.
 - `POST /api/plugins/github`: `{token, repository}`. Fine-grained 토큰으로 github.com 저장소의 commits 읽기 검증에 성공한 뒤 암호화 저장한다. 실패 시 이전 토큰은 유지한다.

@@ -57,6 +57,7 @@ public class SourceController {
     @ResponseStatus(HttpStatus.CREATED)
     public Source create(@PathVariable String workspaceId, @RequestBody Registration request) {
         requireSupportedKind(request.kind());
+        if ("URL".equals(request.kind())) WebSourcePolicy.validate(request.location() == null ? "" : request.location().strip());
         Source source = sources.create(workspaceId, request.name(), request.kind(), request.location(),
                 request.domain() == null ? "" : request.domain());
         if (Boolean.TRUE.equals(request.sync())) {
@@ -94,11 +95,12 @@ public class SourceController {
         Source source = sources.list(workspaceId).stream().filter(item -> item.id().equals(id)).findFirst()
                 .orElseThrow(() -> new dev.dougle.library.application.LibraryException(404, "자료를 찾을 수 없습니다."));
         requireSupportedKind(source.kind());
+        if ("URL".equals(source.kind())) WebSourcePolicy.validate(source.location());
     }
 
     private void requireSupportedKind(String kind) {
-        if (!"LOCAL_FOLDER".equals(kind) && !"MYSQL".equals(kind)) {
-            throw new dev.dougle.library.application.LibraryException(400, "웹·GitHub 직접 연결은 지원하지 않습니다. 파일이나 로컬 폴더를 추가하세요. 기존 수집 자료는 유지됩니다.");
+        if (!"LOCAL_FOLDER".equals(kind) && !"MYSQL".equals(kind) && !"URL".equals(kind)) {
+            throw new dev.dougle.library.application.LibraryException(400, "GitHub 직접 연결은 지원하지 않습니다. 내려받은 소스코드의 로컬 폴더를 추가하세요. 기존 수집 자료는 유지됩니다.");
         }
     }
 

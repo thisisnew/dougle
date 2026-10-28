@@ -205,6 +205,7 @@ public class SourceService {
             }
             String detail = exception instanceof java.util.concurrent.CancellationException ? "동기화를 중단했습니다. 다시 누르면 완료된 분석부터 이어갑니다."
                     : exception instanceof LibraryException ? exception.getMessage()
+                    : "LOCAL_FOLDER".equals(source.kind()) ? "로컬 폴더 수집 실패. 폴더 위치, macOS 시스템 설정의 Dougle 파일 및 폴더 접근 권한, 로컬 저장 공간을 확인하세요. (" + exception.getClass().getSimpleName() + ")"
                     : "수집에 실패했습니다. 위치·접근 권한·네트워크·크기 제한을 확인하세요. ("
                     + exception.getClass().getSimpleName() + ")";
             store.fail(id, detail);

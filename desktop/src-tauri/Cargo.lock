@@ -1784,7 +1784,7 @@ dependencies = [
 
 [[package]]
 name = "dougle-desktop"
-version = "0.1.35"
+version = "0.1.36"
 dependencies = [
  "base64 0.22.1",
  "getrandom 0.4.3",

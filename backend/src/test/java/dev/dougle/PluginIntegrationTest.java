@@ -88,15 +88,15 @@ class PluginIntegrationTest {
         mvc.perform(post("/api/plugins/github/open").header("X-Forge-Client", "1")).andExpect(status().is4xxClientError());
     }
 
-    @Test void connectedNotionDoesNotBypassRemovedUrlRegistration() throws Exception {
+    @Test void connectedNotionCollectsAndIndexesRegisteredUrl() throws Exception {
         connections.notion(token, true);
         String url = "https://app.notion.com/p/359fdb093f9380648576c536ea909b2d";
         when(notion.collect(url, token)).thenReturn(CollectionLimits.snapshot(List.of(new CollectedSnapshot.File("notion-page.txt", "Synthetic waterfall methodology".getBytes()))));
         String workspace = library.createWorkspace("가상 Notion 연결").id();
         mvc.perform(post("/api/workspaces/" + workspace + "/sources").header("X-Forge-Client", "1").contentType("application/json")
                         .content("{\"name\":\"가상 페이지\",\"kind\":\"URL\",\"location\":\"" + url + "\",\"sync\":true}"))
-                .andExpect(status().isBadRequest());
-        assertThat(search.search(workspace, "waterfall", List.of())).isEmpty();
-        verify(notion, never()).collect(url, token);
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("READY"));
+        assertThat(search.search(workspace, "waterfall", List.of())).isNotEmpty();
+        verify(notion).collect(url, token);
     }
 }

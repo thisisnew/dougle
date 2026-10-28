@@ -49,7 +49,10 @@ class CollectorTest {
         Path root = Files.createDirectory(directory.resolve("root"));
         Files.writeString(directory.resolve("outside.txt"), "outside");
         Files.createSymbolicLink(root.resolve("escape"), directory.resolve("outside.txt"));
-        assertThatThrownBy(() -> collector.collect(root.toString())).isInstanceOf(LibraryException.class);
+        try (var snapshot = collector.collect(root.toString())) {
+            assertThat(snapshot.files()).isEmpty();
+            assertThat(snapshot.failures()).containsKey("escape");
+        }
         Files.createSymbolicLink(directory.resolve("root-link"), root);
         assertThatThrownBy(() -> collector.collect(directory.resolve("root-link").toString())).isInstanceOf(LibraryException.class);
     }
@@ -71,7 +74,10 @@ class CollectorTest {
             assertThat(files.toList()).containsExactly(source);
         }
         Files.createSymbolicLink(root.resolve("rejected-link"), source);
-        assertThatThrownBy(() -> collector.collect(root.toString())).isInstanceOf(LibraryException.class);
+        try (var snapshot = collector.collect(root.toString())) {
+            assertThat(snapshot.files()).hasSize(1);
+            assertThat(snapshot.failures()).containsKey("rejected-link");
+        }
         assertThat(Files.readAllBytes(source)).isEqualTo(original);
         assertThat(Files.getLastModifiedTime(source)).isEqualTo(modified);
         assertThat(Files.isSymbolicLink(root.resolve("rejected-link"))).isTrue();
