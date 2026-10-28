@@ -20,10 +20,12 @@ public class CliDiagnosticsAdapter implements CliDiagnostics {
     private final CuratorSettings settings;
     private final CliCuratorModel runner;
     private final Semaphore slot = new Semaphore(1);
+    private dev.dougle.knowledge.application.CliLaunchConfiguration launch;
 
     @org.springframework.beans.factory.annotation.Autowired
     public CliDiagnosticsAdapter(dev.dougle.knowledge.application.CliLaunchConfiguration launch, CuratorSettings settings) {
         this(launch.command(Provider.CODEX), launch.command(Provider.CLAUDE), settings);
+        this.launch = launch;
     }
 
     public CliDiagnosticsAdapter(String codex, String claude, CuratorSettings settings) {
@@ -37,9 +39,10 @@ public class CliDiagnosticsAdapter implements CliDiagnostics {
     public Status probe(Provider provider) {
         if (!slot.tryAcquire()) throw new LibraryException(409, "CLI 설치 확인이 진행 중입니다.");
         Path directory = null;
-        try {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
             directory = Files.createTempDirectory("forge-cli-probe-");
-            String output = runner.run(List.of(provider == Provider.CODEX ? codex : claude, "--version"),
+            String executable = launch == null ? (provider == Provider.CODEX ? codex : claude) : launch.command(provider);
+            String output = runner.run(List.of(executable, "--version"),
                     directory, "", Duration.ofSeconds(5)).strip();
             if (output.length() > 128) return status(provider, "UNRECOGNIZED", null);
             String pattern = provider == Provider.CODEX

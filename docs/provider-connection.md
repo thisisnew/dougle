@@ -75,3 +75,7 @@ Claude는 기존 도구가 인증 상태 명령을 지원할 때 연결/로그�
 마지막 검토에서 로그인 출력 한도 초과 경로도 읽은 바이트를 먼저 지우도록 수정했고, 로그인 어댑터 4개 테스트를 다시 통과했습니다.
 
 공식 계약: [Codex 인증](https://learn.chatgpt.com/docs/app-server), [Claude 명령](https://code.claude.com/docs/en/cli-reference), [Claude 제품 포함 조건](https://code.claude.com/docs/en/legal-and-compliance).
+## 0.1.35 선택 즉시 연결
+
+탐색된 실행 환경을 고르면 인증 확인 후 현재 앱에 즉시 적용한다. 로그인 필요 상태이면 선택한 환경으로 브라우저 로그인에 이어지고, 실패하면 기존 환경을 유지한다. 기본 선택에 재시작을 요구하지 않는다. 인증·답변·진단이 같은 활성 설정을 사용하며 실행 중 환경 교체는 차단한다. [시나리오 검증](release-0.1.35-report.md). 실제 회사 SSO 성공은 별도 검증이 필요하다.
+

@@ -119,7 +119,7 @@ public class AnswerJobService {
     }
 
     private void run(AnswerJob job) {
-        try {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
             record Prepared(String prompt, java.util.List<dev.dougle.knowledge.application.ModelImage> images) {}
             Prepared prepared;
             synchronized (this) {

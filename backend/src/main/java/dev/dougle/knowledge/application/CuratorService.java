@@ -65,7 +65,7 @@ public class CuratorService {
                              boolean approved, String requestedModel, Function<Generated, Document> publish) {
         if (!approved) throw new LibraryException(403, "선택한 AI 제공자에게 근거를 전송하려면 명시적으로 승인하세요.");
         if (!slot.tryAcquire()) throw new LibraryException(409, "다른 AI 생성이 진행 중입니다.");
-        try {
+        try (var lease = CliExecutionGate.read()) {
             Document source = knowledge.get(workspace, id, null);
             Preview preview = prepare(source, provider, requestedModel);
             checkPreview(preview, expectedVersion, digest);

@@ -48,11 +48,12 @@ public class CliCuratorModel implements CuratorModel {
     private final Duration timeout;
     private final CuratorSettings settings;
     private final String codexStreamHome;
+    private final dev.dougle.knowledge.application.CliLaunchConfiguration launch;
 
     @Autowired
     public CliCuratorModel(dev.dougle.knowledge.application.CliLaunchConfiguration launch, CuratorSettings settings,
                            @Value("${forge.ai.codex-stream-home:}") String codexStreamHome) {
-        this(launch.command(Provider.CODEX), launch.command(Provider.CLAUDE), Duration.ofSeconds(120), settings, codexStreamHome);
+        this(null, null, Duration.ofSeconds(120), settings, codexStreamHome, launch);
     }
 
     CliCuratorModel(String codex, String claude) {
@@ -72,11 +73,21 @@ public class CliCuratorModel implements CuratorModel {
     }
 
     CliCuratorModel(String codex, String claude, Duration timeout, CuratorSettings settings, String codexStreamHome) {
+        this(codex, claude, timeout, settings, codexStreamHome, null);
+    }
+
+    private CliCuratorModel(String codex, String claude, Duration timeout, CuratorSettings settings, String codexStreamHome,
+            dev.dougle.knowledge.application.CliLaunchConfiguration launch) {
         this.codex = codex;
         this.claude = claude;
         this.timeout = timeout;
         this.settings = settings;
         this.codexStreamHome = codexStreamHome;
+        this.launch = launch;
+    }
+
+    private String executable(Provider provider) {
+        return launch == null ? (provider == Provider.CODEX ? codex : claude) : launch.command(provider);
     }
 
     public String generate(Provider provider, String prompt) {
@@ -96,8 +107,10 @@ public class CliCuratorModel implements CuratorModel {
     @Override
     public String generateWithText(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
         if (provider == Provider.CODEX && !codexStreamHome.isBlank()) {
-            return new CodexAppServer(codex, Path.of(codexStreamHome), timeout)
+            try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
+                return new CodexAppServer(executable(Provider.CODEX), Path.of(codexStreamHome), timeout)
                     .generate(prompt, CuratorSettings.normalize(requestedModel), text);
+            }
         }
         return generateInternal(provider, prompt, requestedModel, provider == Provider.CLAUDE ? text : null);
     }
@@ -109,8 +122,10 @@ public class CliCuratorModel implements CuratorModel {
         if (provider != Provider.CODEX || codexStreamHome.isBlank()) {
             throw new LibraryException(400, "이미지 질문은 앱에 포함된 Codex 연결을 사용해 주세요.");
         }
-        return new CodexAppServer(codex, Path.of(codexStreamHome), timeout)
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
+            return new CodexAppServer(executable(Provider.CODEX), Path.of(codexStreamHome), timeout)
                 .generate(prompt, CuratorSettings.normalize(requestedModel), text, images);
+        }
     }
 
     private String generateInternal(Provider provider, String prompt, String requestedModel, java.util.function.Consumer<String> text) {
@@ -121,7 +136,7 @@ public class CliCuratorModel implements CuratorModel {
                                     java.util.function.Consumer<String> text, String schema) {
         String selectedModel = CuratorSettings.normalize(requestedModel);
         Path directory = null;
-        try {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
             directory = Files.createTempDirectory("forge-curator-");
             Files.writeString(directory.resolve("schema.json"), schema);
             List<String> command = command(provider, directory, selectedModel, schema);
@@ -166,14 +181,14 @@ public class CliCuratorModel implements CuratorModel {
 
     private List<String> command(Provider provider, Path directory, String requestedModel, String schema) {
         if (provider == Provider.CLAUDE) {
-            List<String> arguments = new ArrayList<>(List.of(claude, "--print", "--output-format", "json", "--json-schema", schema,
+            List<String> arguments = new ArrayList<>(List.of(executable(provider), "--print", "--output-format", "json", "--json-schema", schema,
                     "--tools", "", "--disallowedTools", "mcp__*", "--strict-mcp-config", "--mcp-config", "{\"mcpServers\":{}}",
                     "--setting-sources", "", "--settings", "{\"disableAllHooks\":true}", "--disable-slash-commands",
                     "--no-session-persistence", "--no-chrome", "--permission-mode", "dontAsk"));
             addModel(arguments, requestedModel);
             return arguments;
         }
-        List<String> arguments = new ArrayList<>(List.of(codex, "--no-daemon", "exec", "--ignore-user-config",
+        List<String> arguments = new ArrayList<>(List.of(executable(provider), "--no-daemon", "exec", "--ignore-user-config",
                 "--ephemeral", "--skip-git-repo-check", "--sandbox", "read-only", "--color", "never",
                 "--config", "approval_policy=\"never\"", "--config", "web_search=\"disabled\"",
                 "--config", "project_doc_max_bytes=0", "--config", "tools.view_image=false",

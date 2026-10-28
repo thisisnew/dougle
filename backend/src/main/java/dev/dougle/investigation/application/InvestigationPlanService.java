@@ -256,7 +256,7 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
     private void run(InvestigationPlanStore.Job job) {
         var proposed = new java.util.concurrent.atomic.AtomicReference<PendingOperationalScope>();
         boolean published = false;
-        try {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
             String prompt;
             synchronized (this) {
                 prompt = transaction.execute(status -> {

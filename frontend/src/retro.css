@@ -337,3 +337,6 @@ details > summary { cursor: pointer; }
 .chat-thinking { color: #788398; animation: chat-pulse 1.6s ease-in-out infinite; }
 @keyframes chat-pulse { 50% { opacity: .5; } }
 @media (prefers-reduced-motion: reduce) { .chat-thinking { animation: none; } }
+.installed-cli-choices { display: grid; gap: 10px; min-width: 0; }
+.installed-cli-choices button { display: flex; flex-direction: column; align-items: flex-start; height: auto; min-height: 56px; max-width: 100%; white-space: normal; text-align: left; overflow-wrap: anywhere; }
+.installed-cli-choices small { font-weight: normal; opacity: .7; }

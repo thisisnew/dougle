@@ -44,6 +44,12 @@ public class ProviderLoginAdapter implements ProviderLogin {
 
     @Override
     public synchronized Status start(Provider provider, boolean acknowledged) {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
+            return startLocked(provider, acknowledged);
+        }
+    }
+
+    private Status startLocked(Provider provider, boolean acknowledged) {
         if (!acknowledged) throw new LibraryException(400, "브라우저 로그인과 제공자 자격 증명 저장에 동의하세요. 자료 전송 승인은 별도입니다.");
         if (closed || (current != null && current.state().equals("PENDING"))) throw new LibraryException(409, "로그인이 진행 중이거나 앱이 종료 중입니다.");
         var checked = connection.check(provider);
@@ -52,7 +58,8 @@ public class ProviderLoginAdapter implements ProviderLogin {
         }
         current = new Status(UUID.randomUUID().toString(), provider.name(), checked.state().equals("AUTHENTICATED") ? "AUTHENTICATED" : "PENDING");
         Status started = current;
-        if (started.state().equals("PENDING")) Thread.ofVirtual().name("forge-provider-login").start(() -> execute(started, provider));
+        String executable = launch.command(provider);
+        if (started.state().equals("PENDING")) Thread.ofVirtual().name("forge-provider-login").start(() -> execute(started, provider, executable));
         return started;
     }
 
@@ -84,7 +91,14 @@ public class ProviderLoginAdapter implements ProviderLogin {
         }
     }
 
-    private void execute(Status started, Provider provider) {
+    private void execute(Status started, Provider provider, String executable) {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
+            if (!java.util.Objects.equals(executable, launch.command(provider))) { finish(started, "FAILED"); return; }
+            executeLocked(started, provider);
+        } catch (RuntimeException exception) { finish(started, "FAILED"); }
+    }
+
+    private void executeLocked(Status started, Provider provider) {
         Path directory = null;
         Process owned = null;
         var executor = Executors.newFixedThreadPool(2);

@@ -7,4 +7,5 @@ public interface ProviderConnection {
         }
     }
     Status check(CuratorModel.Provider provider);
+    Status checkCommand(CuratorModel.Provider provider, String executable);
 }

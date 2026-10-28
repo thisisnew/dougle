@@ -40,7 +40,6 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   const [launchSettingsOpen, setLaunchSettingsOpen] = useState(false)
   const [choosingTool, setChoosingTool] = useState(false)
   const [discoveryOpen, setDiscoveryOpen] = useState(false)
-  const [restartRequired, setRestartRequired] = useState(false)
   const loggingIn = login?.state === 'PENDING'
   const indicatorState = error ? 'CHECK_FAILED' : busy ? 'CHECKING' : status?.state ?? 'UNCHECKED'
   const connected = status?.state === 'AUTHENTICATED' && verifiedModels.current[provider] === requestedModel(choice)
@@ -128,17 +127,25 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
         <span className="provider-monogram">{value === 'CODEX' ? 'C' : '✳'}</span><strong>{value === 'CODEX' ? 'Codex' : 'Claude'}</strong><small>{value === 'CODEX' ? 'OpenAI' : 'Anthropic'}</small>
       </button>)}
     </div>
-    <label className="field-label">모델<select value={choice.model} disabled={busy || loggingIn} onChange={event => {
+    <label className="field-label">모델<select value={choice.model} disabled={busy || loggingIn || choosingTool} onChange={event => {
       const value = event.target.value
       if (!modelPresets[provider].some(item => item.id === value)) return
       const next: ModelChoice = { mode: 'custom', model: value }
       setChoice(next); setError('')
     }}>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
-    <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected || choosingTool || restartRequired} onClick={() => void check()}>{restartRequired ? '앱을 다시 열어 주세요' : busy ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
+    <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected || choosingTool} onClick={() => void check()}>{busy || choosingTool ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
     {!['UNCHECKED', 'AUTHENTICATED', 'TOOL_UNAVAILABLE'].includes(indicatorState) && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
     {status && !['AUTHENTICATED', 'TOOL_UNAVAILABLE'].includes(status.state) && <p>{failureMessages[status.reason ?? ''] ?? messages[status.state]}</p>}
     {(['TOOL_UNAVAILABLE', 'CHECK_FAILED', 'UNSUPPORTED'].includes(status?.state ?? '') || discoveryOpen) && <InstalledCliChoices key={provider} provider={provider} unavailable={true} disabled={busy || loggingIn} onPendingChange={setChoosingTool}
-      onRestartRequired={() => { setRestartRequired(true); setStatus(null); setDiscoveryOpen(true) }} />}
+      onConnectionResult={value => {
+        setChoosingTool(false); setError(''); setLogin(null)
+        delete verified.current[provider]; delete verifiedModels.current[provider]
+        if (value.state === 'AUTHENTICATED') {
+          if (!saveModel(provider, choice)) { setError('모델 선택을 저장하지 못했습니다. 다시 확인하세요.'); setStatus(null); return }
+          verifiedModels.current[provider] = requestedModel(choice)
+        }
+        setStatus(value); setDiscoveryOpen(false)
+      }} />}
     <details><summary>고급 설정</summary><Button className="company-launch-button" variant="ghost" disabled={busy || loggingIn || choosingTool} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button></details>
     {launchSettingsOpen && <CliLaunchPanel initialProvider={provider} onClose={() => setLaunchSettingsOpen(false)} />}
     {error && <p role="alert">{error}</p>}

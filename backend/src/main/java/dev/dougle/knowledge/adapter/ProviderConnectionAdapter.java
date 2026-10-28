@@ -40,11 +40,17 @@ public class ProviderConnectionAdapter implements ProviderConnection {
 
     @Override
     public Status check(Provider provider) {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
+            return checkCommand(provider, launch.command(provider));
+        }
+    }
+
+    @Override
+    public Status checkCommand(Provider provider, String executable) {
         if (!slot.tryAcquire()) throw new LibraryException(409, "연결 상태를 확인 중입니다. 잠시 후 다시 확인하세요.");
         Path directory = null;
-        try {
+        try (var lease = dev.dougle.knowledge.application.CliExecutionGate.read()) {
             directory = Files.createTempDirectory("forge-connection-");
-            String executable = launch.command(provider);
             if (provider == Provider.CLAUDE) {
                 var help = run(List.of(executable, "auth", "--help"), directory, false);
                 if (help.exit() != 0 || !java.util.regex.Pattern.compile("(?m)^\\s+status(?:\\s|$)").matcher(help.stdout()).find()) {
