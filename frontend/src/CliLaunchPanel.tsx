@@ -5,7 +5,7 @@ import CliStatusPanel from './CliStatusPanel'
 
 type Configuration = { saved: { codexPath: string; claudePath: string; revision: number }; activeCodexCommand: string; activeClaudeCommand: string; restartRequired: boolean }
 
-export default function CliLaunchPanel({ onClose }: { onClose: () => void }) {
+export default function CliLaunchPanel({ onClose, initialProvider = 'CODEX' }: { onClose: () => void; initialProvider?: 'CODEX' | 'CLAUDE' }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const pending = useRef<AbortController | null>(null)
   const [configuration, setConfiguration] = useState<Configuration | null>(null)
@@ -14,7 +14,7 @@ export default function CliLaunchPanel({ onClose }: { onClose: () => void }) {
   const [acknowledged, setAcknowledged] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [provider, setProvider] = useState('CODEX')
+  const [provider, setProvider] = useState<string>(initialProvider)
 
   function apply(value: Configuration) {
     setConfiguration(value); setCodexPath(value.saved.codexPath); setClaudePath(value.saved.claudePath); setAcknowledged(false)
@@ -55,9 +55,11 @@ export default function CliLaunchPanel({ onClose }: { onClose: () => void }) {
   return <dialog ref={dialog} className="proposal-merge cli-path-dialog" aria-label="CLI 실행 경로 설정" onCancel={event => { event.preventDefault(); onClose() }}>
     <div className="provider-connection-header"><h2>실행 경로</h2><Button variant="ghost" onClick={onClose}>닫기</Button></div>
     <p>빈칸은 기본 경로를 사용합니다. 변경 후 앱을 다시 열어주세요.</p>
+    <p>회사용 실행 파일이나 스크립트의 전체 경로를 지정하세요. 터미널 별칭이나 명령 옵션은 입력하지 않습니다.</p>
     {error && <p role="alert">{error}</p>}
     {busy && <p role="status">설정을 처리하는 중…</p>}
     {configuration && <>
+      <dl><dt>사용 중인 Codex</dt><dd>{configuration.activeCodexCommand}</dd><dt>사용 중인 Claude</dt><dd>{configuration.activeClaudeCommand}</dd></dl>
       {configuration.restartRequired && <p role="status">저장된 경로는 아직 적용되지 않았습니다. 앱을 다시 열어주세요.</p>}
       <form className="cli-launch-form" onSubmit={event => { event.preventDefault(); void save() }}>
         <label>Codex 절대 경로<input aria-label="Codex 절대 경로" maxLength={4096} value={codexPath} disabled={busy} onChange={event => { setCodexPath(event.target.value); setAcknowledged(false) }} /></label>

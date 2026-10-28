@@ -4,6 +4,7 @@ import { Button } from './components/ui/button'
 import { preferredProvider, rememberProvider, type Provider } from './providerPreference'
 import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
 import { loadModel, saveModel, requestedModel, modelPresets, type ModelChoice } from './modelPreference'
+import CliLaunchPanel from './CliLaunchPanel'
 
 type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string }
 type Login = { id: string; provider: Provider; state: 'PENDING' | 'AUTHENTICATED' | 'FAILED' | 'CANCELLED' | 'TIMED_OUT' }
@@ -29,6 +30,7 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   const [login, setLogin] = useState<Login | null>(null)
   const [acknowledged, setAcknowledged] = useState(false)
   const [loginBusy, setLoginBusy] = useState(false)
+  const [launchSettingsOpen, setLaunchSettingsOpen] = useState(false)
   const loggingIn = login?.state === 'PENDING'
   const indicatorState = error ? 'CHECK_FAILED' : busy ? 'CHECKING' : status?.state ?? 'UNCHECKED'
   const connected = status?.state === 'AUTHENTICATED' && verifiedModels.current[provider] === requestedModel(choice)
@@ -124,9 +126,12 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
     }}>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
     <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected} onClick={() => void check()}>{busy ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
     {indicatorState !== 'UNCHECKED' && indicatorState !== 'AUTHENTICATED' && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
-    {status && status.state !== 'AUTHENTICATED' && <p>{messages[status.state]}{status.state === 'TOOL_UNAVAILABLE' && (provider === 'CLAUDE' ? ' Claude Code를 설치한 뒤 앱을 다시 열어 주세요.' : '앱을 다시 설치해 주세요.')}</p>}
+    {status && status.state !== 'AUTHENTICATED' && <p>{messages[status.state]}{status.state === 'TOOL_UNAVAILABLE' && ' 회사용 실행 도구를 사용한다면 실행 파일을 지정해 주세요.'}</p>}
+    <Button variant="outline" disabled={busy || loggingIn} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button>
+    {launchSettingsOpen && <CliLaunchPanel initialProvider={provider} onClose={() => setLaunchSettingsOpen(false)} />}
     {error && <p role="alert">{error}</p>}
     {status?.state === 'LOGIN_REQUIRED' && !loggingIn && <div>
+      <p>회사에서 사용하는 계정으로 로그인하세요. Google 로그인이나 회사 SSO가 나오면 브라우저 안내를 따라 주세요.</p>
       <label className="check-option"><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => setAcknowledged(event.target.checked)} /><span>브라우저 로그인과 인증 정보 저장에 동의합니다.</span></label>
       <Button disabled={busy || !acknowledged} onClick={() => void loginAction(false)}>브라우저에서 로그인</Button>
     </div>}

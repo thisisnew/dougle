@@ -8,6 +8,21 @@ import { request } from './api'
 
 vi.mock('./api', () => ({ request: vi.fn() }))
 const api = vi.mocked(request)
+it.each(['CODEX', 'CLAUDE'] as const)('offers trusted company executable configuration for %s', async provider => {
+  localStorage.setItem('forge.ai.provider', provider)
+  api.mockImplementation(async path => path === '/ai/launch-settings'
+    ? { saved: { codexPath: '', claudePath: '', revision: 0 }, activeCodexCommand: 'codex', activeClaudeCommand: 'claude', restartRequired: false }
+    : { provider, state: 'TOOL_UNAVAILABLE', checkedAt: '', remoteConnection: 'NOT_CHECKED' })
+  render(<ProviderConnectionPanel onClose={vi.fn()} />)
+  await userEvent.click(screen.getByRole('button', { name: '연결' }))
+  expect(await screen.findByText(/회사.*실행 도구를 사용한다면/)).toBeVisible()
+  await userEvent.click(screen.getByRole('button', { name: '회사용 AI 실행 설정' }))
+  expect(await screen.findByLabelText('Codex 절대 경로')).toBeVisible()
+  expect(screen.getByLabelText('Claude 절대 경로')).toBeVisible()
+  expect(screen.getByLabelText('진단 대상')).toHaveValue(provider)
+  expect(screen.getByRole('button', { name: '경로 저장' })).toBeDisabled()
+  expect(api.mock.calls.every(([, options]) => options?.method !== 'PUT')).toBe(true)
+})
 beforeEach(() => {
   api.mockReset(); localStorage.clear()
   Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable: true, value: function (this: HTMLDialogElement) { this.setAttribute('open', '') } })
