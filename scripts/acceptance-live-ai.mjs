@@ -19,12 +19,12 @@ if (selectedCases) assert(selectedCases.length > 0 && selectedCases.every(id => 
 const longTurns = Number(process.env.FORGE_ACCEPTANCE_LONG_TURNS ?? 20)
 assert(Number.isInteger(longTurns) && longTurns >= 2 && longTurns <= 20, 'Long conversation regression must execute 2–20 turns')
 const root = process.cwd()
-const resources = '/Applications/Knowledge Forge.app/Contents/Resources/resources'
+const resources = '/Applications/Dougle.app/Contents/Resources/resources'
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-acceptance-live-'))
 const home = resolve(directory, 'home')
 await mkdir(home)
 const jar = resolve(directory, 'frozen-baseline.jar')
-await copyFile(resolve(root, 'backend/target/knowledge-forge-0.1.0.jar'), jar)
+await copyFile(resolve(root, 'backend/target/dougle-0.1.0.jar'), jar)
 const jarSha256 = createHash('sha256').update(await readFile(jar)).digest('hex')
 const reportPath = resolve(process.env.FORGE_ACCEPTANCE_REPORT)
 const budgetPath = resolve(process.env.FORGE_ACCEPTANCE_BUDGET)

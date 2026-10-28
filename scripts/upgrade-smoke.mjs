@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { spawn, execFileSync } from 'node:child_process'
 import { once } from 'node:events'
 import { mkdtemp, cp, rm } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { createServer } from 'node:net'
 import { tmpdir } from 'node:os'
 import { resolve, dirname } from 'node:path'
@@ -11,7 +12,7 @@ assert.equal(process.platform, 'darwin', 'This fixture uses macOS Java discovery
 assert.ok(process.argv[2], 'Pass the previous v18 release JAR path.')
 const previousJar = resolve(process.argv[2])
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const currentJar = resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
+const currentJar = resolve(root, 'backend/target/dougle-0.1.0.jar')
 assert.notEqual(previousJar, currentJar)
 const temporary = await mkdtemp(resolve(tmpdir(), 'forge-upgrade-smoke-'))
 const directory = resolve(temporary, 'data')
@@ -50,7 +51,10 @@ async function stop() {
   clearTimeout(timer)
 }
 function schema(data) {
-  return Number(execFileSync('/usr/bin/sqlite3', [resolve(data, 'knowledge-forge.sqlite'), 'PRAGMA user_version;'], { encoding: 'utf8' }).trim())
+  const current = resolve(data, 'dougle.sqlite')
+  const database = existsSync(current) ? current : resolve(data, 'knowledge-forge.sqlite')
+  assert(existsSync(database), 'Expected an existing migration fixture database')
+  return Number(execFileSync('/usr/bin/sqlite3', [database, 'PRAGMA user_version;'], { encoding: 'utf8' }).trim())
 }
 try {
   await start(previousJar, directory)
@@ -77,14 +81,14 @@ try {
   await start(currentJar, directory)
   await verify()
   await stop()
-  assert.equal(schema(directory), 21)
+  assert.equal(schema(directory), 30)
   assert.equal(schema(backup), 18)
   await cp(backup, restored, { recursive: true })
   await start(currentJar, restored)
   await verify()
   await stop()
-  assert.equal(schema(restored), 21)
-  console.log('PASS: real v18 release data -> v21, workspace/bytes/knowledge preserved, stopped backup untouched, restored copy migrates; no AI')
+  assert.equal(schema(restored), 30)
+  console.log('PASS: real v18 release data -> v30, workspace/bytes/knowledge preserved, stopped backup untouched, restored copy migrates; no AI')
 } finally {
   await stop()
   await rm(temporary, { recursive: true, force: true })

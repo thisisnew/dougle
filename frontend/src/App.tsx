@@ -3,7 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import DeleteConfirmation from './DeleteConfirmation'
 import DesktopUpdate from './DesktopUpdate'
 import PluginPanel from './PluginPanel'
-import ConnectionSetup from './ConnectionSetup'
+import { useFirstRunAiSetup } from './useFirstRunAiSetup'
 
 import type { PluginId } from './plugins'
 import { ArrowLeft, ChevronRight, Download, FileText, Folder, FolderOpen, History, MessageSquare, PanelsTopLeft, Plug, Plus, Settings2, Trash2, X } from 'lucide-react'
@@ -55,6 +55,7 @@ export default function App() {
   const [modal, setModal] = useState<Modal | null>(null)
   const [cliSettingsOpen, setCliSettingsOpen] = useState(false)
   const [connection, setConnection] = useState<ConnectionIndicator | null>(null)
+  useFirstRunAiSetup(connection, ready && !busy, setCliSettingsOpen)
   const [name, setName] = useState('')
   const [modalError, setModalError] = useState('')
   const [revision, setRevision] = useState(0)
@@ -250,7 +251,6 @@ export default function App() {
         <header className="topbar"><Button className="provider-trigger" variant="outline" size="sm" disabled={busy || !ready || connection?.state === 'CHECKING'} onClick={() => setCliSettingsOpen(true)} title="로그인 확인 결과입니다. 모델 이용 가능 여부는 실제 요청 시 확인됩니다."><i data-connected={connection?.state === 'AUTHENTICATED'} />{connection?.state === 'AUTHENTICATED' ? connection.provider : connection?.state === 'CHECKING' ? '연결 확인 중' : 'AI 연결'}</Button></header>
         {cliSettingsOpen && <Suspense fallback={<p role="status">AI 연결을 여는 중…</p>}><ProviderConnectionPanel initialConnection={connection} onClose={() => setCliSettingsOpen(false)} onConnectionChange={setConnection} /></Suspense>}
         <div className="page-content">
-          {ready && !switchingWorkspace && view !== 'PLUGINS' && <ConnectionSetup connection={connection} disabled={busy} alwaysVisible={view === 'SETTINGS'} onAi={() => setCliSettingsOpen(true)} onPlugin={id => { setPluginId(id); setView('PLUGINS') }} />}
           {view === 'CHAT' && <div className="page-heading"><h1>대화</h1></div>}
           {view === 'LIBRARY' && <div className="page-heading">
             <div><h1>자료</h1></div>

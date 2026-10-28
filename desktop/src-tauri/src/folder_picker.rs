@@ -13,7 +13,7 @@ pub async fn select_source_folder(window: tauri::WebviewWindow) -> Result<Option
     let state = window.state::<FolderPicker>();
     let url = window.url().map_err(|_| "앱 창을 확인할 수 없습니다.")?;
     if window.label() != "main"
-        || !knowledge_forge_desktop::protocol::owned_origin(&url, state.port.load(Ordering::SeqCst))
+        || !dougle_desktop::protocol::owned_origin(&url, state.port.load(Ordering::SeqCst))
     {
         return Err("앱의 자료 화면에서 다시 시도하세요.".into());
     }

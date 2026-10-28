@@ -6,7 +6,7 @@ pub async fn open_notion_connections(window: tauri::WebviewWindow) -> Result<(),
     let state = window.state::<crate::folder_picker::FolderPicker>();
     let url = window.url().map_err(|_| "앱 창을 확인할 수 없습니다.")?;
     if window.label() != "main"
-        || !knowledge_forge_desktop::protocol::owned_origin(&url, state.port.load(Ordering::SeqCst))
+        || !dougle_desktop::protocol::owned_origin(&url, state.port.load(Ordering::SeqCst))
     {
         return Err("앱의 플러그인 화면에서 다시 시도하세요.".into());
     }

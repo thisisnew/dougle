@@ -157,7 +157,7 @@ async function runChecked(config, diagnostic) {
       },
       async sql(query) {
         assert(query.startsWith('SELECT ') && !/[;\r\n]/.test(query))
-        const { stdout } = await execute('/usr/bin/sqlite3', ['-readonly', ownedPath(data, 'knowledge-forge.sqlite'), query],
+        const { stdout } = await execute('/usr/bin/sqlite3', ['-readonly', ownedPath(data, 'dougle.sqlite'), query],
           { timeout: 3000, maxBuffer: 65536, env: childEnvironment(home, data, scratch) })
         return stdout.trim()
       },

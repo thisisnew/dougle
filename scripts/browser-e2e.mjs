@@ -8,8 +8,8 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
-const resources = resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources')
-const jar = process.env.FORGE_BROWSER_JAR ? resolve(process.env.FORGE_BROWSER_JAR) : resolve(resources, 'knowledge-forge.jar')
+const resources = resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources/resources')
+const jar = process.env.FORGE_BROWSER_JAR ? resolve(process.env.FORGE_BROWSER_JAR) : resolve(resources, 'dougle.jar')
 await access(resolve(resources, 'runtime/bin/java'))
 await access(jar)
 const temporary = await realpath(await mkdtemp(resolve(tmpdir(), 'forge-browser-e2e-')))

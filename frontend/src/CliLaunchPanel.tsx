@@ -55,15 +55,15 @@ export default function CliLaunchPanel({ onClose, initialProvider = 'CODEX' }: {
   return <dialog ref={dialog} className="proposal-merge cli-path-dialog" aria-label="CLI 실행 경로 설정" onCancel={event => { event.preventDefault(); onClose() }}>
     <div className="provider-connection-header"><h2>실행 경로</h2><Button variant="ghost" onClick={onClose}>닫기</Button></div>
     <p>빈칸은 기본 경로를 사용합니다. 변경 후 앱을 다시 열어주세요.</p>
-    <p>회사용 실행 파일이나 스크립트의 전체 경로를 지정하세요. 터미널 별칭이나 명령 옵션은 입력하지 않습니다.</p>
+    <p>회사에서 쓰는 명령 이름 또는 실행 파일의 전체 경로를 입력하세요. 터미널 별칭·명령 옵션은 지원하지 않습니다.</p>
     {error && <p role="alert">{error}</p>}
     {busy && <p role="status">설정을 처리하는 중…</p>}
     {configuration && <>
       <dl><dt>사용 중인 Codex</dt><dd>{configuration.activeCodexCommand}</dd><dt>사용 중인 Claude</dt><dd>{configuration.activeClaudeCommand}</dd></dl>
       {configuration.restartRequired && <p role="status">저장된 경로는 아직 적용되지 않았습니다. 앱을 다시 열어주세요.</p>}
       <form className="cli-launch-form" onSubmit={event => { event.preventDefault(); void save() }}>
-        <label>Codex 절대 경로<input aria-label="Codex 절대 경로" maxLength={4096} value={codexPath} disabled={busy} onChange={event => { setCodexPath(event.target.value); setAcknowledged(false) }} /></label>
-        <label>Claude 절대 경로<input aria-label="Claude 절대 경로" maxLength={4096} value={claudePath} disabled={busy} onChange={event => { setClaudePath(event.target.value); setAcknowledged(false) }} /></label>
+        <label>Codex 실행 명령 또는 경로<input aria-label="Codex 실행 명령 또는 경로" maxLength={4096} value={codexPath} disabled={busy} onChange={event => { setCodexPath(event.target.value); setAcknowledged(false) }} /></label>
+        <label>Claude 실행 명령 또는 경로<input aria-label="Claude 실행 명령 또는 경로" maxLength={4096} value={claudePath} disabled={busy} onChange={event => { setClaudePath(event.target.value); setAcknowledged(false) }} /></label>
         <label><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => setAcknowledged(event.target.checked)} />이 실행 파일과 폴더를 신뢰합니다.</label>
         <Button type="submit" disabled={busy || !acknowledged}>경로 저장</Button>
       </form>

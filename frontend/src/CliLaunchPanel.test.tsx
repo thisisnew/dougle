@@ -17,7 +17,7 @@ it('조회나 경로 입력으로 실행하지 않고 명시적 확인 후 저�
   api.mockResolvedValueOnce(initial)
   api.mockResolvedValueOnce({ ...initial, saved: { ...initial.saved, codexPath: '/synthetic/codex', revision: 1 }, restartRequired: true })
   render(<CliLaunchPanel onClose={vi.fn()} />)
-  await userEvent.type(await screen.findByRole('textbox', { name: 'Codex 절대 경로' }), '/synthetic/codex')
+  await userEvent.type(await screen.findByRole('textbox', { name: 'Codex 실행 명령 또는 경로' }), '/synthetic/codex')
   expect(screen.getByRole('button', { name: '경로 저장' })).toBeDisabled()
   expect(api).toHaveBeenCalledTimes(1)
   await userEvent.click(screen.getByRole('checkbox'))
@@ -45,7 +45,7 @@ it('입력을 바꾸면 신뢰 확인을 다시 요구하고 닫을 때 요청�
   api.mockResolvedValue(initial)
   const view = render(<CliLaunchPanel onClose={vi.fn()} />)
   await userEvent.click(await screen.findByRole('checkbox'))
-  await userEvent.type(screen.getByRole('textbox', { name: 'Claude 절대 경로' }), '/synthetic/claude')
+  await userEvent.type(screen.getByRole('textbox', { name: 'Claude 실행 명령 또는 경로' }), '/synthetic/claude')
   expect(screen.getByRole('checkbox')).not.toBeChecked()
   const signal = api.mock.calls[0][1]?.signal
   view.unmount()

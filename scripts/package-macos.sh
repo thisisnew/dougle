@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+node "$repo_root/scripts/verify-brand.mjs"
 mode="${1:-verify}"
 case "$mode" in verify|--skip-verify|--stage-only) ;; *) echo 'Usage: bash scripts/package-macos.sh [--skip-verify|--stage-only]' >&2; exit 2 ;; esac
 [[ "$(uname -s)" == Darwin ]] || { echo 'macOS is required.' >&2; exit 1; }
@@ -28,11 +29,11 @@ if [[ "$mode" == verify ]]; then
   bash "$repo_root/scripts/build.sh"
   (cd "$repo_root" && node scripts/smoke.mjs)
 fi
-jar="$repo_root/backend/target/knowledge-forge-0.1.0.jar"
+jar="$repo_root/backend/target/dougle-0.1.0.jar"
 [[ -f "$jar" ]] || { echo 'Build the application first: bash scripts/build.sh' >&2; exit 1; }
 node "$repo_root/scripts/verify-frontend-bundle.mjs" "$jar" "$repo_root/frontend/dist"
 resources="$repo_root/desktop/src-tauri/resources"
-[[ ! -L "$resources" && ! -L "$resources/runtime" && ! -L "$resources/knowledge-forge.jar" ]] || { echo 'Refusing symlinked staging paths.' >&2; exit 1; }
+[[ ! -L "$resources" && ! -L "$resources/runtime" && ! -L "$resources/dougle.jar" ]] || { echo 'Refusing symlinked staging paths.' >&2; exit 1; }
 mkdir -p "$resources"
 staging="$(mktemp -d "$resources/.staging.XXXXXX")"
 trap 'rm -rf "$staging"' EXIT
@@ -44,18 +45,23 @@ done
 find "$staging/runtime" -type f -exec chmod u+w {} +
 [[ "$(forge_macos_architecture "$staging/runtime/bin/java")" == "$architecture" ]]
 if [[ "$architecture" == "$(uname -m)" ]]; then "$staging/runtime/bin/java" -version; fi
-cp "$jar" "$staging/knowledge-forge.jar"
+python3 "$repo_root/scripts/trim-macos-jar.py" "$jar" "$staging/dougle.jar" "$architecture"
 rm -rf "$resources/runtime"
 mv "$staging/runtime" "$resources/runtime"
-mv "$staging/knowledge-forge.jar" "$resources/knowledge-forge.jar"
+mv "$staging/dougle.jar" "$resources/dougle.jar"
 node "$repo_root/scripts/stage-search-model.mjs" "$architecture"
 if [[ "$mode" == --stage-only ]]; then echo 'Java runtime and JAR staged; no installer built.'; exit 0; fi
-signing_key="${FORGE_UPDATER_PRIVATE_KEY:-${XDG_CONFIG_HOME:-$HOME/.config}/knowledge-forge/updater.key}"
+signing_key="${FORGE_UPDATER_PRIVATE_KEY:-${XDG_CONFIG_HOME:-$HOME/.config}/dougle/updater.key}"
 [[ -f "$signing_key" && ! -L "$signing_key" ]] || { echo 'The updater signing key is required. See docs/automatic-updates.md.' >&2; exit 1; }
 export TAURI_SIGNING_PRIVATE_KEY="$signing_key"
 export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="${TAURI_SIGNING_PRIVATE_KEY_PASSWORD:-}"
 bash "$repo_root/scripts/stage-codex.sh" "$architecture"
 bash "$repo_root/scripts/stage-git.sh" "$architecture"
+if [[ "$architecture" == "$(uname -m)" ]]; then
+  node "$repo_root/scripts/fresh-install-smoke.mjs" "$resources"
+else
+  echo 'Cross-build: clean-HOME runtime acceptance still requires a matching Mac.'
+fi
 cd "$repo_root/desktop"
 npm ci --cache "$repo_root/.tools/npm-cache" --no-audit --no-fund
 export APPLE_SIGNING_IDENTITY=-
@@ -66,16 +72,16 @@ if [[ -d "$cached_resources" && ! -L "$cached_resources" ]]; then
 fi
 unset APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID APPLE_API_ISSUER APPLE_API_KEY APPLE_API_KEY_PATH
 npm run tauri -- build --bundles app ${target_args[@]+"${target_args[@]}"} -- --locked
-app="$target_directory/release/bundle/macos/Knowledge Forge.app"
+app="$target_directory/release/bundle/macos/Dougle.app"
 forge_verify_macos_architecture "$app" "$architecture"
 bash "$repo_root/scripts/create-macos-dmg.sh" "$app"
 version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")"
-update_name="Knowledge.Forge_${version}_${architecture}.app.tar.gz"
+update_name="Dougle_${version}_${architecture}.app.tar.gz"
 update_archive="${app}.tar.gz"
 [[ -f "$update_archive" && -f "$update_archive.sig" ]] || { echo 'Signed update artifacts were not generated.' >&2; exit 1; }
 cp "$update_archive" "$repo_root/release/$update_name"
 cp "$update_archive.sig" "$repo_root/release/$update_name.sig"
 TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=2 bash "$repo_root/scripts/desktop-cargo.sh" run --locked --example updater_verify -- \
   "$repo_root/desktop/src-tauri/tauri.conf.json" "$repo_root/release/$update_name" "$repo_root/release/$update_name.sig" "$version"
-(cd "$repo_root/release" && shasum -a 256 "Knowledge.Forge_${version}_${architecture}.dmg" "$update_name" "$update_name.sig" > "SHA256SUMS-${architecture}")
-(cd "$repo_root/release" && shasum -a 256 Knowledge.Forge_"${version}"_*.dmg Knowledge.Forge_"${version}"_*.app.tar.gz Knowledge.Forge_"${version}"_*.app.tar.gz.sig > SHA256SUMS)
+(cd "$repo_root/release" && shasum -a 256 "Dougle_${version}_${architecture}.dmg" "$update_name" "$update_name.sig" > "SHA256SUMS-${architecture}")
+(cd "$repo_root/release" && shasum -a 256 Dougle_"${version}"_*.dmg Dougle_"${version}"_*.app.tar.gz Dougle_"${version}"_*.app.tar.gz.sig > SHA256SUMS)

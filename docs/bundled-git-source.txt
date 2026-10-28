@@ -1,4 +1,4 @@
-Knowledge Forge bundled Git 2.56.0
+Dougle bundled Git 2.56.0
 
 Git is a separate program distributed under GNU GPL version 2.
 See ../COPYING. The complete, unmodified corresponding Git source is included
@@ -15,5 +15,5 @@ scripts, optional Rust implementations and third-party libraries are not built. 
 system libraries are linked. No Git source patches are applied.
 
 The included source retains its own component licenses and notices.
-Knowledge Forge invokes Git as a separate process to read public repositories.
+Dougle invokes Git as a separate process to read repositories with the user's read access.
 Installing or building Git separately is not required to use the Mac app.

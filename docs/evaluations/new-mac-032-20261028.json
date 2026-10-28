@@ -1,0 +1,53 @@
+{
+  "version": "0.1.32",
+  "date": "2026-10-28",
+  "status": "SUPERSEDED_INTERMEDIATE_BUILD",
+  "supersededBy": "../release-0.1.32-report.md",
+  "note": "Historical intermediate verification. GitHub authentication and direct web/GitHub collection were subsequently removed. Pending packaging items and counts below describe that intermediate build, not the published MVP.",
+  "host": "macOS x86_64",
+  "companyAuthenticationVerified": false,
+  "appleSiliconRuntimeVerified": false,
+  "actualAiCalls": 0,
+  "checks": {
+    "javaRegression": { "total": 1171, "failed": 0, "errors": 0, "skipped": 25 },
+    "additionalCommandAndModelTests": { "passed": 22, "newCommandCasesNotInFullRun": 2 },
+    "uiDefault": { "passed": 642, "skipped": 130 },
+    "uiOptIn": { "passed": 130 },
+    "rust": { "passed": 25 },
+    "node": { "passed": 177 },
+    "nativeTrimUnit": { "passed": 3 },
+    "brandUnit": { "passed": 5 },
+    "frontendBuild": "PASS_WITH_EXISTING_500KB_CHUNK_WARNING",
+    "cleanHomeStagedRuntime": [
+      "bundled Java startup with minimal PATH and empty HOME",
+      "unauthenticated API rejected",
+      "missing Codex and Claude do not prevent library use",
+      "actual bundled tokenizer, embedding and reranker load",
+      "synthetic file upload and Korean concept search",
+      "custom executable names for both providers persist across restart",
+      "synthetic CLI authentication status, not actual account authentication"
+    ],
+    "syntheticBrowserUi": "GitHub connection and custom AI command dialogs inspected in ego-browser",
+    "nativeLegacyMigration": "PASS: actual native host with synthetic old data folder and database name, preserved row, duplicate launch rejection, restart and child shutdown"
+  },
+  "failuresFoundAndCorrected": [
+    "Java module minimization omitted jdk.net.Sockets: restored full Java runtime",
+    "Native trimming removed tokenizer common properties: preserve metadata and test both architectures",
+    "AssertionError left asynchronous model preparation in LOADING: report ERROR without secret-bearing exception messages"
+  ],
+  "testRetries": [
+    "UI default run under concurrent compilation: one five-second timeout; isolated full rerun passed all 642 tests",
+    "Initial native test during packaging failed cleanup timing; rerun reached successful native startup and migration",
+    "Migration verifier initially used system SQLite readonly without WAL sidecars; stopped/checkpointed immutable verification confirmed data preservation"
+  ],
+  "pending": [
+    "Final Intel app and DMG runtime acceptance",
+    "Final ARM artifact static validation",
+    "Installed legacy data migration and local installation",
+    "Actual company command wrapper or shell alias identification",
+    "Actual company GitHub access and SSO approval",
+    "GitHub App registration for browser one-click authorization",
+    "Fresh Apple Silicon Mac runtime acceptance"
+  ],
+  "release": { "publicVersion": "0.1.31", "automaticUpdateFeed": "0.1.16" }
+}

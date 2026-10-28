@@ -1037,7 +1037,7 @@
   "search-modelsHelperSha256": "7adc5776c2d57669522c781d42e0d59edc265a0fa8d67326fdf4559247754c23",
   "jarSha256": "e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d",
   "searchModels": {
-    "directory": "/Users/thisisnew/Desktop/knowledge-forge/.tools/search-model/x86_64",
+    "directory": "/Users/thisisnew/Desktop/dougle/.tools/search-model/x86_64",
     "architecture": "x86_64",
     "files": [
       {

@@ -2,33 +2,33 @@
 
 **물어보면 함께 풀어주는 똑똑한 동료.**
 
-Dougle은 파일·폴더·웹페이지를 모아 두고, 궁금한 내용을 AI에게 질문하는 Mac 앱입니다.
+Dougle은 파일·폴더를 모아 두고, 궁금한 내용을 AI에게 질문하는 Mac 앱입니다.
 검색 준비는 앱이 맡고, 사용자는 질문하고 답변의 출처를 확인하면 됩니다.
 
 ![Dougle 대화 화면](docs/screenshots/dougle-chat.png)
 
 ## 설치하기
 
-공개 설치본은 **0.1.20**입니다. 개발 중인0.1.22 후보는 아직 배포하지 않습니다. [설치 안내와 검증 범위](docs/macos-install.md).
+최신 설치본은 **0.1.32 Preview**입니다. 파일·로컬 폴더 중심 MVP, 회사별 AI 실행 명령 설정, Dougle 이름·데이터 이전을 포함합니다. [설치 안내와 검증 범위](docs/macos-install.md).
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.31-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.32-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
 3. 앱을 열고 **Workspace 만들기**로 첫 서재를 만듭니다.
-4. **자료 → +**에서 파일·폴더·웹 링크·GitHub를 고릅니다. **AI 연결**에서 AI와 모델을 선택하고 로그인합니다.
+4. **자료 → +**에서 파일 또는 폴더를 고릅니다. PC에 내려받은 코드 저장소도 폴더로 추가합니다. **AI 연결**에서 AI와 모델을 선택하고 로그인합니다.
 5. **대화**에서 질문을 보내면 관련 자료로 답변을 시작하고, 출처를 아래에 표시합니다. 질문과 답변은 자동 저장되며 **질문 기록**에서 다시 보거나 삭제할 수 있습니다.
 
 연결한 자료는 **동기화 아이콘**으로 한 번에 갱신합니다. 자동 갱신은 **설정 → Workspace 관리**에서 켜고 끕니다. [자료·설정 안내](docs/library-simplification.md)
 
-**설정 → 플러그인**에서 Notion·Jira/Confluence의 브라우저 승인 연결과 MySQL 접속 설정·연결 테스트·DB 구조 수집을 제공합니다. 다국어 검색 엔진은 설치 파일에 기본 포함됩니다. [연결 방법과 지원 범위](docs/plugins.md)
+**설정 → 플러그인**에서 MySQL 접속 설정·연결 테스트·DB 구조 수집을 제공합니다. Notion·Jira/Confluence 인증 설정은 남아 있지만 이번 MVP에는 웹 주소 등록을 통한 새 문서 수집을 제공하지 않습니다. 다국어 검색 엔진은 설치 파일에 기본 포함됩니다. [연결 방법과 지원 범위](docs/plugins.md)
 
 질문에만 참고할 이미지·문서는 질문창 **+**로 첨부하세요. [첨부 사용법](docs/question-attachments.md)
 
 연결되면 오른쪽 위에 **CODEX / CLAUDE**가 표시됩니다. [짧은 사용 안내](docs/chat-first.md)
 
-Java·Git·Codex 실행 도구는 앱에 포함되어 있습니다. GitHub 자료도 별도 프로그램 설치 없이 가져올 수 있습니다.
-0.1.3부터 새 버전을 앱에서 알려 줍니다. 안내에 따라 설치하고 다시 시작하면 됩니다. [업데이트 안내](docs/automatic-updates.md)
+Java·Codex 실행 도구와 검색 엔진은 앱에 포함되어 있습니다. MVP에서는 웹 URL·GitHub URL 직접 연결을 제공하지 않습니다. 기존 수집 자료는 보존하며, 코드 저장소의 원격 변경은 직접 pull한 뒤 폴더를 동기화하세요.
+자동 업데이트 피드는 현재0.1.16에 유지되어 있으므로 최신 Preview는 위 설치 파일로 직접 설치하세요. [업데이트 안내](docs/automatic-updates.md)
 앱이 열리지 않거나 기존 앱을 업데이트하려면 [자세한 설치 안내](docs/macos-install.md)를 확인하세요.
 
 ## 기술 스택

@@ -57,7 +57,7 @@ impl Backend {
             .canonicalize()
             .map_err(|_| "내장 Java 실행 환경이 없습니다. 앱을 다시 설치해 주세요.")?;
         let jar = resources
-            .join("resources/knowledge-forge.jar")
+            .join("resources/dougle.jar")
             .canonicalize()
             .map_err(|_| "앱 실행 파일이 없습니다. 앱을 다시 설치해 주세요.")?;
         if !java.is_file() || !jar.is_file() || !data.is_absolute() {

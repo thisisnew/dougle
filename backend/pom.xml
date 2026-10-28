@@ -6,8 +6,8 @@
     <version>4.1.1</version>
     <relativePath/>
   </parent>
-  <groupId>dev.knowledgeforge</groupId>
-  <artifactId>knowledge-forge</artifactId>
+  <groupId>dev.dougle</groupId>
+  <artifactId>dougle</artifactId>
   <version>0.1.0</version>
   <properties><java.version>21</java.version></properties>
   <dependencies>

@@ -49,7 +49,7 @@ FORGE_VERIFY_PUBLIC_GITHUB=true bash scripts/verify-macos-package.sh release/Kno
 TAURI_CONFIG='{"bundle":{"resources":[]}}' bash scripts/desktop-cargo.sh build --locked --example git_smoke
 env PATH=/nonexistent GIT_EXEC_PATH=/nonexistent GIT_CONFIG_PARAMETERS=invalid \
   desktop/src-tauri/target/debug/examples/git_smoke \
-  "$PWD/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources"
+  "$PWD/desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources"
 ```
 
 마지막 검사는 실제 네이티브 실행 관리 코드와 동봉 Java/JAR/Git으로 공개 예제 저장소 `octocat/Hello-World`를 수집·검색·재동기화합니다. 임시 데이터만 만들며 AI를 호출하지 않습니다.

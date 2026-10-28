@@ -102,7 +102,7 @@ flowchart LR
 | 앱만 서명 확인 후 교체, 자료 폴더 보존 | Rust `updates.rs`, `Lifecycle`, Tauri Updater | [업데이트](automatic-updates.md), 가상 앱 설치·변조/버전 불일치 차단 검사 |
 
 마이그레이션의 실제 테이블과 대조한 파일:
-`backend/src/main/java/dev/knowledgeforge/library/adapter/persistence/DatabaseConfiguration.java`.
+`backend/src/main/java/dev/dougle/library/adapter/persistence/DatabaseConfiguration.java`.
 
 ## 추가 검색 계획·팀 설정 가져오기 (DB v26)
 

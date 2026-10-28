@@ -1,4 +1,4 @@
-use knowledge_forge_desktop::{protocol, supervisor};
+use dougle_desktop::{protocol, supervisor};
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -40,6 +40,13 @@ window.addEventListener('DOMContentLoaded', () => {
     let phase = 'workspace button';
     Object.defineProperty(window, '__FORGE_QA_PHASE__', { get: () => phase, configurable: true });
     try {
+      phase = 'first AI login';
+      await until(() => document.querySelector('dialog[aria-label="AI 연결"][open]'));
+      if (document.querySelector('.connection-setup')) throw Error('Main connection banner must be absent');
+      const firstLogin = document.querySelector('dialog[aria-label="AI 연결"][open]');
+      if (/GitHub|Notion|MySQL|Confluence/.test(firstLogin.textContent)) throw Error('Optional integrations in first login');
+      [...firstLogin.querySelectorAll('button')].find(button => button.textContent.trim() === '닫기').click();
+      await until(() => !document.querySelector('dialog[aria-label="AI 연결"][open]'));
       workspaceButton.click();
       phase = 'workspace dialog';
       await until(() => document.querySelector('#item-name'));
@@ -144,8 +151,15 @@ window.addEventListener('DOMContentLoaded', () => {
       if ((await api(card + '/versions/2')).version.title !== 'Synthetic human edit') throw Error('Human edit missing');
       const relations = await api(base + '/relations?kind=ORIGINAL&id=' + file.id);
       if (!relations.items.some(item => item.target.id === draft.card.id && item.target.version === 1)) throw Error('Published relation mismatch');
+      for (const kind of ['URL', 'GITHUB']) {
+        const rejected = await fetch('/api' + base + '/sources', {
+          method: 'POST', mode: 'same-origin', headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: 'Removed remote source', kind, location: 'https://github.com/example/synthetic', sync: true }),
+        });
+        if (rejected.status !== 400) throw Error('Retired remote registration was not rejected');
+      }
       const source = await api(base + '/sources', 'POST', {
-        name: 'Synthetic disabled URL', kind: 'URL', location: 'https://example.org/synthetic', domain: '',
+        name: 'Synthetic local folder', kind: 'LOCAL_FOLDER', location: SOURCE_FIXTURE, domain: '',
       });
       const polling = await api(base + '/sources/' + source.id + '/polling', 'PATCH', {
         enabled: false, intervalSeconds: 60, expectedRevision: 0,
@@ -224,6 +238,8 @@ fn main() {
 }
 
 fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Path) -> bool {
+    let source_fixture = data.join("source-fixture");
+    std::fs::create_dir_all(&source_fixture).expect("create synthetic source folder");
     let cancelled = AtomicBool::new(false);
     let mut backend = match supervisor::Backend::launch(resources, data, &cancelled) {
         Ok(backend) => backend,
@@ -272,12 +288,12 @@ fn run(app: &tauri::AppHandle, resources: &std::path::Path, data: &std::path::Pa
         "runtime-smoke",
         WebviewUrl::External(origin.parse().unwrap()),
     )
-    .title("Knowledge Forge · synthetic runtime QA")
+    .title("Dougle · synthetic runtime QA")
     .inner_size(1280.0, 850.0)
     .incognito(true)
     .devtools(false)
     .initialization_script(protocol::initialization_script(port, &backend.token))
-    .initialization_script(SCRIPT)
+    .initialization_script(SCRIPT.replace("SOURCE_FIXTURE", &serde_json::to_string(&source_fixture).unwrap()))
     .on_navigation(move |url| protocol::owned_origin(url, port))
     .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
     .build();

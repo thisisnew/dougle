@@ -20,17 +20,6 @@ const source = {
 
 beforeEach(() => { api.mockReset(); vi.mocked(selectFolder).mockReset(); localStorage.removeItem('dougle.material-sync.one') })
 
-it('Notion 연결 필요 오류에 연결 안내와 플러그인 이동을 제공한다', async () => {
-  api.mockResolvedValue([{ ...source, kind: 'URL', location: 'https://app.notion.com/p/synthetic', status: 'ERROR', error: 'Notion 연결이 필요합니다.' }])
-  const connect = vi.fn()
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} onPluginConnect={connect} />)
-  const warning = await screen.findByRole('button', { name: '가상 연구 연결 필요: Notion 연결이 필요합니다.' })
-  await userEvent.hover(warning)
-  expect(screen.getByRole('tooltip')).toHaveTextContent('플러그인에서 Notion을 연결해 주세요.')
-  expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-  await userEvent.click(warning)
-  expect(connect).toHaveBeenCalledWith('NOTION')
-})
 
 it('Notion 페이지 권한 오류를 토큰 연결 오류로 덮어쓰지 않는다', async () => {
   api.mockResolvedValue([{ ...source, kind: 'URL', location: 'https://app.notion.com/p/synthetic', status: 'ERROR', error: 'Notion 페이지 접근 권한이 없습니다. 페이지의 연결 메뉴에서 접근을 허용하세요.' }])
@@ -60,25 +49,6 @@ it('자료 추가 영역의 열림 상태에 따라 더하기와 빼기 아이�
   expect(screen.queryByRole('button', { name: '폴더' })).not.toBeInTheDocument()
 })
 
-it('동기화 중 느낌표로도 플러그인 화면으로 이동할 수 없다', async () => {
-  let finish!: () => void
-  const pending = new Promise<void>(resolve => { finish = resolve })
-  const notion = { ...source, kind: 'URL', location: 'https://app.notion.com/p/synthetic', status: 'ERROR', error: 'Notion 연결이 필요합니다.' }
-  api.mockImplementation(async path => {
-    if (path.endsWith('/sync')) { await pending; return notion }
-    return [notion]
-  })
-  const connect = vi.fn()
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} onPluginConnect={connect} />)
-  const warning = await screen.findByRole('button', { name: '가상 연구 연결 필요: Notion 연결이 필요합니다.' })
-  await userEvent.click(screen.getByRole('button', { name: '동기화' }))
-  await userEvent.click(warning)
-  expect(connect).not.toHaveBeenCalled()
-  finish()
-  await waitFor(() => expect(screen.getByRole('button', { name: '동기화' })).toBeEnabled())
-  await userEvent.click(warning)
-  expect(connect).toHaveBeenCalledWith('NOTION')
-})
 
 it.each([
   ['LOCAL_FOLDER', '폴더', 'lucide-folder-input'],
@@ -90,7 +60,8 @@ it.each([
   const row = await screen.findByRole('button', { name: '가상 연구' })
   await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
   expect(row.querySelector('svg')).toHaveClass(icon)
-  expect(screen.getByRole('button', { name: label }).querySelector('svg')).toHaveClass(icon)
+  if (kind === 'LOCAL_FOLDER') expect(screen.getByRole('button', { name: label }).querySelector('svg')).toHaveClass(icon)
+  else expect(screen.queryByRole('button', { name: label })).not.toBeInTheDocument()
 })
 
 it('최근 성공 시간을 Workspace별로 표시하고 실패 시 갱신하지 않는다', async () => {
@@ -236,55 +207,8 @@ it('파일 분석 실패를 알리고 연결 자료 동기화는 계속한다', 
   expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' }))
 })
 
-it.each(['웹 링크', 'GitHub'])('%s는 Enter로 연속 등록하고 추가 영역을 유지한다', async kind => {
-  api.mockImplementation(async (_path, options) => options?.method === 'POST' ? source : [])
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
-  await userEvent.click(screen.getByRole('button', { name: kind }))
-  const address = screen.getByLabelText(`${kind} 주소`)
-  await userEvent.type(address, 'https://github.com/example/one{Enter}')
-  await waitFor(() => expect(address).toHaveValue(''))
-  await userEvent.type(address, 'https://github.com/example/two{Enter}')
-  await waitFor(() => expect(address).toHaveValue(''))
-  expect(api.mock.calls.filter(([path, options]) => path.endsWith('/sources') && options?.method === 'POST')).toHaveLength(2)
-  expect(api.mock.calls.filter(([path, options]) => path.endsWith('/sync') && options?.method === 'POST')).toHaveLength(2)
-  expect(address).toBeVisible()
-})
 
-it.each([
-  ['웹 링크', 'https://github.com/example/repo', 'GITHUB'],
-  ['GitHub', 'https://example.org/guide', 'URL'],
-  ['GitHub', 'https://github.com/example/repo/issues/12', 'URL'],
-  ['GitHub', 'https://github.com/example/repo/blob/main/App.java', 'URL'],
-])('%s에서 %s를 %s로 등록하고 동기화한다', async (tab, address, expectedKind) => {
-  api.mockImplementation(async (_path, options) => options?.method === 'POST' ? source : [])
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
-  await userEvent.click(screen.getByRole('button', { name: tab }))
-  await userEvent.type(screen.getByLabelText(`${tab} 주소`), address)
-  expect(screen.getByRole('status')).toHaveTextContent(expectedKind === 'GITHUB' ? 'GitHub 저장소로 추가합니다.' : '웹페이지로 추가합니다.')
-  await userEvent.click(screen.getByRole('button', { name: '추가' }))
-  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' })))
-  const registrations = api.mock.calls.filter(([path, options]) => path === '/workspaces/one/sources' && options?.method === 'POST')
-  expect(registrations).toHaveLength(1)
-  expect(JSON.parse(registrations[0][1]!.body as string)).toMatchObject({ kind: expectedKind, location: address })
-  expect(screen.getByRole('button', { name: expectedKind === 'GITHUB' ? 'GitHub' : '웹 링크' })).toHaveAttribute('aria-pressed', 'true')
-})
 
-it('여러 줄 주소 붙여넣기는 이전 주소도 비우고 제출 전에 차단한다', async () => {
-  api.mockResolvedValue([])
-  const user = userEvent.setup()
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  await user.click(screen.getByRole('button', { name: '자료 추가' }))
-  await user.click(screen.getByRole('button', { name: '웹 링크' }))
-  const address = screen.getByLabelText('웹 링크 주소')
-  await user.type(address, 'https://example.org/previous')
-  await user.paste('https://github.com/example/repo\n--upload-pack=evil')
-  expect(address).toHaveValue('')
-  expect(screen.getByRole('alert')).toHaveTextContent('주소는 한 줄로 입력해 주세요.')
-  expect(screen.getByRole('button', { name: '추가' })).toBeDisabled()
-  expect(api.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(0)
-})
 
 it('등록 날짜를 표시하고 과거 자료의 날짜는 추측하지 않는다', async () => {
   api.mockResolvedValue([source, { ...source, id: 'legacy', name: '이전 자료', createdAt: null }])
@@ -294,37 +218,7 @@ it('등록 날짜를 표시하고 과거 자료의 날짜는 추측하지 않는
   expect(screen.getByTitle('이전 버전에서 등록 날짜를 기록하지 않았습니다.')).toHaveTextContent('—')
 })
 
-it('GitHub 등록 실패 시 입력을 보존하고 저장소 이름으로 재시도한다', async () => {
-  let attempts = 0
-  api.mockImplementation(async (_path, options) => {
-    if (options?.method === 'POST') {
-      if (++attempts === 1) throw new Error('등록 실패')
-      return source
-    }
-    return []
-  })
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
-  await userEvent.click(screen.getByRole('button', { name: 'GitHub' }))
-  await userEvent.type(screen.getByLabelText('GitHub 주소'), 'https://github.com/example/project.git')
-  await userEvent.click(screen.getByRole('button', { name: '추가' }))
-  expect(await screen.findByRole('alert')).toHaveTextContent('등록 실패')
-  expect(screen.getByLabelText('GitHub 주소')).toHaveValue('https://github.com/example/project.git')
-  await userEvent.click(screen.getByRole('button', { name: '추가' }))
-  await waitFor(() => expect(screen.getByLabelText('GitHub 주소')).toHaveValue(''))
-  expect(api).toHaveBeenCalledWith('/workspaces/one/sources', expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'project', kind: 'GITHUB', location: 'https://github.com/example/project.git', domain: '' }) }))
-})
 
-it('웹 링크 주소가 유효하지 않으면 등록을 실행하지 않는다', async () => {
-  api.mockResolvedValue([])
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
-  await userEvent.click(screen.getByRole('button', { name: '웹 링크' }))
-  await userEvent.type(screen.getByLabelText('웹 링크 주소'), 'not a url')
-  await userEvent.click(screen.getByRole('button', { name: '추가' }))
-  expect(screen.getByLabelText('웹 링크 주소')).toBeInvalid()
-  expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false)
-})
 
 it('통합 자료 추가에서 파일은 업로드만 열고 폴더 등록과 구분한다', async () => {
   api.mockResolvedValue([])
@@ -363,29 +257,6 @@ it('자료 목록 갱신으로 사라진 도메인을 숨은 검색 조건으로
   expect(searchPath).not.toContain('domains=')
 })
 
-it('수정 없이 삭제 확인 후 새 자료를 등록한다', async () => {
-  let removed = false
-  api.mockImplementation(async (path, options) => {
-    if (options?.method === 'DELETE') { removed = true; return undefined }
-    if (options?.method === 'POST') return { ...source, id: 'new-source' }
-    return removed ? [] : [source]
-  })
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  await screen.findByText('가상 연구')
-  expect(screen.queryByRole('button', { name: /수정/ })).not.toBeInTheDocument()
-  expect(screen.queryByText('내 자료')).not.toBeInTheDocument()
-  expect(screen.getByRole('button', { name: '동기화' })).toHaveTextContent('')
-  await userEvent.click(screen.getByRole('button', { name: '가상 연구 Source 삭제' }))
-  await userEvent.click(screen.getByRole('button', { name: '삭제' }))
-  await waitFor(() => expect(screen.queryByText('가상 연구')).not.toBeInTheDocument())
-  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
-  await userEvent.click(screen.getByRole('button', { name: '웹 링크' }))
-  await userEvent.type(screen.getByLabelText('웹 링크 주소'), 'https://example.invalid/new')
-  await userEvent.click(screen.getByRole('button', { name: '추가' }))
-  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources', expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'new', kind: 'URL', location: 'https://example.invalid/new', domain: '' }) })))
-  expect(api.mock.calls.some(([, options]) => options?.method === 'PATCH')).toBe(false)
-  expect(api.mock.calls.some(([path]) => /generation|answer/.test(path))).toBe(false)
-})
 
 it('검색된 게시 버전을 관련 자료 화면에 전달한다', async () => {
   api.mockImplementation(async path => path.includes('/search?') ? [
@@ -449,21 +320,6 @@ it('폴더를 선택하면 등록 직후 자동 동기화하고 목록을 갱신
   expect(changed).toHaveBeenCalled()
 })
 
-it('폴더 선택 취소는 등록하지 않고 종류 변경 시 이전 경로를 비운다', async () => {
-  api.mockImplementation(async (_path, options) => options?.method === 'POST' ? source : [])
-  vi.mocked(selectFolder).mockResolvedValueOnce(null).mockResolvedValueOnce('/synthetic')
-  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
-  await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
-  await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
-  expect(screen.queryByRole('button', { name: '추가' })).not.toBeInTheDocument()
-  expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false)
-  await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
-  await waitFor(() => expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(true))
-  await userEvent.click(screen.getByRole('button', { name: '웹 링크' }))
-  expect(screen.getByLabelText('웹 링크 주소')).toHaveValue('')
-  await userEvent.click(screen.getByRole('button', { name: '폴더' }))
-  expect(screen.queryByRole('button', { name: '추가' })).not.toBeInTheDocument()
-})
 
 it('자료 화면에는 자동 갱신 설정을 노출하지 않는다', async () => {
   api.mockResolvedValue([source])

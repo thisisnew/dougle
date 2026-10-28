@@ -8,8 +8,8 @@ if [[ "${1:-}" == --static-only ]]; then static_only=true; shift; fi
 if [[ $# -gt 0 ]]; then
   disk_image="$1"
 else
-  version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$repo_root/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Info.plist")"
-  disk_image="$repo_root/release/Knowledge.Forge_${version}_$(uname -m).dmg"
+  version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$repo_root/desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Info.plist")"
+  disk_image="$repo_root/release/Dougle_${version}_$(uname -m).dmg"
 fi
 [[ -f "$disk_image" ]] || { echo 'Build the DMG first.' >&2; exit 1; }
 temporary="$(mktemp -d "${TMPDIR:-/tmp}/forge-package-qa.XXXXXX")"
@@ -23,13 +23,13 @@ mkdir "$temporary/mount" "$temporary/installed"
 hdiutil verify "$disk_image"
 hdiutil attach "$disk_image" -readonly -nobrowse -mountpoint "$temporary/mount" >/dev/null
 mounted=true
-codesign --verify --deep --strict "$temporary/mount/Knowledge Forge.app"
-ditto "$temporary/mount/Knowledge Forge.app" "$temporary/installed/Knowledge Forge.app"
+codesign --verify --deep --strict "$temporary/mount/Dougle.app"
+ditto "$temporary/mount/Dougle.app" "$temporary/installed/Dougle.app"
 [[ "$(readlink "$temporary/mount/Applications")" == /Applications ]]
 hdiutil detach "$temporary/mount" >/dev/null
 mounted=false
-app="$temporary/installed/Knowledge Forge.app"
-architecture="$(forge_macos_architecture "$app/Contents/MacOS/knowledge-forge-desktop")"
+app="$temporary/installed/Dougle.app"
+architecture="$(forge_macos_architecture "$app/Contents/MacOS/dougle-desktop")"
 forge_verify_macos_architecture "$app" "$architecture"
 node "$repo_root/scripts/stage-search-model.mjs" "$architecture" "$app/Contents/Resources/resources/search-model-e5-v1" --verify-only
 if ! codesign --verify --deep --strict "$app"; then
@@ -44,10 +44,4 @@ fi
 env -i PATH=/usr/bin:/bin "$app/Contents/Resources/resources/runtime/bin/java" -version
 PATH=/usr/bin:/bin JAVA_HOME=/nonexistent TAURI_CONFIG='{"bundle":{"resources":[]}}' \
   CARGO_BUILD_JOBS=2 bash "$repo_root/scripts/desktop-cargo.sh" run --locked --example runtime_smoke -- "$app/Contents/Resources"
-if [[ "${FORGE_VERIFY_PUBLIC_GITHUB:-false}" == true ]]; then
-  TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=2 \
-    bash "$repo_root/scripts/desktop-cargo.sh" build --locked --example git_smoke
-  env PATH=/nonexistent GIT_EXEC_PATH=/nonexistent GIT_CONFIG_PARAMETERS=invalid \
-    "$repo_root/desktop/src-tauri/target/debug/examples/git_smoke" "$app/Contents/Resources"
-fi
 echo 'PASS: DMG verification, read-only mount, installed copy, signature and native runtime UI'

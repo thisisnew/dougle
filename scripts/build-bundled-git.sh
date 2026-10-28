@@ -9,7 +9,7 @@ sdk="$(/usr/bin/xcrun --show-sdk-path)"
   CC=/usr/bin/clang AR=/usr/bin/ar \
   CFLAGS="-O2 -arch $architecture -isysroot $sdk -mmacosx-version-min=11.3" \
   LDFLAGS="-arch $architecture -isysroot $sdk -mmacosx-version-min=11.3" \
-  HOST_CPU="$architecture" prefix=/knowledge-forge gitexecdir=libexec/git-core \
+  HOST_CPU="$architecture" prefix=/dougle gitexecdir=libexec/git-core \
   RUNTIME_PREFIX=YesPlease NO_GETTEXT=YesPlease NO_PERL=YesPlease NO_PYTHON=YesPlease \
   NO_TCLTK=YesPlease NO_EXPAT=YesPlease NO_OPENSSL=YesPlease NO_RUST=YesPlease \
   NO_FINK=YesPlease NO_DARWIN_PORTS=YesPlease NO_HOMEBREW=YesPlease \

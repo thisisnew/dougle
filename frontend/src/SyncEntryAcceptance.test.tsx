@@ -43,7 +43,7 @@ describe.skipIf(import.meta.env.VITE_SYNC_ACCEPTANCE !== '1')('sync entry accept
             syncs++
             await pending
             source = { ...source, status: fixture === 4 || cancelled ? 'ERROR' : 'READY',
-              error: fixture === 4 ? 'Notion 연결이 필요합니다. 플러그인에서 Notion을 연결해 주세요.' : cancelled ? '동기화를 중단했습니다.' : null }
+              error: fixture === 4 ? '폴더를 찾을 수 없습니다.' : cancelled ? '동기화를 중단했습니다.' : null }
             return source
           }
           if (path.endsWith('/progress')) return { stage: 'EXTRACTING', file: 'synthetic.txt', completed: 0, total: 1, cancellable: true }
@@ -59,18 +59,14 @@ describe.skipIf(import.meta.env.VITE_SYNC_ACCEPTANCE !== '1')('sync entry accept
           await user.click(screen.getByRole('button', { name: '자료' }))
           await user.click(screen.getByRole('button', { name: '자료 추가' }))
           if (fixture === 0) await user.upload(screen.getByLabelText('파일 업로드'), new File(['BLUE72'], 'synthetic.txt'))
-          else if (fixture === 1) {
+          else {
             await user.click(screen.getByRole('button', { name: '폴더' }))
             await user.click(screen.getByRole('button', { name: '폴더 선택' }))
-          } else {
-            await user.click(screen.getByRole('button', { name: '웹 링크' }))
-            fireEvent.change(screen.getByLabelText('웹 링크 주소'), { target: { value: fixture === 2 ? 'https://example.org/synthetic' : fixture === 3 ? 'https://github.com/example/synthetic' : 'https://app.notion.com/p/synthetic' } })
-            await user.click(screen.getByRole('button', { name: '추가' }))
           }
           await waitFor(() => expect(registrations).toBe(1))
           await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeDisabled())
           if (fixture !== 0) await waitFor(() => expect(syncs).toBe(1))
-          if (fixture === 3) expect(source).toMatchObject({ kind: 'GITHUB' })
+          if (fixture !== 0) expect(source).toMatchObject({ kind: 'LOCAL_FOLDER' })
           for (const name of ['대화', '자료', '질문 기록', '설정', 'Workspace 생성']) {
             const button = screen.getByRole('button', { name })
             expect(button).toBeDisabled()
@@ -88,9 +84,9 @@ describe.skipIf(import.meta.env.VITE_SYNC_ACCEPTANCE !== '1')('sync entry accept
           await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeEnabled())
           expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeEnabled()
           if (fixture === 4) {
-            const warning = await screen.findByRole('button', { name: /연결 필요: Notion 연결이 필요합니다/ })
+            const warning = await screen.findByRole('button', { name: /동기화 실패: 자료를 찾을 수 없습니다/ })
             await user.hover(warning)
-            expect(screen.getByRole('tooltip')).toHaveTextContent('플러그인')
+            expect(screen.getByRole('tooltip')).toHaveTextContent('자료를 찾을 수 없습니다')
           }
           if (action === 4) {
             view.unmount()

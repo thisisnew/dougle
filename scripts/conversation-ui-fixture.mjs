@@ -14,7 +14,7 @@ export const artifactSha256 = 'f88d6f01b115c5951a98c35dd6723b447c4bce1da03843666
 export const candidateArtifactSha256 = 'b647ff9815037ddef3780246d712a944d4534a43060f881cdcbab8c2e6f3a612'
 export function artifactOptions(args) {
   if (args.length === 0) return {
-    jar: '/Applications/Knowledge Forge.app/Contents/Resources/resources/knowledge-forge.jar', sha256: artifactSha256,
+    jar: '/Applications/Dougle.app/Contents/Resources/resources/dougle.jar', sha256: artifactSha256,
   }
   assert.equal(args.length, 4, 'Candidate requires --jar and --sha256 together')
   const options = {}
@@ -54,7 +54,7 @@ export function allowed(method, path, workspaceId) {
 export async function run() {
   assert.equal(process.platform, 'darwin', 'macOS strict sandbox required')
   const artifact = artifactOptions(process.argv.slice(2))
-  const resources = '/Applications/Knowledge Forge.app/Contents/Resources/resources'
+  const resources = '/Applications/Dougle.app/Contents/Resources/resources'
   const java = await realpath(join(resources, 'runtime/bin/java'))
   const models = await realpath(join(resources, 'search-model-e5-v1'))
   const source = await readFile(artifact.jar)

@@ -18,7 +18,7 @@ if (release) { assert.equal(release.draft, false); assert.equal(release.tag_name
 const config = resolve(root, 'desktop/src-tauri/tauri.conf.json')
 const platforms = {}
 for (const [platform, architecture] of [['darwin-x86_64', 'x86_64'], ['darwin-aarch64', 'arm64']]) {
-  const name = `Knowledge.Forge_${version}_${architecture}.app.tar.gz`
+  const name = `Dougle_${version}_${architecture}.app.tar.gz`
   const archive = resolve(root, 'release', name)
   const signature = archive + '.sig'
   await execute('bash', ['scripts/desktop-cargo.sh', 'run', '--locked', '--example', 'updater_verify', '--', config, archive, signature, version], {
@@ -36,7 +36,7 @@ for (const [platform, architecture] of [['darwin-x86_64', 'x86_64'], ['darwin-aa
       assert.equal(asset.digest, 'sha256:' + digest.digest('hex'))
     }
   }
-  platforms[platform] = { url: `https://github.com/thisisnew/knowledge-forge/releases/download/${tag}/${name}`,
+  platforms[platform] = { url: `https://github.com/thisisnew/dougle/releases/download/${tag}/${name}`,
     signature: (await readFile(signature, 'utf8')).trim() }
 }
 const manifest = { version, notes: '앱 메뉴에서 업데이트를 설치하고 다시 시작할 수 있습니다.',

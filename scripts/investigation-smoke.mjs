@@ -76,7 +76,7 @@ assert(process.argv.slice(2).every(argument => argument === '--hold'), 'Only --h
 assert.notEqual(process.platform, 'win32', 'This fixture requires POSIX process groups')
 const hold = process.argv.includes('--hold')
 const root = fileURLToPath(new URL('../', import.meta.url))
-const jar = resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
+const jar = resolve(root, 'backend/target/dougle-0.1.0.jar')
 assert((await stat(jar)).isFile(), 'Build the production JAR before running this smoke')
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
 const jarSha256 = sha256(await readFile(jar))

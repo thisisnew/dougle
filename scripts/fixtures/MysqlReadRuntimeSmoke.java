@@ -1,4 +1,4 @@
-package dev.knowledgeforge.plugins.adapter;
+package dev.dougle.plugins.adapter;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

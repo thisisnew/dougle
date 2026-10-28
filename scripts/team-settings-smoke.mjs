@@ -8,7 +8,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
-const jar = resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
+const jar = resolve(root, 'backend/target/dougle-0.1.0.jar')
 await access(jar)
 const jarSha256 = createHash('sha256').update(await readFile(jar)).digest('hex')
 const temporary = await mkdtemp(resolve(tmpdir(), 'dougle-team-settings-smoke-'))

@@ -12,11 +12,12 @@ import { fileURLToPath } from 'node:url'
 const execute = promisify(execFile)
 const root = fileURLToPath(new URL('../', import.meta.url))
 assert.equal(process.platform, 'darwin')
-const previous = process.argv[2] || '0.1.6'
+const previous = process.argv[2] || '0.1.32'
 assert.match(previous, /^\d+\.\d+\.\d+$/)
+assert.ok(previous.localeCompare('0.1.32', undefined, { numeric: true }) >= 0, 'Pre-0.1.32 app-name migration requires manual DMG installation; do not claim automatic update coverage.')
 const architecture = process.arch === 'arm64' ? 'arm64' : 'x86_64'
 assert.ok(['arm64', 'x64'].includes(process.arch))
-const name = `Knowledge.Forge_${previous}_${architecture}.app.tar.gz`
+const name = `Dougle_${previous}_${architecture}.app.tar.gz`
 const archive = resolve(root, 'release', name)
 const release = JSON.parse((await execute('gh', ['api', `repos/thisisnew/dougle/releases/tags/v${previous}-preview.1`])).stdout)
 assert.equal(release.draft, false)
@@ -31,7 +32,7 @@ async function digest(path) {
 assert.equal(asset.digest, 'sha256:' + await digest(archive))
 const temporary = await realpath(await mkdtemp(resolve(tmpdir(), 'forge-published-update-')))
 const installed = resolve(temporary, 'installed')
-const app = resolve(installed, 'Knowledge Forge.app')
+const app = resolve(installed, 'Dougle.app')
 const marker = resolve(temporary, 'synthetic-user-data.txt')
 const environment = { ...process.env, TAURI_CONFIG: '{"bundle":{"resources":[]}}', CARGO_BUILD_JOBS: '2' }
 const data = resolve(temporary, 'data')
@@ -42,7 +43,7 @@ async function startBackend() {
   const resources = resolve(app, 'Contents/Resources/resources')
   let logs = ''
   let failed = false
-  backend = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', resolve(resources, 'knowledge-forge.jar'),
+  backend = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', resolve(resources, 'dougle.jar'),
     '--forge.desktop=true', '--server.address=127.0.0.1', '--server.port=0', `--forge.data-dir=${data}`,
     `--forge.ai.codex-command=${resolve(temporary, 'no-ai')}`, `--forge.ai.claude-command=${resolve(temporary, 'no-ai')}`],
   { cwd: temporary, env: { PATH: '/usr/bin:/bin', HOME: temporary, TMPDIR: temporary, FORGE_DATA_DIR: data, FORGE_DESKTOP: 'true' },
@@ -117,8 +118,8 @@ try {
   assert.notEqual(target, previous)
   assert.equal(await version(), target)
   await execute('codesign', ['--verify', '--deep', '--strict', app])
-  assert.equal(await digest(resolve(app, 'Contents/Resources/resources/knowledge-forge.jar')),
-    await digest(resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')))
+  assert.equal(await digest(resolve(app, 'Contents/Resources/resources/dougle.jar')),
+    await digest(resolve(root, 'backend/target/dougle-0.1.0.jar')))
   assert.equal(await readFile(marker, 'utf8'), 'synthetic data outside app must remain')
   await startBackend()
   const after = await Promise.all(paths.map(path => api(path)))

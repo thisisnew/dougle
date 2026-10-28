@@ -1,17 +1,24 @@
 import assert from 'node:assert/strict'
 import { execFile, spawn } from 'node:child_process'
 import { once } from 'node:events'
-import { mkdtemp, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdtemp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { promisify } from 'node:util'
 
 const execute = promisify(execFile)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const app = resolve(process.argv[2] || resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app'))
+const app = resolve(process.argv[2] || resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app'))
 const home = await mkdtemp(resolve(tmpdir(), 'forge-native-host-'))
+const migrateLegacy = process.argv.includes('--legacy-data')
+const legacy = resolve(home, 'Library/Application Support/dev.knowledgeforge.desktop')
+if (migrateLegacy) {
+  await mkdir(legacy, { recursive: true, mode: 0o700 })
+  await writeFile(resolve(legacy, 'synthetic-migration-marker'), 'preserve synthetic data')
+}
 const processes = []
+let primaryFailure
 const pause = () => new Promise(done => setTimeout(done, 100))
 
 async function table() {
@@ -22,7 +29,7 @@ async function table() {
 }
 
 function launch() {
-  const native = spawn(resolve(app, 'Contents/MacOS/knowledge-forge-desktop'), [], {
+  const native = spawn(resolve(app, 'Contents/MacOS/dougle-desktop'), [], {
     env: { HOME: home, PATH: '/usr/bin:/bin', TMPDIR: tmpdir(), LANG: 'en_US.UTF-8' },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
@@ -79,10 +86,15 @@ try {
   const observedWindows = startupOnly ? execute(observer, [String(first.native.pid)], { timeout: 70000 }) : null
   observedWindows?.catch(() => {})
   const base = await ready(first)
+  console.log('PASS: native startup and session protection')
   const startupMs = Date.now() - started
-  const data = resolve(home, 'Library/Application Support/dev.knowledgeforge.desktop')
+  const data = resolve(home, 'Library/Application Support/dev.dougle.desktop')
   assert.equal((await stat(data)).mode & 0o777, 0o700)
-  await stat(resolve(data, 'knowledge-forge.sqlite'))
+  await stat(resolve(data, 'dougle.sqlite'))
+  if (migrateLegacy) {
+    assert.equal(await readFile(resolve(data, 'synthetic-migration-marker'), 'utf8'), 'preserve synthetic data')
+    await assert.rejects(stat(legacy), { code: 'ENOENT' })
+  }
   if (startupOnly) {
     const result = await observedWindows
     console.log(result.stdout.trim())
@@ -116,9 +128,25 @@ try {
     assert.equal((await fetch(base)).status, 200)
     await stop(duplicate)
     await stop(first)
+    if (migrateLegacy) {
+      await execute('/usr/bin/sqlite3', [resolve(data, 'dougle.sqlite'), "CREATE TABLE synthetic_migration(value TEXT); INSERT INTO synthetic_migration VALUES('preserved');"])
+      await rename(resolve(data, 'dougle.sqlite'), resolve(data, 'knowledge-forge.sqlite'))
+      await rename(data, legacy)
+    }
     const restarted = launch()
     await ready(restarted)
     await stop(restarted)
+    if (migrateLegacy) {
+      const database = resolve(data, 'dougle.sqlite')
+      const wal = await stat(database + '-wal').catch(error => { if (error.code === 'ENOENT') return { size: 0 }; throw error })
+      assert.equal(wal.size, 0, 'Stopped database must be fully checkpointed before immutable verification')
+      const uri = pathToFileURL(database); uri.searchParams.set('immutable', '1')
+      const result = await execute('/usr/bin/sqlite3', ['-readonly', uri.href, 'SELECT value FROM synthetic_migration;'])
+      assert.equal(result.stdout.trim(), 'preserved')
+      await assert.rejects(stat(legacy), { code: 'ENOENT' })
+      await assert.rejects(stat(resolve(data, 'knowledge-forge.sqlite')), { code: 'ENOENT' })
+      console.log('PASS: legacy app directory and stopped SQLite migrate without losing synthetic data')
+    }
     const report = { measuredAt: new Date().toISOString(), platform: `${process.platform}/${process.arch}`, startupMs,
       checks: ['packaged native executable with isolated HOME and minimal PATH', 'bundled Java startup and API session protection',
         'private stable application data path', 'duplicate backend rejected while original stays available',
@@ -127,7 +155,17 @@ try {
     await writeFile(resolve(root, 'docs/native-host-report.json'), JSON.stringify(report, null, 2) + '\n')
     console.log(JSON.stringify(report, null, 2))
   }
+} catch (error) {
+  primaryFailure = error
+  console.error(error)
+  throw error
 } finally {
-  for (const process of processes.reverse()) await stop(process)
-  await rm(home, { recursive: true, force: true })
+  for (const process of processes.reverse()) {
+    try { await stop(process) } catch (error) {
+      if (!primaryFailure) throw error
+      console.error('Cleanup failure:', error.message)
+    }
+  }
+  if (!primaryFailure) await rm(home, { recursive: true, force: true })
+  else console.error('Retained synthetic failure fixture:', home)
 }

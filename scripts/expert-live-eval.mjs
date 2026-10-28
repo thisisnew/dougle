@@ -66,8 +66,8 @@ assert.equal(process.env.FORGE_EXPERT_LIVE, 'approved', 'Explicit synthetic exte
 assert.ok(process.env.FORGE_EXPERT_PROFILE, 'Dedicated authenticated profile required; never read or copy credentials')
 assert.ok(process.env.FORGE_EXPERT_REPORT, 'Choose a new private report path')
 const root = fileURLToPath(new URL('../', import.meta.url))
-const resources = contextOnly ? resolve(process.env.FORGE_EXPERT_RESOURCES) : '/Applications/Knowledge Forge.app/Contents/Resources/resources'
-const sourceJar = contextOnly ? resolve(process.env.FORGE_EXPERT_JAR) : resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
+const resources = contextOnly ? resolve(process.env.FORGE_EXPERT_RESOURCES) : '/Applications/Dougle.app/Contents/Resources/resources'
+const sourceJar = contextOnly ? resolve(process.env.FORGE_EXPERT_JAR) : resolve(root, 'backend/target/dougle-0.1.0.jar')
 const reportPath = resolve(process.env.FORGE_EXPERT_REPORT)
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-expert-live-'))
 const jar = contextOnly ? resolve(directory, `frozen-context-${knownArtifacts[process.env.FORGE_EXPERT_JAR_SHA256]}.jar`) : sourceJar
@@ -320,7 +320,7 @@ try {
           threadId = bundle.payload.chatContext.threadId; parentBundleId = bundle.id; expectedBundles++
           await stopRuntime()
           assert(child.exitCode !== null || child.signalCode !== null, 'Seed only after owned backend exits')
-          await promisify(execFile)('/usr/bin/sqlite3', ['-batch', '-bail', resolve(directory, 'knowledge-forge.sqlite'), seededAnswerSql(bundle, seeded.answer, randomUUID())],
+          await promisify(execFile)('/usr/bin/sqlite3', ['-batch', '-bail', resolve(directory, 'dougle.sqlite'), seededAnswerSql(bundle, seeded.answer, randomUUID())],
             { timeout: 5000, maxBuffer: 16384 })
           await startRuntime()
           const restored = await api(prefix + '/chat-threads/' + threadId)

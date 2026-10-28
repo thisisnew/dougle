@@ -12,8 +12,8 @@ assert.ok(['CODEX', 'CLAUDE'].includes(provider), 'Explicit FORGE_LIVE_CLI=CODEX
 const profile = process.env.FORGE_LIVE_CODEX_PROFILE
 if (profile) assert.equal(provider, 'CODEX')
 const root = fileURLToPath(new URL('../', import.meta.url))
-const resources = resolve(process.env.FORGE_LIVE_RESOURCES || resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources'))
-const jar = resolve(process.env.FORGE_LIVE_JAR || resolve(resources, 'knowledge-forge.jar'))
+const resources = resolve(process.env.FORGE_LIVE_RESOURCES || resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources/resources'))
+const jar = resolve(process.env.FORGE_LIVE_JAR || resolve(resources, 'dougle.jar'))
 const directory = await mkdtemp(resolve(tmpdir(), 'forge-live-api-'))
 const token = randomBytes(32).toString('hex')
 const report = { provider, checkedAt: new Date().toISOString(), status: 'RUNNING', checks: [], scope: 'Packaged Intel Java/JAR HTTP API, synthetic data only; not GUI login, ARM, or token-by-token Codex streaming.' }

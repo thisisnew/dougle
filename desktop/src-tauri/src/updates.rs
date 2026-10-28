@@ -35,7 +35,7 @@ fn validate_window(window: &tauri::WebviewWindow) -> Result<(), String> {
         .port
         .load(Ordering::SeqCst);
     let url = window.url().map_err(|_| "앱 창을 확인할 수 없습니다.")?;
-    if window.label() != "main" || !knowledge_forge_desktop::protocol::owned_origin(&url, port) {
+    if window.label() != "main" || !dougle_desktop::protocol::owned_origin(&url, port) {
         return Err("앱에서 업데이트를 확인해 주세요.".into());
     }
     Ok(())
@@ -186,14 +186,9 @@ fn trusted_package(url: &tauri::Url, version: &str) -> bool {
         && url.port().is_none()
         && url.query().is_none()
         && url.fragment().is_none()
-        && [
-            "/thisisnew/knowledge-forge/releases/download/",
-            "/thisisnew/dougle/releases/download/",
-        ]
-        .iter()
-        .any(|prefix| url.path().starts_with(prefix))
+        && url.path().starts_with("/thisisnew/dougle/releases/download/")
         && url.path().ends_with(&format!(
-            "/Knowledge.Forge_{version}_{architecture}.app.tar.gz"
+            "/Dougle_{version}_{architecture}.app.tar.gz"
         ))
 }
 
@@ -399,18 +394,14 @@ mod tests {
             "x86_64"
         };
         let valid = format!(
-            "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.4-preview.1/Knowledge.Forge_0.1.4_{architecture}.app.tar.gz"
+            "https://github.com/thisisnew/dougle/releases/download/v0.1.4-preview.1/Dougle_0.1.4_{architecture}.app.tar.gz"
         );
         assert!(trusted_package(&valid.parse().unwrap(), "0.1.4"));
-        assert!(trusted_package(
-            &valid.replace("knowledge-forge", "dougle").parse().unwrap(),
-            "0.1.4"
-        ));
         for invalid in [
             valid.replace("https:", "http:"),
             valid.replace("github.com", "evil.test"),
             valid.replace("thisisnew", "other"),
-            valid.replace("knowledge-forge", "dougle-evil"),
+            valid.replace("dougle", "dougle-evil"),
             format!("{valid}?token=untrusted"),
             valid.replace("0.1.4", "0.1.3"),
         ] {

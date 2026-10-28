@@ -1,5 +1,5 @@
-use knowledge_forge_desktop::supervisor::Backend;
-use serde_json::{Value, json};
+use dougle_desktop::supervisor::Backend;
+use serde_json::{json, Value};
 use std::path::PathBuf;
 use std::sync::atomic::AtomicBool;
 use std::time::{Duration, SystemTime};
@@ -53,22 +53,44 @@ fn main() {
     let first = post(&agent, &backend, &sync, json!({}));
     assert_eq!(first["status"], "READY", "{first}");
     assert_eq!(first["revision"].as_str().unwrap().len(), 40);
-    let search: Value = agent
-        .get(format!(
-            "http://127.0.0.1:{}/api/workspaces/{}/search?query=Hello",
-            backend.port,
-            workspace["id"].as_str().unwrap()
-        ))
-        .header("X-Forge-Session", &backend.token)
-        .call()
-        .unwrap()
-        .body_mut()
-        .read_json()
-        .unwrap();
-    assert!(
-        !search.as_array().unwrap().is_empty(),
-        "Collected README must be searchable"
-    );
+    let deadline = std::time::Instant::now() + Duration::from_secs(180);
+    loop {
+        let search: Value = agent
+            .get(format!(
+                "http://127.0.0.1:{}/api/workspaces/{}/search?query=Hello",
+                backend.port,
+                workspace["id"].as_str().unwrap()
+            ))
+            .header("X-Forge-Session", &backend.token)
+            .call()
+            .unwrap()
+            .body_mut()
+            .read_json()
+            .unwrap();
+        if !search.as_array().unwrap().is_empty() {
+            break;
+        }
+        let model: Value = agent
+            .get(format!(
+                "http://127.0.0.1:{}/api/search-model",
+                backend.port
+            ))
+            .header("X-Forge-Session", &backend.token)
+            .call()
+            .unwrap()
+            .body_mut()
+            .read_json()
+            .unwrap();
+        assert_ne!(
+            model["state"], "ERROR",
+            "Bundled search model failed: {model}"
+        );
+        assert!(
+            std::time::Instant::now() < deadline,
+            "Collected README must become searchable after model and outbox indexing: {model}"
+        );
+        std::thread::sleep(Duration::from_millis(250));
+    }
     let second = post(&agent, &backend, &sync, json!({}));
     assert_eq!(second["status"], "READY", "{second}");
     assert_eq!(second["revision"], first["revision"]);

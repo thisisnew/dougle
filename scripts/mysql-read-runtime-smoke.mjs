@@ -74,12 +74,12 @@ try {
   const classpath = [...await jars(join(repo, '.m2/com/mysql/mysql-connector-j')), ...await jars(join(repo, '.m2/org/springframework/spring-context'))].join(delimiter);
   await mkdir(join(root, 'classes'));
   await run(join(javaHome, 'bin/javac'), ['-cp', classpath, '-d', join(root, 'classes'),
-    join(repo, 'backend/src/main/java/dev/knowledgeforge/library/application/LibraryException.java'),
-    join(repo, 'backend/src/main/java/dev/knowledgeforge/sources/adapter/CollectionLimits.java'),
-    join(repo, 'backend/src/main/java/dev/knowledgeforge/sources/domain/CollectedSnapshot.java'),
-    join(repo, 'backend/src/main/java/dev/knowledgeforge/sources/domain/HttpValidators.java'),
-    join(repo, 'backend/src/main/java/dev/knowledgeforge/plugins/adapter/MysqlClient.java'),
-    join(repo, 'backend/src/main/java/dev/knowledgeforge/plugins/adapter/MysqlReadClient.java'),
+    join(repo, 'backend/src/main/java/dev/dougle/library/application/LibraryException.java'),
+    join(repo, 'backend/src/main/java/dev/dougle/sources/adapter/CollectionLimits.java'),
+    join(repo, 'backend/src/main/java/dev/dougle/sources/domain/CollectedSnapshot.java'),
+    join(repo, 'backend/src/main/java/dev/dougle/sources/domain/HttpValidators.java'),
+    join(repo, 'backend/src/main/java/dev/dougle/plugins/adapter/MysqlClient.java'),
+    join(repo, 'backend/src/main/java/dev/dougle/plugins/adapter/MysqlReadClient.java'),
     join(repo, 'scripts/fixtures/MysqlReadRuntimeSmoke.java')], 30000);
   const base = dirname(dirname(binary));
   const common = ['--no-defaults', `--basedir=${base}`, `--datadir=${root}/data`, `--socket=${root}/mysql.sock`, `--pid-file=${root}/mysql.pid`, `--log-error=${root}/server.log`, `--plugin-dir=${base}/lib/plugin`];
@@ -122,7 +122,7 @@ try {
     if (!ready) await new Promise(resolveDelay => setTimeout(resolveDelay, 200));
   }
   if (!ready) throw new Error('Private MySQL did not become ready within 60s');
-  console.log(await run(join(javaHome, 'bin/java'), ['-cp', [join(root, 'classes'), classpath].join(delimiter), 'dev.knowledgeforge.plugins.adapter.MysqlReadRuntimeSmoke'], 45000, `${port}\n${password}\n`));
+  console.log(await run(join(javaHome, 'bin/java'), ['-cp', [join(root, 'classes'), classpath].join(delimiter), 'dev.dougle.plugins.adapter.MysqlReadRuntimeSmoke'], 45000, `${port}\n${password}\n`));
 } finally {
   clearTimeout(overall);
   await cleanup();

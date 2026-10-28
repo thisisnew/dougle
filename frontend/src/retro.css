@@ -209,6 +209,7 @@ details > summary { cursor: pointer; }
 .provider-monogram { color: #2868bd; font-size: 24px; font-weight: 700; }
 .provider-card strong { font-size: 16px; }
 .provider-connection .connect-button { width: 100%; min-height: 44px; margin-top: 8px; }
+.provider-connection .company-launch-button { display: flex; margin: 12px auto 0; color: #737b8d; }
 .provider-connection .model-note, .provider-connection .connection-note { font-size: 12px; color: #747b8c; }
 .provider-connection .connection-status { font-size: 13px; text-align: center; color: #757d8d; margin-block: 12px; }
 .provider-connection details { padding-top: 14px; border-top: 1px solid #eceef4; color: #737b8d; font-size: 12px; }

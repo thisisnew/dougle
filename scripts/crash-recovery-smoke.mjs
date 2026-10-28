@@ -14,7 +14,7 @@ const resources = process.env.FORGE_RECOVERY_RESOURCES
 const javaHome = process.env.JAVA_HOME || (process.platform === 'darwin'
   ? execFileSync('/usr/libexec/java_home', ['-v', '21'], { encoding: 'utf8' }).trim() : '')
 const java = resources ? resolve(resources, 'runtime/bin/java') : javaHome ? resolve(javaHome, 'bin/java') : 'java'
-const jar = resources ? resolve(resources, 'knowledge-forge.jar') : resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
+const jar = resources ? resolve(resources, 'dougle.jar') : resolve(root, 'backend/target/dougle-0.1.0.jar')
 const jarSha256 = createHash('sha256').update(await readFile(jar)).digest('hex')
 const directory = await mkdtemp(resolve(tmpdir(), 'forge-crash-recovery-'))
 const fixture = resolve(directory, 'fake-codex.sh')

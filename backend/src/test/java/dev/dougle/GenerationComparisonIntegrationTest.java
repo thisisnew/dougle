@@ -1,0 +1,443 @@
+package dev.dougle;
+
+import dev.dougle.knowledge.application.*;
+import dev.dougle.knowledge.domain.Knowledge.Citation;
+import dev.dougle.library.application.LibraryException;
+import dev.dougle.library.application.LibraryService;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+class GenerationComparisonIntegrationTest {
+    static final Path DATA;
+    static {
+        try { DATA = Files.createTempDirectory("forge-comparison-"); }
+        catch (java.io.IOException exception) { throw new ExceptionInInitializerError(exception); }
+    }
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) { registry.add("forge.data-dir", DATA::toString); }
+    @Autowired GenerationComparisonService comparison;
+    @Autowired KnowledgeService knowledge;
+    @Autowired PublicationService publication;
+    @Autowired LibraryService library;
+    @Autowired JdbcTemplate jdbc;
+    @Autowired MockMvc mvc;
+    @Autowired ProposalDecisionService decisions;
+    @Autowired ProposalAcceptanceService acceptance;
+    String workspace;
+    String entry;
+    String original;
+    String result;
+
+    @BeforeEach
+    void prepare() {
+        jdbc.update("DELETE FROM workspace");
+        workspace = library.createWorkspace("synthetic comparison").id();
+        entry = library.upload(workspace, null, "fixture.txt", "synthetic evidence".getBytes(java.nio.charset.StandardCharsets.UTF_8)).id();
+        var document = knowledge.create(workspace, "original", "base [E1]", List.of(new Citation(entry, 1, 1)));
+        original = document.card().id();
+        result = knowledge.createGenerated(document, "AI fixture", "generated fixture [E1]").card().id();
+        jdbc.update("INSERT INTO generation_job(id,workspace_id,source_card_id,provider,expected_version,digest,status,result_card_id,created_at,updated_at) VALUES('job',?,?,'CODEX',1,'fixture','SUCCEEDED',?,'now','now')",
+                workspace, original, result);
+    }
+
+    void fails(int status, Runnable action) {
+        assertThatThrownBy(action::run).isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(status));
+    }
+
+    @Test
+    void comparesImmutableBaseAndFirstResultWithoutChangingVersionsOrPublication() {
+        publication.review(workspace, original, 1, "synthetic", "checked fixture", true, true);
+        var published = publication.publish(workspace, original, 1, 0).publication();
+        knowledge.revise(workspace, original, 1, "edited original", "human edit [E1]", null);
+        knowledge.revise(workspace, result, 1, "edited result", "result edit [E1]", null);
+        var compared = comparison.compare(workspace, "job");
+        assertThat(compared.base().version().markdown()).isEqualTo("base [E1]");
+        assertThat(compared.current().version().markdown()).isEqualTo("human edit [E1]");
+        assertThat(compared.generated().version().markdown()).isEqualTo("generated fixture [E1]");
+        assertThat(compared.generated().card().latestVersion()).isEqualTo(2);
+        assertThat(compared.base().version().evidence()).isEqualTo(compared.generated().version().evidence());
+        assertThat(publication.state(workspace, original).publication()).isEqualTo(published);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_version", Integer.class)).isEqualTo(4);
+        assertThat(jdbc.queryForObject("SELECT status FROM generation_job", String.class)).isEqualTo("SUCCEEDED");
+    }
+
+    @Test
+    void comparesHistoricalEvidenceAfterOriginalFileDeletion() {
+        library.deleteEntry(workspace, entry);
+        var compared = comparison.compare(workspace, "job");
+        assertThat(compared.generated().version().evidence().getFirst().freshness()).isEqualTo("MISSING");
+        assertThat(compared.base().version().evidence().getFirst().quote()).isEqualTo("synthetic evidence");
+    }
+
+    @Test
+    void isolatesWorkspacesAndRejectsUnfinishedJobs() {
+        fails(404, () -> comparison.compare(library.createWorkspace("other").id(), "job"));
+        fails(404, () -> comparison.compare(workspace, "missing"));
+        jdbc.update("UPDATE generation_job SET status='FAILED'");
+        fails(409, () -> comparison.compare(workspace, "job"));
+    }
+
+    @Test
+    void deletedCardsAreNotRecreatedByComparison() {
+        knowledge.delete(workspace, result);
+        fails(404, () -> comparison.compare(workspace, "job"));
+        assertThat(knowledge.list(workspace)).hasSize(1);
+        knowledge.delete(workspace, original);
+        fails(404, () -> comparison.compare(workspace, "job"));
+        assertThat(knowledge.list(workspace)).isEmpty();
+    }
+
+    @Test
+    void exposesReadOnlyHttpComparison() throws Exception {
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/comparison";
+        mvc.perform(get(path)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.base.version.number").value(1))
+                .andExpect(jsonPath("$.current.card.id").value(original))
+                .andExpect(jsonPath("$.generated.card.id").value(result));
+        mvc.perform(post(path).header("X-Forge-Client", "1")).andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void recordsRejectionAndReopeningWithoutChangingDocumentsOrPublication() {
+        publication.review(workspace, original, 1, "synthetic", "checked", true, true);
+        publication.publish(workspace, original, 1, 0);
+        assertThat(decisions.history(workspace, "job")).isEmpty();
+        var rejected = decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "not useful");
+        assertThat(rejected.getFirst().revision()).isEqualTo(1);
+        assertThat(rejected.getFirst().note()).isEqualTo("not useful");
+        var reopened = decisions.decide(workspace, "job", 1, 1, 1, "OPEN", "reconsider");
+        assertThat(reopened).extracting(item -> item.status()).containsExactly("OPEN", "REJECTED");
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_version", Integer.class)).isEqualTo(2);
+        assertThat(publication.published(workspace, original).version().number()).isEqualTo(1);
+        assertThat(jdbc.queryForObject("SELECT status FROM generation_job", String.class)).isEqualTo("SUCCEEDED");
+    }
+
+    @Test
+    void staleDecisionsAndChangedDocumentsCannotBeSilentlyOverwritten() {
+        decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "first");
+        fails(409, () -> decisions.decide(workspace, "job", 0, 1, 1, "OPEN", "stale"));
+        fails(409, () -> decisions.decide(workspace, "job", 1, 1, 1, "REJECTED", "duplicate"));
+        knowledge.revise(workspace, original, 1, "changed", "human [E1]", null);
+        fails(409, () -> decisions.decide(workspace, "job", 1, 1, 1, "OPEN", "old view"));
+        knowledge.revise(workspace, result, 1, "changed result", "human result [E1]", null);
+        fails(409, () -> decisions.decide(workspace, "job", 1, 2, 1, "OPEN", "old result"));
+        assertThat(decisions.decide(workspace, "job", 1, 2, 2, "OPEN", "reviewed again")).hasSize(2);
+    }
+
+    @Test
+    void validatesDecisionInputAndWorkspaceBeforeWriting() {
+        fails(404, () -> decisions.decide(library.createWorkspace("other").id(), "job", 0, 1, 1, "REJECTED", "no"));
+        fails(400, () -> decisions.decide(workspace, "job", 0, 1, 1, "ACCEPTED", "unsupported"));
+        fails(400, () -> decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", " "));
+        fails(400, () -> decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "x".repeat(4001)));
+        jdbc.update("UPDATE generation_job SET status='FAILED'");
+        fails(409, () -> decisions.history(workspace, "job"));
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM proposal_decision", Integer.class)).isZero();
+    }
+
+    @Test
+    void keepsHistoryAfterCardDeletionButDoesNotRecreateCards() {
+        decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "keep history");
+        knowledge.delete(workspace, result);
+        assertThat(decisions.history(workspace, "job")).hasSize(1);
+        fails(404, () -> decisions.decide(workspace, "job", 1, 1, 1, "OPEN", "deleted"));
+        jdbc.update("DELETE FROM workspace WHERE id=?", workspace);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM proposal_decision", Integer.class)).isZero();
+    }
+
+    @Test
+    void rejectionWithMissingEvidenceDoesNotMarkKnowledgeAsVerified() {
+        library.deleteEntry(workspace, entry);
+        decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "missing evidence");
+        assertThat(comparison.compare(workspace, "job").generated().version().evidence().getFirst().freshness()).isEqualTo("MISSING");
+        assertThat(publication.state(workspace, original).review()).isNull();
+        assertThat(publication.state(workspace, original).publication()).isNull();
+    }
+
+    @Test
+    void decisionsUseSeparateHttpEndpointAndRequireClientHeader() throws Exception {
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/decisions";
+        String body = """
+                {"expectedRevision":0,"expectedSourceVersion":1,"expectedResultVersion":1,"status":"REJECTED","note":"synthetic"}
+                """;
+        mvc.perform(post(path).contentType("application/json").content(body)).andExpect(status().isForbidden());
+        mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json").content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].status").value("REJECTED"));
+        mvc.perform(get(path)).andExpect(status().isOk()).andExpect(jsonPath("$[0].revision").value(1));
+    }
+
+    @Test
+    void acceptanceCreatesOneUnverifiedDraftPreservingOldVersionAndPublication() {
+        publication.review(workspace, original, 1, "synthetic", "checked", true, true);
+        publication.publish(workspace, original, 1, 0);
+        var state = acceptance.accept(workspace, "job", 0, 1, 1, "adopt fixture", true);
+        assertThat(state.status()).isEqualTo("ACCEPTED");
+        assertThat(state.acceptance().appliedVersion()).isEqualTo(2);
+        var applied = knowledge.get(workspace, original, null);
+        assertThat(applied.version().markdown()).isEqualTo("generated fixture [E1]");
+        assertThat(applied.version().status()).isEqualTo("DRAFT");
+        assertThat(applied.version().manuallyEdited()).isFalse();
+        assertThat(applied.version().evidence()).isEqualTo(knowledge.get(workspace, result, 1).version().evidence());
+        assertThat(knowledge.get(workspace, original, 1).version().markdown()).isEqualTo("base [E1]");
+        assertThat(knowledge.get(workspace, result, null).version().number()).isEqualTo(1);
+        assertThat(publication.published(workspace, original).version().number()).isEqualTo(1);
+        assertThat(publication.state(workspace, original).review()).isNull();
+        fails(409, () -> acceptance.accept(workspace, "job", 0, 1, 1, "retry", true));
+        fails(409, () -> decisions.decide(workspace, "job", 0, 2, 1, "REJECTED", "after acceptance"));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(2);
+    }
+
+    @Test
+    void acceptanceProtectsHumanEditsEvenWhenCallerKnowsLatestVersion() {
+        knowledge.revise(workspace, original, 1, "human", "human edit [E1]", null);
+        fails(409, () -> acceptance.accept(workspace, "job", 0, 1, 1, "stale", true));
+        fails(409, () -> acceptance.accept(workspace, "job", 0, 2, 1, "latest", true));
+        assertThat(knowledge.get(workspace, original, null).version().markdown()).isEqualTo("human edit [E1]");
+        assertThat(acceptance.state(workspace, "job").acceptance()).isNull();
+    }
+
+    @Test
+    void acceptanceProtectsEditedResultAndRejectsMissingEvidence() {
+        knowledge.revise(workspace, result, 1, "human result", "result edit [E1]", null);
+        fails(409, () -> acceptance.accept(workspace, "job", 0, 1, 2, "latest result", true));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+    }
+
+    @Test
+    void acceptanceRequiresCurrentMatchingEvidenceAndValidCitations() {
+        jdbc.update("UPDATE knowledge_version SET markdown='invalid [E2]' WHERE card_id=?", result);
+        fails(400, () -> acceptance.accept(workspace, "job", 0, 1, 1, "invalid citation", true));
+        jdbc.update("UPDATE knowledge_version SET markdown='no citation' WHERE card_id=?", result);
+        fails(400, () -> acceptance.accept(workspace, "job", 0, 1, 1, "no citation", true));
+        jdbc.update("UPDATE knowledge_version SET markdown='valid [E1]' WHERE card_id=?", result);
+        library.deleteEntry(workspace, entry);
+        fails(409, () -> acceptance.accept(workspace, "job", 0, 1, 1, "missing", true));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+    }
+
+    @Test
+    void acceptanceRequiresExplicitConfirmationAndCurrentOpenDecision() {
+        fails(400, () -> acceptance.accept(workspace, "job", 0, 1, 1, "not confirmed", false));
+        fails(400, () -> acceptance.accept(workspace, "job", 0, 1, 1, " ", true));
+        fails(400, () -> acceptance.accept(workspace, "job", 0, 1, 1, "x".repeat(4001), true));
+        decisions.decide(workspace, "job", 0, 1, 1, "REJECTED", "rejected");
+        fails(409, () -> acceptance.accept(workspace, "job", 1, 1, 1, "still rejected", true));
+        decisions.decide(workspace, "job", 1, 1, 1, "OPEN", "reopened");
+        fails(409, () -> acceptance.accept(workspace, "job", 0, 1, 1, "stale decision", true));
+        assertThat(acceptance.accept(workspace, "job", 2, 1, 1, "adopt", true).acceptance().decisionRevision()).isEqualTo(2);
+    }
+
+    @Test
+    void acceptanceRollsBackNewVersionWhenAuditInsertFails() {
+        jdbc.execute("CREATE TRIGGER fail_acceptance BEFORE INSERT ON proposal_acceptance BEGIN SELECT RAISE(ABORT,'synthetic failure'); END");
+        try {
+            assertThatThrownBy(() -> acceptance.accept(workspace, "job", 0, 1, 1, "rollback", true)).isInstanceOf(RuntimeException.class);
+            assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_version", Integer.class)).isEqualTo(2);
+            assertThat(acceptance.state(workspace, "job").acceptance()).isNull();
+        } finally {
+            jdbc.execute("DROP TRIGGER fail_acceptance");
+        }
+    }
+
+    @Test
+    void acceptanceIsWorkspaceScopedAndSurvivesCardDeletionButNotWorkspaceDeletion() {
+        fails(404, () -> acceptance.accept(library.createWorkspace("other").id(), "job", 0, 1, 1, "wrong workspace", true));
+        var accepted = acceptance.accept(workspace, "job", 0, 1, 1, "keep history", true);
+        knowledge.delete(workspace, original);
+        assertThat(acceptance.state(workspace, "job")).isEqualTo(accepted);
+        jdbc.update("DELETE FROM workspace WHERE id=?", workspace);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM proposal_acceptance", Integer.class)).isZero();
+    }
+
+    @Test
+    void acceptanceHttpRequiresHeaderAndDoesNotPublish() throws Exception {
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/acceptance";
+        String body = """
+                {"expectedRevision":0,"expectedSourceVersion":1,"expectedResultVersion":1,"note":"synthetic","confirmed":true}
+                """;
+        mvc.perform(get(path)).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("OPEN"));
+        mvc.perform(post(path).contentType("application/json").content(body)).andExpect(status().isForbidden());
+        mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json").content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.acceptance.appliedVersion").value(2));
+        assertThat(publication.state(workspace, original).publication()).isNull();
+    }
+
+    @Test
+    void manualMergePreservesHumanEditsAsNewDraftAndLeavesPublicationUntouched() {
+        publication.review(workspace, original, 1, "synthetic", "checked", true, true);
+        publication.publish(workspace, original, 1, 0);
+        knowledge.revise(workspace, original, 1, "human title", "human paragraph [E1]", null);
+        var state = acceptance.merge(workspace, "job", 0, 2, 1, "selected useful sentence", true,
+                "human title", "human paragraph [E1]\nselected AI sentence [E1]");
+        assertThat(state.acceptance().mode()).isEqualTo("MANUAL");
+        assertThat(state.acceptance().sourceVersion()).isEqualTo(2);
+        assertThat(state.acceptance().appliedVersion()).isEqualTo(3);
+        var merged = knowledge.get(workspace, original, null);
+        assertThat(merged.version().manuallyEdited()).isTrue();
+        assertThat(merged.version().markdown()).isEqualTo("human paragraph [E1]\nselected AI sentence [E1]");
+        assertThat(knowledge.get(workspace, original, 2).version().markdown()).isEqualTo("human paragraph [E1]");
+        assertThat(merged.version().evidence()).isEqualTo(knowledge.get(workspace, result, 1).version().evidence());
+        assertThat(publication.published(workspace, original).version().number()).isEqualTo(1);
+        assertThat(publication.state(workspace, original).review()).isNull();
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 3, 1, "duplicate", true, "title", "again [E1]"));
+    }
+
+    @Test
+    void manualMergeRequiresCurrentVersionsAndExplicitConfirmation() {
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "note", false, "title", "merged [E1]"));
+        knowledge.revise(workspace, original, 1, "human", "human [E1]", null);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 1, 1, "stale", true, "title", "merged [E1]"));
+        knowledge.revise(workspace, result, 1, "result edit", "result [E1]", null);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 2, "result edit", true, "title", "merged [E1]"));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(2);
+    }
+
+    @Test
+    void manualMergeRejectsChangedEvidenceMappingAndMissingEvidence() {
+        String otherEntry = library.upload(workspace, null, "other.txt", "other synthetic evidence".getBytes(java.nio.charset.StandardCharsets.UTF_8)).id();
+        knowledge.revise(workspace, original, 1, "different evidence", "human [E1]", List.of(new Citation(otherEntry, 1, 1)));
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "ambiguous E1", true, "title", "merged [E1]"));
+        library.deleteEntry(workspace, entry);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "missing", true, "title", "merged [E1]"));
+        assertThat(acceptance.state(workspace, "job").acceptance()).isNull();
+    }
+
+    @Test
+    void manualMergeValidatesEditedTextAndRollsBackInvalidTitle() {
+        for (String markdown : List.of("", "missing citation", "invalid [E2]", "invalid [E0]", "x".repeat(100001))) {
+            fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "invalid", true, "title", markdown));
+        }
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "invalid", true, "", "valid [E1]"));
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "unchanged", true, "original", "base [E1]"));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+        assertThat(acceptance.state(workspace, "job").acceptance()).isNull();
+    }
+
+    @Test
+    void manualMergeAuditFailureRollsBackDocumentAndVersions() {
+        jdbc.execute("CREATE TRIGGER fail_manual BEFORE INSERT ON proposal_acceptance BEGIN SELECT RAISE(ABORT,'synthetic'); END");
+        try {
+            assertThatThrownBy(() -> acceptance.merge(workspace, "job", 0, 1, 1, "note", true, "title", "merged [E1]"))
+                    .isInstanceOf(RuntimeException.class);
+            assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_version", Integer.class)).isEqualTo(2);
+        } finally {
+            jdbc.execute("DROP TRIGGER fail_manual");
+        }
+    }
+
+    @Test
+    void manualMergeHttpIsWorkspaceScopedAndRequiresWriteHeader() throws Exception {
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/acceptance/merge";
+        String body = """
+                {"expectedRevision":0,"expectedSourceVersion":1,"expectedResultVersion":1,"note":"synthetic","confirmed":true,"title":"selected","markdown":"selected [E1]"}
+                """;
+        mvc.perform(post(path).contentType("application/json").content(body)).andExpect(status().isForbidden());
+        fails(404, () -> acceptance.merge(library.createWorkspace("other").id(), "job", 0, 1, 1, "note", true, "title", "merged [E1]"));
+        mvc.perform(post(path).header("X-Forge-Client", "1").contentType("application/json").content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.acceptance.mode").value("MANUAL"));
+    }
+
+    @Test
+    void combinesEvidenceWithoutRenumberingHumanTextOrChangingHistoricalDocuments() {
+        String other = library.upload(workspace, null, "new.txt", "new synthetic evidence".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "human title", "human new evidence [E1]", List.of(new Citation(other, 1, 1)));
+        var preview = acceptance.preview(workspace, "job");
+        assertThat(preview.sourceVersion()).isEqualTo(2);
+        assertThat(preview.plan().mapping()).containsExactly(2);
+        assertThat(preview.plan().generatedMarkdown()).isEqualTo("generated fixture [E2]");
+        assertThat(preview.plan().evidence()).extracting(item -> item.entryId()).containsExactly(other, entry);
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(2);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "no opt in", true, "human title", "human [E1] AI [E2]"));
+        var accepted = acceptance.merge(workspace, "job", 0, 2, 1, "explicit union", true,
+                "human title", "human new evidence [E1]\ngenerated fixture [E2]", true);
+        assertThat(accepted.acceptance().appliedVersion()).isEqualTo(3);
+        assertThat(knowledge.get(workspace, original, 3).version().evidence()).isEqualTo(preview.plan().evidence());
+        assertThat(knowledge.get(workspace, original, 2).version().evidence()).hasSize(1);
+        assertThat(knowledge.get(workspace, result, 1).version().markdown()).isEqualTo("generated fixture [E1]");
+        assertThat(publication.state(workspace, original).review()).isNull();
+    }
+
+    @Test
+    void reusesMatchingSnapshotAndRangeButPreservesHumanDuplicateOrdinals() {
+        String other = library.upload(workspace, null, "order.txt", "other synthetic".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "order", "human [E1] [E2] [E3]",
+                List.of(new Citation(other, 1, 1), new Citation(entry, 1, 1), new Citation(entry, 1, 1)));
+        var plan = acceptance.preview(workspace, "job").plan();
+        assertThat(plan.mapping()).containsExactly(2);
+        assertThat(plan.evidence()).hasSize(3);
+        assertThat(plan.generatedMarkdown()).isEqualTo("generated fixture [E2]");
+    }
+
+    @Test
+    void combinedEvidenceRejectsChangedOrMissingMaterialsAndTooManyReferences() {
+        var citations = new java.util.ArrayList<Citation>();
+        for (int index = 0; index < 10; index++) {
+            String added = library.upload(workspace, null, "extra-" + index + ".txt", ("synthetic " + index).getBytes()).id();
+            citations.add(new Citation(added, 1, 1));
+        }
+        knowledge.revise(workspace, original, 1, "many", "human [E1]", citations);
+        fails(409, () -> acceptance.preview(workspace, "job"));
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "too many", true, "many", "human [E1] AI [E11]", true));
+        knowledge.revise(workspace, original, 2, "fewer", "human [E1]", List.of(citations.getFirst()));
+        jdbc.update("UPDATE entry SET content=? WHERE id=?", "changed".getBytes(), entry);
+        fails(409, () -> acceptance.preview(workspace, "job"));
+        library.deleteEntry(workspace, entry);
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 3, 1, "missing", true, "fewer", "human [E1] AI [E2]", true));
+    }
+
+    @Test
+    void combinedEvidenceStillChecksVersionsCitationNumbersAndWorkspace() {
+        fails(404, () -> acceptance.preview(library.createWorkspace("other").id(), "job"));
+        fails(409, () -> acceptance.merge(workspace, "job", 0, 2, 1, "stale", true, "title", "AI [E1]", true));
+        fails(400, () -> acceptance.merge(workspace, "job", 0, 1, 1, "bad", true, "title", "AI [E2]", true));
+        jdbc.update("UPDATE knowledge_version SET markdown='bad [E99]' WHERE card_id=?", result);
+        fails(400, () -> acceptance.preview(workspace, "job"));
+        assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(1);
+    }
+
+    @Test
+    void combinedEvidenceRollbackDoesNotLeaveNewReferences() {
+        String other = library.upload(workspace, null, "rollback.txt", "synthetic".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "human", "human [E1]", List.of(new Citation(other, 1, 1)));
+        jdbc.execute("CREATE TRIGGER fail_combined BEFORE INSERT ON proposal_acceptance BEGIN SELECT RAISE(ABORT,'synthetic'); END");
+        try {
+            assertThatThrownBy(() -> acceptance.merge(workspace, "job", 0, 2, 1, "note", true, "human", "human [E1] AI [E2]", true))
+                    .isInstanceOf(RuntimeException.class);
+            assertThat(knowledge.get(workspace, original, null).version().number()).isEqualTo(2);
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM knowledge_evidence WHERE card_id=? AND version=3", Integer.class, original)).isZero();
+        } finally {
+            jdbc.execute("DROP TRIGGER fail_combined");
+        }
+    }
+
+    @Test
+    void exposesReadOnlyMappingPreviewAndExplicitCombinedMerge() throws Exception {
+        String other = library.upload(workspace, null, "http.txt", "synthetic".getBytes()).id();
+        knowledge.revise(workspace, original, 1, "human", "human [E1]", List.of(new Citation(other, 1, 1)));
+        String path = "/api/workspaces/" + workspace + "/generation-jobs/job/acceptance";
+        mvc.perform(get(path + "/merge-preview")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.plan.mapping[0]").value(2)).andExpect(jsonPath("$.sourceVersion").value(2));
+        String body = """
+                {"expectedRevision":0,"expectedSourceVersion":2,"expectedResultVersion":1,"note":"synthetic","confirmed":true,"title":"human","markdown":"human [E1] AI [E2]","combineEvidence":true}
+                """;
+        mvc.perform(post(path + "/merge").header("X-Forge-Client", "1").contentType("application/json").content(body))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.acceptance.appliedVersion").value(3));
+    }
+}

@@ -27,7 +27,13 @@ forge_verify_bundled_git() {
 
 forge_verify_macos_architecture() {
   local app="$1" expected="$2" binary
-  for binary in "$app/Contents/MacOS/knowledge-forge-desktop" \
+  [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleName' "$app/Contents/Info.plist")" == Dougle && \
+      "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" == dev.dougle.desktop && \
+      "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app/Contents/Info.plist")" == dougle-desktop ]] || {
+    echo 'App name, identifier or executable does not match Dougle.' >&2
+    return 1
+  }
+  for binary in "$app/Contents/MacOS/dougle-desktop" \
       "$app/Contents/Resources/resources/runtime/bin/java" \
       "$app/Contents/Resources/resources/runtime/lib/libjli.dylib" \
       "$app/Contents/Resources/resources/runtime/lib/server/libjvm.dylib"; do

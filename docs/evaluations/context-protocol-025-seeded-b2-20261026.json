@@ -1173,7 +1173,7 @@
     "runtime/bin/java": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
     "ai/codex": "73697f229103f463acaafd8659976caaa4892ec11e2c246c7fa97f93d523f90e"
   },
-  "resourceDirectory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources",
+  "resourceDirectory": "/Users/thisisnew/Desktop/dougle/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources",
   "seedReportSha256": "1db06e9d5c98ecfad55d7a81fbf38f86b27d648f689bf84b4224a8e590b07b50",
   "seededTurns": [
     {
@@ -1606,7 +1606,7 @@
     ]
   },
   "searchModels": {
-    "directory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "directory": "/Users/thisisnew/Desktop/dougle/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
     "architecture": "x86_64",
     "files": [
       {

@@ -1,5 +1,13 @@
 # API
 
+## 0.1.32 회사 연결 작업본
+
+- `GET /api/plugins/github`: 로컬 인증 저장 여부 `{configured}`만 반환한다. 토큰이나 현재 원격 인증 성공을 반환하지 않는다.
+- `POST /api/plugins/github`: `{token, repository}`. Fine-grained 토큰으로 github.com 저장소의 commits 읽기 검증에 성공한 뒤 암호화 저장한다. 실패 시 이전 토큰은 유지한다.
+- `DELETE /api/plugins/github`: 로컬 인증만 제거하며 보관 자료를 삭제하지 않는다.
+- `POST /api/plugins/github/open`: 고정된 GitHub 읽기 토큰 발급 페이지를 기본 브라우저로 연다. 로그인 완료나 조직 승인을 뜻하지 않는다.
+- `/api/ai/launch-settings`는 Codex/Claude 모두 실행 명령 이름 또는 전체 경로를 받는다. 셸 별칭·함수·옵션은 실행하지 않으며 기존 신뢰 확인·revision·재시작 적용을 유지한다.
+
 ## 0.1.26 후보의 대화 조회
 
 일반 텍스트 질문은 계획과 로컬 검색을 거쳐 답변하며, MySQL/Datadog 제안은 수동 입력 양식이 아니라 서버에 묶인 범위 확인·읽기 동의로 이어집니다. `investigation-plans/jobs/{id}/clarification`, `scope/cancel`과 `conversation-operational-reads` 경로의 계약은 [범위 확인](conversation-operational-scope.md), [조회·영수증 복구](conversation-operational-read.md)를 따릅니다. 검색 결과 capture는 당시 스냅샷을 검증하며 재검색하지 않습니다. 아래 수동 양식/V4 설명은 이전 단계 이력입니다. 팀 설정/아카이브 화면은 제거했고 기존 내부 API만 호환 목적으로 유지합니다. 전체 자료 export 지원이 아닙니다.
@@ -217,9 +225,10 @@ curl -X POST http://127.0.0.1:8787/api/workspaces/WORKSPACE_ID/files \
 ```
 
 kind는 LOCAL_FOLDER / URL / GITHUB입니다. URL은 공개 HTTPS 443, GITHUB는
-`https://github.com/owner/repository` 형태의 공개 기본 브랜치만 지원합니다.
+`https://github.com/owner/repository` 형태의 기본 브랜치를 지원합니다. 비공개 저장소는 `/api/plugins/github`에서 조회 검증을 마친 인증이 필요합니다.
 Source 이름은 같은 Workspace에서 고유하며 도메인은 0~80자입니다.
 Source 등록은 수집을 시작하지 않습니다.
+화면에서는 등록 성공 후 별도 동기화 요청을 보냅니다. AI 로그인은 수집의 선행 조건이 아닙니다.
 이름·분류 편집도 수집을 시작하지 않습니다. `expectedRevision`은 현재 `pollingRevision`이며 폴링 설정과 공통 충돌 버전입니다. 위치·종류는 수정하지 않습니다. [계약·보존 정책](source-metadata.md).
 
 Source 필드: `id, workspaceId, name, kind, location, domain, status, revision,

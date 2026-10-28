@@ -127,7 +127,7 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
     <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected} onClick={() => void check()}>{busy ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
     {indicatorState !== 'UNCHECKED' && indicatorState !== 'AUTHENTICATED' && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
     {status && status.state !== 'AUTHENTICATED' && <p>{messages[status.state]}{status.state === 'TOOL_UNAVAILABLE' && ' 회사용 실행 도구를 사용한다면 실행 파일을 지정해 주세요.'}</p>}
-    <Button variant="outline" disabled={busy || loggingIn} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button>
+    <Button className="company-launch-button" variant="ghost" disabled={busy || loggingIn} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button>
     {launchSettingsOpen && <CliLaunchPanel initialProvider={provider} onClose={() => setLaunchSettingsOpen(false)} />}
     {error && <p role="alert">{error}</p>}
     {status?.state === 'LOGIN_REQUIRED' && !loggingIn && <div>

@@ -6,6 +6,7 @@ import { request } from './api'
 import { downloadApi } from './download'
 
 vi.mock('./download', () => ({ downloadApi: vi.fn().mockResolvedValue(undefined) }))
+vi.mock('./folderPicker', () => ({ hasFolderPicker: () => true, selectFolder: vi.fn().mockResolvedValue('/synthetic/source') }))
 
 vi.mock('./api', async importOriginal => ({
   ...await importOriginal<typeof import('./api')>(),
@@ -26,6 +27,11 @@ describe('Workspace와 자료 탐색기', () => {
     })
     render(<App />)
     await screen.findByRole('heading', { name: 'Dougle' })
+    expect(screen.queryByRole('region', { name: '업무 환경 연결' })).not.toBeInTheDocument()
+    for (const name of ['GitHub 연결', 'Notion 연결', 'Jira · Confluence 연결', 'MySQL 연결']) {
+      expect(screen.queryByRole('button', { name })).not.toBeInTheDocument()
+    }
+    expect(document.querySelector('.topbar .provider-trigger')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '운영 자료 조회' })).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: '설정' }))
     await userEvent.click(screen.getByRole('button', { name: '플러그인' }))
@@ -108,7 +114,7 @@ describe('Workspace와 자료 탐색기', () => {
     expect(screen.getByRole('heading', { name: '설정' })).toBeVisible()
   }, 15000)
 
-  it('링크 등록의 첫 동기화 중에도 화면 전환을 막는다', async () => {
+  it('폴더 등록의 첫 동기화 중에도 화면 전환을 막는다', async () => {
     let finish!: () => void
     const pending = new Promise<void>(resolve => { finish = resolve })
     api.mockImplementation(async (path, options) => {
@@ -120,14 +126,14 @@ describe('Workspace와 자료 탐색기', () => {
     await screen.findByRole('heading', { name: 'Dougle' })
     await userEvent.click(screen.getByRole('button', { name: '자료' }))
     await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
-    await userEvent.click(screen.getByRole('button', { name: '웹 링크' }))
-    await userEvent.type(screen.getByLabelText('웹 링크 주소'), 'https://example.invalid/fixture{Enter}')
+    await userEvent.click(screen.getByRole('button', { name: '폴더' }))
+    await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
     await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeDisabled())
     expect(screen.getByRole('button', { name: '대화' })).toBeDisabled()
     expect(screen.getByRole('combobox', { name: 'Workspace 선택' })).toBeDisabled()
     finish()
     await waitFor(() => expect(screen.getByRole('button', { name: '설정' })).toBeEnabled(), { timeout: 5000 })
-    expect(screen.getByLabelText('웹 링크 주소')).toBeVisible()
+    expect(screen.getByRole('button', { name: '폴더 선택' })).toBeVisible()
   }, 15000)
 
   it('빈 서재에서도 질문 기록을 열 수 있고 대화 제목과 로고 시작 화면으로 돌아온다', async () => {
@@ -347,7 +353,7 @@ describe('Workspace와 자료 탐색기', () => {
     expect(within(document.querySelector<HTMLElement>('.sidebar')!).queryByRole('img', { name: 'Dougle' })).not.toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'Dougle' })).toBeVisible()
     expect(screen.queryByText('나만의 지식이 쌓이는 곳')).not.toBeInTheDocument()
-    expect(screen.queryByText('Knowledge Forge')).not.toBeInTheDocument()
+    expect(screen.queryByText('Dougle')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: '대화' }).querySelector('.lucide-message-square')).not.toBeNull()
     expect(screen.getByRole('button', { name: '질문 기록' }).querySelector('.lucide-history')).not.toBeNull()
     expect(document.querySelector('.welcome .pixel-landscape')).not.toBeInTheDocument()

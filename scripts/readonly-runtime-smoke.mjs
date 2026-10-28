@@ -90,7 +90,7 @@ export async function run(config) {
   await chmod(temporary, 0o700)
   const home = join(temporary, 'home')
   const data = join(temporary, 'data')
-  const database = join(data, 'knowledge-forge.sqlite')
+  const database = join(data, 'dougle.sqlite')
   await mkdir(home, { mode: 0o700 }); await mkdir(data, { mode: 0o700 })
   let child, base, token, spawnError
   let startupOutput = ''
@@ -169,7 +169,7 @@ export async function run(config) {
     assert(!alive(), 'Never open SQLite while backend is live')
     const info = await lstat(database)
     assert(info.isFile() && !info.isSymbolicLink())
-    assert.equal(await realpath(database), join(await realpath(data), 'knowledge-forge.sqlite'))
+    assert.equal(await realpath(database), join(await realpath(data), 'dougle.sqlite'))
     const result = await execute('/usr/bin/sqlite3', ['-batch', '-bail', '-json', database, sql], { timeout: 5000, maxBuffer: 128000 })
     return result.stdout.trim() ? JSON.parse(result.stdout) : null
   }

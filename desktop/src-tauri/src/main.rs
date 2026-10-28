@@ -1,4 +1,4 @@
-use knowledge_forge_desktop::{protocol, supervisor};
+use dougle_desktop::{protocol, supervisor};
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
@@ -96,6 +96,7 @@ fn render_failure(status: &tauri::WebviewWindow) {
 }
 
 fn failure(app: &tauri::AppHandle, message: &'static str) {
+    eprintln!("DOUGLE_STARTUP_ERROR: {message}");
     if let Ok(mut stored) = app.state::<FailureMessage>().0.lock() {
         *stored = Some(message);
     }
@@ -136,6 +137,7 @@ fn run_backend(app: &tauri::AppHandle, lifecycle: &Arc<Lifecycle>) -> Result<(),
         .path()
         .app_data_dir()
         .map_err(|_| "앱 데이터 폴더를 찾을 수 없습니다.")?;
+    dougle_desktop::data_migration::migrate(&data)?;
     let mut backend = supervisor::Backend::launch(&resources, &data, &lifecycle.cancelled)?;
     if lifecycle.cancelled.load(Ordering::SeqCst) {
         return Ok(());

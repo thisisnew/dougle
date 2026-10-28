@@ -10,9 +10,10 @@ TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=2 bash "$repo_root/s
 temporary="$(mktemp -d "${TMPDIR:-/tmp}/forge-update-package-qa.XXXXXX")"
 trap 'rm -rf "$temporary"' EXIT
 tar -xzf "$archive" -C "$temporary"
-app="$temporary/Knowledge Forge.app"
+app="$temporary/Dougle.app"
 [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" == "$version" ]]
 forge_verify_macos_architecture "$app" "$architecture"
 codesign --verify --deep --strict "$app"
-cmp "$repo_root/backend/target/knowledge-forge-0.1.0.jar" "$app/Contents/Resources/resources/knowledge-forge.jar"
+python3 "$repo_root/scripts/trim-macos-jar.py" "$repo_root/backend/target/dougle-0.1.0.jar" "$temporary/expected.jar" "$architecture"
+cmp "$temporary/expected.jar" "$app/Contents/Resources/resources/dougle.jar"
 echo "PASS: $architecture signed update archive, extracted app version, architecture, ad-hoc signature and current JAR; runtime NOT tested"

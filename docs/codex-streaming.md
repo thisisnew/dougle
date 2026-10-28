@@ -19,10 +19,10 @@ Mac/Linux 개발 환경용 옵션입니다. 기존 `~/.codex`나 현재 `CODEX_H
 새 폴더를 만들고 별도로 로그인합니다. 아래 명령은 사용자가 직접 실행하는 준비 절차이며 앱이 대신 로그인하지 않습니다.
 
 ```bash
-mkdir -m 700 "$HOME/.knowledge-forge-codex"
-CODEX_HOME="$HOME/.knowledge-forge-codex" codex -c 'cli_auth_credentials_store="file"' login
-chmod 600 "$HOME/.knowledge-forge-codex/auth.json"
-bash scripts/run.sh --forge.ai.codex-stream-home="$HOME/.knowledge-forge-codex"
+mkdir -m 700 "$HOME/.dougle-codex"
+CODEX_HOME="$HOME/.dougle-codex" codex -c 'cli_auth_credentials_store="file"' login
+chmod 600 "$HOME/.dougle-codex/auth.json"
+bash scripts/run.sh --forge.ai.codex-stream-home="$HOME/.dougle-codex"
 ```
 
 같은 폴더가 이미 있으면 새로 덮어쓰지 말고 용도를 확인하세요. 별도 CLI 설정·MCP·사용자 skill을 이 폴더에 넣지 않습니다.

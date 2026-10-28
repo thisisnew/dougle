@@ -209,8 +209,4 @@ dt { color: #97a28d; }
 .datadog-read-panel fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; min-width: 0; border: 0; padding: 0; }
 .datadog-read-panel label { display: grid; gap: 6px; min-width: 0; font-size: 12px; }
 .datadog-read-panel input:not([type="checkbox"]) { width: 100%; min-width: 0; padding: 9px 11px; background: white; border: 1px solid #dce3ef; border-radius: 8px; }
-.connection-setup { border: 1px solid #dce3ef; border-radius: 16px; padding: 20px; margin-bottom: 24px; }
-.connection-setup h2 { margin: 0 0 8px; font-size: 18px; }
-.connection-setup p { color: #68758b; font-size: 13px; }
-.connection-setup-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .cli-path-dialog dd { overflow-wrap: anywhere; margin: 4px 0 12px; }

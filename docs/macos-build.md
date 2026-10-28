@@ -24,7 +24,7 @@ Codex 실행 도구는 CPU별로 동봉합니다. Claude는 현재 별도로 설
 ## 빌드하는 사람
 
 macOS, Xcode Command Line Tools, Java 21 JDK, Node/npm, 저장소 로컬 Rust 도구가 필요합니다.
-0.1.3부터 기존 업데이트 서명 키도 필요합니다. `~/.config/knowledge-forge/updater.key` 또는 `FORGE_UPDATER_PRIVATE_KEY` 경로를 사용합니다. 새 PC에서 임의로 새 키를 만들지 말고 기존 키를 안전하게 옮기세요. [키 관리·업데이트 배포 순서](automatic-updates.md).
+0.1.3부터 기존 업데이트 서명 키도 필요합니다. `~/.config/dougle/updater.key` 또는 `FORGE_UPDATER_PRIVATE_KEY` 경로를 사용합니다. 새 PC에서 임의로 새 키를 만들지 말고 기존 키를 안전하게 옮기세요. [키 관리·업데이트 배포 순서](automatic-updates.md).
 Rust 버전은 `desktop/rust-toolchain.toml`, Tauri CLI는 `desktop/package-lock.json`에 고정합니다.
 Rust 설치 시 `CARGO_HOME=.tools/cargo`, `RUSTUP_HOME=.tools/rustup`를 사용하며 전역 셸 설정을 바꾸지 않습니다.
 

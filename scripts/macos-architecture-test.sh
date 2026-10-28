@@ -10,7 +10,8 @@ for architecture in arm64 x86_64; do
 done
 app="$temporary/Test.app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources/resources/runtime/bin" "$app/Contents/Resources/resources/runtime/lib/server"
-for binary in Contents/MacOS/knowledge-forge-desktop Contents/Resources/resources/runtime/bin/java \
+/usr/libexec/PlistBuddy -c 'Add :CFBundleName string Dougle' -c 'Add :CFBundleIdentifier string dev.dougle.desktop' -c 'Add :CFBundleExecutable string dougle-desktop' "$app/Contents/Info.plist" >/dev/null
+for binary in Contents/MacOS/dougle-desktop Contents/Resources/resources/runtime/bin/java \
     Contents/Resources/resources/runtime/lib/libjli.dylib Contents/Resources/resources/runtime/lib/server/libjvm.dylib; do
   cp "$temporary/arm64.o" "$app/$binary"
 done

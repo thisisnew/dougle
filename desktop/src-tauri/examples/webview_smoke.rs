@@ -1,4 +1,4 @@
-use knowledge_forge_desktop::protocol::{initialization_script, owned_download, owned_origin};
+use dougle_desktop::protocol::{initialization_script, owned_download, owned_origin};
 use std::io::{BufRead, BufReader, Write};
 use std::net::TcpListener;
 use std::sync::Arc;
@@ -9,7 +9,7 @@ use tauri::webview::{DownloadEvent, NewWindowResponse};
 use tauri::{WebviewUrl, WebviewWindowBuilder};
 
 const TOKEN: &str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-const CONTENT: &str = "Knowledge Forge synthetic download";
+const CONTENT: &str = "Dougle synthetic download";
 const SCRIPT: &str = r#"
 (async () => {
   const descriptor = Object.getOwnPropertyDescriptor(window, '__FORGE_DESKTOP_SESSION__');
@@ -19,10 +19,10 @@ const SCRIPT: &str = r#"
   const mutation = await fetch('/mutation', { method: 'POST', mode: 'same-origin', headers: { 'X-Forge-Session': window.__FORGE_DESKTOP_SESSION__, 'X-Forge-Client': '1' } });
   if (!mutation.ok) return;
   window.open('https://example.invalid/blocked');
-  const blob = URL.createObjectURL(new Blob(['Knowledge Forge synthetic download'], { type: 'text/plain' }));
+  const blob = URL.createObjectURL(new Blob(['Dougle synthetic download'], { type: 'text/plain' }));
   const anchor = document.createElement('a');
   anchor.href = blob;
-  anchor.download = 'knowledge-forge-synthetic.txt';
+  anchor.download = 'dougle-synthetic.txt';
   document.body.append(anchor);
   anchor.click();
   setTimeout(() => { URL.revokeObjectURL(blob); location.href = 'http://localhost:' + location.port + '/blocked'; }, 1000);
@@ -107,7 +107,7 @@ fn main() {
         }
     });
     let destination = std::env::temp_dir().join(format!(
-        "knowledge-forge-webview-smoke-{}.txt",
+        "dougle-webview-smoke-{}.txt",
         std::process::id()
     ));
     let download_destination = destination.clone();
@@ -117,7 +117,7 @@ fn main() {
             let denied_navigation = navigation_denied.clone();
             let denied_popup = popup_denied.clone();
             WebviewWindowBuilder::new(app, "smoke", WebviewUrl::External(format!("http://127.0.0.1:{port}/").parse().unwrap()))
-                .title("Knowledge Forge — synthetic WebKit verification")
+                .title("Dougle — synthetic WebKit verification")
                 .visible(false)
                 .incognito(true)
                 .initialization_script(initialization_script(port, TOKEN))

@@ -12,7 +12,7 @@ import { promisify } from 'node:util'
 import { assertReadOnly, childEnvironment, denialCases, legacyReceipts, sandboxProfile, seedSql, startupDiagnostic } from './readonly-runtime-smoke.mjs'
 
 export const artifactSha256 = 'e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d'
-const resources = '/Applications/Knowledge Forge.app/Contents/Resources/resources'
+const resources = '/Applications/Dougle.app/Contents/Resources/resources'
 const execute = promisify(execFile)
 const pause = milliseconds => new Promise(done => setTimeout(done, milliseconds))
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -148,7 +148,7 @@ async function checkpoint({ directory, phase, bridge, workspaceIds, receipts, ab
 }
 
 export async function run() {
-  const config = { jar: join(resources, 'knowledge-forge.jar'), java: join(resources, 'runtime/bin/java'), hash: artifactSha256 }
+  const config = { jar: join(resources, 'dougle.jar'), java: join(resources, 'runtime/bin/java'), hash: artifactSha256 }
   const report = { version: 1, criterion: 'E35', result: 'INCOMPLETE', mode: 'manual', artifactSha256,
     startedAt: new Date().toISOString(), checkpoints: [], backendPids: [], externalBusinessCallsAuthorized: 0, actualAiCalls: 0,
     limits: 'Synthetic legacy receipts, including SENT; no actual Slack account/send. Bundled React through a restricted loopback bridge, not native WebKit. No whole-criterion promotion. Direct internal dispatch requires separate source/test evidence. Proxy count cannot count blocked transport attempts.' }
@@ -164,7 +164,7 @@ export async function run() {
   await chmod(temporary, 0o700)
   const home = join(temporary, 'home')
   const data = join(temporary, 'data')
-  const database = join(data, 'knowledge-forge.sqlite')
+  const database = join(data, 'dougle.sqlite')
   await mkdir(home, { mode: 0o700 }); await mkdir(data, { mode: 0o700 })
   let child, base, token, spawnError
   let startupOutput = ''
@@ -244,7 +244,7 @@ export async function run() {
     assert(!alive(), 'Never open SQLite while backend is live')
     const info = await lstat(database)
     assert(info.isFile() && !info.isSymbolicLink())
-    assert.equal(await realpath(database), join(await realpath(data), 'knowledge-forge.sqlite'))
+    assert.equal(await realpath(database), join(await realpath(data), 'dougle.sqlite'))
     const result = await execute('/usr/bin/sqlite3', ['-batch', '-bail', '-json', database, sql], { timeout: 5000, maxBuffer: 128000 })
     return result.stdout.trim() ? JSON.parse(result.stdout) : null
   }

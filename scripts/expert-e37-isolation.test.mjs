@@ -6,7 +6,7 @@ const fixture = { ownerWorkspaceId: 'owner', otherWorkspaceId: 'other', entryId:
   bundleId: 'bundle', attachmentId: 'attachment', browserJobId: 'browser', answerJobId: 'answer', planJobId: 'plan' }
 
 test('artifact binding rejects implicit old or mutable build artifacts', () => {
-  const binding = { version: '0.1.25', jar: '/synthetic/immutable/resources/knowledge-forge.jar', sha256: 'a'.repeat(64) }
+  const binding = { version: '0.1.25', jar: '/synthetic/immutable/resources/dougle.jar', sha256: 'a'.repeat(64) }
   assert.deepEqual(validateArtifactBinding(binding), binding)
   for (const change of [{ version: '0.1.22' }, { version: '0.1.23' }, { jar: 'relative.jar' }, { jar: '/repo/backend/target/app.jar' }, { jar: '/repo/desktop/target/app.jar' },
     { jar: '/safe/../unsafe.jar' }, { sha256: 'invalid' },

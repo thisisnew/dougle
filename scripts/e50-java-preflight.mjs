@@ -28,7 +28,7 @@ export function safeNativeLines(output) {
 async function run() {
   assert.equal(process.platform, 'darwin')
   assert(process.argv.length === 3 && ['--compare-version-only', '--strict-version-only', '--pid-denials', ...Object.keys(probeDiffs)].includes(process.argv[2]))
-  const java = await realpath('/Applications/Knowledge Forge.app/Contents/Resources/resources/runtime/bin/java')
+  const java = await realpath('/Applications/Dougle.app/Contents/Resources/resources/runtime/bin/java')
   const before = sha256(await readFile(java))
   const root = await realpath(await mkdtemp(join(tmpdir(), 'dougle-e50-java-')))
   await chmod(root, 0o700)

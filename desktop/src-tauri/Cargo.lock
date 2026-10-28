@@ -1783,8 +1783,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "knowledge-forge-desktop"
-version = "0.1.31"
+name = "dougle-desktop"
+version = "0.1.32"
 dependencies = [
  "base64 0.22.1",
  "getrandom 0.4.3",

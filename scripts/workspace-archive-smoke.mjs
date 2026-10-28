@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
-const jar = resolve(root, 'backend/target/knowledge-forge-0.1.0.jar')
+const jar = resolve(root, 'backend/target/dougle-0.1.0.jar')
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
 const catalogKey = '00000000-0000-0000-0000-000000000001'
 const catalogPath = 'documents/' + catalogKey + '.bin'
@@ -167,7 +167,7 @@ async function verifySearch(workspaceId, expectedId, forbiddenIds, textHash, exp
     assert(['STARTING', 'LOADING', 'INDEXING', 'READY'].includes(model.state), 'Local search model not usable: ' + JSON.stringify(model))
     return model.state === 'READY'
   })
-  const database = resolve(data, 'knowledge-forge.sqlite')
+  const database = resolve(data, 'dougle.sqlite')
   await boundedPoll(async () => {
     const { stdout } = await promisify(execFile)('sqlite3', ['-readonly', database, 'SELECT count(*) FROM search_outbox;'],
       { timeout: 3000, maxBuffer: 4096 })

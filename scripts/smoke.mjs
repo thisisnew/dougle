@@ -35,7 +35,7 @@ async function start() {
   const started = performance.now()
   sessionToken = desktopResources ? randomBytes(32).toString('hex') : ''
   const command = desktopResources ? resolve(desktopResources, 'runtime/bin/java') : 'bash'
-  const launcher = desktopResources ? ['-jar', resolve(desktopResources, 'knowledge-forge.jar')] : ['scripts/run.sh']
+  const launcher = desktopResources ? ['-jar', resolve(desktopResources, 'dougle.jar')] : ['scripts/run.sh']
   child = spawn(command, [...launcher,
     `--forge.ai.codex-command=${configuredCodex}`,
     `--forge.ai.codex-stream-home=${configuredStreamHome}`,

@@ -43,8 +43,8 @@ export function score(items, question) {
 export async function run(reportPath, notionPath) {
   assert.equal(process.platform, 'darwin')
   assert(isAbsolute(reportPath) && (!notionPath || isAbsolute(notionPath)))
-  const resources = await realpath('/Applications/Knowledge Forge.app/Contents/Resources/resources')
-  const sourceJar = join(resources, 'knowledge-forge.jar')
+  const resources = await realpath('/Applications/Dougle.app/Contents/Resources/resources')
+  const sourceJar = join(resources, 'dougle.jar')
   const bytes = await readFile(sourceJar)
   assert.equal(createHash('sha256').update(bytes).digest('hex'), artifactHash)
   const directory = await realpath(await mkdtemp(join(tmpdir(), 'dougle-retrieval-')))

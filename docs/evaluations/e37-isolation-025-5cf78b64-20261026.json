@@ -955,7 +955,7 @@
   ],
   "javaSha256": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
   "models": {
-    "directory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "directory": "/Users/thisisnew/Desktop/dougle/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
     "architecture": "x86_64",
     "files": [
       {

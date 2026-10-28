@@ -36,7 +36,7 @@ node scripts/crash-recovery-smoke.mjs
 동봉 Java와 JAR로 검사하려면 해당 CPU에서 실행하세요.
 
 ```bash
-FORGE_RECOVERY_RESOURCES="$PWD/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources" node scripts/crash-recovery-smoke.mjs
+FORGE_RECOVERY_RESOURCES="$PWD/desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources/resources" node scripts/crash-recovery-smoke.mjs
 ```
 
 검사 도구가 직접 만든 임시 폴더·프로세스만 정리합니다. 데이터 경로를 사용자에게서 받지 않으며, JVM 임시 파일도 검사 폴더 안에 둡니다.

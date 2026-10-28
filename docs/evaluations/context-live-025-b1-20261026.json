@@ -2915,7 +2915,7 @@
     "runtime/bin/java": "e5df547d287f27e7e8d4d78e8133c0ba9833c512f60de67bffa46c609a93ac8f",
     "ai/codex": "73697f229103f463acaafd8659976caaa4892ec11e2c246c7fa97f93d523f90e"
   },
-  "resourceDirectory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources",
+  "resourceDirectory": "/Users/thisisnew/Desktop/dougle/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources",
   "harnessSha256": "8addc6e788caa138a30470f6fb6a1e08b90f434341101146b954eefb589f8fe1",
   "fixtureSha256": "462786d48c9e551b038f72d6a3d1e27d6f290ddf8fe2e43b6d8e780b918dfce0",
   "historyHelperSha256": "13cefde5187bb49dc6ae0d07d2fb038755842853dd0b5d3b58beec1946f12c26",
@@ -2925,7 +2925,7 @@
   "search-modelsHelperSha256": "7adc5776c2d57669522c781d42e0d59edc265a0fa8d67326fdf4559247754c23",
   "jarSha256": "5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a",
   "searchModels": {
-    "directory": "/Users/thisisnew/Desktop/knowledge-forge/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
+    "directory": "/Users/thisisnew/Desktop/dougle/desktop/src-tauri/target/release/bundle/macos/Knowledge Forge.app/Contents/Resources/resources/search-model-e5-v1",
     "architecture": "x86_64",
     "files": [
       {

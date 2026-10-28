@@ -15,7 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     .starts_with("forge-published-update-")
             })
         })
-        || installed.file_name().and_then(|name| name.to_str()) != Some("Knowledge Forge.app")
+        || installed.file_name().and_then(|name| name.to_str()) != Some("Dougle.app")
     {
         return Err("Only an isolated test installation is allowed".into());
     }
@@ -29,7 +29,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let result: Result<(), Box<dyn std::error::Error>> = async {
                     let updater = handle
                         .updater_builder()
-                        .executable_path(installed.join("Contents/MacOS/knowledge-forge-desktop"))
+                        .executable_path(installed.join("Contents/MacOS/dougle-desktop"))
                         .timeout(std::time::Duration::from_secs(300))
                         .build()?;
                     let update = updater.check().await?.ok_or("No newer public update")?;
@@ -38,7 +38,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         || !update
                             .download_url
                             .path()
-                            .starts_with("/thisisnew/knowledge-forge/releases/download/")
+                            .starts_with("/thisisnew/dougle/releases/download/")
                     {
                         return Err("Unexpected update destination".into());
                     }

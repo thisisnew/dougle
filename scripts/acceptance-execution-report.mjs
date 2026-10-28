@@ -81,11 +81,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       repairedProbeIds: baseline.cases.filter(item => item.status === 'FAIL' && cases.find(current => current.id === item.id)?.status === 'PARTIAL').map(item => item.id) },
     runnerHashes: Object.fromEntries([
       ...['FileAcceptanceTest', 'FolderAcceptanceTest', 'WebAcceptanceTest', 'SearchAcceptanceTest', 'LibraryWorkflowAcceptanceTest', 'GitAcceptanceTest', 'FolderFailureAcceptanceTest', 'SyncProgressAcceptanceTest']
-        .map(name => `backend/src/test/java/dev/knowledgeforge/${name}.java`),
-      'backend/src/test/java/dev/knowledgeforge/sources/adapter/WebBoundaryAcceptanceTest.java',
-      'backend/src/test/java/dev/knowledgeforge/sources/adapter/DnsRebindingAcceptanceTest.java',
+        .map(name => `backend/src/test/java/dev/dougle/${name}.java`),
+      'backend/src/test/java/dev/dougle/sources/adapter/WebBoundaryAcceptanceTest.java',
+      'backend/src/test/java/dev/dougle/sources/adapter/DnsRebindingAcceptanceTest.java',
       ...['Notion', 'Oauth', 'Mysql', 'Readonly'].map(name =>
-        `backend/src/test/java/dev/knowledgeforge/plugins/adapter/${name}AcceptanceTest.java`),
+        `backend/src/test/java/dev/dougle/plugins/adapter/${name}AcceptanceTest.java`),
       'frontend/src/SyncEntryAcceptance.test.tsx', 'frontend/src/UpdateAcceptance.test.tsx',
       'scripts/acceptance-live-ai.mjs', 'docs/evaluations/acceptance-live-ai-20261027.json',
       'scripts/AcceptanceImages.java', 'docs/evaluations/acceptance-images-20261027.json',

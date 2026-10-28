@@ -1,0 +1,121 @@
+{
+  "scope": "Remove web URL and GitHub URL direct connections; preserve cached materials and conversations",
+  "status": "PASS_WITH_DECLARED_LIMITATIONS",
+  "checks": [
+    {
+      "id": "M01",
+      "check": "Only file and folder choices in material add UI",
+      "status": "PASS"
+    },
+    {
+      "id": "M02",
+      "check": "No URL text input or GitHub token input",
+      "status": "PASS"
+    },
+    {
+      "id": "M03",
+      "check": "No GitHub plugin authentication entry",
+      "status": "PASS"
+    },
+    {
+      "id": "M04",
+      "check": "URL/GitHub registration rejected before collection",
+      "status": "PASS"
+    },
+    {
+      "id": "M05",
+      "check": "Legacy URL/GitHub manual synchronization rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "M06",
+      "check": "Legacy remote polling cannot be enabled through API",
+      "status": "PASS"
+    },
+    {
+      "id": "M07",
+      "check": "Already enabled remote sources excluded from scheduler",
+      "status": "PASS"
+    },
+    {
+      "id": "M08",
+      "check": "Cached remote rows and original open action preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "M09",
+      "check": "Sync all skips remote archives and syncs local folders",
+      "status": "PASS"
+    },
+    {
+      "id": "M10",
+      "check": "File uploads and folder automatic synchronization preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "M11",
+      "check": "Folder picker cancellation performs no collection",
+      "status": "PASS"
+    },
+    {
+      "id": "M12",
+      "check": "Folder registration failure does not trigger sync",
+      "status": "PASS"
+    },
+    {
+      "id": "M13",
+      "check": "Existing sources survive archive listing and denied resync",
+      "status": "PASS"
+    },
+    {
+      "id": "M14",
+      "check": "Workspace isolation on legacy source requests",
+      "status": "PASS"
+    },
+    {
+      "id": "M15",
+      "check": "Local folder/MySQL registration still supported",
+      "status": "PASS"
+    },
+    {
+      "id": "M16",
+      "check": "Connected Notion does not bypass removed URL registration",
+      "status": "PASS"
+    },
+    {
+      "id": "M17",
+      "check": "UI regression and production build",
+      "status": "PASS"
+    },
+    {
+      "id": "M18",
+      "check": "Java regression",
+      "status": "PASS"
+    },
+    {
+      "id": "M19",
+      "check": "Actual installed Intel UI, file ingestion and search",
+      "status": "PASS"
+    },
+    {
+      "id": "M20",
+      "check": "Apple Silicon package static checks (not runtime)",
+      "status": "PASS"
+    }
+  ],
+  "limitations": [
+    "No actual company credentials or documents used",
+    "Apple Silicon runtime requires another Mac",
+    "Internal historical collector tests do not imply supported URL/GitHub features"
+  ],
+  "evidence": [
+    "SourceMvp.test.tsx: 6 passed",
+    "SourceMvpBoundaryTest: 10 passed",
+    "SourceIntegrationTest + PluginIntegrationTest: 44 passed",
+    "UI: 635 + 50 passed; production build passed",
+    "Java full: 1191 total, 24 skipped, 0 failure/error",
+    "Fresh HOME real bundled model and fake custom CLI: passed",
+    "Intel DMG actual native WebView upload/search: passed",
+    "ARM DMG static integrity, CPU, signature, bundled model: passed"
+  ]
+}

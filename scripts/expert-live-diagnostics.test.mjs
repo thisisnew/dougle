@@ -102,7 +102,7 @@ test('fixed response-validation and interruption errors retain counters without 
 })
 
 test('parser field order and StreamPhase allowlist match current Java record contract', async () => {
-  const source = await readFile(new URL('../backend/src/main/java/dev/knowledgeforge/knowledge/application/ProviderExecutionException.java', import.meta.url), 'utf8')
+  const source = await readFile(new URL('../backend/src/main/java/dev/dougle/knowledge/application/ProviderExecutionException.java', import.meta.url), 'utf8')
   const declaration = source.match(/public record AppStream\(([^)]*)\)/)[1]
   const fields = declaration.split(',').map(field => field.trim().split(/\s+/).at(-1))
   assert.deepEqual(fields, [...Object.keys(stream), 'ignoredEvents'])

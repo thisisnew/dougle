@@ -1,8 +1,12 @@
 # 아키텍처
 
+## 현재 MVP 범위
+
+웹 URL/GitHub URL 신규 등록과 원격 동기화는 HTTP 경계에서 거부하고, 저장된 원격 Source는 스케줄러 대상에서 제외한다. 기존 원본·색인·대화는 보존한다. GitHub 인증 화면/API는 제거했으며 과거 수집기·주소 정규화 코드와 테스트는 호환 이력으로 남긴다. 파일·로컬 폴더 및 기존 MySQL 경로는 유지한다. 아래 GitHub 인증 계획은 현재 제공 기능이 아니다.
+
 ## 회사 연결 안내 — 작업본
 
-`ConnectionSetup`은 초기 연결 진입과 안내 표시 여부만 담당한다. 인증 정보는 저장하지 않고 기존 AI/플러그인 연결 경로에 위임한다. `ProviderConnectionPanel`에서 두 제공자의 `CliLaunchPanel`에 접근하며 기존 백엔드의 절대 경로 검증·신뢰 확인·revision 충돌·재시작 적용 계약을 그대로 사용한다. 회사별 인증 우회나 외부 쓰기 권한은 추가하지 않는다. GitHub 비공개 인증과 실제 회사 환경 인수는 미완료다.
+`ConnectionSetup`은 초기 연결 진입과 안내 표시 여부만 담당한다. 인증 정보는 저장하지 않고 AI/플러그인 연결 경로에 위임한다. `ProviderConnectionPanel`에서 두 제공자의 `CliLaunchPanel`에 접근하며 명령 이름/전체 경로 해석·신뢰 확인·revision 충돌·재시작 적용 계약을 사용한다. GitHub 읽기 토큰은 조회 성공 후 `PluginVault`에 저장하고 API와 Git의 제한된 읽기 요청에만 사용한다. 회사별 인증 우회나 외부 쓰기 권한은 추가하지 않는다. GitHub App 원클릭 인증과 실제 회사 환경 인수는 미완료다.
 
 ## 공개 상태 — 2026-10-28
 
@@ -137,7 +141,7 @@ GitHub Collector는 선점 뒤 읽은 이전 원본을 입력받아 같은 commi
 
 `SourcePolling → SourceStore.beginPoll → SourceService → JdbcSourceStore.publish`는 opt-in 예약 수집 경로입니다. SQLite v19의 예약·설정 revision을 보존하고 자동 작업 2개/Source별 단일 선점을 적용합니다. [실제 코드와 정책](source-polling.md).
 
-`desktop/src-tauri`는 토큰/준비 상태/프로세스 그룹/창을 관리합니다. 백엔드 준비 전에는 로컬 시작 창만 표시합니다. 앱 데이터 위치는 고정 식별자 `dev.knowledgeforge.desktop`로 계산하며 Java는 PATH가 아닌 번들 안 절대 경로로 실행합니다. [계약](../desktop/README.md).
+`desktop/src-tauri`는 토큰/준비 상태/프로세스 그룹/창을 관리합니다. 백엔드 준비 전에는 로컬 시작 창만 표시합니다. 0.1.32 작업본의 앱 데이터 위치는 `dev.dougle.desktop`이며 이전 이름의 폴더를 잠금 확인 후 원자적으로 이전합니다. Java는 PATH가 아닌 번들 안 절대 경로로 실행합니다. [계약](../desktop/README.md).
 
 `ConversationPreviewService`는 읽기 전용 문맥 미리보기를 만듭니다. `ConversationRequestService`가 명시적으로 고정 저장하면 `StoredAnswerContext → AnswerContextProvider → EvidenceAnswerPreview`를 통해 기존 승인·작업 경로에 결합합니다. 완료 답변과 `ConversationCompletion`의 보관함 연결은 원자적입니다. [검증 경계](context-requests.md).
 

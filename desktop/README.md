@@ -39,7 +39,7 @@ Staging must provide these files, retaining Java executable permissions and the 
 ```text
 desktop/src-tauri/resources/runtime/bin/java
 desktop/src-tauri/resources/runtime/lib/...
-desktop/src-tauri/resources/knowledge-forge.jar
+desktop/src-tauri/resources/dougle.jar
 desktop/src-tauri/resources/ai/codex
 desktop/src-tauri/resources/git/bin/git
 desktop/src-tauri/resources/git/libexec/git-core/...
@@ -51,7 +51,7 @@ The JAR must embed the built UI. Tauri preserves the `resources/` prefix under `
 
 From 0.1.5, the host requires bundled Git and passes its canonical root through `--forge.git-home`. Git and HTTPS helper paths must remain in the bundle. `GitRunner` invokes the absolute executable with its own helper path, clears inherited `GIT_*` overrides, and keeps collection limits. Missing bundled Git never falls back to system Git. The complete corresponding source, GPL license and build recipe ship with both CPU packages. [Build and verification](../docs/bundled-git.md).
 
-The stable application identifier is `dev.knowledgeforge.desktop`; `app_data_dir()` is the sole data path (normally `~/Library/Application Support/dev.knowledgeforge.desktop` on macOS). The host passes absolute `FORGE_DATA_DIR`, `FORGE_DESKTOP=true` and uses the data directory as the child working directory. It does not import development data. The backend's data lock rejects another app instance using the same directory.
+The stable application identifier is `dev.dougle.desktop`; `app_data_dir()` is the sole data path (normally `~/Library/Application Support/dev.dougle.desktop` on macOS). The host passes absolute `FORGE_DATA_DIR`, `FORGE_DESKTOP=true` and uses the data directory as the child working directory. It does not import development data. The backend's data lock rejects another app instance using the same directory.
 
 Each process gets a fresh OS-random 32-byte token encoded as 64 lowercase hexadecimal characters. The first stdin line is the token, followed by a newline; the host retains stdin until shutdown. The backend must force `127.0.0.1:0`, print `FORGE_DESKTOP_READY:<port>` as its own stdout line after readiness, require `X-Forge-Session` on `/api/desktop/ready`, and return HTTP 200 with JSON `{"ready":true}`. Backend EOF supervision is required for host-crash cleanup. The host probes readiness without proxies or redirects before opening `WebviewUrl::External` at the exact owned HTTP origin.
 
