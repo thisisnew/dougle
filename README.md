@@ -9,9 +9,9 @@ Dougle은 파일·폴더를 모아 두고, 궁금한 내용을 AI에게 질문�
 
 ## 설치하기
 
-최신 설치본은 **0.1.34 Preview**입니다. 파일·로컬 폴더 중심 MVP와 지원하는 회사 계정 별칭의 인증 환경 연동을 포함합니다. 연결 실패 시 도구를 자동 탐색하며 직접 경로 입력은 고급 설정입니다. [설치 안내와 검증 범위](docs/macos-install.md).
+최신 설치본은 **0.1.35 Preview**입니다. AI 실행 환경을 선택하면 인증 확인 후 재시작 없이 적용합니다. 인증 실패 시 기존 설정을 유지하고, 로그인 필요 시 선택한 환경으로 브라우저 로그인에 이어집니다. [시나리오 검증과 한계](docs/release-0.1.35-report.md) · [설치 안내](docs/macos-install.md).
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.34-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.35-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.

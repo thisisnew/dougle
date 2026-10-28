@@ -1,6 +1,6 @@
 # Dougle 0.1.35 — 선택한 AI 환경 즉시 연결
 
-2026-10-29 소스·Intel 실행 검증 완료, 공개·설치 준비 중. 실제 회사 Mac 인증은 미검증이다.
+2026-10-29 [공개·로컬 설치 완료](https://github.com/thisisnew/dougle/releases/tag/v0.1.35-preview.1). 공개3자산 크기·SHA-256이 로컬 검증본과 일치한다. 실제 회사 Mac 인증은 미검증이다.
 
 ## 원인과 변경
 
@@ -35,8 +35,9 @@
 | 새 HOME에서 저장·실제 JVM 종료/시작 후 유지 | 동봉 Java/JAR + 가상 CLI 시나리오 통과 |
 | 잘못된 기본 Claude→회사 별칭 선택→재시작 없이 답변 | 두 제공자 답변 작업 SUCCEEDED, 정확한 R1 인용 결과 확인 |
 | 재시작 후 저장한 회사 별칭으로 다시 답변 | 두 제공자 답변 작업 SUCCEEDED |
-| Intel 설치본 실행·ARM 패키지 정적 검사 | Intel 네이티브 React/UI 실행 통과, ARM 검사 진행 중 |
-| 공개 다운로드 무결성 | 대기 |
+| 환경 전환 후 기존 답변 승인 재사용 | 실제 패키지 HTTP409 거절 확인 |
+| Intel 설치본 실행·ARM 패키지 정적 검사 | 양쪽 통과, ARM 실행은 제외 |
+| 공개 다운로드 무결성 | 공개3자산 크기·SHA-256 일치 |
 | 회사 M5·실제 계정/SSO·모델 응답 | 미검증 |
 
 ![가상 후보 선택 화면](evaluations/live-connection-035.png)
@@ -59,3 +60,17 @@ node scripts/fresh-install-smoke.mjs "$PWD/desktop/src-tauri/resources" --profil
 ```
 
 두 번째 명령은 현재 빌드된 앱 리소스가 필요하며 임시 HOME/SQLite만 사용한다. 사용자의 로그인·자료는 사용하지 않는다.
+
+## 설치·배포 증거
+
+Intel DMG의 실제 네이티브 WebView에서 Workspace·AI 연결 화면·한글·업로드/다운로드/검색·CLI 설정 검사를 통과했다. ARM DMG는 아키텍처·서명·검색 엔진·무결성 정적 검사만 수행했다. 양쪽 업데이트 아카이브의 서명·버전·최종 JAR 일치도 확인했다.
+
+로컬 앱과 종료된 데이터 디렉토리를 Dougle Backups에 백업하고 `/Applications/Dougle.app`을0.1.35로 설치했다. 버전·서명·패키지 JAR 바이트 일치를 확인했다. [기계 판독 검증 요약](evaluations/live-connection-035.json)에 CPU별 JAR 해시와 검증 한계를 남겼다.
+
+| 공개 파일 | 바이트 | SHA-256 |
+| --- | ---: | --- |
+| Dougle_0.1.35_arm64.dmg | 476790543 | fe180d4ae7e8c2d96e5ce1e6d1e3bef6b6473cb6ea76e2c8aec50b270d35ccf5 |
+| Dougle_0.1.35_x86_64.dmg | 485760405 | cbc92348d42def9d7469493cb5a2fb42cd3766c130b5216397ca50730ad0050c |
+| SHA256SUMS-0.1.35-DMG | 181 | c173c5d58c87719288b92d07c77a6ffc386097e1815c2011725bbd49ec24554e |
+
+릴리스는 Preview이며 자동 업데이트 피드는 유지한다. 회사 M5의 실제 계정·네트워크·도구 버전은 이 테스트 환경에서 재현하지 못했으며 정상 연결을 보장하지 않는다.

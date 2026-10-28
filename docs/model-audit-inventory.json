@@ -1674,6 +1674,7 @@
         "frontend/src/SourcePanel.test.tsx",
         "scripts/cli-settings-smoke.mjs",
         "scripts/crash-recovery-smoke.mjs",
+        "scripts/fresh-install-smoke.mjs",
         "scripts/live-ai-smoke.mjs",
         "scripts/smoke.mjs"
       ]
@@ -4770,6 +4771,7 @@
         "scripts/expert-live-history.test.mjs",
         "scripts/expert-live-local-fixtures.test.mjs",
         "scripts/expert-upstream-verify.test.mjs",
+        "scripts/fresh-install-smoke.mjs",
         "scripts/investigation-smoke.mjs",
         "scripts/live-ai-smoke.mjs",
         "scripts/macos-architecture-test.sh",
@@ -5024,6 +5026,7 @@
         "scripts/e50-independent-archive.test.mjs",
         "scripts/expert-evaluation.test.mjs",
         "scripts/expert-live-diagnostics.test.mjs",
+        "scripts/fresh-install-smoke.mjs",
         "scripts/investigation-smoke.mjs",
         "scripts/live-ai-smoke.mjs",
         "scripts/native-host-smoke.mjs",
@@ -5276,8 +5279,8 @@
     },
     {
       "path": "frontend/src/InstalledCliChoices.test.tsx",
-      "sha256": "633d74de4e741830070f48343010ef9906f4b4de37434df1aaca494330df9bec",
-      "lines": 78,
+      "sha256": "5f824a50903f6b4d8970bc70aa3cc7d9e68c4ee7add6b813a92fddbe61308ce3",
+      "lines": 105,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -6269,6 +6272,7 @@
         "scripts/expert-live-history.test.mjs",
         "scripts/expert-live-local-fixtures.test.mjs",
         "scripts/expert-upstream-verify.test.mjs",
+        "scripts/fresh-install-smoke.mjs",
         "scripts/investigation-smoke.mjs",
         "scripts/live-ai-smoke.mjs",
         "scripts/macos-architecture-test.sh",
@@ -6913,6 +6917,7 @@
         "frontend/src/desktopTransport.test.ts",
         "scripts/e50-independent-archive.test.mjs",
         "scripts/expert-live-diagnostics.test.mjs",
+        "scripts/fresh-install-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/mysql-read-runtime-smoke.mjs",
         "scripts/native-host-smoke.mjs",
@@ -7376,8 +7381,8 @@
     },
     {
       "path": "scripts/fresh-install-smoke.mjs",
-      "sha256": "d82289dae2b6441a12970918c36c760f481492049731420e9a4480f4c87a86bf",
-      "lines": 142,
+      "sha256": "8aec502717a683e329024e2a1954ddad1aad083d96a857d8ddfaebdc3685198e",
+      "lines": 199,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
