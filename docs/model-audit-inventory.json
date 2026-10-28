@@ -4365,8 +4365,8 @@
     },
     {
       "path": "desktop/src-tauri/examples/runtime_smoke.rs",
-      "sha256": "960b577dcc6adf6ce5132a3addf9a0a63bf836588e39356af59820da0d799624",
-      "lines": 403,
+      "sha256": "215ce198c6b6026d4ad40da47505b3b7440bb74d1bbb91a2114ff7cce4826817",
+      "lines": 406,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },

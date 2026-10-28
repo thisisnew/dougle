@@ -98,10 +98,13 @@ window.addEventListener('DOMContentLoaded', () => {
       const appearance = getComputedStyle(model).getPropertyValue('appearance') || getComputedStyle(model).getPropertyValue('-webkit-appearance');
       if (model.getBoundingClientRect().height < 40 || appearance !== 'none') throw Error('Native select appearance mismatch');
       const connect = () => [...dialog.querySelectorAll('button')].find(button => button.textContent.trim() === '연결');
-      phase = 'Claude unavailable in isolated PATH';
+      phase = 'Claude missing configured command with discovery';
       connect().click();
-      await until(() => dialog.textContent.includes('실행 도구를 찾지 못했습니다.') || dialog.querySelector('[role="alert"]'));
+      await until(() => dialog.querySelector('[aria-label="설치된 AI 도구"]')
+        && (dialog.textContent.includes('실행 도구를 찾지 못했습니다.') || dialog.textContent.includes('설치된 도구를 찾았습니다.'))
+        || dialog.querySelector('[role="alert"]'));
       if (dialog.querySelector('[role="alert"]')) throw Error('AI connection UI mismatch');
+      if ((await api('/ai/providers/CLAUDE/connection', 'POST')).state !== 'TOOL_UNAVAILABLE') throw Error('Missing configured Claude command must remain unavailable');
       [...dialog.querySelectorAll('.provider-card')].find(button => button.textContent.includes('Codex')).click();
       phase = 'Codex selected without redundant status';
       await until(() => [...dialog.querySelectorAll('.provider-card')].some(button => button.textContent.includes('Codex') && button.getAttribute('aria-pressed') === 'true') && !dialog.querySelector('.connection-status') && connect() && !connect().disabled);
