@@ -5,6 +5,7 @@ import { preferredProvider, rememberProvider, type Provider } from './providerPr
 import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
 import { loadModel, saveModel, requestedModel, modelPresets, type ModelChoice } from './modelPreference'
 import CliLaunchPanel from './CliLaunchPanel'
+import InstalledCliChoices from './InstalledCliChoices'
 
 type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string }
 type Login = { id: string; provider: Provider; state: 'PENDING' | 'AUTHENTICATED' | 'FAILED' | 'CANCELLED' | 'TIMED_OUT' }
@@ -31,6 +32,9 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   const [acknowledged, setAcknowledged] = useState(false)
   const [loginBusy, setLoginBusy] = useState(false)
   const [launchSettingsOpen, setLaunchSettingsOpen] = useState(false)
+  const [choosingTool, setChoosingTool] = useState(false)
+  const [discoveryOpen, setDiscoveryOpen] = useState(false)
+  const [restartRequired, setRestartRequired] = useState(false)
   const loggingIn = login?.state === 'PENDING'
   const indicatorState = error ? 'CHECK_FAILED' : busy ? 'CHECKING' : status?.state ?? 'UNCHECKED'
   const connected = status?.state === 'AUTHENTICATED' && verifiedModels.current[provider] === requestedModel(choice)
@@ -89,7 +93,7 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   function choose(next: Provider) {
     if (next === provider) return
     pending.current?.abort()
-    setProvider(next); setChoice(loadModel(next)); setStatus(verified.current[next] ?? null); setBusy(false); setLogin(null); setAcknowledged(false)
+    setProvider(next); setChoice(loadModel(next)); setStatus(verified.current[next] ?? null); setBusy(false); setLogin(null); setAcknowledged(false); setDiscoveryOpen(false)
     setError(initialConnection?.state === 'AUTHENTICATED' || rememberProvider(next) ? '' : '이 환경에서는 선택을 기억할 수 없습니다. 현재 화면에서는 사용할 수 있습니다.')
   }
 
@@ -111,10 +115,10 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
     finally { if (!controller.signal.aborted) setBusy(false) }
   }
 
-  return <dialog ref={dialog} className="proposal-merge provider-connection" aria-label="AI 연결" onCancel={event => { event.preventDefault(); if (!loggingIn && !busy) onClose() }}>
-    <div className="provider-connection-header"><div><h2>AI 연결</h2></div><Button variant="ghost" disabled={loggingIn || busy} onClick={onClose}>닫기</Button></div>
+  return <dialog ref={dialog} className="proposal-merge provider-connection" aria-label="AI 연결" onCancel={event => { event.preventDefault(); if (!loggingIn && !busy && !choosingTool) onClose() }}>
+    <div className="provider-connection-header"><div><h2>AI 연결</h2></div><Button variant="ghost" disabled={loggingIn || busy || choosingTool} onClick={onClose}>닫기</Button></div>
     <div className="provider-cards" role="group" aria-label="사용할 AI">
-      {(['CODEX', 'CLAUDE'] as const).map(value => <button key={value} className="provider-card" aria-pressed={provider === value} disabled={loggingIn || loginBusy} onClick={() => choose(value)}>
+      {(['CODEX', 'CLAUDE'] as const).map(value => <button key={value} className="provider-card" aria-pressed={provider === value} disabled={loggingIn || loginBusy || choosingTool} onClick={() => choose(value)}>
         <span className="provider-monogram">{value === 'CODEX' ? 'C' : '✳'}</span><strong>{value === 'CODEX' ? 'Codex' : 'Claude'}</strong><small>{value === 'CODEX' ? 'OpenAI' : 'Anthropic'}</small>
       </button>)}
     </div>
@@ -124,16 +128,19 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
       const next: ModelChoice = { mode: 'custom', model: value }
       setChoice(next); setError('')
     }}>{modelPresets[provider].map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
-    <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected} onClick={() => void check()}>{busy ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
-    {indicatorState !== 'UNCHECKED' && indicatorState !== 'AUTHENTICATED' && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
-    {status && status.state !== 'AUTHENTICATED' && <p>{messages[status.state]}{status.state === 'TOOL_UNAVAILABLE' && ' 회사용 실행 도구를 사용한다면 실행 파일을 지정해 주세요.'}</p>}
-    <Button className="company-launch-button" variant="ghost" disabled={busy || loggingIn} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button>
+    <Button aria-live="polite" className="connect-button" disabled={busy || loggingIn || connected || choosingTool || restartRequired} onClick={() => void check()}>{restartRequired ? '앱을 다시 열어 주세요' : busy ? '확인 중…' : connected ? '연결됨' : '연결'}</Button>
+    {!['UNCHECKED', 'AUTHENTICATED', 'TOOL_UNAVAILABLE'].includes(indicatorState) && <p className="connection-status" data-state={indicatorState} role="status" aria-live="polite">{provider === 'CODEX' ? 'Codex' : 'Claude'} · {connectionLabels[indicatorState]}</p>}
+    {status && !['AUTHENTICATED', 'TOOL_UNAVAILABLE'].includes(status.state) && <p>{messages[status.state]}</p>}
+    {(status?.state === 'TOOL_UNAVAILABLE' || discoveryOpen) && <InstalledCliChoices key={provider} provider={provider} unavailable={true} disabled={busy || loggingIn} onPendingChange={setChoosingTool}
+      onRestartRequired={() => { setRestartRequired(true); setStatus(null); setDiscoveryOpen(true) }} />}
+    {!discoveryOpen && status?.state !== 'TOOL_UNAVAILABLE' && <Button variant="ghost" disabled={busy || loggingIn || choosingTool} onClick={() => setDiscoveryOpen(true)}>다른 AI 도구 찾기</Button>}
+    <details><summary>고급 설정</summary><Button className="company-launch-button" variant="ghost" disabled={busy || loggingIn || choosingTool} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button></details>
     {launchSettingsOpen && <CliLaunchPanel initialProvider={provider} onClose={() => setLaunchSettingsOpen(false)} />}
     {error && <p role="alert">{error}</p>}
     {status?.state === 'LOGIN_REQUIRED' && !loggingIn && <div>
       <p>회사에서 사용하는 계정으로 로그인하세요. Google 로그인이나 회사 SSO가 나오면 브라우저 안내를 따라 주세요.</p>
       <label className="check-option"><input type="checkbox" checked={acknowledged} disabled={busy} onChange={event => setAcknowledged(event.target.checked)} /><span>브라우저 로그인과 인증 정보 저장에 동의합니다.</span></label>
-      <Button disabled={busy || !acknowledged} onClick={() => void loginAction(false)}>브라우저에서 로그인</Button>
+      <Button disabled={busy || choosingTool || !acknowledged} onClick={() => void loginAction(false)}>브라우저에서 로그인</Button>
     </div>}
     {loggingIn && <div role="status"><p>브라우저에서 로그인을 완료해 주세요. 최대 3분 동안 기다립니다. 중단은 이미 저장된 로그인을 취소하거나 로그아웃하지 않습니다.</p><Button disabled={busy} onClick={() => void loginAction(true)}>로그인 중단</Button></div>}
     {login && ['FAILED', 'CANCELLED', 'TIMED_OUT'].includes(login.state) && <p role="status">{login.state === 'TIMED_OUT' ? '로그인 대기 시간이 지났습니다.' : login.state === 'CANCELLED' ? '로그인 대기를 중단했습니다.' : '로그인 완료를 확인하지 못했습니다.'} 연결 상태를 다시 확인해 주세요.</p>}

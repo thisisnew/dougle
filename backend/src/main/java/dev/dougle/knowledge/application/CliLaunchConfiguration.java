@@ -19,7 +19,12 @@ public class CliLaunchConfiguration {
     @org.springframework.beans.factory.annotation.Autowired
     public CliLaunchConfiguration(CliLaunchStore store, @Value("${forge.ai.codex-command:codex}") String codex,
                                   @Value("${forge.ai.claude-command:claude}") String claude,
-                                  @Value("${forge.ai.codex-stream-home:}") String codexStreamHome) {
+                                  @Value("${forge.ai.codex-stream-home:}") String codexStreamHome, CliDiscovery discovery) {
+        this(store, discovery.defaultCommand(CuratorModel.Provider.CODEX, codex),
+                discovery.defaultCommand(CuratorModel.Provider.CLAUDE, claude), codexStreamHome);
+    }
+
+    public CliLaunchConfiguration(CliLaunchStore store, String codex, String claude, String codexStreamHome) {
         this.store = store;
         startup = store.current();
         this.codex = startup.codexPath().isEmpty() ? codex : startup.codexPath();

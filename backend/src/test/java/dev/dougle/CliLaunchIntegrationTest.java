@@ -52,7 +52,7 @@ class CliLaunchIntegrationTest {
         assertThat(saved.saved().revision()).isEqualTo(1);
         assertThat(settings.binding(Provider.CODEX)).isEqualTo(before);
         assertThat(Files.exists(marker)).isFalse();
-        var restarted = new CliLaunchConfiguration(store, "codex", "claude");
+        var restarted = new CliLaunchConfiguration(store, settings.view().activeCodexCommand(), settings.view().activeClaudeCommand());
         assertThat(restarted.command(Provider.CODEX)).isEqualTo(executable.toString());
         assertThat(restarted.view().restartRequired()).isFalse();
         assertThat(restarted.binding(Provider.CODEX)).isNotEqualTo(before);

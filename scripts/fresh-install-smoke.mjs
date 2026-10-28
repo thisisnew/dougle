@@ -7,12 +7,12 @@ import { resolve, join } from 'node:path'
 import { tmpdir } from 'node:os'
 
 const resources = resolve(process.argv[2])
+const automatic = process.argv.includes('--auto-discovery')
 const temporary = await mkdtemp(join(tmpdir(), 'dougle-fresh-install-'))
 const home = join(temporary, 'home'), data = join(temporary, 'data')
 await mkdir(home)
-await mkdir(join(home, '.local'), { recursive: true })
-await mkdir(join(home, '.local/bin'))
-const cli = join(home, '.local/bin')
+const cli = join(home, automatic ? '.nvm/versions/node/v22/bin' : '.local/bin')
+await mkdir(cli, { recursive: true })
 await writeFile(join(cli, 'company-codex'), '#!/bin/sh\n[ "$*" = "login status" ] || exit 99\necho "Logged in using ChatGPT"\n', { mode: 0o700 })
 await writeFile(join(cli, 'company-claude'), '#!/bin/sh\ncase "$*" in\n"auth --help") printf "  status   show status\\n";;\n"auth status") printf \'{"loggedIn":true}\\n\';;\n*) exit 99;;\nesac\n', { mode: 0o700 })
 const pause = () => new Promise(done => setTimeout(done, 150))
@@ -30,8 +30,8 @@ async function until(check, label, milliseconds = 180000) {
 async function start() {
   token = randomBytes(32).toString('hex'); logs = ''
   child = spawn(join(resources, 'runtime/bin/java'), ['-Duser.home=' + home, '-jar', join(resources, 'dougle.jar'),
-    '--forge.desktop=true', '--forge.ai.codex-command=' + join(temporary, 'missing-codex'),
-    '--forge.ai.claude-command=' + join(temporary, 'missing-claude'), '--forge.git-home=' + join(resources, 'git')], {
+    '--forge.desktop=true', ...(!automatic ? ['--forge.ai.codex-command=' + join(temporary, 'missing-codex'),
+    '--forge.ai.claude-command=' + join(temporary, 'missing-claude')] : []), '--forge.git-home=' + join(resources, 'git')], {
     cwd: temporary, env: { HOME: home, PATH: '/usr/bin:/bin', TMPDIR: temporary, LANG: 'en_US.UTF-8', FORGE_DATA_DIR: data, FORGE_DESKTOP: 'true' },
     stdio: ['pipe', 'pipe', 'pipe'],
   })
@@ -65,8 +65,26 @@ async function api(path, method = 'GET', body) {
 try {
   await start(); checks.push('clean-home-bundled-runtime-and-session-protection')
   console.log('PASS clean HOME startup and session protection')
-  for (const provider of ['CODEX', 'CLAUDE']) assert.equal((await api('/ai/providers/' + provider + '/connection', 'POST')).state, 'TOOL_UNAVAILABLE')
-  checks.push('missing-both-ai-tools-does-not-block-library')
+  if (automatic) {
+    const settings = await api('/ai/launch-settings')
+    const selected = {}
+    for (const provider of ['CODEX', 'CLAUDE']) {
+      const discovered = await api('/ai/launch-settings/discovered/' + provider)
+      const candidate = discovered.find(item => item.name === 'company-' + provider.toLowerCase())
+      assert(candidate, provider + ' company tool must be discovered')
+      selected[provider === 'CODEX' ? 'codexPath' : 'claudePath'] = candidate.path
+    }
+    if (settings.activeCodexCommand !== selected.codexPath || settings.activeClaudeCommand !== selected.claudePath) {
+      await api('/ai/launch-settings', 'PUT', { ...selected, expectedRevision: settings.saved.revision, acknowledged: true })
+      await stop(); await start()
+      checks.push('multiple-installed-tools-selected-from-discovery-without-typing-paths')
+    }
+  }
+  for (const provider of ['CODEX', 'CLAUDE']) {
+    assert.equal((await api('/ai/providers/' + provider + '/connection', 'POST')).state, automatic ? 'AUTHENTICATED' : 'TOOL_UNAVAILABLE')
+    if (automatic) assert((await api('/ai/launch-settings/discovered/' + provider)).some(item => item.path === join(cli, 'company-' + provider.toLowerCase())))
+  }
+  checks.push(automatic ? 'both-company-tools-discovered-under-minimal-finder-path' : 'missing-both-ai-tools-does-not-block-library')
   let previousModelState = null
   await until(async () => {
     const model = await api('/search-model')
@@ -81,12 +99,19 @@ try {
   form.append('file', new Blob(['전략 패턴 Strategy 예제: Player는 Strategy.choose()에 선택 알고리즘을 위임합니다.']), 'strategy.txt')
   const file = await api('/workspaces/' + workspace.id + '/files', 'POST', form)
   await until(async () => (await api('/workspaces/' + workspace.id + '/search?query=' + encodeURIComponent('전략 패턴'))).some(hit => hit.entryId === file.id), 'upload-to-semantic-search')
-  checks.push('upload-and-korean-concept-search-without-ai-login')
+  checks.push('upload-and-korean-concept-search-without-inference')
   const settings = await api('/ai/launch-settings')
-  const saved = await api('/ai/launch-settings', 'PUT', { codexPath: 'company-codex', claudePath: 'company-claude', acknowledged: true, expectedRevision: settings.saved.revision })
-  assert.equal(saved.saved.codexPath, join(cli, 'company-codex'))
-  assert.equal(saved.saved.claudePath, join(cli, 'company-claude'))
-  assert.equal(saved.restartRequired, true)
+  if (automatic) {
+    assert(['', join(cli, 'company-codex')].includes(settings.saved.codexPath))
+    assert(['', join(cli, 'company-claude')].includes(settings.saved.claudePath))
+    assert.equal(settings.activeCodexCommand, join(cli, 'company-codex'))
+    assert.equal(settings.activeClaudeCommand, join(cli, 'company-claude'))
+  } else {
+    const saved = await api('/ai/launch-settings', 'PUT', { codexPath: 'company-codex', claudePath: 'company-claude', acknowledged: true, expectedRevision: settings.saved.revision })
+    assert.equal(saved.saved.codexPath, join(cli, 'company-codex'))
+    assert.equal(saved.saved.claudePath, join(cli, 'company-claude'))
+    assert.equal(saved.restartRequired, true)
+  }
   await stop(); await start()
   for (const provider of ['CODEX', 'CLAUDE']) assert.equal((await api('/ai/providers/' + provider + '/connection', 'POST')).state, 'AUTHENTICATED')
   assert((await api('/session')).workspaces.some(item => item.id === workspace.id))

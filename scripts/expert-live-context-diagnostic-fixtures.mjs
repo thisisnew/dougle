@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto'
 import { documents, scenarios as baseline, validateContextConfiguration } from './expert-live-context-fixtures.mjs'
 
 export { documents }
-export const seedReportSha256 = '1db06e9d5c98ecfad55d7a81fbf38f86b27d648f689bf84b4224a8e590b07b50'
+export const seedReportSha256 = 'a0b724ec0ed3562c9ac35db12201f1f9655f35b35cdc072bf3a1155b505ab0d9'
 export const scenarios = [{ id: 'seeded-exact-implicit-followup', questions: [[baseline[0].questions[0][2]]],
   expected: [baseline[0].expected[2]], forbidden: [baseline[0].forbidden[2]], expectedDecisions: ['STOP'],
   manualCriteria: 'Seeded exact b1 prior questions/answers; not uninterrupted third turn. Resolve that badge to corrected AMBER, no auto-renewal, visitor-desk manual approval grounded in R1. No invented actual issuance/approval. Protocol diagnostic, not E04/E05 acceptance.',

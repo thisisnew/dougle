@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 679,
-  "testOrFixtureFiles": 257,
+  "totalFiles": 684,
+  "testOrFixtureFiles": 259,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -1081,8 +1081,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/CliLaunchController.java",
-      "sha256": "d6ea03a284275644b4702257273938b4f1cf22b54e3cc38f5e0f9e69b19abab4",
-      "lines": 20,
+      "sha256": "75a70d3d6340626bd6586652f983d1a18bf61a71bdcf1346e5d1d5528158cba9",
+      "lines": 31,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
@@ -1162,6 +1162,15 @@
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
+    },
+    {
+      "path": "backend/src/main/java/dev/dougle/knowledge/adapter/InstalledCliDiscovery.java",
+      "sha256": "08a628a36a69f89f1daa48d6a2e239431f18da2ff201cda5e68064e61f8b50f8",
+      "lines": 108,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java"
+      ]
     },
     {
       "path": "backend/src/main/java/dev/dougle/knowledge/adapter/JdbcCliLaunchStore.java",
@@ -1304,9 +1313,18 @@
       ]
     },
     {
+      "path": "backend/src/main/java/dev/dougle/knowledge/application/CliDiscovery.java",
+      "sha256": "3ebcd25b079d9666e1342a6b6397bd7dd931a318184815bbc7440526a4216eff",
+      "lines": 16,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java"
+      ]
+    },
+    {
       "path": "backend/src/main/java/dev/dougle/knowledge/application/CliLaunchConfiguration.java",
-      "sha256": "852e690dd3593bde36f07ece23dc37e5cb4f4c63ef3c3710a41795ae032c6f35",
-      "lines": 61,
+      "sha256": "3080b302d0a293772a4ceed4ee0c89f3f0a664da628dfca1e18a1b7875e013b2",
+      "lines": 66,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/CliLaunchIntegrationTest.java",
@@ -1343,6 +1361,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CliProcessPathTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java"
@@ -2937,6 +2956,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CliPlanTransportTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerSessionTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CompanyExecutableTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LargeFileIngestionTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginReaderTest.java",
@@ -3209,6 +3229,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexTextStreamTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProcessDiagnosticsTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
@@ -3340,7 +3361,7 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/CliLaunchIntegrationTest.java",
-      "sha256": "536a718ffdc4870f8d7641a8459fa69320db43e4e9032a828f3f1231021f6f74",
+      "sha256": "33dbabb5b322fff93a34b0da272bf440fe99937682f91ff50ae5f4a34a015d51",
       "lines": 93,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
@@ -3991,6 +4012,13 @@
       "lexicalTestReferences": []
     },
     {
+      "path": "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
+      "sha256": "0c56920f64784b7ff52107aef4d3f26ce33646b1700206efe378e0c9c4f130f7",
+      "lines": 92,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "backend/src/test/java/dev/dougle/knowledge/adapter/ProcessDiagnosticsTest.java",
       "sha256": "fb330f8b1ce2790fa375c5dec4f3aa7c1330c42a4b9fe858e052d00d08aa2846",
       "lines": 104,
@@ -4238,14 +4266,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "c2b510b4012f6fd52a1ee6aa382d58faea99d7525270ce0cd991c1488558018b",
+      "sha256": "08c0a0f43d57c6fab90940298941b7d813eabb1d008541089b21b971d9f7bbb4",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "9bdcdc69965cde0a69ac7b7c8083c1c7e8d8db34d99495abe20bfca1d22da559",
+      "sha256": "b94a042e0159bbd19e4cee354dc7ea0ad192e6ab098b3967d0e7985ff8add7b0",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -4261,7 +4289,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "730b6b5847fd918b7a7c20148c7eacbed3c98e8f74e4d3ec606fcd6e1d6060b7",
+      "sha256": "5d94d0cc7e64536f51086a78c4315547bf1df67b4d801414199a3d1697bca8f3",
       "lines": 27,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -4512,6 +4540,7 @@
         "frontend/src/GenerationComparison.test.tsx",
         "frontend/src/GenerationJobsPanel.test.tsx",
         "frontend/src/GenerationPanel.test.tsx",
+        "frontend/src/InstalledCliChoices.test.tsx",
         "frontend/src/InvestigationPanel.test.tsx",
         "frontend/src/KnowledgeMarkdown.test.tsx",
         "frontend/src/KnowledgeOrganization.test.tsx",
@@ -4745,7 +4774,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "071be8f612296896f0e6a5faedea01269ecb9d8a2afb04a4469798a6ce81133c",
+      "sha256": "684f8af15633d3b755917290206abc35463fd19433900662925f1f7faa02494c",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -4908,6 +4937,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexAppServerTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexTextStreamTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProcessDiagnosticsTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderProcessIoTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
@@ -5180,6 +5210,22 @@
       ]
     },
     {
+      "path": "frontend/src/InstalledCliChoices.test.tsx",
+      "sha256": "2b8db44e62cebfa8c0010909a3e4671fe663fe470d17cacad8a859be2a933c9e",
+      "lines": 55,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "frontend/src/InstalledCliChoices.tsx",
+      "sha256": "bcbef3fc02c1457f72010845253eaa135fcd80f8e6ed5cdabad4c185a0b6357e",
+      "lines": 57,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "frontend/src/InstalledCliChoices.test.tsx"
+      ]
+    },
+    {
       "path": "frontend/src/InvestigationPanel.test.tsx",
       "sha256": "63ac0b67250212071bad9c2a332401d2d49d4536331588e0546e3eeabe4fc576",
       "lines": 234,
@@ -5375,15 +5421,15 @@
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.test.tsx",
-      "sha256": "37b81c2f688d5baceed43d26f352d64a96790a361c1a85e9c6249db81130f206",
-      "lines": 188,
+      "sha256": "704c303d55e6c90482b3109e57c60b5d073f6bdd57fb8ddca9d01f93464014fc",
+      "lines": 190,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/ProviderConnectionPanel.tsx",
-      "sha256": "29a15a33ebf05cc2a4d0cfb68f443cfaf5ff383a80f07d7e26f7ab278ba9cb7a",
-      "lines": 141,
+      "sha256": "456e50799d276acaf7d41bf8130833c01bd793dfc95e4dd0a707d7c6ef05d570",
+      "lines": 148,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/ProviderConnectionPanel.test.tsx"
@@ -5774,6 +5820,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexTextStreamTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CompanyExecutableTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProcessDiagnosticsTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
@@ -5824,6 +5871,7 @@
         "frontend/src/GenerationComparison.test.tsx",
         "frontend/src/GenerationJobsPanel.test.tsx",
         "frontend/src/GenerationPanel.test.tsx",
+        "frontend/src/InstalledCliChoices.test.tsx",
         "frontend/src/InvestigationPanel.test.tsx",
         "frontend/src/KnowledgeMarkdown.test.tsx",
         "frontend/src/KnowledgeOrganization.test.tsx",
@@ -5923,6 +5971,7 @@
         "frontend/src/GenerationComparison.test.tsx",
         "frontend/src/GenerationJobsPanel.test.tsx",
         "frontend/src/GenerationPanel.test.tsx",
+        "frontend/src/InstalledCliChoices.test.tsx",
         "frontend/src/InvestigationPanel.test.tsx",
         "frontend/src/KnowledgeOrganization.test.tsx",
         "frontend/src/KnowledgePanel.test.tsx",
@@ -6757,6 +6806,7 @@
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexProfileTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CodexTextStreamTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/CompanyExecutableTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProcessDiagnosticsTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderLoginAdapterTest.java",
@@ -6926,7 +6976,7 @@
     },
     {
       "path": "scripts/expert-live-context-diagnostic-fixtures.mjs",
-      "sha256": "73f98ab5b42650e1ed55ebcf007df2ec583f7f2a285b91e616dcf8c3804d9a60",
+      "sha256": "ce6d697210d70074ea7c9d7d3b64263aa35184c113b337d10f9403f0f65a6a8d",
       "lines": 48,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -7256,8 +7306,8 @@
     },
     {
       "path": "scripts/fresh-install-smoke.mjs",
-      "sha256": "a94ab4c13639f5c53eef5c0b7974e0ce576dc7b07cd00e4b2a9392f5988aac61",
-      "lines": 101,
+      "sha256": "7cba69933924f6d79b8e25a5485962d8f23816c4a13d0bb141837dad4534f8ca",
+      "lines": 126,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -7446,6 +7496,7 @@
         "backend/src/test/java/dev/dougle/investigation/adapter/OperationalResultTextTest.java",
         "backend/src/test/java/dev/dougle/investigation/application/InvestigationPlanIntegrationTest.java",
         "backend/src/test/java/dev/dougle/investigation/domain/ConstrainedToolExecutorTest.java",
+        "backend/src/test/java/dev/dougle/knowledge/adapter/InstalledCliDiscoveryTest.java",
         "backend/src/test/java/dev/dougle/knowledge/adapter/ProviderConnectionAdapterTest.java",
         "backend/src/test/java/dev/dougle/library/adapter/persistence/MigrationTest.java",
         "backend/src/test/java/dev/dougle/plugins/adapter/BrowserPluginConnectionsTest.java",

@@ -15,7 +15,8 @@ it.each(['CODEX', 'CLAUDE'] as const)('offers trusted company executable configu
     : { provider, state: 'TOOL_UNAVAILABLE', checkedAt: '', remoteConnection: 'NOT_CHECKED' })
   render(<ProviderConnectionPanel onClose={vi.fn()} />)
   await userEvent.click(screen.getByRole('button', { name: '연결' }))
-  expect(await screen.findByText(/회사.*실행 도구를 사용한다면/)).toBeVisible()
+  expect(await screen.findByText(/AI 실행 도구를 찾지 못했습니다/)).toBeVisible()
+  await userEvent.click(screen.getByText('고급 설정'))
   await userEvent.click(screen.getByRole('button', { name: '회사용 AI 실행 설정' }))
   expect(await screen.findByLabelText('Codex 실행 명령 또는 경로')).toBeVisible()
   expect(screen.getByLabelText('Claude 실행 명령 또는 경로')).toBeVisible()
@@ -151,6 +152,7 @@ it('선택 변경 시 늦게 도착한 이전 제공자 결과를 무시한다',
 
 it('도구 없음과 로그인 필요를 구별하며 별도 동의 전에 로그인하지 않는다', async () => {
   api.mockResolvedValueOnce({ provider: 'CODEX', state: 'TOOL_UNAVAILABLE', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
+    .mockResolvedValueOnce([])
     .mockResolvedValueOnce({ provider: 'CODEX', state: 'LOGIN_REQUIRED', checkedAt: 'time', remoteConnection: 'NOT_CHECKED' })
   render(<ProviderConnectionPanel onClose={vi.fn()} />)
   await userEvent.click(screen.getByRole('button', { name: '연결' }))
