@@ -1,5 +1,7 @@
 # Dougle 0.1.33 — AI 도구 자동 탐색
 
+2026-10-28 22:29 KST [공개 완료](https://github.com/thisisnew/dougle/releases/tag/v0.1.33-preview.1). 공개 자산 3개 모두 GitHub의 크기·SHA-256 digest가 로컬 검증본과 일치하며 ARM 다운로드 HTTP 200을 확인했다. 로컬 Intel 앱도 이전 앱·정지된 데이터 백업 후 0.1.33으로 교체했다.
+
 ## 변경
 
 Claude/Codex 실행 파일·회사별 명령·Node 버전 관리자 설치·단순 별칭/인자 전달 함수를 코드로 탐색한다. 사용자는 기본 연결 또는 발견한 도구 이름 선택을 사용하며 직접 경로 입력은 고급 설정이다. npm 심볼릭 링크 대상에 맞는 Node 실행 경로도 추가한다.

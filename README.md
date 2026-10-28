@@ -9,9 +9,9 @@ Dougle은 파일·폴더를 모아 두고, 궁금한 내용을 AI에게 질문�
 
 ## 설치하기
 
-최신 설치본은 **0.1.32 Preview**입니다. 파일·로컬 폴더 중심 MVP, 회사별 AI 실행 명령 설정, Dougle 이름·데이터 이전을 포함합니다. [설치 안내와 검증 범위](docs/macos-install.md).
+최신 설치본은 **0.1.33 Preview**입니다. 파일·로컬 폴더 중심 MVP와 회사용 AI 실행 도구 자동 탐색·선택을 포함합니다. 직접 경로 입력은 고급 설정으로 이동했습니다. [설치 안내와 검증 범위](docs/macos-install.md).
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.32-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.33-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
