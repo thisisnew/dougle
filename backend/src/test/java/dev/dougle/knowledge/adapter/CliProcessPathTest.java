@@ -35,4 +35,27 @@ class CliProcessPathTest {
         CliProcessPath.includeCommandDirectory(builder);
         assertThat(builder.environment().get("PATH")).isEqualTo("/usr/bin:/bin");
     }
+
+    @Test
+    void symlinkedNpmToolFindsItsOwnNodeWithFinderPath() throws Exception {
+        var version = fixture.resolve(".nvm/versions/node/v22");
+        var bin = java.nio.file.Files.createDirectories(version.resolve("bin"));
+        var node = bin.resolve("node");
+        java.nio.file.Files.writeString(node, "#!/bin/sh\nprintf 'synthetic-node-ok\\n'\n");
+        assertThat(node.toFile().setExecutable(true, true)).isTrue();
+        var packageDirectory = java.nio.file.Files.createDirectories(version.resolve("lib/node_modules/vendor/cli"));
+        var script = packageDirectory.resolve("cli.js");
+        java.nio.file.Files.writeString(script, "#!/usr/bin/env node\n");
+        assertThat(script.toFile().setExecutable(true, true)).isTrue();
+        var launcher = java.nio.file.Files.createDirectories(fixture.resolve(".local/bin")).resolve("claude-work");
+        java.nio.file.Files.createSymbolicLink(launcher, script);
+        var builder = new ProcessBuilder(launcher.toString(), "--version");
+        builder.environment().put("PATH", "/usr/bin:/bin");
+        CliProcessPath.includeCommandDirectory(builder);
+        var process = builder.start();
+        assertThat(process.waitFor(5, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
+        assertThat(process.exitValue()).isZero();
+        assertThat(new String(process.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)).isEqualTo("synthetic-node-ok\n");
+        assertThat(builder.environment().get("PATH")).contains(bin.toString());
+    }
 }
