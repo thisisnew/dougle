@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 706,
-  "testOrFixtureFiles": 276,
+  "totalFiles": 708,
+  "testOrFixtureFiles": 277,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -7303,6 +7303,22 @@
       "lexicalTestReferences": []
     },
     {
+      "path": "scripts/expert-live-budget.mjs",
+      "sha256": "36f060181bc02b2b3c4f5ccae311f6757e9756d2189d9585c6b0611804783192",
+      "lines": 54,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "scripts/expert-live-budget.test.mjs"
+      ]
+    },
+    {
+      "path": "scripts/expert-live-budget.test.mjs",
+      "sha256": "2e23e7c6a0c0dfe8dfcdeba7281150bdbf7cc29a88f5bc82882e87e4ef264127",
+      "lines": 63,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
       "path": "scripts/expert-live-context-diagnostic-fixtures.mjs",
       "sha256": "ce6d697210d70074ea7c9d7d3b64263aa35184c113b337d10f9403f0f65a6a8d",
       "lines": 48,
@@ -7353,8 +7369,8 @@
     },
     {
       "path": "scripts/expert-live-eval.mjs",
-      "sha256": "e661cb2a2a69a14b23c1310279fa4e1cc9450c8163aaa711041a1b86ebe19509",
-      "lines": 539,
+      "sha256": "24fbd57ca74ce5b63f7b98127d936ddaed9bd79d62052004ac02564b3f64bc0a",
+      "lines": 550,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-live-schedule.test.mjs",

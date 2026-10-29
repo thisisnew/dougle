@@ -6,9 +6,10 @@ import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { resolve } from 'node:path'
+import { resolve, isAbsolute } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { executionDiagnostic } from './expert-live-diagnostics.mjs'
+import { reservePersistentCall } from './expert-live-budget.mjs'
 import { requireSuccessfulAnswer, restartAndValidate, assertThreadExtends, manualCriteriaFor } from './expert-live-history.mjs'
 import { holdAtRestart } from './expert-live-ui-hold.mjs'
 import { proposalCases, proposalFields } from './expert-live-proposal-fixtures.mjs'
@@ -53,6 +54,10 @@ if (memoryOnly) {
   assert.equal(maximumDispatches, 64, 'Memory variant requires an explicit 64-dispatch cap')
   assert.equal(process.env.FORGE_EXPERT_MEMORY_VARIANT_APPROVED, String(variantStart), 'Separate finite variant authorization required')
   validatePinnedRuntimeConfiguration(process.env)
+  assert(isAbsolute(process.env.FORGE_EXPERT_BUDGET_JOURNAL || ''), 'Explicit persistent budget journal required')
+  assert.match(process.env.FORGE_EXPERT_BUDGET_APPROVAL_ID || '', /^[A-Za-z0-9_-]{1,120}$/)
+  assert(Number.isSafeInteger(Number(process.env.FORGE_EXPERT_BUDGET_LIMIT))
+    && Number(process.env.FORGE_EXPERT_BUDGET_LIMIT) > 0, 'Explicit approved persistent limit required')
   assert.match(process.env.FORGE_EXPERT_READONLY_ARTIFACT_SHA256 || '', /^[a-f0-9]{64}$/)
   assert.equal(process.env.FORGE_EXPERT_READONLY_ARTIFACT_SHA256, process.env.FORGE_EXPERT_JAR_SHA256)
   assert.notEqual(process.env.FORGE_EXPERT_JAR_SHA256, '675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489')
@@ -123,6 +128,12 @@ async function dispatch(kind, requestId, context) {
   assert.equal(verified.directory, report.searchModels.directory, 'Model directory changed')
   report.lastModelVerificationAt = verified.verifiedAt
   variantBudget?.reserve(kind, requestId)
+  if (memoryOnly) {
+    const grant = { approvalId: process.env.FORGE_EXPERT_BUDGET_APPROVAL_ID,
+      jarSha256: process.env.FORGE_EXPERT_JAR_SHA256, limit: Number(process.env.FORGE_EXPERT_BUDGET_LIMIT) }
+    const sequence = await reservePersistentCall(process.env.FORGE_EXPERT_BUDGET_JOURNAL, grant, { kind, requestId })
+    report.persistentBudget = { ...grant, reservedThrough: sequence }
+  }
   report.dispatched++
   report[kind + 'Dispatches']++
   report.dispatches.push({ kind, requestId, at: new Date().toISOString(), ...context })
