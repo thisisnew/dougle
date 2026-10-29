@@ -33,6 +33,25 @@ class ExtractiveContextTest {
         assertThat(ContextPrompt.serializedCharacters(context(selection, questions.getLast().bundleId()))).isLessThanOrEqualTo(8000);
     }
 
+    @Test void omittedTargetCannotBeReconstructedFromEitherRenderedPrompt() {
+        var questions = new ArrayList<UserQuestion>();
+        questions.add(question(0, "가상 설명 대상으로 CEDAR-8472를 선택했어. 실제 조회 없이 정책 용어만 설명해줘."));
+        for (int index = 1; index <= 32; index++) questions.add(question(index,
+                index + "번째 용어 질문: 라벨 검토와 승인 검토의 정의를 설명해줘. 실제 시스템 조회는 하지 마."));
+        var recent = questions.subList(28, 33).stream().map(value ->
+                new ChatTurn(value.bundleId(), value.bundleDigest(), value.question(), null)).toList();
+        var selection = ContextPrompt.select(questions, recent, List.of("앞서 선택한 대상"), false);
+        var context = new ChatContext("thread", questions.getLast().bundleId(), "request", "앞서 선택한 대상",
+                selection.history(), selection.extractive());
+        assertThat(selection.extractive().omittedQuestions()).isPositive();
+        assertThat(selection.extractive().totalQuestions()).isEqualTo(33);
+        assertThat(ContextPrompt.serializedCharacters(context)).isLessThanOrEqualTo(8000);
+        String answerPrompt = ContextPrompt.prefix(context) + "앞서 선택한 가상 대상 이름은?";
+        assertThat(answerPrompt).doesNotContain("CEDAR-8472").contains("Do not claim complete memory", "omittedQuestions");
+        assertThat(ContextPrompt.planPrompt(answerPrompt)).doesNotContain("CEDAR-8472");
+        assertThat(questions.getFirst().question()).contains("CEDAR-8472");
+    }
+
     @Test void escapedUtf16JsonBudgetKeepsWholeQuestionsAndDisclosesDroppedAnswers() {
         var questions = new ArrayList<UserQuestion>();
         for (int index = 0; index < 32; index++) questions.add(question(index, "\u0001".repeat(220) + "😀".repeat(10) + index));

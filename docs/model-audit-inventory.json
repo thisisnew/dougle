@@ -6,8 +6,8 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 708,
-  "testOrFixtureFiles": 277,
+  "totalFiles": 710,
+  "testOrFixtureFiles": 278,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
     {
@@ -3464,8 +3464,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/ChatThreadIntegrationTest.java",
-      "sha256": "700907b9c936f9cadbd29351c8729101335201c508c3db0d1f471959c4247747",
-      "lines": 620,
+      "sha256": "91e3ba1da7fc409fb10786f1617911cb33cb54f4a989ad2fd40b9ae069488919",
+      "lines": 646,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -3557,8 +3557,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/ExtractiveContextTest.java",
-      "sha256": "826c4677fb63219c68c3c2e75d71bc64b0eeb338c4979feecfc450b7b5638e9f",
-      "lines": 99,
+      "sha256": "ec98cf6ac1d5a1bacfb9d4bd7ec1ed0bdc0e7f02f67940ca63748196a751ae33",
+      "lines": 118,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -7369,8 +7369,8 @@
     },
     {
       "path": "scripts/expert-live-eval.mjs",
-      "sha256": "24fbd57ca74ce5b63f7b98127d936ddaed9bd79d62052004ac02564b3f64bc0a",
-      "lines": 550,
+      "sha256": "3a7d9e1b39928e5acb17b96732d96b5d1e8f1de3cadabaaeac1a8b862e7a4b36",
+      "lines": 576,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-live-schedule.test.mjs",
@@ -7441,6 +7441,22 @@
       "path": "scripts/expert-live-local-fixtures.test.mjs",
       "sha256": "7d19702fe328a9d541f158bfcb069917c631dbd535bb16dbe0df3c5a65d14c18",
       "lines": 28,
+      "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/expert-live-loss-fixtures.mjs",
+      "sha256": "a1cf023da9620c47554ffc8bba230acd1d94cd9748f5063f0009f7ab4b5e6709",
+      "lines": 38,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "scripts/expert-live-loss-fixtures.test.mjs"
+      ]
+    },
+    {
+      "path": "scripts/expert-live-loss-fixtures.test.mjs",
+      "sha256": "5d932036e5fc0c23d0fd2a67d3810da1b962d91038657b3877fd6e55dbf640d8",
+      "lines": 39,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },

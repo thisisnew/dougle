@@ -10,6 +10,7 @@ import { resolve, isAbsolute } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { executionDiagnostic } from './expert-live-diagnostics.mjs'
 import { reservePersistentCall } from './expert-live-budget.mjs'
+import { seedQuestions as lossSeedQuestions, validateLostContext, validateLostPrompt } from './expert-live-loss-fixtures.mjs'
 import { requireSuccessfulAnswer, restartAndValidate, assertThreadExtends, manualCriteriaFor } from './expert-live-history.mjs'
 import { holdAtRestart } from './expert-live-ui-hold.mjs'
 import { proposalCases, proposalFields } from './expert-live-proposal-fixtures.mjs'
@@ -21,14 +22,15 @@ import { contextApiAllowed, knownArtifacts, validateContextConfiguration, valida
 import { readSeedReport, seededAnswerSql, validateDiagnosticConfiguration, verifySeededContext } from './expert-live-context-diagnostic-fixtures.mjs'
 const proposalOnly = process.env.FORGE_EXPERT_MODE === 'proposal'
 const contextDiagnostic = process.env.FORGE_EXPERT_MODE === 'context-diagnostic'
-const contextOnly = contextDiagnostic || process.env.FORGE_EXPERT_MODE === 'context'
+const contextLoss = process.env.FORGE_EXPERT_MODE === 'context-loss'
+const contextOnly = contextLoss || contextDiagnostic || process.env.FORGE_EXPERT_MODE === 'context'
 const memoryOnly = process.env.FORGE_EXPERT_MODE === 'memory'
 const isolatedRuntime = contextOnly || memoryOnly
 const localOnly = contextOnly || memoryOnly || process.env.FORGE_EXPERT_MODE === 'local'
 assert.ok(process.argv.slice(2).every(argument => argument === '--hold-at-restart'), 'Unknown evaluation option')
 const holdForUi = process.argv.includes('--hold-at-restart')
 const investigation = localOnly || process.env.FORGE_EXPERT_MODE === 'investigation'
-const fixtureFile = contextDiagnostic ? 'expert-live-context-diagnostic-fixtures.mjs' : contextOnly ? 'expert-live-context-fixtures.mjs' : memoryOnly ? 'expert-live-memory-fixtures.mjs' : localOnly ? 'expert-live-local-fixtures.mjs'
+const fixtureFile = contextLoss ? 'expert-live-loss-fixtures.mjs' : contextDiagnostic ? 'expert-live-context-diagnostic-fixtures.mjs' : contextOnly ? 'expert-live-context-fixtures.mjs' : memoryOnly ? 'expert-live-memory-fixtures.mjs' : localOnly ? 'expert-live-local-fixtures.mjs'
   : investigation ? 'expert-live-investigation-fixtures.mjs' : 'expert-live-fixtures.mjs'
 const fixtures = await import('./' + fixtureFile)
 const { documents } = fixtures
@@ -45,7 +47,14 @@ assert.ok(Number.isSafeInteger(variantStart) && variantStart >= 0, 'Invalid star
 assert.ok(Number.isSafeInteger(variants) && variants > 0 && scenarios.every(scenario => scenario.questions.length >= variantStart + variants), 'Invalid variant count')
 assert.ok((proposalOnly ? proposalCases.length : scheduledDispatches(scenarios, variantStart, variants, investigation ? 2 : 1)) <= maximumDispatches, 'Select scenarios fitting the bounded batch')
 if (contextOnly) {
-  if (contextDiagnostic) validateDiagnosticConfiguration(process.env, maximumDispatches, variants, variantStart)
+  if (contextLoss) {
+    assert.equal(maximumDispatches, 2)
+    validateContextConfiguration(process.env, 8, variants, variantStart)
+    assert(isAbsolute(process.env.FORGE_EXPERT_BUDGET_JOURNAL || ''), 'Explicit persistent budget journal required')
+    assert.match(process.env.FORGE_EXPERT_BUDGET_APPROVAL_ID || '', /^[A-Za-z0-9_-]{1,120}$/)
+    assert(Number.isSafeInteger(Number(process.env.FORGE_EXPERT_BUDGET_LIMIT))
+      && Number(process.env.FORGE_EXPERT_BUDGET_LIMIT) > 0, 'Explicit approved persistent limit required')
+  } else if (contextDiagnostic) validateDiagnosticConfiguration(process.env, maximumDispatches, variants, variantStart)
   else validateContextConfiguration(process.env, maximumDispatches, variants, variantStart)
   assert.equal(holdForUi, false)
 }
@@ -104,6 +113,7 @@ if (contextOnly) {
   report.contextBundles = []; report.fullE04Pass = false; report.fullE05Pass = false
 }
 let seededTurns
+if (contextLoss) report.fixtureVersion = 'synthetic-seeded-loss-awareness-v1'
 if (contextDiagnostic) {
   report.fixtureVersion = 'synthetic-seeded-b1-implicit-diagnostic-v1'
   report.seededHistoryLimitation = 'Exact prior questions/answers seeded into fresh local bundles and terminal jobs; new IDs/digests; not uninterrupted third turn or identical full serialized prompt.'
@@ -128,7 +138,7 @@ async function dispatch(kind, requestId, context) {
   assert.equal(verified.directory, report.searchModels.directory, 'Model directory changed')
   report.lastModelVerificationAt = verified.verifiedAt
   variantBudget?.reserve(kind, requestId)
-  if (memoryOnly) {
+  if (memoryOnly || contextLoss) {
     const grant = { approvalId: process.env.FORGE_EXPERT_BUDGET_APPROVAL_ID,
       jarSha256: process.env.FORGE_EXPERT_JAR_SHA256, limit: Number(process.env.FORGE_EXPERT_BUDGET_LIMIT) }
     const sequence = await reservePersistentCall(process.env.FORGE_EXPERT_BUDGET_JOURNAL, grant, { kind, requestId })
@@ -330,6 +340,19 @@ try {
       let expectedBundles = 0
       let restartedSnapshot = null
       const priorMemoryTurns = []
+      if (contextLoss) {
+        report.lossSeedBundles = []
+        for (const question of lossSeedQuestions) {
+          const seeded = await api(prefix + '/chat-threads', 'POST', { requestId: randomUUID(), threadId, parentBundleId, question })
+          threadId = seeded.payload.chatContext.threadId
+          parentBundleId = seeded.id
+          expectedBundles++
+          report.lossSeedBundles.push({ id: seeded.id, digest: seeded.digest, question })
+        }
+        assert.equal(report.dispatched, 0)
+        assert.deepEqual(await api(prefix + '/answer-jobs'), [])
+        await save()
+      }
       if (contextDiagnostic) {
         for (const seeded of seededTurns) {
           const bundle = await api(prefix + '/chat-threads', 'POST', { requestId: randomUUID(), threadId, parentBundleId, question: seeded.question })
@@ -377,6 +400,7 @@ try {
         const question = scenario.questions[variant][turn]
         let bundle = await api(`${prefix}/chat-threads`, 'POST', { requestId: randomUUID(), threadId, parentBundleId, question })
         if (contextDiagnostic) verifySeededContext(bundle, seededTurns)
+        if (contextLoss) report.lossContext = validateLostContext(bundle)
         if (contextOnly) { report.contextBundles.push({ turn, bundle }); await save() }
         if (memoryOnly) {
           report.memoryChecks.push({ variant, turn, bundle, validation: 'PENDING' })
@@ -405,6 +429,7 @@ try {
         if (investigation) {
           const plans = `${prefix}/investigation-plans`
           const preview = await api(plans + '/preview', 'POST', { bundleId: bundle.id, provider: 'CODEX' })
+          if (contextLoss) validateLostPrompt(preview.prompt)
           assert.equal(preview.maxCalls, 1)
           assert.equal(preview.maxToolCalls, 1)
           if (memoryOnly) {
@@ -452,6 +477,7 @@ try {
         if (bundle.payload.items.length) {
           const path = `${prefix}/evidence-bundles/${bundle.id}`
           const preview = await api(path + '/answer-preview', 'POST', { provider: 'CODEX' })
+          if (contextLoss) validateLostPrompt(preview.prompt)
           if (memoryOnly) {
             report.memoryChecks.at(-1).answerPromptContext = validateMemoryPrompt(preview.prompt, bundle.payload.chatContext, scenario.maximumContextCharacters)
             report.memoryChecks.at(-1).answerPromptSha256 = createHash('sha256').update(preview.prompt).digest('hex')

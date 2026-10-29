@@ -82,6 +82,32 @@ class ChatThreadIntegrationTest {
     }
 
     @Test
+    void lossAwarenessProbeRetainsPolicyEvidenceWithoutLeakingOmittedTarget() {
+        library.upload(workspace, null, "synthetic-loss-policy.md",
+                "가상 정책에서 라벨 검토는 표기 확인, 승인 검토는 승인 조건 설명, 만료 검토는 유효 기간 정의 설명이다. 현재 대화에서 선택한 대상은 이 자료에 기록되어 있지 않다. 실제 시스템이나 레코드는 없다.".getBytes(StandardCharsets.UTF_8));
+        search.refresh();
+        var first = threads.create(workspace, new Create("loss-first", null, null,
+                "가상 설명 대상으로 CEDAR-8472를 선택했어. 실제 조회 없이 정책 용어만 설명해줘.", List.of()));
+        String thread = first.payload().chatContext().threadId();
+        var current = first;
+        for (int index = 1; index <= 32; index++) current = threads.create(workspace,
+                new Create("loss-" + index, thread, current.id(), index + "번째 용어 질문: 라벨 검토와 승인 검토의 정의를 설명해줘. 실제 시스템 조회는 하지 마.", List.of()));
+        var probe = threads.create(workspace, new Create("loss-probe", thread, current.id(),
+                "가상 정책의 라벨 검토에 관해 앞서 내가 선택했던 설명 대상의 이름은 뭐였지? 실제 시스템 조회는 하지 마.", List.of()));
+        var context = probe.payload().chatContext();
+        assertThat(context.extractive().totalQuestions()).isEqualTo(33);
+        assertThat(context.extractive().omittedQuestions()).isPositive();
+        assertThat(context.history()).allSatisfy(turn -> assertThat(turn.answer()).isNull());
+        assertThat(probe.payload().status()).isEqualTo("READY");
+        assertThat(probe.payload().items()).extracting(item -> item.title()).contains("synthetic-loss-policy.md");
+        String prompt = previews.prepare(workspace, probe.id(), "CODEX", null).prompt();
+        assertThat(prompt).doesNotContain("CEDAR-8472").contains("PREVIOUS_CONVERSATION_JSON", "omittedQuestions");
+        assertThat(dev.dougle.search.application.ContextPrompt.planPrompt(prompt)).doesNotContain("CEDAR-8472");
+        assertThat(threads.get(workspace, thread).bundles()).hasSize(34).contains(first);
+        assertThat(jobs.list(workspace)).isEmpty();
+    }
+
+    @Test
     void explicitNewTopicDoesNotReusePreviousRetrievalQuery() {
         var first = threads.create(workspace, new Create("first", null, null, "Strategy", List.of()));
         var next = threads.create(workspace, new Create("next", first.payload().chatContext().threadId(), first.id(), "NightState", List.of()));
