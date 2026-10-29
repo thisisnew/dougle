@@ -346,7 +346,11 @@
           "skipped": 0,
           "scope": "component/integration evidence, not full expert acceptance"
         }
-      ]
+      ],
+      "followupIntegrationEvidence": {
+        "report": "atlassian-stage-recovery-0.1.38.json",
+        "scope": "20 synthetic HTTP failure/retry scenarios; actual company SSO remains unverified."
+      }
     },
     {
       "id": "E29",

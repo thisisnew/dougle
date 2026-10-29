@@ -31,6 +31,8 @@ class AtlassianLocalHttpTest {
     PluginVault vault;
     volatile String fault = "";
     volatile String product = "both";
+    volatile String failedEndpoint;
+    volatile int endpointStatus;
     volatile boolean omitScope;
     volatile List<Map<String, String>> siteOverrides;
 
@@ -39,6 +41,14 @@ class AtlassianLocalHttpTest {
         server.createContext("/", exchange -> {
             String path = exchange.getRequestURI().getPath();
             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+            if (path.equals(failedEndpoint)) {
+                byte[] failure = "<html>synthetic-secret-must-not-leak</html>".getBytes(StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type", "text/html");
+                exchange.sendResponseHeaders(endpointStatus, failure.length);
+                exchange.getResponseBody().write(failure);
+                exchange.close();
+                return;
+            }
             Object response;
             int status = 200;
             if (path.contains("well-known")) {
@@ -309,6 +319,63 @@ class AtlassianLocalHttpTest {
         expire(); fault = "scope";
         assertThatThrownBy(() -> connections.accessToken(provider)).hasMessageContaining("읽기 승인");
         assertThat(connections.connected(provider)).isFalse();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"metadata:401", "metadata:403", "metadata:429", "metadata:503", "metadata:200",
+            "registration:401", "registration:403", "registration:429", "registration:503", "registration:200",
+            "token:401", "token:403", "token:429", "token:503", "token:200",
+            "mcp:401", "mcp:403", "mcp:429", "mcp:503", "mcp:200"})
+    void companyGatewayFailuresIdentifyStageAndPreserveExistingGrant(String scenario) throws Exception {
+        String[] parts = scenario.split(":");
+        String stage = switch (parts[0]) {
+            case "metadata" -> "서비스 인증 설정 확인";
+            case "registration" -> "앱 자동 연결 등록";
+            case "token" -> "인증 승인 확인";
+            default -> "자료 서비스 연결";
+        };
+        failedEndpoint = switch (parts[0]) {
+            case "metadata" -> "/.well-known/oauth-authorization-server";
+            case "registration" -> "/v1/register";
+            case "token" -> "/v1/token";
+            default -> URI.create(provider.origin + provider.path).getPath();
+        };
+        endpointStatus = Integer.parseInt(parts[1]);
+        expire();
+        String previousGrant = vault.get("browser-ATLASSIAN");
+        var progress = begin();
+        if (Set.of("token", "mcp").contains(parts[0])) {
+            assertThat(progress.state()).isEqualTo("WAITING");
+            var params = BrowserPluginConnections.query(authorization.get().getRawQuery());
+            var reply = callback(params.get("state"));
+            assertThat(reply.statusCode()).isEqualTo(400);
+            assertThat(reply.body()).contains(stage).doesNotContain("synthetic-secret-must-not-leak", "synthetic-access");
+        } else {
+            assertThat(authorization.get()).isNull();
+        }
+        for (int retry = 0; retry < 150 && !connections.progress(provider, progress.id()).state().equals("FAILED"); retry++) Thread.sleep(20);
+        var failed = connections.progress(provider, progress.id());
+        assertThat(failed.state()).isEqualTo("FAILED");
+        String reason = switch (endpointStatus) {
+            case 401 -> "다시 연결";
+            case 403 -> "회사 관리자";
+            case 429 -> "요청이 많습니다";
+            default -> parts[0].equals("token") || endpointStatus == 200 ? "응답 형식" : "HTTP 503";
+        };
+        assertThat(failed.message()).startsWith(stage + ": ").contains(reason)
+                .doesNotContain("synthetic-secret-must-not-leak", "synthetic-access", "synthetic-old-refresh");
+        assertThat(vault.get("browser-ATLASSIAN")).isEqualTo(previousGrant);
+        assertThat(reads).isEmpty();
+        failedEndpoint = null;
+        authorization.set(null);
+        assertThat(begin().state()).isEqualTo("WAITING");
+        var retryParams = BrowserPluginConnections.query(authorization.get().getRawQuery());
+        assertThat(callback(retryParams.get("state")).statusCode()).isEqualTo(200);
+        assertThat(vault.get("browser-ATLASSIAN")).isNotEqualTo(previousGrant);
+        try (var snapshot = new BrowserPluginReader(connections, http).collect(provider,
+                "https://fixture.atlassian.net/browse/TEST-1")) {
+            assertThat(new String(snapshot.files().getFirst().content(), StandardCharsets.UTF_8)).contains("가상 회사 문서 본문");
+        }
     }
 
     void expire() {

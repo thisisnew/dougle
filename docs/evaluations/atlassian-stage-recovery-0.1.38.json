@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-30",
+  "scope": "Current compiled backend adapters over real loopback HTTP with synthetic OAuth/MCP. Not installed app UI or company SSO.",
+  "testSha256": "8fa18b49f9a9205880180b68c158cdcb52639c41e2d8d5afa4f52a22480261a8",
+  "results": [
+    {
+      "class": "AtlassianLocalHttpTest",
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "pass": 45
+    },
+    {
+      "class": "BrowserPluginConnectionsTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "pass": 12
+    },
+    {
+      "class": "BrowserPluginHttpTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "pass": 6
+    },
+    {
+      "class": "BrowserPluginReaderTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "pass": 5
+    }
+  ],
+  "newScenarios": 20,
+  "matrix": {
+    "stages": [
+      "metadata",
+      "registration",
+      "token",
+      "mcp"
+    ],
+    "responses": [
+      401,
+      403,
+      429,
+      503,
+      200
+    ],
+    "body": "Synthetic HTML, including malformed success and gateway error pages"
+  },
+  "assertions": [
+    "Correct failure stage and actionable category",
+    "Provider body and synthetic credentials absent from progress/callback messages",
+    "Previously saved grant byte-for-byte preserved",
+    "No document tool calls on failed attempt",
+    "Retry after fault removal succeeds and reads synthetic Jira issue"
+  ],
+  "initialFixtureFailure": "Five MCP injections did not fire because fixture compared a URI path with path plus query. Corrected fixture to use parsed path; repeated all four classes including retry recovery.",
+  "externalAiCalls": 0,
+  "companyServiceRequests": 0,
+  "productChanges": false
+}

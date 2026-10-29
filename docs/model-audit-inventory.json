@@ -4250,8 +4250,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/plugins/adapter/AtlassianLocalHttpTest.java",
-      "sha256": "bacf10a46ea038d3c9f0eb7501e5f020ba7bf323b4929c59030eb969ec9a1100",
-      "lines": 318,
+      "sha256": "8fa18b49f9a9205880180b68c158cdcb52639c41e2d8d5afa4f52a22480261a8",
+      "lines": 385,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
