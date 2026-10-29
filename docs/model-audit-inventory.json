@@ -6,7 +6,7 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 711,
+  "totalFiles": 712,
   "testOrFixtureFiles": 278,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
@@ -7671,6 +7671,13 @@
       "sha256": "2abba298be7a04709293fd33652285e9ceab137d65f0ad3ab9ce1d248d06cacd",
       "lines": 201,
       "kind": "test-or-fixture",
+      "lexicalTestReferences": []
+    },
+    {
+      "path": "scripts/installed-search-benchmark.mjs",
+      "sha256": "6b4dd36c550b88c4b81f42c9524dc1af92d84a8dbe95a26dbba05ae74d6fcb39",
+      "lines": 119,
+      "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {

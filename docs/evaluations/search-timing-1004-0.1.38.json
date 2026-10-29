@@ -1,0 +1,498 @@
+{
+  "startedAt": "2026-10-29T22:23:15.471Z",
+  "jarSha256": "97c02f213455511766c475eeb5d934cac50614b7b0d864726b6213a76d36dcbc",
+  "harnessSha256": "6b4dd36c550b88c4b81f42c9524dc1af92d84a8dbe95a26dbba05ae74d6fcb39",
+  "fixtureSha256": "a115be3d9159c53e17b2eb14140fa558b3582d9e0310358b00415c7798857c60",
+  "environment": {
+    "arch": "x64",
+    "cpu": "Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz",
+    "logicalCpus": 12
+  },
+  "files": 1004,
+  "bytes": 189685,
+  "externalAiCalls": 0,
+  "samples": [
+    {
+      "round": 0,
+      "id": "strategy-exact",
+      "searchMs": 59.98210400000244,
+      "evidenceMs": 288.3299479999987,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java",
+        "State.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 0.5,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "strategy-korean",
+      "searchMs": 4.625931999995373,
+      "evidenceMs": 182.28100200000335,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "strategy-paraphrase",
+      "searchMs": 6.508224999997765,
+      "evidenceMs": 188.93830900000466,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "strategy-colloquial",
+      "searchMs": 4.259191000004648,
+      "evidenceMs": 182.7685679999995,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "operation-exact",
+      "searchMs": 5.078163999998651,
+      "evidenceMs": 166.70756699999765,
+      "searchHits": 0,
+      "titles": [
+        "가상 업무.md"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "operation-paraphrase",
+      "searchMs": 4.032227999996394,
+      "evidenceMs": 202.64746100000048,
+      "searchHits": 0,
+      "titles": [
+        "가상 업무.md"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "badge-cross-language",
+      "searchMs": 4.547402999996848,
+      "evidenceMs": 185.91817699999956,
+      "searchHits": 0,
+      "titles": [
+        "policy.txt"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "badge-interpretation",
+      "searchMs": 4.387970000003406,
+      "evidenceMs": 219.17174300000624,
+      "searchHits": 0,
+      "titles": [
+        "policy.txt"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 0,
+      "id": "negative-moon",
+      "searchMs": 4.062298999997438,
+      "evidenceMs": 195.40529000000242,
+      "searchHits": 0,
+      "titles": [],
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true
+    },
+    {
+      "round": 0,
+      "id": "negative-pizza",
+      "searchMs": 3.689049000000523,
+      "evidenceMs": 159.31917700000486,
+      "searchHits": 0,
+      "titles": [],
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true
+    },
+    {
+      "round": 1,
+      "id": "strategy-exact",
+      "searchMs": 3.4640179999987595,
+      "evidenceMs": 175.8227149999948,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java",
+        "State.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 0.5,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "strategy-korean",
+      "searchMs": 3.997687999995833,
+      "evidenceMs": 165.60961300000054,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "strategy-paraphrase",
+      "searchMs": 4.142137999995612,
+      "evidenceMs": 175.28554499999882,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "strategy-colloquial",
+      "searchMs": 3.6346019999982673,
+      "evidenceMs": 169.92487300000357,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "operation-exact",
+      "searchMs": 3.6094189999930677,
+      "evidenceMs": 164.58498500000132,
+      "searchHits": 0,
+      "titles": [
+        "가상 업무.md"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "operation-paraphrase",
+      "searchMs": 4.875632999996014,
+      "evidenceMs": 200.54312899999786,
+      "searchHits": 0,
+      "titles": [
+        "가상 업무.md"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "badge-cross-language",
+      "searchMs": 4.426420000003418,
+      "evidenceMs": 180.15551200000482,
+      "searchHits": 0,
+      "titles": [
+        "policy.txt"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "badge-interpretation",
+      "searchMs": 4.03181599999516,
+      "evidenceMs": 208.2812430000049,
+      "searchHits": 0,
+      "titles": [
+        "policy.txt"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 1,
+      "id": "negative-moon",
+      "searchMs": 3.736587999999756,
+      "evidenceMs": 221.60230600000068,
+      "searchHits": 0,
+      "titles": [],
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true
+    },
+    {
+      "round": 1,
+      "id": "negative-pizza",
+      "searchMs": 4.170478000000003,
+      "evidenceMs": 194.03673300000082,
+      "searchHits": 0,
+      "titles": [],
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true
+    },
+    {
+      "round": 2,
+      "id": "strategy-exact",
+      "searchMs": 4.075242999999318,
+      "evidenceMs": 188.39305199999944,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java",
+        "State.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 0.5,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "strategy-korean",
+      "searchMs": 4.126304000004893,
+      "evidenceMs": 156.62578599999688,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "strategy-paraphrase",
+      "searchMs": 3.5717490000024554,
+      "evidenceMs": 167.3572189999977,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "strategy-colloquial",
+      "searchMs": 3.3362290000004577,
+      "evidenceMs": 163.75660299999436,
+      "searchHits": 0,
+      "titles": [
+        "Strategy.java"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "operation-exact",
+      "searchMs": 3.2524990000019898,
+      "evidenceMs": 158.4349860000002,
+      "searchHits": 0,
+      "titles": [
+        "가상 업무.md"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "operation-paraphrase",
+      "searchMs": 3.1063890000004903,
+      "evidenceMs": 204.91997300000367,
+      "searchHits": 0,
+      "titles": [
+        "가상 업무.md"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "badge-cross-language",
+      "searchMs": 3.4921359999934793,
+      "evidenceMs": 172.88281200000347,
+      "searchHits": 0,
+      "titles": [
+        "policy.txt"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "badge-interpretation",
+      "searchMs": 3.2931340000068303,
+      "evidenceMs": 205.5704459999979,
+      "searchHits": 0,
+      "titles": [
+        "policy.txt"
+      ],
+      "hitAt1": true,
+      "hitAt5": true,
+      "precisionReturned": 1,
+      "evidencePresent": true,
+      "negativeAbstention": null
+    },
+    {
+      "round": 2,
+      "id": "negative-moon",
+      "searchMs": 6.679684000002453,
+      "evidenceMs": 184.51506900000095,
+      "searchHits": 0,
+      "titles": [],
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true
+    },
+    {
+      "round": 2,
+      "id": "negative-pizza",
+      "searchMs": 3.3315939999956754,
+      "evidenceMs": 175.61105800000223,
+      "searchHits": 0,
+      "titles": [],
+      "hitAt1": null,
+      "hitAt5": null,
+      "precisionReturned": null,
+      "evidencePresent": null,
+      "negativeAbstention": true
+    }
+  ],
+  "limitations": [
+    "Synthetic small corpus, not company repository scale.",
+    "First pass includes application warmup; OS disk caches are not cleared.",
+    "HTTP search and evidence construction are measured separately; no AI generation or human investigation comparison.",
+    "Relevance labels are inherited fixture-file labels, not independent passage judgments."
+  ],
+  "syncMs": 34480.300843000005,
+  "originalsUnchanged": true,
+  "summary": {
+    "firstPass": {
+      "searchMs": {
+        "count": 10,
+        "median": 4.387970000003406,
+        "p95": 59.98210400000244,
+        "max": 59.98210400000244
+      },
+      "evidenceMs": {
+        "count": 10,
+        "median": 185.91817699999956,
+        "p95": 288.3299479999987,
+        "max": 288.3299479999987
+      }
+    },
+    "repeat": {
+      "searchMs": {
+        "count": 20,
+        "median": 3.6346019999982673,
+        "p95": 4.875632999996014,
+        "max": 6.679684000002453
+      },
+      "evidenceMs": {
+        "count": 20,
+        "median": 175.61105800000223,
+        "p95": 208.2812430000049,
+        "max": 221.60230600000068
+      }
+    }
+  },
+  "retrievalFailures": [],
+  "cleanup": true,
+  "finishedAt": "2026-10-29T22:24:10.962Z"
+}

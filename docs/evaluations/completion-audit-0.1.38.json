@@ -29,7 +29,14 @@
           "skipped": 0,
           "scope": "component/integration evidence, not full expert acceptance"
         }
-      ]
+      ],
+      "searchTimingEvidence": {
+        "reports": [
+          "search-timing-104-0.1.38.json",
+          "search-timing-1004-0.1.38.json"
+        ],
+        "scope": "Installed Intel JAR; 10 synthetic retrieval questions x 3 repetitions per corpus. Expected file/quote and negative abstention checks pass, but Strategy exact also returns irrelevant State.java. No AI answers, long-thread or human time comparison. First run predates configurable distractor-count harness change; each report records its own executed harness hash."
+      }
     },
     {
       "id": "E02",
@@ -590,7 +597,14 @@
       "historicalRevision": null,
       "assessment": "NOT_PROVEN_FOR_CURRENT_RELEASE",
       "reason": "Current release lacks complete case-specific runtime and semantic evidence; historical PASS is not inherited.",
-      "componentEvidence": []
+      "componentEvidence": [],
+      "searchTimingEvidence": {
+        "reports": [
+          "search-timing-104-0.1.38.json",
+          "search-timing-1004-0.1.38.json"
+        ],
+        "scope": "Installed Intel JAR; 10 synthetic retrieval questions x 3 repetitions per corpus. Expected file/quote and negative abstention checks pass, but Strategy exact also returns irrelevant State.java. No AI answers, long-thread or human time comparison. First run predates configurable distractor-count harness change; each report records its own executed harness hash."
+      }
     },
     {
       "id": "E46",
