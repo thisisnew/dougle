@@ -50,6 +50,19 @@ test('all 32 turns require counted distinct plan/answer POSTs; no replay or POST
   assert.throws(() => post('/chat-threads', {}))
 })
 
+test('memory entrypoint rejects missing pinned resources before approval, runtime or credentials', () => {
+  const environment = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('FORGE_EXPERT_')))
+  const pin = '97c02f213455511766c475eeb5d934cac50614b7b0d864726b6213a76d36dcbc'
+  const result = spawnSync(process.execPath, [fileURLToPath(new URL('./expert-live-eval.mjs', import.meta.url))], {
+    env: { ...environment, FORGE_EXPERT_MODE: 'memory', FORGE_EXPERT_MAX_CALLS: '64', FORGE_EXPERT_VARIANTS: '1',
+      FORGE_EXPERT_MEMORY_VARIANT_APPROVED: '0', FORGE_EXPERT_JAR_SHA256: pin, FORGE_EXPERT_READONLY_ARTIFACT_SHA256: pin,
+      FORGE_EXPERT_LIVE: 'not-approved' }, encoding: 'utf8', timeout: 5000,
+  })
+  assert.equal(result.status, 1)
+  assert.match(result.stderr, /Explicit resource path required: FORGE_EXPERT_RESOURCES/)
+  assert.doesNotMatch(result.stdout, /Isolated backend/)
+})
+
 function contextFixture() {
   const prior = scenario.questions[0].slice(0, 31).map((question, turn) => ({
     bundle: { id: `bundle-${turn}`, digest: `digest-${turn}`, payload: { question } }, answer: '합성 승인 검토 설명',

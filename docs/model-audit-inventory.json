@@ -4580,6 +4580,7 @@
         "scripts/expert-e37-isolation.test.mjs",
         "scripts/expert-e37-runtime.test.mjs",
         "scripts/expert-evaluation.test.mjs",
+        "scripts/expert-live-context-fixtures.test.mjs",
         "scripts/investigation-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/published-update-smoke.mjs",
@@ -6920,6 +6921,7 @@
         "scripts/expert-e37-isolation.test.mjs",
         "scripts/expert-e37-runtime.test.mjs",
         "scripts/expert-evaluation.test.mjs",
+        "scripts/expert-live-context-fixtures.test.mjs",
         "scripts/investigation-smoke.mjs",
         "scripts/macos-architecture-test.sh",
         "scripts/published-update-smoke.mjs",
@@ -7318,8 +7320,8 @@
     },
     {
       "path": "scripts/expert-live-context-fixtures.mjs",
-      "sha256": "f0a062b015ae7c022325015e2efe8a6561272fa4dcb827a8fb440496d5ee7808",
-      "lines": 44,
+      "sha256": "9f8f1f44714c6772c2eda4f9be695a5a83f74c633f9178f45b40454fbd4b5136",
+      "lines": 59,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-live-context-diagnostic-fixtures.test.mjs",
@@ -7328,8 +7330,8 @@
     },
     {
       "path": "scripts/expert-live-context-fixtures.test.mjs",
-      "sha256": "21e1095b0cbd69d997641fa78cb57e3c6d54cc7e6555ac02bff9640847bbf894",
-      "lines": 51,
+      "sha256": "50703e87f67684ecb9e3f571e5b233aabd76e01e084c3e0b1eda7fd7c0bb1c6e",
+      "lines": 105,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -7351,8 +7353,8 @@
     },
     {
       "path": "scripts/expert-live-eval.mjs",
-      "sha256": "2b264f0e2d28cfa7ecdf6a4a730bfadfe52d2bfd182cd729b19f33f928d0be6f",
-      "lines": 534,
+      "sha256": "e661cb2a2a69a14b23c1310279fa4e1cc9450c8163aaa711041a1b86ebe19509",
+      "lines": 539,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-live-schedule.test.mjs",
@@ -7491,8 +7493,8 @@
     },
     {
       "path": "scripts/expert-live-schedule.test.mjs",
-      "sha256": "af3d3275fd78b695b8a5c53218a27f6ec10187a2cd145867b5c66e61ec42492c",
-      "lines": 133,
+      "sha256": "b0a4d3d7b60744206a0ef7c9365b44be430678a7a6fd190694cd63689ae6edd2",
+      "lines": 146,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -7870,6 +7872,7 @@
         "scripts/expert-e37-isolation.test.mjs",
         "scripts/expert-e37-runtime.test.mjs",
         "scripts/expert-live-context-diagnostic-fixtures.test.mjs",
+        "scripts/expert-live-context-fixtures.test.mjs",
         "scripts/expert-live-schedule.test.mjs",
         "scripts/expert-live-search-models.test.mjs",
         "scripts/expert-live-semantic-review.test.mjs",

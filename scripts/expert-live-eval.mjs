@@ -16,12 +16,13 @@ import { scheduledDispatches, createVariantBudget, validateMemoryContext, memory
 import { requireSemanticReview } from './expert-live-semantic-review.mjs'
 import { verifySearchModels } from './expert-live-search-models.mjs'
 import { prepareProtocolHook, collectProtocolCounters } from './expert-live-protocol-hook.mjs'
-import { contextApiAllowed, knownArtifacts, validateContextConfiguration } from './expert-live-context-fixtures.mjs'
+import { contextApiAllowed, knownArtifacts, validateContextConfiguration, validatePinnedRuntimeConfiguration, isolatedRuntimeSettings } from './expert-live-context-fixtures.mjs'
 import { readSeedReport, seededAnswerSql, validateDiagnosticConfiguration, verifySeededContext } from './expert-live-context-diagnostic-fixtures.mjs'
 const proposalOnly = process.env.FORGE_EXPERT_MODE === 'proposal'
 const contextDiagnostic = process.env.FORGE_EXPERT_MODE === 'context-diagnostic'
 const contextOnly = contextDiagnostic || process.env.FORGE_EXPERT_MODE === 'context'
 const memoryOnly = process.env.FORGE_EXPERT_MODE === 'memory'
+const isolatedRuntime = contextOnly || memoryOnly
 const localOnly = contextOnly || memoryOnly || process.env.FORGE_EXPERT_MODE === 'local'
 assert.ok(process.argv.slice(2).every(argument => argument === '--hold-at-restart'), 'Unknown evaluation option')
 const holdForUi = process.argv.includes('--hold-at-restart')
@@ -51,6 +52,7 @@ if (memoryOnly) {
   assert.equal(variants, 1, 'Only one separately authorized memory variant per invocation')
   assert.equal(maximumDispatches, 64, 'Memory variant requires an explicit 64-dispatch cap')
   assert.equal(process.env.FORGE_EXPERT_MEMORY_VARIANT_APPROVED, String(variantStart), 'Separate finite variant authorization required')
+  validatePinnedRuntimeConfiguration(process.env)
   assert.match(process.env.FORGE_EXPERT_READONLY_ARTIFACT_SHA256 || '', /^[a-f0-9]{64}$/)
   assert.equal(process.env.FORGE_EXPERT_READONLY_ARTIFACT_SHA256, process.env.FORGE_EXPERT_JAR_SHA256)
   assert.notEqual(process.env.FORGE_EXPERT_JAR_SHA256, '675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489')
@@ -66,11 +68,11 @@ assert.equal(process.env.FORGE_EXPERT_LIVE, 'approved', 'Explicit synthetic exte
 assert.ok(process.env.FORGE_EXPERT_PROFILE, 'Dedicated authenticated profile required; never read or copy credentials')
 assert.ok(process.env.FORGE_EXPERT_REPORT, 'Choose a new private report path')
 const root = fileURLToPath(new URL('../', import.meta.url))
-const resources = contextOnly ? resolve(process.env.FORGE_EXPERT_RESOURCES) : '/Applications/Dougle.app/Contents/Resources/resources'
-const sourceJar = contextOnly ? resolve(process.env.FORGE_EXPERT_JAR) : resolve(root, 'backend/target/dougle-0.1.0.jar')
+const resources = isolatedRuntime ? resolve(process.env.FORGE_EXPERT_RESOURCES) : '/Applications/Dougle.app/Contents/Resources/resources'
+const sourceJar = isolatedRuntime ? resolve(process.env.FORGE_EXPERT_JAR) : resolve(root, 'backend/target/dougle-0.1.0.jar')
 const reportPath = resolve(process.env.FORGE_EXPERT_REPORT)
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-expert-live-'))
-const jar = contextOnly ? resolve(directory, `frozen-context-${knownArtifacts[process.env.FORGE_EXPERT_JAR_SHA256]}.jar`) : sourceJar
+const jar = isolatedRuntime ? resolve(directory, `frozen-context-${knownArtifacts[process.env.FORGE_EXPERT_JAR_SHA256]}.jar`) : sourceJar
 const privateHome = resolve(directory, 'home')
 let token = randomBytes(32).toString('hex')
 const report = { fixtureVersion: investigation ? 'synthetic-investigation-v3' : 'synthetic-expert-v1', startedAt: new Date().toISOString(), maximumDispatches,
@@ -87,11 +89,14 @@ report.restartChecks = []
 report.runtimes = []
 if (localOnly) report.fixtureVersion = 'synthetic-local-restart-glossary-v1'
 if (memoryOnly) { report.fixtureVersion = 'synthetic-memory-v1'; report.fullE05Pass = false; report.memoryChecks = [] }
-if (contextOnly) {
+if (isolatedRuntime) {
   report.artifactVersion = knownArtifacts[process.env.FORGE_EXPERT_JAR_SHA256]
+  report.privateDirectory = directory
+  report.runtimeIsolation = 'private HOME/temp, explicit allowlisted environment, frozen JAR, pinned Java/CLI resources'
+}
+if (contextOnly) {
   report.fixtureVersion = 'synthetic-short-context-correction-v1'
   report.contextBundles = []; report.fullE04Pass = false; report.fullE05Pass = false
-  report.privateDirectory = directory
 }
 let seededTurns
 if (contextDiagnostic) {
@@ -124,7 +129,7 @@ async function dispatch(kind, requestId, context) {
   await save()
 }
 async function api(path, method = 'GET', body) {
-  if (contextOnly) assert(contextApiAllowed(path, method), 'Context batch route outside synthetic local/AI allowlist')
+  if (isolatedRuntime) assert(contextApiAllowed(path, method), 'Context batch route outside synthetic local/AI allowlist')
   assert.ok(!uiHoldActive || method === 'GET', 'No POST while waiting for UI acknowledgment')
   if (method === 'POST') variantBudget?.beforePost(path, body)
   if (proposalOnly) {
@@ -160,19 +165,19 @@ async function startRuntime() {
   base = null
   logs = ''
   report.launchFailed = false
-  if (contextOnly) {
+  if (isolatedRuntime) {
     for (const [name, expected] of Object.entries(report.assetHashes)) {
       assert.equal(createHash('sha256').update(await readFile(resolve(resources, name))).digest('hex'), expected, 'Frozen resource changed')
     }
   }
-  child = spawn(resolve(resources, 'runtime/bin/java'), [...(contextOnly ? [`-Duser.home=${privateHome}`, `-Djava.io.tmpdir=${directory}`] : []), '-jar', jar,
+  const isolation = isolatedRuntime ? isolatedRuntimeSettings(privateHome, directory) : null
+  child = spawn(resolve(resources, 'runtime/bin/java'), [...(isolation?.args ?? []), '-jar', jar,
     '--forge.desktop=true', '--server.address=127.0.0.1', '--server.port=0', `--forge.data-dir=${directory}`,
     `--forge.search-model-directory=${models.directory}`,
     `--forge.ai.codex-command=${protocolHook?.command ?? resolve(resources, 'ai/codex')}`,
     `--forge.ai.codex-stream-home=${resolve(process.env.FORGE_EXPERT_PROFILE)}`],
-  { cwd: directory, detached: true, env: contextOnly
-    ? { HOME: privateHome, TMPDIR: directory, PATH: '/usr/bin:/bin:/usr/sbin:/sbin', LANG: 'en_US.UTF-8', FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true' }
-    : { ...process.env, FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true', JAVA_TOOL_OPTIONS: '', JDK_JAVA_OPTIONS: '', _JAVA_OPTIONS: '' }, stdio: ['pipe', 'pipe', 'pipe'] })
+  { cwd: directory, detached: true, env: isolation?.env
+    ?? { ...process.env, FORGE_DATA_DIR: directory, FORGE_DESKTOP: 'true', JAVA_TOOL_OPTIONS: '', JDK_JAVA_OPTIONS: '', _JAVA_OPTIONS: '' }, stdio: ['pipe', 'pipe', 'pipe'] })
   child.on('error', () => { report.launchFailed = true })
   for (const pipe of [child.stdout, child.stderr]) pipe.on('data', chunk => { logs = (logs + chunk).slice(-16000) })
   child.stdin.write(token + '\n')
@@ -226,7 +231,7 @@ async function historySnapshot(prefix, threadId) {
 try {
   await writeFile(reportPath, '{}', { flag: 'wx', mode: 0o600 })
   reportCreated = true
-  if (contextOnly) {
+  if (isolatedRuntime) {
     assert.equal(createHash('sha256').update(await readFile(sourceJar)).digest('hex'), process.env.FORGE_EXPERT_JAR_SHA256)
     await copyFile(sourceJar, jar, constants.COPYFILE_EXCL); await chmod(jar, 0o400)
     await mkdir(privateHome, { mode: 0o700 })
@@ -510,7 +515,7 @@ try {
 } finally {
   await stopRuntime()
   if (batchTimer) clearTimeout(batchTimer)
-  if (contextOnly) {
+  if (isolatedRuntime) {
     report.sourceJarUnchanged = createHash('sha256').update(await readFile(sourceJar)).digest('hex') === process.env.FORGE_EXPERT_JAR_SHA256
     report.snapshotJarUnchanged = createHash('sha256').update(await readFile(jar)).digest('hex') === process.env.FORGE_EXPERT_JAR_SHA256
     report.assetsUnchanged = {}
