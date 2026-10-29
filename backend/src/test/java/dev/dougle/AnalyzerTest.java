@@ -3,6 +3,7 @@ package dev.dougle;
 import dev.dougle.ingestion.adapter.TikaJavaAnalyzer;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -13,6 +14,29 @@ import static org.assertj.core.api.Assertions.*;
 
 class AnalyzerTest {
     private final TikaJavaAnalyzer analyzer = new TikaJavaAnalyzer();
+
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings = {"build.gradle", "settings.gradle.kts", "gradle.properties", "src/Build.GRADLE", "Dockerfile", "gradlew", "config.yaml", "query.sql", "index.ts", "config.xml", "main.py"})
+    void sourceAndConfigurationFilesKeepExactText(String name) {
+        String text = "가상 프로젝트\nplugins { id 'java' }\nSELECT * FROM synthetic;\n";
+        try (var analysis = analyzer.analyze(name, text.getBytes(StandardCharsets.UTF_8))) {
+            assertThat(analysis.status()).isEqualTo("READY");
+            assertThat(analysis.text()).isEqualTo(text.stripTrailing());
+        }
+    }
+
+    @Test
+    void readsBomTextAndRejectsBinaryDisguisedAsGradle() {
+        String text = "가상 빌드 설정";
+        for (var charset : List.of(StandardCharsets.UTF_8, StandardCharsets.UTF_16LE, StandardCharsets.UTF_16BE)) {
+            var analysis = analyzer.analyze("build.gradle", ("\ufeff" + text).getBytes(charset));
+            assertThat(analysis.status()).isEqualTo("READY");
+            assertThat(analysis.text()).isEqualTo(text);
+        }
+        var binary = analyzer.analyze("build.gradle", new byte[]{'a', 0, 'b'});
+        assertThat(binary.status()).isEqualTo("ERROR");
+        assertThat(binary.error()).contains("인코딩").doesNotContain("손상·암호");
+    }
 
     @Test
     void loginInstructionsAreNotMistakenForAnAuthenticationWall() {

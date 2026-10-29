@@ -500,7 +500,7 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/ingestion/adapter/JdbcAnalysisStore.java",
-      "sha256": "190539aa721d81bb17f448f7a5c63a04ddecb626e15c70471c7219537872813a",
+      "sha256": "34df90d615fbe793d742c5475f1efec085c9d5760acc8ca330560d3681a7f75e",
       "lines": 72,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -519,8 +519,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/ingestion/adapter/TikaJavaAnalyzer.java",
-      "sha256": "8e17be8b2dd345c8080d81b961608295d7d2e2c1e63e930d667ead3a67e83348",
-      "lines": 156,
+      "sha256": "5b1521c44c2cf428d18e1b3d857bd4d8ce7d16b6b112819a61ac331afafd0239",
+      "lines": 184,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/AnalyzerTest.java",
@@ -2729,8 +2729,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/adapter/JdbcSourceStore.java",
-      "sha256": "53d79f870a29cb04394ed17d58ab49b12995c8ca44fbf810dfa913d0d4b67ffb",
-      "lines": 315,
+      "sha256": "b20e4f11913b1c67b3c249a2548c4057f65beea5c6c1ac70060c9812b5e450cf",
+      "lines": 322,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/library/adapter/persistence/LargeFileIngestionTest.java",
@@ -2870,8 +2870,8 @@
     },
     {
       "path": "backend/src/main/java/dev/dougle/sources/application/SourceService.java",
-      "sha256": "f8ee6c81058a05aeb720b22c4bf8753a57a03a72b5434fac65d5e7e3ad7cb918",
-      "lines": 254,
+      "sha256": "d8666c28aca8ab21fbc686e8065749835c70b9e849aa06595dec2b3764084bbc",
+      "lines": 258,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "backend/src/test/java/dev/dougle/BundleValidationIntegrationTest.java",
@@ -2954,6 +2954,7 @@
       "lines": 6,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/AnalyzerTest.java",
         "backend/src/test/java/dev/dougle/AnswerApprovalIntegrationTest.java",
         "backend/src/test/java/dev/dougle/AnswerJobEventsIntegrationTest.java",
         "backend/src/test/java/dev/dougle/AnswerJobIntegrationTest.java",
@@ -3348,8 +3349,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/AnalyzerTest.java",
-      "sha256": "17f83f101541914e5a2f62750ef401c36178d5b6539856d23e731711365ef96a",
-      "lines": 111,
+      "sha256": "ff0aa401914cfa60a60f8460ce310b89763751549a751e0dd313bf96b3085059",
+      "lines": 135,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -3693,8 +3694,8 @@
     },
     {
       "path": "backend/src/test/java/dev/dougle/SourceIntegrationTest.java",
-      "sha256": "12141dda5d621878dd2fbb095773362eb3a4d29fe77a5183626711c457990a1b",
-      "lines": 882,
+      "sha256": "37d09517d347fa8e5601109b05dc24971b1c033e95d45894bb547fd9725816cd",
+      "lines": 941,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -4360,14 +4361,14 @@
     },
     {
       "path": "desktop/package-lock.json",
-      "sha256": "995845650f3e109348acce06618ae743b60211a3e79852715e8c9ffc66adff9f",
+      "sha256": "8af52be26e52351d9e17d220b337b8976f41e035c99e47cd43da88647c5b7d81",
       "lines": 232,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
     },
     {
       "path": "desktop/package.json",
-      "sha256": "1d90d4c1869b74a2777c99c1c40d63928cb044998bd83ff88782763e38ed0f05",
+      "sha256": "69892bcf2121acad30eac2f270c25b8d3a6f573fab44fa1334664cd146f859f9",
       "lines": 7,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -4383,7 +4384,7 @@
     },
     {
       "path": "desktop/src-tauri/Cargo.toml",
-      "sha256": "bacd855b6b0eebd33c1aca0672745e9d12c08e58379bfc6f5882f80bf929e175",
+      "sha256": "9e5a95190679fc3b84b71107ef04c167b138b0f8b95f56563aede4632fe8d018",
       "lines": 27,
       "kind": "production-or-tooling",
       "lexicalTestReferences": []
@@ -4394,6 +4395,7 @@
       "lines": 10,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/AnalyzerTest.java",
         "backend/src/test/java/dev/dougle/AnswerJobEventsIntegrationTest.java",
         "backend/src/test/java/dev/dougle/BundleValidationIntegrationTest.java",
         "backend/src/test/java/dev/dougle/BundledSearchModelTest.java",
@@ -4407,6 +4409,7 @@
         "backend/src/test/java/dev/dougle/RemovedIntegrationsTest.java",
         "backend/src/test/java/dev/dougle/RoutingAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/SearchSnippetTest.java",
+        "backend/src/test/java/dev/dougle/SourceIntegrationTest.java",
         "backend/src/test/java/dev/dougle/TeamSettingsControllerTest.java",
         "backend/src/test/java/dev/dougle/TeamSettingsImportIntegrationTest.java",
         "backend/src/test/java/dev/dougle/TeamSettingsServiceTest.java",
@@ -4438,6 +4441,7 @@
         "scripts/macos-architecture-test.sh",
         "scripts/published-update-smoke.mjs",
         "scripts/search-acceptance-fixtures.test.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/team-settings-smoke.mjs",
         "scripts/workspace-archive-smoke.mjs"
       ]
@@ -4876,7 +4880,7 @@
     },
     {
       "path": "desktop/src-tauri/tauri.conf.json",
-      "sha256": "3a7e390ac59d9686d767bc264a0a0815bc51ed9b3e0eeb3061d356db45d6f84f",
+      "sha256": "de4b870557aaee28534c9b18b8351878ff871e669f86e04affd9ad0659a59863",
       "lines": 30,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
@@ -5648,15 +5652,15 @@
     },
     {
       "path": "frontend/src/SourcePanel.test.tsx",
-      "sha256": "6c023895e4c842d1dde25b3e6b66d7470996b006d72ed163806a9f16e6b50275",
-      "lines": 438,
+      "sha256": "32a1c0e9077b0a94c517ffebd9b713abe56f0a9d659bc8b9c591a396917b8a7e",
+      "lines": 445,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
     {
       "path": "frontend/src/SourcePanel.tsx",
-      "sha256": "2a5b50ceb94b4ca5665aa717a5e11b66d778e889c498bfc2f9982f8108958e72",
-      "lines": 331,
+      "sha256": "adb586f88ae0609b23a0a2eddfd243cfc8567d408a95d2cb516b50dd79b06dd1",
+      "lines": 332,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "frontend/src/SourceMvp.test.tsx",
@@ -6397,10 +6401,12 @@
       "lines": 20,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/AnalyzerTest.java",
         "backend/src/test/java/dev/dougle/CollectorTest.java",
         "backend/src/test/java/dev/dougle/DocumentRetrievalEvaluationTest.java",
         "backend/src/test/java/dev/dougle/PluginIntegrationTest.java",
         "backend/src/test/java/dev/dougle/RemovedIntegrationsTest.java",
+        "backend/src/test/java/dev/dougle/SourceIntegrationTest.java",
         "backend/src/test/java/dev/dougle/investigation/adapter/ConversationOperationalReadServiceTest.java",
         "backend/src/test/java/dev/dougle/investigation/adapter/MysqlInvestigationServiceTest.java",
         "backend/src/test/java/dev/dougle/investigation/adapter/MysqlReadToolTest.java",
@@ -6431,7 +6437,8 @@
         "scripts/expert-e35-ui.test.mjs",
         "scripts/expert-live-context-fixtures.test.mjs",
         "scripts/investigation-smoke.mjs",
-        "scripts/mysql-read-runtime-smoke.mjs"
+        "scripts/mysql-read-runtime-smoke.mjs",
+        "scripts/source-recovery-smoke.mjs"
       ]
     },
     {
@@ -6694,6 +6701,7 @@
       "lines": 8,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
+        "backend/src/test/java/dev/dougle/AnalyzerTest.java",
         "backend/src/test/java/dev/dougle/AnswerJobEventsIntegrationTest.java",
         "backend/src/test/java/dev/dougle/BundleValidationIntegrationTest.java",
         "backend/src/test/java/dev/dougle/BundledSearchModelTest.java",
@@ -6707,6 +6715,7 @@
         "backend/src/test/java/dev/dougle/RemovedIntegrationsTest.java",
         "backend/src/test/java/dev/dougle/RoutingAcceptanceTest.java",
         "backend/src/test/java/dev/dougle/SearchSnippetTest.java",
+        "backend/src/test/java/dev/dougle/SourceIntegrationTest.java",
         "backend/src/test/java/dev/dougle/TeamSettingsControllerTest.java",
         "backend/src/test/java/dev/dougle/TeamSettingsImportIntegrationTest.java",
         "backend/src/test/java/dev/dougle/TeamSettingsServiceTest.java",
@@ -6738,6 +6747,7 @@
         "scripts/macos-architecture-test.sh",
         "scripts/published-update-smoke.mjs",
         "scripts/search-acceptance-fixtures.test.mjs",
+        "scripts/source-recovery-smoke.mjs",
         "scripts/team-settings-smoke.mjs",
         "scripts/workspace-archive-smoke.mjs"
       ]
@@ -7725,8 +7735,8 @@
     },
     {
       "path": "scripts/source-recovery-smoke.mjs",
-      "sha256": "0a97f71ec5c5a451b2e5b5447c5a87a141d53b6ff091a21de915034364a9d416",
-      "lines": 77,
+      "sha256": "2a374c3d4b62da137d3e3c511f2cdd4f71dea510947413bb8c9342676ed4155c",
+      "lines": 82,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },

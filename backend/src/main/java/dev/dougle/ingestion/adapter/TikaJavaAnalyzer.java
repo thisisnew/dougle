@@ -78,17 +78,34 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             var pdf = new org.apache.tika.parser.pdf.PDFParserConfig();
             pdf.setOcrStrategy(org.apache.tika.parser.pdf.PDFParserConfig.OCR_STRATEGY.NO_OCR);
             context.set(org.apache.tika.parser.pdf.PDFParserConfig.class, pdf);
-            if (name.endsWith(".java")) {
-                var reader = new java.io.InputStreamReader(content, StandardCharsets.UTF_8.newDecoder()
+            if (isSourceText(name)) {
+                metadata.set("Content-Type", "text/plain");
+                var input = new java.io.PushbackInputStream(content, 3);
+                byte[] prefix = input.readNBytes(3);
+                var charset = StandardCharsets.UTF_8;
+                int skipped = 0;
+                if (prefix.length >= 3 && prefix[0] == (byte) 0xef && prefix[1] == (byte) 0xbb && prefix[2] == (byte) 0xbf) skipped = 3;
+                else if (prefix.length >= 2 && prefix[0] == (byte) 0xff && prefix[1] == (byte) 0xfe) { charset = StandardCharsets.UTF_16LE; skipped = 2; }
+                else if (prefix.length >= 2 && prefix[0] == (byte) 0xfe && prefix[1] == (byte) 0xff) { charset = StandardCharsets.UTF_16BE; skipped = 2; }
+                input.unread(prefix, skipped, prefix.length - skipped);
+                var reader = new java.io.InputStreamReader(input, charset.newDecoder()
                         .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
                         .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT));
                 char[] buffer = new char[16 * 1024];
                 long characters = 0;
+                long reported = 0;
                 for (int count; (count = reader.read(buffer)) != -1;) {
                     if (Thread.currentThread().isInterrupted()) throw new java.io.InterruptedIOException();
+                    for (int index = 0; index < count; index++) {
+                        if (Character.isISOControl(buffer[index]) && "\t\n\r\f".indexOf(buffer[index]) < 0)
+                            throw new java.nio.charset.MalformedInputException(1);
+                    }
                     extracted.write(buffer, 0, count);
                     characters += count;
-                    dev.dougle.ingestion.application.ProcessingProgress.report("EXTRACTING_CHARS", name, characters, 0);
+                    if (characters - reported >= 64 * 1024) {
+                        dev.dougle.ingestion.application.ProcessingProgress.report("EXTRACTING_CHARS", name, characters, 0);
+                        reported = characters;
+                    }
                 }
             } else {
                 try (var resources = new org.apache.tika.io.TemporaryResources();
@@ -103,7 +120,7 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             List<Analysis.Symbol> symbols = new ArrayList<>();
             String status = blank ? "UNSUPPORTED" : "READY";
             String error = blank ? "추출 가능한 텍스트가 없습니다." : null;
-            if (name.endsWith(".java")) {
+            if (name.toLowerCase(java.util.Locale.ROOT).endsWith(".java") && !blank) {
                 if (parts.size() > 30) {
                     return new Analysis(text, "text/x-java-source", "PARTIAL",
                             "큰 소스 파일은 심볼 분석 없이 본문 전체를 검색합니다.", List.of(), parts);
@@ -138,8 +155,10 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             if (Thread.currentThread().isInterrupted()) throw new java.util.concurrent.CancellationException();
             var visited = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<Throwable, Boolean>());
             boolean sizeLimit = false;
+            boolean encodingError = false;
             for (Throwable cause = exception; cause != null && visited.add(cause); cause = cause.getCause()) {
                 if (cause instanceof ExtractedTextWriter.SizeLimitException) sizeLimit = true;
+                if (cause instanceof java.nio.charset.CharacterCodingException) encodingError = true;
                 if (cause instanceof java.util.concurrent.CancellationException cancellation) throw cancellation;
                 if (cause instanceof java.io.InterruptedIOException) {
                     var cancellation = new java.util.concurrent.CancellationException("분석이 중단되었습니다.");
@@ -149,8 +168,17 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             }
             if (sizeLimit) return new Analysis("", metadata.get("Content-Type"), "ERROR",
                     "추출문이 저장 용량 한도(" + maxExtractedBytes + " 바이트)를 넘었습니다. 문서를 나누거나 불필요한 내용을 줄인 뒤 다시 등록하세요.", List.of());
+            if (encodingError) return new Analysis("", metadata.get("Content-Type"), "ERROR",
+                    "텍스트 인코딩을 읽을 수 없거나 바이너리 내용이 포함되어 있습니다. UTF-8 또는 BOM이 있는 UTF-16 파일인지 확인하세요.", List.of());
             return new Analysis("", metadata.get("Content-Type"), "ERROR",
-                    "파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요.", List.of());
+                    "파일 내용을 분석하지 못했습니다. 파일 형식과 읽기 권한을 확인한 뒤 다시 동기화하세요.", List.of());
         }
+    }
+
+    private static boolean isSourceText(String name) {
+        String basename = name.replace('\\', '/').substring(name.replace('\\', '/').lastIndexOf('/') + 1)
+                .toLowerCase(java.util.Locale.ROOT);
+        return java.util.Set.of("dockerfile", "makefile", "jenkinsfile", "gradlew", ".gitignore", ".gitattributes", ".editorconfig").contains(basename)
+                || basename.matches(".*\\.(java|gradle|groovy|kt|kts|scala|js|jsx|ts|tsx|mjs|cjs|py|rb|go|rs|c|h|cpp|hpp|cs|swift|sh|bash|zsh|bat|cmd|ps1|sql|yaml|yml|json|jsonl|toml|ini|cfg|conf|properties|xml|svg|css|scss|md|mdx|txt|csv|tsv|log|graphql|proto)$");
     }
 }

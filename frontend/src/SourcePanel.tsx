@@ -264,6 +264,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       <details><summary>상세 정보</summary><small>{source.location}</small>
         {source.syncedAt && <small>최근 동기화 {new Date(source.syncedAt).toLocaleString('ko-KR')}</small>}
         {source.revision && <small>반영 버전 {source.revision.slice(0, 12)}</small>}
+        {source.error && <small>{source.error}</small>}
       </details>
     </div>
     <span className="file-meta">—</span>

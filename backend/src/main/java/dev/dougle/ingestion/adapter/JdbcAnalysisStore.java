@@ -46,7 +46,7 @@ public class JdbcAnalysisStore implements AnalysisStore {
                 WITH RECURSIVE failures(entry_id,parent_id,error) AS (
                   SELECT e.id,e.parent_id,COALESCE(d.error,'파일을 읽지 못했습니다.')
                   FROM entry e JOIN extracted_document d ON d.entry_id=e.id
-                  WHERE e.workspace_id=? AND e.area='ORIGINAL' AND d.status IN ('ERROR','UNSUPPORTED','PARTIAL')
+                  WHERE e.workspace_id=? AND e.area='ORIGINAL' AND d.status IN ('ERROR','PARTIAL')
                   UNION
                   SELECT parent.id,parent.parent_id,'일부 파일을 읽지 못했습니다.'
                   FROM entry parent JOIN failures child ON child.parent_id=parent.id

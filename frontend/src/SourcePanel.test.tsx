@@ -20,6 +20,13 @@ const source = {
 
 beforeEach(() => { api.mockReset(); vi.mocked(selectFolder).mockReset(); localStorage.removeItem('dougle.material-sync.one') })
 
+it('텍스트 없는 파일은 정상 폴더의 실패 경고 대신 상세 정보에 표시한다', async () => {
+  api.mockResolvedValue([{ ...source, status: 'READY', rootEntryId: 'root', error: '텍스트가 없어 검색에서 제외한 파일 2개' }])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  expect(await screen.findByText('텍스트가 없어 검색에서 제외한 파일 2개')).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /분석 실패|동기화 실패/ })).not.toBeInTheDocument()
+})
+
 
 it('Notion 페이지 권한 오류를 토큰 연결 오류로 덮어쓰지 않는다', async () => {
   api.mockResolvedValue([{ ...source, kind: 'URL', location: 'https://app.notion.com/p/synthetic', status: 'ERROR', error: 'Notion 페이지 접근 권한이 없습니다. 페이지의 연결 메뉴에서 접근을 허용하세요.' }])

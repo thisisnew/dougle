@@ -120,7 +120,7 @@ public class JdbcSourceStore implements SourceStore {
     public Map<String, String> fileHashes(String workspaceId, String id) {
         Map<String, String> hashes = new HashMap<>();
         jdbc.query("""
-                SELECT e.relative_path,CASE WHEN d.error LIKE '%앞부분만 검색%' THEN NULL ELSE e.content_hash END AS content_hash
+                SELECT e.relative_path,CASE WHEN d.error LIKE '%앞부분만 검색%' OR d.status IN ('ERROR','UNSUPPORTED') THEN NULL ELSE e.content_hash END AS content_hash
                 FROM entry e LEFT JOIN extracted_document d ON d.entry_id=e.id
                 WHERE e.workspace_id=? AND e.source_id=? AND e.kind='FILE'
                 """,
@@ -261,7 +261,7 @@ public class JdbcSourceStore implements SourceStore {
         Map<String, String> failures = new HashMap<>(snapshot.failures());
         jdbc.query("""
                 SELECT e.relative_path,d.error FROM entry e JOIN extracted_document d ON d.entry_id=e.id
-                WHERE e.source_id=? AND d.status IN ('ERROR','UNSUPPORTED','PARTIAL')
+                WHERE e.source_id=? AND d.status IN ('ERROR','PARTIAL')
                 """, result -> { failures.putIfAbsent(result.getString("relative_path"),
                         Objects.requireNonNullElse(result.getString("error"), "텍스트를 읽을 수 없습니다.")); }, source.id());
         jdbc.update("DELETE FROM source_file_failure WHERE source_id=?", source.id());
@@ -278,15 +278,22 @@ public class JdbcSourceStore implements SourceStore {
                     WHERE part.entry_id=e.id AND length(trim(part.text))>0
                 ))
                 """, Integer.class, source.id());
-        if (!failures.isEmpty() && searchable == 0) {
-            fail(source.id(), "검색 가능한 자료가 없습니다. " + failureSummary);
+        int unsupported = jdbc.queryForObject("""
+                SELECT count(*) FROM entry e JOIN extracted_document d ON d.entry_id=e.id
+                WHERE e.source_id=? AND d.status='UNSUPPORTED'
+                """, Integer.class, source.id());
+        String summary = failureSummary;
+        if (unsupported > 0) summary = (summary == null ? "" : summary + " · ")
+                + "텍스트가 없어 검색에서 제외한 파일 " + unsupported + "개";
+        if (searchable == 0 && (!failures.isEmpty() || unsupported > 0)) {
+            fail(source.id(), "검색 가능한 자료가 없습니다. " + summary);
             return;
         }
         jdbc.update("""
                 UPDATE source SET status=?,revision=?,error=?,synced_at=?,consecutive_failures=0,
                   next_poll_at=CASE WHEN polling_enabled=1 THEN ? + poll_interval_seconds * 1000 ELSE NULL END WHERE id=?
                 """, failures.isEmpty() ? "READY" : "PARTIAL", snapshot.revision(),
-                failureSummary,
+                summary,
                 clock.instant().toString(), clock.millis(), source.id());
         for (var file : snapshot.files()) {
             jdbc.update("DELETE FROM source_analysis_checkpoint WHERE source_id=? AND path=?", source.id(), file.path());

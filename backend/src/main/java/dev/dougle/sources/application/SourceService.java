@@ -167,6 +167,10 @@ public class SourceService {
                     throw new InterruptedException("Synchronization interrupted");
                 }
                 Analysis analysis = store.checkpoint(id, file.path(), file.hash()).orElse(null);
+                if (analysis != null && ("ERROR".equals(analysis.status()) || "UNSUPPORTED".equals(analysis.status()))) {
+                    analysis.close();
+                    analysis = null;
+                }
                 if (analysis == null) {
                     try (var input = file.open()) {
                         analysis = analyzer.analyzeStream(file.path(), input);
@@ -174,9 +178,9 @@ public class SourceService {
                     if (analysis != null) store.checkpoint(id, file.path(), file.hash(), analysis);
                 }
                 if (analysis == null || "ERROR".equals(analysis.status())
-                        || "UNSUPPORTED".equals(analysis.status()) && baseline.containsKey(file.path())) {
+                        || "UNSUPPORTED".equals(analysis.status()) && baseline.get(file.path()) != null) {
                     failures.put(file.path(), analysis == null || analysis.error() == null
-                            ? "파일을 읽지 못했습니다. 손상·암호 설정을 확인하세요." : analysis.error());
+                            ? "파일 내용을 분석하지 못했습니다. 파일 형식과 읽기 권한을 확인하세요." : analysis.error());
                     accepted.remove(file);
                     completed++;
                     continue;

@@ -49,6 +49,63 @@ class SourceIntegrationTest {
     @TempDir Path fixture;
 
     @Autowired dev.dougle.conversation.application.ChatThreadService threads;
+
+    @Test
+    void gradleAndTextlessImagesStaySearchableAcrossResync() throws Exception {
+        String workspace = library.createWorkspace("code and images").id();
+        Files.writeString(fixture.resolve("build.gradle"), "plugins { id 'java' }\n// ZEPHYR build configuration");
+        var image = new java.awt.image.BufferedImage(2, 2, java.awt.image.BufferedImage.TYPE_INT_RGB);
+        javax.imageio.ImageIO.write(image, "png", fixture.resolve("diagram.png").toFile());
+        Source source = local(workspace, "code", "");
+        for (int attempt = 0; attempt < 2; attempt++) {
+            Source synced = sources.sync(workspace, source.id(), search::refresh);
+            assertThat(synced.status()).isEqualTo("READY");
+            assertThat(synced.error()).contains("검색에서 제외한 파일 1개").doesNotContain("확인이 필요");
+            assertThat(search.searchQuestion(workspace, "ZEPHYR", List.of(), false)).isNotEmpty();
+            assertThat(jdbc.queryForObject("SELECT count(*) FROM source_file_failure WHERE source_id=?", Integer.class, source.id())).isZero();
+        }
+    }
+
+    @Test
+    void failedCheckpointIsRetriedWithoutChangingOriginalBytes() throws Exception {
+        String workspace = library.createWorkspace("retry code").id();
+        Files.writeString(fixture.resolve("build.gradle"), "plugins { id 'java' }");
+        Source source = local(workspace, "retry", "");
+        doReturn(new Analysis("", "text/plain", "ERROR", "temporary failure", List.of()))
+                .when(analyzer).analyzeStream(eq("build.gradle"), any(java.io.InputStream.class));
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("ERROR");
+        doCallRealMethod().when(analyzer).analyzeStream(eq("build.gradle"), any(java.io.InputStream.class));
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("READY");
+        assertThat(Files.readString(fixture.resolve("build.gradle"))).isEqualTo("plugins { id 'java' }");
+    }
+
+    @Test
+    void previouslyUnsupportedCodeIsReanalyzedAndTextlessOnlyFolderIsNotReady() throws Exception {
+        String workspace = library.createWorkspace("unsupported retry").id();
+        Files.writeString(fixture.resolve("build.gradle"), "plugins { id 'java' }");
+        Source source = local(workspace, "retry", "");
+        doReturn(new Analysis("", "application/octet-stream", "UNSUPPORTED", "추출 가능한 텍스트가 없습니다.", List.of()))
+                .when(analyzer).analyzeStream(eq("build.gradle"), any(java.io.InputStream.class));
+        var initial = sources.sync(workspace, source.id());
+        assertThat(initial.status()).isEqualTo("ERROR");
+        assertThat(initial.error()).contains("검색 가능한 자료가 없습니다", "검색에서 제외한 파일 1개");
+        doCallRealMethod().when(analyzer).analyzeStream(eq("build.gradle"), any(java.io.InputStream.class));
+        assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("READY");
+        assertThat(library.analysisFailures(workspace)).isEmpty();
+    }
+
+    @Test
+    void textlessImagesDoNotInflateRealFailureCount() throws Exception {
+        String workspace = library.createWorkspace("mixed failures").id();
+        Files.writeString(fixture.resolve("build.gradle"), "plugins { id 'java' }");
+        Files.write(fixture.resolve("broken.gradle"), new byte[]{'a', 0, 'b'});
+        Files.write(fixture.resolve("empty.txt"), new byte[0]);
+        Source source = local(workspace, "mixed", "");
+        var result = sources.sync(workspace, source.id());
+        assertThat(result.status()).isEqualTo("PARTIAL");
+        assertThat(result.error()).contains("1개 파일 확인", "broken.gradle", "검색에서 제외한 파일 1개");
+        assertThat(result.error()).doesNotContain("손상·암호", "empty.txt:");
+    }
     @Autowired dev.dougle.search.application.EvidenceBundleValidator evidenceValidator;
 
     @Test
@@ -155,7 +212,7 @@ class SourceIntegrationTest {
     }
 
     @Test
-    void unchangedUnreadableFileIsNotAnalyzedForeverAndDoesNotDiscardHealthySibling() throws Exception {
+    void unchangedUnreadableFileRetriesWithoutReanalyzingHealthySibling() throws Exception {
         String workspace = library.createWorkspace("부분 실패 가상 자료").id();
         Files.writeString(fixture.resolve("broken.txt"), "synthetic broken bytes");
         Files.writeString(fixture.resolve("healthy.txt"), "healthy evidence");
@@ -166,7 +223,9 @@ class SourceIntegrationTest {
         assertThat(entryId(source.id(), "healthy.txt")).isNotBlank();
         clearInvocations(analyzer);
         assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("PARTIAL");
-        verifyNoInteractions(analyzer);
+        verify(analyzer).analyzeStream(eq("broken.txt"), any(java.io.InputStream.class));
+        verify(analyzer, never()).analyzeStream(eq("healthy.txt"), any(java.io.InputStream.class));
+        clearInvocations(analyzer);
         doCallRealMethod().when(analyzer).analyzeStream(eq("broken.txt"), any(java.io.InputStream.class));
         Files.writeString(fixture.resolve("broken.txt"), "repaired synthetic evidence");
         assertThat(sources.sync(workspace, source.id()).status()).isEqualTo("READY");
