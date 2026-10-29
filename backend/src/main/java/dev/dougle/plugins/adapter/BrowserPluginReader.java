@@ -38,8 +38,7 @@ public class BrowserPluginReader {
             if (!matcher.find()) throw new LibraryException(400, "Notion 페이지 링크를 등록해 주세요.");
             result = session.call("notion-fetch", Map.of("id", matcher.group(1)));
         } else {
-            JsonNode resources = payload(session.call("getAccessibleAtlassianResources", Map.of()));
-            if (!resources.isArray()) resources = resources.path("resources");
+            JsonNode resources = session.accessibleResources();
             String cloud = null;
             for (JsonNode resource : resources) {
                 if (("https://" + uri.getHost()).equals(resource.path("url").asText().replaceFirst("/$", ""))) cloud = resource.path("id").asText();
@@ -96,10 +95,5 @@ public class BrowserPluginReader {
         JsonNode properties = session.schema(tool).path("properties");
         for (String name : names) if (properties.has(name)) { arguments.put(name, value); return; }
         throw new LibraryException(502, "자료 읽기 형식이 변경되었습니다. 앱 업데이트를 확인해 주세요.");
-    }
-    private JsonNode payload(JsonNode result) {
-        if (result.has("structuredContent")) return result.path("structuredContent");
-        try { return json.readTree(PluginMcpSession.text(result)); }
-        catch (Exception exception) { throw new LibraryException(502, "회사 사이트 목록을 읽지 못했습니다."); }
     }
 }

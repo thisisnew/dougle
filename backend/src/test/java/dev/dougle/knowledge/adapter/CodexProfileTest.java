@@ -68,18 +68,18 @@ class CodexProfileTest {
         assertThat(executable.toFile().setExecutable(true)).isTrue();
         var launch = mock(CliLaunchConfiguration.class);
         when(launch.command(any())).thenReturn(executable.toString());
-        var connection = new ProviderConnectionAdapter(launch, Duration.ofSeconds(5), profile.toString());
+        var connection = new ProviderConnectionAdapter(launch, profile.toString());
         assertThat(connection.check(Provider.CODEX).state()).isEqualTo("LOGIN_REQUIRED");
         assertThat(profile.resolve("auth.json")).doesNotExist();
-        var login = new ProviderLoginAdapter(launch, connection, Duration.ofSeconds(5), profile.toString());
+        var login = new ProviderLoginAdapter(launch, connection, Duration.ofSeconds(30), profile.toString());
         try {
             assertThatThrownBy(() -> login.start(Provider.CODEX, false)).isInstanceOf(LibraryException.class);
             var started = login.start(Provider.CODEX, true);
-            long deadline = System.nanoTime() + Duration.ofSeconds(8).toNanos();
+            long deadline = System.nanoTime() + Duration.ofSeconds(60).toNanos();
             while (login.status(started.id()).state().equals("PENDING") && System.nanoTime() < deadline) Thread.sleep(20);
             assertThat(login.status(started.id()).state()).isEqualTo("AUTHENTICATED");
             assertThat(connection.check(Provider.CODEX).state()).isEqualTo("AUTHENTICATED");
-            var model = new CliCuratorModel(executable.toString(), "unused", Duration.ofSeconds(8), new CuratorSettings("", ""), profile.toString());
+            var model = new CliCuratorModel(executable.toString(), "unused", Duration.ofSeconds(30), new CuratorSettings("", ""), profile.toString());
             assertThat(model.generate(Provider.CODEX, "synthetic", "")).contains("synthetic");
             Files.writeString(profile.resolve(".sandbox_migration"), "synthetic");
             var chunks = new java.util.concurrent.CopyOnWriteArrayList<String>();

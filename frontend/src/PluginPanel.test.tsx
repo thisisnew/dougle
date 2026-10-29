@@ -82,6 +82,48 @@ it('실패는 오류를 표시하고 재시도할 수 있으며 연결됨으로 
   expect(screen.queryByText('연결됨')).not.toBeInTheDocument()
 })
 
+it.each(['FAILED', 'EXPIRED', 'CANCELLED'])('Atlassian %s 상태는 성공이나 자료 동기화로 처리하지 않는다', async state => {
+  api.mockImplementation(async path => {
+    if (path === '/plugins/browser/atlassian') return { id: 'atlassian-attempt', state: 'STARTING', message: '서비스 인증 설정 확인' }
+    if (path === '/plugins/browser/atlassian/atlassian-attempt') return { id: 'atlassian-attempt', state, message: '회사 앱 연결 정책을 확인해 주세요.' }
+    return disconnected
+  })
+  render(<PluginPanel initialPlugin="ATLASSIAN" workspaceId="one" />)
+  await waitFor(() => expect(screen.getByRole('button', { name: '연결' })).toBeEnabled())
+  expect(screen.getByText('브라우저에서 사용할 회사 사이트를 선택해 주세요.')).toBeVisible()
+  expect(screen.queryByText(/토큰 발급|개발자 설정|로컬 인증/)).not.toBeInTheDocument()
+  await userEvent.click(screen.getByRole('button', { name: '연결' }))
+  expect(await screen.findByRole('alert')).toHaveTextContent('회사 앱 연결 정책을 확인해 주세요.')
+  expect(screen.queryByText('연결됨')).not.toBeInTheDocument()
+  expect(api.mock.calls.some(([path]) => path.endsWith('/sources') || path.endsWith('/sync'))).toBe(false)
+  expect(screen.getByRole('button', { name: '연결' })).toBeEnabled()
+})
+
+it('Atlassian 승인 성공 뒤 Jira와 Confluence 링크를 모두 동기화한다', async () => {
+  let connected = false
+  api.mockImplementation(async path => {
+    if (path === '/plugins/browser/atlassian') return { id: 'atlassian-attempt', state: 'WAITING', message: '승인 대기' }
+    if (path === '/plugins/browser/atlassian/atlassian-attempt') {
+      connected = true
+      return { id: 'atlassian-attempt', state: 'CONNECTED', message: '연결되었습니다.' }
+    }
+    if (path.endsWith('/sources')) return [
+      { id: 'jira', kind: 'URL', name: '가상 이슈', location: 'https://fixture.atlassian.net/browse/TEST-1' },
+      { id: 'confluence', kind: 'URL', name: '가상 문서', location: 'https://fixture.atlassian.net/wiki/spaces/TEST/pages/123/Page' },
+      { id: 'other', kind: 'URL', name: '다른 문서', location: 'https://example.org/page' },
+    ]
+    if (path.endsWith('/sync')) return { status: 'READY' }
+    return { ...disconnected, atlassianConnected: connected }
+  })
+  render(<PluginPanel initialPlugin="ATLASSIAN" workspaceId="one" />)
+  await waitFor(() => expect(screen.getByRole('button', { name: '연결' })).toBeEnabled())
+  await userEvent.click(screen.getByRole('button', { name: '연결' }))
+  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/confluence/sync', { method: 'POST' }))
+  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/jira/sync', { method: 'POST' })
+  expect(api.mock.calls.some(([path]) => path.endsWith('/other/sync'))).toBe(false)
+  expect(await screen.findByText('연결됨')).toBeVisible()
+})
+
 it('인증 성공 후 자료 갱신 실패가 화면을 잠그지 않는다', async () => {
   api.mockImplementation(async path => {
     if (path === '/plugins') return disconnected

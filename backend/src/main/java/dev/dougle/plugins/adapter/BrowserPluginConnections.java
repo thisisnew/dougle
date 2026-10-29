@@ -83,22 +83,36 @@ public class BrowserPluginConnections {
         if (attempt.callback != null) attempt.callback.stop(0);
     }
     private void prepare(BrowserProvider provider, Attempt attempt) {
+        String stage = "서비스 인증 설정 확인";
         try {
             JsonNode metadata = http.send(provider, "GET", URI.create(provider.origin + "/.well-known/oauth-authorization-server"), null, false, null, null, null).body();
-            if (!provider.origin.equals(metadata.path("issuer").asText())
-                    || !metadata.path("code_challenge_methods_supported").toString().contains("\"S256\"")) throw new LibraryException(502, "안전한 인증 방식을 확인하지 못했습니다.");
+            boolean pkce = false;
+            if (metadata.path("code_challenge_methods_supported").isArray())
+                for (JsonNode method : metadata.path("code_challenge_methods_supported")) if (method.isTextual() && method.asText().equals("S256")) pkce = true;
+            if (!provider.origin.equals(metadata.path("issuer").asText()) || !pkce)
+                throw new LibraryException(502, "안전한 인증 방식을 확인하지 못했습니다. 앱 업데이트를 확인하거나 Dougle 지원팀에 문의해 주세요.");
             URI authorization = provider.trusted(metadata.path("authorization_endpoint").asText());
             URI token = provider.trusted(metadata.path("token_endpoint").asText());
+            if (metadata.path("registration_endpoint").asText("").isBlank())
+                throw new LibraryException(503, "서비스에서 자동 연결 등록을 제공하지 않습니다. Dougle 지원팀에 문의해 주세요. 토큰 발급이나 개발자 설정은 필요하지 않습니다.");
             URI registration = provider.trusted(metadata.path("registration_endpoint").asText());
             String saved = vault.get(key(provider) + "-client");
             Client registered = saved == null ? null : json.readValue(saved, Client.class);
-            HttpServer listener = HttpServer.create(new InetSocketAddress("127.0.0.1", registered == null ? 0 : registered.port()), 4);
+            stage = "로컬 인증 응답 준비";
+            HttpServer listener;
+            try { listener = HttpServer.create(new InetSocketAddress("127.0.0.1", registered == null ? 0 : registered.port()), 4); }
+            catch (BindException occupied) {
+                if (registered == null) throw occupied;
+                registered = null;
+                listener = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 4);
+            }
             String redirect = "http://127.0.0.1:" + listener.getAddress().getPort() + "/callback";
             synchronized (this) {
                 if (!active(provider, attempt)) { listener.stop(0); return; }
                 attempt.callback = listener;
             }
             if (registered == null) {
+                stage = "앱 자동 연결 등록";
                 var request = Map.of("client_name", "Dougle", "redirect_uris", List.of(redirect),
                         "grant_types", List.of("authorization_code", "refresh_token"), "response_types", List.of("code"), "token_endpoint_auth_method", "none");
                 JsonNode result = http.send(provider, "POST", registration, json.writeValueAsString(request), false, null, null, null).body();
@@ -122,10 +136,11 @@ public class BrowserPluginConnections {
                 params.put("state", attempt.state); params.put("code_challenge", challenge(attempt.verifier)); params.put("code_challenge_method", "S256");
                 params.put("resource", provider.resource());
                 if (provider == BrowserProvider.ATLASSIAN) params.put("scope", "read:jira:agent-interface read:confluence:agent-interface");
+                stage = "기본 브라우저 열기";
                 browser.open(provider, URI.create(authorization + "?" + BrowserPluginHttp.form(params)));
             }
         } catch (Exception exception) {
-            finish(provider, attempt, "FAILED", exception instanceof LibraryException ? exception.getMessage() : "인증을 시작하지 못했습니다. 앱을 다시 열고 연결해 주세요.");
+            finish(provider, attempt, "FAILED", stage + ": " + (exception instanceof LibraryException ? exception.getMessage() : "인증을 시작하지 못했습니다. 앱을 다시 열고 연결해 주세요."));
         }
     }
     private void callback(BrowserProvider provider, Attempt attempt, Client client, URI endpoint, String redirect, HttpExchange exchange) {
@@ -151,9 +166,11 @@ public class BrowserPluginConnections {
             stage = "인증 승인 확인";
             JsonNode result = http.send(provider, "POST", endpoint, BrowserPluginHttp.form(Map.of("grant_type", "authorization_code", "client_id", client.id(),
                     "code", code, "redirect_uri", redirect, "code_verifier", attempt.verifier, "resource", provider.resource())), true, null, null, null).body();
+            validateScopes(provider, result);
             Grant grant = grant(result, endpoint.toString(), client.id(), null);
             stage = "자료 서비스 연결";
-            new PluginMcpSession(provider, http, grant.access());
+            var session = new PluginMcpSession(provider, http, grant.access());
+            session.verifyConnection();
             stage = "연결 저장";
             synchronized (grantLocks.get(provider)) {
                 synchronized (this) {
@@ -201,6 +218,7 @@ public class BrowserPluginConnections {
             try {
                 JsonNode result = http.send(provider, "POST", provider.trusted(previous.tokenEndpoint()), BrowserPluginHttp.form(Map.of("grant_type", "refresh_token",
                         "refresh_token", previous.refresh(), "client_id", previous.clientId(), "resource", provider.resource())), true, null, null, null).body();
+                validateScopes(provider, result);
                 Grant renewed = grant(result, previous.tokenEndpoint(), previous.clientId(), previous.refresh());
                 vault.put(key(provider), json.writeValueAsString(renewed));
                 return renewed.access();
@@ -231,6 +249,12 @@ public class BrowserPluginConnections {
         if (lifetime <= 0 || lifetime > 31536000) throw new LibraryException(502, "인증 유효 기간을 확인하지 못했습니다.");
         String refresh = credential(result, "refresh_token", false);
         return new Grant(credential(result, "access_token", true), refresh == null ? previousRefresh : refresh, Instant.now().getEpochSecond() + lifetime, endpoint, clientId);
+    }
+    private static void validateScopes(BrowserProvider provider, JsonNode result) {
+        if (provider != BrowserProvider.ATLASSIAN || !result.has("scope")) return;
+        Set<String> scopes = new HashSet<>(Arrays.asList(result.path("scope").asText("").split("\\s+")));
+        if (Collections.disjoint(scopes, Set.of("read:jira:agent-interface", "read:confluence:agent-interface")))
+            throw new LibraryException(401, "Jira 또는 Confluence 읽기 승인이 필요합니다. 사용할 서비스를 선택해 다시 연결해 주세요.");
     }
     private static String credential(JsonNode result, String field, boolean required) {
         String value = result.path(field).asText("");

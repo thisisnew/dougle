@@ -9,6 +9,10 @@ import java.util.Locale;
 final class SearchRepresentation {
     private SearchRepresentation() {}
 
+    static String evidence(String path, String text) {
+        return path.toLowerCase(Locale.ROOT).endsWith(".java") ? of(path, text) : text;
+    }
+
     static String of(String path, String text) {
         String original = path + "\n" + text;
         if (!path.toLowerCase(Locale.ROOT).endsWith(".java")) return original;

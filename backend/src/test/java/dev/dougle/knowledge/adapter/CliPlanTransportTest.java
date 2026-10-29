@@ -48,7 +48,7 @@ class CliPlanTransportTest {
                 else
                   printf '%%s' '{"type":"result","subtype":"success","is_error":false,"structured_output":{"decision":"SEARCH","query":"synthetic"}}'
                 fi
-                """.formatted(arguments, schema, schema, prompt), Duration.ofSeconds(5));
+                """.formatted(arguments, schema, schema, prompt), Duration.ofSeconds(30));
         String output = new CliPlanModel(model).generate(provider.name(), "ordinary synthetic prompt", "selected-model");
         assertThat(new PlanDecisionParser().parse(output)).isEqualTo(new PlanDecision.Search("synthetic"));
         assertThat(Files.readString(prompt)).isEqualTo("ordinary synthetic prompt");
@@ -113,7 +113,7 @@ class CliPlanTransportTest {
         var model = fixture("cat >/dev/null\nsleep 30\n", Duration.ofMillis(200));
         assertThatThrownBy(() -> model.generatePlan(provider, "synthetic", ""))
                 .isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(504));
-        var failing = fixture("echo private-marker >&2\nexit 9\n", Duration.ofSeconds(5));
+        var failing = fixture("echo private-marker >&2\nexit 9\n", Duration.ofSeconds(30));
         assertThatThrownBy(() -> failing.generatePlan(provider, "synthetic", ""))
                 .isInstanceOf(LibraryException.class).hasMessageNotContaining("private-marker");
     }
@@ -122,20 +122,21 @@ class CliPlanTransportTest {
     @EnumSource(Provider.class)
     void planningInterruptionKillsProcessAndCleansTemporaryDirectory(Provider provider) throws Exception {
         Path started = directory.resolve("started");
-        var model = fixture("cat >/dev/null\nprintf '%s\\n' \"$$\" \"$PWD\" > '" + started + "'\nexec sleep 30\n", Duration.ofSeconds(30));
+        var model = fixture("cat >/dev/null\nprintf '%s\\n' \"$$\" \"$PWD\" > '" + started + "'\nexec sleep 60\n", Duration.ofSeconds(60));
         var failure = new AtomicReference<Throwable>();
         Thread worker = Thread.ofPlatform().start(() -> {
             try { model.generatePlan(provider, "synthetic", ""); }
             catch (Throwable exception) { failure.set(exception); }
         });
         try {
-            long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
-            while ((!Files.exists(started) || Files.readAllLines(started).size() < 2) && System.nanoTime() < deadline) Thread.sleep(10);
+            long deadline = System.nanoTime() + Duration.ofSeconds(30).toNanos();
+            while ((!Files.exists(started) || Files.readAllLines(started).size() < 2) && worker.isAlive() && System.nanoTime() < deadline) Thread.sleep(10);
+            assertThat(failure.get()).as("Fixture must reach readiness before interruption").isNull();
             var details = Files.readAllLines(started);
             worker.interrupt();
             worker.join(5000);
             assertThat(worker.isAlive()).isFalse();
-            assertThat(failure.get()).isInstanceOf(LibraryException.class);
+            assertThat(failure.get()).isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(503));
             assertThat(ProcessHandle.of(Long.parseLong(details.get(0))).map(ProcessHandle::isAlive).orElse(false)).isFalse();
             assertThat(Files.exists(Path.of(details.get(1)))).isFalse();
         } finally {

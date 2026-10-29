@@ -17,6 +17,6 @@ public class PluginBrowser {
                     .redirectOutput(ProcessBuilder.Redirect.DISCARD).redirectError(ProcessBuilder.Redirect.DISCARD).start();
             if (!process.waitFor(5, TimeUnit.SECONDS)) { process.destroyForcibly(); throw new IllegalStateException(); }
             if (process.exitValue() != 0) throw new IllegalStateException();
-        } catch (Exception exception) { throw new LibraryException(502, "브라우저를 열지 못했습니다. 다시 연결해 주세요."); }
+        } catch (Exception exception) { throw new LibraryException(502, "브라우저를 열지 못했습니다. macOS 기본 웹 브라우저 설정과 회사의 앱 실행 정책을 확인한 뒤 다시 연결해 주세요."); }
     }
 }

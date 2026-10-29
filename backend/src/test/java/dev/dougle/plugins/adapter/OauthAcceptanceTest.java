@@ -75,8 +75,14 @@ class OauthAcceptanceTest {
                     } else {
                         var payload = json.readTree((String) invocation.getArgument(3));
                         String method = payload.path("method").asText();
-                        Object response = method.equals("initialize") ? Map.of("protocolVersion", "2025-03-26")
-                                : method.equals("tools/list") ? Map.of("tools", List.of(Map.of("name", provider == BrowserProvider.NOTION ? "notion-fetch" : "getAccessibleAtlassianResources", "inputSchema", Map.of()))) : Map.of();
+                        Object response = switch (method) {
+                            case "initialize" -> Map.of("protocolVersion", "2025-03-26");
+                            case "tools/list" -> Map.of("tools", (provider == BrowserProvider.NOTION
+                                    ? List.of("notion-fetch") : List.of("getAccessibleAtlassianResources", "getJiraIssue", "getConfluenceContent"))
+                                    .stream().map(name -> Map.of("name", name, "inputSchema", Map.of())).toList());
+                            case "tools/call" -> Map.of("structuredContent", Map.of("resources", List.of(Map.of("url", "https://fixture.atlassian.net", "id", "fixture-cloud"))));
+                            default -> Map.of();
+                        };
                         String requestId = invocation.getArgument(7);
                         result = requestId == null ? Map.of() : Map.of("id", requestId, "result", response);
                     }

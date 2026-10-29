@@ -54,6 +54,40 @@ class CodexAppServerSessionTest {
     }
 
     @Test
+    void completedMessageWaitsForMatchingTurnWithoutLosingProgress() throws Exception {
+        var diagnostics = new ProcessDiagnostics(dev.dougle.knowledge.application.ProviderExecutionException.Transport.CODEX_APP_SERVER);
+        var observed = new CodexAppServerSession(new StringWriter(), Path.of("/synthetic"), "private-prompt", "model", ignored -> {}, List.of(), diagnostics);
+        observed.initialize();
+        observed.accept(response(1, Map.of()));
+        observed.accept(response(2, Map.of("config", config(), "layers", List.of())));
+        observed.accept(response(3, thread()));
+        observed.accept(response(4, Map.of("turn", Map.of("id", "turn"))));
+        var item = Map.of("type", "agentMessage", "id", "answer", "phase", "final_answer", "text", "private-final");
+        observed.accept(mapper.writeValueAsString(Map.of("method", "item/started", "params",
+                Map.of("threadId", "thread", "turnId", "turn", "item", item))));
+        observed.accept(mapper.writeValueAsString(Map.of("method", "item/agentMessage/delta", "params",
+                Map.of("threadId", "thread", "turnId", "turn", "itemId", "answer", "delta", "private-partial"))));
+        observed.accept(mapper.writeValueAsString(Map.of("method", "item/completed", "params",
+                Map.of("threadId", "thread", "turnId", "turn", "item", item))));
+        observed.accept(mapper.writeValueAsString(Map.of("method", "turn/completed", "params",
+                Map.of("threadId", "thread", "turnId", "turn", "turn", Map.of("id", "other-turn", "status", "completed")))));
+        var progress = diagnostics.snapshot().appStream();
+        assertThat(progress.turnAccepted()).isTrue();
+        assertThat(progress.messages()).isEqualTo(1);
+        assertThat(progress.deltas()).isEqualTo(1);
+        assertThat(progress.completedMessages()).isEqualTo(1);
+        assertThat(progress.matchedCompletions()).isZero();
+        assertThat(progress.ignoredBindings()).isEqualTo(1);
+        assertThat(progress.protocolInvalid()).isZero();
+        assertThat(observed.result()).isNull();
+        observed.accept(mapper.writeValueAsString(Map.of("method", "turn/completed", "params",
+                Map.of("threadId", "thread", "turn", Map.of("id", "turn", "status", "completed")))));
+        assertThat(observed.result()).isEqualTo("private-final");
+        assertThat(diagnostics.snapshot().appStream().matchedCompletions()).isEqualTo(1);
+        assertThat(diagnostics.snapshot().safeSummary()).doesNotContain("private", "other-turn");
+    }
+
+    @Test
     void sendsPromptOnlyAfterConfigurationAndThreadValidation() throws Exception {
         initialize(); configuration(config());
         assertThat(output.toString()).contains("initialized", "config/read", "thread/start").doesNotContain("private-prompt");

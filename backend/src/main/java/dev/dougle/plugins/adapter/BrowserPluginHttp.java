@@ -20,6 +20,11 @@ import tools.jackson.databind.json.JsonMapper;
 
 @Component
 public class BrowserPluginHttp {
+    private final java.util.function.UnaryOperator<URI> transport;
+    private final long deadlineMillis;
+    public BrowserPluginHttp() { this(java.util.function.UnaryOperator.identity()); }
+    BrowserPluginHttp(java.util.function.UnaryOperator<URI> transport) { this(transport, 30_000); }
+    BrowserPluginHttp(java.util.function.UnaryOperator<URI> transport, long deadlineMillis) { this.transport = transport; this.deadlineMillis = deadlineMillis; }
     private final JsonMapper json = new JsonMapper();
     private final org.apache.hc.client5.http.impl.classic.CloseableHttpClient client = HttpClients.custom()
             .disableRedirectHandling().disableCookieManagement().disableAutomaticRetries()
@@ -31,13 +36,13 @@ public class BrowserPluginHttp {
 
     public Reply send(BrowserProvider provider, String method, URI uri, String body, boolean form, String token, String session, String requestId) {
         validateReadOrAuthentication(provider, method, uri, body, form, token, session, requestId);
-        var request = new HttpUriRequestBase(method, uri);
+        var request = new HttpUriRequestBase(method, transport.apply(uri));
         request.setHeader("Accept", "application/json, text/event-stream");
         if (token != null) request.setHeader("Authorization", "Bearer " + token);
         if (session != null) request.setHeader("Mcp-Session-Id", session);
         request.setHeader("MCP-Protocol-Version", "2025-03-26");
         if (body != null) request.setEntity(requestEntity(body, form));
-        var deadline = deadlines.schedule(request::cancel, 30, java.util.concurrent.TimeUnit.SECONDS);
+        var deadline = deadlines.schedule(request::cancel, deadlineMillis, java.util.concurrent.TimeUnit.MILLISECONDS);
         try {
             return client.execute(request, response -> {
                 int status = response.getCode();
@@ -50,7 +55,8 @@ public class BrowserPluginHttp {
                         if ("invalid_grant".equals(error.path("error").asText())) throw new LibraryException(401, "인증이 만료되었습니다. 다시 연결해 주세요.");
                         String reason = switch (error.path("error").asText()) {
                             case "invalid_target" -> "인증 대상이 일치하지 않습니다. 앱 업데이트 후 다시 연결해 주세요.";
-                            case "invalid_client" -> "앱 등록을 확인하지 못했습니다. 다시 연결해 주세요.";
+                            case "invalid_client" -> "앱 등록을 확인하지 못했습니다. Dougle 지원팀에 문의해 주세요. 토큰 발급이나 개발자 설정은 필요하지 않습니다.";
+                            case "invalid_scope" -> "Jira · Confluence 읽기 승인을 확인하지 못했습니다. 앱 업데이트와 회사의 앱 연결 정책을 확인해 주세요.";
                             case "invalid_request", "unsupported_grant_type" -> "서비스에서 인증 요청을 거부했습니다. 앱 업데이트를 확인해 주세요.";
                             default -> null;
                         };
@@ -69,8 +75,27 @@ public class BrowserPluginHttp {
                 }
             });
         } catch (LibraryException exception) { throw exception; }
-        catch (Exception exception) { throw new LibraryException(502, "서비스 응답을 확인하지 못했습니다. 네트워크를 확인해 주세요."); }
+        catch (Exception exception) { throw transportFailure(provider, exception, request.isCancelled()); }
         finally { deadline.cancel(false); }
+    }
+
+    static LibraryException transportFailure(BrowserProvider provider, Exception failure, boolean cancelled) {
+        String host = URI.create(provider.origin).getHost();
+        if (cancelled) return new LibraryException(504, "서비스 응답 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.");
+        Throwable cause = failure;
+        for (int depth = 0; cause != null && depth < 10; depth++, cause = cause.getCause()) {
+            if (cause instanceof tools.jackson.core.JacksonException)
+                return new LibraryException(502, "서비스 응답 형식이 올바르지 않습니다. 잠시 후 다시 시도해 주세요.");
+            if (cause instanceof javax.net.ssl.SSLException)
+                return new LibraryException(502, "서비스 보안 연결을 확인하지 못했습니다. " + host + " 인증서·TLS 정책을 확인해 주세요.");
+            if (cause instanceof java.net.UnknownHostException)
+                return new LibraryException(502, "서비스 주소를 찾지 못했습니다. " + host + " DNS·네트워크 연결을 확인해 주세요.");
+            if (cause instanceof java.io.InterruptedIOException)
+                return new LibraryException(504, "서비스 연결 또는 응답 시간이 초과되었습니다. 네트워크를 확인하고 다시 시도해 주세요.");
+            if (cause instanceof java.net.ConnectException)
+                return new LibraryException(502, "서비스에 접속하지 못했습니다. " + host + " 네트워크·프록시 연결을 확인해 주세요.");
+        }
+        return new LibraryException(502, "서비스 응답 형식을 확인하지 못했거나 응답이 중단되었습니다. 잠시 후 다시 시도해 주세요.");
     }
 
     static void validateReadOrAuthentication(BrowserProvider provider, String method, URI uri, String body,

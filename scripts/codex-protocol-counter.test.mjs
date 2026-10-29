@@ -160,10 +160,24 @@ function launch(context, fixture, args = appArgs, environment = {}) {
   child.stdout.on('data', bytes => { stdout = Buffer.concat([stdout, bytes]) })
   child.stderr.on('data', bytes => { stderr = Buffer.concat([stderr, bytes]) })
   const finished = new Promise(resolve => child.once('close', (code, signal) => resolve({ code, signal, stdout, stderr })))
-  const watchdog = setTimeout(() => child.kill('SIGTERM'), 5000)
+  const watchdog = setTimeout(() => child.kill('SIGTERM'), 20000)
   context.after(async () => { clearTimeout(watchdog); if (child.exitCode === null && child.signalCode === null) child.kill('SIGTERM'); await finished })
   finished.then(() => clearTimeout(watchdog))
-  return { child, finished, stdout: () => stdout }
+  const waitForOutput = length => new Promise((resolve, reject) => {
+    const cleanup = () => {
+      child.stdout.off('data', observe)
+      child.off('close', ended)
+    }
+    const observe = () => {
+      if (stdout.length >= length) { cleanup(); resolve() }
+    }
+    const ended = () => { cleanup(); reject(new Error('Fixture exited before expected stdout')) }
+    child.stdout.on('data', observe)
+    child.once('close', ended)
+    if (child.exitCode !== null || child.signalCode !== null) ended()
+    else observe()
+  })
+  return { child, finished, stdout: () => stdout, waitForOutput }
 }
 
 async function stats(fixture) {
@@ -240,12 +254,11 @@ test('unsafe manifest permissions and symlinked binary are rejected before launc
   assert.deepEqual(await readdir(fixtureData.statsDirectory), [])
 })
 
-test('stats are atomically persisted before forwarded bytes and signal cleanup preserves signal', { timeout: 8000 }, async context => {
+test('stats are atomically persisted before forwarded bytes and signal cleanup preserves signal', { timeout: 30000 }, async context => {
   const output = Buffer.concat([...responses.map(line), line(event('turn/started', { threadId: binding.threadId, turn: { id: binding.turnId } }))])
   const fixtureData = await fixture(context, `process.stdout.write(Buffer.from('${output.toString('base64')}', 'base64')); setInterval(() => {}, 1000);`)
   const run = launch(context, fixtureData)
-  const deadline = Date.now() + 3000
-  while (run.stdout().length < output.length && Date.now() < deadline) await pause(10)
+  await run.waitForOutput(output.length)
   assert.deepEqual(run.stdout(), output)
   assert.equal((await stats(fixtureData)).normalizedBinding.TURN_STARTED.MATCH, 1)
   run.child.kill('SIGTERM')
@@ -274,14 +287,27 @@ test('dedicated profile is passed unchanged and cannot be used as stats storage'
   assert.deepEqual(await readdir(profile), ['auth.json'])
 })
 
-test('forwarded termination cleans child process group including synthetic descendant', { timeout: 8000 }, async context => {
+test('delayed fixture readiness still preserves persisted bytes and termination', { timeout: 30000 }, async context => {
+  const output = line(response(1))
+  const fixtureData = await fixture(context, `setTimeout(() => {
+    process.stdout.write(Buffer.from('${output.toString('base64')}', 'base64'));
+  }, 3200); setInterval(() => {}, 1000);`)
+  const run = launch(context, fixtureData)
+  await run.waitForOutput(output.length)
+  assert.deepEqual(run.stdout(), output)
+  assert.equal((await stats(fixtureData)).responses.INITIALIZE, 1)
+  run.child.kill('SIGTERM')
+  assert.equal((await run.finished).signal, 'SIGTERM')
+  assert.equal((await stats(fixtureData)).responses.INITIALIZE, 1)
+})
+
+test('forwarded termination cleans child process group including synthetic descendant', { timeout: 30000 }, async context => {
   const fixtureData = await fixture(context, `const fs = require('node:fs'); const { spawn } = require('node:child_process');
     const leaf = spawn('/bin/sleep', ['60'], {stdio: 'ignore'});
     fs.writeFileSync('owned-pids.json', JSON.stringify([process.pid, leaf.pid]));
     process.stdout.write('${line(response(1)).toString().trim()}\\n'); setInterval(() => {}, 1000);`)
   const run = launch(context, fixtureData)
-  const deadline = Date.now() + 3000
-  while (run.stdout().length === 0 && Date.now() < deadline) await pause(10)
+  await run.waitForOutput(1)
   assert.ok(run.stdout().length > 0)
   const pids = JSON.parse(await readFile(join(fixtureData.directory, 'owned-pids.json'), 'utf8'))
   context.after(() => { for (const pid of pids) { try { process.kill(pid, 'SIGKILL') } catch (error) { if (error.code !== 'ESRCH') throw error } } })

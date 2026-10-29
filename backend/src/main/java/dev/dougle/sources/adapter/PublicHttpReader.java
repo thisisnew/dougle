@@ -57,8 +57,8 @@ public class PublicHttpReader implements RemoteReader, AutoCloseable {
                     || (uri.getPort() != -1 && uri.getPort() != 443)) {
                 throw new IllegalArgumentException();
             }
-            String host = uri.getHost();
-            if (host.equalsIgnoreCase("localhost") || host.endsWith(".localhost") || host.endsWith(".local")) {
+            String host = uri.getHost().toLowerCase(java.util.Locale.ROOT).replaceAll("\\.+$", "");
+            if (host.equals("localhost") || host.endsWith(".localhost") || host.endsWith(".local")) {
                 throw new IllegalArgumentException();
             }
             if (host.contains(":") || host.matches("[0-9.]+")) {

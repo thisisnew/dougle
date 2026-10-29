@@ -133,6 +133,8 @@ public class ProviderConnectionAdapter implements ProviderConnection {
             long deadline = System.nanoTime() + timeout.toNanos();
             while (process.isAlive()) {
                 process.descendants().forEach(descendants::add);
+                if (stdout.isDone()) stdout.get();
+                if (stderr.isDone()) stderr.get();
                 if (System.nanoTime() >= deadline) throw new java.util.concurrent.TimeoutException();
                 process.waitFor(20, TimeUnit.MILLISECONDS);
             }

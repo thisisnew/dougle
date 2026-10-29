@@ -31,7 +31,7 @@ class ProviderLoginAdapterTest {
     }
     ProviderConnection.Status state(String state) { return new ProviderConnection.Status("CODEX", state, "now", "NOT_CHECKED"); }
     String await(ProviderLoginAdapter adapter, String id) throws Exception {
-        long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
+        long deadline = System.nanoTime() + Duration.ofSeconds(30).toNanos();
         while (adapter.status(id).state().equals("PENDING") && System.nanoTime() < deadline) Thread.sleep(20);
         return adapter.status(id).state();
     }
@@ -50,7 +50,7 @@ class ProviderLoginAdapterTest {
 
     @Test
     void successRequiresAuthenticationRecheckAndNeverReturnsOutput() throws Exception {
-        var adapter = fixture("[ \"$*\" = login ] || exit 9\n[ -z \"$(cat)\" ] || exit 8\necho 'secret-token fake-url'\n", Duration.ofSeconds(3));
+        var adapter = fixture("[ \"$*\" = login ] || exit 9\ninput=''\nif IFS= read -r input || [ -n \"$input\" ]; then exit 8; fi\necho 'secret-token fake-url'\n", Duration.ofSeconds(30));
         try {
             when(connection.check(Provider.CODEX)).thenReturn(state("LOGIN_REQUIRED"), state("AUTHENTICATED"));
             var started = adapter.start(Provider.CODEX, true);

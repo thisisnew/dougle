@@ -22,6 +22,7 @@ class ShellAliasLaunchTest {
         Path executable = home.resolve("bin").resolve(name);
         Files.createDirectories(executable.getParent());
         Files.writeString(executable, "#!/bin/sh\n"
+                + "printf '%s\\n' \"$*\" >> '" + home.resolve("invocations") + "'\n"
                 + "[ \"$CLAUDE_CONFIG_DIR\" = '" + home.resolve("Work Profile") + "' ] || exit 41\n"
                 + "if [ \"$*\" = 'auth --help' ]; then echo '  status Show authentication status'; exit 0; fi\n"
                 + "if [ \"$*\" = 'auth status' ]; then echo '{\"loggedIn\":true}'; exit 0; fi\n"
@@ -40,10 +41,11 @@ class ShellAliasLaunchTest {
         assertThat(CompanyExecutable.resolve(command)).isEqualTo(command);
         var launch = mock(CliLaunchConfiguration.class);
         when(launch.command(Provider.CLAUDE)).thenReturn(command);
-        assertThat(new ProviderConnectionAdapter(launch, Duration.ofSeconds(3)).check(Provider.CLAUDE).state())
+        var checked = new ProviderConnectionAdapter(launch, "").check(Provider.CLAUDE);
+        assertThat(checked.state()).as("%s; fixture invocations: %s", checked, invocations())
                 .isEqualTo("AUTHENTICATED");
         assertThat(new CliCuratorModel("codex", command, new CuratorSettings("", ""))
-                .run(List.of(command, "--print"), home, "", Duration.ofSeconds(3))).contains("profile-preserved");
+                .run(List.of(command, "--print"), home, "", Duration.ofSeconds(30))).contains("profile-preserved");
         assertThat(home.resolve("must-not-run")).doesNotExist();
     }
 
@@ -69,26 +71,35 @@ class ShellAliasLaunchTest {
         Path executable = binary("claude");
         Path marker = home.resolve("logged-in");
         Files.writeString(executable, "#!/bin/sh\n"
+                + "printf '%s\\n' \"$*\" >> '" + home.resolve("invocations") + "'\n"
                 + "[ \"$CLAUDE_CONFIG_DIR\" = '" + home.resolve("Work Profile") + "' ] || exit 41\n"
                 + "case \"$*\" in\n"
                 + "'auth --help') echo '  status Show authentication status';;\n"
-                + "'auth login') touch '" + marker + "';;\n"
+                + "'auth login') : > '" + marker + "';;\n"
                 + "'auth status') if [ -f '" + marker + "' ]; then echo '{\"loggedIn\":true}';"
                 + " else echo '{\"loggedIn\":false}'; exit 1; fi;;\n*) exit 99;;\nesac\n");
         String command = ShellAliasLaunch.register("claude", "office", "CLAUDE_CONFIG_DIR=\"$HOME/Work Profile\" claude",
                 home, List.of(executable.getParent()));
         var launch = mock(CliLaunchConfiguration.class);
         when(launch.command(Provider.CLAUDE)).thenReturn(command);
-        var connection = new ProviderConnectionAdapter(launch, Duration.ofSeconds(3));
-        var login = new ProviderLoginAdapter(launch, connection, Duration.ofSeconds(3));
+        var connection = new ProviderConnectionAdapter(launch, "");
+        var login = new ProviderLoginAdapter(launch, connection, Duration.ofSeconds(30));
         try {
-            assertThat(connection.check(Provider.CLAUDE).state()).isEqualTo("LOGIN_REQUIRED");
+            var checked = connection.check(Provider.CLAUDE);
+            assertThat(checked.state()).as("%s; fixture invocations: %s", checked, invocations()).isEqualTo("LOGIN_REQUIRED");
             String id = login.start(Provider.CLAUDE, true).id();
-            long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
+            long deadline = System.nanoTime() + Duration.ofSeconds(90).toNanos();
             while (login.status(id).state().equals("PENDING") && System.nanoTime() < deadline) Thread.sleep(20);
-            assertThat(login.status(id).state()).isEqualTo("AUTHENTICATED");
+            assertThat(login.status(id).state()).as("Fixture invocations: %s", invocations()).isEqualTo("AUTHENTICATED");
             assertThat(marker).exists();
+            assertThat(Files.readAllLines(home.resolve("invocations"))).containsExactly(
+                    "auth --help", "auth status", "auth --help", "auth status", "auth login", "auth --help", "auth status");
         } finally { login.close(); }
+    }
+
+    private String invocations() throws Exception {
+        Path trace = home.resolve("invocations");
+        return Files.exists(trace) ? Files.readString(trace) : "NOT_STARTED";
     }
 
     @ParameterizedTest

@@ -37,8 +37,12 @@ class CliLiveConnectionTest {
     }
 
     CliLaunchController controller(CliLaunchConfiguration settings, String command) {
+        return controller(settings, command, Duration.ofSeconds(30));
+    }
+
+    CliLaunchController controller(CliLaunchConfiguration settings, String command, Duration timeout) {
         CliDiscovery discovery = provider -> List.of(new CliDiscovery.Candidate("company", command));
-        return new CliLaunchController(settings, discovery, new ProviderConnectionAdapter(settings, Duration.ofSeconds(3)));
+        return new CliLaunchController(settings, discovery, new ProviderConnectionAdapter(settings, timeout));
     }
 
     @ParameterizedTest
@@ -63,7 +67,7 @@ class CliLiveConnectionTest {
         assertThat(runner.generate(provider, "synthetic prompt")).contains("new-profile");
         var restarted = new CliLaunchConfiguration(store, "missing-codex", "missing-claude");
         assertThat(restarted.command(provider)).isEqualTo(path.toString());
-        assertThat(new ProviderConnectionAdapter(restarted, Duration.ofSeconds(2)).check(provider).state()).isEqualTo("AUTHENTICATED");
+        assertThat(new ProviderConnectionAdapter(restarted, Duration.ofSeconds(30)).check(provider).state()).isEqualTo("AUTHENTICATED");
     }
 
     @ParameterizedTest
@@ -72,8 +76,9 @@ class CliLiveConnectionTest {
         Path path = executable(body);
         var store = new Store();
         var launch = new CliLaunchConfiguration(store, "original-codex", "original-claude");
-        var result = controller(launch, path.toString()).connect(Provider.CLAUDE, new CliLaunchController.Selection(path.toString(), 0));
+        var result = controller(launch, path.toString(), Duration.ofSeconds(3)).connect(Provider.CLAUDE, new CliLaunchController.Selection(path.toString(), 0));
         assertThat(result.state()).isIn("CHECK_FAILED", "UNSUPPORTED");
+        if (body.equals("sleep 10")) assertThat(result.reason()).isEqualTo("TIMED_OUT");
         assertThat(store.current().revision()).isZero();
         assertThat(launch.command(Provider.CLAUDE)).isEqualTo("original-claude");
     }
@@ -83,14 +88,15 @@ class CliLiveConnectionTest {
         Path marker = directory.resolve("signed-in");
         Path path = executable("case \"$*\" in\n'auth --help') echo '  status  Check';;\n"
                 + "'auth status') if [ -f '" + marker + "' ]; then echo '{\"loggedIn\":true}'; else echo '{\"loggedIn\":false}'; exit 1; fi;;\n"
-                + "'auth login') touch '" + marker + "';;\n*) exit 99;;\nesac\n");
+                + "'auth login') : > '" + marker + "';;\n*) exit 99;;\nesac\n");
         var store = new Store();
         var launch = new CliLaunchConfiguration(store, "missing", "missing");
-        assertThat(controller(launch, path.toString()).connect(Provider.CLAUDE, new CliLaunchController.Selection(path.toString(), 0)).state()).isEqualTo("LOGIN_REQUIRED");
-        var login = new ProviderLoginAdapter(launch, new ProviderConnectionAdapter(launch, Duration.ofSeconds(2)), Duration.ofSeconds(3));
+        var connection = controller(launch, path.toString()).connect(Provider.CLAUDE, new CliLaunchController.Selection(path.toString(), 0));
+        assertThat(connection.state()).as(connection.toString()).isEqualTo("LOGIN_REQUIRED");
+        var login = new ProviderLoginAdapter(launch, new ProviderConnectionAdapter(launch, Duration.ofSeconds(30)), Duration.ofSeconds(30));
         try {
             var started = login.start(Provider.CLAUDE, true);
-            long deadline = System.nanoTime() + Duration.ofSeconds(4).toNanos();
+            long deadline = System.nanoTime() + Duration.ofSeconds(90).toNanos();
             while (login.status(started.id()).state().equals("PENDING") && System.nanoTime() < deadline) Thread.sleep(20);
             assertThat(login.status(started.id()).state()).isEqualTo("AUTHENTICATED");
             assertThat(marker).exists();
@@ -114,7 +120,7 @@ class CliLiveConnectionTest {
     void runningAnswerCannotSwitchExecutionEnvironment() throws Exception {
         Path marker = directory.resolve("answer-started");
         Path release = directory.resolve("answer-release");
-        Path path = executable("cat >/dev/null\ntouch '" + marker + "'\nwhile [ ! -f '" + release + "' ]; do sleep 0.05; done\n"
+        Path path = executable("while IFS= read -r input || [ -n \"$input\" ]; do :; done\n: > '" + marker + "'\nwhile [ ! -f '" + release + "' ]; do sleep 0.05; done\n"
                 + "echo '{\"title\":\"original-profile\",\"claims\":[]}' > answer.json\n");
         var store = new Store();
         var launch = new CliLaunchConfiguration(store, path.toString(), "unused");
@@ -125,14 +131,18 @@ class CliLiveConnectionTest {
             catch (Throwable exception) { answer.completeExceptionally(exception); }
         });
         try {
-            long deadline = System.nanoTime() + Duration.ofSeconds(5).toNanos();
-            while (!Files.exists(marker) && System.nanoTime() < deadline) Thread.sleep(20);
+            long deadline = System.nanoTime() + Duration.ofSeconds(30).toNanos();
+            while (!Files.exists(marker) && !answer.isDone() && System.nanoTime() < deadline) Thread.sleep(20);
+            if (answer.isCompletedExceptionally()) answer.get();
             assertThat(marker).exists();
+            assertThat(answer.isDone()).isFalse();
             assertThatThrownBy(() -> launch.activate(Provider.CODEX, "different", 0)).isInstanceOf(LibraryException.class);
             assertThat(store.current().revision()).isZero();
+            assertThat(launch.command(Provider.CODEX)).isEqualTo(path.toString());
             Files.writeString(release, "done");
-            assertThat(answer.get(5, TimeUnit.SECONDS)).contains("original-profile");
+            assertThat(answer.get(30, TimeUnit.SECONDS)).contains("original-profile");
         } finally { Files.writeString(release, "done"); worker.interrupt(); worker.join(5000); }
+        assertThat(worker.isAlive()).isFalse();
     }
 
     @Test
@@ -144,15 +154,16 @@ class CliLiveConnectionTest {
         var worker = Thread.ofVirtual().start(() -> {
             try (var lease = CliExecutionGate.read()) {
                 entered.countDown();
-                release.await(5, TimeUnit.SECONDS);
+                release.await();
             } catch (InterruptedException exception) { Thread.currentThread().interrupt(); }
         });
         try {
-            assertThat(entered.await(2, TimeUnit.SECONDS)).isTrue();
+            assertThat(entered.await(30, TimeUnit.SECONDS)).isTrue();
             assertThatThrownBy(() -> launch.activate(Provider.CLAUDE, "new", 0)).isInstanceOf(LibraryException.class);
             assertThatThrownBy(() -> launch.save("new", "new", 0, true)).isInstanceOf(LibraryException.class);
             assertThat(store.current().revision()).isZero();
         } finally { release.countDown(); worker.join(3000); }
+        assertThat(worker.isAlive()).isFalse();
         launch.activate(Provider.CLAUDE, "new", 0);
         assertThat(launch.command(Provider.CLAUDE)).isEqualTo("new");
     }

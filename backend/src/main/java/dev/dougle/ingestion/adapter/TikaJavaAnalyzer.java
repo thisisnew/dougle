@@ -36,6 +36,7 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
 
     @Override
     public Analysis analyzeStream(String name, java.io.InputStream content) {
+        if (Thread.currentThread().isInterrupted()) throw new java.util.concurrent.CancellationException();
         Metadata metadata = new Metadata();
         metadata.set(TikaCoreProperties.RESOURCE_NAME_KEY, name);
         try (var extracted = new ExtractedTextWriter(maxExtractedBytes)) {
@@ -80,14 +81,25 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             context.set(org.apache.tika.parser.pdf.PDFParserConfig.class, pdf);
             if (isSourceText(name)) {
                 metadata.set("Content-Type", "text/plain");
-                var input = new java.io.PushbackInputStream(content, 3);
-                byte[] prefix = input.readNBytes(3);
+                boolean plainText = name.toLowerCase(java.util.Locale.ROOT).endsWith(".txt");
+                byte[] prefix = readTextPrefix(content, plainText ? 64 * 1024 : 3);
                 var charset = StandardCharsets.UTF_8;
                 int skipped = 0;
                 if (prefix.length >= 3 && prefix[0] == (byte) 0xef && prefix[1] == (byte) 0xbb && prefix[2] == (byte) 0xbf) skipped = 3;
                 else if (prefix.length >= 2 && prefix[0] == (byte) 0xff && prefix[1] == (byte) 0xfe) { charset = StandardCharsets.UTF_16LE; skipped = 2; }
                 else if (prefix.length >= 2 && prefix[0] == (byte) 0xfe && prefix[1] == (byte) 0xff) { charset = StandardCharsets.UTF_16BE; skipped = 2; }
-                input.unread(prefix, skipped, prefix.length - skipped);
+                if (plainText && skipped == 0 && StandardCharsets.UTF_8.newDecoder().decode(
+                        java.nio.ByteBuffer.wrap(prefix), java.nio.CharBuffer.allocate(prefix.length), false).isError()) {
+                    var detector = new org.apache.tika.parser.txt.UniversalEncodingDetector();
+                    detector.setMarkLimit(prefix.length);
+                    var detected = detector.detect(new ByteArrayInputStream(prefix), new Metadata());
+                    if (detected != null && (detected.name().equalsIgnoreCase("EUC-KR")
+                            || detected.equals(java.nio.charset.Charset.forName("MS949")))) {
+                        charset = java.nio.charset.Charset.forName("MS949");
+                    }
+                }
+                var input = new java.io.SequenceInputStream(
+                        new ByteArrayInputStream(prefix, skipped, prefix.length - skipped), content);
                 var reader = new java.io.InputStreamReader(input, charset.newDecoder()
                         .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
                         .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT));
@@ -173,6 +185,25 @@ public class TikaJavaAnalyzer implements DocumentAnalyzer {
             return new Analysis("", metadata.get("Content-Type"), "ERROR",
                     "파일 내용을 분석하지 못했습니다. 파일 형식과 읽기 권한을 확인한 뒤 다시 동기화하세요.", List.of());
         }
+    }
+
+    private static byte[] readTextPrefix(java.io.InputStream content, int limit) throws java.io.IOException {
+        byte[] prefix = new byte[limit];
+        int length = 0;
+        while (length < limit) {
+            if (Thread.currentThread().isInterrupted()) throw new java.io.InterruptedIOException();
+            int count = content.read(prefix, length, limit - length);
+            if (count < 0) break;
+            if (count == 0) {
+                int next = content.read();
+                if (next < 0) break;
+                prefix[length++] = (byte) next;
+            } else {
+                length += count;
+            }
+        }
+        if (Thread.currentThread().isInterrupted()) throw new java.io.InterruptedIOException();
+        return java.util.Arrays.copyOf(prefix, length);
     }
 
     private static boolean isSourceText(String name) {

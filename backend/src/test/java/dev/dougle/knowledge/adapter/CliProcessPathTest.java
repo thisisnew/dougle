@@ -50,12 +50,31 @@ class CliProcessPathTest {
         var launcher = java.nio.file.Files.createDirectories(fixture.resolve(".local/bin")).resolve("claude-work");
         java.nio.file.Files.createSymbolicLink(launcher, script);
         var builder = new ProcessBuilder(launcher.toString(), "--version");
+        builder.environment().clear();
         builder.environment().put("PATH", "/usr/bin:/bin");
         CliProcessPath.includeCommandDirectory(builder);
+        assertThat(builder.environment().get("PATH").split(java.io.File.pathSeparator))
+                .startsWith(launcher.getParent().toString(), packageDirectory.toRealPath().toString(), bin.toRealPath().toString());
+        assertThat(builder.command()).containsExactly(launcher.toString(), "--version");
+        var stderr = fixture.resolve("launcher-stderr");
+        builder.redirectError(stderr.toFile());
         var process = builder.start();
-        assertThat(process.waitFor(5, java.util.concurrent.TimeUnit.SECONDS)).isTrue();
-        assertThat(process.exitValue()).isZero();
-        assertThat(new String(process.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)).isEqualTo("synthetic-node-ok\n");
-        assertThat(builder.environment().get("PATH")).contains(bin.toString());
+        try {
+            process.getOutputStream().close();
+            assertThat(process.waitFor(30, java.util.concurrent.TimeUnit.SECONDS))
+                    .as("Synthetic env/shebang launcher must exit within the fixture deadline").isTrue();
+            assertThat(process.exitValue()).as(java.nio.file.Files.readString(stderr)).isZero();
+            assertThat(new String(process.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)).isEqualTo("synthetic-node-ok\n");
+            assertThat(builder.environment().get("PATH")).contains(bin.toString());
+        } finally {
+            process.destroyForcibly();
+            try {
+                assertThat(process.waitFor(5, java.util.concurrent.TimeUnit.SECONDS)).as("Synthetic launcher cleanup").isTrue();
+            } finally {
+                process.getInputStream().close();
+                process.getErrorStream().close();
+                process.getOutputStream().close();
+            }
+        }
     }
 }

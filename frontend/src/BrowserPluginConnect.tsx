@@ -91,8 +91,9 @@ export default function BrowserPluginConnect({ provider, connected, ready, onBus
   }
   return <>
     {busy ? <p className="plugin-message" role="status"><LoaderCircle className="animate-spin" size={17} />{cancelling ? '연결을 취소하는 중…' : progress?.message || '브라우저를 여는 중…'}</p>
-      : <p className="plugin-message">{connected ? '연결되었습니다.' : '브라우저에서 로그인하고 연결을 승인해 주세요.'}</p>}
+      : <p className="plugin-message">{connected ? '연결되었습니다.' : error ? '연결을 완료하지 못했습니다.' : '브라우저에서 로그인하고 연결을 승인해 주세요.'}</p>}
     {error && <p className="plugin-message error" role="alert">{error}</p>}
+    {provider === 'atlassian' && !connected && !error && <small>브라우저에서 사용할 회사 사이트를 선택해 주세요.</small>}
     <div className="dialog-actions plugin-actions">
       {connected && !busy && <Button variant="ghost" onClick={() => void disconnect()}>연결 해제</Button>}
       {busy ? <Button variant="outline" disabled={!attempt.current || cancelling} onClick={() => void cancel()}>취소</Button>

@@ -41,7 +41,7 @@ class CodexAppServerTest {
     }
 
     private CodexAppServer turnFixture(String events) throws Exception {
-        var server = fixture("normal", Duration.ofMillis(1500));
+        var server = fixture("normal", Duration.ofSeconds(8));
         Path original = Path.of("../scripts/fixtures/fake-codex-app-server.mjs").toRealPath();
         String script = Files.readString(original);
         String marker = "    if (mode === 'request')";
@@ -128,8 +128,8 @@ class CodexAppServerTest {
 
     @Test
     void optInRoutesCodexAnswerThroughIsolatedStreamAndReleasesProcessAndLock() throws Exception {
-        fixture("normal", Duration.ofSeconds(8));
-        var model = new CliCuratorModel(executable, "unused", Duration.ofSeconds(8), new CuratorSettings("", ""), home.toString());
+        fixture("normal", Duration.ofSeconds(30));
+        var model = new CliCuratorModel(executable, "unused", Duration.ofSeconds(30), new CuratorSettings("", ""), home.toString());
         var texts = new CopyOnWriteArrayList<String>();
         var partial = new CompletableFuture<String>();
         var releasePartial = new CountDownLatch(1);
@@ -147,23 +147,23 @@ class CodexAppServerTest {
             })); } catch (Throwable error) { result.completeExceptionally(error); }
         });
         try {
-            CompletableFuture.anyOf(partial, result).get(8, TimeUnit.SECONDS);
+            CompletableFuture.anyOf(partial, result).get(30, TimeUnit.SECONDS);
             assertThat(partial).isCompletedWithValue("가상 Codex 임시 출력");
             assertThat(result.isDone()).isFalse();
             releasePartial.countDown();
-            assertThat(result.get(8, TimeUnit.SECONDS)).contains("R1", "claims").doesNotContain("임시");
+            assertThat(result.get(30, TimeUnit.SECONDS)).contains("R1", "claims").doesNotContain("임시");
             assertThat(texts).contains("가상 Codex 임시 출력");
             var first = JsonMapper.builder().build().readTree(Files.readAllLines(trace).getFirst());
             assertThat(Files.exists(Path.of(first.path("cwd").asString()))).isFalse();
             assertThat(ProcessHandle.of(first.path("pid").asLong()).map(ProcessHandle::isAlive).orElse(false)).isFalse();
             assertThat(Files.readString(home.resolve("auth.json"))).isEqualTo("{\"synthetic\":true}");
-            assertThat(new CodexAppServer(executable, home, Duration.ofSeconds(8)).generate("synthetic", "", text -> {})).contains("claims");
+            assertThat(new CodexAppServer(executable, home, Duration.ofSeconds(30)).generate("synthetic", "", text -> {})).contains("claims");
         } finally { releasePartial.countDown(); worker.interrupt(); worker.join(5000); }
     }
 
     @Test
     void sendsRealImageInputWithPrivatePermissionsAndRemovesTemporaryFile() throws Exception {
-        var server = fixture("image", Duration.ofSeconds(8));
+        var server = fixture("image", Duration.ofSeconds(30));
         var image = new dev.dougle.knowledge.application.ModelImage("R1", "synthetic-image-bytes".getBytes(java.nio.charset.StandardCharsets.UTF_8));
         assertThat(server.generate("synthetic", "fixture-model", text -> {}, List.of(image))).contains("claims");
         String line = Files.readAllLines(trace).stream().filter(value -> value.contains("verifiedImage")).findFirst().orElseThrow();
@@ -174,7 +174,7 @@ class CodexAppServerTest {
 
     @Test
     void buffersNotificationsBeforeTurnResponse() throws Exception {
-        var server = fixture("early", Duration.ofSeconds(8));
+        var server = fixture("early", Duration.ofSeconds(30));
         var texts = new java.util.ArrayList<String>();
         assertThat(server.generate("synthetic", "", texts::add)).contains("claims");
         assertThat(texts).contains("가상 Codex 임시 출력");
@@ -182,22 +182,22 @@ class CodexAppServerTest {
 
     @Test
     void rejectsExternalConfigBeforeSendingPrompt() throws Exception {
-        var server = fixture("unsafe-config", Duration.ofSeconds(8));
+        var server = fixture("unsafe-config", Duration.ofSeconds(30));
         assertThatThrownBy(() -> server.generate("synthetic", "", text -> {})).isInstanceOf(LibraryException.class);
         assertThat(Files.readString(trace)).doesNotContain("thread/start", "turn/start");
     }
 
     @Test
     void rejectsUnsafeThreadBeforeSendingPrompt() throws Exception {
-        var server = fixture("unsafe-thread", Duration.ofSeconds(8));
+        var server = fixture("unsafe-thread", Duration.ofSeconds(30));
         assertThatThrownBy(() -> server.generate("synthetic", "", text -> {})).isInstanceOf(LibraryException.class);
         assertThat(Files.readString(trace)).contains("thread/start").doesNotContain("turn/start");
     }
 
     @Test
     void rejectsApprovalRequestWithoutRespondingOrRetrying() throws Exception {
-        fixture("request", Duration.ofSeconds(8));
-        var model = new CliCuratorModel(executable, "unused", Duration.ofSeconds(8), new CuratorSettings("", ""), home.toString());
+        fixture("request", Duration.ofSeconds(30));
+        var model = new CliCuratorModel(executable, "unused", Duration.ofSeconds(30), new CuratorSettings("", ""), home.toString());
         assertThatThrownBy(() -> model.generateWithText(Provider.CODEX, "synthetic", "", text -> {}))
                 .isInstanceOf(LibraryException.class).hasMessageContaining("자동 재전송하지 않습니다");
         var lines = Files.readAllLines(trace);
@@ -208,19 +208,20 @@ class CodexAppServerTest {
 
     @Test
     void cancelsProcessAndObservedDescendants() throws Exception {
-        var server = fixture("hang", Duration.ofSeconds(30));
+        var server = fixture("hang", Duration.ofSeconds(60));
         var finished = new CompletableFuture<Throwable>();
         Thread worker = Thread.ofVirtual().start(() -> {
             try { server.generate("synthetic", "", text -> {}, List.of(new dev.dougle.knowledge.application.ModelImage("R1", new byte[]{1, 2, 3}))); finished.complete(null); }
             catch (Throwable error) { finished.complete(error); }
         });
         try {
-            long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
-            while ((!Files.exists(trace) || !Files.readString(trace).contains("childPid")) && System.nanoTime() < deadline) Thread.sleep(20);
+            long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(30);
+            while ((!Files.exists(trace) || !Files.readString(trace).contains("childPid")) && !finished.isDone() && System.nanoTime() < deadline) Thread.sleep(20);
+            assertThat(finished.isDone()).as("Fixture must remain running until interruption").isFalse();
             assertThat(Files.readString(trace)).contains("childPid");
             Thread.sleep(200);
             worker.interrupt();
-            assertThat(finished.get(5, TimeUnit.SECONDS)).isInstanceOf(LibraryException.class);
+            assertThat(finished.get(5, TimeUnit.SECONDS)).isInstanceOfSatisfying(LibraryException.class, error -> assertThat(error.status()).isEqualTo(503));
             for (String line : Files.readAllLines(trace)) {
                 var value = JsonMapper.builder().build().readTree(line);
                 if (value.has("cwd")) assertThat(Files.exists(Path.of(value.path("cwd").asString()))).isFalse();
@@ -259,25 +260,25 @@ class CodexAppServerTest {
 
     @Test
     void rejectsUnexpectedTools() throws Exception {
-        var server = fixture("tool", Duration.ofSeconds(8));
+        var server = fixture("tool", Duration.ofSeconds(30));
         assertThatThrownBy(() -> server.generate("synthetic", "", text -> {})).isInstanceOf(LibraryException.class);
     }
 
     @Test
     void rejectsWrongResponseId() throws Exception {
-        var server = fixture("wrong-id", Duration.ofSeconds(8));
+        var server = fixture("wrong-id", Duration.ofSeconds(30));
         assertThatThrownBy(() -> server.generate("synthetic", "", text -> {})).isInstanceOf(LibraryException.class);
     }
 
     @Test
     void processExitCannotBecomeSuccess() throws Exception {
-        var server = fixture("exit", Duration.ofSeconds(8));
+        var server = fixture("exit", Duration.ofSeconds(30));
         assertThatThrownBy(() -> server.generate("synthetic", "", text -> {})).isInstanceOf(LibraryException.class);
     }
 
     @Test
     void refusesCustomConfigSymlinksAndSharedPermissionsBeforeLaunch() throws Exception {
-        var server = fixture("normal", Duration.ofSeconds(8));
+        var server = fixture("normal", Duration.ofSeconds(30));
         Files.writeString(home.resolve("config.toml"), "synthetic = true");
         assertThatThrownBy(server::validateHome).isInstanceOf(java.io.IOException.class);
         Files.delete(home.resolve("config.toml"));

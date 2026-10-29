@@ -38,7 +38,45 @@ final class PluginMcpSession {
     }
 
     boolean has(String tool) { return tools.containsKey(tool); }
+    void verifyConnection() {
+        if (provider != BrowserProvider.ATLASSIAN) return;
+        if (!(has("getJiraIssue") || has("getConfluenceContent") || has("getConfluencePage")))
+            throw new LibraryException(403, "Jira 또는 Confluence 읽기 권한이 필요합니다. 사용할 서비스를 선택해 다시 연결해 주세요.");
+        accessibleResources();
+    }
+    JsonNode accessibleResources() {
+        if (!has("getAccessibleAtlassianResources"))
+            throw new LibraryException(403, "회사 사이트 조회 권한이 없습니다. 사용할 사이트를 선택해 다시 연결해 주세요.");
+        JsonNode result = call("getAccessibleAtlassianResources", Map.of());
+        JsonNode resources;
+        try { resources = result.has("structuredContent") ? result.path("structuredContent") : json.readTree(text(result)); }
+        catch (RuntimeException exception) { throw new LibraryException(502, "회사 사이트 목록을 읽지 못했습니다. 다시 연결해 주세요."); }
+        if (resources == null) throw new LibraryException(502, "회사 사이트 목록 형식을 확인하지 못했습니다. 다시 연결해 주세요.");
+        if (!resources.isArray()) resources = resources.path("resources");
+        if (!resources.isArray()) throw new LibraryException(502, "회사 사이트 목록 형식을 확인하지 못했습니다. 다시 연결해 주세요.");
+        if (resources.isEmpty())
+            throw new LibraryException(403, "승인된 회사 사이트가 없습니다. 사용할 사이트를 선택해 다시 연결해 주세요.");
+        var supported = json.createArrayNode();
+        for (JsonNode resource : resources) {
+            try {
+                URI site = URI.create(resource.path("url").asText(""));
+                if (!resource.path("id").isTextual() || !resource.path("id").asText().matches("[A-Za-z0-9_-]{1,128}")
+                        || !"https".equals(site.getScheme()) || site.getHost() == null || !site.getHost().endsWith(".atlassian.net")
+                        || site.getUserInfo() != null || site.getPort() != -1 || site.getRawQuery() != null || site.getFragment() != null
+                        || !(site.getPath().isEmpty() || site.getPath().equals("/"))) continue;
+                supported.add(resource);
+            } catch (IllegalArgumentException ignored) { }
+        }
+        if (supported.isEmpty())
+            throw new LibraryException(403, "지원되는 회사 사이트가 없습니다. Jira 또는 Confluence Cloud 사이트를 선택해 다시 연결해 주세요.");
+        return supported;
+    }
     JsonNode schema(String tool) {
+        if (provider == BrowserProvider.ATLASSIAN && !has(tool)) {
+            if (tool.equals("getJiraIssue")) throw new LibraryException(403, "Jira 읽기 권한이 없습니다. Jira 사용 권한을 확인하고 다시 연결해 주세요.");
+            if (tool.equals("getConfluenceContent") || tool.equals("getConfluencePage"))
+                throw new LibraryException(403, "Confluence 읽기 권한이 없습니다. Confluence 사용 권한을 확인하고 다시 연결해 주세요.");
+        }
         if (!provider.readTools.contains(tool) || !has(tool)) throw new LibraryException(403, "이 자료의 읽기 기능이 허용되지 않았습니다.");
         return tools.get(tool);
     }

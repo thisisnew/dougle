@@ -51,15 +51,25 @@ class RoutingAcceptanceTest {
             String caseId = fixture.path("caseIds").path("api").asText();
             tests.add(DynamicTest.dynamicTest(caseId, () -> {
                 for (String selected : List.of("URL", "GITHUB")) {
+                    boolean supported = "URL".equals(selected)
+                            && "https://example.org/guide".equals(fixture.path("input").asText());
                     String workspace = library.createWorkspace(caseId + selected).id();
                     var body = json.createObjectNode().put("name", caseId).put("kind", selected)
-                            .put("location", fixture.path("input").asText()).put("domain", "").put("sync", false);
+                            .put("location", fixture.path("input").asText()).put("domain", "").put("sync", !supported);
                     var response = mvc.perform(post("/api/workspaces/" + workspace + "/sources")
                             .header("X-Forge-Client", "1")
                             .contentType("application/json").content(body.toString())).andReturn().getResponse();
-                    assertThat(response.getStatus()).isEqualTo(400);
+                    assertThat(response.getStatus()).isEqualTo(supported ? 201 : 400);
                     var listed = mvc.perform(get("/api/workspaces/" + workspace + "/sources")).andReturn().getResponse();
-                    assertThat(json.readTree(listed.getContentAsString()).size()).isZero();
+                    assertThat(listed.getStatus()).isEqualTo(200);
+                    var sources = json.readTree(listed.getContentAsString());
+                    assertThat(sources.size()).isEqualTo(supported ? 1 : 0);
+                    if (supported) {
+                        var created = json.readTree(response.getContentAsString());
+                        assertThat(created.path("kind").asText()).isEqualTo("URL");
+                        assertThat(created.path("location").asText()).isEqualTo("https://example.org/guide");
+                        assertThat(sources.path(0).path("id").asText()).isEqualTo(created.path("id").asText());
+                    }
                     verifyNoInteractions(remote, git);
                 }
             }));

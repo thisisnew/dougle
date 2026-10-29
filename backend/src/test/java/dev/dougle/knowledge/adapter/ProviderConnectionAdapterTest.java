@@ -12,18 +12,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @DisabledOnOs(OS.WINDOWS)
 class ProviderConnectionAdapterTest {
     @TempDir Path directory;
 
     ProviderConnectionAdapter adapter(String body) throws Exception {
-        return adapter(body, Duration.ofSeconds(3));
+        return adapter(body, Duration.ofSeconds(30));
     }
 
     ProviderConnectionAdapter adapter(String body, Duration timeout) throws Exception {
         Path executable = directory.resolve("fake-provider");
-        Files.writeString(executable, "#!/bin/sh\n[ -z \"$(cat)\" ] || exit 91\n" + body);
+        Files.writeString(executable, "#!/bin/sh\ninput=''\nif IFS= read -r input || [ -n \"$input\" ]; then exit 91; fi\n" + body);
         assertThat(executable.toFile().setExecutable(true)).isTrue();
         var launch = mock(CliLaunchConfiguration.class);
         when(launch.command(any())).thenReturn(executable.toString());
@@ -70,6 +72,15 @@ class ProviderConnectionAdapterTest {
         var launch = mock(CliLaunchConfiguration.class);
         when(launch.command(Provider.CODEX)).thenReturn(executable.toString());
         assertThat(new ProviderConnectionAdapter(launch, "").check(Provider.CODEX).state()).isEqualTo("AUTHENTICATED");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", " >&2"})
+    void oversizedOutputFailsBeforeAProviderThatNeverExitsTimesOut(String redirection) throws Exception {
+        var adapter = adapter("head -c 9000 /dev/zero" + redirection + "\nexec sleep 30");
+        long started = System.nanoTime();
+        assertThat(adapter.check(Provider.CODEX).reason()).isEqualTo("PROCESS_CHECK_FAILED");
+        assertThat(Duration.ofNanos(System.nanoTime() - started)).isLessThan(Duration.ofSeconds(5));
     }
 
     @Test

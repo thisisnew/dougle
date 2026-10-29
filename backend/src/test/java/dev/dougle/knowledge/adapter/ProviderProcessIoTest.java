@@ -17,7 +17,7 @@ class ProviderProcessIoTest {
     @TempDir Path directory;
 
     @Test
-    void streamAndExecProgressWithOneVirtualCarrier() throws Exception {
+    void streamExecAuthenticationAndLoginProgressWithOneVirtualCarrier() throws Exception {
         Path log = directory.resolve("synthetic-process-io.log");
         var process = new ProcessBuilder(Path.of(System.getProperty("java.home"), "bin", "java").toString(),
                 "-Djdk.virtualThreadScheduler.parallelism=1", "-Djdk.virtualThreadScheduler.maxPoolSize=1",
@@ -25,7 +25,7 @@ class ProviderProcessIoTest {
                 .redirectErrorStream(true).redirectOutput(log.toFile()).start();
         var descendants = new HashSet<ProcessHandle>();
         try {
-            long deadline = System.nanoTime() + Duration.ofSeconds(30).toNanos();
+            long deadline = System.nanoTime() + Duration.ofSeconds(120).toNanos();
             while (process.isAlive() && System.nanoTime() < deadline) {
                 process.descendants().forEach(descendants::add);
                 process.waitFor(20, TimeUnit.MILLISECONDS);
@@ -51,5 +51,11 @@ class ProviderProcessIoTest {
             planning.directory = Files.createDirectory(root.resolve("plan-" + provider.name()));
             planning.explicitPlanRouteUsesFixedSchemaAndSharedRestrictions(provider);
         }
+        var authentication = new ShellAliasLaunchTest();
+        authentication.home = Files.createDirectory(root.resolve("alias-authentication"));
+        authentication.profileAliasSurvivesDiscoveryAuthenticationAndInferenceWithoutShellExecution();
+        var login = new ShellAliasLaunchTest();
+        login.home = Files.createDirectory(root.resolve("alias-login"));
+        login.browserLoginAndItsRecheckUseTheSameAliasProfile();
     }
 }

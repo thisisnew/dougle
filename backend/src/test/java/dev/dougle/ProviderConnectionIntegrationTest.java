@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@org.springframework.test.annotation.DirtiesContext(classMode = org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS)
 class ProviderConnectionIntegrationTest {
     @TempDir static Path data;
     @DynamicPropertySource static void properties(DynamicPropertyRegistry registry) { registry.add("forge.data-dir", data::toString); }

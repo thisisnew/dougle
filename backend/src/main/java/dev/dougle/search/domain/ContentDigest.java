@@ -13,12 +13,15 @@ public final class ContentDigest {
     public static String ofParts(Iterable<String> parts) {
         try {
             var digest = MessageDigest.getInstance("SHA-256");
-            for (String part : parts) {
-                if (Thread.currentThread().isInterrupted()) throw new java.util.concurrent.CancellationException();
-                digest.update(part.getBytes(StandardCharsets.UTF_8));
+            try (var writer = new java.io.OutputStreamWriter(new java.security.DigestOutputStream(
+                    java.io.OutputStream.nullOutputStream(), digest), StandardCharsets.UTF_8)) {
+                for (String part : parts) {
+                    if (Thread.currentThread().isInterrupted()) throw new java.util.concurrent.CancellationException();
+                    writer.write(part);
+                }
             }
             return HexFormat.of().formatHex(digest.digest());
-        } catch (NoSuchAlgorithmException exception) { throw new IllegalStateException(exception); }
+        } catch (NoSuchAlgorithmException | java.io.IOException exception) { throw new IllegalStateException(exception); }
     }
 
     public static String of(byte[] content) {

@@ -100,10 +100,16 @@ class ConversationRetrievalIntegrationTest {
     }
 
     @Test void actualEmptySearchPreservesExplicitNoEvidenceWithoutModelDispatch() {
-        doReturn(List.of()).when(search).searchQuestionCandidates(workspace, "Strategy");
+        assertThat(search.searchQuestionCandidates(workspace, "Strategy"))
+                .extracting(dev.dougle.search.application.SearchIndex.Hit::entryId).contains(entry);
+        library.deleteEntry(workspace, entry);
+        search.refresh();
+        assertThat(search.searchQuestionCandidates(workspace, "Strategy")).isEmpty();
         var result = threads.create(workspace, request("empty"));
         assertThat(result.payload().status()).isEqualTo("NO_EVIDENCE");
         assertThat(result.payload().items()).isEmpty();
+        assertThat(bundles.get(workspace, result.id()).payload().status()).isEqualTo("NO_EVIDENCE");
+        assertThat(jobs.list(workspace)).isEmpty();
         verifyNoInteractions(answers, plans);
     }
 

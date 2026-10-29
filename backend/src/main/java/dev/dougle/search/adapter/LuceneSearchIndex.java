@@ -178,7 +178,7 @@ public class LuceneSearchIndex implements SearchIndex {
         var candidates = hits.values();
         var reranked = new java.util.ArrayList<Hit>();
         for (Hit hit : candidates) {
-            float score = embeddings.relevance(question, SearchRepresentation.of(hit.path(), hit.snippet()));
+            float score = embeddings.relevance(question, SearchRepresentation.evidence(hit.path(), hit.snippet()));
             if (!Float.isFinite(score)) score = hit.score();
             reranked.add(new Hit(hit.entryId(), hit.name(), hit.sourceId(), hit.domain(), hit.path(), hit.snippet(), score,
                     hit.startLine(), hit.endLine(), hit.bodyMatch(), hit.kind(), hit.cardId(), hit.version(), hit.domains(),
