@@ -1,6 +1,8 @@
 # 모델링 — 무엇을 어떻게 보관하나?
 
-## 분할 추출문 (DB v30 작업본)
+현재0.1.38의 스키마는 **SQLite v30**이다. `DatabaseConfiguration`의 마이그레이션이 기준이며 아래 v21/v22 등은 기능 도입 당시 버전이다. 앱은 자료/대화/색인과 연결 설정을 보관하지만 외부 원본은 수정하지 않는다. GitHub 직접 연결·Slack·Datadog·제한형 이전 UI는 현재 지원하지 않으며, 관련 과거 테이블 보존은 기능 지원과 다르다. 현재 제공 범위는 [아키텍처](architecture.md), 검증 한계는 [현재 상태](phase-plan.md)를 따른다.
+
+## 분할 추출문 (현재 DB v30)
 
 `extracted_text_part`는 큰 문서의 추출문을 entry ID와 순번으로 나누어 보관합니다. `source_analysis_text_part`는 동기화 체크포인트의 큰 추출문을 source ID·경로·순번으로 보관합니다. 메타데이터와 파트는 같은 트랜잭션으로 교체하며 상위 문서·체크포인트 삭제 시 함께 삭제합니다. 검색과 현재 답변 근거는 전체 파트를 순차 조회하고 전체 해시를 검증합니다. `extracted_document.text`는 큰 문서에서 앞부분 미리보기이므로 전체 본문으로 간주하지 않습니다. [처리 범위와 검증](large-file-streaming.md).
 
@@ -21,7 +23,7 @@ Notion/MySQL 연결 정보는 DB 테이블 대신 앱 데이터의 암호화된 
 
 `question_attachment`는 **질문에만 쓰는 파일**입니다. Workspace 1:N 첨부, 질문(`evidence_bundle`) 1:N 첨부이며 질문 전에는 bundle_id가 비어 있습니다. ID·파일명·MIME·바이트·SHA-256·추출문·잘림 여부를 저장합니다. 질문 생성과 연결은 하나의 트랜잭션이며 연결 뒤 수정하지 않습니다. 질문/서재를 지우면 함께 삭제합니다. 자료 탐색기·검색 색인과 독립적입니다. [제한·승인·코드·API](question-attachments.md).
 
-아래 “새 테이블 없음/v21 유지”는 첨부 기능을 넣기 전의 단계 기록입니다. 현재 개발 스키마는 v22입니다.
+아래 “새 테이블 없음/v21 유지”는 첨부 기능을 넣기 전의 단계 기록입니다. 첨부 기능 도입 당시 스키마는 v22였으며 현재는 v30입니다.
 
 최신 결정: 사용자는 원본 자료만 관리하고 검색용 추출문·심볼·색인은 앱이 관리합니다. 편집형 지식 문서는 보존하되 화면에서 편집하거나 새 대화 검색에 사용하지 않습니다. 새 모델·DB 마이그레이션 없이 검색 범위를 분리했습니다. [쉬운 원리·실제 구현 범위](internal-search.md).
 
@@ -41,7 +43,7 @@ Notion/MySQL 연결 정보는 DB 테이블 대신 앱 데이터의 암호화된 
 현재 CLI 경로 설정과 목표인 제공자 선택형 연결은 다릅니다. 설치 확인을 인증/연결 완료로 간주하지 않습니다.
 0.1.2부터 [제공자 선택·인증 확인·로그인](provider-connection.md)이 포함됩니다. 최신 [0.1.3 설치 파일과 검증](release-0.1.3-report.md)은 실제 버튼 요청 오류도 수정합니다.
 
-현재 개발 소스의 DB는 **SQLite v21**입니다. 원본, 지식, AI 요청을 따로 보관합니다.
+현재 개발 소스의 DB는 **SQLite v30**입니다. 원본, 지식, AI 요청을 따로 보관합니다.
 Intel/Apple Silicon 패키지에서 같은 모델을 사용합니다. CPU 지원 추가로 스키마를 변경하지 않습니다.
 원본 파일을 CPU별로 변환하지 않으며, 로컬 Source·CLI의 절대 경로는 다른 PC에서 다시 확인해야 합니다.
 
@@ -50,7 +52,7 @@ Intel/Apple Silicon 패키지에서 같은 모델을 사용합니다. CPU 지원
 | 쉽게 말하면 | 모델/테이블 | 역할 |
 |---|---|---|
 | 프로젝트 서랍 | `workspace`, `app_state` | 자료 격리, 마지막 선택 |
-| 연결한 자료 위치 | `source`, `source_http_cache` | 폴더/URL/GitHub, revision·오류·예약·HTTP 확인표; 이름·분류 편집은 pollingRevision으로 충돌 검사 |
+| 연결한 자료 위치 | `source`, `source_http_cache` | 폴더/URL/MySQL, revision·오류·예약·HTTP 확인표; 기존 GitHub 자료는 보존하되 재연결하지 않음; 이름·분류 편집은 pollingRevision으로 충돌 검사 |
 | Workspace 자동 갱신 | `workspace_source_polling` | v23. Workspace별 활성 여부와 CAS revision. 토글은 기존 자료에 원자적으로 적용하고 새 자료가 상속하며, 기존 개별 설정은 사용자가 변경하기 전까지 보존합니다. |
 | 원본 복사본 | `entry` | 폴더·파일 바이트, Source 경로·해시 |
 | 검색 준비 결과 | `extracted_document`, `symbol`, `search_outbox` | 본문·Java 선언·색인 갱신 큐 |
