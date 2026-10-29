@@ -442,6 +442,10 @@
     },
     {
       "id": "E37",
+      "followupRuntimeEvidence": {
+        "report": "isolation-runtime-0.1.38.json",
+        "scope": "Installed Intel artifact: same-name source search and immutable evidence isolation; foreign thread, bundle, preview and parent IDs denied. Tool/browser cross-workspace acceptance remains unverified."
+      },
       "requirement": "대화·검색·도구·브라우저 데이터 교차 노출 없음",
       "historicalStatus": "NOT_RUN",
       "historicalRevision": null,
@@ -492,6 +496,10 @@
     },
     {
       "id": "E40",
+      "followupRuntimeEvidence": {
+        "report": "isolation-runtime-0.1.38.json",
+        "scope": "Installed Intel artifact: local source changes/deletion invalidate new answer preview, preserve historical evidence and remove deleted search data. Remote authorization revocation and full investigation remain unverified."
+      },
       "requirement": "신규 조회와 근거 사용 권한 재검사, 보존 이력과 현재 접근을 구분",
       "historicalStatus": "NOT_RUN",
       "historicalRevision": null,

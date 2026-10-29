@@ -7977,8 +7977,8 @@
     },
     {
       "path": "scripts/source-recovery-smoke.mjs",
-      "sha256": "2a374c3d4b62da137d3e3c511f2cdd4f71dea510947413bb8c9342676ed4155c",
-      "lines": 82,
+      "sha256": "632f758380bf4d0c8e7287f1f6f5c97a6aa237ce09354166f2d9434570b216b6",
+      "lines": 132,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },

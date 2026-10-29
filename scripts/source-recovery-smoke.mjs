@@ -1,12 +1,16 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
-import { randomBytes } from 'node:crypto'
+import { createHash, randomBytes } from 'node:crypto'
 import { mkdtemp, mkdir, writeFile, symlink, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { once } from 'node:events'
 
 const resources = resolve(process.argv[2] || 'desktop/src-tauri/resources')
+const jarSha256 = createHash('sha256').update(await readFile(resolve(resources, 'dougle.jar'))).digest('hex')
+if (process.env.FORGE_RECOVERY_JAR_SHA256) assert.equal(jarSha256, process.env.FORGE_RECOVERY_JAR_SHA256)
+const startedAt = new Date().toISOString()
+const checks = []
 const directory = await mkdtemp(resolve(tmpdir(), 'dougle-source-recovery-'))
 const home = resolve(directory, 'home')
 const project = resolve(directory, 'project')
@@ -69,12 +73,58 @@ try {
   assert.ok(gradleHits.some(hit => hit.name === 'build.gradle'), JSON.stringify(gradleHits))
   assert.deepEqual(await api(prefix + '/analysis-failures'), [])
   assert.equal(await readFile(resolve(project, 'Main.java'), 'utf8'), 'class Telescope { int syntheticObservation() { return 42; } }')
+  checks.push('partial-source-recovery', 'healthy-sibling-search', 'excluded-path-isolation', 'original-unchanged')
+  const otherProject = resolve(directory, 'other-project')
+  await mkdir(otherProject)
+  await writeFile(resolve(otherProject, 'Main.java'), 'class Telescope { int syntheticObservation() { return 987654; } }')
+  const other = await api('/workspaces', 'POST', { name: 'Isolation QA' }, 201)
+  const otherPrefix = `/workspaces/${other.id}`
+  await api(otherPrefix + '/sources', 'POST', { name: 'Other project', kind: 'LOCAL_FOLDER', location: otherProject, sync: true }, 201)
+  const bundle = await api(prefix + '/chat-threads', 'POST', { requestId: 'boundary-first', question: 'syntheticObservation' }, 201)
+  assert(bundle.payload.items.length > 0)
+  assert(bundle.payload.items.every(item => item.sourceId === source.id))
+  assert(!JSON.stringify(bundle.payload.items).includes('987654'))
+  const previewBody = { provider: 'CODEX', requestedModel: 'preview-only-no-dispatch' }
+  await api(prefix + `/evidence-bundles/${bundle.id}/answer-preview`, 'POST', previewBody)
+  await api(otherPrefix + `/chat-threads/${bundle.payload.chatContext.threadId}`, 'GET', undefined, 404)
+  await api(otherPrefix + `/evidence-bundles/${bundle.id}`, 'GET', undefined, 404)
+  await api(otherPrefix + `/evidence-bundles/${bundle.id}/answer-preview`, 'POST', previewBody, 404)
+  await api(otherPrefix + '/chat-threads', 'POST', { requestId: 'foreign-parent',
+    threadId: bundle.payload.chatContext.threadId, parentBundleId: bundle.id, question: 'syntheticObservation' }, 404)
+  checks.push('same-name-workspace-evidence-isolation', 'foreign-thread-read-denied', 'foreign-bundle-read-denied',
+    'foreign-preview-denied', 'foreign-parent-injection-denied')
+  await writeFile(resolve(project, 'Main.java'), 'class Telescope { int syntheticObservation() { return 84; } }')
+  await api(prefix + `/sources/${source.id}/sync`, 'POST')
+  assert.equal((await api(prefix + `/evidence-bundles/${bundle.id}/validation`)).eligible, false)
+  await api(prefix + `/evidence-bundles/${bundle.id}/answer-preview`, 'POST', previewBody, 409)
+  assert.deepEqual(await api(prefix + `/evidence-bundles/${bundle.id}`), bundle)
+  const fresh = await api(prefix + '/chat-threads', 'POST', { requestId: 'boundary-fresh', question: 'syntheticObservation' }, 201)
+  assert(fresh.payload.items.some(item => item.quote.includes('84')))
+  await api(prefix + `/evidence-bundles/${fresh.id}/answer-preview`, 'POST', previewBody)
+  checks.push('changed-source-revalidated', 'stale-preview-denied', 'historical-evidence-preserved', 'fresh-source-searchable')
+  await api(prefix + `/sources/${source.id}`, 'DELETE', undefined, 204)
+  assert.equal((await api(prefix + `/evidence-bundles/${fresh.id}/validation`)).eligible, false)
+  await api(prefix + `/evidence-bundles/${fresh.id}/answer-preview`, 'POST', previewBody, 409)
+  assert.deepEqual(await api(prefix + `/evidence-bundles/${fresh.id}`), fresh)
+  assert.deepEqual(await api(prefix + '/search?query=syntheticObservation'), [])
+  assert((await api(otherPrefix + '/search?query=syntheticObservation')).some(hit => hit.name === 'Main.java'))
+  assert.deepEqual(await api(prefix + '/answer-jobs'), [])
+  assert.deepEqual(await api(otherPrefix + '/answer-jobs'), [])
+  assert.equal(await readFile(resolve(project, 'Main.java'), 'utf8'), 'class Telescope { int syntheticObservation() { return 84; } }')
+  checks.push('deleted-source-preview-denied', 'deleted-source-removed-from-search', 'other-workspace-preserved', 'no-answer-dispatch')
   for (const location of ['https://github.com/org/repo', 'https://GITHUB.COM./org/repo', 'https://raw.githubusercontent.com/org/repo/main/file']) {
     await api(prefix + '/sources', 'POST', { name: 'Blocked', kind: 'URL', location, sync: true }, 400)
   }
   const confluence = await api(prefix + '/sources', 'POST', { name: 'Synthetic Confluence', kind: 'URL', location: 'https://synthetic.atlassian.net/wiki/spaces/TEAM/pages/123', sync: true }, 201)
   assert.equal(confluence.status, 'ERROR')
   assert.match(confluence.error, /연결이 필요/)
+  checks.push('github-url-denied', 'confluence-login-required')
+  assert.equal(createHash('sha256').update(await readFile(resolve(resources, 'dougle.jar'))).digest('hex'), jarSha256)
+  if (process.env.FORGE_RECOVERY_REPORT) await writeFile(resolve(process.env.FORGE_RECOVERY_REPORT), JSON.stringify({
+    fixtureVersion: 'source-recovery-isolation-v2', jarSha256, startedAt, finishedAt: new Date().toISOString(),
+    checks: checks.map(id => ({ id, status: 'PASS' })), externalAiCalls: 0,
+    scope: 'Packaged runtime with isolated synthetic local sources; partial E37/E40 evidence, not browser/tool isolation, real SSO, or semantic AI acceptance',
+  }, null, 2) + '\n', { flag: 'wx', mode: 0o600 })
   console.log('PASS: packaged runtime, isolated HOME, no AI, healthy source search, unsafe entries skipped, retry recovery, original unchanged, GitHub blocked, Confluence connection required')
 } finally {
   if (child.exitCode === null) { child.kill('SIGTERM'); await once(child, 'exit') }
