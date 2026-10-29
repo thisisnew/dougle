@@ -15,6 +15,8 @@ import { isolationPlan, validateArtifactBinding, validateIsolationObservation } 
 import { verifySearchModels } from './expert-live-search-models.mjs'
 
 export const approvedHash = '5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a'
+export const artifactHashes = Object.freeze({ '0.1.25': approvedHash,
+  '0.1.38': '97c02f213455511766c475eeb5d934cac50614b7b0d864726b6213a76d36dcbc' })
 const execute = promisify(execFile)
 const pause = milliseconds => new Promise(done => setTimeout(done, milliseconds))
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex')
@@ -24,17 +26,17 @@ export function runtimeOptions(args) {
   assert.equal(args.length, 13)
   assert.deepEqual(args.filter((value, index) => index % 2 === 1), ['--version', '--source-jar', '--sha256', '--java', '--models', '--report'])
   const options = { version: args[2], sourceJar: args[4], hash: args[6], java: args[8], models: args[10], report: args[12] }
-  assert.equal(options.version, '0.1.25'); assert.equal(options.hash, approvedHash)
+  assert(Object.hasOwn(artifactHashes, options.version)); assert.equal(options.hash, artifactHashes[options.version])
   for (const key of ['sourceJar', 'java', 'models', 'report']) assert(isAbsolute(options[key]) && !options[key].split('/').includes('..'))
   assert(options.report.endsWith('.json'))
   assert(!options.report.split('/').includes('target'), 'Never write build output')
   return options
 }
 
-export async function snapshotArtifact(source, destination, expectedHash) {
-  assert.equal(expectedHash, approvedHash)
+export async function snapshotArtifact(source, destination, expectedHash, version = '0.1.25') {
+  assert(Object.hasOwn(artifactHashes, version)); assert.equal(expectedHash, artifactHashes[version])
   assert((await lstat(source)).isFile(), 'Regular source JAR required')
-  validateArtifactBinding({ version: '0.1.25', jar: destination, sha256: expectedHash })
+  validateArtifactBinding({ version, jar: destination, sha256: expectedHash })
   assert.equal(sha256(await readFile(source)), expectedHash, 'Source artifact pin mismatch')
   await copyFile(source, destination, constants.COPYFILE_EXCL)
   await chmod(destination, 0o400)
@@ -127,18 +129,20 @@ export function verifyHits(hits, owned, foreign) {
 }
 
 export async function run(config) {
-  assert.equal(config.hash, approvedHash); assert.equal(config.version, '0.1.25')
+  assert(Object.hasOwn(artifactHashes, config.version)); assert.equal(config.hash, artifactHashes[config.version])
   await access(config.report).then(() => { throw Error('Report exists; refusing overwrite') }, error => { if (error.code !== 'ENOENT') throw error })
-  const report = { criterion: 'E37', result: 'INCOMPLETE', mode: 'simulated', artifactSha256: approvedHash,
+  const report = { criterion: 'E37', result: 'INCOMPLETE', mode: 'simulated', artifactSha256: config.hash, version: config.version,
     startedAt: new Date().toISOString(), observations: [], proposalObservations: [], backendPids: [], aiDispatches: 0,
-    limitations: ['Seeded terminal jobs are not AI/browser executions', 'Populated MySQL/Datadog/operational capture memory state deferred', 'No UI checkpoint or full E37 verdict'], }
+    limitations: ['Seeded terminal jobs are not AI/browser executions',
+      config.version === '0.1.38' ? 'Populated MySQL/operational capture memory state deferred; Datadog integration removed'
+        : 'Populated MySQL/Datadog/operational capture memory state deferred', 'No UI checkpoint or full E37 verdict'], }
   let modelDirectory
 
   assert.equal(process.platform, 'darwin', 'This offline harness requires macOS sandbox-exec; no unsandboxed fallback')
   for (const executable of [config.java, '/usr/bin/sandbox-exec', '/usr/bin/sqlite3']) await access(executable)
   const temporary = await mkdtemp(join(tmpdir(), 'dougle-e37-runtime-'))
   await chmod(temporary, 0o700)
-  const jar = join(temporary, 'frozen-0.1.25.jar')
+  const jar = join(temporary, `frozen-${config.version}.jar`)
   const home = join(temporary, 'home')
   const data = join(temporary, 'data')
   const database = join(data, 'dougle.sqlite')
@@ -263,7 +267,7 @@ export async function run(config) {
     return result
   }
   try {
-    await snapshotArtifact(config.sourceJar, jar, config.hash)
+    await snapshotArtifact(config.sourceJar, jar, config.hash, config.version)
     report.javaSha256 = sha256(await readFile(config.java))
     const models = await verifySearchModels(process.cwd(), config.models)
     modelDirectory = models.directory; report.models = models
@@ -334,19 +338,27 @@ export async function run(config) {
           for (const expected of proposalContracts(fixture)) {
             const suffix = '/investigation-plans/jobs/' + expected.jobId + '/tool-proposal'
             const owner = await request('/workspaces/' + fixture.ownerWorkspaceId + suffix)
-            assert.equal(owner.status, 200); verifyProposal(owner.body, expected)
+            const removed = config.version === '0.1.38' && expected.kind === 'DATADOG_LOGS'
+            assert.equal(owner.status, removed ? 409 : 200)
+            if (!removed) verifyProposal(owner.body, expected)
+            else {
+              assert.equal(owner.body.status, 409)
+              assert(!owner.text.includes(fixture.canary))
+              assert(!Object.hasOwn(owner.body, 'executionAllowed'))
+            }
             const denied = await request('/workspaces/' + fixture.otherWorkspaceId + suffix)
             report.proposalLastProbe = { phase, active, kind: expected.kind, ownerStatus: owner.status, foreignStatus: denied.status,
-              ownerExactVerified: true, foreignResponseSha256: sha256(denied.text),
+              ownerExactVerified: !removed, removedFeatureDenied: removed, foreignResponseSha256: sha256(denied.text),
               problemKeys: denied.body && typeof denied.body === 'object' ? Object.keys(denied.body).sort() : [],
               ...proposalDenialDiagnostics(denied, '/api/workspaces/' + fixture.otherWorkspaceId + suffix, fixture, expected) }
             verifyProposalDenial(denied, '/api/workspaces/' + fixture.otherWorkspaceId + suffix, fixture, expected)
-            validateIsolationObservation({ ownerStatus: 200, foreignStatus: 404 }, {
+            validateIsolationObservation({ ownerStatus: removed ? 409 : 200, foreignStatus: 404 }, {
               ownerStatus: owner.status, ownerIdentityVerified: true, foreignStatus: denied.status,
               foreignBody: denied.text, ownerUnchanged: true, aiDispatches: 0, externalRequests: proxyRequests,
             }, [fixture.canary, fixture.bundleId])
             report.proposalObservations.push({ phase, active, expected, ownerStatus: owner.status, foreignStatus: denied.status,
-              ownerResponseSha256: sha256(owner.text), foreignResponseSha256: sha256(denied.text), provenance: 'STOPPED_DB_SEEDED_NOT_MODEL_GENERATED' })
+              ownerResponseSha256: sha256(owner.text), foreignResponseSha256: sha256(denied.text), removedFeatureDenied: removed,
+              provenance: 'STOPPED_DB_SEEDED_NOT_MODEL_GENERATED' })
           }
           const before = await api('/workspaces/' + fixture.ownerWorkspaceId + '/chat-threads/' + fixture.threadId)
           await api('/workspaces/' + foreign.ownerWorkspaceId + '/chat-threads', 'POST',
@@ -366,6 +378,8 @@ export async function run(config) {
     report.proposalReadPairs = report.proposalObservations.length
     assert.equal(report.proposalReadPairs, 16)
     report.deferred = report.deferred.filter(value => value.scope !== 'tool proposal payload')
+    if (config.version === '0.1.38') report.deferred = report.deferred.map(value => ({ ...value,
+      scope: value.scope.replace('MYSQL/DATADOG', 'MYSQL') }))
     report.readPairs = report.observations.filter(value => value.foreignStatus === 404).length
     report.localSearchAndInjectionGroups = report.observations.filter(value => value.name === 'search-positive-and-foreign-thread-attachment-denials').length
   } catch (error) {

@@ -442,6 +442,10 @@
     },
     {
       "id": "E37",
+      "persistedJobRuntimeEvidence": {
+        "report": "e37-isolation-0.1.38.json",
+        "scope": "88 owner/foreign read pairs, 16 proposal pairs and 8 search/injection groups across active workspace changes and restart. Seeded terminal answer/browser/plan records only; no actual browser execution, populated MySQL memory result or UI checkpoint. Not full E37."
+      },
       "followupRuntimeEvidence": {
         "report": "isolation-runtime-0.1.38.json",
         "scope": "Installed Intel artifact: same-name source search and immutable evidence isolation; foreign thread, bundle, preview and parent IDs denied. Tool/browser cross-workspace acceptance remains unverified."

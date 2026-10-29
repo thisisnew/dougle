@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile, access, symlink } from 'node:fs/promi
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
-import { approvedHash, proposalContracts, proposalDenialDiagnostics, runtimeOptions, snapshotArtifact, terminalSql, verifyHits, verifyProposal, verifyProposalDenial } from './expert-e37-runtime.mjs'
+import { approvedHash, artifactHashes, proposalContracts, proposalDenialDiagnostics, runtimeOptions, snapshotArtifact, terminalSql, verifyHits, verifyProposal, verifyProposalDenial } from './expert-e37-runtime.mjs'
 import { sandboxProfile } from './e50-archive-fixtures.mjs'
 
 test('runtime requires exact approved hash, explicit resources and isolated opt-in', () => {
@@ -28,6 +28,14 @@ test('runtime keeps strict file/network sandbox and has no network-only fallback
   assert(profile.includes('(deny file-read* file-write*)'))
   assert(!profile.includes('(subpath "/")'))
   assert(profile.includes('(deny network*)'))
+})
+
+test('current release requires its own exact artifact binding and cannot borrow historical approval pins', () => {
+  const args = ['--run-approved-isolated', '--version', '0.1.38', '--source-jar', '/installed/resources/dougle.jar',
+    '--sha256', artifactHashes['0.1.38'], '--java', '/installed/runtime/bin/java', '--models', '/installed/models', '--report', '/private/e37.json']
+  assert.equal(runtimeOptions(args).version, '0.1.38')
+  assert.throws(() => runtimeOptions(args.map(value => value === artifactHashes['0.1.38'] ? approvedHash : value)))
+  assert.throws(() => runtimeOptions(args.map(value => value === '0.1.38' ? '0.1.25' : value)))
 })
 
 test('incorrect artifact bytes cannot be copied or launched and source is unchanged', async () => {

@@ -7256,8 +7256,8 @@
     },
     {
       "path": "scripts/expert-e37-isolation.mjs",
-      "sha256": "58059972b2eb134c6ac852e4dd30637b4261d11299a9e2e8cc27b4680a168fab",
-      "lines": 75,
+      "sha256": "c2a1bf97d2f664080a9c2e23a55c4e5e5baf4c0a5b99c3b84ec8bf1434ee2160",
+      "lines": 76,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-e37-isolation.test.mjs"
@@ -7272,8 +7272,8 @@
     },
     {
       "path": "scripts/expert-e37-runtime.mjs",
-      "sha256": "cf4a11536e0f8b91df746cfa68e5f6e0457c46a6701ca20a768ecc13ecf4ed7a",
-      "lines": 399,
+      "sha256": "747be6172734cc313278534bec7a3fe838dd8491daf96ed1935fcc01dcb21abd",
+      "lines": 413,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-e37-runtime.test.mjs"
@@ -7281,8 +7281,8 @@
     },
     {
       "path": "scripts/expert-e37-runtime.test.mjs",
-      "sha256": "a2261bb40d57cd24ae5a1903fab3fa28ec2fdfa978ad72fd8f949286a26081ee",
-      "lines": 117,
+      "sha256": "d8416e307617f25700863f6d31814f8802f78508135949524317a9d3e27b8fa2",
+      "lines": 125,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
