@@ -9,9 +9,9 @@ Dougle은 파일·폴더·웹 문서를 모아 두고, 궁금한 내용을 AI에
 
 ## 설치하기
 
-최신 설치본은 **0.1.37 Preview**입니다. Gradle 등 코드 파일 판독과 실패 파일 재시도를 개선하고, 텍스트 없는 이미지의 검색 제외를 실제 오류와 분리했습니다. 웹 링크·Confluence는 지원하며 GitHub 주소는 계속 차단합니다. [시나리오 검증과 한계](docs/release-0.1.37-report.md) · [설치 안내](docs/macos-install.md).
+최신 설치본은 **0.1.38 Preview**입니다. 파일·폴더·검색·AI 별칭·Jira/Confluence 연결 검사를 보강하고 발견한 판독·검색·연결 문제를 수정했습니다. Java 7,916개와 새 HOME 6종 검사가 통과했으며, 실제 회사 SSO·ARM 실기기 실행은 별도 인수가 필요합니다. 웹 링크·Confluence는 지원하며 GitHub 주소는 계속 차단합니다. [시나리오 검증과 한계](docs/release-0.1.38-report.md) · [설치 안내](docs/macos-install.md).
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.37-preview.1)**
+**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.38-preview.1)**
 
 1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
