@@ -1,0 +1,117 @@
+{
+  "fixtureVersion": "installed-mysql-isolation-v1",
+  "jarSha256": "97c02f213455511766c475eeb5d934cac50614b7b0d864726b6213a76d36dcbc",
+  "startedAt": "2026-10-29T22:08:40.556Z",
+  "finishedAt": "2026-10-29T22:08:54.807Z",
+  "checks": [
+    {
+      "id": "session-required",
+      "status": "PASS"
+    },
+    {
+      "id": "real-mysql-plugin-connect",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-preview-result-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-execution-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-cancel-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "explicit-consent-required",
+      "status": "PASS"
+    },
+    {
+      "id": "failed-login-preserves-existing-binding",
+      "status": "PASS"
+    },
+    {
+      "id": "predicate-injection-remains-data",
+      "status": "PASS"
+    },
+    {
+      "id": "real-owned-row",
+      "status": "PASS"
+    },
+    {
+      "id": "same-request-reconciles",
+      "status": "PASS"
+    },
+    {
+      "id": "new-request-cannot-reuse-consent",
+      "status": "PASS"
+    },
+    {
+      "id": "populated-foreign-result-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "unsafe-query-shapes-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "result-unchanged-after-denials",
+      "status": "PASS"
+    },
+    {
+      "id": "cancelled-preview-cannot-execute",
+      "status": "PASS"
+    },
+    {
+      "id": "disconnect-revokes-result",
+      "status": "PASS"
+    },
+    {
+      "id": "reconnect-does-not-revive-result",
+      "status": "PASS"
+    },
+    {
+      "id": "reconnect-does-not-revive-consent",
+      "status": "PASS"
+    },
+    {
+      "id": "connection-restored-on-restart",
+      "status": "PASS"
+    },
+    {
+      "id": "volatile-result-not-claimed-restored",
+      "status": "PASS"
+    },
+    {
+      "id": "fresh-consent-read-after-restart",
+      "status": "PASS"
+    },
+    {
+      "id": "no-ai-answer-dispatch",
+      "status": "PASS"
+    }
+  ],
+  "externalAiCalls": 0,
+  "scope": "Actual installed HTTP services and synthetic SELECT-only local MySQL; no company database or AI use. UI and full investigation acceptance are separate.",
+  "testHarnesses": {
+    "scripts/mysql-installed-runtime.mjs": "3994a5e496a71f9d94b7c3ae0bb4caa471175e6e5ebe11e2ba57355719c94a29",
+    "scripts/mysql-read-runtime-smoke.mjs": "0a4719ef969bfe77c6e6c09cb6b80b071994fd7fcff886e51f3bad0e87d59034",
+    "scripts/fixtures/MysqlReadRuntimeSmoke.java": "62f81137ae9509dc68d77596e752ed8d3a1ecefa87addf3059520b85acbac29b"
+  },
+  "jdbcChecks": 34,
+  "mysqlVersion": "8.4.0 x86_64 (Anaconda)",
+  "wrapperExitCode": 0,
+  "cleanup": "Owned app and MySQL processes stopped; wrapper awaited deletion of private datadir and generated credentials before exit 0.",
+  "priorAttempts": [
+    "Fixture omitted desktop FORGE_DATA_DIR/parent stdin lifetime; repaired launcher.",
+    "Fixture execute request IDs were shorter than the 16-character contract; replaced with valid IDs.",
+    "Wrong-password fixture with disabled TLS returned a connection failure before authentication rejection; used REQUIRED TLS for the authentication case. Disabled-TLS failure is not reclassified as authenticated bad-password detection."
+  ],
+  "limits": [
+    "JDBC checks compile the current production adapter sources; the 22 HTTP checks use the exact installed 0.1.38 JAR.",
+    "Same-request equal response is observed; this HTTP fixture does not count server SELECT statements.",
+    "Real company database, TLS certificate identity policy, UI and full investigation semantics are not verified."
+  ]
+}

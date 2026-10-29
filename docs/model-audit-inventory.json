@@ -6,7 +6,7 @@
     "desktop",
     "scripts"
   ],
-  "totalFiles": 710,
+  "totalFiles": 711,
   "testOrFixtureFiles": 278,
   "limitation": "Complete file enumeration and lexical test references; not line coverage, proof of correctness, or exhaustive manual semantic review. Rust inline tests remain in production files.",
   "files": [
@@ -7720,9 +7720,18 @@
       "lexicalTestReferences": []
     },
     {
+      "path": "scripts/mysql-installed-runtime.mjs",
+      "sha256": "3994a5e496a71f9d94b7c3ae0bb4caa471175e6e5ebe11e2ba57355719c94a29",
+      "lines": 99,
+      "kind": "production-or-tooling",
+      "lexicalTestReferences": [
+        "scripts/mysql-read-runtime-smoke.mjs"
+      ]
+    },
+    {
       "path": "scripts/mysql-read-runtime-smoke.mjs",
-      "sha256": "c42c7a32482fbc7fbeb8e0d820db633ad9db599809fec76d7e73e9e2e4c6c17d",
-      "lines": 130,
+      "sha256": "0a4719ef969bfe77c6e6c09cb6b80b071994fd7fcff886e51f3bad0e87d59034",
+      "lines": 137,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },

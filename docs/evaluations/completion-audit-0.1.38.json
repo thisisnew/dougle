@@ -278,6 +278,10 @@
     },
     {
       "id": "E24",
+      "mysqlRuntimeEvidence": {
+        "report": "mysql-installed-0.1.38.json",
+        "scope": "34 real JDBC adapter checks and 22 installed HTTP checks using a synthetic SELECT-only MySQL account. Query-shape rejection, consent, cancellation, workspace isolation and connection lifecycle verified; no company database or complete investigation acceptance."
+      },
       "requirement": "읽기 전용 계정과 실행 정책으로 차단, 실제 변경 0건",
       "historicalStatus": "NOT_RUN",
       "historicalRevision": null,
@@ -442,6 +446,10 @@
     },
     {
       "id": "E37",
+      "mysqlRuntimeEvidence": {
+        "report": "mysql-installed-0.1.38.json",
+        "scope": "Actual populated MySQL result denied to another workspace; foreign execute/cancel attempts cannot change owned result. UI, browser execution and operational-capture isolation remain separate."
+      },
       "persistedJobRuntimeEvidence": {
         "report": "e37-isolation-0.1.38.json",
         "scope": "88 owner/foreign read pairs, 16 proposal pairs and 8 search/injection groups across active workspace changes and restart. Seeded terminal answer/browser/plan records only; no actual browser execution, populated MySQL memory result or UI checkpoint. Not full E37."
@@ -500,6 +508,10 @@
     },
     {
       "id": "E40",
+      "mysqlRuntimeEvidence": {
+        "report": "mysql-installed-0.1.38.json",
+        "scope": "Disconnect and reconnect invalidate existing MySQL result/consent. Restart restores saved connection but not volatile results; fresh consent reads unchanged fixture data. Remote corporate revocation not verified."
+      },
       "followupRuntimeEvidence": {
         "report": "isolation-runtime-0.1.38.json",
         "scope": "Installed Intel artifact: local source changes/deletion invalidate new answer preview, preserve historical evidence and remove deleted search data. Remote authorization revocation and full investigation remain unverified."

@@ -2,6 +2,8 @@
 
 ## 후속 목표 감사·검증기 수정 — 2026-10-30
 
+실제 임시MySQL8.4 SELECT계정으로 JDBC34/설치0.1.38 HTTP22건 통과. 새 `mysql-installed-runtime.mjs`는 연결·실제행·소유/타Workspace 결과격리·승인/취소·입력거부·실패로그인 기존연결보존·연결해제/재연결/재시작을 검증한다. `mysql-read-runtime-smoke.mjs`의 명시적 환경변수 opt-in으로 실행. 초기 fixture 데이터경로/stdin/짧은ID/TLS설정 문제는 보고서에 보존했고 최종 전체실행 exit0·cleanup 확인. `docs/evaluations/mysql-installed-0.1.38.json`에 해시/범위 기록, E24/E37/E40 부분 증거로 연결. 외부AI0회/회사DB 접근0, 제품변경없음.
+
 저장된 답변/브라우저/계획 기록까지 E37 부분 런타임 증거를 추가했다. `expert-e37-runtime.mjs`가0.1.38 정확한 해시를 지원하며 제거된 Datadog 과거 제안은409/외부Workspace404로 검사한다. strict파일/네트워크 sandbox에서88조회쌍·16제안쌍·8검색/주입그룹, 재시작·행불변·외부AI/요청0·cleanup 통과. 관련14/전체Node5,569통과, 보고서 문구 정정 후 관련14/런타임 재통과. `docs/evaluations/e37-isolation-0.1.38.json`. 가상 완료기록이라 실제브라우저/메모리MySQL/UI 포함 전체E37은 미완료. 회사Jira 실패 단계 async질문 대기 중이다.
 
 설치된0.1.38 Intel로 실제 검색·대화 HTTP 경계를 추가 확인했다. source-recovery-smoke19항목 통과: 동일 이름 자료의 Workspace 격리, 외부 대화/근거/부모 ID 거부, 원본 변경·삭제 후 미리보기 차단, 과거 근거/다른 Workspace 보존, 답변 작업0건. 최초 fixture 이름20자 초과 실패 후 수정·전체 재실행. `docs/evaluations/isolation-runtime-0.1.38.json`에 JAR/검증기 해시와 결과를 기록하고 E37/E40 감사에 부분 증거로 연결했다. 전체 인수 상태는 승격하지 않는다. 외부AI0회, 제품0.1.38 유지.

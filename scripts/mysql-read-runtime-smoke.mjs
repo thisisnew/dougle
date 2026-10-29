@@ -4,6 +4,7 @@ import { dirname, resolve, join, delimiter } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomBytes } from 'node:crypto';
 import { createServer, connect } from 'node:net';
+import { verifyInstalledMysql } from './mysql-installed-runtime.mjs';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const binary = process.argv[2];
@@ -12,8 +13,9 @@ const root = await mkdtemp('/tmp/dougle-mysql-');
 const children = new Set();
 const environment = { PATH: '/usr/bin:/bin', HOME: root, TMPDIR: root, LANG: 'C' };
 let cleanupPromise;
-function launch(command, args, input = '') {
-  const child = spawn(command, args, { detached: true, env: environment, cwd: root, stdio: ['pipe', 'pipe', 'pipe'] });
+function launch(command, args, input = '', options = {}) {
+  const child = spawn(command, args, { detached: true, env: { ...environment,
+    ...(options.dataDirectory ? { FORGE_DATA_DIR: options.dataDirectory } : {}) }, cwd: root, stdio: ['pipe', 'pipe', 'pipe'] });
   children.add(child);
   let output = '';
   child.stdout.on('data', data => { output = (output + data).slice(-16384); });
@@ -21,7 +23,8 @@ function launch(command, args, input = '') {
     if (['java', 'javac'].includes(command.split('/').at(-1))) output = (output + data).slice(-16384);
   });
   child.stdin.on('error', () => {});
-  child.stdin.end(input);
+  if (options.keepInputOpen) child.stdin.write(input);
+  else child.stdin.end(input);
   child.done = new Promise(resolveDone => {
     child.once('error', () => { children.delete(child); resolveDone(-1); });
     child.once('close', code => { children.delete(child); resolveDone(code ?? -1); });
@@ -123,6 +126,10 @@ try {
   }
   if (!ready) throw new Error('Private MySQL did not become ready within 60s');
   console.log(await run(join(javaHome, 'bin/java'), ['-cp', [join(root, 'classes'), classpath].join(delimiter), 'dev.dougle.plugins.adapter.MysqlReadRuntimeSmoke'], 45000, `${port}\n${password}\n`));
+  if (process.env.FORGE_MYSQL_RUNTIME_RESOURCES) await verifyInstalledMysql({
+    resources: process.env.FORGE_MYSQL_RUNTIME_RESOURCES, expectedHash: process.env.FORGE_MYSQL_RUNTIME_SHA256,
+    reportPath: process.env.FORGE_MYSQL_RUNTIME_REPORT, root, port, password, launch, stop,
+  });
 } finally {
   clearTimeout(overall);
   await cleanup();
