@@ -478,7 +478,11 @@
           "skipped": 0,
           "scope": "component/integration evidence, not full expert acceptance"
         }
-      ]
+      ],
+      "uiRuntimeEvidence": {
+        "report": "e37-ui-0.1.38.json",
+        "scope": "Installed frontend in Chromium web mode: synthetic question history isolated across workspace switches and backend restart. Not completed-answer, native Mac or tool-browser execution acceptance."
+      }
     },
     {
       "id": "E38",

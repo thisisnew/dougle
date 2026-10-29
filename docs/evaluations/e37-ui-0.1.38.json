@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-30",
+  "status": "PASS_WITH_DECLARED_LIMITATIONS",
+  "release": "0.1.38-preview.1",
+  "artifactSha256": "97c02f213455511766c475eeb5d934cac50614b7b0d864726b6213a76d36dcbc",
+  "harness": "scripts/browser-e2e.mjs",
+  "harnessSha256": "b61a45de31249fb1aa2ce3b8865dd5c447eb9382b757213561eb661fcddd3abe",
+  "mode": "Installed Intel Java/JAR/frontend in web mode; ego-browser Chromium, not native WebKit",
+  "fixture": "Two synthetic workspaces with one uploaded text and one unanswered question each, seeded through local HTTP API",
+  "checks": [
+    "ALPHA history displays only ALPHA question",
+    "BETA history displays only BETA question",
+    "Switch back to ALPHA and reopen its existing question",
+    "Restart backend, reload browser and verify ALPHA history isolation",
+    "Before/after full thread API snapshots are equal; zero answer jobs"
+  ],
+  "snapshotSha256": "5647c3f6699e057c142518a493c9c0d3491921165b2d7d8d5eb7dfe559d869a3",
+  "screenshots": [
+    {
+      "path": "docs/screenshots/e37-038-alpha.png",
+      "sha256": "2f02ecb411b892d69e784eba5d1df6026f08b63590882eaf1d62697a9c6e5351"
+    },
+    {
+      "path": "docs/screenshots/e37-038-beta.png",
+      "sha256": "e5e6770df72d96cbe3e6a1d410ec98c1f7d3af513885098b45e18fd41c0f71d9"
+    },
+    {
+      "path": "docs/screenshots/e37-038-restart.png",
+      "sha256": "2f02ecb411b892d69e784eba5d1df6026f08b63590882eaf1d62697a9c6e5351"
+    }
+  ],
+  "nodeTests": {
+    "pass": 5569,
+    "fail": 0,
+    "skipped": 0
+  },
+  "externalAiCalls": 0,
+  "cleanup": {
+    "ownedProcessAbsent": true,
+    "temporaryDirectoryRemoved": true,
+    "agentTaskSpaceClosed": true
+  },
+  "fixtureCorrections": [
+    "Initial wait expected history immediately after workspace switch; inspected default chat view and opened history explicitly. No product failure."
+  ],
+  "limitations": [
+    "Unanswered seeded questions, not completed AI answers",
+    "No actual company SSO or other physical Mac",
+    "No tool-browser execution isolation or full E37 acceptance"
+  ]
+}

@@ -4,11 +4,12 @@ import { once } from 'node:events'
 import { access, cp, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:net'
 import { tmpdir } from 'node:os'
-import { resolve } from 'node:path'
+import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
-const resources = resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources/resources')
+const resources = process.env.FORGE_BROWSER_RESOURCES ? resolve(process.env.FORGE_BROWSER_RESOURCES)
+  : resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources/resources')
 const jar = process.env.FORGE_BROWSER_JAR ? resolve(process.env.FORGE_BROWSER_JAR) : resolve(resources, 'dougle.jar')
 await access(resolve(resources, 'runtime/bin/java'))
 await access(jar)
@@ -53,13 +54,14 @@ async function stop() {
 }
 async function start() {
   logs = ''
-  child = spawn(resolve(resources, 'runtime/bin/java'), ['-jar', jar,
+  child = spawn(resolve(resources, 'runtime/bin/java'), ['-Duser.home=' + temporary, '-jar', jar,
     '--forge.desktop=false', `--server.port=${port}`, '--server.address=127.0.0.1',
     `--forge.data-dir=${resolve(temporary, 'data')}`, `--forge.ai.codex-command=${executable}`,
     ...(process.env.FORGE_BROWSER_SEARCH_MODEL_DIR ? [`--forge.search-model-directory=${resolve(process.env.FORGE_BROWSER_SEARCH_MODEL_DIR)}`] : []),
     `--forge.ai.claude-command=${resolve(temporary, 'missing-claude')}`, `--forge.ai.codex-model=${process.env.FORGE_BROWSER_ANSWER_TEST === 'true' ? 'preview-only-model' : 'synthetic-smoke-model'}`,
     ...(process.env.FORGE_BROWSER_PRIVATE_PROFILE === 'true' ? [`--forge.ai.codex-stream-home=${resolve(temporary, 'data/codex-profile')}`] : [])],
-  { cwd: temporary, stdio: ['ignore', 'pipe', 'pipe'] })
+  { cwd: temporary, env: { HOME: temporary, TMPDIR: temporary, LANG: 'en_US.UTF-8',
+    PATH: dirname(process.execPath) + ':/usr/bin:/bin:/usr/sbin:/sbin' }, stdio: ['ignore', 'pipe', 'pipe'] })
   let launchError
   child.once('error', error => { launchError = error })
   for (const stream of [child.stdout, child.stderr]) stream.on('data', chunk => { logs = (logs + chunk).slice(-8000) })

@@ -1,5 +1,7 @@
 # Dougle — 이어서 작업하기
 
+설치0.1.38의 실제 화면에서 가상 Workspace별 질문 기록 분리·다시 열기·백엔드 재시작 후 유지 확인. 전후 대화 API 내용 동일·답변 작업0건, 전체Node5,569통과. `docs/evaluations/e37-ui-0.1.38.json`과 화면3장에 기록했다. Chromium 웹 모드·미완료 가상 질문 범위이며 실제AI 답변/네이티브Mac/회사SSO 인수는 아니다. 테스트 실행기의 HOME/환경변수 격리를 보완했고 제품 설치본은 유지한다.
+
 ## 후속 목표 감사·검증기 수정 — 2026-10-30
 
 실제 임시MySQL8.4 SELECT계정으로 JDBC34/설치0.1.38 HTTP22건 통과. 새 `mysql-installed-runtime.mjs`는 연결·실제행·소유/타Workspace 결과격리·승인/취소·입력거부·실패로그인 기존연결보존·연결해제/재연결/재시작을 검증한다. `mysql-read-runtime-smoke.mjs`의 명시적 환경변수 opt-in으로 실행. 초기 fixture 데이터경로/stdin/짧은ID/TLS설정 문제는 보고서에 보존했고 최종 전체실행 exit0·cleanup 확인. `docs/evaluations/mysql-installed-0.1.38.json`에 해시/범위 기록, E24/E37/E40 부분 증거로 연결. 외부AI0회/회사DB 접근0, 제품변경없음.

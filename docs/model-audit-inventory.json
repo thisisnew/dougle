@@ -6856,8 +6856,8 @@
     },
     {
       "path": "scripts/browser-e2e.mjs",
-      "sha256": "266315e24b0427c5e340a3e328da8d544f4a7994a74c1be2ebfe61ff5c8eefe4",
-      "lines": 104,
+      "sha256": "b61a45de31249fb1aa2ce3b8865dd5c447eb9382b757213561eb661fcddd3abe",
+      "lines": 106,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
