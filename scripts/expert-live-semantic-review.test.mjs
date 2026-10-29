@@ -4,6 +4,8 @@ import { mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promise
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { requireSemanticReview } from './expert-live-semantic-review.mjs'
+import { memoryAnswerCheck } from './expert-live-schedule.mjs'
+import { scenario } from './expert-live-memory-fixtures.mjs'
 
 async function fixture(run) {
   const ownedDirectory = await mkdtemp(join(tmpdir(), 'semantic-review-test-'))
@@ -55,6 +57,26 @@ test('semantic notification/error/expiry and cancellation never grant another di
         if (mode === 'hung-notify') return new Promise(() => {})
         if (mode === 'abort') controller.abort()
       } }))
+    assert.deepEqual(await readdir(ownedDirectory), [])
+  }
+}))
+
+test('mentioning both targets cannot bypass a failed or uncertain semantic verdict', async () => fixture(async ownedDirectory => {
+  for (const verdict of ['FAIL', 'UNCERTAIN']) {
+    const result = { answer: 'VEGA production은 폐기했고 현재 대상은 ORBIT staging입니다.', turn: 31 }
+    assert.equal(memoryAnswerCheck(result.answer, scenario, result.turn, 0), true)
+    let advanced = false
+    await assert.rejects((async () => {
+      await requireSemanticReview({ ownedDirectory, result, timeoutMs: 2000, pollMs: 1,
+        notify: async ({ controlPath }) => {
+          const checkpoint = JSON.parse(await readFile(controlPath, 'utf8'))
+          assert.deepEqual(checkpoint.result, result)
+          await writeFile(checkpoint.acknowledgmentPath, JSON.stringify({ checkpointId: checkpoint.checkpointId,
+            resultSha256: checkpoint.resultSha256, verdict, reviewer: 'AGENT', note: 'Wrong current target despite matching words.' }), { mode: 0o600 })
+        } })
+      advanced = true
+    })(), /Semantic review failed or uncertain/)
+    assert.equal(advanced, false)
     assert.deepEqual(await readdir(ownedDirectory), [])
   }
 }))

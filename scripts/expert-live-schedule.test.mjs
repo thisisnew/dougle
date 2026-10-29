@@ -121,3 +121,13 @@ test('failed/uncertain/proposed/search plans and wrong-target or irrelevant answ
   assert.equal(memoryAnswerCheck('승인 검토', scenario, 1, 0), true)
   assert.equal(memoryAnswerCheck('irrelevant', scenario, 1, 0), false)
 })
+
+test('memory screening permits historical contrasts and case variants for mandatory semantic review', () => {
+  assert.equal(memoryAnswerCheck('현재는 ORBIT staging입니다. VEGA production은 다른 선택입니다.', scenario, 0, 0), true)
+  assert.equal(memoryAnswerCheck('이전 ORBIT staging 대신 현재 VEGA production입니다.', scenario, 24, 0), true)
+  assert.equal(memoryAnswerCheck('예전에는 ORBIT staging이었지만 최신 정정은 VEGA production입니다.', scenario, 31, 0), true)
+  assert.equal(memoryAnswerCheck('현재 vega / Production입니다.', scenario, 31, 0), true)
+  assert.equal(memoryAnswerCheck('현재 orbit / Staging입니다.', scenario, 0, 0), true)
+  assert.equal(memoryAnswerCheck('NOTVEGA production', scenario, 31, 0), false)
+  assert.equal(memoryAnswerCheck('VEGA nonproduction', scenario, 31, 0), false)
+})

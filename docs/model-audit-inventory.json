@@ -7433,7 +7433,8 @@
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-live-memory-fixtures.test.mjs",
-        "scripts/expert-live-schedule.test.mjs"
+        "scripts/expert-live-schedule.test.mjs",
+        "scripts/expert-live-semantic-review.test.mjs"
       ]
     },
     {
@@ -7477,20 +7478,21 @@
     },
     {
       "path": "scripts/expert-live-schedule.mjs",
-      "sha256": "459517071aa565a1a5981960f0ab8fb610a97896180f646d3f2d5ecdaa70f2d3",
-      "lines": 110,
+      "sha256": "388a89888f41b32e404e7ee47640df50f8c998a4e2aa60df333916ad578ea627",
+      "lines": 108,
       "kind": "production-or-tooling",
       "lexicalTestReferences": [
         "scripts/expert-live-context-diagnostic-fixtures.test.mjs",
         "scripts/expert-live-context-fixtures.test.mjs",
         "scripts/expert-live-history.test.mjs",
-        "scripts/expert-live-schedule.test.mjs"
+        "scripts/expert-live-schedule.test.mjs",
+        "scripts/expert-live-semantic-review.test.mjs"
       ]
     },
     {
       "path": "scripts/expert-live-schedule.test.mjs",
-      "sha256": "3a133f0bb6d3606923fec506c76226882ccd2237c40f06de7a176efa3b1cb7b1",
-      "lines": 123,
+      "sha256": "af3d3275fd78b695b8a5c53218a27f6ec10187a2cd145867b5c66e61ec42492c",
+      "lines": 133,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },
@@ -7521,8 +7523,8 @@
     },
     {
       "path": "scripts/expert-live-semantic-review.test.mjs",
-      "sha256": "c3094626edce992a3b35febc732120a3e208c70fefd305a7c2b46463ece921ae",
-      "lines": 60,
+      "sha256": "c32d30026ccfc028dbbc522f3bd30a85d54e635baf62fbb6f824bba3a7800ac9",
+      "lines": 82,
       "kind": "test-or-fixture",
       "lexicalTestReferences": []
     },

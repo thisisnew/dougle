@@ -100,10 +100,8 @@ export function validateMemoryPrompt(prompt, context, maximumCharacters) {
 
 export function memoryAnswerCheck(answer, scenario, turn, variant) {
   if (!answer.trim()) return false
-  if (turn < scenario.correctionTurn && /VEGA|production/i.test(answer)) return false
-  if (turn >= scenario.correctionTurn && /ORBIT|staging/i.test(answer)) return false
-  if (turn === 0) return /ORBIT/.test(answer) && /staging/.test(answer)
-  if (turn === scenario.correctionTurn || turn === scenario.probeTurn) return /VEGA/.test(answer) && /production/.test(answer)
+  if (turn === 0) return /\bORBIT\b/i.test(answer) && /\bstaging\b/i.test(answer)
+  if (turn === scenario.correctionTurn || turn === scenario.probeTurn) return /\bVEGA\b/i.test(answer) && /\bproduction\b/i.test(answer)
   const question = scenario.questions[variant][turn]
   const term = ['라벨', '승인', '만료'].find(value => question.includes(value))
   return !!term && answer.includes(term)
