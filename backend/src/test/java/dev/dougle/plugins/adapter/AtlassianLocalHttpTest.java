@@ -37,6 +37,7 @@ class AtlassianLocalHttpTest {
     volatile int endpointStatus;
     volatile boolean omitScope;
     volatile List<Map<String, String>> siteOverrides;
+    volatile Object resourceReply;
 
     @BeforeEach void setup() throws Exception {
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
@@ -98,7 +99,7 @@ class AtlassianLocalHttpTest {
                         reads.add(name);
                         if (!name.equals("getAccessibleAtlassianResources")) cloudIds.add(request.path("params").path("arguments").path("cloudId").asText());
                         yield name.equals("getAccessibleAtlassianResources")
-                                ? Map.of("structuredContent", Map.of("resources", siteOverrides != null ? siteOverrides : switch (fault) {
+                                ? resourceReply != null ? resourceReply : Map.of("structuredContent", Map.of("resources", siteOverrides != null ? siteOverrides : switch (fault) {
                                     case "sites" -> List.of();
                                     case "malformed-sites" -> "not-an-array";
                                     case "empty-resource" -> List.of(Map.of());
@@ -149,6 +150,40 @@ class AtlassianLocalHttpTest {
                     + BrowserPluginHttp.form(Map.of("state", state, "code", "synthetic-code"))))
                     .timeout(java.time.Duration.ofSeconds(5)).GET().build(), HttpResponse.BodyHandlers.ofString());
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
+    void standardResourceEncodingsCompleteApprovalAndReadBothProducts(int encoding) throws Exception {
+        modernAuthority = true;
+        var site = Map.of("id", "fixture-cloud", "url", "https://fixture.atlassian.net");
+        var sites = List.of(site);
+        var text = Map.of("type", "text", "text", json.writeValueAsString(sites));
+        resourceReply = switch (encoding) {
+            case 0 -> Map.of("structuredContent", sites);
+            case 1 -> Map.of("structuredContent", Map.of("result", sites));
+            case 2 -> Map.of("structuredContent", Map.of("resources", sites));
+            case 3 -> Map.of("structuredContent", Map.of("result", Map.of("resources", sites)));
+            case 4 -> Map.of("content", List.of(text));
+            case 5 -> Map.of("content", List.of(Map.of("type", "text", "text", json.writeValueAsString(site)),
+                    Map.of("type", "text", "text", json.writeValueAsString(Map.of("id", "other-cloud", "url", "https://other.atlassian.net")))));
+            case 6 -> Map.of("structuredContent", Map.of(), "content", List.of(text));
+            default -> Map.of("content", List.of(Map.of("type", "text", "text", json.writeValueAsString(Map.of("result", sites)))));
+        };
+        assertThat(begin().state()).isEqualTo("WAITING");
+        var params = BrowserPluginConnections.query(authorization.get().getRawQuery());
+        assertThat(callback(params.get("state")).statusCode()).isEqualTo(200);
+        assertThat(connections.connected(provider)).isTrue();
+        var reader = new BrowserPluginReader(connections, http);
+        for (String path : List.of("/browse/TEST-1", "/wiki/spaces/TEST/pages/123/Page")) {
+            try (var snapshot = reader.collect(provider, "https://fixture.atlassian.net" + path)) {
+                assertThat(new String(snapshot.files().getFirst().content(), StandardCharsets.UTF_8)).contains("가상 회사 문서 본문");
+            }
+        }
+        assertThat(cloudIds).containsExactly("fixture-cloud", "fixture-cloud");
+        int before = reads.size();
+        assertThatThrownBy(() -> reader.collect(provider, "https://wrong.atlassian.net/browse/TEST-1")).hasMessageContaining("접근 권한");
+        assertThat(reads.subList(before, reads.size())).containsExactly("getAccessibleAtlassianResources");
     }
 
     @Test void approvalPkceCloudReadsAndRefreshUseRealLocalHttp() throws Exception {

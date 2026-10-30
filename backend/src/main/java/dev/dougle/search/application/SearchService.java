@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SearchService {
+    private final java.util.concurrent.locks.ReentrantLock indexLock = new java.util.concurrent.locks.ReentrantLock();
     private final SearchCatalog catalog;
     private final SearchIndex index;
     private final LibraryStore library;
@@ -23,51 +24,63 @@ public class SearchService {
     }
 
     @PostConstruct
-    public synchronized void initialize() {
+    public void initialize() {
         if (!index.questionReady()) return;
         initializeIndex();
     }
 
-    public synchronized void initializeIndex() {
-        if (index.initialized()) refresh();
-        else rebuild();
+    public void initializeIndex() {
+        indexLock.lock();
+        try {
+            if (index.initialized()) refresh();
+            else rebuild();
+        } finally { indexLock.unlock(); }
     }
 
-    public synchronized void rebuild() {
-        index.reset();
-        catalog.each(index::put);
-        index.commit();
-        refresh();
+    public void rebuild() {
+        indexLock.lock();
+        try {
+            index.reset();
+            catalog.each(index::put);
+            index.commit();
+            refresh();
+        } finally { indexLock.unlock(); }
     }
 
     @Scheduled(fixedDelay = 2000, initialDelay = 2000)
-    public synchronized void refresh() {
-        if (!index.questionReady()) return;
-        var changes = catalog.changes();
-        while (!changes.isEmpty()) {
-            for (var change : changes) {
-                catalog.withDocument(change.entryId(), index::put, () -> index.remove(change.entryId()));
+    public void refresh() {
+        indexLock.lock();
+        try {
+            if (!index.questionReady()) return;
+            var changes = catalog.changes();
+            while (!changes.isEmpty()) {
+                for (var change : changes) {
+                    catalog.withDocument(change.entryId(), index::put, () -> index.remove(change.entryId()));
+                }
+                index.commit();
+                catalog.acknowledge(changes.getLast().sequence());
+                changes = catalog.changes();
             }
-            index.commit();
-            catalog.acknowledge(changes.getLast().sequence());
-            changes = catalog.changes();
-        }
+        } finally { indexLock.unlock(); }
     }
 
-    public synchronized List<SearchIndex.Hit> search(String workspaceId, String query, List<String> domains) {
+    public List<SearchIndex.Hit> search(String workspaceId, String query, List<String> domains) {
         return search(workspaceId, query, domains, false);
     }
 
-    public synchronized List<SearchIndex.Hit> search(String workspaceId, String query, List<String> domains, boolean includeKnowledge) {
-        return find(workspaceId, query, domains, includeKnowledge, false);
+    public List<SearchIndex.Hit> search(String workspaceId, String query, List<String> domains, boolean includeKnowledge) {
+        lockForSearch();
+        try { return find(workspaceId, query, domains, includeKnowledge, false); }
+        finally { indexLock.unlock(); }
     }
 
     public List<SearchIndex.Hit> searchQuestion(String workspaceId, String query, List<String> domains, boolean includeKnowledge) {
         if (!index.questionReady()) throw new LibraryException(503, "자료 검색을 준비하고 있습니다. 잠시 후 다시 질문해 주세요.");
-        synchronized (this) {
+        lockForSearch();
+        try {
             if (!index.questionReady()) throw new LibraryException(503, "자료 검색을 준비하고 있습니다. 잠시 후 다시 질문해 주세요.");
             return find(workspaceId, query, domains, includeKnowledge, true);
-        }
+        } finally { indexLock.unlock(); }
     }
 
     public List<SearchIndex.Hit> searchQuestionCandidates(String workspaceId, String query) {
@@ -76,6 +89,25 @@ public class SearchService {
         }
         if (!index.questionReady()) throw new LibraryException(503, "자료 검색을 준비하고 있습니다. 잠시 후 다시 질문해 주세요.");
         return index.searchQuestion(workspaceId, query.strip(), List.of(), false);
+    }
+
+    public void requireQuestionReady() {
+        lockForSearch();
+        try { if (!index.questionReady()) throw preparing(); }
+        finally { indexLock.unlock(); }
+    }
+
+    private void lockForSearch() {
+        try {
+            if (!indexLock.tryLock(200, java.util.concurrent.TimeUnit.MILLISECONDS)) throw preparing();
+        } catch (InterruptedException interrupted) {
+            Thread.currentThread().interrupt();
+            throw new LibraryException(409, "자료 검색을 중단했습니다.");
+        }
+    }
+
+    private LibraryException preparing() {
+        return new LibraryException(503, "자료를 검색용으로 준비하고 있습니다. 동기화가 끝난 뒤 다시 질문해 주세요.");
     }
 
     private List<SearchIndex.Hit> find(String workspaceId, String query, List<String> domains, boolean includeKnowledge, boolean naturalQuestion) {

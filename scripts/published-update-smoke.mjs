@@ -12,17 +12,18 @@ import { fileURLToPath } from 'node:url'
 const execute = promisify(execFile)
 const root = fileURLToPath(new URL('../', import.meta.url))
 assert.equal(process.platform, 'darwin')
-const previous = process.argv[2] || '0.1.32'
+const previous = process.argv[2] || '0.1.38'
 assert.match(previous, /^\d+\.\d+\.\d+$/)
 assert.ok(previous.localeCompare('0.1.32', undefined, { numeric: true }) >= 0, 'Pre-0.1.32 app-name migration requires manual DMG installation; do not claim automatic update coverage.')
 const architecture = process.arch === 'arm64' ? 'arm64' : 'x86_64'
 assert.ok(['arm64', 'x64'].includes(process.arch))
-const name = `Dougle_${previous}_${architecture}.app.tar.gz`
-const archive = resolve(root, 'release', name)
 const release = JSON.parse((await execute('gh', ['api', `repos/thisisnew/dougle/releases/tags/v${previous}-preview.1`])).stdout)
 assert.equal(release.draft, false)
-const asset = release.assets.find(value => value.name === name)
-assert.ok(asset)
+const archiveName = `Dougle_${previous}_${architecture}.app.tar.gz`
+const asset = release.assets.find(value => value.name === archiveName)
+  || release.assets.find(value => value.name === `Dougle_${previous}_${architecture}.dmg`)
+assert.ok(asset, 'Previous release must have a public archive or DMG')
+const archive = resolve(root, 'release', asset.name)
 assert.equal(asset.size, (await stat(archive)).size)
 async function digest(path) {
   const hash = createHash('sha256')
@@ -88,7 +89,13 @@ async function version() {
 }
 try {
   await mkdir(installed)
-  await execute('tar', ['-xzf', archive, '-C', installed])
+  if (asset.name.endsWith('.dmg')) {
+    const mount = resolve(temporary, 'previous-dmg')
+    await mkdir(mount)
+    await execute('hdiutil', ['attach', '-readonly', '-nobrowse', '-mountpoint', mount, archive])
+    try { await execute('ditto', [resolve(mount, 'Dougle.app'), app]) }
+    finally { await execute('hdiutil', ['detach', mount]) }
+  } else await execute('tar', ['-xzf', archive, '-C', installed])
   assert.equal(await version(), previous)
   await execute('codesign', ['--verify', '--deep', '--strict', app])
   await writeFile(marker, 'synthetic data outside app must remain', { mode: 0o600 })
@@ -118,16 +125,17 @@ try {
   assert.notEqual(target, previous)
   assert.equal(await version(), target)
   await execute('codesign', ['--verify', '--deep', '--strict', app])
-  assert.equal(await digest(resolve(app, 'Contents/Resources/resources/dougle.jar')),
-    await digest(resolve(root, 'backend/target/dougle-0.1.0.jar')))
+  const expectedJar = resolve(temporary, 'expected.jar')
+  await execute('python3', [resolve(root, 'scripts/trim-macos-jar.py'), resolve(root, 'backend/target/dougle-0.1.0.jar'), expectedJar, architecture])
+  assert.equal(await digest(resolve(app, 'Contents/Resources/resources/dougle.jar')), await digest(expectedJar))
   assert.equal(await readFile(marker, 'utf8'), 'synthetic data outside app must remain')
   await startBackend()
   const after = await Promise.all(paths.map(path => api(path)))
   assert.deepEqual(after, before, 'Workspace, file, manual draft, publication and evidence must survive the real update')
   await stopBackend()
   await execute('node', ['scripts/native-host-smoke.mjs', app], { cwd: root, timeout: 300000, maxBuffer: 1024 * 1024 })
-  const report = { checkedAt: new Date().toISOString(), previous, target, architecture, status: 'PASS',
-    checks: ['previous public archive SHA-256 and app signature', 'public feed and real signed archive installation with default version comparison',
+  const report = { checkedAt: new Date().toISOString(), previous, previousArtifact: asset.name, target, architecture, status: 'PASS',
+    checks: ['previous public artifact SHA-256 and app signature', 'public feed and real signed archive installation with default version comparison',
       'updated version, app signature and current JAR equality', 'external synthetic file preserved',
       'same synthetic SQLite database preserves workspace, active selection, file preview, human draft, publication and evidence across versions',
       'updated native app startup, session protection, duplicate protection, shutdown and restart'],

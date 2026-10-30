@@ -261,7 +261,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
     return <li key={source.id}>
     <div className="source-info">
       <div className={`material-name${failed || analysisError ? ' has-warning' : ''}`}><button className="source-open" disabled={!source.rootEntryId || !!busy} onClick={() => source.rootEntryId && onSelect(source.rootEntryId)}><SourceIcon size={18} aria-hidden="true" /><strong>{source.name}</strong></button>{(failed || analysisError) && <MaterialWarning name={source.name} kind={source.kind} error={failed ? sourceErrors[source.id] || source.error : analysisError} label={requiredPlugin ? '연결 필요' : failed ? '동기화 실패' : '분석 실패'} onAction={requiredPlugin && onPluginConnect && !syncing && !busy && !picking ? () => onPluginConnect(requiredPlugin) : undefined} />}</div>
-      <span>{sourceKinds[source.kind] || source.kind} · {archived ? '보관 자료 · 직접 연결 종료' : requiresConnection ? '연결 필요' : analysisError && !failed ? '일부 처리' : states[failed ? 'ERROR' : source.status] || source.status}</span>
+      <span>{sourceKinds[source.kind] || source.kind} · {archived ? '보관 자료 · 직접 연결 종료' : requiresConnection ? '연결 필요' : analysisError && !failed ? '일부 처리' : (failed || source.status === 'ERROR') ? (source.revision ? '오류 · 이전 자료 유지' : '수집 실패 · 검색 자료 없음') : states[source.status] || source.status}</span>
       <details><summary>상세 정보</summary><small>{source.location}</small>
         {source.syncedAt && <small>최근 동기화 {new Date(source.syncedAt).toLocaleString('ko-KR')}</small>}
         {source.revision && <small>반영 버전 {source.revision.slice(0, 12)}</small>}

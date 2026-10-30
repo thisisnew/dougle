@@ -116,6 +116,7 @@ public final class ConstrainedToolExecutor implements AutoCloseable {
             if (failed.getCause() instanceof CancellationException || failed.getCause() instanceof InterruptedException) {
                 return result(CANCELLED, "tool_cancelled");
             }
+            if (failed.getCause() instanceof ToolExecution.NotReady) return result(FAILED, "resource_preparing");
             return result(FAILED, "tool_failed");
         } finally {
             output.seal();

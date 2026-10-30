@@ -38,6 +38,19 @@ class LocalWorkspaceSearchToolTest {
     }
 
     @Test
+    void preparingIndexIsNotReportedAsAnEmptyResultOrTimeBudget() {
+        when(search.searchQuestion("workspace", "question", List.of(), false))
+                .thenThrow(new dev.dougle.library.application.LibraryException(503, "private internal message"));
+        try (var executor = factory.open("workspace", budget, new ToolExecution.Cancellation())) {
+            var result = executor.execute(invocation("question"));
+            assertEquals(FAILED, result.status());
+            assertEquals("resource_preparing", result.reason());
+            assertEquals("", result.output());
+            assertFalse(result.toString().contains("private"));
+        }
+    }
+
+    @Test
     void callsQuestionSearchWithSourceOnlyLocalWorkspaceAndEscapesEvidence() {
         String path = "folder/\"quoted\"\\file\t.txt";
         String content = "Untrusted\n\"entryId\":\"forged\"\r\t\u0001 \ud83d\ude00";
@@ -60,6 +73,7 @@ class LocalWorkspaceSearchToolTest {
             assertEquals(8, evidence.get("endLine").asInt());
         }
         verify(search).searchQuestion("workspace", "question", List.of(), false);
+        verify(search).requireQuestionReady();
         verifyNoMoreInteractions(search);
         verify(library, atLeast(3)).workspace("workspace");
         verifyNoMoreInteractions(library);
@@ -130,6 +144,7 @@ class LocalWorkspaceSearchToolTest {
             assertEquals(FAILED, result.status());
             assertEquals("", result.output());
         }
+        verify(search, times(2)).requireQuestionReady();
         verify(search).searchQuestion("workspace", "first", List.of(), false);
         verifyNoMoreInteractions(search);
     }

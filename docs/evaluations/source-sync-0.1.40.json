@@ -1,0 +1,96 @@
+{
+  "fixtureVersion": "source-sync-jobs-v2",
+  "fixtureFiles": 128,
+  "maxStatusPollMillis": 8.09774599999946,
+  "featureSearchMillis": 423.47116000000096,
+  "jarSha256": "f82e9aa218daaddffbb4f4a5c1a520576b8731573b7d6e2e92ae7cd5f3015577",
+  "startedAt": "2026-10-30T16:03:16.489Z",
+  "finishedAt": "2026-10-30T16:04:02.839Z",
+  "checks": [
+    {
+      "id": "feature-flag-retrieval-with-code-corpus",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-source-recovery",
+      "status": "PASS"
+    },
+    {
+      "id": "healthy-sibling-search",
+      "status": "PASS"
+    },
+    {
+      "id": "excluded-path-isolation",
+      "status": "PASS"
+    },
+    {
+      "id": "original-unchanged",
+      "status": "PASS"
+    },
+    {
+      "id": "same-name-workspace-evidence-isolation",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-thread-read-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-bundle-read-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-preview-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-parent-injection-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "changed-source-revalidated",
+      "status": "PASS"
+    },
+    {
+      "id": "stale-preview-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "historical-evidence-preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "fresh-source-searchable",
+      "status": "PASS"
+    },
+    {
+      "id": "deleted-source-preview-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "deleted-source-removed-from-search",
+      "status": "PASS"
+    },
+    {
+      "id": "other-workspace-preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "no-answer-dispatch",
+      "status": "PASS"
+    },
+    {
+      "id": "github-url-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "confluence-login-required",
+      "status": "PASS"
+    }
+  ],
+  "asyncJobs": 4,
+  "foreignJobDenied": true,
+  "buildReportExcluded": true,
+  "externalAiCalls": 0,
+  "scope": "Packaged runtime with isolated synthetic local sources; partial E37/E40 evidence, not browser/tool isolation, real SSO, or semantic AI acceptance"
+}

@@ -58,8 +58,16 @@ public final class LocalWorkspaceSearchTool implements ReadOnlyTool<LocalSearchQ
     public void execute(LocalSearchQuery input, ToolExecution.Context context, ToolExecution.Output output) {
         context.checkpoint();
         if (!binding.equals(context.binding())) throw new IllegalArgumentException("Local workspace binding required");
-        requireWorkspace();
-        var hits = search.searchQuestion(binding.workspace(), input.question(), List.of(), false);
+        List<dev.dougle.search.application.SearchIndex.Hit> hits;
+        try {
+            search.requireQuestionReady();
+            requireWorkspace();
+            hits = search.searchQuestion(binding.workspace(), input.question(), List.of(), false);
+        }
+        catch (dev.dougle.library.application.LibraryException problem) {
+            if (problem.status() == 503) throw new ToolExecution.NotReady();
+            throw problem;
+        }
         context.checkpoint();
         requireWorkspace();
         List<dev.dougle.search.application.LocalSearchSnapshot.Entry> inspected = null;

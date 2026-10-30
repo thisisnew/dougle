@@ -4,7 +4,6 @@ import { Button } from './components/ui/button'
 import { preferredProvider, rememberProvider, type Provider } from './providerPreference'
 import { connectionLabels, type ConnectionIndicator } from './connectionIndicator'
 import { loadModel, saveModel, requestedModel, modelPresets, type ModelChoice } from './modelPreference'
-import CliLaunchPanel from './CliLaunchPanel'
 import InstalledCliChoices from './InstalledCliChoices'
 
 type Status = { provider: Provider; state: string; checkedAt: string; remoteConnection: string; reason?: string }
@@ -37,7 +36,6 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
   const [login, setLogin] = useState<Login | null>(null)
   const [acknowledged, setAcknowledged] = useState(false)
   const [loginBusy, setLoginBusy] = useState(false)
-  const [launchSettingsOpen, setLaunchSettingsOpen] = useState(false)
   const [choosingTool, setChoosingTool] = useState(false)
   const [discoveryOpen, setDiscoveryOpen] = useState(false)
   const loggingIn = login?.state === 'PENDING'
@@ -146,8 +144,6 @@ export default function ProviderConnectionPanel({ onClose, onConnectionChange, c
         }
         setStatus(value); setDiscoveryOpen(false)
       }} />}
-    <details><summary>고급 설정</summary><Button className="company-launch-button" variant="ghost" disabled={busy || loggingIn || choosingTool} onClick={() => setLaunchSettingsOpen(true)}>회사용 AI 실행 설정</Button></details>
-    {launchSettingsOpen && <CliLaunchPanel initialProvider={provider} onClose={() => setLaunchSettingsOpen(false)} />}
     {error && <p role="alert">{error}</p>}
     {status?.state === 'LOGIN_REQUIRED' && !loggingIn && <div>
       <p>회사에서 사용하는 계정으로 로그인하세요. Google 로그인이나 회사 SSO가 나오면 브라우저 안내를 따라 주세요.</p>

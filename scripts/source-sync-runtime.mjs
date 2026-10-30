@@ -28,6 +28,18 @@ await symlink(resolve(directory, 'outside.txt'), resolve(project, 'external'))
 await symlink(project, resolve(project, 'cycle'))
 await mkdir(resolve(project, 'level/'.repeat(17)), { recursive: true })
 await writeFile(resolve(project, 'level/'.repeat(17), 'deep.txt'), 'DEEP_SENTINEL')
+const fixtureFiles = Number(process.env.FORGE_SOURCE_FIXTURE_FILES || 0)
+assert(Number.isInteger(fixtureFiles) && fixtureFiles >= 0 && fixtureFiles <= 5000)
+let maxStatusPollMillis = 0
+let featureSearchMillis = null
+if (fixtureFiles > 0) {
+  for (let number = 0; number < fixtureFiles; number++) {
+    await writeFile(resolve(project, `Synthetic${number}.java`),
+      `class Synthetic${number} { int compute${number}(int value) { return value + ${number}; } }`)
+  }
+  await writeFile(resolve(project, 'FeatureFlagClient.java'),
+    'class FeatureFlagClient { String provider = "flipt"; boolean enabled(String flag) { return flipt.evaluate(flag); } }')
+}
 let logs = ''
 let base
 const child = spawn(resolve(resources, 'runtime/bin/java'), ['-Duser.home=' + home, '-jar', resolve(resources, 'dougle.jar'), '--forge.ai.codex-command=/nonexistent', '--forge.ai.claude-command=/nonexistent'], {
@@ -49,7 +61,10 @@ async function api(path, method = 'GET', body, expected = 200) {
     for (let retry = 0; job.state === 'RUNNING'; retry++) {
       assert(retry < 1200)
       await new Promise(done => setTimeout(done, 100))
+      const started = performance.now()
       job = await api(jobPath)
+      maxStatusPollMillis = Math.max(maxStatusPollMillis, performance.now() - started)
+      assert(maxStatusPollMillis < 5000, 'Job status must not wait for the publish transaction or indexing')
     }
     assert.equal(job.state, 'COMPLETED', JSON.stringify(job))
     return job.source
@@ -83,6 +98,16 @@ try {
   assert.match(source.error, /심볼릭|깊이/)
   const hits = await api(prefix + '/search?query=syntheticObservation')
   assert.ok(hits.some(hit => hit.name === 'Main.java'), JSON.stringify({ source, hits }))
+  if (fixtureFiles > 0) {
+    const started = performance.now()
+    const feature = await api(prefix + '/chat-threads', 'POST', {
+      requestId: 'feature-flag-fixture', question: 'FeatureFlagClient flipt 구현 의존성 설정',
+    }, 201)
+    featureSearchMillis = performance.now() - started
+    assert(feature.payload.items.some(item => item.quote.includes('flipt')), 'Feature flag evidence must be found')
+    assert(featureSearchMillis < 10000, 'Feature flag evidence retrieval must finish within ten seconds')
+    checks.push('feature-flag-retrieval-with-code-corpus')
+  }
   assert.deepEqual(await api(prefix + '/search?query=OUTSIDE_SECRET_SENTINEL'), [])
   assert.deepEqual(await api(prefix + '/search?query=GENERATED_REPORT_SHOULD_NOT_BE_COLLECTED'), [])
   await rm(resolve(project, 'external'))
@@ -144,7 +169,7 @@ try {
   checks.push('github-url-denied', 'confluence-login-required')
   assert.equal(createHash('sha256').update(await readFile(resolve(resources, 'dougle.jar'))).digest('hex'), jarSha256)
   if (process.env.FORGE_RECOVERY_REPORT) await writeFile(resolve(process.env.FORGE_RECOVERY_REPORT), JSON.stringify({
-    fixtureVersion: 'source-sync-jobs-v1', jarSha256, startedAt, finishedAt: new Date().toISOString(),
+    fixtureVersion: 'source-sync-jobs-v2', fixtureFiles, maxStatusPollMillis, featureSearchMillis, jarSha256, startedAt, finishedAt: new Date().toISOString(),
     checks: checks.map(id => ({ id, status: 'PASS' })), asyncJobs: asyncJobs.length, foreignJobDenied: true, buildReportExcluded: true, externalAiCalls: 0,
     scope: 'Packaged runtime with isolated synthetic local sources; partial E37/E40 evidence, not browser/tool isolation, real SSO, or semantic AI acceptance',
   }, null, 2) + '\n', { flag: 'wx', mode: 0o600 })

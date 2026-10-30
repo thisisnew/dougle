@@ -48,21 +48,14 @@ it('연결 실패 시 자동 탐색하고 별도 도구 찾기 버튼을 요구�
   expect(screen.getByText(/인증 응답을 해석하지 못했습니다/)).toBeVisible()
   expect(api.mock.calls.some(([, options]) => options?.method === 'PUT')).toBe(false)
 })
-it.each(['CODEX', 'CLAUDE'] as const)('offers trusted company executable configuration for %s', async provider => {
+it.each(['CODEX', 'CLAUDE'] as const)('does not expose manual advanced configuration for %s', provider => {
   localStorage.setItem('forge.ai.provider', provider)
-  api.mockImplementation(async path => path === '/ai/launch-settings'
-    ? { saved: { codexPath: '', claudePath: '', revision: 0 }, activeCodexCommand: 'codex', activeClaudeCommand: 'claude', restartRequired: false }
-    : { provider, state: 'TOOL_UNAVAILABLE', checkedAt: '', remoteConnection: 'NOT_CHECKED' })
   render(<ProviderConnectionPanel onClose={vi.fn()} />)
-  await userEvent.click(screen.getByRole('button', { name: '연결' }))
-  expect(await screen.findByText(/AI 실행 도구를 찾지 못했습니다/)).toBeVisible()
-  await userEvent.click(screen.getByText('고급 설정'))
-  await userEvent.click(screen.getByRole('button', { name: '회사용 AI 실행 설정' }))
-  expect(await screen.findByLabelText('Codex 실행 명령 또는 경로')).toBeVisible()
-  expect(screen.getByLabelText('Claude 실행 명령 또는 경로')).toBeVisible()
-  expect(screen.getByLabelText('진단 대상')).toHaveValue(provider)
-  expect(screen.getByRole('button', { name: '경로 저장' })).toBeDisabled()
-  expect(api.mock.calls.every(([, options]) => options?.method !== 'PUT')).toBe(true)
+  expect(screen.queryByText('고급 설정')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: '회사용 AI 실행 설정' })).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('Codex 실행 명령 또는 경로')).not.toBeInTheDocument()
+  expect(screen.queryByLabelText('Claude 실행 명령 또는 경로')).not.toBeInTheDocument()
+  expect(api).not.toHaveBeenCalled()
 })
 beforeEach(() => {
   api.mockReset(); localStorage.clear()

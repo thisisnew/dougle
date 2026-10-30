@@ -1,0 +1,14 @@
+[
+  {
+    "architecture": "x86_64",
+    "productClassesCompared": 523,
+    "jarSha256": "f82e9aa218daaddffbb4f4a5c1a520576b8731573b7d6e2e92ae7cd5f3015577",
+    "status": "PASS"
+  },
+  {
+    "architecture": "arm64",
+    "productClassesCompared": 523,
+    "jarSha256": "a32e6254e6c06b7ccc6067b5f0f9bc1545e92ff1d8072352a1a976639315f5d3",
+    "status": "PASS"
+  }
+]

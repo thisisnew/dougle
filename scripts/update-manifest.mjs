@@ -25,19 +25,28 @@ for (const [platform, architecture] of [['darwin-x86_64', 'x86_64'], ['darwin-aa
     cwd: root, env: { ...process.env, TAURI_CONFIG: '{"bundle":{"resources":[]}}', CARGO_BUILD_JOBS: '2' }, maxBuffer: 1024 * 1024,
   })
   if (release) {
-    for (const filename of [name, name + '.sig']) {
-      const asset = release.assets.find(asset => asset.name === filename)
-      assert.ok(asset, `Missing public asset: ${filename}`)
-      assert.equal(asset.state, 'uploaded')
-      const path = resolve(root, 'release', filename)
-      assert.equal(asset.size, (await stat(path)).size)
-      const digest = createHash('sha256')
-      for await (const chunk of createReadStream(path)) digest.update(chunk)
-      assert.equal(asset.digest, 'sha256:' + digest.digest('hex'))
-    }
+    for (const filename of [name, name + '.sig', `Dougle_${version}_${architecture}.dmg`]) await verifyPublicAsset(filename)
   }
   platforms[platform] = { url: `https://github.com/thisisnew/dougle/releases/download/${tag}/${name}`,
     signature: (await readFile(signature, 'utf8')).trim() }
+}
+async function verifyPublicAsset(filename) {
+  const asset = release.assets.find(asset => asset.name === filename)
+  assert.ok(asset, `Missing public asset: ${filename}`)
+  assert.equal(asset.state, 'uploaded')
+  const path = resolve(root, 'release', filename)
+  assert.equal(asset.size, (await stat(path)).size)
+  const digest = createHash('sha256')
+  for await (const chunk of createReadStream(path)) digest.update(chunk)
+  assert.equal(asset.digest, 'sha256:' + digest.digest('hex'))
+}
+if (release) {
+  // Never promote the fallback feed for a DMG-only or incomplete release again.
+  await verifyPublicAsset('latest.json')
+  await verifyPublicAsset('SHA256SUMS')
+  const publishedManifest = JSON.parse(await readFile(resolve(root, 'release/latest.json'), 'utf8'))
+  assert.equal(publishedManifest.version, version)
+  assert.deepEqual(publishedManifest.platforms, platforms)
 }
 const manifest = { version, notes: '앱 메뉴에서 업데이트를 설치하고 다시 시작할 수 있습니다.',
   pub_date: release?.published_at ?? new Date().toISOString(), platforms }

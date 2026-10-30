@@ -302,7 +302,11 @@ public class InvestigationPlanService implements ConversationOperationalScopeAcc
                     boolean successful = completed == null || completed.status() == ToolExecution.Status.OK || completed.status() == ToolExecution.Status.EMPTY;
                     store.update(job.workspaceId(), job.id(), successful ? "SUCCEEDED" : "FAILED", decisionName, selectedQuery,
                             successful && completed != null ? completed.output() : null, completed != null && completed.truncated(),
-                            completed == null ? null : completed.status().name(), successful ? null : "로컬 검색이 완료되지 않았습니다: " + completed.reason());
+                            completed == null ? null : completed.status().name(), successful ? null : "resource_preparing".equals(completed.reason())
+                                    ? "자료를 검색용으로 준비하고 있습니다. 동기화가 끝난 뒤 다시 질문해 주세요."
+                                    : completed.status() == ToolExecution.Status.TIMEOUT
+                                    ? "자료 검색에 시간이 오래 걸려 중단했습니다. 자료 동기화가 완료됐는지 확인한 뒤 다시 질문해 주세요."
+                                    : "자료 검색을 완료하지 못했습니다. 잠시 후 다시 질문해 주세요.");
                 });
                 published = true;
             }

@@ -3,7 +3,7 @@ import { request } from './api'
 import { Button } from './components/ui/button'
 
 type Progress = { stage: string; file: string; completed: number; total: number; cancellable: boolean }
-const stages: Record<string, string> = { READING: '파일 읽는 중', READING_BYTES: '파일 복사 중', EXTRACTING: '내용 추출 중', PAGES: '페이지 읽는 중', SPLITTING: '파일 분할 중', PUBLISHING: '검색 자료 저장 중', SYNCING: '동기화 준비 중' }
+const stages: Record<string, string> = { INDEXING: '검색 색인 갱신 중', READING: '파일 읽는 중', READING_BYTES: '파일 복사 중', EXTRACTING: '내용 추출 중', PAGES: '페이지 읽는 중', SPLITTING: '파일 분할 중', PUBLISHING: '검색 자료 저장 중', SYNCING: '동기화 준비 중' }
 
 export default function SourceSyncProgress({ workspaceId, sourceId, onCancel }: {
   workspaceId: string; sourceId: string; onCancel: () => void

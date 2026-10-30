@@ -21,6 +21,15 @@ const source = {
 
 beforeEach(() => { api.mockReset(); vi.mocked(selectFolder).mockReset(); localStorage.removeItem('dougle.material-sync.one') })
 
+it.each([
+  [null, '수집 실패 · 검색 자료 없음'],
+  ['root', '오류 · 이전 자료 유지'],
+])('수집 실패의 기존 자료 유무를 구분한다: %s', async (rootEntryId, label) => {
+  api.mockResolvedValue([{ ...source, status: 'ERROR', error: '수집 실패', rootEntryId, revision: rootEntryId ? 'previous-revision' : null }])
+  render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
+  expect(await screen.findByText(`로컬 폴더 · ${label}`)).toBeInTheDocument()
+})
+
 it('텍스트 없는 파일은 정상 폴더의 실패 경고 대신 상세 정보에 표시한다', async () => {
   api.mockResolvedValue([{ ...source, status: 'READY', rootEntryId: 'root', error: '텍스트가 없어 검색에서 제외한 파일 2개' }])
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
@@ -397,7 +406,7 @@ it('삭제 확인을 취소하면 Source와 원본이 유지된다', async () =>
 })
 
 it('실패한 수집은 오류와 이전 반영 버전을 함께 표시한다', async () => {
-  api.mockResolvedValue([{ ...source, status: 'ERROR', revision: 'abcdef1234567890', error: '네트워크 연결 실패' }])
+  api.mockResolvedValue([{ ...source, status: 'ERROR', rootEntryId: 'previous-root', revision: 'abcdef1234567890', error: '네트워크 연결 실패' }])
   render(<SourcePanel workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   await userEvent.hover(await screen.findByRole('button', { name: /동기화 실패: 네트워크 연결을 확인해 주세요/ }))
   expect(screen.getByRole('tooltip')).toHaveTextContent('네트워크 연결을 확인해 주세요.')

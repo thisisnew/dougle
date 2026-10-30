@@ -19,19 +19,27 @@ public class SourceService {
     private final LibraryStore library;
     private final List<Collector> collectors;
     private final DocumentAnalyzer analyzer;
-    private final java.util.concurrent.ConcurrentMap<String, Progress> progress = new java.util.concurrent.ConcurrentHashMap<>();
+    private final java.util.concurrent.ConcurrentMap<String, ActiveProgress> progress = new java.util.concurrent.ConcurrentHashMap<>();
     private final java.util.Set<String> cancelled = java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private record ActiveProgress(String workspace, Progress value) {}
     public record Progress(String stage, String file, long completed, long total, boolean cancellable) {}
 
     public Progress progress(String workspaceId, String id) {
+        ActiveProgress active = progress.get(id);
+        if (active != null) return boundProgress(workspaceId, active);
         Source source = require(workspaceId, id);
-        return progress.getOrDefault(id, new Progress(source.status(), "", 0, 0, false));
+        return new Progress(source.status(), "", 0, 0, false);
+    }
+
+    private Progress boundProgress(String workspaceId, ActiveProgress active) {
+        if (!active.workspace().equals(workspaceId)) throw new LibraryException(404, "자료를 찾을 수 없습니다.");
+        return active.value();
     }
 
     public void cancel(String workspaceId, String id) {
-        require(workspaceId, id);
-        Progress current = progress.get(id);
-        if (current != null && current.cancellable()) cancelled.add(id);
+        ActiveProgress active = progress.get(id);
+        if (active == null) { require(workspaceId, id); return; }
+        if (boundProgress(workspaceId, active).cancellable()) cancelled.add(id);
     }
 
     public SourceService(SourceStore store, LibraryStore library, List<Collector> collectors, DocumentAnalyzer analyzer) {
@@ -142,12 +150,12 @@ public class SourceService {
         String id = source.id();
         cancelled.remove(id);
         boolean[] publishing = {false};
-        progress.put(id, new Progress("READING", "", 0, 0, true));
+        progress.put(id, new ActiveProgress(workspaceId, new Progress("READING", "", 0, 0, true)));
         try (var observation = dev.dougle.ingestion.application.ProcessingProgress.observe(step -> {
             if (!publishing[0] && cancelled.contains(id)) throw new java.util.concurrent.CancellationException();
             if ("PUBLISHING".equals(step.stage())) publishing[0] = true;
-            progress.put(id, new Progress(step.stage(), step.file(), step.completed(), step.total(),
-                    !publishing[0]));
+            progress.put(id, new ActiveProgress(workspaceId, new Progress(step.stage(), step.file(), step.completed(), step.total(),
+                    !publishing[0])));
         })) {
             source = require(workspaceId, id);
             var baseline = store.fileHashes(workspaceId, id);
@@ -200,6 +208,7 @@ public class SourceService {
                         }
                         public java.util.Set<Map.Entry<String, Analysis>> entrySet() { throw new UnsupportedOperationException(); }
                     } : analyses);
+            dev.dougle.ingestion.application.ProcessingProgress.report("INDEXING", "", completed, plan.changed().size());
             refreshIndex.run();
             }
         } catch (Exception exception) {

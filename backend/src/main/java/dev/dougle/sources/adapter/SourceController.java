@@ -84,7 +84,7 @@ public class SourceController {
 
     @GetMapping("/sources/{id}/sync-jobs/{jobId}")
     public dev.dougle.sources.application.SourceSyncJobs.Progress syncJob(@PathVariable String workspaceId, @PathVariable String id, @PathVariable String jobId) {
-        requireSupportedSource(workspaceId, id);
+        // The job already binds workspace and source; do not acquire SQLite during a long publish.
         return syncJobs.get(workspaceId, id, jobId);
     }
 

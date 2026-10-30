@@ -9,6 +9,8 @@ import java.util.function.BooleanSupplier;
 public final class ToolExecution {
     private ToolExecution() {}
 
+    public static final class NotReady extends RuntimeException {}
+
     public enum Status { OK, EMPTY, DENIED, TIMEOUT, FAILED, CANCELLED }
 
     public record Binding(String workspace, String environment, String scope) {

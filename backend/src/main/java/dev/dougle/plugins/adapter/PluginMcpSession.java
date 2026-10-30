@@ -48,12 +48,7 @@ final class PluginMcpSession {
         if (!has("getAccessibleAtlassianResources"))
             throw new LibraryException(403, "회사 사이트 조회 권한이 없습니다. 사용할 사이트를 선택해 다시 연결해 주세요.");
         JsonNode result = call("getAccessibleAtlassianResources", Map.of());
-        JsonNode resources;
-        try { resources = result.has("structuredContent") ? result.path("structuredContent") : json.readTree(text(result)); }
-        catch (RuntimeException exception) { throw new LibraryException(502, "회사 사이트 목록을 읽지 못했습니다. 다시 연결해 주세요."); }
-        if (resources == null) throw new LibraryException(502, "회사 사이트 목록 형식을 확인하지 못했습니다. 다시 연결해 주세요.");
-        if (!resources.isArray()) resources = resources.path("resources");
-        if (!resources.isArray()) throw new LibraryException(502, "회사 사이트 목록 형식을 확인하지 못했습니다. 다시 연결해 주세요.");
+        JsonNode resources = AtlassianResourceList.decode(result);
         if (resources.isEmpty())
             throw new LibraryException(403, "승인된 회사 사이트가 없습니다. 사용할 사이트를 선택해 다시 연결해 주세요.");
         var supported = json.createArrayNode();
