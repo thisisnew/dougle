@@ -1,15 +1,11 @@
 {
-  "version": "0.1.16",
+  "version": "0.1.40",
   "notes": "앱 메뉴에서 업데이트를 설치하고 다시 시작할 수 있습니다.",
-  "pub_date": "2026-10-24T14:44:33Z",
+  "pub_date": "2026-10-30T17:17:10Z",
   "platforms": {
-    "darwin-x86_64": {
-      "url": "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.16-preview.1/Knowledge.Forge_0.1.16_x86_64.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVURDY1dWlCMmppWUZmbms4cjZYK244NEtTU2FrL3JnbFNjTlJGOEUyNmc3WTNjNVQ5dmFwNFpvdmhvVGJtcDRwVncvaTRQWjMra3Y5ZGNkTXRGUWxhbnA2b2pHMFgzL2dBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyODUyNjA0CWZpbGU6S25vd2xlZGdlLkZvcmdlXzAuMS4xNl94ODZfNjQuYXBwLnRhci5negl2ZXJzaW9uOjAuMS4xNgpqTXgwVDIwZXhnaS9iWG5kbnJWNW1qL2F3citEUkhUUmhGRjhvbldXQ0oxc1ZzMGlMRG1mc2tkL3RMRkNraEM0djNjUUU3cGQzNGxHUWplNFljbDJBQT09Cg=="
-    },
     "darwin-aarch64": {
-      "url": "https://github.com/thisisnew/knowledge-forge/releases/download/v0.1.16-preview.1/Knowledge.Forge_0.1.16_arm64.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVURDY1dWlCMmppWUZMTTRpMk5SSlVVMzhndkVSVm5DK1E5V1hib0ZFN1J5KytqVDdwV25yMnJ3dkhFVnpGZjFWUWxwMGJpbFZ3Z3dHcUJZakIxUHdCMWkvcXlvWXd0K0E0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyODUyNzYzCWZpbGU6S25vd2xlZGdlLkZvcmdlXzAuMS4xNl9hcm02NC5hcHAudGFyLmd6CXZlcnNpb246MC4xLjE2CmpMNmlXZDdVZENiWlQ2RU1MSWFHdGRldkptRjNmUWsrZTZHRE9mZnNWRXpVeGdJc0tpYWpvaklUZ3BoNENsOTRwSHZtaTc2SExHdFNNL281d1Q4R0JnPT0K"
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.1.40-preview.1/Dougle_0.1.40_arm64.app.tar.gz",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVURDY1dWlCMmppWU1Ld2NLTEdLRDNnOGJOaXZQcUhIdkVPNXBJWmtuT0M0OHVKWUF5cDBpa3dVZEtpMmc0eTJybTlHZUloUEo3SWg4QW14d3U0QnJGOUl6T0RpdFpZS2c4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkzMzgwNTE5CWZpbGU6RG91Z2xlXzAuMS40MF9hcm02NC5hcHAudGFyLmd6CXZlcnNpb246MC4xLjQwCndqaWszeTZpcXFoTzhXNE9KbUxTU0Q2SWEvZlhzNUlyQ2hlQkNpUFRTRFVDU2NXMXhwR2R3UnA4QncvZDFacTRTRGtBVGVIbGoxK0JCT1Q2OWhpN0R3PT0K"
     }
   }
 }

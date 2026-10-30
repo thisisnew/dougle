@@ -1,0 +1,37 @@
+{
+  "tag": "v0.1.40-preview.1",
+  "sourceCommit": "1521d47e8be515929c1cf0fa2d94aa7d0d29754a",
+  "draft": false,
+  "assets": [
+    {
+      "name": "Dougle_0.1.40_arm64.dmg",
+      "size": 476652486,
+      "sha256": "aebc745b431d15b5b194fdd08c7674c5c34cd24d754bd3734d6bdcad16db8ecd",
+      "anonymousStatus": 200
+    },
+    {
+      "name": "Dougle_0.1.40_arm64.app.tar.gz",
+      "size": 450831062,
+      "sha256": "6b51b783ababcfa2f4d93c39a95a72220de6d4859e004e79b49bb941d10ceabf",
+      "anonymousStatus": 200
+    },
+    {
+      "name": "SHA256SUMS",
+      "size": 366,
+      "sha256": "857553ecc5e48da38ee34798abe1ebd7aa3072700026b68cf056d35d8697ae21",
+      "anonymousStatus": 200
+    },
+    {
+      "name": "latest.json",
+      "size": 796,
+      "sha256": "0f17d365b53e30b47251bb65af79f1acf44ce7bfb68d85b67b336a8ef61fbf6a",
+      "anonymousStatus": 200
+    },
+    {
+      "name": "Dougle_0.1.40_arm64.app.tar.gz.sig",
+      "size": 440,
+      "sha256": "f4db328ea17b90e96a0dbd01e60aaeb9ae7254d18ed755264ba0e4a41d325101",
+      "anonymousStatus": 200
+    }
+  ]
+}

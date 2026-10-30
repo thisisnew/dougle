@@ -9,7 +9,7 @@ Dougle은 파일·폴더·웹 문서를 모아 두고, 궁금한 내용을 AI에
 
 ## 설치하기
 
-최신 설치본은 **0.1.40 Preview**입니다. Jira·Confluence 사이트 목록 처리, 대량 폴더 저장 중 상태 조회, 검색 준비 안내를 보완하고 AI 연결의 고급 설정을 제거했습니다. 앱 업데이트용 서명 아카이브와 버전 피드도 함께 제공합니다. 실제 회사 SSO·ARM 실기기 실행은 별도 인수가 필요합니다. 웹 링크·Confluence는 지원하며 GitHub 주소는 계속 차단합니다. [시나리오 검증과 한계](docs/release-0.1.40-report.md) · [설치 안내](docs/macos-install.md).
+최신 설치본은 **0.1.40 Preview**입니다. Jira·Confluence 사이트 목록 처리, 대량 폴더 저장 중 상태 조회, 검색 준비 안내를 보완하고 AI 연결의 고급 설정을 제거했습니다. 앱 업데이트용 서명 아카이브와 버전 피드도 함께 제공합니다. 새 Apple Silicon Mac의 동봉 런타임 수집·검색을 확인했으며 실제 회사 SSO·회사 PC 환경은 별도 인수가 필요합니다. 웹 링크·Confluence는 지원하며 GitHub 주소는 계속 차단합니다. [시나리오 검증과 한계](docs/release-0.1.40-report.md) · [설치 안내](docs/macos-install.md).
 
 **[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.40-preview.1)**
 
