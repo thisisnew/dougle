@@ -1,5 +1,11 @@
 # Dougle — 이어서 작업하기
 
+## 배포 전송 미완료 — 2026-10-31
+
+소스1521d47은 origin/main에 push했고 로컬0.1.40 설치·패키지 검증은 끝났다. GitHub 대용량 업로드가 매우 느리며 ARM DMG curl 업로드는 HTTP 오류(exit22)로 실패했다. 기본 gh, HTTP/1.1, GitHub 공식 다른 DNS 주소, 스트리밍 전송을 시도했다. 모든 업로더는 종료했다. `v0.1.40-preview.1`은 비공개 초안이며 서명2개/latest.json/SHA256SUMS만 올라갔다. 공개·피드 갱신·실제 공개 업데이트 검증을 완료했다고 말하지 않는다.
+
+재개 시 재빌드 없이 `release/`의0.1.40 DMG2개와 tar.gz2개를 초안에 업로드한다. 8개 자산 크기/해시 확인 후 undraft, `node scripts/update-manifest.mjs --publish` 실행(서명 검증 수분), `updates/preview.json` commit/push 후 `node scripts/published-update-smoke.mjs 0.1.38`로 실제 공개 파일 교체/가상 DB 보존을 검증한다. 공개 익명 자산 확인과 보고서를 갱신한다. `/tmp/dougle040-public-verify.py`는 로컬/공개8자산 대조용이다. source target은1521d47e8be515929c1cf0fa2d94aa7d0d29754a. 초안의 latest.json은0.1.40이며 SHA256SUMS는7항목이다. 제품 코드/패키지는 고정됐으므로 불필요한 재빌드 금지.
+
 ## 0.1.40 작업 중 — 2026-10-31
 
 현재 사용자 요청: Jira 회사 사이트 목록 형식 오류, 0.1.38 앱 업데이트 실패, AI 고급 설정 제거. 추가 제보: 0.1.39 폴더 수집이 오래 진행된 뒤500, 남은 자료에 질문하면 `time_budget`.

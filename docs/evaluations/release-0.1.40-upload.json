@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-10-30T16:47:59.318436+00:00",
+  "status": "INCOMPLETE_UPLOAD",
+  "draft": true,
+  "tag": "v0.1.40-preview.1",
+  "sourceCommit": "1521d47e8be515929c1cf0fa2d94aa7d0d29754a",
+  "assets": [
+    {
+      "name": "Dougle_0.1.40_arm64.app.tar.gz.sig",
+      "size": 424,
+      "state": "uploaded"
+    },
+    {
+      "name": "Dougle_0.1.40_x86_64.app.tar.gz.sig",
+      "size": 424,
+      "state": "uploaded"
+    },
+    {
+      "name": "latest.json",
+      "size": 1376,
+      "state": "uploaded"
+    },
+    {
+      "name": "SHA256SUMS",
+      "size": 657,
+      "state": "uploaded"
+    }
+  ],
+  "attempts": [
+    "gh default HTTP/2: sustained very slow transfer; stopped",
+    "gh HTTP/1.1: sustained very slow transfer; stopped",
+    "curl official alternate GitHub address: ARM DMG HTTP failure (curl exit 22)",
+    "curl other official address and streaming: sustained very slow transfer; stopped"
+  ],
+  "publicFeedChanged": false,
+  "publicUpgradeTest": "NOT_RUN: complete release and public feed required",
+  "note": "Four small metadata/signature assets uploaded. Both DMGs and both update archives remain local. No upload remains running."
+}
