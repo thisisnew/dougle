@@ -28,7 +28,7 @@ Dougle은 파일·폴더·웹 문서를 모아 두고, 궁금한 내용을 AI에
 연결되면 오른쪽 위에 **CODEX / CLAUDE**가 표시됩니다. [짧은 사용 안내](docs/chat-first.md)
 
 Java·Codex 실행 도구와 검색 엔진은 앱에 포함되어 있습니다. **자료 → + → 웹 링크**에서 HTTPS 문서를 추가할 수 있습니다. Confluence Cloud는 설정의 Jira · Confluence 플러그인을 연결해야 합니다. GitHub 주소는 지원하지 않습니다. 코드 저장소는 PC에 내려받아 폴더로 추가하고, 원격 변경은 직접 pull한 뒤 동기화하세요. 로컬 폴더 수집에는 AI·인터넷 연결이 필요하지 않습니다.
-자동 업데이트 피드는 현재0.1.16에 유지되어 있으므로 최신 Preview는 위 설치 파일로 직접 설치하세요. [업데이트 안내](docs/automatic-updates.md)
+M 시리즈 Mac의0.1.32 이상 앱에서는 **업데이트 확인**으로 최신 버전을 받을 수 있습니다. 설치를 직접 진행하려면 위 DMG를 사용하세요. [업데이트 안내](docs/automatic-updates.md)
 앱이 열리지 않거나 기존 앱을 업데이트하려면 [자세한 설치 안내](docs/macos-install.md)를 확인하세요.
 
 ## 기술 스택

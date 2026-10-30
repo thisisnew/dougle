@@ -19,10 +19,8 @@ jobs:
           gh release download v0.1.38-preview.1 --pattern Dougle_0.1.38_arm64.dmg --dir release
       - name: Prepare pinned Rust update verification tool
         run: |
-          mkdir -p .tools
-          ln -s "$HOME/.cargo" .tools/cargo
-          ln -s "$HOME/.rustup" .tools/rustup
-          rustup toolchain install 1.99.1 --profile minimal
+          mkdir -p .tools/cargo .tools/rustup
+          RUSTUP_HOME="$PWD/.tools/rustup" rustup toolchain install 1.99.1 --profile minimal
           TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=3 bash scripts/desktop-cargo.sh build --locked --example published_update_smoke
       - name: Verify real signed upgrade and synthetic data preservation
         env:
