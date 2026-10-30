@@ -78,3 +78,16 @@ it('does not create a download for HTTP errors', async () => {
   await expect(downloadApi('/files/one/content', 'file')).rejects.toThrow('403')
   expect(click).not.toHaveBeenCalled()
 })
+
+it('explains WebKit transport failure without retrying a mutation', async () => {
+  const fetcher = vi.fn().mockRejectedValue(new TypeError('Load failed'))
+  vi.stubGlobal('fetch', fetcher)
+  await expect(request('/sources', { method: 'POST' })).rejects.toThrow('앱 내부 연결이 끊겼습니다')
+  expect(fetcher).toHaveBeenCalledOnce()
+})
+
+it('preserves intentional cancellation', async () => {
+  const failure = new DOMException('aborted', 'AbortError')
+  vi.stubGlobal('fetch', vi.fn().mockRejectedValue(failure))
+  await expect(request('/session')).rejects.toBe(failure)
+})

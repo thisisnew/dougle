@@ -11,6 +11,7 @@ vi.mock('./RelationPanel', () => ({ default: ({ seed }: { seed: { id: string; ve
 import { request } from './api'
 
 vi.mock('./api', async original => ({ ...await original<typeof import('./api')>(), request: vi.fn() }))
+vi.mock('./sourceSync', () => ({ syncSource: (path: string, signal: AbortSignal) => request(`${path}/sync-jobs`, { method: 'POST', signal }) }))
 const api = vi.mocked(request)
 const source = {
   id: 'source', name: '가상 연구', kind: 'LOCAL_FOLDER', location: '/synthetic', domain: '연구',
@@ -97,7 +98,7 @@ it('최근 성공 시간을 Workspace별로 표시하고 실패 시 갱신하지
 })
 
 it('서버가 ERROR 상태를 반환한 동기화도 실패로 처리한다', async () => {
-  api.mockImplementation(async path => path.endsWith('/sync') ? { ...source, status: 'ERROR', error: '수집 실패' } : [source])
+  api.mockImplementation(async path => path.endsWith('/sync-jobs') ? { ...source, status: 'ERROR', error: '수집 실패' } : [source])
   render(<SourcePanel manageOnly workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
   await screen.findByText('가상 연구')
   await userEvent.click(screen.getByRole('button', { name: '동기화' }))
@@ -110,8 +111,8 @@ it('현재 처리 대상과 실제 완료 내역을 순서대로 표시한다', 
   let finish!: () => void
   const pending = new Promise<void>(resolve => { finish = resolve })
   api.mockImplementation(async path => {
-    if (path.endsWith('/source/sync')) return { ...source, status: 'READY' }
-    if (path.endsWith('/second/sync')) { await pending; return { ...source, id: 'second', status: 'READY' } }
+    if (path.endsWith('/source/sync-jobs')) return { ...source, status: 'READY' }
+    if (path.endsWith('/second/sync-jobs')) { await pending; return { ...source, id: 'second', status: 'READY' } }
     if (path.endsWith('/progress')) return { stage: 'EXTRACTING', file: 'example.txt', completed: 2, total: 5, cancellable: true }
     return [source, { ...source, id: 'second', name: '두 번째 자료' }]
   })
@@ -163,7 +164,7 @@ it('등록에 실패하면 자동 동기화하지 않는다', async () => {
   await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
   await userEvent.click(screen.getByRole('button', { name: '폴더 선택' }))
   expect(await screen.findByRole('alert')).toHaveTextContent('등록 실패')
-  expect(api.mock.calls.some(([path]) => path.endsWith('/sync'))).toBe(false)
+  expect(api.mock.calls.some(([path]) => path.endsWith('/sync-jobs'))).toBe(false)
 })
 
 it('연결 Source 없이 업로드 파일도 동기화하고 처리 중 버튼을 잠근다', async () => {
@@ -203,7 +204,7 @@ it('자료가 없으면 잠그고 추가 및 마지막 삭제에 따라 동기�
 it('파일 분석 실패를 알리고 연결 자료 동기화는 계속한다', async () => {
   api.mockImplementation(async path => {
     if (path.endsWith('/files/sync')) return { processed: 1, failures: [{ name: 'scan.pdf', error: '텍스트를 읽을 수 없습니다.' }] }
-    if (path.endsWith('/source/sync')) return source
+    if (path.endsWith('/source/sync-jobs')) return source
     return [source]
   })
   render(<SourcePanel manageOnly syncUploads workspaceId="one" revision={0} onChanged={vi.fn()} onSelect={vi.fn()} />)
@@ -211,7 +212,7 @@ it('파일 분석 실패를 알리고 연결 자료 동기화는 계속한다', 
   await userEvent.click(screen.getByRole('button', { name: '동기화' }))
   expect(await screen.findByRole('button', { name: /파일 동기화 동기화 실패/ })).toBeInTheDocument()
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' }))
+  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync-jobs', expect.objectContaining({ method: 'POST' }))
 })
 
 
@@ -308,7 +309,7 @@ it('폴더를 선택하면 등록 직후 자동 동기화하고 목록을 갱신
   let created = false
   api.mockImplementation(async (path, options) => {
     if (options?.method === 'POST' && path.endsWith('/sources')) { created = true; return source }
-    if (path.endsWith('/sync')) return { ...source, status: 'READY' }
+    if (path.endsWith('/sync-jobs')) return { ...source, status: 'READY' }
     return created ? [source] : []
   })
   render(<SourcePanel workspaceId="one" revision={0} onChanged={changed} onSelect={vi.fn()} />)
@@ -320,10 +321,10 @@ it('폴더를 선택하면 등록 직후 자동 동기화하고 목록을 갱신
   await waitFor(() => expect(api.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(true))
   await screen.findByText('가상 연구')
   expect(api).toHaveBeenCalledWith('/workspaces/one/sources', expect.objectContaining({ method: 'POST', body: JSON.stringify({ name: 'synthetic', kind: 'LOCAL_FOLDER', location: '/synthetic', domain: '' }) }))
-  expect(api.mock.calls.filter(([path]) => path.endsWith('/sync'))).toHaveLength(1)
+  expect(api.mock.calls.filter(([path]) => path.endsWith('/sync-jobs'))).toHaveLength(1)
   expect(screen.getByRole('button', { name: '동기화' })).toBeVisible()
   await user.click(screen.getByRole('button', { name: '동기화' }))
-  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync', expect.objectContaining({ method: 'POST' })))
+  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/source/sync-jobs', expect.objectContaining({ method: 'POST' })))
   expect(changed).toHaveBeenCalled()
 })
 
@@ -406,8 +407,8 @@ it('실패한 수집은 오류와 이전 반영 버전을 함께 표시한다', 
 it('동기화는 모든 연결 자료를 처리하고 하나가 실패해도 다음 자료를 계속한다', async () => {
   const other = { ...source, id: 'second', name: '두 번째 자료' }
   api.mockImplementation(async (path) => {
-    if (path.endsWith('/source/sync')) throw new Error('연결 실패')
-    if (path.endsWith('/second/sync')) return { ...other, status: 'READY' }
+    if (path.endsWith('/source/sync-jobs')) throw new Error('연결 실패')
+    if (path.endsWith('/second/sync-jobs')) return { ...other, status: 'READY' }
     return [source, other]
   })
   const changed = vi.fn()
@@ -418,7 +419,7 @@ it('동기화는 모든 연결 자료를 처리하고 하나가 실패해도 다
   await userEvent.hover(await screen.findByRole('button', { name: /가상 연구 동기화 실패/ }))
   expect(screen.getByRole('tooltip')).toHaveTextContent('네트워크 연결을 확인해 주세요.')
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/second/sync', expect.objectContaining({ method: 'POST' }))
+  expect(api).toHaveBeenCalledWith('/workspaces/one/sources/second/sync-jobs', expect.objectContaining({ method: 'POST' }))
   expect(changed).toHaveBeenCalledOnce()
   expect(api.mock.calls.some(([path]) => /answer|generation/.test(path))).toBe(false)
 })

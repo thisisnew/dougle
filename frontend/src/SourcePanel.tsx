@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type React
 import { ArrowRight, Database, FileText, FolderInput, Github, Link, Minus, Plus, RefreshCw, Search, Trash2 } from 'lucide-react'
 import { Button } from './components/ui/button'
 import { request } from './api'
+import { syncSource } from './sourceSync'
 import PublishedSearchPreview from './PublishedSearchPreview'
 import EvidenceBundlePanel from './EvidenceBundlePanel'
 import { hasFolderPicker, selectFolder } from './folderPicker'
@@ -176,7 +177,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
       setKind(sourceKind)
       setActiveSource(source.id)
       let synced: Source
-      try { synced = await request<Source>(`${base}/sources/${source.id}/sync`, { method: 'POST', signal }) }
+      try { synced = await syncSource(`${base}/sources/${source.id}`, signal) }
       finally { setActiveSource(null) }
       if (synced.status === 'READY') setLastSync(recordMaterialSync(workspaceId))
       setSyncStep('자료 목록 갱신 중…')
@@ -229,7 +230,7 @@ export default function SourcePanel({ workspaceId, revision, onChanged, onSelect
         setActiveSource(source.id)
         setSyncStep(`${source.name} · 자료 수집·분석 중…`)
         try {
-          const synced = await request<Source>(`${base}/sources/${source.id}/sync`, { method: 'POST', signal })
+          const synced = await syncSource(`${base}/sources/${source.id}`, signal)
           if (signal.aborted) return
           if (synced.status === 'ERROR') {
             failures.push(`${source.name}: ${synced.error || '동기화하지 못했습니다.'}`)

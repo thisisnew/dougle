@@ -1,5 +1,15 @@
 # API
 
+## 0.1.39 폴더·웹 동기화 작업
+
+- `POST /api/workspaces/{workspaceId}/sources/{sourceId}/sync-jobs`:202, `{id,state,source,error}`. 실행 중 동일 자료의 요청은 같은 ID를 반환한다. 이 API에서 동시에2개 작업을 실행하며 용량 초과는429다.
+- `GET /api/workspaces/{workspaceId}/sources/{sourceId}/sync-jobs/{jobId}`: 같은 응답 구조. `state`는 RUNNING/COMPLETED/FAILED이며 작업은 Workspace와 Source 모두에 묶인다. 다른 소유 범위·없는 작업은404다.
+- COMPLETED는 수집 호출이 반환됐다는 뜻이다. 최종 성공/부분 처리/실패는 `source.status`와 `source.error`로 표시한다. 예상하지 못한 작업 예외는 FAILED와 내부 내용을 제거한 안내를 반환한다.
+- 기록128개는 메모리에 보관하며 앱 재시작 후 작업 ID가 유지되지 않는다. 클라이언트는 POST를 자동 재전송하지 않는다. UI 폴링 중단과 기존 명시적 수집 취소 API를 구별한다.
+
+UI는 등록을 `sync:false`로 요청한 뒤 이 작업 API를 호출한다. 기존 `/sync` 및 `sync:true` 계약은 호환 경로로 유지한다. 파일 업로드·보관 파일 일괄 재분석은 별도 경로다.
+
+
 ## 0.1.36 자료 연결
 
 `POST /api/workspaces/{workspaceId}/sources`는 LOCAL_FOLDER, URL, MYSQL을 허용한다. URL은 공개 HTTPS(443, 사용자정보·fragment 없음)이며 GitHub 주소와 파일 링크를 거부한다. `sync:true` 또는 별도 `/sources/{id}/sync`로 수집한다. UI 등록은 곧바로 동기화를 요청한다. Confluence Cloud 인증이 없으면 Source ERROR와 연결 안내를 반환하고 로그인 페이지를 색인하지 않는다. GitHub 보관 자료의 수동 동기화와 폴링 활성화는 400, 스케줄러는 제외한다. GitHub 인증 API는 제거된 상태다.

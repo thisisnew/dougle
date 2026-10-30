@@ -31,6 +31,21 @@ class LocalFolderCollectorTest {
         assertThat(Files.isSymbolicLink(root.resolve("cycle"))).isTrue();
     }
 
+    @Test void nestedGradleBuildReportsAreExcludedBeforePathValidation() throws Exception {
+        Path root = Files.createDirectory(directory.resolve("project"));
+        Path module = Files.createDirectories(root.resolve("inbound-module/src/main/java"));
+        Files.writeString(module.resolve("ReceivingService.java"), "class ReceivingService {}");
+        Path reports = Files.createDirectories(root.resolve("inbound-module/build/reports/tests/test/classes"));
+        Path report = Files.writeString(reports.resolve("GeneratedTest".repeat(12) + ".html"), "generated");
+        Files.writeString(root.resolve("build.gradle"), "plugins { id 'java' }");
+        try (var snapshot = collector.collect(root.toString())) {
+            assertThat(snapshot.failures()).isEmpty();
+            assertThat(snapshot.files()).extracting(file -> file.path()).containsExactlyInAnyOrder(
+                    "build.gradle", "inbound-module/src/main/java/ReceivingService.java");
+        }
+        assertThat(Files.readString(report)).isEqualTo("generated");
+    }
+
     @Test void missingRootExplainsLocalAccessRatherThanNetwork() {
         assertThatThrownBy(() -> collector.collect(directory.resolve("missing").toString()))
                 .hasMessageContaining("폴더 위치").hasMessageContaining("macOS").hasMessageNotContaining("인터넷");

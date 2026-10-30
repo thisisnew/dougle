@@ -70,12 +70,13 @@ class FolderAcceptanceTest {
                 write(root, manifest, path, content);
             }
             if (fixture == 5) {
-                for (String excluded : List.of(".git", "node_modules")) {
+                for (String excluded : List.of(".git", "node_modules", "build", "module/build/reports/tests")) {
                     Files.createDirectories(root.resolve(excluded));
                     Files.writeString(root.resolve(excluded).resolve("excluded.txt"), "EXCLUDED_ONLY_MARKER");
                 }
-                write(root, manifest, "build/generated.txt", "Build directory is not in the configured exclusion policy");
-                result.put("buildPolicy", "build is currently collected; .git and node_modules excluded");
+                write(root, manifest, "build.gradle", "plugins { id 'java' }");
+                write(root, manifest, "module/src/main/java/ReceivingService.java", "class ReceivingService {}");
+                result.put("buildPolicy", "root and nested build outputs excluded; build.gradle and module source retained");
             }
             if (fixture == 6) {
                 Path outside = directory.resolve(id + "-outside.txt");

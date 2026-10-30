@@ -191,8 +191,10 @@ public class LuceneSearchIndex implements SearchIndex {
             semanticScores.merge(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()) + ":" + hit.startLine(), hit.score(), Math::max);
         }
         Set<String> included = new HashSet<>();
+        var namedTargets = NamedCodeFocus.targets(question, candidates);
         return reranked.stream().filter(hit -> hit.score() >= best * 0.10f && relevant(question, hit,
                         semanticScores.getOrDefault(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()) + ":" + hit.startLine(), 0f)))
+                .filter(hit -> NamedCodeFocus.allows(hit, namedTargets))
                 .filter(hit -> included.add(hit.kind() + ":" + (hit.entryId() == null ? hit.cardId() : hit.entryId()))).toList();
     }
 

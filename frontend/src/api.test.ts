@@ -20,7 +20,8 @@ it('서버 문제 응답을 사용자 오류 메시지로 전달한다', async (
 it('통신 오류는 확정적인 서버 거절 상태로 바꾸지 않는다', async () => {
   const failure = new TypeError('Network unavailable')
   vi.stubGlobal('fetch', vi.fn().mockRejectedValue(failure))
-  await expect(request('/workspaces')).rejects.toBe(failure)
+  await expect(request('/workspaces')).rejects.toThrow('앱 내부 연결이 끊겼습니다')
+  await expect(request('/workspaces')).rejects.not.toHaveProperty('status')
 })
 
 it('삭제된 Slack 대화의 구조화된 복구 정보만 검증해 전달한다', async () => {
@@ -53,4 +54,16 @@ it('파일 업로드의 multipart 경계는 브라우저가 생성한다', async
   vi.stubGlobal('fetch', fetcher)
   await request('/files', { method: 'POST', body: new FormData() })
   expect((fetcher.mock.calls[0][1].headers as Headers).has('Content-Type')).toBe(false)
+})
+
+it('응답 본문 수신 중 끊긴 연결도 안내하며 재전송하지 않는다', async () => {
+  const fetcher = vi.fn().mockResolvedValue({ ok: true, status: 200, json: () => Promise.reject(new TypeError('Load failed')) })
+  vi.stubGlobal('fetch', fetcher)
+  await expect(request('/workspaces')).rejects.toThrow('앱 내부 연결이 끊겼습니다')
+  expect(fetcher).toHaveBeenCalledOnce()
+})
+
+it('손상된 JSON 응답을 원문 파싱 오류로 노출하지 않는다', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('invalid-json')))
+  await expect(request('/workspaces')).rejects.toThrow('앱 응답을 읽지 못했습니다')
 })

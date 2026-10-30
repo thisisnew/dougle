@@ -20,7 +20,8 @@ describe.skipIf(import.meta.env.VITE_SYNC_ACCEPTANCE !== '1')('sync entry accept
         const result: Record<string, unknown> = { id, startedAt, scope: 'ACTUAL_REACT_APP_JSDOM_MOCKED_API', fullAcceptancePassed: false,
           remaining: ['Native picker/network/backend ingestion and search', 'Actual process restart and background scheduler', 'File upload has no cancellation control; only source sync cancellation exercised'] }
         let finish!: () => void
-        const pending = new Promise<void>(resolve => { finish = resolve })
+        let finished = false
+        const pending = new Promise<void>(resolve => { finish = () => { finished = true; resolve() } })
         const api = vi.mocked(request)
         api.mockReset()
         vi.mocked(selectFolder).mockResolvedValue('/synthetic/owned-folder')
@@ -39,12 +40,15 @@ describe.skipIf(import.meta.env.VITE_SYNC_ACCEPTANCE !== '1')('sync entry accept
             source = { ...JSON.parse(options.body as string), id: 'source', status: 'NEW', pollingEnabled: false }
             return source
           }
-          if (path.endsWith('/sources/source/sync')) {
+          if (path.endsWith('/sources/source/sync-jobs') && options?.method === 'POST') {
             syncs++
-            await pending
+            return { id: 'sync-job', state: 'RUNNING', source: null, error: null }
+          }
+          if (path.endsWith('/sources/source/sync-jobs/sync-job')) {
+            if (!finished) return { id: 'sync-job', state: 'RUNNING', source: null, error: null }
             source = { ...source, status: fixture === 4 || cancelled ? 'ERROR' : 'READY',
               error: fixture === 4 ? '폴더를 찾을 수 없습니다.' : cancelled ? '동기화를 중단했습니다.' : null }
-            return source
+            return { id: 'sync-job', state: 'COMPLETED', source, error: null }
           }
           if (path.endsWith('/progress')) return { stage: 'EXTRACTING', file: 'synthetic.txt', completed: 0, total: 1, cancellable: true }
           if (path.endsWith('/cancel')) { cancelled = true; finish(); return null }

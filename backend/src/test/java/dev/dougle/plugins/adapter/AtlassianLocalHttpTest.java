@@ -31,6 +31,8 @@ class AtlassianLocalHttpTest {
     PluginVault vault;
     volatile String fault = "";
     volatile String product = "both";
+    volatile boolean modernAuthority;
+    volatile String resourceIssuer;
     volatile String failedEndpoint;
     volatile int endpointStatus;
     volatile boolean omitScope;
@@ -51,17 +53,19 @@ class AtlassianLocalHttpTest {
             }
             Object response;
             int status = 200;
-            if (path.contains("well-known")) {
+            if (path.contains("oauth-protected-resource")) {
+                response = Map.of("resource", provider.resource(), "authorization_servers", List.of(resourceIssuer == null ? issuer() : resourceIssuer));
+            } else if (path.contains("well-known")) {
                 var metadata = new LinkedHashMap<String, Object>();
-                metadata.put("issuer", provider.origin);
-                metadata.put("authorization_endpoint", provider.origin + "/v1/authorize");
-                metadata.put("token_endpoint", provider.origin + "/v1/token");
+                metadata.put("issuer", issuer());
+                metadata.put("authorization_endpoint", modernAuthority ? "https://auth.atlassian.com/authorize" : provider.origin + "/v1/authorize");
+                metadata.put("token_endpoint", modernAuthority ? "https://auth.atlassian.com/oauth/token" : provider.origin + "/v1/token");
                 metadata.put("code_challenge_methods_supported", List.of("S256"));
-                if (!fault.equals("setup")) metadata.put("registration_endpoint", provider.origin + "/v1/register");
+                if (!fault.equals("setup")) metadata.put("registration_endpoint", modernAuthority ? issuer() + "/dcr/register" : provider.origin + "/v1/register");
                 response = metadata;
-            } else if (path.equals("/v1/register")) {
+            } else if ((path.equals("/v1/register") || path.endsWith("/dcr/register"))) {
                 response = Map.of("client_id", "synthetic-client", "token_endpoint_auth_method", "none");
-            } else if (path.equals("/v1/token")) {
+            } else if ((path.equals("/v1/token") || path.equals("/oauth/token"))) {
                 exchanges.add(BrowserPluginConnections.query(body));
                 if (Set.of("invalid_grant", "invalid_client", "invalid_scope", "unavailable").contains(fault)) {
                     status = fault.equals("unavailable") ? 503 : 400;
@@ -378,8 +382,35 @@ class AtlassianLocalHttpTest {
         }
     }
 
+    String issuer() { return modernAuthority ? "https://auth.atlassian.com/SyntheticTenant" : provider.origin; }
+
+    @Test void protectedResourceSelectsNewAuthorityAndReplacesLegacyClient() throws Exception {
+        modernAuthority = true;
+        vault.put("browser-ATLASSIAN-client", json.writeValueAsString(new BrowserPluginConnections.Client("legacy-client", 12345)));
+        assertThat(begin().state()).isEqualTo("WAITING");
+        assertThat(authorization.get().getHost()).isEqualTo("auth.atlassian.com");
+        assertThat(provider.trusted(authorization.get().toString())).isEqualTo(authorization.get());
+        var params = BrowserPluginConnections.query(authorization.get().getRawQuery());
+        assertThat(params.get("client_id")).isEqualTo("synthetic-client");
+        assertThat(params.get("scope")).contains("read:me", "read:account", "offline_access").doesNotContain("write:", "delete:", "manage:");
+        assertThat(params.get("prompt")).isEqualTo("consent");
+        assertThat(callback(params.get("state")).statusCode()).isEqualTo(200);
+        assertThat(json.readValue(vault.get("browser-ATLASSIAN-client"), BrowserPluginConnections.Client.class).issuer()).isEqualTo(issuer());
+        expire();
+        assertThat(connections.accessToken(provider)).isEqualTo("synthetic-access");
+        assertThat(exchanges.getLast()).containsEntry("grant_type", "refresh_token");
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"https://evil.test/tenant", "http://auth.atlassian.com/tenant", "https://auth.atlassian.com.evil.test/tenant", "https://auth.atlassian.com/tenant?x=1"})
+    void untrustedDiscoveredAuthorityNeverOpensBrowser(String issuer) throws Exception {
+        resourceIssuer = issuer;
+        assertThat(begin().state()).isEqualTo("FAILED");
+        assertThat(authorization.get()).isNull();
+        assertThat(exchanges).isEmpty();
+    }
+
     void expire() {
         vault.put("browser-ATLASSIAN", json.writeValueAsString(new BrowserPluginConnections.Grant("expired", "synthetic-old-refresh", 1,
-                provider.origin + "/v1/token", "synthetic-client")));
+                (modernAuthority ? "https://auth.atlassian.com/oauth/token" : provider.origin + "/v1/token"), "synthetic-client")));
     }
 }

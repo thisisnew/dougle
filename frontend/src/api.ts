@@ -32,7 +32,12 @@ export async function request<T>(path: string, options: RequestInit = {}): Promi
     throw new ApiError(typeof problem?.detail === 'string' && problem.detail ? problem.detail : `요청을 완료하지 못했습니다. (${response.status})`,
       response.status, problem?.code, problem?.expectedThreadId)
   }
-  return response.status === 204 ? undefined as T : response.json()
+  return response.status === 204 ? undefined as T : response.json().catch((error: unknown) => {
+    if (options.signal?.aborted || error instanceof DOMException && error.name === 'AbortError') throw error
+    throw new Error(error instanceof TypeError
+      ? '앱 내부 연결이 끊겼습니다. 잠시 후 다시 시도해 주세요. 계속되면 Dougle을 다시 열어 주세요.'
+      : '앱 응답을 읽지 못했습니다. 잠시 후 다시 시도해 주세요.')
+  })
 }
 
 export function entryPath(workspaceId: string, entryId?: string) {

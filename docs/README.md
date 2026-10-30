@@ -1,8 +1,8 @@
 # 문서 안내 — 어디부터 읽으면 되나요?
 
-## 현재 공개 버전 — 0.1.38 / 2026-10-30
+## 현재 공개 버전 — 0.1.39 / 2026-10-30
 
-[최신 설치 파일](https://github.com/thisisnew/dougle/releases/tag/v0.1.38-preview.1) · [설치·백업](macos-install.md) · [5분 사용법](how-it-works.md) · [0.1.38 검증 보고서](release-0.1.38-report.md).
+[최신 설치 파일](https://github.com/thisisnew/dougle/releases/tag/v0.1.39-preview.1) · [설치·백업](macos-install.md) · [5분 사용법](how-it-works.md) · [0.1.39 검증 보고서](release-0.1.39-report.md).
 
 파일·로컬 폴더·웹 URL을 등록해 질문합니다. GitHub 주소 직접 연결은 지원하지 않으며 내려받은 코드 폴더를 사용합니다. AI 연결은 오른쪽 상단, Notion·Jira/Confluence·MySQL 연결은 설정의 플러그인에서 진행합니다.
 

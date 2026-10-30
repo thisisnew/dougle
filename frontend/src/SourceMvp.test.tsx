@@ -7,6 +7,7 @@ import { request } from './api'
 import { selectFolder } from './folderPicker'
 vi.mock('./api', async original => ({ ...await original<typeof import('./api')>(), request: vi.fn() }))
 vi.mock('./folderPicker', () => ({ hasFolderPicker: () => true, selectFolder: vi.fn() }))
+vi.mock('./sourceSync', () => ({ syncSource: (path: string, signal: AbortSignal) => request(`${path}/sync-jobs`, { method: 'POST', signal }) }))
 const api = vi.mocked(request)
 beforeEach(() => { api.mockReset(); api.mockResolvedValue([]); vi.mocked(selectFolder).mockReset() })
 const props = () => ({ workspaceId: 'one', revision: 0, onChanged: vi.fn(), onSelect: vi.fn(), onUpload: vi.fn() })
@@ -40,8 +41,8 @@ it('syncs a local folder without sending remote archive sync requests', async ()
   render(<SourcePanel {...props()} />)
   await waitFor(() => expect(screen.getByRole('button', { name: '동기화' })).toBeEnabled())
   await userEvent.click(screen.getByRole('button', { name: '동기화' }))
-  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/local/sync', expect.objectContaining({ method: 'POST' })))
-  expect(api.mock.calls.filter(([, options]) => options?.method === 'POST').map(([path]) => path)).toEqual(['/workspaces/one/sources/web/sync', '/workspaces/one/sources/local/sync'])
+  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/local/sync-jobs', expect.objectContaining({ method: 'POST' })))
+  expect(api.mock.calls.filter(([, options]) => options?.method === 'POST').map(([path]) => path)).toEqual(['/workspaces/one/sources/web/sync-jobs', '/workspaces/one/sources/local/sync-jobs'])
 })
 
 it.each(['https://github.com/org/repo', 'https://GITHUB.COM./org/repo', 'https://raw.githubusercontent.com/org/repo/main/file'])('blocks Github pasted as a web link: %s', async location => {
@@ -55,13 +56,13 @@ it.each(['https://github.com/org/repo', 'https://GITHUB.COM./org/repo', 'https:/
 })
 
 it('automatically syncs a registered web document', async () => {
-  api.mockImplementation(async (path, options) => options?.method !== 'POST' ? [] : path.endsWith('/sync') ? { status: 'READY' } : { id: 'web' })
+  api.mockImplementation(async (path, options) => options?.method !== 'POST' ? [] : path.endsWith('/sync-jobs') ? { status: 'READY' } : { id: 'web' })
   render(<SourcePanel {...props()} />)
   await userEvent.click(screen.getByRole('button', { name: '자료 추가' }))
   await userEvent.click(screen.getByRole('button', { name: '웹 링크' }))
   await userEvent.type(screen.getByRole('textbox', { name: '웹 URL' }), 'https://example.org/document')
   await userEvent.click(screen.getByRole('button', { name: '추가' }))
-  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/web/sync', expect.objectContaining({ method: 'POST' })))
+  await waitFor(() => expect(api).toHaveBeenCalledWith('/workspaces/one/sources/web/sync-jobs', expect.objectContaining({ method: 'POST' })))
   expect(api.mock.calls.find(([, options]) => options?.method === 'POST')?.[1]?.body).toContain('"kind":"URL"')
 })
 

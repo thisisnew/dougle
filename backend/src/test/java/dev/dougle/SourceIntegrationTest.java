@@ -324,7 +324,7 @@ class SourceIntegrationTest {
             when(collector.collect(anyString())).thenReturn(new dev.dougle.sources.domain.CollectedSnapshot("a".repeat(40),
                     List.of(new dev.dougle.sources.domain.CollectedSnapshot.File("notes.txt", "가상 온실 기록".getBytes(StandardCharsets.UTF_8)))));
         } catch (Exception exception) { throw new AssertionError(exception); }
-        var controller = new dev.dougle.sources.adapter.SourceController(new SourceService(sourceStore, libraryStore, List.of(collector), analyzer), search);
+        var controller = new dev.dougle.sources.adapter.SourceController(new SourceService(sourceStore, libraryStore, List.of(collector), analyzer), search, mock(dev.dougle.sources.application.SourceSyncJobs.class));
         assertThatThrownBy(() -> controller.create(workspace, new dev.dougle.sources.adapter.SourceController.Registration(
                 "가상 저장소", "GITHUB", "https://github.com/example/synthetic", "", true))).isInstanceOf(LibraryException.class);
         verifyNoInteractions(collector);

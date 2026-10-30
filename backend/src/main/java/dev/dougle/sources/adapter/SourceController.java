@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class SourceController {
     private final SourceService sources;
     private final SearchService search;
+    private final dev.dougle.sources.application.SourceSyncJobs syncJobs;
 
-    public SourceController(SourceService sources, SearchService search) {
+    public SourceController(SourceService sources, SearchService search, dev.dougle.sources.application.SourceSyncJobs syncJobs) {
         this.sources = sources;
         this.search = search;
+        this.syncJobs = syncJobs;
     }
 
     public record Registration(String name, String kind, String location, String domain, Boolean sync) {}
@@ -71,6 +73,19 @@ public class SourceController {
         requireSupportedSource(workspaceId, id);
         Source source = sources.sync(workspaceId, id, search::refresh);
         return source;
+    }
+
+    @PostMapping("/sources/{id}/sync-jobs")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public dev.dougle.sources.application.SourceSyncJobs.Progress startSync(@PathVariable String workspaceId, @PathVariable String id) {
+        requireSupportedSource(workspaceId, id);
+        return syncJobs.start(workspaceId, id);
+    }
+
+    @GetMapping("/sources/{id}/sync-jobs/{jobId}")
+    public dev.dougle.sources.application.SourceSyncJobs.Progress syncJob(@PathVariable String workspaceId, @PathVariable String id, @PathVariable String jobId) {
+        requireSupportedSource(workspaceId, id);
+        return syncJobs.get(workspaceId, id, jobId);
     }
 
     @GetMapping("/sources/{id}/progress")

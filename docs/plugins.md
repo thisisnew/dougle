@@ -18,7 +18,7 @@
 
 공식 원격 MCP의 동적 클라이언트 등록·OAuth PKCE를 사용하는 공통 연결 엔진입니다. 별도 중계 서버/도메인/client secret 배포 없이 공식 서버에 직접 연결하며 OAuth state, issuer, 고정 HTTPS origin, 로컬 콜백 Host/경로를 검증합니다. 고객의 승인이나 회사 관리자 정책을 우회하지 않습니다. [Notion 규격](https://developers.notion.com/guides/mcp/build-mcp-client), [Atlassian 규격](https://developer.atlassian.com/cloud/rovo-mcp/guides/configuring-oauth-2-1/).
 
-Notion은 notion-fetch만 호출합니다. Atlassian은 승인된 사이트 목록의 URL과 등록 링크의 호스트를 대조한 뒤 getJiraIssue 또는 getConfluenceContent/getConfluencePage만 호출합니다. 도구 스키마의 필수 입력을 확인하며 모르는 규격을 임의 추측하지 않습니다. 쓰기/삭제/범용 실행 도구는 실행 허용 목록에 없습니다. 제공자 승인 화면이 광범위한 권한을 요청할 수 있으므로 앱의 읽기 전용 실행 정책과 OAuth 권한 범위는 별개입니다. Atlassian 인증 요청에는 Jira/Confluence 읽기 scope만 지정합니다.
+Notion은 notion-fetch만 호출합니다. Atlassian은 승인된 사이트 목록의 URL과 등록 링크의 호스트를 대조한 뒤 getJiraIssue 또는 getConfluenceContent/getConfluencePage만 호출합니다. 도구 스키마의 필수 입력을 확인하며 모르는 규격을 임의 추측하지 않습니다. 쓰기/삭제/범용 실행 도구는 실행 허용 목록에 없습니다. 제공자 승인 화면이 광범위한 권한을 요청할 수 있으므로 앱의 읽기 전용 실행 정책과 OAuth 권한 범위는 별개입니다. Atlassian 인증 요청에는 Jira/Confluence 읽기 scope를 지정하며, 새 인증 서버에는 계정 확인용 `read:me read:account`와 갱신용 `offline_access`를 함께 요청합니다. 업무 자료 쓰기 scope는 요청하지 않습니다.
 
 연결 확인은 MCP initialize/tools/list를 검사합니다. Atlassian은 Jira 또는 Confluence 중 하나 이상의 읽기 기능과 유효한 회사 사이트 목록을 확인합니다. token 응답에 scope가 있으면 하나 이상의 해당 읽기 scope가 필요하며, 생략되면 기능 확인을 사용합니다. 한 제품만 승인해도 연결할 수 있고 다른 제품을 읽을 때는 해당 제품의 권한 부족을 표시합니다. 각 문서의 접근 성공을 보장하지 않습니다. 응답은 요청당 최대 30초/10 MiB, 본문 200만 문자, 기능 목록 최대 20페이지입니다. 원격 리다이렉트·쿠키·자동 HTTP 재시도는 하지 않습니다. 자료 수집이 AI 모델을 자동 실행하지 않습니다.
 
@@ -72,3 +72,7 @@ Notion은 notion-fetch만 호출합니다. Atlassian은 승인된 사이트 목�
 화면: [설정의 플러그인 진입](screenshots/settings-plugins.png), [Notion 브라우저 연결](screenshots/notion-browser-connection.png), [Atlassian 브라우저 연결](screenshots/atlassian-browser-connection.png), [MySQL](screenshots/mysql-plugin-connection.png). 기존 토큰 안내 스크린샷은 이전 버전입니다.
 
 브라우저 연결은 가상 OAuth/MCP 응답과 실제 로컬 콜백 HTTP로 검증합니다. 실제 사용자 Notion/Atlassian 로그인·회사 정책·문서 권한은 별도 확인이 필요합니다. MySQL 검사는 모의 JDBC 외에 새 임시 서버의 읽기 전용 계정 시나리오를 포함하며, 실제 회사 DB 접속 성공을 뜻하지 않습니다. 현재 체크리스트와 재현 방법은 [다른 Mac 사용 흐름 검증](portability-verification.md)을 따릅니다. [0.1.20 보고서](release-0.1.20-report.md)는 당시의 이력입니다.
+
+## Atlassian 인증 서버 탐색 — 0.1.39
+
+`/v2/mcp`의 보호 자원 메타데이터에서 인증 서버를 먼저 확인한다. MCP 호스트의 구형 OAuth 메타데이터를 고정 사용하지 않는다. resource 일치·허용된 HTTPS issuer·PKCE를 검증하며 등록 클라이언트를 issuer별로 묶는다. 인증 서버가 달라지면 기존 등록을 재사용하지 않는다. 새 서버는 `prompt=consent`와 계정 확인/갱신 scope를 요구한다. 실제 회사 SSO와 관리자 정책은 별도 인수다. [수정 및 검증 기록](release-0.1.39-report.md).

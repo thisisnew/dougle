@@ -16,7 +16,7 @@ public final class CollectionLimits {
     public static final long MAX_SNAPSHOT = 8L * 1024 * 1024 * 1024;
     public static final int MAX_SNAPSHOT_FILES = 20_000;
     private static final Set<String> EXCLUDED = Set.of(".git", ".ssh", ".aws", ".env",
-            "node_modules", "target", ".data", ".tools", ".m2", "dist", ".DS_Store",
+            "node_modules", "build", "target", ".data", ".tools", ".m2", "dist", ".DS_Store",
             ".idea", ".gradle", ".classpath", ".project", "__pycache__");
 
     private CollectionLimits() {}

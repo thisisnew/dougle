@@ -1,0 +1,20 @@
+{
+  "version": "0.1.39",
+  "previousVersion": "0.1.38",
+  "jarSha256": "91085bf889334e39d85f4e2fe019e2ca475c4a41141dfe78fc08b91965643da3",
+  "installedAppSignature": "PASS",
+  "backupApp": true,
+  "stoppedSqliteBackupFiles": [
+    "dougle.sqlite",
+    "dougle.sqlite-wal",
+    "dougle.sqlite-shm"
+  ],
+  "backupScope": "Stopped SQLite files and previous app; no authentication files or full material archive copied",
+  "launchRequested": true,
+  "externalAiCalls": 0,
+  "httpCheck": {
+    "root": 200,
+    "unauthenticatedSession": 403
+  },
+  "installedProcessRunning": true
+}

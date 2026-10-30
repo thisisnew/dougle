@@ -1,5 +1,10 @@
 # 다른 Mac 사용 흐름 검증
 
+## 0.1.39 회사 연결·폴더 수정 검증
+
+최종 고정 소스의 Java7,953·UI718·Node5,569·Python5·Rust24 검사가 통과했다(Java 외부환경4생략). 새 HOME6종, Intel 네이티브 UI·ARM 정적/서명·설치본 코드 일치도 확인했다. [보고서와 최초 실패](release-0.1.39-report.md), [Java 케이스별 원장](evaluations/portability-0.1.39-java.json), [설치 환경6종](evaluations/portability-0.1.39-install.json)을 따른다. 실제 회사 SSO·ARM 실행·전체 전문가 인수는 미검증이다. 아래는 이전 버전별 검증 기록이다.
+
+
 ## 설치본 검색 시간 측정 — 2026-10-30
 
 Intel i7-9750H에서 동봉0.1.38 JAR·검색 모델, 전용 HOME/DB, 외부 AI 실행 불가 상태로 측정했다. 각 규모에 동일10질문을3회 실행하고 검색 API와 질문 근거 구성 HTTP 시간을 따로 기록했다. 한영 표현·구어체·해석형 질문과 자료 밖 질문을 포함한다.

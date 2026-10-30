@@ -17,7 +17,9 @@ import tools.jackson.databind.json.JsonMapper;
 @Service
 public class BrowserPluginConnections {
     public record Progress(String id, String state, String message) {}
-    record Client(String id, int port) {}
+    record Client(String id, int port, String issuer) {
+        Client(String id, int port) { this(id, port, null); }
+    }
     record Grant(String access, String refresh, long expires, String tokenEndpoint, String clientId) {
         @Override public String toString() { return "Grant[redacted]"; }
     }
@@ -85,11 +87,19 @@ public class BrowserPluginConnections {
     private void prepare(BrowserProvider provider, Attempt attempt) {
         String stage = "서비스 인증 설정 확인";
         try {
-            JsonNode metadata = http.send(provider, "GET", URI.create(provider.origin + "/.well-known/oauth-authorization-server"), null, false, null, null, null).body();
+            String issuer = provider.origin;
+            if (provider == BrowserProvider.ATLASSIAN) {
+                JsonNode resource = http.send(provider, "GET", URI.create(provider.origin + "/.well-known/oauth-protected-resource/v2/mcp"), null, false, null, null, null).body();
+                if (!provider.resource().equals(resource.path("resource").asText())
+                        || !resource.path("authorization_servers").isArray() || resource.path("authorization_servers").size() != 1)
+                    throw new LibraryException(502, "서비스의 인증 대상 정보를 확인하지 못했습니다.");
+                issuer = resource.path("authorization_servers").get(0).asText();
+            }
+            JsonNode metadata = http.send(provider, "GET", URI.create(provider.authorizationMetadata(issuer)), null, false, null, null, null).body();
             boolean pkce = false;
             if (metadata.path("code_challenge_methods_supported").isArray())
                 for (JsonNode method : metadata.path("code_challenge_methods_supported")) if (method.isTextual() && method.asText().equals("S256")) pkce = true;
-            if (!provider.origin.equals(metadata.path("issuer").asText()) || !pkce)
+            if (!issuer.equals(metadata.path("issuer").asText()) || !pkce)
                 throw new LibraryException(502, "안전한 인증 방식을 확인하지 못했습니다. 앱 업데이트를 확인하거나 Dougle 지원팀에 문의해 주세요.");
             URI authorization = provider.trusted(metadata.path("authorization_endpoint").asText());
             URI token = provider.trusted(metadata.path("token_endpoint").asText());
@@ -98,6 +108,7 @@ public class BrowserPluginConnections {
             URI registration = provider.trusted(metadata.path("registration_endpoint").asText());
             String saved = vault.get(key(provider) + "-client");
             Client registered = saved == null ? null : json.readValue(saved, Client.class);
+            if (registered != null && !issuer.equals(registered.issuer() == null ? provider.origin : registered.issuer())) registered = null;
             stage = "로컬 인증 응답 준비";
             HttpServer listener;
             try { listener = HttpServer.create(new InetSocketAddress("127.0.0.1", registered == null ? 0 : registered.port()), 4); }
@@ -118,7 +129,7 @@ public class BrowserPluginConnections {
                 JsonNode result = http.send(provider, "POST", registration, json.writeValueAsString(request), false, null, null, null).body();
                 String clientId = credential(result, "client_id", true);
                 if (!"none".equals(result.path("token_endpoint_auth_method").asText("none"))) throw new LibraryException(502, "브라우저 인증을 지원하지 않는 응답입니다.");
-                registered = new Client(clientId, listener.getAddress().getPort());
+                registered = new Client(clientId, listener.getAddress().getPort(), issuer);
                 synchronized (this) {
                     if (!active(provider, attempt)) return;
                     vault.put(key(provider) + "-client", json.writeValueAsString(registered));
@@ -135,7 +146,11 @@ public class BrowserPluginConnections {
                 params.put("client_id", client.id()); params.put("response_type", "code"); params.put("redirect_uri", redirect);
                 params.put("state", attempt.state); params.put("code_challenge", challenge(attempt.verifier)); params.put("code_challenge_method", "S256");
                 params.put("resource", provider.resource());
-                if (provider == BrowserProvider.ATLASSIAN) params.put("scope", "read:jira:agent-interface read:confluence:agent-interface");
+                if (provider == BrowserProvider.ATLASSIAN) {
+                    params.put("scope", (client.issuer() == null || provider.origin.equals(client.issuer()) ? "" : "read:me read:account offline_access ")
+                            + "read:jira:agent-interface read:confluence:agent-interface");
+                    if (client.issuer() != null && !provider.origin.equals(client.issuer())) params.put("prompt", "consent");
+                }
                 stage = "기본 브라우저 열기";
                 browser.open(provider, URI.create(authorization + "?" + BrowserPluginHttp.form(params)));
             }
@@ -153,7 +168,7 @@ public class BrowserPluginConnections {
             synchronized (this) {
                 if (!active(provider, attempt) || !"WAITING".equals(attempt.phase)
                         || !MessageDigest.isEqual(attempt.state.getBytes(StandardCharsets.UTF_8), params.getOrDefault("state", "").getBytes(StandardCharsets.UTF_8))
-                        || (params.containsKey("iss") && !provider.origin.equals(params.get("iss")))) { respond(exchange, 400, "유효하지 않거나 만료된 연결입니다."); return; }
+                        || (params.containsKey("iss") && !(client.issuer() == null ? provider.origin : client.issuer()).equals(params.get("iss")))) { respond(exchange, 400, "유효하지 않거나 만료된 연결입니다."); return; }
                 accepted = true;
                 attempt.phase = "VERIFYING"; attempt.message = "연결을 확인하는 중…";
             }
@@ -183,6 +198,8 @@ public class BrowserPluginConnections {
             }
         } catch (Exception exception) {
             String message = stage + ": " + (exception instanceof LibraryException ? exception.getMessage() : "연결을 완료하지 못했습니다. 다시 시도해 주세요.");
+            if (stage.equals("자료 서비스 연결") && exception instanceof LibraryException failure && failure.status() == 401)
+                message = stage + ": 인증 승인 후 서비스가 인증을 거부했습니다. (HTTP 401) 다시 연결해도 반복되면 앱 인증 설정과 회사의 연결 허용 정책을 확인해야 합니다.";
             try { respond(exchange, 400, accepted ? message : "유효하지 않은 연결 요청입니다."); } catch (Exception ignored) { }
             if (accepted) finish(provider, attempt, "FAILED", message);
         } finally { exchange.close(); }

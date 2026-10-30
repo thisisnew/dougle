@@ -23,5 +23,8 @@ export function apiFetch(path: string, options: RequestInit = {}): Promise<Respo
   const token = desktopSession()
   if (token) headers.set('X-Forge-Session', token)
   headers.set('X-Forge-Client', '1')
-  return fetch(`/api${path}`, { ...options, headers, redirect: 'error', mode: 'same-origin' })
+  return fetch(`/api${path}`, { ...options, headers, redirect: 'error', mode: 'same-origin' }).catch((error: unknown) => {
+    if (options.signal?.aborted || error instanceof DOMException && error.name === 'AbortError') throw error
+    throw new Error('앱 내부 연결이 끊겼습니다. 잠시 후 다시 시도해 주세요. 계속되면 Dougle을 다시 열어 주세요.')
+  })
 }

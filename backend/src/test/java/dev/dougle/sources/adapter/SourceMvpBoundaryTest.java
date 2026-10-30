@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class SourceMvpBoundaryTest {
     private final SourceService sources = mock(SourceService.class);
     private final SearchService search = mock(SearchService.class);
-    private final SourceController controller = new SourceController(sources, search);
+    private final SourceController controller = new SourceController(sources, search, org.mockito.Mockito.mock(dev.dougle.sources.application.SourceSyncJobs.class));
 
     private Source archived(String kind) {
         return new Source("saved", "workspace", "Saved evidence", kind, "https://example.org", "", "READY", "revision", null,

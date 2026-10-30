@@ -1,0 +1,41 @@
+{
+  "version": "0.1.39",
+  "sourceSha256": "787863c1bfb2706fe2b207283f3017f17865922c56ad4f7bb993dc85782cbbe3",
+  "java": {
+    "PASS": 7953,
+    "FAIL": 0,
+    "SKIPPED": 4
+  },
+  "inputMatrix": {
+    "PASS": 5879,
+    "FAIL": 0,
+    "SKIPPED": 0
+  },
+  "ui": {
+    "passed": 718,
+    "failed": 0
+  },
+  "node": {
+    "passed": 5569,
+    "failed": 0,
+    "note": "5376 protocol byte partition combinations included; not separate business workflows"
+  },
+  "python": {
+    "passed": 5,
+    "failed": 0
+  },
+  "rust": {
+    "passed": 24,
+    "failed": 0
+  },
+  "intelNativeRuntime": "PASS_ON_SERIAL_RUN_AFTER_INITIAL_STARTUP_TIMEOUT",
+  "armPackageStatic": "PASS",
+  "companySsoVerified": false,
+  "armRuntimeVerified": false,
+  "externalAiCalls": 0,
+  "productionClassByteMatches": {
+    "x86_64": 520,
+    "arm64": 520
+  },
+  "scope": "Synthetic tests, bundled local search models, native Intel UI and ARM static artifact inspection; not actual company SSO or complete expert acceptance"
+}

@@ -62,7 +62,8 @@ class OauthAcceptanceTest {
                 .thenAnswer(invocation -> {
                     URI uri = invocation.getArgument(2);
                     Object result;
-                    if (uri.getPath().contains("well-known")) result = Map.of("issuer", provider.origin, "authorization_endpoint", provider.origin + "/authorize",
+                    if (uri.getPath().contains("oauth-protected-resource")) result = Map.of("resource", provider.resource(), "authorization_servers", List.of(provider.origin));
+                    else if (uri.getPath().contains("well-known")) result = Map.of("issuer", provider.origin, "authorization_endpoint", provider.origin + "/authorize",
                             "token_endpoint", provider.origin + "/token", "registration_endpoint", provider.origin + "/register", "code_challenge_methods_supported", List.of("S256"));
                     else if (uri.getPath().equals("/register")) result = Map.of("client_id", "synthetic-client", "token_endpoint_auth_method", "none");
                     else if (uri.getPath().equals("/token")) {

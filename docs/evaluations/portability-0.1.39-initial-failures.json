@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "PASS": 7947,
+    "FAIL": 6,
+    "SKIPPED": 4
+  },
+  "matrixSummary": {
+    "PASS": 5879,
+    "FAIL": 0,
+    "SKIPPED": 0
+  },
+  "sourceSha256": "fd3d03ece48d5660ffac2f0f6008f0e3fed3e50fcf081243b138f4f14842a10d",
+  "scope": "Synthetic JVM component/integration cases and parameter variants, not physical Mac/company SSO acceptance",
+  "failedCases": [
+    {
+      "id": "dev.dougle.FolderAcceptanceTest#cases()[26]",
+      "status": "FAIL",
+      "lifecycleFailure": false,
+      "seconds": 0.026,
+      "matrix": false
+    },
+    {
+      "id": "dev.dougle.FolderAcceptanceTest#cases()[27]",
+      "status": "FAIL",
+      "lifecycleFailure": false,
+      "seconds": 0.045,
+      "matrix": false
+    },
+    {
+      "id": "dev.dougle.FolderAcceptanceTest#cases()[28]",
+      "status": "FAIL",
+      "lifecycleFailure": false,
+      "seconds": 0.016,
+      "matrix": false
+    },
+    {
+      "id": "dev.dougle.FolderAcceptanceTest#cases()[29]",
+      "status": "FAIL",
+      "lifecycleFailure": false,
+      "seconds": 0.037,
+      "matrix": false
+    },
+    {
+      "id": "dev.dougle.FolderAcceptanceTest#cases()[30]",
+      "status": "FAIL",
+      "lifecycleFailure": false,
+      "seconds": 0.012,
+      "matrix": false
+    },
+    {
+      "id": "dev.dougle.investigation.adapter.ManagedBrowserCaptureTest#actualChromiumRendersSyntheticApiDataAndBlocksMutationsWithoutRemoteTraffic",
+      "status": "FAIL",
+      "lifecycleFailure": false,
+      "seconds": 5.331,
+      "matrix": false
+    }
+  ],
+  "ui": {
+    "passed": 698,
+    "failed": 20,
+    "cause": "SyncEntryAcceptance still modeled old /sync endpoint; updated to /sync-jobs start and polling"
+  },
+  "native": "Intel runtime startup timed out during concurrent packaging and broad verification; isolated rerun pending",
+  "status": "INITIAL_FAILURES_NOT_FINAL_VERIFICATION"
+}

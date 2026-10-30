@@ -101,7 +101,9 @@ public class BrowserPluginHttp {
     static void validateReadOrAuthentication(BrowserProvider provider, String method, URI uri, String body,
                                              boolean form, String token, String session, String requestId) {
         provider.trusted(uri.toString());
-        if ("GET".equals(method) && uri.toString().equals(provider.origin + "/.well-known/oauth-authorization-server")
+        if ("GET".equals(method) && (uri.toString().equals(provider.origin + "/.well-known/oauth-authorization-server")
+                || provider == BrowserProvider.ATLASSIAN && (uri.toString().equals(provider.origin + "/.well-known/oauth-protected-resource/v2/mcp")
+                || uri.toString().matches("https://auth\\.atlassian\\.com/\\.well-known/oauth-authorization-server/[A-Za-z0-9_-]{1,128}")))
                 && body == null && !form && token == null && session == null && requestId == null) return;
         if (!"POST".equals(method) || body == null || body.length() > 65536) throw readOnlyDenied();
         try {
