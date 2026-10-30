@@ -23,3 +23,11 @@ Atlassian 공식 [도구 목록](https://developer.atlassian.com/cloud/rovo-mcp/
 - [검사 원장](evaluations/atlassian-0.1.41.json).
 - 회사 SSO, 실제 회사 Jira/Confluence 자료 수집: 미검증. 실패 단계 응답 대기.
 - 외부 AI 호출0회. 제품 지원 대상은 M 시리즈 Mac만입니다.
+
+## Release verification pending (2026-10-31)
+
+ARM packaging and original local DMG/update signature, architecture and JAR checks passed. Product commit: 35dd7277aeccea88b931cc696f241414e6ede560 (pushed). Product classes compared: 523.
+
+The draft contains repacked containers whose hashes differ from the original local containers. Download, hash/content verification and local update signing are still required. Incomplete downloads must not be used. Public feed remains 0.1.40; 0.1.41 is NOT published.
+
+GitHub API TLS handshakes and an independent apple.com HTTPS connection timed out. Parallel downloads were stopped. Repack run41101226991 and ARM runtime run41102708128 need final result collection; cancellation of duplicate41101686864 also needs confirmation. Remaining: verify/sign final containers, obtain ARM runtime results, prepare five final assets, publish and promote feed, verify the real public ARM upgrade. Actual company SSO/material access remains unverified.

@@ -1,5 +1,10 @@
 # Dougle 개발 지침
 
+## 0.1.41 release verification pending
+
+ARM packaging and original package checks passed; source is pushed. Network TLS/connect timeouts block final repacked downloads/signing and ARM CI result collection. 0.1.41 remains a draft; public feed is 0.1.40. See docs/release-0.1.41-report.md. Do not claim company connectivity or release success.
+
+
 ## 0.1.41 Atlassian 후속 수정 진행 — 2026-10-31
 
 사용자가 Jira/Confluence 연결 실패와 ‘자료를 찾을 수 없다’를 다시 제보했다. async로 실패 단계·앱 버전·전체 문구를 요청했고 아직 답을 받지 못했다. 회사 실제 원인을 확정하지 않는다. 확인한 별도 결함: 0.1.40 사이트 항목이 id/HTTPS만 인정해 cloudId/호스트 형태를 거절했다. callback400 재현3건 실패 후 정규화 수정, Java120/UI49 통과. 회사SSO·실자료 미검증, AI0회. M 시리즈0.1.41 패키징 진행 중. `docs/release-0.1.41-report.md` 참고. 현재 버전 정보만0.1.41이며 공개 피드는 아직0.1.40이다.
