@@ -1,0 +1,28 @@
+{
+  "tag": "v0.1.39-preview.1",
+  "sourceCommit": "96f0ec39fc408599ac516094ee43aba3bac902b9",
+  "url": "https://github.com/thisisnew/dougle/releases/tag/v0.1.39-preview.1",
+  "publishedAt": "2026-10-30T11:55:02Z",
+  "publicAnonymousMetadataVerified": true,
+  "assets": [
+    {
+      "name": "Dougle_0.1.39_arm64.dmg",
+      "size": 477038317,
+      "digest": "sha256:7aab0d9f41a26aa1133581e3f30ed1742c410bd502db8ab6ee5087e0071c8429",
+      "browser_download_url": "https://github.com/thisisnew/dougle/releases/download/v0.1.39-preview.1/Dougle_0.1.39_arm64.dmg"
+    },
+    {
+      "name": "Dougle_0.1.39_x86_64.dmg",
+      "size": 486514000,
+      "digest": "sha256:0a2c757cf0c212271f3f5f3b99636c260cd2476725af81f49c4374274e3feb97",
+      "browser_download_url": "https://github.com/thisisnew/dougle/releases/download/v0.1.39-preview.1/Dougle_0.1.39_x86_64.dmg"
+    },
+    {
+      "name": "SHA256SUMS",
+      "size": 181,
+      "digest": "sha256:00250cb736b79a528cab963335428f2c5e9c6ccdab89a1ab711f43aaf695bbbe",
+      "browser_download_url": "https://github.com/thisisnew/dougle/releases/download/v0.1.39-preview.1/SHA256SUMS"
+    }
+  ],
+  "verification": "Public GitHub asset SHA-256 digest and byte size match locally verified installers and checksum file"
+}

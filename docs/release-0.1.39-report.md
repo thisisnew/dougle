@@ -2,7 +2,7 @@
 
 ## 상태
 
-검증·패키징·로컬 설치 완료. 배포 대상은0.1.39 Preview이며 공개 결과는 게시 후 확정한다. 회사 계정 SSO·ARM 실기기 실행·Apple 공증은 미검증이다. 자동 업데이트 피드는 유지한다.
+[0.1.39 Preview](https://github.com/thisisnew/dougle/releases/tag/v0.1.39-preview.1) 공개·검증·로컬 설치 완료. 릴리스 소스 커밋은 `96f0ec3`이며 공개3자산의 익명 조회·크기·SHA-256과 태그 커밋을 확인했다. 회사 계정 SSO·ARM 실기기 실행·Apple 공증은 미검증이다. 자동 업데이트 피드는 유지한다.
 
 ## 변경
 
@@ -60,3 +60,5 @@ ARM JAR: `b862de81b549b8b3cd844aae80911e1d302cd8a9086e3d2560026d24987dec68`.
 ## 로컬 설치
 
 [설치 기록](evaluations/local-install-0.1.39.json): 기존0.1.38 앱과 종료된 SQLite 파일을 비공개 위치에 백업한 뒤 `/Applications/Dougle.app`을0.1.39로 교체했다. 서명·JAR 해시·버전·실행 프로세스·정적 화면HTTP200·비인증 API403을 확인했다. 인증 파일은 복사하지 않았으며 전체 자료 백업으로 표시하지 않는다.
+
+[공개 자산 대조 기록](evaluations/release-0.1.39-public.json). 다운로드 후 Jira·Confluence는 설정 → 플러그인에서 다시 연결하고, 기존 소스 폴더는 삭제하지 말고 다시 동기화한다.
