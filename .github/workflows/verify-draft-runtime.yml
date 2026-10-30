@@ -2,7 +2,8 @@ name: Verify 0.1.40 packaged runtimes
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  # GitHub draft releases require push access even for downloading assets.
+  contents: write
 jobs:
   verify:
     strategy:
