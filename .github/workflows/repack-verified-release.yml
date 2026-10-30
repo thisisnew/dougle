@@ -1,0 +1,62 @@
+name: Repack verified 0.1.40 apps
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: repack-verified-0.1.40
+  cancel-in-progress: false
+jobs:
+  repack:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-15
+          - arch: x86_64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    env:
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Download published base and private draft delta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p inputs
+          gh release download v0.1.39-preview.1 --pattern "Dougle_0.1.39_${ARCH}.dmg" --dir inputs
+          gh release download v0.1.40-preview.1 --pattern "Dougle_0.1.40_${ARCH}.delta.zip" --dir inputs
+          python3 - <<'PY'
+          import os,json,hashlib,pathlib
+          a=os.environ['ARCH']; m=json.loads(pathlib.Path('docs/evaluations/release-0.1.40-repack-inputs.json').read_text())['architectures'][a]
+          for name,key in [(f'Dougle_0.1.39_{a}.dmg','baseSha256'),(f'Dougle_0.1.40_{a}.delta.zip','deltaSha256')]:
+              h=hashlib.sha256()
+              with open('inputs/'+name,'rb') as f:
+                  for b in iter(lambda:f.read(1048576),b''): h.update(b)
+              assert h.hexdigest()==m[key], name
+          PY
+      - name: Reconstruct and verify every tested app file
+        run: |
+          command -v zstd || brew install zstd
+          mkdir -p base reconstructed
+          hdiutil attach -readonly -nobrowse -mountpoint "$PWD/base" "inputs/Dougle_0.1.39_${ARCH}.dmg"
+          python3 scripts/release-app-delta.py apply "$PWD/base/Dougle.app" "inputs/Dougle_0.1.40_${ARCH}.delta.zip" "$PWD/reconstructed/Dougle.app"
+          hdiutil detach "$PWD/base"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' reconstructed/Dougle.app/Contents/Info.plist)" = 0.1.40
+          codesign --verify --deep --strict reconstructed/Dougle.app
+          source scripts/macos-architecture.sh
+          forge_verify_macos_architecture "$PWD/reconstructed/Dougle.app" "$ARCH"
+      - name: Package without rebuilding or signing keys
+        run: |
+          bash scripts/create-macos-dmg.sh "$PWD/reconstructed/Dougle.app"
+          COPYFILE_DISABLE=1 tar -czf "$PWD/release/Dougle_0.1.40_${ARCH}.app.tar.gz" -C reconstructed Dougle.app
+          shasum -a 256 "release/Dougle_0.1.40_${ARCH}.dmg" "release/Dougle_0.1.40_${ARCH}.app.tar.gz"
+      - name: Upload containers to unpublished draft only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh release view v0.1.40-preview.1 --json isDraft --jq .isDraft)" = true
+          gh release upload v0.1.40-preview.1 "release/Dougle_0.1.40_${ARCH}.dmg" "release/Dougle_0.1.40_${ARCH}.app.tar.gz"

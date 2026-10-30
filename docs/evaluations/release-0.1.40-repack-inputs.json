@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "1521d47e8be515929c1cf0fa2d94aa7d0d29754a",
+  "baseVersion": "0.1.39",
+  "version": "0.1.40",
+  "architectures": {
+    "arm64": {
+      "baseSha256": "7aab0d9f41a26aa1133581e3f30ed1742c410bd502db8ab6ee5087e0071c8429",
+      "deltaSha256": "661ca8097cfe886ea2598cfbf6d78ae07ef05654e57fd45fc5f4970a31b9c303"
+    },
+    "x86_64": {
+      "baseSha256": "0a2c757cf0c212271f3f5f3b99636c260cd2476725af81f49c4374274e3feb97",
+      "deltaSha256": "ea078b208addf2d9ff99df128ebb1e32adb471bb03504b957dbae485910f38a0"
+    }
+  }
+}
