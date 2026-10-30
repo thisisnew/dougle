@@ -57,3 +57,10 @@ it('마우스와 키보드로 실제 툴팁을 열고 Escape로 닫는다', asyn
   await userEvent.click(warning)
   expect(screen.getByRole('tooltip')).toBeInTheDocument()
 })
+
+it.each([404, 500, 502])('서비스 연결 HTTP %s를 삭제된 자료로 안내하지 않는다', status => {
+  const message = `서비스에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요. (HTTP ${status})`
+  expect(shortMaterialError(message)).toBe('자료 서비스에 연결하지 못했습니다.')
+  expect(materialErrorHelp(message)).toContain(`HTTP ${status}`)
+  expect(materialErrorHelp(message)).not.toContain('삭제')
+})

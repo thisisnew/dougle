@@ -41,7 +41,7 @@ public class BrowserPluginReader {
             JsonNode resources = session.accessibleResources();
             String cloud = null;
             for (JsonNode resource : resources) {
-                if (("https://" + uri.getHost()).equals(resource.path("url").asText().replaceFirst("/$", ""))) cloud = resource.path("id").asText();
+                if (("https://" + uri.getHost().toLowerCase(Locale.ROOT)).equals(resource.path("url").asText().replaceFirst("/$", ""))) cloud = resource.path("id").asText();
             }
             if (cloud == null || cloud.isBlank()) throw new LibraryException(403, "이 회사 사이트의 접근 권한이 없습니다. 해당 사이트로 다시 연결해 주세요.");
             var issue = Pattern.compile("/browse/([A-Za-z][A-Za-z0-9_]*-[0-9]+)(?:/)?$").matcher(uri.getPath());

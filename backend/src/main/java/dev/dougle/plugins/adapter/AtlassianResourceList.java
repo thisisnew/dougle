@@ -1,6 +1,8 @@
 package dev.dougle.plugins.adapter;
 
 import dev.dougle.library.application.LibraryException;
+import java.net.URI;
+import java.util.Locale;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -43,9 +45,27 @@ final class AtlassianResourceList {
         if (value.has("result")) return list(value.get("result"), depth + 1);
         if (value.has("resources")) return list(value.get("resources"), depth + 1);
         // Legacy unstructured MCP output can have one text block per resource.
-        if (value.path("id").isTextual() && value.path("url").isTextual())
+        if ((value.path("id").isTextual() || value.path("cloudId").isTextual()) && value.path("url").isTextual())
             return JSON.createArrayNode().add(value);
         throw invalid();
+    }
+
+    /** Normalize only server-granted Cloud sites; never infer a grant from a user URL. */
+    static JsonNode site(JsonNode value) {
+        try {
+            JsonNode legacy = value.get("id"), modern = value.get("cloudId");
+            if (legacy != null && !legacy.isTextual() || modern != null && !modern.isTextual()) return null;
+            if (legacy != null && modern != null && !legacy.asText().equals(modern.asText())) return null;
+            String id = modern != null ? modern.asText() : legacy != null ? legacy.asText() : "";
+            if (!id.matches("[A-Za-z0-9_-]{1,128}") || !value.path("url").isTextual()) return null;
+            String raw = value.path("url").asText();
+            URI uri = URI.create(raw.contains("://") ? raw : "https://" + raw);
+            String host = uri.getHost() == null ? "" : uri.getHost().toLowerCase(Locale.ROOT);
+            if (!"https".equals(uri.getScheme()) || !host.matches("[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.atlassian\\.net")
+                    || uri.getRawUserInfo() != null || uri.getPort() != -1 || uri.getRawQuery() != null || uri.getRawFragment() != null
+                    || !(uri.getRawPath().isEmpty() || uri.getRawPath().equals("/"))) return null;
+            return JSON.createObjectNode().put("id", id).put("url", "https://" + host);
+        } catch (IllegalArgumentException failure) { return null; }
     }
 
     private static LibraryException invalid() {

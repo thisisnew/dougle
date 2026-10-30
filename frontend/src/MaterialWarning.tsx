@@ -2,6 +2,10 @@ import { CircleAlert } from 'lucide-react'
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+function isServiceConnectionFailure(error?: string | null) {
+  return /^(?:자료 서비스 연결: )?서비스에 연결하지 못했습니다\..*\(HTTP \d{3}\)/.test(error || '')
+}
+
 export function shortMaterialError(error?: string | null) {
   if (/개 파일을 읽지 못했습니다/.test(error || '')) return '일부 파일을 읽지 못했습니다. 이전 자료는 유지됩니다.'
   if (/폴더 깊이|지원하지 않는 파일 경로/.test(error || '')) return '처리할 수 없는 폴더 깊이 또는 파일 이름입니다.'
@@ -20,6 +24,7 @@ export function shortMaterialError(error?: string | null) {
   if (/DB 열|DB 구조/.test(error || '')) return 'DB 구조 수집 한도를 초과했습니다.'
   if (/Notion 연결/.test(error || '')) return 'Notion 연결이 필요합니다.'
   if (!error) return '자료를 가져오지 못했습니다.'
+  if (isServiceConnectionFailure(error)) return '자료 서비스에 연결하지 못했습니다.'
   if (/일부 파일/.test(error)) return '일부 파일을 읽지 못했습니다.'
   if (/추출 가능한 텍스트|텍스트가 없/.test(error)) return '읽을 수 있는 텍스트가 없습니다.'
   if (/텍스트 추출 실패/.test(error)) return '파일 내용을 읽지 못했습니다.'
@@ -40,6 +45,7 @@ export function shortMaterialError(error?: string | null) {
 }
 
 export function materialErrorHelp(error?: string | null, kind?: string) {
+  if (isServiceConnectionFailure(error)) return `서비스 연결 응답 오류(${error!.match(/HTTP \d{3}/)![0]}). 설정 → 플러그인에서 연결 상태를 확인해 주세요. 계속되면 앱 버전과 오류 코드를 함께 알려 주세요.`
   if (/개 파일 확인이 필요|개 파일을 읽지 못했습니다/.test(error || '')) return error!.slice(0, 500)
   if (/폴더 깊이|지원하지 않는 파일 경로/.test(error || '')) return '해당 하위 폴더를 별도로 연결하거나 파일 이름을 확인하세요. 정상 파일은 계속 수집합니다.'
   if (/심볼릭 링크|특수 파일/.test(error || '')) return '바로가기 대신 원본 파일이 있는 실제 폴더를 연결하세요. 다른 정상 파일은 계속 수집합니다.'

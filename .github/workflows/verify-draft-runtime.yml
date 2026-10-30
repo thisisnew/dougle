@@ -1,4 +1,4 @@
-name: Verify 0.1.40 packaged runtimes
+name: Verify 0.1.41 packaged runtimes
 on:
   workflow_dispatch:
 permissions:
@@ -23,18 +23,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p inputs extracted
-          gh release download v0.1.40-preview.1 --pattern "Dougle_0.1.40_${ARCH}.app.tar.gz" --dir inputs
-          gh release view v0.1.40-preview.1 --json assets > inputs/assets.json
+          gh release download v0.1.41-preview.1 --pattern "Dougle_0.1.41_${ARCH}.app.tar.gz" --dir inputs
+          gh release view v0.1.41-preview.1 --json assets > inputs/assets.json
           python3 - <<'PY'
           import os,json,hashlib,pathlib
-          name=f"Dougle_0.1.40_{os.environ['ARCH']}.app.tar.gz"
+          name=f"Dougle_0.1.41_{os.environ['ARCH']}.app.tar.gz"
           a=next(x for x in json.loads(pathlib.Path('inputs/assets.json').read_text())['assets'] if x['name']==name)
           h=hashlib.sha256()
           with open('inputs/'+name,'rb') as f:
               for b in iter(lambda:f.read(1048576),b''): h.update(b)
           assert 'sha256:'+h.hexdigest()==a['digest']
           PY
-          tar -xzf "inputs/Dougle_0.1.40_${ARCH}.app.tar.gz" -C extracted
+          tar -xzf "inputs/Dougle_0.1.41_${ARCH}.app.tar.gz" -C extracted
           codesign --verify --deep --strict extracted/Dougle.app
       - name: Run isolated synthetic folder import and search with no AI
         run: |

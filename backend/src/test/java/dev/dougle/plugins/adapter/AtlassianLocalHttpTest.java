@@ -186,6 +186,28 @@ class AtlassianLocalHttpTest {
         assertThat(reads.subList(before, reads.size())).containsExactly("getAccessibleAtlassianResources");
     }
 
+    @ParameterizedTest @ValueSource(strings = {"fixture.atlassian.net", "https://fixture.atlassian.net", "https://FIXTURE.atlassian.net/"})
+    void cloudIdResourceContractCompletesApprovalAndReadsBothProducts(String site) throws Exception {
+        modernAuthority = true;
+        resourceReply = Map.of("structuredContent", Map.of("resources", List.of(Map.of(
+                "cloudId", "fixture-cloud", "url", site, "products", List.of(Map.of("id", "jira", "access", "read"), Map.of("id", "confluence", "access", "read"))))));
+        var progress = begin();
+        assertThat(progress.state()).isEqualTo("WAITING");
+        var params = BrowserPluginConnections.query(authorization.get().getRawQuery());
+        assertThat(callback(params.get("state")).statusCode()).isEqualTo(200);
+        assertThat(connections.connected(provider)).isTrue();
+        var reader = new BrowserPluginReader(connections, http);
+        for (String path : List.of("/browse/TEST-1", "/wiki/spaces/TEST/pages/123/Page")) {
+            try (var snapshot = reader.collect(provider, "https://fixture.atlassian.net" + path)) {
+                assertThat(new String(snapshot.files().getFirst().content(), StandardCharsets.UTF_8)).contains("가상 회사 문서 본문");
+            }
+        }
+        assertThat(cloudIds).containsExactly("fixture-cloud", "fixture-cloud");
+        int before = reads.size();
+        assertThatThrownBy(() -> reader.collect(provider, "https://wrong.atlassian.net/browse/TEST-1")).hasMessageContaining("접근 권한");
+        assertThat(reads.subList(before, reads.size())).containsExactly("getAccessibleAtlassianResources");
+    }
+
     @Test void approvalPkceCloudReadsAndRefreshUseRealLocalHttp() throws Exception {
         var progress = begin();
         assertThat(progress.state()).isEqualTo("WAITING");

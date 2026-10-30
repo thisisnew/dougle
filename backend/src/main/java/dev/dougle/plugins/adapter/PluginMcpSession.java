@@ -53,14 +53,8 @@ final class PluginMcpSession {
             throw new LibraryException(403, "승인된 회사 사이트가 없습니다. 사용할 사이트를 선택해 다시 연결해 주세요.");
         var supported = json.createArrayNode();
         for (JsonNode resource : resources) {
-            try {
-                URI site = URI.create(resource.path("url").asText(""));
-                if (!resource.path("id").isTextual() || !resource.path("id").asText().matches("[A-Za-z0-9_-]{1,128}")
-                        || !"https".equals(site.getScheme()) || site.getHost() == null || !site.getHost().endsWith(".atlassian.net")
-                        || site.getUserInfo() != null || site.getPort() != -1 || site.getRawQuery() != null || site.getFragment() != null
-                        || !(site.getPath().isEmpty() || site.getPath().equals("/"))) continue;
-                supported.add(resource);
-            } catch (IllegalArgumentException ignored) { }
+            JsonNode site = AtlassianResourceList.site(resource);
+            if (site != null) supported.add(site);
         }
         if (supported.isEmpty())
             throw new LibraryException(403, "지원되는 회사 사이트가 없습니다. Jira 또는 Confluence Cloud 사이트를 선택해 다시 연결해 주세요.");

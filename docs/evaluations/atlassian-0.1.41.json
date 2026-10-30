@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "regressionBeforeFix": {
+    "tests": 3,
+    "failures": 3,
+    "detail": "CloudId resource entries rejected at callback before normalization fix"
+  },
+  "afterFix": [
+    {
+      "class": "AtlassianResourceListTest",
+      "tests": 35,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "AtlassianLocalHttpTest",
+      "tests": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "BrowserPluginReaderTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "PluginReadOnlyBoundaryTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "BrowserPluginConnectionsTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "frontend": {
+    "tests": 49,
+    "failures": 0
+  },
+  "scope": "Synthetic OAuth/MCP loopback HTTP and parser/read-only regression. Not company SSO or company source retrieval."
+}
