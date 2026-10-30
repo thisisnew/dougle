@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "35dd7277aeccea88b931cc696f241414e6ede560",
+  "baseVersion": "0.1.40",
+  "version": "0.1.41",
+  "architectures": {
+    "arm64": {
+      "baseSha256": "aebc745b431d15b5b194fdd08c7674c5c34cd24d754bd3734d6bdcad16db8ecd",
+      "deltaSha256": "bb18e81616c5dd636880d0d3e7f4401958e70286e9fac2fb70400fdd758ef54c"
+    }
+  }
+}
