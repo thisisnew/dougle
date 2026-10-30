@@ -1,0 +1,43 @@
+name: Verify 0.1.40 packaged runtimes
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-15
+          - arch: x86_64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    env:
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Fetch draft archive and check GitHub asset digest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p inputs extracted
+          gh release download v0.1.40-preview.1 --pattern "Dougle_0.1.40_${ARCH}.app.tar.gz" --dir inputs
+          gh release view v0.1.40-preview.1 --json assets > inputs/assets.json
+          python3 - <<'PY'
+          import os,json,hashlib,pathlib
+          name=f"Dougle_0.1.40_{os.environ['ARCH']}.app.tar.gz"
+          a=next(x for x in json.loads(pathlib.Path('inputs/assets.json').read_text())['assets'] if x['name']==name)
+          h=hashlib.sha256()
+          with open('inputs/'+name,'rb') as f:
+              for b in iter(lambda:f.read(1048576),b''): h.update(b)
+          assert 'sha256:'+h.hexdigest()==a['digest']
+          PY
+          tar -xzf "inputs/Dougle_0.1.40_${ARCH}.app.tar.gz" -C extracted
+          codesign --verify --deep --strict extracted/Dougle.app
+      - name: Run isolated synthetic folder import and search with no AI
+        run: |
+          FORGE_SOURCE_FIXTURE_FILES=128 FORGE_RECOVERY_REPORT="$PWD/runtime-report.json" node scripts/source-sync-runtime.mjs "$PWD/extracted/Dougle.app/Contents/Resources/resources"
+          node -e 'const fs=require("fs"); const r=JSON.parse(fs.readFileSync("runtime-report.json")); r.architecture=process.env.ARCH; console.log("DOUGLE_REPORT="+JSON.stringify(r))'
