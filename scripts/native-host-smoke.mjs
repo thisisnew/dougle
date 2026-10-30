@@ -9,7 +9,7 @@ import { promisify } from 'node:util'
 
 const execute = promisify(execFile)
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const app = resolve(process.argv[2] || resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app'))
+const app = resolve(process.argv[2] || resolve(root, 'desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dougle.app'))
 const home = await mkdtemp(resolve(tmpdir(), 'forge-native-host-'))
 const migrateLegacy = process.argv.includes('--legacy-data')
 const legacy = resolve(home, 'Library/Application Support/dev.knowledgeforge.desktop')
@@ -151,7 +151,7 @@ try {
       checks: ['packaged native executable with isolated HOME and minimal PATH', 'bundled Java startup and API session protection',
         'private stable application data path', 'duplicate backend rejected while original stays available',
         'parent termination closes Java through stdin EOF', 'native restart uses the same database'],
-      limits: 'Synthetic isolated home; no Finder/Gatekeeper interaction, actual external AI, or Apple Silicon validation.' }
+      limits: 'Synthetic isolated home on the reported native architecture; no Finder/Gatekeeper interaction, company SSO, actual external AI, or Apple notarization.' }
     await writeFile(resolve(root, 'docs/native-host-report.json'), JSON.stringify(report, null, 2) + '\n')
     console.log(JSON.stringify(report, null, 2))
   }

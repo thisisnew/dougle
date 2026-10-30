@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-app="${1:-$repo_root/desktop/src-tauri/target/release/bundle/macos/Dougle.app}"
+app="${1:-$repo_root/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dougle.app}"
 source "$repo_root/scripts/macos-architecture.sh"
 architecture="$(forge_macos_architecture "$app/Contents/MacOS/dougle-desktop")"
 forge_verify_macos_architecture "$app" "$architecture"

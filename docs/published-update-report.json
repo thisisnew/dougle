@@ -1,16 +1,19 @@
 {
-  "checkedAt": "2026-10-23T23:39:16.695Z",
-  "previous": "0.1.6",
-  "target": "0.1.7",
-  "architecture": "x86_64",
+  "checkedAt": "2026-10-30T17:23:41.866Z",
+  "previous": "0.1.38",
+  "previousArtifact": "Dougle_0.1.38_arm64.dmg",
+  "target": "0.1.40",
+  "architecture": "arm64",
   "status": "PASS",
   "checks": [
-    "previous public archive SHA-256 and app signature",
+    "previous public artifact SHA-256 and app signature",
     "public feed and real signed archive installation with default version comparison",
     "updated version, app signature and current JAR equality",
     "external synthetic file preserved",
     "same synthetic SQLite database preserves workspace, active selection, file preview, human draft, publication and evidence across versions",
     "updated native app startup, session protection, duplicate protection, shutdown and restart"
   ],
-  "scope": "Real released app copy and synthetic SQLite data in temporary installation; updater library harness uses previous bundle version. Not menu clicks, /Applications permissions, private user data inspection, ARM on Intel, or real AI."
+  "scope": "Real released app copy and synthetic SQLite data in temporary installation; updater library harness uses previous bundle version. Not menu clicks, /Applications permissions, private user data inspection, company SSO, or real AI.",
+  "run": "https://github.com/thisisnew/dougle/actions/runs/41097881980",
+  "initialAttempt": "41097609656: CI Cargo home symlink did not resolve; failed before app upgrade. Dedicated tool directories fixed the fixture."
 }

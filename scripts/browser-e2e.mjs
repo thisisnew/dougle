@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const resources = process.env.FORGE_BROWSER_RESOURCES ? resolve(process.env.FORGE_BROWSER_RESOURCES)
-  : resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources/resources')
+  : resolve(root, 'desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dougle.app/Contents/Resources/resources')
 const jar = process.env.FORGE_BROWSER_JAR ? resolve(process.env.FORGE_BROWSER_JAR) : resolve(resources, 'dougle.jar')
 await access(resolve(resources, 'runtime/bin/java'))
 await access(jar)

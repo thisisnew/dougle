@@ -1,6 +1,6 @@
 # Native desktop host
 
-The preview baseline is x86_64 macOS 11.3 or later. Rust 1.99.1, Tauri 2.12.5, tauri-build 2.7.4 and npm CLI 2.12.4 are pinned; both dependency lockfiles are included. The CLI and Cargo wrappers use only this repository's `.tools/cargo` and `.tools/rustup`.
+The supported product platform is Apple Silicon (M-series), macOS 11.3 or later. Intel builds and compatibility are outside development, acceptance and release scope. Rust 1.99.1, Tauri 2.12.5, tauri-build 2.7.4 and npm CLI 2.12.4 are pinned; both dependency lockfiles are included. The CLI and Cargo wrappers use only this repository's `.tools/cargo` and `.tools/rustup`.
 
 ## Commands
 
@@ -18,14 +18,14 @@ The synthetic smoke requires a logged-in macOS GUI session. It starts only a tem
 
 `scripts/verify-macos-package.sh` additionally mounts the generated DMG read-only, copies its app to an isolated installation directory, verifies signatures, and runs `examples/runtime_smoke.rs` against the actual bundled Java/JAR/React. `scripts/native-host-smoke.mjs` exercises the production native executable with an isolated HOME, minimal PATH, duplicate launch and parent-exit recovery. Neither sends real AI requests. [Korean verification report](../docs/desktop-report.md).
 
-Validation on the x86_64 macOS development machine: Cargo check passed; 12 Rust tests passed; Clippy with `--all-targets -- -D warnings` and rustfmt check passed. The native WebKit smoke passed all five checks. Tests cover exact readiness parsing, output bounds, runtime log discarding, origin/blob policy, random tokens, authenticated readiness with redirect/body rejection, graceful EOF, forced termination and descendant cleanup without affecting another process group. Installer and staged-JAR integration validation are recorded by the parent workflow separately.
+Historical validation before the Apple Silicon-only policy on an Intel development host: Cargo check passed; 12 Rust tests passed; Clippy with `--all-targets -- -D warnings` and rustfmt check passed. The native WebKit smoke passed all five checks. Tests cover exact readiness parsing, output bounds, runtime log discarding, origin/blob policy, random tokens, authenticated readiness with redirect/body rejection, graceful EOF, forced termination and descendant cleanup without affecting another process group. Installer and staged-JAR integration validation are recorded by the parent workflow separately.
 
 `check`, `test` and `clippy` deliberately override only the bundle resource list so they work before staging. Normal `build`, `run`, and the npm Tauri wrapper require staged resources. Do not use that override to build a distributable.
 
 After the parent packaging workflow stages resources:
 
 ```sh
-APPLE_SIGNING_IDENTITY=- npm --prefix desktop run tauri -- build --target x86_64-apple-darwin --bundles app,dmg -- --locked
+APPLE_SIGNING_IDENTITY=- npm --prefix desktop run tauri -- build --target aarch64-apple-darwin --bundles app,dmg -- --locked
 ```
 
 For reproducible local packaging use `bash scripts/package-macos.sh` instead: its DMG helper uses `hdiutil` without Finder-prettifying AppleScript, which failed in this development environment.
@@ -49,7 +49,7 @@ desktop/src-tauri/resources/git/source/...
 
 The JAR must embed the built UI. Tauri preserves the `resources/` prefix under `app.path().resource_dir()` (in the macOS bundle: `Contents/Resources/resources/`). The host canonicalizes Java and JAR paths before directly spawning Java, without a shell or PATH-based Java lookup. It removes Java option injection environment variables but retains the user's existing CLI environment. It does not install or call AI itself.
 
-From 0.1.5, the host requires bundled Git and passes its canonical root through `--forge.git-home`. Git and HTTPS helper paths must remain in the bundle. `GitRunner` invokes the absolute executable with its own helper path, clears inherited `GIT_*` overrides, and keeps collection limits. Missing bundled Git never falls back to system Git. The complete corresponding source, GPL license and build recipe ship with both CPU packages. [Build and verification](../docs/bundled-git.md).
+From 0.1.5, the host requires bundled Git and passes its canonical root through `--forge.git-home`. Git and HTTPS helper paths must remain in the bundle. `GitRunner` invokes the absolute executable with its own helper path, clears inherited `GIT_*` overrides, and keeps collection limits. Missing bundled Git never falls back to system Git. The complete corresponding source, GPL license and build recipe ship with the Apple Silicon package. [Build and verification](../docs/bundled-git.md).
 
 The stable application identifier is `dev.dougle.desktop`; `app_data_dir()` is the sole data path (normally `~/Library/Application Support/dev.dougle.desktop` on macOS). The host passes absolute `FORGE_DATA_DIR`, `FORGE_DESKTOP=true` and uses the data directory as the child working directory. It does not import development data. The backend's data lock rejects another app instance using the same directory.
 
@@ -64,6 +64,6 @@ Each process gets a fresh OS-random 32-byte token encoded as 64 lowercase hexade
 - Stdout/stderr are drained without retaining or printing backend text. Combined startup output is capped at 8 MiB; parsed lines at 4096 bytes; readiness JSON at 1024 bytes. After authenticated readiness, output is discarded in fixed-size buffers without a cumulative lifetime limit.
 - Java starts in a new owned Unix process group. Closing the app drops child stdin and allows 8 seconds for graceful backend shutdown. On timeout, while the owned leader is still unreaped, the host confirms its group identity, kills that group, then reaps Java. No global Java/process-name kill is used. Host crashes close the pipe at the OS level; backend EOF supervision owns that shutdown. Descendants that deliberately detach from the group, or survive an already-exited leader, remain the backend's cleanup responsibility.
 - Finder may omit `/opt/homebrew/bin`, `/usr/local/bin` and `~/.local/bin` from PATH. Bundled Git and Codex use absolute app paths. Existing Claude tools can use the persisted CLI path setting; the host does not read credentials or shell profiles.
-- Friendly startup/runtime errors stay in a local host window. Failure messages intentionally omit raw backend output. Native signed updates are available from 0.1.3; see [update flow and signing keys](../docs/automatic-updates.md). Apple Silicon packages are cross-built and statically checked, not runtime-verified on this Intel host. Automatic failure restart, development-data migration, AI replay and Windows packaging remain outside this preview.
+- Friendly startup/runtime errors stay in a local host window. Failure messages intentionally omit raw backend output. Native signed updates are available from 0.1.3; see [update flow and signing keys](../docs/automatic-updates.md). From 0.1.40, the packaged runtime is also exercised on a fresh Apple Silicon GitHub Mac with isolated synthetic folder imports and searches; company SSO remains unverified. Automatic failure restart, development-data migration, AI replay and Windows packaging remain outside this preview.
 
 API references: [Tauri resource resolution](https://v2.tauri.app/develop/resources/) and [Tauri WebviewWindowBuilder](https://docs.rs/tauri/2.12.5/tauri/webview/struct.WebviewWindowBuilder.html). The resolved Wry source uses `WKUserScriptInjectionTime::AtDocumentStart` and dispatches download actions before navigation checks.

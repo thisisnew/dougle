@@ -1,7 +1,7 @@
 {
-  "measuredAt": "2026-10-28T10:38:06.020Z",
-  "platform": "darwin/x64",
-  "startupMs": 15839,
+  "measuredAt": "2026-10-30T17:23:41.591Z",
+  "platform": "darwin/arm64",
+  "startupMs": 7642,
   "checks": [
     "packaged native executable with isolated HOME and minimal PATH",
     "bundled Java startup and API session protection",
@@ -10,5 +10,6 @@
     "parent termination closes Java through stdin EOF",
     "native restart uses the same database"
   ],
-  "limits": "Synthetic isolated home; no Finder/Gatekeeper interaction, actual external AI, or Apple Silicon validation."
+  "limits": "Synthetic isolated home on the reported native architecture; no Finder/Gatekeeper interaction, company SSO, actual external AI, or Apple notarization.",
+  "run": "https://github.com/thisisnew/dougle/actions/runs/41097881980"
 }

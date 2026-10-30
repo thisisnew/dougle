@@ -12,7 +12,7 @@ assert.ok(['CODEX', 'CLAUDE'].includes(provider), 'Explicit FORGE_LIVE_CLI=CODEX
 const profile = process.env.FORGE_LIVE_CODEX_PROFILE
 if (profile) assert.equal(provider, 'CODEX')
 const root = fileURLToPath(new URL('../', import.meta.url))
-const resources = resolve(process.env.FORGE_LIVE_RESOURCES || resolve(root, 'desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Resources/resources'))
+const resources = resolve(process.env.FORGE_LIVE_RESOURCES || resolve(root, 'desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dougle.app/Contents/Resources/resources'))
 const jar = resolve(process.env.FORGE_LIVE_JAR || resolve(resources, 'dougle.jar'))
 const directory = await mkdtemp(resolve(tmpdir(), 'forge-live-api-'))
 const token = randomBytes(32).toString('hex')

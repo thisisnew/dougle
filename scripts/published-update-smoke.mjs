@@ -141,7 +141,7 @@ try {
       'updated version, app signature and current JAR equality', 'external synthetic file preserved',
       'same synthetic SQLite database preserves workspace, active selection, file preview, human draft, publication and evidence across versions',
       'updated native app startup, session protection, duplicate protection, shutdown and restart'],
-    scope: 'Real released app copy and synthetic SQLite data in temporary installation; updater library harness uses previous bundle version. Not menu clicks, /Applications permissions, private user data inspection, ARM on Intel, or real AI.' }
+    scope: 'Real released app copy and synthetic SQLite data in temporary installation; updater library harness uses previous bundle version. Not menu clicks, /Applications permissions, private user data inspection, company SSO, or real AI.' }
   await writeFile(resolve(root, 'docs/published-update-report.json'), JSON.stringify(report, null, 2) + '\n')
   console.log(JSON.stringify(report, null, 2))
 } finally {

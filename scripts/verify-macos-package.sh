@@ -8,8 +8,8 @@ if [[ "${1:-}" == --static-only ]]; then static_only=true; shift; fi
 if [[ $# -gt 0 ]]; then
   disk_image="$1"
 else
-  version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$repo_root/desktop/src-tauri/target/release/bundle/macos/Dougle.app/Contents/Info.plist")"
-  disk_image="$repo_root/release/Dougle_${version}_$(uname -m).dmg"
+  version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$repo_root/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Dougle.app/Contents/Info.plist")"
+  disk_image="$repo_root/release/Dougle_${version}_arm64.dmg"
 fi
 [[ -f "$disk_image" ]] || { echo 'Build the DMG first.' >&2; exit 1; }
 temporary="$(mktemp -d "${TMPDIR:-/tmp}/forge-package-qa.XXXXXX")"
@@ -30,6 +30,7 @@ hdiutil detach "$temporary/mount" >/dev/null
 mounted=false
 app="$temporary/installed/Dougle.app"
 architecture="$(forge_macos_architecture "$app/Contents/MacOS/dougle-desktop")"
+[[ "$architecture" == arm64 ]] || { echo 'Only Apple Silicon product packages are supported.' >&2; exit 2; }
 forge_verify_macos_architecture "$app" "$architecture"
 node "$repo_root/scripts/stage-search-model.mjs" "$architecture" "$app/Contents/Resources/resources/search-model-e5-v1" --verify-only
 if ! codesign --verify --deep --strict "$app"; then
