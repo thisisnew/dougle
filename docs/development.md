@@ -1,5 +1,7 @@
 # 개발 환경 실행
 
+제품 지원 대상은 **Apple Silicon(M 시리즈) Mac만**입니다. 데스크톱 개발·릴리스 빌드 타깃은 `aarch64-apple-darwin`이며 Intel 호환성은 개발/인수 범위에서 제외합니다. `desktop/tauri.sh`와 `scripts/package-macos.sh`가 이를 강제합니다. 일반 백엔드·화면·서명 도구의 호스트 실행은 별개입니다. 아래 과거 Intel 패키징 기록은 현재 지원 범위가 아닙니다.
+
 앱 사용자에게 아래 도구 설치나 명령 실행을 요구하지 않습니다. [앱 소개와 설치](../README.md).
 
 Java 21, Node.js 22.12+ 또는 24, Git이 필요합니다. Maven은 저장소 Wrapper를 사용합니다.

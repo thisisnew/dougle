@@ -1,0 +1,33 @@
+name: Verify Apple Silicon published upgrade
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  upgrade:
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      CARGO_PROFILE_DEV_DEBUG: '0'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Fetch previous public Apple Silicon installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p release
+          gh release download v0.1.38-preview.1 --pattern Dougle_0.1.38_arm64.dmg --dir release
+      - name: Prepare pinned Rust update verification tool
+        run: |
+          mkdir -p .tools
+          ln -s "$HOME/.cargo" .tools/cargo
+          ln -s "$HOME/.rustup" .tools/rustup
+          rustup toolchain install 1.99.1 --profile minimal
+          TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=3 bash scripts/desktop-cargo.sh build --locked --example published_update_smoke
+      - name: Verify real signed upgrade and synthetic data preservation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/published-update-smoke.mjs 0.1.38
+          node -e 'const fs=require("fs"); console.log("DOUGLE_UPGRADE_REPORT="+JSON.stringify(JSON.parse(fs.readFileSync("docs/published-update-report.json"))))'
+          node -e 'const fs=require("fs"); console.log("DOUGLE_NATIVE_REPORT="+JSON.stringify(JSON.parse(fs.readFileSync("docs/native-host-report.json"))))'

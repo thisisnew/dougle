@@ -15,8 +15,8 @@ assert.equal(process.platform, 'darwin')
 const previous = process.argv[2] || '0.1.38'
 assert.match(previous, /^\d+\.\d+\.\d+$/)
 assert.ok(previous.localeCompare('0.1.32', undefined, { numeric: true }) >= 0, 'Pre-0.1.32 app-name migration requires manual DMG installation; do not claim automatic update coverage.')
-const architecture = process.arch === 'arm64' ? 'arm64' : 'x86_64'
-assert.ok(['arm64', 'x64'].includes(process.arch))
+assert.equal(process.arch, 'arm64', 'Product upgrade acceptance runs on Apple Silicon Macs only')
+const architecture = 'arm64'
 const release = JSON.parse((await execute('gh', ['api', `repos/thisisnew/dougle/releases/tags/v${previous}-preview.1`])).stdout)
 assert.equal(release.draft, false)
 const archiveName = `Dougle_${previous}_${architecture}.app.tar.gz`
@@ -125,9 +125,11 @@ try {
   assert.notEqual(target, previous)
   assert.equal(await version(), target)
   await execute('codesign', ['--verify', '--deep', '--strict', app])
-  const expectedJar = resolve(temporary, 'expected.jar')
-  await execute('python3', [resolve(root, 'scripts/trim-macos-jar.py'), resolve(root, 'backend/target/dougle-0.1.0.jar'), expectedJar, architecture])
-  assert.equal(await digest(resolve(app, 'Contents/Resources/resources/dougle.jar')), await digest(expectedJar))
+  assert.equal(target, JSON.parse(await readFile(resolve(root, 'desktop/package.json'), 'utf8')).version)
+  const verifiedClasses = JSON.parse(await readFile(resolve(root, `docs/evaluations/release-${target}-classes.json`), 'utf8'))
+  const approvedJar = verifiedClasses.find(value => value.architecture === architecture && value.status === 'PASS')
+  assert.ok(approvedJar && /^[a-f0-9]{64}$/.test(approvedJar.jarSha256))
+  assert.equal(await digest(resolve(app, 'Contents/Resources/resources/dougle.jar')), approvedJar.jarSha256)
   assert.equal(await readFile(marker, 'utf8'), 'synthetic data outside app must remain')
   await startBackend()
   const after = await Promise.all(paths.map(path => api(path)))

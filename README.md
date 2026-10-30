@@ -13,7 +13,7 @@ Dougle은 파일·폴더·웹 문서를 모아 두고, 궁금한 내용을 AI에
 
 **[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.40-preview.1)**
 
-1. 내 Mac에 맞는 파일을 받습니다. **M 시리즈는 `arm64`**, **Intel은 `x86_64`**입니다.
+1. **Apple Silicon(M 시리즈) Mac 전용**인 `Dougle_0.1.40_arm64.dmg`를 받습니다. Intel Mac은 지원하지 않습니다.
 2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
 3. 앱을 열고 **Workspace 만들기**로 첫 서재를 만듭니다.
 4. **자료 → +**에서 파일 또는 폴더를 고릅니다. PC에 내려받은 코드 저장소도 폴더로 추가합니다. **AI 연결**에서 AI와 모델을 선택하고 로그인합니다.

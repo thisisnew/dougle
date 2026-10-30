@@ -1,0 +1,60 @@
+{
+  "checks": [
+    {
+      "args": [
+        "build"
+      ],
+      "status": "PASS"
+    },
+    {
+      "args": [
+        "dev"
+      ],
+      "status": "PASS"
+    },
+    {
+      "args": [
+        "build",
+        "--target",
+        "aarch64-apple-darwin"
+      ],
+      "status": "PASS"
+    },
+    {
+      "args": [
+        "build",
+        "--target=x86_64-apple-darwin"
+      ],
+      "status": "PASS"
+    },
+    {
+      "args": [
+        "build",
+        "--target",
+        "x86_64-apple-darwin"
+      ],
+      "status": "PASS"
+    },
+    {
+      "args": [
+        "build",
+        "-t",
+        "universal-apple-darwin"
+      ],
+      "status": "PASS"
+    },
+    {
+      "args": [
+        "signer",
+        "sign",
+        "--help"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "Intel packaging refused before staging",
+      "status": "PASS"
+    }
+  ],
+  "scope": "CLI target policy and early package rejection; product binaries unchanged"
+}

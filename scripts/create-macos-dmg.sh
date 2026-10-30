@@ -5,6 +5,7 @@ app="${1:-$repo_root/desktop/src-tauri/target/release/bundle/macos/Dougle.app}"
 source "$repo_root/scripts/macos-architecture.sh"
 architecture="$(forge_macos_architecture "$app/Contents/MacOS/dougle-desktop")"
 forge_verify_macos_architecture "$app" "$architecture"
+[[ "$architecture" == arm64 ]] || { echo 'Dougle installers support Apple Silicon Macs only.' >&2; exit 2; }
 version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")"
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Expected a numeric three-part app version.' >&2; exit 1; }
 release="$repo_root/release"
@@ -27,5 +28,5 @@ disk_image="$release/Dougle_${version}_${architecture}.dmg"
 hdiutil create -volname 'Dougle' -srcfolder "$staging" -format UDZO -ov "$disk_image"
 hdiutil verify "$disk_image"
 (cd "$release" && shasum -a 256 "$(basename "$disk_image")" > "SHA256SUMS-${architecture}")
-(cd "$release" && shasum -a 256 Dougle_"${version}"_*.dmg > SHA256SUMS)
+(cd "$release" && shasum -a 256 "Dougle_${version}_arm64.dmg" > SHA256SUMS)
 echo "Ad-hoc signed preview artifacts: $release (not Apple notarized)"

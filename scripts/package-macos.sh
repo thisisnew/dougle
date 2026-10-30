@@ -6,14 +6,12 @@ mode="${1:-verify}"
 case "$mode" in verify|--skip-verify|--stage-only) ;; *) echo 'Usage: bash scripts/package-macos.sh [--skip-verify|--stage-only]' >&2; exit 2 ;; esac
 [[ "$(uname -s)" == Darwin ]] || { echo 'macOS is required.' >&2; exit 1; }
 source "$repo_root/scripts/macos-architecture.sh"
-target="${FORGE_MACOS_TARGET:-}"
+target="${FORGE_MACOS_TARGET:-aarch64-apple-darwin}"
 target_args=()
 target_directory="$repo_root/desktop/src-tauri/target"
 case "$target" in
-  '') architecture="$(uname -m)" ;;
   aarch64-apple-darwin) architecture=arm64; target_args=(--target "$target"); target_directory="$target_directory/$target" ;;
-  x86_64-apple-darwin) architecture=x86_64; target_args=(--target "$target"); target_directory="$target_directory/$target" ;;
-  *) echo 'FORGE_MACOS_TARGET must be aarch64-apple-darwin or x86_64-apple-darwin.' >&2; exit 2 ;;
+  *) echo 'Dougle supports Apple Silicon Macs only. Use aarch64-apple-darwin.' >&2; exit 2 ;;
 esac
 java_home="${FORGE_PACKAGE_JAVA_HOME:-$(/usr/libexec/java_home -v 21)}"
 target_java_home="${FORGE_TARGET_JAVA_HOME:-$java_home}"
@@ -84,4 +82,4 @@ cp "$update_archive.sig" "$repo_root/release/$update_name.sig"
 TAURI_CONFIG='{"bundle":{"resources":[]}}' CARGO_BUILD_JOBS=2 bash "$repo_root/scripts/desktop-cargo.sh" run --locked --example updater_verify -- \
   "$repo_root/desktop/src-tauri/tauri.conf.json" "$repo_root/release/$update_name" "$repo_root/release/$update_name.sig" "$version"
 (cd "$repo_root/release" && shasum -a 256 "Dougle_${version}_${architecture}.dmg" "$update_name" "$update_name.sig" > "SHA256SUMS-${architecture}")
-(cd "$repo_root/release" && shasum -a 256 Dougle_"${version}"_*.dmg Dougle_"${version}"_*.app.tar.gz Dougle_"${version}"_*.app.tar.gz.sig > SHA256SUMS)
+(cd "$repo_root/release" && shasum -a 256 "Dougle_${version}_arm64.dmg" "Dougle_${version}_arm64.app.tar.gz" "Dougle_${version}_arm64.app.tar.gz.sig" > SHA256SUMS)

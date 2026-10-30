@@ -1,0 +1,99 @@
+{
+  "fixtureVersion": "source-sync-jobs-v2",
+  "fixtureFiles": 128,
+  "maxStatusPollMillis": 65.63479199999892,
+  "featureSearchMillis": 325.930792000001,
+  "jarSha256": "a32e6254e6c06b7ccc6067b5f0f9bc1545e92ff1d8072352a1a976639315f5d3",
+  "startedAt": "2026-10-30T17:11:55.771Z",
+  "finishedAt": "2026-10-30T17:12:12.497Z",
+  "checks": [
+    {
+      "id": "feature-flag-retrieval-with-code-corpus",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-source-recovery",
+      "status": "PASS"
+    },
+    {
+      "id": "healthy-sibling-search",
+      "status": "PASS"
+    },
+    {
+      "id": "excluded-path-isolation",
+      "status": "PASS"
+    },
+    {
+      "id": "original-unchanged",
+      "status": "PASS"
+    },
+    {
+      "id": "same-name-workspace-evidence-isolation",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-thread-read-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-bundle-read-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-preview-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-parent-injection-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "changed-source-revalidated",
+      "status": "PASS"
+    },
+    {
+      "id": "stale-preview-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "historical-evidence-preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "fresh-source-searchable",
+      "status": "PASS"
+    },
+    {
+      "id": "deleted-source-preview-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "deleted-source-removed-from-search",
+      "status": "PASS"
+    },
+    {
+      "id": "other-workspace-preserved",
+      "status": "PASS"
+    },
+    {
+      "id": "no-answer-dispatch",
+      "status": "PASS"
+    },
+    {
+      "id": "github-url-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "confluence-login-required",
+      "status": "PASS"
+    }
+  ],
+  "asyncJobs": 4,
+  "foreignJobDenied": true,
+  "buildReportExcluded": true,
+  "externalAiCalls": 0,
+  "scope": "Packaged runtime with isolated synthetic local sources; partial E37/E40 evidence, not browser/tool isolation, real SSO, or semantic AI acceptance",
+  "architecture": "arm64",
+  "run": "https://github.com/thisisnew/dougle/actions/runs/41096646425",
+  "initialAttempt": "41095896801: draft download permission failure before app test; permissions corrected"
+}

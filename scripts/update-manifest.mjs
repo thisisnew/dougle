@@ -17,7 +17,7 @@ const release = publish ? JSON.parse((await execute('gh', ['api', `repos/thisisn
 if (release) { assert.equal(release.draft, false); assert.equal(release.tag_name, tag) }
 const config = resolve(root, 'desktop/src-tauri/tauri.conf.json')
 const platforms = {}
-for (const [platform, architecture] of [['darwin-x86_64', 'x86_64'], ['darwin-aarch64', 'arm64']]) {
+for (const [platform, architecture] of [['darwin-aarch64', 'arm64']]) {
   const name = `Dougle_${version}_${architecture}.app.tar.gz`
   const archive = resolve(root, 'release', name)
   const signature = archive + '.sig'

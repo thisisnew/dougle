@@ -1,0 +1,85 @@
+{
+  "status": "PASS",
+  "run": "https://github.com/thisisnew/dougle/actions/runs/41094497948",
+  "packagingCommit": "579171866962085ace1521f494bbb47055939c5f",
+  "productCommit": "1521d47e8be515929c1cf0fa2d94aa7d0d29754a",
+  "jobs": [
+    {
+      "name": "repack (x86_64, macos-15-intel)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+          "conclusion": "success"
+        },
+        {
+          "name": "Download published base and private draft delta",
+          "conclusion": "success"
+        },
+        {
+          "name": "Reconstruct and verify every tested app file",
+          "conclusion": "success"
+        },
+        {
+          "name": "Package without rebuilding or signing keys",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload containers to unpublished draft only",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "repack (arm64, macos-15)",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+          "conclusion": "success"
+        },
+        {
+          "name": "Download published base and private draft delta",
+          "conclusion": "success"
+        },
+        {
+          "name": "Reconstruct and verify every tested app file",
+          "conclusion": "success"
+        },
+        {
+          "name": "Package without rebuilding or signing keys",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload containers to unpublished draft only",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "scope": "Exact app file contents, modes and symlink targets reconstructed from verified 0.1.39 app plus hash-pinned delta; full tree, code signature and architecture verified on both macOS CPU runners. DMG and tar.gz containers repacked, not product binaries rebuilt. Updater signing key remains local."
+}

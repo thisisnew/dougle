@@ -1,5 +1,7 @@
 # 앱 업데이트
 
+0.1.40부터 제품 개발·인수 검사·배포는 Apple Silicon(M 시리즈) Mac만 지원합니다. 업데이트 피드는 `darwin-aarch64`만 제공하며 Intel용 파일을 공개하지 않습니다. 아래 구버전 Intel 검증은 과거 이력입니다.
+
 0.1.40부터 DMG뿐 아니라 서명된 업데이트 아카이브와 `latest.json`을 함께 공개하고, 공개 자산 검증 후 호환 피드를 갱신합니다. 0.1.38에서 업데이트가 발견되지 않았던 이유는 이전 릴리스에 업데이트 자산이 없고 피드가0.1.16에 머물렀기 때문입니다. 앱 이름이 다른0.1.31 이하 설치본은 최신 DMG로 직접 설치하세요.
 
 0.1.17부터 앱 **왼쪽 아래**에 업데이트 버튼이 있습니다. 앱 시작 시와 실행 중 약 1시간마다 새 버전을 확인하고, 발견하면 **새 버전 업데이트 · 버전 번호**를 표시합니다. 자동 확인은 팝업이나 다운로드를 시작하지 않습니다. 버튼을 누른 뒤 다운로드·설치를 확인합니다.
@@ -38,12 +40,12 @@ flowchart LR
 - 개인 서명 키: `~/.config/dougle/updater.key`. 기존 키의 디렉토리 이름만 이전했으며 키 자체를 새로 생성하지 않았습니다. 현재 Mac에만 저장하며 Git이나 설치 파일에 넣지 않습니다.
 - 이 키는 별도 안전한 위치에 백업해야 합니다. 다른 빌드 PC에서는 같은 키를 안전하게 옮기고 `FORGE_UPDATER_PRIVATE_KEY`로 경로를 지정합니다. 기존 키를 지우거나 새 키로 덮어쓰지 마세요.
 - `scripts/package-macos.sh`는 DMG·서명된 `.app.tar.gz`·`.sig`·체크섬을 만들고 공개 키와 서명된 버전을 재검증합니다.
-- 두 CPU의 빌드 후 `node scripts/update-manifest.mjs`로 `release/latest.json`을 만듭니다.
-- `bash scripts/verify-macos-update.sh release/Dougle_버전_CPU.app.tar.gz 버전 CPU`로 서명과 버전, 압축 해제한 앱의 CPU·ad-hoc 서명을 검사합니다. CPU는 `x86_64` 또는 `arm64`입니다.
-- 검증된 두 CPU 설치 파일·서명·체크섬과 **`release/latest.json`**을 같은 새 GitHub Release에 올립니다. 버전 번호는 이전보다 높아야 합니다. Draft를 해제하면 0.1.17 이상 앱이 GitHub 공개 릴리스 목록에서 발견합니다. 메모만 올리거나 DMG만 올린 릴리스는 자동 설치 대상으로 표시하지 않습니다.
+- Apple Silicon 빌드 후 `node scripts/update-manifest.mjs`로 `release/latest.json`을 만듭니다.
+- `bash scripts/verify-macos-update.sh release/Dougle_버전_CPU.app.tar.gz 버전 CPU`로 서명과 버전, 압축 해제한 앱의 CPU·ad-hoc 서명을 검사합니다. CPU는 `arm64`입니다.
+- 검증된 Apple Silicon 설치 파일·서명·체크섬과 **`release/latest.json`**을 같은 새 GitHub Release에 올립니다. 버전 번호는 이전보다 높아야 합니다. Draft를 해제하면 0.1.17 이상 앱이 GitHub 공개 릴리스 목록에서 발견합니다. 메모만 올리거나 DMG만 올린 릴리스는 자동 설치 대상으로 표시하지 않습니다.
 - GitHub 최근 공개 릴리스 20개 중 정확한 프로젝트 경로의 `latest.json`이 있는 가장 높은 숫자 버전을 고릅니다. preview 릴리스도 포함하고 draft·외부 자산 주소는 제외합니다. API 연결/제한 실패 시 기존 `updates/preview.json` 피드로 확인합니다. 실제 패키지는 다운로드 후 기존 공개 키·서명된 버전·CPU·허용 경로를 검증합니다.
 - 구버전 앱 지원을 위해 공개 후 `node scripts/update-manifest.mjs --publish`도 실행합니다. 이 명령은 공개 자산의 해시/서명을 확인한 뒤 `updates/preview.json`을 만듭니다.
-- 마지막으로 공개 피드 파일을 커밋·푸시합니다. 아직 공개되지 않은 다운로드를 앱에 알리지 않도록 이 순서를 지킵니다. GitHub Actions는 사용하지 않습니다.
+- 마지막으로 공개 피드 파일을 커밋·푸시합니다. 아직 공개되지 않은 다운로드를 앱에 알리지 않도록 이 순서를 지킵니다. GitHub Actions에서는 검증된 앱의 차분 복원·패키징·새 Mac 환경 검사를 수행할 수 있습니다. 개인 업데이트 서명 키는 로컬에만 둡니다.
 
 일반 웹 브라우저에서는 설치 업데이트 버튼을 표시하지 않습니다. `node scripts/updater-smoke.mjs`는 임시 키·가상 앱·로컬 서버로 설치와 변조 차단을 검사하며, 실제 설치 앱을 교체하지 않습니다.
 
