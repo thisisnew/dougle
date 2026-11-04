@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Dougle 0.1.34 — 회사 계정 별칭 연결
 
 2026-10-28 [공개 완료](https://github.com/thisisnew/dougle/releases/tag/v0.1.34-preview.1). 공개 자산3개 모두 GitHub 크기·SHA-256 digest와 로컬 검증본이 일치한다. 실제 회사 Mac 인증 성공은 미검증이다.

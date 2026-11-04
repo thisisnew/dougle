@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Dougle 0.1.40 — 연결·진행 상태·앱 업데이트
 
 **Apple Silicon(M 시리즈) 전용 0.1.40 Preview를 공개했습니다.** [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.40-preview.1). 제품 수정 소스는 `1521d47`이며 이후 개발·패키징 정책을 ARM 전용으로 고정했습니다. 새 ARM Mac에서 실제 동봉 런타임 수집·검색20건을 통과했습니다. 공개0.1.38 ARM→0.1.40 실제 업데이트·동일 가상DB 보존·네이티브 재시작까지 통과했습니다. [업데이트 검사](published-update-check.md).

@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # V3 real-model investigation review
 
 Production JAR SHA-256: `7fe16e3f7637a5b536702d12059d462117b9d46037e0f6c04813a8b2b8fd680e`. This replaces, but does not erase failures on, `6b60123…`. The user authorized synthetic real-model evaluation in bounded batches beyond the earlier 30-call cap. Reviewer: **Codex evaluation agent, manual semantic comparison** (not an independent human review). Requested provider/model: CODEX/default; actual model ID **unobserved**. No token/cost telemetry. No credentials or user database contents read.

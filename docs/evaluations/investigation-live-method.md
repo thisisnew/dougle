@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Synthetic live investigation evaluation
 
 The latest user authorization supersedes the historical 30-call total limit. Runs remain bounded per batch; there is no unattended infinite loop or automatic retry after failure. Only generated synthetic documents enter a temporary Workspace/database. The existing dedicated app Codex profile is passed to the provider CLI; the harness never reads or copies credentials. No Maven/package build is performed while the production JAR is in use.

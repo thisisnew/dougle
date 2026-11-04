@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # 모델링 재점검 — 구현과 약속의 차이
 
 최신 후속: `App`의 KnowledgePanel 경로와 `AnalysisPanel`의 DraftForm을 제거했습니다. `ChatPanel`은 새 근거에 `includeKnowledge=false`를 명시하며 예전 지식 포함 미완료 질문은 다시 검색합니다. UI 경로와 Java 원본 전용 근거 캡처/기존 문서 보존을 대조합니다. 기존 편집형 문서 API를 내부 전용 보안 경계로 바꾼 것은 아닙니다. [정확한 모델](internal-search.md).

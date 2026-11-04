@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # E05 variant0 — partial diagnostic, stopped without retry
 
 - Artifact: `5cd81269031769b8c65af4a3cfc136dcd562e30a0c3e91f255f6a959f4a9bd0d`, unchanged after cleanup.

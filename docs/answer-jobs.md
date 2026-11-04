@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # 근거로 답변 받기 — 승인 후 별도로 전송
 
 후속 [Claude 미검증 임시 출력](partial-answer.md), [선택적 Codex 스트리밍](codex-streaming.md), [선택 문맥 이어 질문](context-requests.md)을 추가했습니다. 최종 답변 저장 정책은 유지합니다. 0.1.5의 [강제 종료 복구](crash-recovery.md)는 중단 이력·소비된 승인 재사용 차단을 실제 JAR로 검사합니다.

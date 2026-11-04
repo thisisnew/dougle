@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Dougle 0.1.1 — Apple Silicon 미리보기
 
 M 시리즈 Mac을 위한 **ARM64 앱 + ARM64 Java 21** 패키지입니다. Rosetta용 Intel 패키지가 아닙니다.

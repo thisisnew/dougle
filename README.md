@@ -1,49 +1,58 @@
 # Dougle · 더글
 
-**물어보면 함께 풀어주는 똑똑한 동료.**
+**평소 사용하는 AI에게 회사 업무 맥락을 연결하는 스킬 모음.**
 
-Dougle은 파일·폴더·웹 문서를 모아 두고, 궁금한 내용을 AI에게 질문하는 Mac 앱입니다.
-검색 준비는 앱이 맡고, 사용자는 질문하고 답변의 출처를 확인하면 됩니다.
+Claude Code나 Codex를 프로젝트 폴더에서 실행하고, 더글에 자료 연결이나 업무 질문을 요청하세요. 별도 앱·웹 화면·AI 선택 메뉴는 없습니다. 같은 PC의 같은 작업 공간에서는 연결 자료와 업무 기억을 두 AI가 공유합니다. 모델 자체를 재학습하거나 전체 대화 기록을 자동 이전하는 기능은 아닙니다.
 
-![Dougle 대화 화면](docs/screenshots/dougle-chat.png)
+## 설치
 
-## 설치하기
+지원 대상: Apple Silicon(M 시리즈) Mac, 이미 사용하는 Claude Code 또는 Codex, **Python 3.9 이상과 SQLite FTS5**. Python은 이 패키지에 포함되지 않습니다. 회사 정책에 맞는 Python을 먼저 준비하세요. 기존 더글 앱·Java·Node·검색 모델·별도 AI API 키는 필요 없습니다.
 
-최신 설치본은 **0.1.40 Preview**입니다. Jira·Confluence 사이트 목록 처리, 대량 폴더 저장 중 상태 조회, 검색 준비 안내를 보완하고 AI 연결의 고급 설정을 제거했습니다. 앱 업데이트용 서명 아카이브와 버전 피드도 함께 제공합니다. 새 Apple Silicon Mac의 동봉 런타임 수집·검색을 확인했으며 실제 회사 SSO·회사 PC 환경은 별도 인수가 필요합니다. 웹 링크·Confluence는 지원하며 GitHub 주소는 계속 차단합니다. [시나리오 검증과 한계](docs/release-0.1.40-report.md) · [설치 안내](docs/macos-install.md).
+[스킬 배포 파일](https://github.com/thisisnew/dougle/releases/tag/v0.2.0-skills-preview.1)을 내려받아 압축을 풀고 그 폴더에서:
 
-**[Mac 설치 파일 다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.1.40-preview.1)**
+```sh
+python3 scripts/install-skills.py
+```
 
-1. **Apple Silicon(M 시리즈) Mac 전용**인 `Dougle_0.1.40_arm64.dmg`를 받습니다. Intel Mac은 지원하지 않습니다.
-2. 받은 `.dmg` 파일을 열고 앱을 **Applications(응용 프로그램)**로 옮깁니다.
-3. 앱을 열고 **Workspace 만들기**로 첫 서재를 만듭니다.
-4. **자료 → +**에서 파일 또는 폴더를 고릅니다. PC에 내려받은 코드 저장소도 폴더로 추가합니다. **AI 연결**에서 AI와 모델을 선택하고 로그인합니다.
-5. **대화**에서 질문을 보내면 관련 자료로 답변을 시작하고, 출처를 아래에 표시합니다. 질문과 답변은 자동 저장되며 **질문 기록**에서 다시 보거나 삭제할 수 있습니다.
+Codex의 `~/.agents/skills`와 Claude Code의 `~/.claude/skills`에 두 스킬을 설치합니다. 새 AI 세션을 열어 사용하세요. 기존 회사용 실행 명령과 로그인은 그대로 사용합니다. [설치·업데이트·삭제](docs/skills/install.md)
 
-연결한 자료는 **동기화 아이콘**으로 한 번에 갱신합니다. 자동 갱신은 **설정 → Workspace 관리**에서 켜고 끕니다. [자료·설정 안내](docs/library-simplification.md)
+## 사용
 
-**설정 → 플러그인**에서 MySQL 접속 설정·연결 테스트·DB 구조 수집을 제공합니다. Notion·Jira/Confluence는 브라우저 승인 후 **자료 → + → 웹 링크**로 페이지·이슈를 등록합니다. 회사의 앱 승인 정책과 해당 자료의 읽기 권한이 필요합니다. 다국어 검색 엔진은 설치 파일에 기본 포함됩니다. [연결 방법과 지원 범위](docs/plugins.md)
+Codex에서는 `$dougle-connect`, `$dougle-ask`를 선택하거나 스킬 이름으로 요청하세요. Claude Code에서는 `/dougle-connect`, `/dougle-ask`를 사용합니다. 개념적인 `dougle/connect` 묶음을 양쪽의 표준 스킬 이름으로 배포합니다.
 
-질문에만 참고할 이미지·문서는 질문창 **+**로 첨부하세요. [첨부 사용법](docs/question-attachments.md)
+```text
+dougle-connect로 현재 프로젝트와 이 컨플루언스 문서를 연결해.
+https://company.atlassian.net/wiki/spaces/TEAM/pages/123
 
-연결되면 오른쪽 위에 **CODEX / CLAUDE**가 표시됩니다. [짧은 사용 안내](docs/chat-first.md)
+dougle-ask로 입하 확정 시 어떤 테이블에 데이터가 들어가는지 설명해.
 
-Java·Codex 실행 도구와 검색 엔진은 앱에 포함되어 있습니다. **자료 → + → 웹 링크**에서 HTTPS 문서를 추가할 수 있습니다. Confluence Cloud는 설정의 Jira · Confluence 플러그인을 연결해야 합니다. GitHub 주소는 지원하지 않습니다. 코드 저장소는 PC에 내려받아 폴더로 추가하고, 원격 변경은 직접 pull한 뒤 동기화하세요. 로컬 폴더 수집에는 AI·인터넷 연결이 필요하지 않습니다.
-M 시리즈 Mac의0.1.32 이상 앱에서는 **업데이트 확인**으로 최신 버전을 받을 수 있습니다. 설치를 직접 진행하려면 위 DMG를 사용하세요. [업데이트 안내](docs/automatic-updates.md)
-앱이 열리지 않거나 기존 앱을 업데이트하려면 [자세한 설치 안내](docs/macos-install.md)를 확인하세요.
+그건 이전 방식이야. 지금은 입하 확정과 검수를 별도로 처리해. 기억해 줘.
+```
 
-## 기술 스택
+자료 종류를 메뉴에서 고르지 않습니다. AI가 요청을 해석하고 공통 실행 도구로 읽기·검색·기억 저장을 수행합니다. 연결 후 선택지가 필요하면 `1 계속 연결하기`, `0 이전으로`만 제공합니다. 내부 업무 지식을 열람·관리하는 별도 UI는 없습니다. 답변에는 근거와 필요한 한계를 표시합니다.
 
-| 구분 | 사용 기술 |
+## 현재 구현 범위
+
+| 자료/기능 | 지원 방식 |
 |---|---|
-| 데스크톱 앱 | Tauri 2 |
-| 화면 | React · TypeScript · Vite · Tailwind CSS · shadcn/ui |
-| 서버 | Java 21 · Spring Boot 4.1 |
-| 저장·검색 | SQLite · Apache Lucene 10 · Nori |
-| 자료 분석 | Apache Tika · JavaParser |
-| AI 연결 | Codex · Claude Code |
+| 로컬 코드·문서 | UTF-8 텍스트를 분할·검색. 변경·삭제는 다음 검색에 반영 |
+| 컨플루언스·웹 | **현재 AI에 이미 연결된 읽기 도구**로 가져온 실제 본문을 출처와 함께 저장 |
+| 회사 DB | 기존 읽기 전용 도구로 조회한 구조를 저장. 인증·실시간 조회는 해당 도구가 담당 |
+| 로컬 SQLite | 읽기 전용 스키마 수집과 제한된 테이블 조회 |
+| 업무 기억 | 근거 기반 사실·추론·사용자 정정을 구분. 원본 변경 시 관련 기억을 검색에서 제외 |
+| 공유 | 동일 PC·동일 작업 공간에서 Claude/Codex가 같은 저장소 사용 |
 
-## 더 알아보기
+**회사 SSO·컨플루언스 OAuth·MySQL/PostgreSQL 드라이버가 새로 내장된 것은 아닙니다.** 접근 도구가 없으면 연결은 대기 상태이며 로그인·도구 설정을 안내합니다. 외부 자료는 읽은 시점의 스냅샷입니다. PDF/OCR·임베딩 검색·AWS/Kafka 직접 연결·기존 앱 DB 이전은 이번 버전에 포함하지 않습니다. [연결 계약과 한계](docs/skills/connections.md)
 
-[사용 방법](docs/chat-first.md) · [검색 원리](docs/internal-search.md) · [설계도](docs/design-map.md) · [개발 환경](docs/development.md) · [전체 문서](docs/README.md)
+원본 코드·문서·DB는 수정하지 않습니다. 더글의 로컬 저장소만 갱신합니다. 단, 스킬이 호스트 AI의 다른 도구까지 전역으로 차단하는 것은 아닙니다. [읽기 전용과 보관 정책](docs/skills/architecture.md)
 
-현재 개발 중인 실무 전문가 기능은 연속 대화와 범위를 확인한 읽기 전용 DB 조회를 포함합니다. Slack 문의·Datadog 연결 기능은 제거했습니다. 설치 파일의 지원 범위와 개발 소스는 다를 수 있습니다. [구현·검증 상태](docs/expert-implementation.md)와 [50개 인수 기준](docs/expert-adoption.md)에서 실제 검증과 남은 항목을 구분합니다.
+## 개발과 검증
+
+```sh
+python3 scripts/build-skills.py --check
+python3 -m unittest discover -s tests/skills -v
+```
+
+[검증 결과와 미검증 항목](docs/skills/verification.md) · [개발 안내](docs/skills/development.md) · [문서 목록](docs/README.md)
+
+`backend/`, `frontend/`, `desktop/`은 이전 0.1.x 앱의 보존 코드입니다. 현재 스킬을 설치·실행할 때 사용하지 않습니다. 앱 자동 업데이트 피드는 스킬 배포와 별개이며 변경하지 않습니다. [이전 앱 기록](docs/skills/legacy-index.md)

@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "status": "PASS",
+  "checks": [
+    "archive_fresh_home_install_both_hosts",
+    "claude_path_connect_codex_path_search",
+    "shared_grounded_memory_across_processes",
+    "original_source_bytes_unchanged",
+    "changed_source_invalidates_old_evidence_and_memory",
+    "reinstall_preserves_connections",
+    "uninstall_preserves_state"
+  ],
+  "archiveBytes": 28496,
+  "archiveSha256": "640a038bd9fad35f9de3b6831571e4d4d83422896bf84740dca5e3e5db536384",
+  "externalModelCalls": 0,
+  "limits": [
+    "Host AI discovery and model behavior were not exercised; installed entrypoint processes were exercised.",
+    "Actual company SSO/Confluence/MySQL and Apple Silicon hardware were not exercised."
+  ]
+}

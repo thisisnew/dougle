@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # 0.1.10 — 기능 다이어트
 
 소스 `4d4558b`의 Intel/Apple Silicon 설치 파일과 서명 업데이트를 [0.1.10 릴리스](https://github.com/thisisnew/dougle/releases/tag/v0.1.10-preview.1)에 공개했습니다. 자산 10개의 크기·SHA-256을 로컬 파일과 대조했습니다. 이 Mac에도 0.1.10을 설치했습니다. [쉬운 사용법과 코드 대조](simple-workflow.md).

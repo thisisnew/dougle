@@ -1,3 +1,5 @@
+> 이전 0.1.x 데스크톱 앱 구현 문서입니다. 현재 제품은 [Dougle Skills](../../../../../../../../docs/skills/README.md)이며 이 코드는 새 스킬 실행에 사용하지 않습니다.
+
 # Transfer archive integrity groundwork
 
 This package has no application, persistence, filesystem extraction, credential access or API integration. The only payload type is a document identified by UUID, with byte length and SHA-256. There is no settings, authentication, provider, connection or arbitrary metadata field. This excludes settings structurally; arbitrary document bytes can still contain secrets. Callers must select/sanitize exportable content. Integrity hashes do not authenticate the sender or encrypt data.

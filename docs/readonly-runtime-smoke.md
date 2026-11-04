@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Offline read-only runtime smoke
 
 Status: **actual isolated runtime passed** at `2026-10-26T10:18:04.359Z` against authorized JAR SHA `5cd81269031769b8c65af4a3cfc136dcd562e30a0c3e91f255f6a959f4a9bd0d`. All old `.21` packages remain blocked. The known pre-policy JAR SHA `675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489` is explicitly rejected. E35 inventory remains unchanged pending parent review; this is not whole-product acceptance.

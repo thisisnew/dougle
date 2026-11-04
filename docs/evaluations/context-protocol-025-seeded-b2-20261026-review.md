@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # .25 seeded implicit-follow-up diagnostic b2
 
 One separately authorized diagnostic, maximum **two dispatches**, completed with exactly **one real plan and one real answer**. Run: 2026-10-26 14:56:38–14:59:56 UTC, terminal session 3516, exit 0. No retry, remainder or additional batch. Report: `context-protocol-025-seeded-b2-20261026.json`; log: `/tmp/dougle-context-protocol-025-seeded-b2.log`.

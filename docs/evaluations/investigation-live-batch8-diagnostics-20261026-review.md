@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Batch 8 — bounded E01 diagnostic trial
 
 - Artifact SHA-256: `276e56fd38d1720cb0bde17072bd2b14ab63233d7fb6e356e82d32bd782b6f22`.

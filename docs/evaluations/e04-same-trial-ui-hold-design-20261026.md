@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # E04 same-trial UI hold — offline implementation, not executed
 
 Batch13's backend restart/GET checks passed, but its temporary database was cleaned up. A reconstructed database cannot retroactively prove UI reopening of those trials. E04 remains partial and unpromoted. Do not repeat completed batches13/14 because of the later network outage.

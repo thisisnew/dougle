@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # E37 .25 isolated runtime — scoped checks completed
 
 One authorized attempt, 2026-10-26 13:58:24–13:59:50 UTC (85.645 seconds), terminal session 8876, runner exit 0. Log: `/tmp/dougle-e37-025-5cf78b64.log`. No automatic retry or additional attempt. Earlier .24 startup-failure evidence remains unchanged.

@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Mac 설치형 빌드
 
 증분 빌드에서도 이전 Vite 자산을 남기지 않도록 Maven initialize가 `target/classes/static`만 지운 뒤 현재 `frontend/dist`를 복사한다. Java class 출력은 이 단계에서 삭제하지 않는다. `package-macos.sh`는 staging 전에 `verify-frontend-bundle.mjs`로 JAR의 static 파일 목록과 바이트가 dist와 정확히 일치하는지 확인한다. 누락/중복/오래된 자산이 있으면 skip-verify 모드에서도 패키징을 중단한다. 직접 `resources:resources` goal만 호출하면 lifecycle initialize를 건너뛰므로 표준 lifecycle 빌드를 사용한다.

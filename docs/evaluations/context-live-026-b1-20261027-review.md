@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # .26 four-turn actual-AI context probe
 
 One authorized variant completed **8 dispatch attempts: 4 plans and 4 answers**, 2026-10-26 21:28:52–21:33:03 UTC (October 27 KST). Session 61945 exited 0. No retries, seeded history, protocol wrapper, UI hold or additional batch. Plans all returned STOP; operational tools were not executed.

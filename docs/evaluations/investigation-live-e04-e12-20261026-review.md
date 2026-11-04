@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # E04 backend restart and E12 glossary — actual bounded evaluation
 
 Artifact SHA-256: `675a7c59e13edc8ee849b23977699e600331555d8f53c669ef8e7f10406e3489`. Synthetic-only policy/glossary files and isolated temporary databases; existing dedicated CLI authentication, no credentials read. Reviewer: Codex evaluation agent, manual comparison of every answer with captured source quotes, not independent human review. Requested CODEX/default; actual model ID, tokens and currency cost unobserved.

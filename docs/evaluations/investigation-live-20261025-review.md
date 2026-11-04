@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Live investigation review — 2026-10-25
 
 Artifact: production JAR SHA-256 `6b60123c3502153dea371118e1d9873242b431a4b9a6ff3d37978a2c0a81bc52`. Synthetic documents only, isolated temporary databases; no credential reads/copies. Requested model is provider default (`""`); actual model ID is **unobserved**. This is not a blanket acceptance PASS.

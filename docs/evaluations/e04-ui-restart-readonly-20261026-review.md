@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # E04 first readonly UI trial — handoff failure, not app failure
 
 Artifact `e0e43e1084177ea4d28530547cc762bce339d2de2f5721d21ce70d0ef4eeb58d` remained unchanged. [Original raw report](e04-ui-restart-readonly-20261026.json) is preserved without edits; log `/tmp/dougle-e04-ui-restart-readonly.log`.

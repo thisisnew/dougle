@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Expert upstream audit and adoption gate
 
 Audit date: 2026-10-25. Scope: four public upstream repositories, their pinned license/provenance, HolmesGPT model connectivity, Mac packaging and read-only enforcement. This is a static source audit, not an installation, successful model connection, security certification or completed E01–E50 evaluation.

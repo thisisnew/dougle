@@ -1,3 +1,5 @@
+> 이전 0.1.x 데스크톱 앱 구현 문서입니다. 현재 제품은 [Dougle Skills](../docs/skills/README.md)이며 이 코드는 새 스킬 실행에 사용하지 않습니다.
+
 # Native desktop host
 
 The supported product platform is Apple Silicon (M-series), macOS 11.3 or later. Intel builds and compatibility are outside development, acceptance and release scope. Rust 1.99.1, Tauri 2.12.5, tauri-build 2.7.4 and npm CLI 2.12.4 are pinned; both dependency lockfiles are included. The CLI and Cargo wrappers use only this repository's `.tools/cargo` and `.tools/rustup`.

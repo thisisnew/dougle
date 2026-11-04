@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # E37 .25 proposal extension — incomplete single attempt
 
 One authorized run, 2026-10-26 14:10:22–14:11:07 UTC, session 92834, runner exit 1. No retry. Artifact SHA-256 `5cf78b6441a99f893ecbaf6e81babd3e17e01e46b154f3c772e43abe138ca22a`; finalized Intel bundle Java/models, not installed assets. Existing strict sandbox/root-literal rule unchanged. Log `/tmp/dougle-e37-025-proposals.log`.

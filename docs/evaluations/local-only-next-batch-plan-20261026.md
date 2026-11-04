@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # Proposed next local-only evaluation — not authorization or execution
 
 Read-only source/harness review following V4 batches11/12. No AI calls, runtime, build, JAR write or acceptance-status change. Packaging/QA owns the artifact lease. Existing E01–E03 results are not repeated in the proposal below.

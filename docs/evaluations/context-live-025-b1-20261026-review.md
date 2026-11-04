@@ -1,3 +1,5 @@
+> **이전 데스크톱 앱 기록** — 이 문서는 0.1.x 앱의 설계·사용법·검증 이력입니다. 현재 제품은 UI 없는 Dougle Skills입니다. 설치와 지원 범위는 [최신 문서](../skills/README.md)를 따르세요. 아래 기능·검증 결과가 스킬 버전에도 적용된다는 뜻은 아닙니다.
+
 # .25 real Codex short-context batch b1 — partial, timeout stop
 
 One authorized synthetic batch, 2026-10-26 14:43:17–14:48:15 UTC, terminal session 67110, exit 1. Purpose: initial target → explicit correction → implicit follow-up → backend restart and correction recall. Budget was eight dispatches for this batch only, not a global authorization cap. The run stopped at its first failure after **six dispatch attempts: three plans, three answers**. No automatic retry, remainder execution, or further batch occurred.

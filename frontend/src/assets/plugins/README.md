@@ -1,3 +1,5 @@
+> 이전 0.1.x 데스크톱 앱 구현 문서입니다. 현재 제품은 [Dougle Skills](../../../../docs/skills/README.md)이며 이 코드는 새 스킬 실행에 사용하지 않습니다.
+
 # Service marks
 
 Bundled locally for identifying the corresponding integration; not Dougle branding or an endorsement.
