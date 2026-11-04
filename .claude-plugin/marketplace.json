@@ -1,0 +1,16 @@
+{
+  "name": "dougle-marketplace",
+  "owner": {
+    "name": "thisisnew"
+  },
+  "plugins": [
+    {
+      "name": "dougle",
+      "source": "./plugins/dougle",
+      "description": "Shared read-only domain knowledge workflows for your existing AI."
+    }
+  ],
+  "metadata": {
+    "description": "Runtime-free domain knowledge skills for your existing AI."
+  }
+}

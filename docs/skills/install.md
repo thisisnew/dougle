@@ -1,47 +1,34 @@
-# 설치와 사용
+# 설치 — 0.3.0
 
-## 요구 사항
+더글 자체 실행 의존성은 없습니다. 이미 쓰는 호스트 AI와 해당 호스트의 스킬/플러그인 기능만 필요합니다. 호스트 도구 자체의 설치 요구 사항과 회사 정책은 그대로 적용됩니다.
 
-지원 대상은 M 시리즈 Mac입니다. Claude Code 또는 Codex는 회사에서 평소 쓰는 방식으로 설치·로그인되어 있어야 합니다. 더글은 AI 프로세스를 새로 실행하지 않으므로 `claude-work` 같은 별칭을 탐지하거나 변경하지 않습니다.
+## Claude Code
 
-Python 3.9+와 SQLite FTS5가 필요합니다. Python이 없는 새 Mac에서는 회사가 허용한 배포판을 준비해야 합니다. Python·Java·Node·모델은 배포 파일에 포함하지 않습니다. 설치 프로그램이 FTS5를 확인합니다.
-
-## 설치
-
-[0.2.0 스킬 패키지](https://github.com/thisisnew/dougle/releases/tag/v0.2.0-skills-preview.1)의 `Dougle_Skills_0.2.0.zip`을 풀고 해당 폴더에서 실행합니다.
-
-```sh
-python3 scripts/install-skills.py
+```text
+/plugin marketplace add thisisnew/dougle
+/plugin install dougle@dougle-marketplace
 ```
 
-두 호스트에 함께 설치합니다. 하나만 설치하려면 `--agent codex` 또는 `--agent claude`를 붙입니다. 프로젝트 파일이나 AI 권한 설정, AGENTS.md/CLAUDE.md를 수정하지 않습니다. 새 AI 세션에서 스킬 이름을 선택하거나 이름을 포함해 요청하세요.
+저장소의 `.claude-plugin/marketplace.json`은 `plugins/dougle`을 가리킵니다. 플러그인은 스킬과 Markdown 참조, 매니페스트만 포함합니다. 명령은 `/dougle:dougle-connect`, `/dougle:dougle-ask`입니다. 업데이트는 호스트의 플러그인 관리 화면에서 진행하세요.
 
-| 호스트 | 설치 위치 | 호출 |
-|---|---|---|
-| Codex | `~/.agents/skills/dougle-connect`, `dougle-ask` | `$dougle-connect`, `$dougle-ask` 또는 스킬 이름으로 요청 |
-| Claude Code | `~/.claude/skills/dougle-connect`, `dougle-ask` | `/dougle-connect`, `/dougle-ask` |
+이 방식은 [pstack 배포 사례](https://github.com/cursor/plugins/tree/main/pstack)와 같은 marketplace/plugin 구조이며 [Claude 공식 설치 규격](https://code.claude.com/docs/en/plugin-marketplaces)을 따릅니다. Cursor 공개 디렉토리에 등록된 제품이라는 뜻은 아니며 `/add-plugin dougle`을 보장하지 않습니다.
 
-기본 스킬 형식과 설치 위치는 [OpenAI 공식 문서](https://learn.chatgpt.com/docs/build-skills)와 [Claude Code 공식 문서](https://code.claude.com/docs/en/skills)를 따릅니다. 회사의 관리 정책이 개인 스킬을 제한하면 관리자 설정을 따라야 합니다. 두 스킬은 독립적으로 복사할 수 있도록 실행 코드와 참조 문서를 각각 포함합니다.
+## Codex
 
-## 프로젝트와 공유
+Codex에 다음처럼 요청할 수 있습니다.
 
-평소처럼 프로젝트 폴더에서 AI를 실행하세요. 스킬은 그 프로젝트의 절대 경로를 `--workspace`로 전달합니다. 같은 실제 경로는 같은 작업 공간이고, 다른 경로는 별도 공간입니다. 다른 하위 폴더나 Git worktree를 자동 합치지 않습니다. 다른 AI로 이어갈 때 같은 프로젝트 루트를 지정하세요.
+> thisisnew/dougle 저장소의 skills/dougle-connect와 skills/dougle-ask를 설치해 줘.
 
-저장 위치: `~/Library/Application Support/Dougle Skills/knowledge.sqlite3`. `DOUGLE_HOME`으로 별도 위치를 지정할 수 있지만 두 AI가 같은 값을 사용해야 합니다. 비밀정보를 포함할 수 있는 자료 사본과 업무 기억이 들어 있으므로 Git에 넣지 마세요. 파일 권한은 디렉토리700/DB600이며 별도 암호화는 없습니다.
+또는 [배포 파일](https://github.com/thisisnew/dougle/releases/tag/v0.3.0-skills-preview.1)을 풀고 `skills` 안 두 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask`로 선택하거나 이름으로 요청합니다. 새 세션이 필요할 수 있습니다. [공식 스킬 위치 안내](https://learn.chatgpt.com/docs/build-skills)
 
-## 업데이트와 제거
+플러그인 ZIP에는 `.codex-plugin/plugin.json`도 포함하지만 Codex 버전별 UI/마켓플레이스 명령을 동일하다고 가정하지 않습니다. 기본 호환 경로는 두 표준 스킬 폴더 설치입니다.
 
-새 패키지를 받아 같은 설치 명령을 실행합니다. 저장소는 유지됩니다. 설치한 스킬을 직접 수정했거나 같은 이름의 다른 스킬이 있으면 덮어쓰지 않고 중단합니다. 직접 수정본을 백업/이동한 뒤 재설치하세요.
+## 기존 버전
 
-```sh
-python3 scripts/install-skills.py --uninstall
-```
+0.2.0 개인 스킬 폴더를 사용했다면 사용자 수정본을 먼저 확인하고 해당 두 폴더를 새 Markdown 전용 폴더로 교체하세요. Python 실행 파일을 새 폴더에 남겨두지 마세요. Claude에서는 개인 스킬과 플러그인을 동시에 설치하면 중복 명령이 생길 수 있으므로 사용하는 설치 방식 하나를 선택하세요.
 
-설치된 두 스킬만 제거하고 자료·기억은 남깁니다. 저장소 삭제는 별도 사용자 선택입니다. 이전 데스크톱 앱이나 해당 DB는 이 설치 프로그램이 건드리지 않습니다.
+예전 SQLite 데이터는 `~/Library/Application Support/Dougle Skills/`에 남아 있습니다. 새 스킬은 이를 자동으로 읽거나 삭제하지 않습니다. 원본 자료를 다시 연결하면 새 Markdown 기억을 만듭니다. 자료 연결 정보/본문을 무단으로 다른 곳에 복사하지 않습니다.
 
-## 문제가 있을 때
+제거는 호스트 플러그인 제거 기능 또는 설치한 두 스킬 폴더 제거로 수행합니다. `~/.dougle/`의 기억은 별도이며 자동 삭제하지 않습니다.
 
-- 스킬 없음: 새 세션·설치 위치·회사 정책을 확인합니다.
-- Python/FTS5 없음: 회사 승인 Python 환경을 준비합니다. AI 인증 문제가 아닙니다.
-- 컨플루언스/DB 접근 없음: 해당 AI의 기존 읽기 도구와 로그인을 연결합니다. 더글 설치 성공과 회사 자료 접근 성공은 별개입니다.
-- 자료 일부 제외: 결과의 사유를 확인하고 범위를 좁힙니다. PDF·비 UTF-8 파일은 현재 직접 지원하지 않습니다.
+두 폴더를 Claude의 `~/.claude/skills/`에 직접 복사하는 방식도 가능합니다. 이 경우 명령은 플러그인 접두사 없이 `/dougle-connect`, `/dougle-ask`입니다. 이번 개발 PC의 개인 스킬은 이 방식으로 새 지침으로 교체했습니다.
