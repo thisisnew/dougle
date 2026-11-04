@@ -21,8 +21,6 @@ skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
 skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 ```
 
-더글용 Python·Node·서버는 필요 없습니다. [다른 설치 방법과 업데이트 →](docs/skills/install.md)
-
 ## 2. 자료 연결하기
 
 프로젝트 폴더에서 AI를 실행하고 요청하세요. 아래는 Claude 플러그인 기준입니다.
@@ -54,6 +52,12 @@ skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 | 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
 
 [복사해서 쓰는 예시 →](docs/skills/usage.md) · [자료 갱신 →](docs/skills/reload.md) · [팀 공유 →](docs/skills/sharing.md)
+
+## 지식은 어떻게 내재화하나요?
+
+**업무 개념별 Markdown에 규칙·시스템 관계·출처를 정리하고, 질문할 때 다시 읽습니다.** 모델 재학습이나 그래프 DB 방식은 아닙니다. API → 코드 → 테이블의 관계도 근거와 함께 기록하며, 답변할 때 필요한 원본을 확인합니다.
+
+[저장 구조·관계 기록·검색 흐름 보기 →](docs/skills/architecture.md)
 
 ## 기억은 어디에 남나요?
 
