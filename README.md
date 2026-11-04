@@ -41,7 +41,7 @@ skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 /dougle:dougle-ask 입하 확정할 때 어느 테이블에 데이터가 들어가?
 ```
 
-같은 대화에서는 “그럼 어느 코드를 보면 돼?”처럼 이어서 물어보세요. 답변은 근거를 바탕으로 하며, 확인된 사실과 해석을 구분합니다.
+같은 대화에서는 “그럼 어느 코드를 보면 돼?”처럼 이어서 물어보세요. 답변은 **결론부터 짧게**, 근거는 해당 설명 옆에 보여줍니다. 확인된 사실과 해석은 구분합니다. 더 깊은 설명이 필요하면 “자세히 설명해 줘”라고 요청하세요.
 
 ## 필요할 때 꺼내 쓰기
 
@@ -61,6 +61,6 @@ skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 
 원본 코드·문서·DB는 읽기만 합니다. 다만 스킬 자체가 쓰기 권한을 차단하는 보안 장치는 아니므로 회사 시스템에는 읽기 전용 권한을 사용하세요.
 
-현재 버전은 **0.4.0 Preview**입니다. 설치·파일 구조는 검증했지만 회사별 연결과 AI 답변·지식 병합 품질을 모두 검증한 상태는 아닙니다. [검증 범위 →](docs/skills/verification.md)
+현재 버전은 **0.4.1 Preview**입니다. 설치·파일 구조는 검증했지만 회사별 연결과 AI 답변·지식 병합 품질을 모두 검증한 상태는 아닙니다. [검증 범위 →](docs/skills/verification.md)
 
-[전체 문서 →](docs/README.md) · [스킬 다운로드 →](https://github.com/thisisnew/dougle/releases/tag/v0.4.0-skills-preview.1)
+[전체 문서 →](docs/README.md) · [스킬 다운로드 →](https://github.com/thisisnew/dougle/releases/tag/v0.4.1-skills-preview.1)

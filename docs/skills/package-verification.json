@@ -1,10 +1,11 @@
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "files": 15,
-  "archiveBytes": 49390,
-  "sha256": "151f5184fcc6084155aee41646f2ccd4e98721f3e5538d8f43def2f2a05543b2",
+  "archiveBytes": 48706,
+  "sha256": "ed6ad42c989cb748fe753fb1f463a56918e52e3c7cfe4da13e968040402c6b59",
   "structuralChecks": 66,
   "externalModelCalls": 0,
+  "answerReadabilityEvaluation": "NOT_RUN",
   "semanticMergeEvaluation": "NOT_RUN",
   "realKnowledgePublished": 0
 }

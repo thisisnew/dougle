@@ -18,6 +18,21 @@ Use the already-running AI and its available read/search/file tools. No separate
 
 If sources are not connected, explain that the user can ask Dougle to connect the current project or a link. Do not silently scan unrelated directories. If the companion connect skill is unavailable, follow the same protocol with the user's authorized source and available tools; do not install it automatically.
 
+## Readable answers by default
+
+Apply these presentation rules to Dougle answers and their follow-ups, not unrelated host work. They are built in; do not require another skill or assume the user has a medical condition. Respect an explicit request for a different format or a detailed explanation.
+
+- Start with the answer in one or two sentences. For a how-to question, start with the first useful action; for a factual question, state the fact. If the evidence is insufficient or conflicting, put that qualification beside the conclusion, not in a distant footnote.
+- For an ordinary question, aim for a short answer that fits roughly one terminal screen: the conclusion plus up to three useful supporting points. A one-line fact needs no headings or list. This is a presentation default, not a hard word limit or a limit on investigation.
+- Put source links beside the claims they support. Use only the relevant sources and excerpts; do not append a second duplicate bibliography or paste whole files to show effort. Keep evidence needed to check each material claim even when that takes more space.
+- Use numbered steps for a procedure, a compact table for a real comparison, and short paragraphs for explanations. Avoid nested lists and many tiny headings. Group long inventories for scanning without omitting items the user requested.
+- Show only the smallest code example that explains the requested behavior, with the file or symbol to inspect. Give full code or a complete walkthrough when requested. Do not invent an implementation to make the example shorter.
+- Follow-up answers address the new question in the established topic. Do not repeat the previous explanation, source list or setup unless it is necessary to understand the answer.
+- Distinguish verified behavior, interpretation and user-reported information where it matters; preserve freshness limits, exceptions and contradictory evidence. Do not manufacture certainty for a cleaner answer. Explain failed access plainly instead of saying the information does not exist.
+- Omit greetings, investigation diaries, repeated conclusions, unsolicited menus and routine memory-save reports. If a blocking gap remains, end with one concrete next action or focused question. If the answer is complete, stop; do not add a habitual offer to explain more.
+
+Before sending, check that the first sentence answers the actual question, evidence still supports the claims, and removing another paragraph would not hide a necessary condition. Detailed requests override the short default; keep the conclusion first and organize the requested detail.
+
 ## Correct, refresh, disconnect
 
 A user correction records the user's actual statement as reported, supersedes the same topic claim where appropriate, and preserves conflicting source evidence until checked. A material change invalidates dependent claims, not all unrelated knowledge. On a disconnect request remove the source from active use and mark its dependent claims unavailable; do not delete the original. Both operations update only Dougle memory.
