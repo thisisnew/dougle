@@ -40,7 +40,7 @@
    $dougle-connect 현재 프로젝트를 읽고 업무 지식을 정리해 줘.
    ```
 
-직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.4.1-skills-preview.1)을 풀고 `Dougle/skills/` 안의 다섯 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.4.2-skills-preview.1)을 풀고 `Dougle/skills/` 안의 다섯 폴더를 `~/.agents/skills/`에 복사하세요.
 
 ## 설치 후 확인하기
 
@@ -146,7 +146,7 @@ Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설�
 <details>
 <summary>예전 앱이나 0.2.0~0.3.x를 사용했다면</summary>
 
-0.4.1은 connect·ask·reload·publish·fetch 다섯 스킬을 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
+0.4.2은 connect·ask·reload·publish·fetch 다섯 스킬을 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
 
 0.2.0 SQLite 데이터는 `~/Library/Application Support/Dougle Skills/`에 남아 있으며 자동으로 읽거나 삭제하지 않습니다. 원본 자료를 다시 연결하면 새 Markdown 지식을 만듭니다.
 

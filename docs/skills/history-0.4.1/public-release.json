@@ -1,0 +1,12 @@
+{
+  "tag": "v0.4.1-skills-preview.1",
+  "sourceCommit": "b1c185f036888a90f54e08e59f21e8e573728c8f",
+  "assets": [
+    {
+      "name": "Dougle_Skills_0.4.1.zip",
+      "bytes": 48706,
+      "sha256": "ed6ad42c989cb748fe753fb1f463a56918e52e3c7cfe4da13e968040402c6b59",
+      "anonymousDownload": "PASS"
+    }
+  ]
+}

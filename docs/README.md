@@ -16,7 +16,7 @@
 
 [제품 개요](skills/README.md) · [개발 안내](skills/development.md) · [검증 범위](skills/verification.md)
 
-현재 제품은 **0.4.1 스킬 모음**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
+현재 제품은 **0.4.2 스킬 모음**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
 
 <details>
 <summary>이전 버전 기록</summary>

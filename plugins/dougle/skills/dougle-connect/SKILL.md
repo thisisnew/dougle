@@ -5,7 +5,7 @@ description: Connect and organize requested work material into Dougle's shared d
 
 # Dougle connect
 
-Use the current AI session and its existing tools. Do not install a runtime, start a server, run a Dougle executable, create SQLite, or launch another AI. Read [the organization protocol](references/organization.md) before creating or updating memory. It defines the shared format used by both skills.
+Use the current AI session and its existing tools. Do not install a runtime, start a server, run a Dougle executable, create SQLite, or launch another AI. Read [the organization protocol](references/organization.md) before creating or updating memory. It defines the shared format used by all Dougle skills.
 
 ## Understand and read
 
@@ -25,7 +25,7 @@ For databases, use an existing authorized read-only tool. Begin with schema, tab
 
 Apply the organization protocol rather than copying entire files or dumping tool output:
 
-1. Check existing source identities using the organization protocol before registering. Reuse or refresh the same source, including exact pending requests; create a source only for a new identity. Record actual read time, revision if available, coverage and access state. The user need not check duplicates.
+1. Check existing source identities using the organization protocol before registering. Reuse or refresh the same source, including exact pending requests; create a source only for a new identity. Record actual read time, revision if available, coverage and access state; after the dependent notes are saved, record successful coverage verification under the ask-time freshness policy. The user need not check duplicates.
 2. Extract domain terms and synonyms, responsibilities, business rules, process transitions, and links between documents, code, APIs, tables and events.
 3. Store concise topic notes grounded in specific source locations. Clearly separate observations, user statements and inferences. Leave unsupported relationships unknown.
 4. Update existing topics rather than creating overlapping summaries. Preserve conflicts and provenance; do not let a newer timestamp alone decide which claim is true.
@@ -35,4 +35,4 @@ The host writes only the Dougle memory directory. If permitted persistent storag
 
 Report connection outcome and significant gaps briefly. Do not expose an internal knowledge browser. If continuation choices are useful, offer only `1 계속 연결하기` and `0 이전으로`. Going back retains connections; do not add a question shortcut.
 
-For an explicit refresh of existing material, use the companion dougle-reload skill when available. A normal question still verifies its relevant evidence; it does not trigger a full-workspace reload.
+For an explicit refresh of existing material, use the companion dougle-reload skill when available. A normal question applies ask-time freshness to its relevant evidence; it does not trigger a full-workspace reload.
