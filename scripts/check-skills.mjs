@@ -10,7 +10,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.3.1', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.4.0', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -21,10 +21,10 @@ async function files(dir) {
  }
  return out
 }
-for (const name of ['dougle-connect','dougle-ask','dougle-reload']) {
+for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
- check(all.length===2,'only instruction and organization reference')
+ check(all.length===(['dougle-publish','dougle-fetch'].includes(name)?3:2),'only declared Markdown skill resources')
  for(const p of all) {
   check(p.endsWith('.md'),'no executable/runtime dependency')
   const text=await readFile(p,'utf8')
@@ -40,4 +40,6 @@ for (const name of ['dougle-connect','dougle-ask','dougle-reload']) {
 }
 check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,'skills/dougle-ask/references/organization.md'),'utf8'),'shared protocol')
 check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,'skills/dougle-reload/references/organization.md'),'utf8'),'reload shared protocol')
+for (const name of ['dougle-publish','dougle-fetch']) check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,`skills/${name}/references/organization.md`),'utf8'),'shared organization')
+check(await readFile(resolve(root,'skills/dougle-publish/references/sharing.md'),'utf8')===await readFile(resolve(root,'skills/dougle-fetch/references/sharing.md'),'utf8'),'shared merge protocol')
 console.log(JSON.stringify({status:'PASS',structuralChecks:checks,semanticModelEvaluation:false}))

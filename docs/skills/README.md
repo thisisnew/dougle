@@ -1,4 +1,4 @@
-# Dougle Skills 0.3.1
+# Dougle Skills 0.4.0
 
 스킬이 자료 정리·검색·기억 갱신 방법을 제공하고, 실행은 현재 호스트 AI의 기존 도구에 맡깁니다. Python/SQLite 기반0.2.0 실행기는 제거했습니다.
 
@@ -6,6 +6,9 @@
 - `dougle-reload`: 기존 자료의 명시적 갱신. 변경·동일·부분·접근 실패·삭제 확인을 구분.
 - `dougle-ask`: 저장된 맥락으로 관련 근거를 찾고 원본을 확인해 답변. 업무 지식과 정정 반영.
 
-[설치](install.md) · [사용 예시](usage.md) · [연결](connections.md) · [갱신](reload.md) · [정리 방식](architecture.md) · [검증](verification.md) · [개발](development.md)
+- `dougle-publish`: 선택한 정제 지식을 지정 저장소에 공유.
+- `dougle-fetch`: 공유 지식을 기존 맥락·정정·근거를 보존하며 병합.
+
+[공유와 병합](sharing.md) · [설치](install.md) · [사용 예시](usage.md) · [연결](connections.md) · [갱신](reload.md) · [정리 방식](architecture.md) · [검증](verification.md) · [개발](development.md)
 
 실제 호스트 도구/권한이 없는 서비스를 설치만으로 읽을 수는 없습니다. 원본 읽기 전용은 호스트 권한과 스킬 절차로 지킵니다. 이전 실행기의 테스트 수치는 현재 스킬 동작을 증명하지 않습니다.

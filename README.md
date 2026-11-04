@@ -13,9 +13,9 @@ Claude Code에서:
 /plugin install dougle@dougle-marketplace
 ```
 
-사용 명령은 `/dougle:dougle-connect`, `/dougle:dougle-ask`, `/dougle:dougle-reload`입니다.
+사용 명령은 `/dougle:dougle-connect`, `/dougle:dougle-ask`, `/dougle:dougle-reload`, `/dougle:dougle-publish`, `/dougle:dougle-fetch`입니다.
 
-Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`, `skills/dougle-reload`를 스킬로 설치해 달라고 요청하세요. 또는 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.3.1-skills-preview.1)의 `skills` 안 세 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask`, `$dougle-reload` 또는 이름으로 요청하면 됩니다. [상세 설치 안내](docs/skills/install.md)
+Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`, `skills/dougle-reload`, `skills/dougle-publish`, `skills/dougle-fetch`를 스킬로 설치해 달라고 요청하세요. 또는 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.4.0-skills-preview.1)의 `skills` 안 다섯 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask`, `$dougle-reload`, `$dougle-publish`, `$dougle-fetch` 또는 이름으로 요청하면 됩니다. [상세 설치 안내](docs/skills/install.md)
 
 ## 사용
 
@@ -24,6 +24,8 @@ Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`, `s
 | 자료 연결 | `/dougle:dougle-connect` | `$dougle-connect` |
 | 질문 | `/dougle:dougle-ask` | `$dougle-ask` |
 | 자료 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
+| 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
+| 지식 가져오기·병합 | `/dougle:dougle-fetch` | `$dougle-fetch` |
 
 [명령별 예시](docs/skills/usage.md)
 
@@ -48,6 +50,12 @@ dougle-reload 전체
 - 서비스 종류를 고정하지 않습니다. 사용 가능한 **인증된 읽기 도구**가 있어야 해당 서비스를 읽을 수 있습니다.
 
 [자료 갱신 방법](docs/skills/reload.md)
+
+## 팀 지식 공유
+
+`dougle-publish owner/team-knowledge`로 선택한 정제 지식을 지정 저장소에 공유하고, `dougle-fetch owner/team-knowledge`로 기존 지식과 병합합니다. 기본 대상은 전용 `dougle-knowledge` 브랜치의 `knowledge/<project-id>/`입니다. 개인 경로·인증정보·원본 전체·DB 행은 올리지 않습니다. 원격과 로컬의 추가/정정/충돌을 함께 보존하며 강제 덮어쓰지 않습니다. [공유·병합 규칙](docs/skills/sharing.md)
+
+저장소를 지정하지 않았다면 대상부터 묻습니다. 사용자 지식을 임의로 공개 더글 저장소에 올리지 않습니다.
 
 ## 업무 기억
 

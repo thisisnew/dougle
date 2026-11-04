@@ -1,11 +1,10 @@
 {
-  "version": "0.3.1",
-  "files": 9,
-  "archiveBytes": 25277,
-  "sha256": "9c198ede3be879582093f24416bbf99b13289f51911f107b742407771369c6ce",
-  "structuralChecks": 35,
-  "skillFormatValidation": "3 PASS",
+  "version": "0.4.0",
+  "files": 15,
+  "archiveBytes": 49390,
+  "sha256": "151f5184fcc6084155aee41646f2ccd4e98721f3e5538d8f43def2f2a05543b2",
+  "structuralChecks": 66,
   "externalModelCalls": 0,
-  "semanticEvaluation": "NOT_RUN",
-  "companyAccess": "NOT_TESTED"
+  "semanticMergeEvaluation": "NOT_RUN",
+  "realKnowledgePublished": 0
 }
