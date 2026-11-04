@@ -21,3 +21,7 @@
 README/docs/README/AGENTS 및 docs/skills를 새 방향으로 작성했다. 이전 docs Markdown181개와 기존 구성요소 안내에는 과거 앱 기록 표시를 추가했다. 과거 수치와 앱 기능을 현재 지원으로 인용하지 않는다.
 
 이전 backend/frontend/desktop 및 사용자 DB는 보존하며 새 스킬에서 실행하지 않는다. 0.1.41 앱 초안·0.1.40 자동 업데이트 피드는 그대로 두고 스킬 릴리스를 별도로 제공한다. 과거 상세 기록은 docs/desktop-handoff-history.md와 docs/desktop-agent-history.md에 있다.
+
+## 공개 완료
+
+`v0.2.0-skills-preview.1` 공개. 제품 소스는 `6c51bc6a9cb965a3dda1765b14696fa1dbb519c4`이며 ZIP28,496바이트와 체크섬 파일을 익명으로 재다운로드해 검증한 로컬 파일과 바이트 일치를 확인했다. docs/skills/public-release.json 참고. GitHub 저장소 설명도 스킬 제품으로 갱신했다.

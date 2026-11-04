@@ -37,3 +37,7 @@
 - 자동 OAuth, PDF/OCR, 임베딩 품질, 대규모 저장소 성능, 기존 앱 DB 이전. 이번 버전 구현 범위 밖입니다.
 
 외부 AI 호출0회. 설치 경로의 실행 코드 공유 성공을 실제 두 모델의 의미 품질이나 회사 연동 성공으로 표현하지 않습니다. 회사 인증 도구가 없으면 연결이 대기로 남는 것이 현재 계약입니다.
+
+## 공개 파일 검증
+
+[0.2.0 Preview](https://github.com/thisisnew/dougle/releases/tag/v0.2.0-skills-preview.1)의 ZIP28,496바이트와 SHA256SUMS를 익명으로 내려받아 테스트한 파일과 바이트 일치를 확인했습니다. [공개 자산 기록](public-release.json). 제품 소스 커밋은 `6c51bc6a9cb965a3dda1765b14696fa1dbb519c4`입니다.
