@@ -65,6 +65,4 @@ skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 
 원본 코드·문서·DB는 읽기만 합니다. 다만 스킬 자체가 쓰기 권한을 차단하는 보안 장치는 아니므로 회사 시스템에는 읽기 전용 권한을 사용하세요.
 
-현재 버전은 **0.4.1 Preview**입니다. 설치·파일 구조는 검증했지만 회사별 연결과 AI 답변·지식 병합 품질을 모두 검증한 상태는 아닙니다. [검증 범위 →](docs/skills/verification.md)
-
 [전체 문서 →](docs/README.md) · [스킬 다운로드 →](https://github.com/thisisnew/dougle/releases/tag/v0.4.1-skills-preview.1)
