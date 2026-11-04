@@ -6,6 +6,6 @@
 - `dougle-reload`: 기존 자료의 명시적 갱신. 변경·동일·부분·접근 실패·삭제 확인을 구분.
 - `dougle-ask`: 저장된 맥락으로 관련 근거를 찾고 원본을 확인해 답변. 업무 지식과 정정 반영.
 
-[설치](install.md) · [연결](connections.md) · [정리 방식](architecture.md) · [검증](verification.md) · [개발](development.md)
+[설치](install.md) · [사용 예시](usage.md) · [연결](connections.md) · [갱신](reload.md) · [정리 방식](architecture.md) · [검증](verification.md) · [개발](development.md)
 
 실제 호스트 도구/권한이 없는 서비스를 설치만으로 읽을 수는 없습니다. 원본 읽기 전용은 호스트 권한과 스킬 절차로 지킵니다. 이전 실행기의 테스트 수치는 현재 스킬 동작을 증명하지 않습니다.

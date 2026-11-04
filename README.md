@@ -19,6 +19,14 @@ Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`, `s
 
 ## 사용
 
+| 작업 | Claude 플러그인 | Codex |
+|---|---|---|
+| 자료 연결 | `/dougle:dougle-connect` | `$dougle-connect` |
+| 질문 | `/dougle:dougle-ask` | `$dougle-ask` |
+| 자료 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
+
+[명령별 예시](docs/skills/usage.md)
+
 ```text
 더글로 현재 프로젝트랑 이 컨플루언스·노션 문서를 연결해.
 
@@ -27,6 +35,9 @@ Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`, `s
 입하 확정할 때 어떤 테이블에 데이터가 들어가?
 
 그건 예전 방식이야. 지금은 검수를 별도로 처리해. 기억해 줘.
+
+dougle-reload 컨플루언스 입하 설계 문서
+dougle-reload 전체
 ```
 
 - **connect:** 자연어로 자료 요청 → 기존 등록 여부 확인 → 호스트 도구로 읽기 → 출처와 업무 개념 정리.

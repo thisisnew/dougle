@@ -4,6 +4,7 @@
 
 - [제품 개요](skills/README.md)
 - [설치](skills/install.md)
+- [명령과 사용 예시](skills/usage.md)
 - [자료 갱신](skills/reload.md)
 - [자료 연결·중복 처리](skills/connections.md)
 - [지식 정리 절차](skills/architecture.md)

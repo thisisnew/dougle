@@ -19,13 +19,13 @@ Codex에 다음처럼 요청할 수 있습니다.
 
 > thisisnew/dougle 저장소의 skills/dougle-connect, skills/dougle-ask, skills/dougle-reload를 설치해 줘.
 
-또는 [배포 파일](https://github.com/thisisnew/dougle/releases/tag/v0.3.1-skills-preview.1)을 풀고 `skills` 안 세 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask`, `$dougle-reload`로 선택하거나 이름으로 요청합니다. 새 세션이 필요할 수 있습니다. [공식 스킬 위치 안내](https://learn.chatgpt.com/docs/build-skills)
+또는 [배포 파일](https://github.com/thisisnew/dougle/releases/tag/v0.3.1-skills-preview.1)을 풀고 `Dougle/skills` 안 세 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask`, `$dougle-reload`로 선택하거나 이름으로 요청합니다. 새 세션이 필요할 수 있습니다. [공식 스킬 위치 안내](https://learn.chatgpt.com/docs/build-skills)
 
 플러그인 ZIP에는 `.codex-plugin/plugin.json`도 포함하지만 Codex 버전별 UI/마켓플레이스 명령을 동일하다고 가정하지 않습니다. 기본 호환 경로는 세 표준 스킬 폴더 설치입니다.
 
 ## 기존 버전
 
-0.2.0 개인 스킬 폴더를 사용했다면 사용자 수정본을 먼저 확인하고 해당 세 폴더를 새 Markdown 전용 폴더로 교체하세요. Python 실행 파일을 새 폴더에 남겨두지 마세요. Claude에서는 개인 스킬과 플러그인을 동시에 설치하면 중복 명령이 생길 수 있으므로 사용하는 설치 방식 하나를 선택하세요.
+0.2.0 개인 스킬을 사용했다면 사용자 수정본을 먼저 확인하고 기존 `dougle-connect`·`dougle-ask` 두 폴더를 교체한 뒤 새 `dougle-reload` 폴더를 추가하세요. 0.3.0에서도 `dougle-reload`를 추가하고 기존 두 스킬을 함께 갱신하세요. Python 실행 파일을 새 폴더에 남겨두지 마세요. Claude에서는 개인 스킬과 플러그인을 동시에 설치하면 중복 명령이 생길 수 있으므로 사용하는 설치 방식 하나를 선택하세요.
 
 예전 SQLite 데이터는 `~/Library/Application Support/Dougle Skills/`에 남아 있습니다. 새 스킬은 이를 자동으로 읽거나 삭제하지 않습니다. 원본 자료를 다시 연결하면 새 Markdown 기억을 만듭니다. 자료 연결 정보/본문을 무단으로 다른 곳에 복사하지 않습니다.
 
