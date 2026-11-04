@@ -21,6 +21,15 @@ skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
 skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 ```
 
+### 이미 설치했다면: 업데이트 → 리로드
+
+1. Claude 플러그인 관리에서 **dougle을 업데이트**합니다.
+2. **플러그인을 리로드**합니다. 새 명령이 안 보이면 새 세션을 시작하세요.
+
+리로드만으로 새 버전을 다운로드하지는 않습니다. Codex나 폴더 설치는 스킬 파일을 최신 버전으로 갱신한 뒤 새 세션에서 확인하세요.
+
+[업데이트 방법과 자료 갱신의 차이 →](docs/skills/install.md#새-버전으로-업데이트하기)
+
 ## 2. 자료 연결하기
 
 프로젝트 폴더에서 AI를 실행하고 요청하세요. 아래는 Claude 플러그인 기준입니다.
