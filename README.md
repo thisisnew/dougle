@@ -21,14 +21,83 @@ skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
 skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 ```
 
-### 이미 설치했다면: 업데이트 → 리로드
+## 이미 설치했다면: 사용하는 AI에 맞춰 업데이트
 
-1. Claude 플러그인 관리에서 **dougle을 업데이트**합니다.
-2. **플러그인을 리로드**합니다. 새 명령이 안 보이면 새 세션을 시작하세요.
+### Claude Code: 플러그인으로 설치한 경우
 
-리로드만으로 새 버전을 다운로드하지는 않습니다. Codex나 폴더 설치는 스킬 파일을 최신 버전으로 갱신한 뒤 새 세션에서 확인하세요.
+**1. 터미널에서 아래 두 명령을 순서대로 실행하세요.** Claude 대화 입력창이 아니라 일반 터미널에 입력합니다.
 
-[업데이트 방법과 자료 갱신의 차이 →](docs/skills/install.md#새-버전으로-업데이트하기)
+```sh
+claude plugin marketplace update dougle-marketplace
+claude plugin update dougle@dougle-marketplace
+```
+
+평소 `claude-work`로 실행한다면 위 명령의 `claude`도 `claude-work`로 바꾸세요. 같은 실행 명령을 사용해야 회사 설정을 유지할 수 있습니다.
+
+**2. 실행 중인 Claude 대화창에서 입력하세요.**
+
+```text
+/reload-plugins
+```
+
+이 명령을 지원하지 않는 버전이면 Claude를 종료하고 평소 쓰는 명령(`claude` 또는 `claude-work`)으로 다시 실행하세요.
+
+**3. Claude 대화창에서 `/dougle:`을 입력해 새 명령을 확인하세요.** 예: `/dougle:dougle-fetch`.
+
+**여전히 안 보이면** 터미널에서 설치 상태를 확인하세요.
+
+```sh
+claude plugin list
+```
+
+| 확인 결과 | 대처 |
+|---|---|
+| `dougle`이 목록에 없음 | `claude plugin install dougle@dougle-marketplace` 실행 |
+| 마켓플레이스를 찾지 못함 | `claude plugin marketplace add thisisnew/dougle` 실행 후 업데이트 재시도 |
+| Scope가 `project` 또는 `local` | 설치한 프로젝트 폴더에서 업데이트 명령 끝에 `--scope project` 또는 `--scope local`을 붙여 실행 |
+| 비활성 상태 | `claude plugin enable dougle@dougle-marketplace` 실행 후 리로드 |
+| 설치돼 있는데 명령이 없음 | Claude 대화창에서 `/plugin`의 Errors 항목 확인. 개인 스킬과 플러그인이 중복 설치됐는지도 확인 |
+
+위 확인·설치 명령도 회사 실행명이 다르면 `claude`를 해당 이름으로 바꾸세요. 관리자가 관리하는 설치는 관리자에게 업데이트를 요청하세요.
+
+### Codex: 스킬 폴더로 설치한 경우
+
+**1. Codex 대화창에 아래 요청을 그대로 입력하세요.**
+
+```text
+https://github.com/thisisnew/dougle 의 최신 main 기준으로
+현재 설치된 dougle-connect, dougle-ask, dougle-reload,
+dougle-publish, dougle-fetch 다섯 스킬을 갱신해 줘.
+
+실제로 로드되는 설치 경로를 먼저 확인하고 그 위치를 업데이트해.
+개인 수정본은 보존하고, ~/.dougle/의 업무 지식은 건드리지 마.
+완료 후 다섯 SKILL.md와 참조 파일이 최신 저장소와 일치하는지 확인해.
+```
+
+**2. Codex를 다시 실행하고 `$dougle-fetch`를 입력해 확인하세요.**
+
+안 보이면 Codex에 아래 요청을 보내세요.
+
+```text
+현재 세션에서 dougle-fetch가 안 보여.
+실제 스킬 검색 경로에 dougle-fetch/SKILL.md가 있는지,
+다른 위치의 이전 설치본과 중복되거나 형식 오류가 있는지 확인해 줘.
+저장된 업무 지식은 변경하지 마.
+```
+
+### Claude Code: 개인 스킬 폴더로 설치한 경우
+
+`~/.claude/skills/`에 직접 설치했다면 플러그인 업데이트 명령으로 갱신되지 않습니다. **위 Codex의 갱신 요청을 Claude 대화창에 입력한 뒤 새 세션을 시작하세요.** 확인할 명령은 접두사 없는 `/dougle-fetch`입니다.
+
+### 업데이트와 리로드의 차이
+
+| 작업 | 하는 일 |
+|---|---|
+| 플러그인 업데이트·스킬 파일 갱신 | GitHub의 새 스킬 파일을 받음 |
+| 플러그인·스킬 리로드 | 현재 설치된 파일을 세션에 다시 반영 |
+| `dougle-reload` | 연결한 회사 자료를 다시 읽어 업무 지식을 갱신 |
+
+**새 기능을 받으려면 파일 업데이트가 먼저입니다.** 플러그인 리로드 후 스킬 리로드까지 따로 반복할 필요는 보통 없습니다.
 
 ## 2. 자료 연결하기
 
