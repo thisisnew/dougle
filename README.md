@@ -1,70 +1,66 @@
 # Dougle · 더글
 
-**평소 쓰는 AI가 회사 자료를 읽고, 업무 지식으로 정리하고, 근거를 찾아 답하도록 하는 스킬 모음.**
+**회사 자료를 연결하고, 평소 쓰는 AI에게 업무를 물어보세요.**
 
-더글은 실행 프로그램이 아닙니다. Python·Node·Java·SQLite·별도 서버나 모델을 설치하지 않습니다. 스킬에 자료 정리 절차를 담고, 현재 AI가 가진 파일·검색·서비스 조회 도구를 사용합니다.
+더글은 Claude Code·Codex에서 쓰는 스킬 모음입니다. AI가 코드·문서·DB를 읽고, 출처와 업무 지식을 파일에 정리해 다음 질문에도 참고합니다.
 
-## 설치
+## 1. 설치하기
 
-Claude Code에서:
+**Claude Code**에 아래 두 줄을 차례로 입력하세요.
 
 ```text
 /plugin marketplace add thisisnew/dougle
 /plugin install dougle@dougle-marketplace
 ```
 
-사용 명령은 `/dougle:dougle-connect`, `/dougle:dougle-ask`, `/dougle:dougle-reload`, `/dougle:dougle-publish`, `/dougle:dougle-fetch`입니다.
-
-Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`, `skills/dougle-reload`, `skills/dougle-publish`, `skills/dougle-fetch`를 스킬로 설치해 달라고 요청하세요. 또는 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.4.0-skills-preview.1)의 `skills` 안 다섯 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask`, `$dougle-reload`, `$dougle-publish`, `$dougle-fetch` 또는 이름으로 요청하면 됩니다. [상세 설치 안내](docs/skills/install.md)
-
-## 사용
-
-| 작업 | Claude 플러그인 | Codex |
-|---|---|---|
-| 자료 연결 | `/dougle:dougle-connect` | `$dougle-connect` |
-| 질문 | `/dougle:dougle-ask` | `$dougle-ask` |
-| 자료 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
-| 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
-| 지식 가져오기·병합 | `/dougle:dougle-fetch` | `$dougle-fetch` |
-
-[명령별 예시](docs/skills/usage.md)
+**Codex**를 쓴다면 아래 요청을 붙여 넣으세요.
 
 ```text
-더글로 현재 프로젝트랑 이 컨플루언스·노션 문서를 연결해.
-
-이 DB도 같이 참고해. 연결이 안 되면 필요한 설정을 알려줘.
-
-입하 확정할 때 어떤 테이블에 데이터가 들어가?
-
-그건 예전 방식이야. 지금은 검수를 별도로 처리해. 기억해 줘.
-
-dougle-reload 컨플루언스 입하 설계 문서
-dougle-reload 전체
+https://github.com/thisisnew/dougle 저장소에서
+skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
+skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
 ```
 
-- **connect:** 자연어로 자료 요청 → 기존 등록 여부 확인 → 호스트 도구로 읽기 → 출처와 업무 개념 정리.
-- **reload:** 연결한 자료를 명시적으로 다시 읽고 변경된 업무 지식 갱신. 예: `dougle-reload 전체`, `dougle-reload 컨플루언스 입하 설계`.
-- **ask:** 관련 기억으로 찾을 곳을 좁히고 원본을 재확인 → 근거 기반 답변 → 필요한 지식·정정 반영.
-- 같은 자료는 재사용/갱신합니다. 사용자가 중복 여부를 먼저 확인할 필요 없습니다.
-- 연결할 수 없으면 호스트 AI가 도구 부재·로그인·권한·일시 오류를 구분해 안내합니다. 실제 읽기 전에는 연결 완료로 표현하지 않습니다.
-- 서비스 종류를 고정하지 않습니다. 사용 가능한 **인증된 읽기 도구**가 있어야 해당 서비스를 읽을 수 있습니다.
+더글용 Python·Node·서버는 필요 없습니다. [다른 설치 방법과 업데이트 →](docs/skills/install.md)
 
-[자료 갱신 방법](docs/skills/reload.md)
+## 2. 자료 연결하기
 
-## 팀 지식 공유
+프로젝트 폴더에서 AI를 실행하고 요청하세요. 아래는 Claude 플러그인 기준입니다.
 
-`dougle-publish owner/team-knowledge`로 선택한 정제 지식을 지정 저장소에 공유하고, `dougle-fetch owner/team-knowledge`로 기존 지식과 병합합니다. 기본 대상은 전용 `dougle-knowledge` 브랜치의 `knowledge/<project-id>/`입니다. 개인 경로·인증정보·원본 전체·DB 행은 올리지 않습니다. 원격과 로컬의 추가/정정/충돌을 함께 보존하며 강제 덮어쓰지 않습니다. [공유·병합 규칙](docs/skills/sharing.md)
+```text
+/dougle:dougle-connect 현재 프로젝트 코드를 읽고 입하 업무를 정리해 줘.
+```
 
-저장소를 지정하지 않았다면 대상부터 묻습니다. 사용자 지식을 임의로 공개 더글 저장소에 올리지 않습니다.
+문서 URL이나 DB 설명도 자유롭게 덧붙일 수 있습니다. 이미 등록한 자료인지 확인할 필요는 없습니다. 더글이 기존 기록을 찾아 재사용하거나 갱신합니다.
 
-## 업무 기억
+**자료를 읽으려면 AI에 해당 서비스의 조회 도구와 접근 권한이 있어야 합니다.** 연결이 안 되면 필요한 설정을 안내합니다. [연결이 안 될 때 →](docs/skills/connections.md)
 
-AI가 `~/.dougle/workspaces/` 아래 Markdown에 출처·업무 개념·규칙·문서/코드/API/테이블 관계를 정리합니다. 두 AI가 같은 작업 공간을 사용하면 같은 파일을 읽습니다. 별도 지식 열람 UI는 없습니다. 원본 변경과 사용자 정정의 처리 절차도 스킬에 포함됩니다.
+## 3. 질문하기
 
-더글 전용 런타임이 강제하는 DB 제약이나 자동 색인/감시 기능은 없습니다. 중복 검사·근거 갱신은 호스트 AI가 수행하는 절차입니다. 동시에 여러 AI가 같은 기억을 쓰는 것은 피해야 합니다. 스킬이 호스트 전체를 샌드박싱하지 않으므로 회사 시스템은 읽기 전용 계정·권한을 사용하세요.
+```text
+/dougle:dougle-ask 입하 확정할 때 어느 테이블에 데이터가 들어가?
+```
 
-## 문서와 검증
+같은 대화에서는 “그럼 어느 코드를 보면 돼?”처럼 이어서 물어보세요. 답변은 근거를 바탕으로 하며, 확인된 사실과 해석을 구분합니다.
 
-[설치](docs/skills/install.md) · [연결·중복 처리](docs/skills/connections.md) · [자료 정리 방식](docs/skills/architecture.md) · [검증 범위](docs/skills/verification.md) · [개발](docs/skills/development.md)
+## 필요할 때 꺼내 쓰기
 
-0.2.0의 Python/SQLite 구현은 철회했습니다. 기존 저장 데이터는 삭제하거나 자동 이전하지 않습니다. 이전 앱 코드는 보존된 이력이며 현재 스킬 설치에 사용하지 않습니다. 새 버전의 검증을 과거 앱/실행기 테스트 수치로 대신하지 않습니다.
+| 하고 싶은 일 | Claude 플러그인 | Codex |
+|---|---|---|
+| 자료 연결 | `/dougle:dougle-connect` | `$dougle-connect` |
+| 업무 질문 | `/dougle:dougle-ask` | `$dougle-ask` |
+| 바뀐 자료 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
+| 팀에 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
+| 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
+
+[복사해서 쓰는 예시 →](docs/skills/usage.md) · [자료 갱신 →](docs/skills/reload.md) · [팀 공유 →](docs/skills/sharing.md)
+
+## 기억은 어디에 남나요?
+
+`~/.dougle/workspaces/`에 Markdown 파일로 저장합니다. **저장된 지식은 터미널이나 대화 세션을 닫아도 남습니다.** 같은 PC의 같은 작업 공간을 쓰는 AI가 다시 참고할 수 있습니다. 전체 채팅이 자동으로 옮겨지는 것은 아닙니다.
+
+원본 코드·문서·DB는 읽기만 합니다. 다만 스킬 자체가 쓰기 권한을 차단하는 보안 장치는 아니므로 회사 시스템에는 읽기 전용 권한을 사용하세요.
+
+현재 버전은 **0.4.0 Preview**입니다. 설치·파일 구조는 검증했지만 회사별 연결과 AI 답변·지식 병합 품질을 모두 검증한 상태는 아닙니다. [검증 범위 →](docs/skills/verification.md)
+
+[전체 문서 →](docs/README.md) · [스킬 다운로드 →](https://github.com/thisisnew/dougle/releases/tag/v0.4.0-skills-preview.1)
