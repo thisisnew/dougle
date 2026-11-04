@@ -34,3 +34,5 @@ Apply the organization protocol rather than copying entire files or dumping tool
 The host writes only the Dougle memory directory. If permitted persistent storage is unavailable, continue read-only work and say that context was not saved. Do not change host permissions or project instruction files to enable this skill.
 
 Report connection outcome and significant gaps briefly. Do not expose an internal knowledge browser. If continuation choices are useful, offer only `1 계속 연결하기` and `0 이전으로`. Going back retains connections; do not add a question shortcut.
+
+For an explicit refresh of existing material, use the companion dougle-reload skill when available. A normal question still verifies its relevant evidence; it does not trigger a full-workspace reload.

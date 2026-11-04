@@ -13,9 +13,9 @@ Claude Code에서:
 /plugin install dougle@dougle-marketplace
 ```
 
-사용 명령은 `/dougle:dougle-connect`, `/dougle:dougle-ask`입니다.
+사용 명령은 `/dougle:dougle-connect`, `/dougle:dougle-ask`, `/dougle:dougle-reload`입니다.
 
-Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`를 스킬로 설치해 달라고 요청하세요. 또는 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.3.0-skills-preview.1)의 `skills` 안 두 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask` 또는 이름으로 요청하면 됩니다. [상세 설치 안내](docs/skills/install.md)
+Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`, `skills/dougle-reload`를 스킬로 설치해 달라고 요청하세요. 또는 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.3.1-skills-preview.1)의 `skills` 안 세 폴더를 `~/.agents/skills/`에 복사하세요. `$dougle-connect`, `$dougle-ask`, `$dougle-reload` 또는 이름으로 요청하면 됩니다. [상세 설치 안내](docs/skills/install.md)
 
 ## 사용
 
@@ -30,10 +30,13 @@ Codex에서는 이 저장소의 `skills/dougle-connect`, `skills/dougle-ask`를 
 ```
 
 - **connect:** 자연어로 자료 요청 → 기존 등록 여부 확인 → 호스트 도구로 읽기 → 출처와 업무 개념 정리.
+- **reload:** 연결한 자료를 명시적으로 다시 읽고 변경된 업무 지식 갱신. 예: `dougle-reload 전체`, `dougle-reload 컨플루언스 입하 설계`.
 - **ask:** 관련 기억으로 찾을 곳을 좁히고 원본을 재확인 → 근거 기반 답변 → 필요한 지식·정정 반영.
 - 같은 자료는 재사용/갱신합니다. 사용자가 중복 여부를 먼저 확인할 필요 없습니다.
 - 연결할 수 없으면 호스트 AI가 도구 부재·로그인·권한·일시 오류를 구분해 안내합니다. 실제 읽기 전에는 연결 완료로 표현하지 않습니다.
 - 서비스 종류를 고정하지 않습니다. 사용 가능한 **인증된 읽기 도구**가 있어야 해당 서비스를 읽을 수 있습니다.
+
+[자료 갱신 방법](docs/skills/reload.md)
 
 ## 업무 기억
 

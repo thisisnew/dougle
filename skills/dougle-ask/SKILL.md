@@ -23,3 +23,5 @@ If sources are not connected, explain that the user can ask Dougle to connect th
 A user correction records the user's actual statement as reported, supersedes the same topic claim where appropriate, and preserves conflicting source evidence until checked. A material change invalidates dependent claims, not all unrelated knowledge. On a disconnect request remove the source from active use and mark its dependent claims unavailable; do not delete the original. Both operations update only Dougle memory.
 
 This is a skill workflow, not a global sandbox. Use read-only business credentials and the host's permissions. Do not use unrestricted shell/SQL to bypass a missing reader. If persistence is disallowed, answer from available evidence and state that memory was not updated.
+
+For an explicit refresh of existing material, use the companion dougle-reload skill when available. A normal question still verifies its relevant evidence; it does not trigger a full-workspace reload.

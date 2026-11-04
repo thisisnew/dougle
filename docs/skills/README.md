@@ -1,8 +1,9 @@
-# Dougle Skills 0.3.0
+# Dougle Skills 0.3.1
 
 스킬이 자료 정리·검색·기억 갱신 방법을 제공하고, 실행은 현재 호스트 AI의 기존 도구에 맡깁니다. Python/SQLite 기반0.2.0 실행기는 제거했습니다.
 
 - `dougle-connect`: 자유로운 자료 요청, 중복 확인, 읽기, 정리. 접근 실패 시 호스트 설정 안내.
+- `dougle-reload`: 기존 자료의 명시적 갱신. 변경·동일·부분·접근 실패·삭제 확인을 구분.
 - `dougle-ask`: 저장된 맥락으로 관련 근거를 찾고 원본을 확인해 답변. 업무 지식과 정정 반영.
 
 [설치](install.md) · [연결](connections.md) · [정리 방식](architecture.md) · [검증](verification.md) · [개발](development.md)
