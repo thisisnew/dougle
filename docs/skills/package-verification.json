@@ -1,14 +1,14 @@
 {
-  "version": "0.6.1",
-  "files": 48,
-  "archiveBytes": 128265,
-  "sha256": "15f121904b3d8d13c6593b7b4c6b2a329732875760ecf7c3d9e3e41621afa2c7",
-  "structuralChecks": 250,
+  "version": "0.6.2",
+  "files": 49,
+  "archiveBytes": 132143,
+  "sha256": "d3019295d8d06a824d940dedf4cbb51331c40a7ea1ad40df3837b07829d56397",
+  "structuralChecks": 255,
   "scheduleFormatCheck": "PASS",
   "manifestChecks": "PASS",
   "localScheduleCopies": "PASS with backups",
-  "nativeSyntheticManagementCases": "12/12 manually matched",
-  "additionalIndependentReview": "two lifecycle crash fixes, instruction-level review",
-  "actualTimerStateAndSlackRuntime": "NOT_VERIFIED",
+  "nativeSyntheticMenuCases": "12/12 manually matched",
+  "additionalIndependentReview": "delete intent approval gate patched and reviewed",
+  "actualSlackTimerAndMenuRuntime": "NOT_VERIFIED",
   "realSlackPosts": 0
 }

@@ -19,7 +19,7 @@
 - 원본은 읽기만 합니다. schedule의 승인된 Slack 답글 게시만 별도 예외입니다. 권한을 강제하는 장치는 아니므로 읽기 전용 계정을 사용하세요.
 - 관련 자료는 기본 1시간 간격을 기준으로 질문 시 갱신합니다. 자료 전체의 자동 갱신은 하지 않습니다. Slack 문의 감시는 별도 `dougle-schedule`로 실행합니다.
 
-현재 버전은 **0.6.1 Preview**입니다. [검증된 범위](verification.md) · [내부 구조](architecture.md)
+현재 버전은 **0.6.2 Preview**입니다. [검증된 범위](verification.md) · [내부 구조](architecture.md)
 
 [문맥 최적화와 정확도 비교](context-optimization.md)
 

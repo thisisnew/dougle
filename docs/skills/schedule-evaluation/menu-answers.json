@@ -1,0 +1,74 @@
+[
+  {
+    "id": "M01",
+    "action": "Show entry menu: 1. 목록 / 2. 등록 / 3. 삭제 / 0. 나가기; wait.",
+    "canPost": false,
+    "reason": "No arguments open the menu without listing, scanning or scheduling."
+  },
+  {
+    "id": "M02",
+    "action": "Ask for the Slack channel URL; default to five minutes.",
+    "canPost": false,
+    "reason": "Registration needs a channel; no interval question is needed."
+  },
+  {
+    "id": "M03",
+    "action": "Bypass menu; complete setup checks and register one verified five-minute draft-only timer.",
+    "canPost": false,
+    "reason": "A new verified channel uses the default cadence; registration does not authorize posting."
+  },
+  {
+    "id": "M04",
+    "action": "Report existing monitor status and preserve its ten-minute interval.",
+    "canPost": false,
+    "reason": "An existing active channel must not create a duplicate or reset cadence."
+  },
+  {
+    "id": "M05",
+    "action": "Verify ownership, state and generation G; run one bounded draft-only check if valid, otherwise exit.",
+    "canPost": false,
+    "reason": "Timer callbacks bypass menus and never consume posting approval."
+  },
+  {
+    "id": "M06",
+    "action": "Exit the menu; leave both monitors unchanged.",
+    "canPost": false,
+    "reason": "Menu exit does not stop monitors."
+  },
+  {
+    "id": "M07",
+    "action": "Complete deletion records and archive the selected monitor, retaining history and delivery evidence.",
+    "canPost": false,
+    "reason": "The selection authorizes removal, and owned timer cancellation is verified."
+  },
+  {
+    "id": "M08",
+    "action": "Keep deletion_pending visible, revoke approvals and report cancellation uncertainty.",
+    "canPost": false,
+    "reason": "A timeout does not establish cancellation; polling and sending remain blocked."
+  },
+  {
+    "id": "M09",
+    "action": "Refresh the list and request a new row selection.",
+    "canPost": false,
+    "reason": "A stale number must not target a different channel."
+  },
+  {
+    "id": "M10",
+    "action": "Request a valid Slack channel link.",
+    "canPost": false,
+    "reason": "Unsupported URLs do not authorize website fetching or monitoring."
+  },
+  {
+    "id": "M11",
+    "action": "Clarify whether to track the thread or the entire channel.",
+    "canPost": false,
+    "reason": "A message permalink does not authorize broader channel monitoring."
+  },
+  {
+    "id": "M12",
+    "action": "Show the archived record and offer explicit reactivation of the same ID; preserve checkpoints and unknown delivery.",
+    "canPost": false,
+    "reason": "Pasting the URL does not reactivate it; unknown delivery requires reconciliation before any future send."
+  }
+]

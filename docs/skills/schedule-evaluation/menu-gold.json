@@ -1,0 +1,14 @@
+{
+  "M01": "show1list2register3delete0exit, no Slack or timer work",
+  "M02": "ask channelURL only,5minute default",
+  "M03": "register5minute via actual checks, no menu",
+  "M04": "status no duplicate, keep10minutes",
+  "M05": "tick without menu or waiting for input",
+  "M06": "exit menu only, no stop",
+  "M07": "stop revoke thenarchive, retain history and unknown receipts, no Slack message deletion",
+  "M08": "deletion_pending visible, no claim deleted, callbacks no work",
+  "M09": "refresh and new selection, no action on wrong target",
+  "M10": "request Slack channel URL, no universal poller",
+  "M11": "clarify thread vs channel before broadening",
+  "M12": "offer sameID reactivation; no implicit start/clearing receipt"
+}

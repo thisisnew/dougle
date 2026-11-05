@@ -99,12 +99,12 @@ fetch는 기존 지식을 통째로 덮어쓰지 않고 출처·정정·충돌�
 전용 AI 세션에서 실행하세요. **기본 5분마다 새 문의를 확인하고, 승인한 답변만 게시합니다.**
 
 ```text
-/dougle:dougle-schedule #입하문의 채널을 확인하고 답변을 준비해 줘.
+/dougle:dougle-schedule
 ```
 
 기존 Slack MCP와 호스트의 주기 실행 기능이 필요합니다. 더글이 작성하는 Slack 댓글 끝에는 **✦ dougle**을 붙입니다.
 
-스케줄 설정·이력·대기 초안은 로컬에 남습니다. 새 세션에서 `/dougle:dougle-schedule 목록`으로 확인하고 `<id> 재개`로 이어갈 수 있습니다. [사용법·VDI 조회·지원 환경](docs/skills/schedule.md)
+실행하면 **1. 목록 / 2. 등록 / 3. 삭제 / 0. 나가기** 메뉴가 나옵니다. Slack 채널 URL을 붙여 실행하면 기본5분으로 바로 등록합니다. 설정·이력·대기 초안은 로컬에 남고, 목록에서 번호를 골라 재개할 수 있습니다. [사용법·VDI 조회·지원 환경](docs/skills/schedule.md)
 
 ## 질문에서 답변까지
 
@@ -196,4 +196,4 @@ dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 �
 
 저장된 지식은 세션을 닫아도 남습니다. [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
-[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.6.1-skills-preview.1)
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.6.2-skills-preview.1)

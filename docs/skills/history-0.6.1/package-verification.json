@@ -1,0 +1,14 @@
+{
+  "version": "0.6.1",
+  "files": 48,
+  "archiveBytes": 128265,
+  "sha256": "15f121904b3d8d13c6593b7b4c6b2a329732875760ecf7c3d9e3e41621afa2c7",
+  "structuralChecks": 250,
+  "scheduleFormatCheck": "PASS",
+  "manifestChecks": "PASS",
+  "localScheduleCopies": "PASS with backups",
+  "nativeSyntheticManagementCases": "12/12 manually matched",
+  "additionalIndependentReview": "two lifecycle crash fixes, instruction-level review",
+  "actualTimerStateAndSlackRuntime": "NOT_VERIFIED",
+  "realSlackPosts": 0
+}

@@ -141,3 +141,9 @@ User requested persisted local list/history/restore after terminal updates; inte
 Native Codex1 synthetic12-case management run manually matched expected actions, no real services/store actions; external completed models186→187/200. Separate independent review covers two added crash cases. Structural250; business skill format and manifests checked. Real timer/state persistence/Slack company E2E unverified.
 
 0.6.1 published at v0.6.1-skills-preview.1, source f9f5b29cb797b38c1935f7b97ff39f8e154f0153. Anonymous ZIP/checksum match locally verified assets;48files128265bytes. Local schedule skill copies refreshed with backups. Independent final review confirmed two crash fixes at instruction level. Real timer/Slack/state recovery E2E remains unverified.
+
+## 0.6.2 conversational menu and direct Slack URL
+
+User wants bare invocation menu1list2register3delete0exit, direct URL5min registration. Added menu.md plus routing and per-row management. Existing direct commands retained; timer checks never enter UI. URL is Slack channel URL, not arbitrary web crawler; message links require scope clarification. Existing channel preserves interval/identity, deleted record not implicitly reactivated. Delete stops verified owned timer then archives with history/unknown receipts retained; failures stay deletion_pending visible and old callbacks blocked. Independent review identified delete-intent approval gap; positive active state and no unfinished stop/pause/delete gating added before accepting or sending.
+
+Native Codex1 synthetic12-case menu run matched expected decisions (external completed187→188/200). No actual user-store/Slack/timer actions. Structural255, format schedule and manifests pass; real host menu/tool/timer runtime unverified.

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "M01",
+    "scenario": "User invokes /dougle:dougle-schedule with no arguments. No prior menu."
+  },
+  {
+    "id": "M02",
+    "scenario": "After entry menu local user selects2. No channel supplied."
+  },
+  {
+    "id": "M03",
+    "scenario": "Direct URL https://example.slack.com/archives/C0123456789 points to a new verified channel; dedicated session and scheduler available."
+  },
+  {
+    "id": "M04",
+    "scenario": "Same direct URL resolves existing active monitor interval10minutes."
+  },
+  {
+    "id": "M05",
+    "scenario": "Timer callback invokes check ID generation G."
+  },
+  {
+    "id": "M06",
+    "scenario": "Local user selects0in entry menu while two monitors are running."
+  },
+  {
+    "id": "M07",
+    "scenario": "User chooses3delete, sees rows and selects one unambiguous channel; owned timer cancellation verified."
+  },
+  {
+    "id": "M08",
+    "scenario": "Delete selected channel; owned timer cancel result times out."
+  },
+  {
+    "id": "M09",
+    "scenario": "Rows changed between display and numeric selection; row2now another channel."
+  },
+  {
+    "id": "M10",
+    "scenario": "User pastes https://example.com/docs into direct schedule invocation."
+  },
+  {
+    "id": "M11",
+    "scenario": "User pastes a Slack message permalink; channel-wide permission not established."
+  },
+  {
+    "id": "M12",
+    "scenario": "Direct channel URL resolves archived schedule with past unknown delivery."
+  }
+]

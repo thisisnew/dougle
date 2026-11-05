@@ -1,0 +1,21 @@
+{
+  "version": "0.6.2",
+  "evaluation": "native Codex synthetic menu decisions, manually reviewed",
+  "cases": 12,
+  "expectedDecisionMatches": 12,
+  "actualSlackTimerCalls": 0,
+  "actualUserStoreActions": 0,
+  "externalCompletedCallsBefore": 187,
+  "externalCompletedCallsAfter": 188,
+  "readCommands": [
+    "/bin/zsh -lc \"cat '/Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/state.md'\"",
+    "/bin/zsh -lc \"cat '/Users/thisisnew/Desktop/dougle/docs/skills/schedule-evaluation/menu-cases.json'\"",
+    "/bin/zsh -lc \"cat '/Users/thisisnew/Desktop/dougle/skills/dougle-schedule/SKILL.md'\"",
+    "/bin/zsh -lc \"cat '/Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/host.md'\"",
+    "/bin/zsh -lc \"cat '/Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/menu.md'\"",
+    "/bin/zsh -lc \"cat '/Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/management.md'\"",
+    "/bin/zsh -lc \"cat '/Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/management.md'\""
+  ],
+  "additionalReview": "approval gate for unresolved delete/archived patched after independent review",
+  "runtime": "NOT_VERIFIED"
+}
