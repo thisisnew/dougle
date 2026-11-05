@@ -131,3 +131,5 @@ User asked about ASCII banner token cost while work ongoing. Recommended one-tim
 Signature steering: user rejected plain by dougle as visually weak. Changed current schedule signature to standalone **✦ dougle** (Slack mrkdwn *✦ dougle*, plain fallback). Approval includes the final signature. Previous synthetic decision evaluation used by dougle; behavioral approval/pagination results predate this presentation-only change. No large banner.
 
 User extended compact signature to ALL Dougle-authored Slack comments, not only schedule. Added common organization rule in all five existing business skills and schedule explicitly loads common rule. Formatting does not grant posting permission; unrelated host actions cannot be globally enforced.
+
+0.6.0 published at v0.6.0-skills-preview.1, source 3925a060a17ac3461990f507a15f0510a14f1785. Anonymous ZIP/checksum downloads byte-match local package;47files123763bytes. Local Codex/Claude copies updated with backups. Native company Slack/timer/posting/VDI still unverified.
