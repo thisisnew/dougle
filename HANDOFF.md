@@ -153,3 +153,5 @@ Native Codex1 synthetic12-case menu run matched expected decisions (external com
 ## 0.6.3 two-minute default
 
 User requests new schedule default2minutes and asks about load. Updated canonical/plugin schedule entry/menu/management/host cron example to2minute /loop2m and */2. Existing saved cadences not migrated; user memory untouched. Documented nominal30vs12checks/hour, per-tick host AI cost even when no ask call, incremental paging/unchanged-draft avoidance, rate-limit backoff and host delay. No new native evaluation required for default/presentation change; earlier synthetic tests preserved with original5minute expectations as historical evidence. Structural/format/manifests/package checked; no real load measurement or actual Slack/timer E2E. External completed model ledger unchanged188/200.
+
+0.6.3 published at v0.6.3-skills-preview.1, source 29ecd8b76458e9f57408d50361cf7692bee099bd. Anonymous ZIP/checksum match;49files132547bytes. Local schedule copies updated/backed up. Actual load/tokens/runtime not measured.
