@@ -42,7 +42,7 @@ Each successful complete scan may add one compact outcome event (window end, new
 
 ## Entry and existing commands
 
-No-argument invocation opens the entry menu in [menu routing](menu.md). Direct Slack channel URL registration bypasses it with5minute default for new channels. The removal menu stops then archives a selected monitor; preserve its history and handle unfinished deletion like unfinished stop. The commands below remain supported for users who already use them.
+No-argument invocation opens the entry menu in [menu routing](menu.md). Direct Slack channel URL registration bypasses it with2minute default for new channels. The removal menu stops then archives a selected monitor; preserve its history and handle unfinished deletion like unfinished stop. The commands below remain supported for users who already use them.
 
 ## Commands users can say
 

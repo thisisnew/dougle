@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.6.2', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.6.3', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]

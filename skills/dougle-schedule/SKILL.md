@@ -5,13 +5,13 @@ description: Monitor a user-designated Slack inquiry channel using existing MCP 
 
 # Dougle schedule
 
-Use the existing Slack connection in a dedicated host AI session. Default polling interval is **5 minutes**; accept an explicit positive whole-minute interval. Ask only for a missing/ambiguous channel or invalid interval. Do not create a Slack app, request tokens in chat, install a daemon, change permissions, or begin monitoring merely because the user requested development of this skill.
+Use the existing Slack connection in a dedicated host AI session. Default polling interval is **2 minutes**; accept an explicit positive whole-minute interval. Ask only for a missing/ambiguous channel or invalid interval. Do not create a Slack app, request tokens in chat, install a daemon, change permissions, or begin monitoring merely because the user requested development of this skill.
 
 Apply the [common organization rules](../dougle-ask/references/organization.md), including the shared Slack signature rule. Read [host scheduling](references/host.md) for start/resume/interval changes and [state and delivery](references/state.md) before any tick, record update or approval. Business originals remain read-only. The only Slack write allowed here is a reply to the selected inquiry after the local user approves its exact final text and destination. No automatic acknowledgements, reactions, channel posts, edits or deletions.
 
 ## Entry
 
-Read [menu and URL routing](references/menu.md) for user-facing invocation, menu selections, URL registration or deletion. With no arguments show1.목록 /2.등록 /3.삭제 /0.나가기 and wait. A verified new Slack channel URL bypasses the menu and requests5minute registration. Timer callbacks `check <id>` bypass all interactive menus.
+Read [menu and URL routing](references/menu.md) for user-facing invocation, menu selections, URL registration or deletion. With no arguments show1.목록 /2.등록 /3.삭제 /0.나가기 and wait. A verified new Slack channel URL bypasses the menu and requests2minute registration. Timer callbacks `check <id>` bypass all interactive menus.
 
 ## Manage existing schedules
 
