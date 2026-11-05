@@ -75,3 +75,5 @@ Claude 플러그인 명령은 /dougle:dougle-fetch, 개인 폴더 설치는 /dou
 사용자가 속도/Lucene 트레이드오프, i-have-adhd 기본 적용, 답변 출처를 요청했다. Lucene은 도입하지 않고 주제·동의어 목차, 정확한 원본 위치, 독립 읽기 묶기, 부족 시 검색 확대를 추가했다. 실제 지연 개선은 미측정. ask는 원본 i-have-adhd(1ecea1993b7fce257ffbd686c070948b5e07eda6)와 MIT 라이선스를 references에 포함하고 답변 전에 읽는다. 독립 스킬 자동 발견에 의존하지 않으며, 문서에서는 독립 명령이 자동 등록된다고 주장하지 않는다. 주장별 원본 출처/코드 위치/DB 조회시각, 간접근거·추론 구분을 강화했다.
 
 사용자가 i-have-adhd 실제 설치와 그 지침에 따른 README 개편을 재차 명시했다. skill-installer로 현재 PC의 ~/.agents/skills/i-have-adhd 및 ~/.claude/skills/i-have-adhd에 고정 커밋을 설치하고 LICENSE.md도 보존했다. 원본 파일 일치 확인. 사용자 다음 턴부터 Codex 스킬로 사용 가능하다고 안내했다. README는 설치→연결→질문, 가상 출처 예시, 모델별 실제 업데이트 명령과 문제 대처를 유지해 정리했다.
+
+0.4.3 공개 완료: v0.4.3-skills-preview.1, 소스9837e88e45c55cbdaf91c37846550e06d5a5a1f2. 구조76·형식5·문서링크58·격리 Claude 설치/활성·번들 지침/라이선스 바이트 확인. ZIP17파일(71,236 bytes)과 체크섬 익명 다운로드 일치 확인. 실제 모델 가독성/출처 준수, 검색 지연 개선은 미측정.
