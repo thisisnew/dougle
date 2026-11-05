@@ -133,8 +133,6 @@ claude plugin marketplace update dougle-marketplace
 claude plugin update dougle@dougle-marketplace
 ```
 
-평소 `claude-work`를 쓴다면 위 명령의 `claude`도 `claude-work`로 바꾸세요.
-
 **2. Claude 대화창**에서 실행하세요.
 
 ```text
