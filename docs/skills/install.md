@@ -40,9 +40,9 @@
    $dougle-connect /path/to/project를 읽고 업무 지식을 정리해 줘.
    ```
 
-직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.7.0-skills-preview.1)을 풀고 `Dougle/skills/` 안의 일곱 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.7.1-skills-preview.1)을 풀고 `Dougle/skills/` 안의 일곱 폴더를 `~/.agents/skills/`에 복사하세요.
 
-설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`도 함께 포함하세요. 독립된 `i-have-adhd/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
+설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`와 `scripts/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 독립된 `i-have-adhd/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 
 ## 설치 후 확인하기
 
@@ -148,7 +148,7 @@ Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설�
 <details>
 <summary>예전 앱이나 0.2.0~0.3.x를 사용했다면</summary>
 
-0.7.0은 connect·ask·reload·publish·fetch·schedule과 답변 정리용 i-have-adhd를 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
+0.7.1은 connect·ask·reload·publish·fetch·schedule과 답변 정리용 i-have-adhd를 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
 
 0.2.0 SQLite 데이터는 `~/Library/Application Support/Dougle Skills/`에 남아 있으며 자동으로 읽거나 삭제하지 않습니다. 원본 자료를 다시 연결하면 새 Markdown 지식을 만듭니다.
 

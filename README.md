@@ -8,6 +8,8 @@
 
 **publish**로 내가 쌓은 지식을 공유하고, **fetch**로 동료의 지식을 가져와 함께 활용합니다.
 
+공유 전 토큰·비밀번호·개인정보 후보를 검사하고, 발견되거나 검사를 완료하지 못하면 게시를 중단합니다.
+
 [처음 설치](#1-설치하기) · [바로 질문](#3-질문하기) · [이미 설치했다면](#업데이트하기) · [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
 ## 1. 설치하기
@@ -198,4 +200,4 @@ dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 �
 
 저장된 지식은 세션을 닫아도 남습니다. [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
-[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.7.0-skills-preview.1)
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.7.1-skills-preview.1)
