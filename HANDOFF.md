@@ -115,3 +115,7 @@ User approved visual-explainer alternative. Installed0.15.0 in ~/.agents/skills/
 ## Remaining current diagrams unified
 
 User requested replacement of remaining diagram-design/other diagram images. Rebuilt ask-flow and replaced active skills architecture/how-it-works Mermaid with knowledge-memory/skill-execution figures. All4 current diagrams now visual-explainer HTML + fixed-font PNG. Removed old ask SVG and unused diagram-design template license; historical app Mermaid and UI evidence screenshots intentionally retained as historical records. Docs-only update.
+
+## 0.5.3 companion invocation visibility
+
+User clarified i-have-adhd must install with Dougle and activate automatically during ask, not be an extra user command. Bundled upstream-based companion retained; user-invocable:false added for Claude menu hiding while model invocation remains enabled. Description/direct-invocation docs corrected. Codex hiding not claimed. Structural229 and Claude manifest validation pass; actual Claude invocation remains unverified due prior authentication failure.

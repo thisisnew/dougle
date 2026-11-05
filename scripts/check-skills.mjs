@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.5.2', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.5.3', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -56,6 +56,7 @@ for (const resource of ['store.md','retrieval.md','records.md','freshness.md','o
 }
 const companion=await readFile(resolve(root,'skills/i-have-adhd/SKILL.md'),'utf8')
 check(!companion.includes('disable-model-invocation:'),'companion model invocation enabled')
+check(companion.includes('user-invocable: false'),'companion hidden from Claude user commands')
 check(await readFile(resolve(root,'skills/i-have-adhd/LICENSE.md'),'utf8')===await readFile(resolve(root,'skills/dougle-ask/references/i-have-adhd-LICENSE.md'),'utf8'),'companion license retained')
 for (const name of ['connect','ask','reload','publish','fetch']) {
  const core=await readFile(resolve(root,`skills/dougle-${name}/references/organization.md`),'utf8')

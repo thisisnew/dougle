@@ -1,6 +1,7 @@
 ---
 name: i-have-adhd
-description: 'Use for Dougle answer presentation when dougle-ask requests this skill, or when the user requests ADHD-friendly formatting. Shape output for a reader with ADHD: lead with the next action, number multi-step work, restate state across turns, suppress tangents, give specific time estimates, make wins visible. Invoke with /i-have-adhd; stays on until "stop adhd mode".'
+description: 'Companion skill automatically invoked by dougle-ask to format evidence-based answers clearly. Not a separate user command.'
+user-invocable: false
 license: MIT
 metadata:
   tags: "ADHD, Output Style, Productivity, Formatting"
@@ -11,7 +12,7 @@ metadata:
 
 ## Dougle integration scope
 
-When invoked by dougle-ask, apply the original rules below to Dougle answers and follow-ups only. This scope overrides the session-wide persistence and diagnostic assumption below: do not infer a medical condition or change unrelated tasks. Lead factual answers with the answer, retain all material evidence/citations/exceptions, and do not invent time estimates. Respect an explicit style opt-out. Do not invoke dougle-ask or this skill recursively. Direct user invocation outside Dougle follows the user's requested scope.
+When invoked by dougle-ask, apply the original rules below to Dougle answers and follow-ups only. This scope overrides the session-wide persistence and diagnostic assumption below: do not infer a medical condition or change unrelated tasks. Lead factual answers with the answer, retain all material evidence/citations/exceptions, and do not invent time estimates. Respect an explicit style opt-out. Do not invoke dougle-ask or this skill recursively. Users invoke dougle-ask; this companion is called internally and requires no separate user command.
 
 Upstream: ayghri/i-have-adhd, commit 1ecea1993b7fce257ffbd686c070948b5e07eda6. This distribution changes invocation metadata and adds this scope; the original rules below are retained. See [MIT license](LICENSE.md).
 
