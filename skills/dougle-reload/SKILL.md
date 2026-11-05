@@ -5,15 +5,15 @@ description: Refresh previously connected Dougle material and its dependent doma
 
 # Dougle reload
 
-Use the current host AI's read/search/file tools. No runtime, server, background watcher or nested AI is needed. Read [the shared organization protocol](references/organization.md) for workspace identity, source records, provenance and update boundaries.
+Use the current host AI's read/search/file tools. No runtime, server, background watcher or nested AI is needed. Read [the shared organization protocol](references/organization.md) for common-store discovery, source records, provenance and update boundaries.
 
 ## Resolve the requested target
 
 Examples: `dougle-reload current project`, `dougle-reload Confluence receiving design`, `dougle-reload all` (including equivalent Korean requests).
 
-Read the workspace index and match registered sources by canonical identity, source ID, label, alias, path or requested service. Do not search the whole company or silently create a source. With no target or an ambiguous match, ask a short question listing relevant existing candidates. If nothing matches, explain that the material must first be connected; do not claim a successful empty reload.
+Read the common index and registered legacy collection indexes and match registered sources by canonical identity, source ID, label, alias, path or requested service. Do not search the whole company or silently create a source. With no target or an ambiguous match, ask a short question listing relevant existing candidates. If nothing matches, explain that the material must first be connected; do not claim a successful empty reload.
 
-"All" means all non-disconnected sources in the current workspace, including pending ones, within their existing authorized scopes. It never means other workspaces or every resource in a company account. "Current project" matches the connected local project scope; explain/clarify competing roots rather than guessing. A folder reload includes new, changed and removed files within its existing scope, excluding generated/dependency/credential material as before. It does not automatically include parent folders or linked external resources.
+"All" means all registered non-disconnected sources discoverable through the common store and its legacy indexes, including pending ones, within their existing authorized scopes. Briefly report the resolved target count/business scopes before processing. It never means unregistered company resources, every file on the PC or another user's store. Resume an old pending reload using its recorded target set; do not expand it merely because the common index now includes other collections. Only an explicit "current project" request uses the actual cwd to match a connected source scope; explain/clarify competing roots rather than guessing. A folder reload includes new, changed and removed files within its existing scope, excluding generated/dependency/credential material as before. It does not automatically include parent folders or linked external resources.
 
 Freeze a short target list before reading. Process registrations/updates sequentially to avoid duplicate memory writers. For a large request, work in bounded batches and keep the exact remaining targets; do not silently reduce scope or claim completion for unprocessed sources.
 
@@ -32,6 +32,6 @@ Freeze a short target list before reading. Process registrations/updates sequent
 
 Give a brief per-source or grouped summary with counts: changed, unchanged (confirmed), refreshed without comparable baseline, partial, access/temporary failure, deletion confirmed, and not processed. Include important affected concepts and unresolved gaps, not a dump of the knowledge store.
 
-Persist each source's completed update separately. On interruption, retain completed work and the remaining target list when permitted; never advance a workspace-wide freshness marker for unfinished work. A retry checks current records again, processes unresolved targets, and does not create duplicate sources. Do not promise automatic retries or monitoring after this conversation ends.
+Persist each source's completed update separately. On interruption, retain completed work and the remaining target list when permitted; never advance a store-wide freshness marker for unfinished work. A retry checks current records again, processes unresolved targets, and does not create duplicate sources. Do not promise automatic retries or monitoring after this conversation ends.
 
 Reload is explicit maintenance and bypasses the interval even for recently checked sources; `dougle-ask` uses the shared ask-time freshness policy and always checks fresh evidence for current-state questions. A completed reload is an observation at a time, not a guarantee that the source cannot change later. Source code, company documents, databases and infrastructure remain read-only; the skill does not globally sandbox the host AI.

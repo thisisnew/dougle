@@ -25,10 +25,10 @@ skills/dougle-publish, skills/dougle-fetch를 참조 파일까지 설치해 줘.
 
 ## 2. 자료 연결하기
 
-프로젝트 폴더에서 AI를 실행하고 요청하세요. 아래는 Claude 플러그인 기준입니다.
+어느 디렉토리에서든 AI를 실행하고 요청하세요. 아래 `/path/to/project`를 실제 자료 폴더 경로로 바꾸면 됩니다. Claude 플러그인 기준입니다.
 
 ```text
-/dougle:dougle-connect 현재 프로젝트 코드를 읽고 입하 업무를 정리해 줘.
+/dougle:dougle-connect /path/to/project 코드를 읽고 입하 업무를 정리해 줘.
 ```
 
 문서 링크나 DB 설명도 그대로 알려주세요. 같은 자료를 다시 요청하면 기존 기록을 찾아 갱신합니다.
@@ -74,7 +74,7 @@ skills/dougle-publish, skills/dougle-fetch를 참조 파일까지 설치해 줘.
 
 ```text
 이 컨플루언스 문서는 일주일마다 확인해 줘.
-현재 작업 공간의 기본 확인 간격을 12시간으로 바꿔 줘.
+더글의 기본 확인 간격을 12시간으로 바꿔 줘.
 ```
 
 갱신에 실패하면 예전 자료를 최신 정보처럼 말하지 않습니다. 전체를 지금 갱신하려면 `/dougle:dougle-reload 전체` 또는 `$dougle-reload 전체`를 쓰세요.
@@ -140,10 +140,14 @@ dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 �
 
 ## 지식은 어디에 남나요?
 
-`~/.dougle/workspaces/`에 업무 개념·규칙·시스템 관계·출처를 Markdown으로 저장합니다. 세션이 끝나도 **저장된 지식은 남습니다.** 전체 대화가 자동 복원되는 것은 아닙니다.
+**어느 디렉토리에서 실행해도 같은 `~/.dougle/` 지식을 사용합니다.** 작업 공간을 따로 만들거나 선택하지 않습니다.
+
+업무 개념·규칙·시스템 관계·출처를 Markdown으로 저장하며, 프로젝트와 서비스는 각 자료의 정보로 구분합니다. 같은 용어가 여러 시스템에 있으면 필요한 경우에만 대상을 확인합니다.
+
+기존 `~/.dougle/workspaces/`의 지식은 삭제하거나 옮기지 않고 공통 목차에 연결해 찾습니다. 세션을 닫아도 **저장된 지식은 남지만 전체 대화가 자동 복원되지는 않습니다.**
 
 질문할 때 주제·동의어 목차로 관련 자료를 좁히고 필요한 근거를 읽습니다. 그래프 DB나 모델 재학습 방식은 아닙니다. [내재화 방식](docs/skills/architecture.md) · [검색 속도와 Lucene 비교](docs/skills/search-performance.md)
 
-원본 자료는 읽기만 합니다. 회사 시스템에는 읽기 전용 권한을 사용하세요.
+“현재 폴더”나 상대 경로를 연결할 때만 실행 위치를 사용합니다. 원본 자료는 읽기만 하며, 호스트의 파일 접근 권한과 회사 서비스의 읽기 권한은 그대로 적용됩니다.
 
-[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.4.3-skills-preview.1)
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.5.0-skills-preview.1)

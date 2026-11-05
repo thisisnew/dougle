@@ -16,10 +16,10 @@
    /plugin install dougle@dougle-marketplace
    ```
 
-3. 프로젝트 폴더에서 첫 자료를 연결합니다.
+3. 어느 디렉토리에서든 자료를 연결합니다. 아래 `/path/to/project`를 실제 자료 경로로 바꾸세요.
 
    ```text
-   /dougle:dougle-connect 현재 프로젝트를 읽고 업무 지식을 정리해 줘.
+   /dougle:dougle-connect /path/to/project를 읽고 업무 지식을 정리해 줘.
    ```
 
 명령을 찾을 수 없다면 설치 상태를 확인하고 새 세션에서 다시 시도하세요.
@@ -34,13 +34,13 @@
    skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
    ```
 
-2. 설치 후 새 세션에서 자료를 연결합니다.
+2. 설치 후 새 세션에서 자료를 연결합니다. `/path/to/project`를 실제 자료 경로로 바꾸세요.
 
    ```text
-   $dougle-connect 현재 프로젝트를 읽고 업무 지식을 정리해 줘.
+   $dougle-connect /path/to/project를 읽고 업무 지식을 정리해 줘.
    ```
 
-직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.4.3-skills-preview.1)을 풀고 `Dougle/skills/` 안의 다섯 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.5.0-skills-preview.1)을 풀고 `Dougle/skills/` 안의 다섯 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`도 함께 포함하세요. ask의 `i-have-adhd` 지침과 라이선스도 이 폴더에 있습니다.
 
@@ -148,7 +148,7 @@ Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설�
 <details>
 <summary>예전 앱이나 0.2.0~0.3.x를 사용했다면</summary>
 
-0.4.3은 connect·ask·reload·publish·fetch 다섯 스킬을 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
+0.5.0은 connect·ask·reload·publish·fetch 다섯 스킬을 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
 
 0.2.0 SQLite 데이터는 `~/Library/Application Support/Dougle Skills/`에 남아 있으며 자동으로 읽거나 삭제하지 않습니다. 원본 자료를 다시 연결하면 새 Markdown 지식을 만듭니다.
 

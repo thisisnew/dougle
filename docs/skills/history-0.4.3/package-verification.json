@@ -1,0 +1,15 @@
+{
+  "version": "0.4.3",
+  "files": 17,
+  "archiveBytes": 71236,
+  "sha256": "d38b51d4517769050ceaecffa2e37eed597fc7617dc24d1a96d83ad654fa4007",
+  "structuralChecks": 76,
+  "skillFormatChecks": 5,
+  "isolatedClaudePluginInstall": "PASS",
+  "bundledStyleAndLicenseInFreshInstall": "PASS",
+  "externalModelCalls": 0,
+  "retrievalLatencyBenchmark": "NOT_RUN",
+  "answerSourceAndStyleEvaluation": "NOT_RUN",
+  "semanticMergeEvaluation": "NOT_RUN",
+  "realKnowledgePublished": 0
+}

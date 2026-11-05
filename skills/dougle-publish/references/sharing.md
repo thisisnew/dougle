@@ -4,7 +4,7 @@ Use existing host Git/GitHub and file tools. Do not install a runtime, generate 
 
 ## Binding and portable package
 
-Store a local binding under the workspace's `sharing/<binding-id>/binding.md`: canonical repository identity (server/owner/repo), branch, package path, stable project ID, local workspace root mapping, last successfully published commit, last fully merged commit and pending operation. The absolute local root stays local. Changing repositories or project IDs requires the user's intended mapping, not matching a display name by guesswork.
+Store a local binding under `~/.dougle/sharing/<binding-id>/binding.md` independently of cwd (or reuse a qualified existing legacy binding): canonical repository identity (server/owner/repo), branch, package path, stable project ID, selected business/source scope and qualified local source mappings, last successfully published commit, last fully merged commit and pending operation. Absolute source locations stay local. An absent local code root does not prevent importing knowledge; leave unresolved original mappings unverified. Changing repositories or project IDs requires the user's intended mapping, not matching a display name by guesswork.
 
 First publish accepts a repo URL/name. Read its actual identity, visibility and access with the host tool; strip no security-significant host/owner information. Do not create a repository or change visibility without a request. If branch is unspecified, propose/use the dedicated `dougle-knowledge` branch and `knowledge/<project-id>/` path, report these concrete defaults, and leave other files alone. Inspect an existing branch/path before writing. Choose a filesystem-safe stable project ID for first publication, recording it for subsequent fetch/publish. If an existing package's identity does not match, do not overwrite it; clarify/select a new package path.
 
@@ -27,6 +27,8 @@ For local code, export an approved logical source/project identity plus project-
 
 ## Select what is shareable
 
+Before staging, resolve the requested business/source scope from the common index. An existing binding preserves its package scope; do not add other collections merely because they share the same store. If multiple scopes fit and none is selected, clarify the scope. A repository-only request is not consent to export all knowledge.
+
 Publish curated domain concepts, rules, relationships, relevant corrections, provenance and unresolved contradictions in the selected scope. Read the actual staged text and diff. Exclude credentials/tokens/signed URLs, personal absolute paths, raw DB rows, confidential personal notes, chat logs/context.md, original bulk files, caches, local binding metadata and installed skills. Do not publish the whole memory folder using `git add .`.
 
 Summaries can themselves contain confidential information. Do not rely on filename checks alone. If redaction removes required evidence, omit the affected claim or explicitly record that evidence was withheld; never create a falsely verified claim. Do not silently drop contradictory evidence to make a cleaner export. Report exclusions and actual size/file count. Large original artifacts stay at authorized original sources; do not auto-upload them or introduce LFS/install dependencies. If a genuine curated-text package is too large for host/provider limits, narrow or batch scope with the user; no hardcoded invented GitHub size guarantee.
@@ -37,7 +39,7 @@ Resolve a repository, branch and project package using a saved binding or the us
 
 1. Validate manifest/version, scope, paths, IDs and evidence links. Inspect the full selected package before mutating active knowledge. Invalid/unreadable/incomplete packages leave active memory and last-merged commit unchanged.
 2. Compare remote, local and the last fully merged/published base for this binding. A first fetch has no base: preserve local claims and compare identities/evidence cautiously. An existing name or identical wording is not enough to merge independent evidence.
-3. Match source identities through the organization protocol and portable local mappings. Keep original remote IDs in an import mapping and reuse this mapping on repeated fetch. Ask only when mapping is genuinely ambiguous; never copy another user's root path into the local workspace.
+3. Match source identities through the organization protocol and portable local mappings. Keep original remote IDs in an import mapping and reuse this mapping on repeated fetch. Ask only when mapping is genuinely ambiguous; never copy another user's root path into the local source mapping.
 4. Classify claim-level outcomes:
 
 | Situation | Merge action |
@@ -55,7 +57,7 @@ Resolve a repository, branch and project package using a saved binding or the us
 
 A successful fetch does not mean the source systems were accessed, the document is current, or the remote author's observations were independently verified. Imported time and original observed time are separate. Conflicting claims must be surfaced when relevant to an answer, not silently treated as authoritative by ask.
 
-5. Prepare merged files and a concise change summary before replacing active notes. Preserve a local backup of affected notes inside the memory directory. Reread active notes immediately before editing and use host conflict-aware writes; on a concurrent change, recompute. Do not run multiple writers to the same workspace. This is a host-executed protocol, not an atomic database transaction.
+5. Prepare merged files and a concise change summary before replacing active notes. Preserve a local backup of affected notes inside the memory directory. Reread active notes immediately before editing and use host conflict-aware writes; on a concurrent change, recompute. Do not run multiple writers to the same common store. This is a host-executed protocol, not an atomic database transaction.
 6. Apply only the affected source/topic/index edits. Keep an operation record of completed/pending files so interruption can be resumed or rolled back from backups. Do not advance last-merged commit or replace the base until all planned edits and reference checks succeed. If conflicts are recorded safely, the content can be merged with unresolved conflicts; report them explicitly rather than claiming conflict-free success.
 7. Save the remote package at that commit as the new comparison base, with local mapping and unresolved conflicts tracked separately. Repeated fetch of the same revision preserves later local changes and does not duplicate claims. A changed remote head after a pinned fetch is a later revision, not a reason to mix snapshots.
 
