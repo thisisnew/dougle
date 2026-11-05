@@ -2,102 +2,26 @@
 
 **회사 자료를 연결하고, 평소 쓰는 AI에게 업무를 물어보세요.**
 
-더글은 Claude Code·Codex에서 쓰는 스킬 모음입니다. AI가 코드·문서·DB를 읽고, 출처와 업무 지식을 파일에 정리해 다음 질문에도 참고합니다.
+더글은 코드·문서·DB에서 업무 지식을 정리하고, 출처를 찾아 답하는 Claude Code·Codex 스킬입니다.
+
+[처음 설치](#1-설치하기) · [바로 질문](#3-질문하기) · [이미 설치했다면](#업데이트하기)
 
 ## 1. 설치하기
 
-**Claude Code**에 아래 두 줄을 차례로 입력하세요.
+**Claude Code 대화창**에 두 줄을 차례로 입력하세요.
 
 ```text
 /plugin marketplace add thisisnew/dougle
 /plugin install dougle@dougle-marketplace
 ```
 
-**Codex**를 쓴다면 아래 요청을 붙여 넣으세요.
+**Codex 대화창**에는 아래 요청을 붙여 넣으세요.
 
 ```text
 https://github.com/thisisnew/dougle 저장소에서
 skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
-skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
+skills/dougle-publish, skills/dougle-fetch를 참조 파일까지 설치해 줘.
 ```
-
-## 이미 설치했다면: 사용하는 AI에 맞춰 업데이트
-
-### Claude Code: 플러그인으로 설치한 경우
-
-**1. 터미널에서 아래 두 명령을 순서대로 실행하세요.** Claude 대화 입력창이 아니라 일반 터미널에 입력합니다.
-
-```sh
-claude plugin marketplace update dougle-marketplace
-claude plugin update dougle@dougle-marketplace
-```
-
-평소 `claude-work`로 실행한다면 위 명령의 `claude`도 `claude-work`로 바꾸세요. 같은 실행 명령을 사용해야 회사 설정을 유지할 수 있습니다.
-
-**2. 실행 중인 Claude 대화창에서 입력하세요.**
-
-```text
-/reload-plugins
-```
-
-이 명령을 지원하지 않는 버전이면 Claude를 종료하고 평소 쓰는 명령(`claude` 또는 `claude-work`)으로 다시 실행하세요.
-
-**3. Claude 대화창에서 `/dougle:`을 입력해 새 명령을 확인하세요.** 예: `/dougle:dougle-fetch`.
-
-**여전히 안 보이면** 터미널에서 설치 상태를 확인하세요.
-
-```sh
-claude plugin list
-```
-
-| 확인 결과 | 대처 |
-|---|---|
-| `dougle`이 목록에 없음 | `claude plugin install dougle@dougle-marketplace` 실행 |
-| 마켓플레이스를 찾지 못함 | `claude plugin marketplace add thisisnew/dougle` 실행 후 업데이트 재시도 |
-| Scope가 `project` 또는 `local` | 설치한 프로젝트 폴더에서 업데이트 명령 끝에 `--scope project` 또는 `--scope local`을 붙여 실행 |
-| 비활성 상태 | `claude plugin enable dougle@dougle-marketplace` 실행 후 리로드 |
-| 설치돼 있는데 명령이 없음 | Claude 대화창에서 `/plugin`의 Errors 항목 확인. 개인 스킬과 플러그인이 중복 설치됐는지도 확인 |
-
-위 확인·설치 명령도 회사 실행명이 다르면 `claude`를 해당 이름으로 바꾸세요. 관리자가 관리하는 설치는 관리자에게 업데이트를 요청하세요.
-
-### Codex: 스킬 폴더로 설치한 경우
-
-**1. Codex 대화창에 아래 요청을 그대로 입력하세요.**
-
-```text
-https://github.com/thisisnew/dougle 의 최신 main 기준으로
-현재 설치된 dougle-connect, dougle-ask, dougle-reload,
-dougle-publish, dougle-fetch 다섯 스킬을 갱신해 줘.
-
-실제로 로드되는 설치 경로를 먼저 확인하고 그 위치를 업데이트해.
-개인 수정본은 보존하고, ~/.dougle/의 업무 지식은 건드리지 마.
-완료 후 다섯 SKILL.md와 참조 파일이 최신 저장소와 일치하는지 확인해.
-```
-
-**2. Codex를 다시 실행하고 `$dougle-fetch`를 입력해 확인하세요.**
-
-안 보이면 Codex에 아래 요청을 보내세요.
-
-```text
-현재 세션에서 dougle-fetch가 안 보여.
-실제 스킬 검색 경로에 dougle-fetch/SKILL.md가 있는지,
-다른 위치의 이전 설치본과 중복되거나 형식 오류가 있는지 확인해 줘.
-저장된 업무 지식은 변경하지 마.
-```
-
-### Claude Code: 개인 스킬 폴더로 설치한 경우
-
-`~/.claude/skills/`에 직접 설치했다면 플러그인 업데이트 명령으로 갱신되지 않습니다. **위 Codex의 갱신 요청을 Claude 대화창에 입력한 뒤 새 세션을 시작하세요.** 확인할 명령은 접두사 없는 `/dougle-fetch`입니다.
-
-### 업데이트와 리로드의 차이
-
-| 작업 | 하는 일 |
-|---|---|
-| 플러그인 업데이트·스킬 파일 갱신 | GitHub의 새 스킬 파일을 받음 |
-| 플러그인·스킬 리로드 | 현재 설치된 파일을 세션에 다시 반영 |
-| `dougle-reload` | 연결한 회사 자료를 다시 읽어 업무 지식을 갱신 |
-
-**새 기능을 받으려면 파일 업데이트가 먼저입니다.** 플러그인 리로드 후 스킬 리로드까지 따로 반복할 필요는 보통 없습니다.
 
 ## 2. 자료 연결하기
 
@@ -107,9 +31,9 @@ dougle-publish, dougle-fetch 다섯 스킬을 갱신해 줘.
 /dougle:dougle-connect 현재 프로젝트 코드를 읽고 입하 업무를 정리해 줘.
 ```
 
-문서 URL이나 DB 설명도 자유롭게 덧붙일 수 있습니다. 이미 등록한 자료인지 확인할 필요는 없습니다. 더글이 기존 기록을 찾아 재사용하거나 갱신합니다.
+문서 링크나 DB 설명도 그대로 알려주세요. 같은 자료를 다시 요청하면 기존 기록을 찾아 갱신합니다.
 
-**자료를 읽으려면 AI에 해당 서비스의 조회 도구와 접근 권한이 있어야 합니다.** 연결이 안 되면 필요한 설정을 안내합니다. [연결이 안 될 때 →](docs/skills/connections.md)
+해당 서비스에 접근할 수 있는 조회 도구와 권한이 필요합니다. 연결이 안 되면 필요한 설정을 안내합니다. [연결 문제 해결](docs/skills/connections.md)
 
 ## 3. 질문하기
 
@@ -117,46 +41,109 @@ dougle-publish, dougle-fetch 다섯 스킬을 갱신해 줘.
 /dougle:dougle-ask 입하 확정할 때 어느 테이블에 데이터가 들어가?
 ```
 
-같은 대화에서는 “그럼 어느 코드를 보면 돼?”처럼 이어서 물어보세요. 답변은 **결론부터 짧게**, 근거는 해당 설명 옆에 보여줍니다. 확인된 사실과 해석은 구분합니다. 더 깊은 설명이 필요하면 “자세히 설명해 줘”라고 요청하세요.
+같은 대화에서 **“어느 코드를 보면 돼?”**처럼 이어서 물어보세요.
 
-## 질문할 때 오래된 자료 자동 갱신
+답변은 **결론 → 필요한 설명 → 출처** 순서로 정리합니다. 실제로 확인한 자료만 인용하며, 추론이나 최신 확인이 안 된 내용은 구분합니다.
 
-**`ask`가 질문과 관련된 자료의 마지막 확인 시각을 비교합니다. 기본 24시간이 지났으면 갱신한 뒤 답합니다.** 바뀌지 않은 자료는 다시 정리하지 않고, 바뀐 부분의 지식만 갱신합니다.
+> 답변 형식 예시 — 아래 파일과 동작은 가상입니다.
+>
+> 입하 확정은 `receipt` 테이블에 기록합니다. [1]
+>
+> 흐름은 `confirmReceipt()`부터 보면 됩니다. [1]
+>
+> **출처**
+> - [1] `src/ReceiptService.java` · `confirmReceipt()`
 
-확인 주기는 질문하듯 바꿀 수 있습니다.
+`i-have-adhd` 원본 지침이 ask에 포함되어 기본 답변에 적용됩니다. 자세한 설명이 필요하면 **“전체 흐름을 자세히 설명해 줘”**라고 요청하세요.
 
-```text
-이 컨플루언스 문서는 일주일마다 확인해 줘.
-현재 작업 공간의 기본 확인 간격을 12시간으로 바꿔 줘.
-이 자료는 질문할 때마다 확인해 줘.
-```
-
-현재 DB 상태나 “최신 설정”을 묻는 질문은 간격과 무관하게 확인합니다. 갱신에 실패하면 마지막 성공 시점을 유지하고, 답변에 영향을 주는 오래된 정보나 확인 불가 상태를 알려줍니다.
-
-질문과 무관한 자료까지 매번 읽지는 않습니다. 전체를 바로 갱신하려면 `/dougle:dougle-reload 전체` 또는 Codex의 `$dougle-reload 전체`를 사용하세요.
-
-## 필요할 때 꺼내 쓰기
+## 필요한 명령 찾기
 
 | 하고 싶은 일 | Claude 플러그인 | Codex |
 |---|---|---|
 | 자료 연결 | `/dougle:dougle-connect` | `$dougle-connect` |
 | 업무 질문 | `/dougle:dougle-ask` | `$dougle-ask` |
-| 바뀐 자료 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
+| 자료 즉시 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
 | 팀에 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
 | 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
 
-[복사해서 쓰는 예시 →](docs/skills/usage.md) · [자료 갱신 →](docs/skills/reload.md) · [팀 공유 →](docs/skills/sharing.md)
+## 오래된 자료는 질문할 때 갱신합니다
 
-## 지식은 어떻게 내재화하나요?
+`ask`는 **관련 자료를 마지막으로 확인한 지 24시간 이상 지났으면 갱신 후 답합니다.** 현재 DB 상태나 최신 설정을 묻는 질문은 매번 확인합니다.
 
-**업무 개념별 Markdown에 규칙·시스템 관계·출처를 정리하고, 질문할 때 다시 읽습니다.** 모델 재학습이나 그래프 DB 방식은 아닙니다. API → 코드 → 테이블의 관계도 근거와 함께 기록하며, 답변할 때 필요한 원본을 확인합니다.
+주기도 바꿀 수 있습니다.
 
-[저장 구조·관계 기록·검색 흐름 보기 →](docs/skills/architecture.md)
+```text
+이 컨플루언스 문서는 일주일마다 확인해 줘.
+현재 작업 공간의 기본 확인 간격을 12시간으로 바꿔 줘.
+```
 
-## 기억은 어디에 남나요?
+갱신에 실패하면 예전 자료를 최신 정보처럼 말하지 않습니다. 전체를 지금 갱신하려면 `/dougle:dougle-reload 전체` 또는 `$dougle-reload 전체`를 쓰세요.
 
-`~/.dougle/workspaces/`에 Markdown 파일로 저장합니다. **저장된 지식은 터미널이나 대화 세션을 닫아도 남습니다.** 같은 PC의 같은 작업 공간을 쓰는 AI가 다시 참고할 수 있습니다. 전체 채팅이 자동으로 옮겨지는 것은 아닙니다.
+## 업데이트하기
 
-원본 코드·문서·DB는 읽기만 합니다. 다만 스킬 자체가 쓰기 권한을 차단하는 보안 장치는 아니므로 회사 시스템에는 읽기 전용 권한을 사용하세요.
+### Claude Code 플러그인
 
-[전체 문서 →](docs/README.md) · [스킬 다운로드 →](https://github.com/thisisnew/dougle/releases/tag/v0.4.2-skills-preview.1)
+**1. 일반 터미널**에서 실행하세요.
+
+```sh
+claude plugin marketplace update dougle-marketplace
+claude plugin update dougle@dougle-marketplace
+```
+
+평소 `claude-work`를 쓴다면 위 명령의 `claude`도 `claude-work`로 바꾸세요.
+
+**2. Claude 대화창**에서 실행하세요.
+
+```text
+/reload-plugins
+```
+
+지원하지 않는 버전이면 Claude를 종료하고 평소 쓰는 실행 명령으로 다시 여세요. `/dougle:`을 입력해 스킬 목록을 확인합니다.
+
+**새 명령이 안 보이면**, 터미널에서 상태를 확인하세요.
+
+```sh
+claude plugin list
+```
+
+| 확인 결과 | 실행할 명령·대처 |
+|---|---|
+| dougle이 없음 | `claude plugin install dougle@dougle-marketplace` |
+| 마켓플레이스를 못 찾음 | `claude plugin marketplace add thisisnew/dougle` 후 업데이트 |
+| 비활성 상태 | `claude plugin enable dougle@dougle-marketplace` 후 리로드 |
+| Scope가 project 또는 local | 해당 프로젝트에서 업데이트 명령에 `--scope project` 또는 `--scope local` 추가 |
+| 설치됐는데 계속 안 보임 | 대화창의 `/plugin` → Errors 확인. 개인 스킬·플러그인 중복 설치 여부 확인 |
+
+이 명령들도 회사 실행명이 다르면 `claude` 대신 그 이름을 쓰세요. 관리자가 관리하는 설치는 관리자에게 업데이트를 요청하세요.
+
+### Codex 또는 Claude 개인 스킬 폴더
+
+**1. AI 대화창**에 붙여 넣으세요.
+
+```text
+https://github.com/thisisnew/dougle 의 최신 main으로
+dougle-connect, dougle-ask, dougle-reload, dougle-publish, dougle-fetch를 갱신해 줘.
+실제로 로드되는 설치 경로를 확인하고 SKILL.md와 참조 파일을 함께 업데이트해.
+개인 수정본은 보존하고 ~/.dougle/의 업무 지식은 건드리지 마.
+```
+
+**2. AI를 다시 실행**하고 Codex는 `$dougle-fetch`, Claude 개인 설치는 `/dougle-fetch`를 확인하세요.
+
+안 보이면 아래를 요청하세요.
+
+```text
+dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 파일,
+이전 설치본과의 중복, 형식 오류를 확인해 줘. 업무 지식은 변경하지 마.
+```
+
+**업데이트는 새 스킬 파일을 받는 것, 리로드는 받은 파일을 다시 읽는 것**입니다. `dougle-reload`는 회사 자료를 갱신하는 별도 기능입니다.
+
+## 지식은 어디에 남나요?
+
+`~/.dougle/workspaces/`에 업무 개념·규칙·시스템 관계·출처를 Markdown으로 저장합니다. 세션이 끝나도 **저장된 지식은 남습니다.** 전체 대화가 자동 복원되는 것은 아닙니다.
+
+질문할 때 주제·동의어 목차로 관련 자료를 좁히고 필요한 근거를 읽습니다. 그래프 DB나 모델 재학습 방식은 아닙니다. [내재화 방식](docs/skills/architecture.md) · [검색 속도와 Lucene 비교](docs/skills/search-performance.md)
+
+원본 자료는 읽기만 합니다. 회사 시스템에는 읽기 전용 권한을 사용하세요.
+
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.4.3-skills-preview.1)

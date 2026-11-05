@@ -1,0 +1,13 @@
+{
+  "version": "0.4.2",
+  "files": 15,
+  "archiveBytes": 60467,
+  "sha256": "282e7f7ab13842c6c985996554c19bce676bef2b12b221eb7a3e79b7a8b988c7",
+  "structuralChecks": 66,
+  "skillFormatChecks": 5,
+  "externalModelCalls": 0,
+  "askTimeFreshnessEvaluation": "NOT_RUN",
+  "answerReadabilityEvaluation": "NOT_RUN",
+  "semanticMergeEvaluation": "NOT_RUN",
+  "realKnowledgePublished": 0
+}

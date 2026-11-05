@@ -1,5 +1,6 @@
 // Developer packaging checks only. Not shipped or needed by skill users.
 import assert from 'node:assert/strict'
+import {createHash} from 'node:crypto'
 import {readFile, readdir, stat} from 'node:fs/promises'
 import {resolve, dirname} from 'node:path'
 const root = resolve(import.meta.dirname, '..')
@@ -10,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.4.2', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.4.3', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -24,7 +25,7 @@ async function files(dir) {
 for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
- check(all.length===(['dougle-publish','dougle-fetch'].includes(name)?3:2),'only declared Markdown skill resources')
+ check(all.length===(name==='dougle-ask'?4:['dougle-publish','dougle-fetch'].includes(name)?3:2),'only declared Markdown skill resources')
  for(const p of all) {
   check(p.endsWith('.md'),'no executable/runtime dependency')
   const text=await readFile(p,'utf8')
@@ -42,4 +43,11 @@ check(await readFile(resolve(root,'skills/dougle-connect/references/organization
 check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,'skills/dougle-reload/references/organization.md'),'utf8'),'reload shared protocol')
 for (const name of ['dougle-publish','dougle-fetch']) check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,`skills/${name}/references/organization.md`),'utf8'),'shared organization')
 check(await readFile(resolve(root,'skills/dougle-publish/references/sharing.md'),'utf8')===await readFile(resolve(root,'skills/dougle-fetch/references/sharing.md'),'utf8'),'shared merge protocol')
+for (const [file, expected] of [
+ ['i-have-adhd.md','88955c019bbb1419ff4b49dbb1f80a867467de6233d7865af2e06a7d7b76c7d3'],
+ ['i-have-adhd-LICENSE.md','8acbb618089b738404f76ac60fca1aaa995d9a87995eddf95f0b777acd7f7d2c']
+]) {
+ const bytes=await readFile(resolve(root,'skills/dougle-ask/references',file))
+ check(createHash('sha256').update(bytes).digest('hex')===expected, 'pinned upstream guide/license bytes')
+}
 console.log(JSON.stringify({status:'PASS',structuralChecks:checks,semanticModelEvaluation:false}))
