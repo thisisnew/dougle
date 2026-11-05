@@ -26,3 +26,7 @@ Title28px, node names16px, supporting Korean labels12px, general introduction14p
 - No scripts, external images, fonts, shadows or hidden content. SVGs include title/description accessibility labels.
 
 Created using [diagram-design](https://github.com/cathrynlavery/diagram-design/tree/f24d98b05e2d7a5e68c2dedfe46e5b7173f50118/skills/diagram-design). [MIT notice](diagram-design-LICENSE).
+
+## Korean sharing figure revision
+
+Sharing figure now follows visual-explainer with the same Dougle palette. Editable source: knowledge-sharing.src.html. Three left-to-right stages; HTML stacks below650px. Korean system font, title32px, stage heading26px, body19px, command16px. Phrase-level line breaks; no reverse arrows or English category tags. README uses a2x PNG export so font substitution cannot change its layout. The original960×504 sharing SVG is replaced. Ask-flow remains unchanged.

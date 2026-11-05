@@ -2,7 +2,7 @@
 
 **더글은 평소 쓰는 AI에게 업무 지식을 찾고 기억하는 방법을 알려주는 스킬 묶음입니다.** Claude Code나 Codex가 스킬 지침을 읽고, 자신에게 연결된 도구로 자료를 조회합니다. 더글 자체가 별도 AI 모델을 실행하거나 회사 서비스의 로그인·검색 도구를 제공하지는 않습니다.
 
-![내재화한 지식을 publish와 fetch로 팀에서 공유하는 구조](../diagrams/knowledge-sharing.svg)
+![내재화한 지식을 publish와 fetch로 팀에서 공유하는 구조](../diagrams/knowledge-sharing.png)
 
 ## 1. 실행부터 답변까지
 

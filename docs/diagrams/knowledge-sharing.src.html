@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko" data-register="editorial">
+<head>
+<title>내 업무 지식을 동료의 AI도 활용합니다</title>
+<link rel="stylesheet" href="kit.css" data-ve-kit>
+<style>
+:root { color-scheme:light; --bg:#fff; --text:#292f3e; --text-dim:#56647a; --accent:#2866c2; }
+body { margin:0; background:#fff; color:#292f3e; font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif; }
+main { max-width:1000px; padding:36px; margin:auto; }
+figure { margin:0; }
+main h1 { max-width:none; width:auto; font-family:inherit; font-size:32px; font-weight:700; line-height:1.4; letter-spacing:-.6px; margin:0 0 32px; }
+.flow { display:grid; grid-template-columns:1fr 40px 1fr 40px 1fr; align-items:stretch; }
+.stage { min-width:0; padding:24px 20px; border:1px solid #c7d4e6; border-radius:12px; }
+.stage:first-child { background:#edf4ff; border-color:#2866c2; }
+.who { font-size:18px; color:#2866c2; margin:0 0 12px; font-weight:600; }
+main h2 { max-width:none; font-family:inherit; font-size:26px; line-height:1.45; letter-spacing:-.4px; margin:0 0 22px; word-break:keep-all; }
+.stage p { line-height:1.65; word-break:keep-all; }
+.detail { font-size:19px; margin:0; }
+.command { display:block; margin-top:28px; font-size:16px; color:#56647a; font-family:ui-monospace,monospace; }
+.arrow { display:flex; align-items:center; justify-content:center; color:#2866c2; font-size:28px; }
+figcaption { font-size:19px; line-height:1.7; margin:24px 0 0; color:#56647a; word-break:keep-all; }
+@media(max-width:650px) { main { padding:24px; } main h1 { font-size:27px; } .flow { grid-template-columns:1fr; } .arrow { height:40px; transform:rotate(90deg); } h2 { margin-bottom:12px; } .command { margin-top:16px; } }
+</style>
+</head>
+<body><main><figure aria-label="자료를 연결해 지식을 정리하고, 선택한 지식을 팀 저장소에 공유하면 동료가 가져와 질문에 활용합니다.">
+<h1>내 업무 지식을 동료의 AI도 활용합니다</h1>
+<div class="flow">
+<div class="stage"><p class="who">나</p><h2>자료를 연결해<br>지식으로 정리</h2><p class="detail">문서·코드·DB에서<br>업무 개념과 규칙을<br>출처와 함께 저장</p><span class="command">connect</span></div>
+<div class="arrow" aria-label="공유">→</div>
+<div class="stage"><p class="who">팀 GitHub 저장소</p><h2>쌓인 지식 중<br>필요한 것만 공유</h2><p class="detail">원본 자료 전체 대신<br>선택한 업무 지식을<br>팀 저장소에 올리기</p><span class="command">publish</span></div>
+<div class="arrow" aria-label="가져오기">→</div>
+<div class="stage"><p class="who">동료</p><h2>공유 지식을<br>가져와 질문</h2><p class="detail">기존 지식과 합쳐서<br>동료의 AI가<br>업무 질문에 활용</p><span class="command">fetch → ask</span></div>
+</div>
+<figcaption>자료를 읽어 정리하는 것이 <strong>내재화</strong>입니다. 공유한 지식은 동료의 기존 지식과 함께 쓰입니다.</figcaption>
+</figure></main></body></html>

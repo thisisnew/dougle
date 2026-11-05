@@ -4,7 +4,7 @@
 
 더글은 평소 쓰는 Claude Code·Codex에서 자료를 읽고 업무 지식으로 내재화하는 스킬입니다.
 
-![자료 연결과 내재화, publish로 팀 저장소에 공유, fetch로 동료 지식과 병합하는 흐름](docs/diagrams/knowledge-sharing.svg)
+![자료 연결과 내재화, publish로 팀 저장소에 공유, fetch로 동료 지식과 병합하는 흐름](docs/diagrams/knowledge-sharing.png)
 
 **publish**로 내가 쌓은 지식을 공유하고, **fetch**로 동료의 지식을 가져와 함께 활용합니다.
 
