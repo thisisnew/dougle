@@ -1,17 +1,17 @@
 {
-  "tag": "v0.6.0-skills-preview.1",
-  "sourceCommit": "3925a060a17ac3461990f507a15f0510a14f1785",
+  "tag": "v0.6.1-skills-preview.1",
+  "sourceCommit": "f9f5b29cb797b38c1935f7b97ff39f8e154f0153",
   "assets": [
     {
-      "name": "Dougle_Skills_0.6.0.zip",
-      "bytes": 123763,
-      "sha256": "7b6c257d81d47fba695c38edbc005082cb4413fe74cf98ac9f64b6619bd6ba0d",
+      "name": "Dougle_Skills_0.6.1.zip",
+      "bytes": 128265,
+      "sha256": "15f121904b3d8d13c6593b7b4c6b2a329732875760ecf7c3d9e3e41621afa2c7",
       "anonymousDownload": "PASS"
     },
     {
-      "name": "Dougle_Skills_0.6.0_SHA256SUMS",
+      "name": "Dougle_Skills_0.6.1_SHA256SUMS",
       "bytes": 90,
-      "sha256": "043e8b7c6bafd41e86eba52c56cd7ad3081499d548dd4f1dfdf98277b9670fbc",
+      "sha256": "22914efa002c2097012485b30c7f5123cd7869e8058a3c0c21215cea52134869",
       "anonymousDownload": "PASS"
     }
   ]
