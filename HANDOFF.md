@@ -111,3 +111,7 @@ README diagram follow-up: user requested diagram-design, then explicitly chose e
 ## Korean knowledge-sharing diagram revision
 
 User approved visual-explainer alternative. Installed0.15.0 in ~/.agents/skills/visual-explainer via skill-installer and read actual instructions/style/kit. Rebuilt sharing diagram as three stages with Korean typography, white/blue styling. Source.src.html and rendered.html retained; README/how-it-works use fixed-font2x PNG. Skill renderer390/1280 and light/dark sheets checked; PNG visually inspected. Developer-only playwright-core installed inside the skill, not product runtime. Existing ask-flow untouched. Documentation-only change, no skill release bump.
+
+## Remaining current diagrams unified
+
+User requested replacement of remaining diagram-design/other diagram images. Rebuilt ask-flow and replaced active skills architecture/how-it-works Mermaid with knowledge-memory/skill-execution figures. All4 current diagrams now visual-explainer HTML + fixed-font PNG. Removed old ask SVG and unused diagram-design template license; historical app Mermaid and UI evidence screenshots intentionally retained as historical records. Docs-only update.
