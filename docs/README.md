@@ -24,3 +24,5 @@
 [0.2.0 실행기 검증](skills/history-0.2.0/verification.md) · [이전 앱 문서](skills/legacy-index.md)
 
 </details>
+
+- [Slack 문의 확인·승인 후 답변](skills/schedule.md)

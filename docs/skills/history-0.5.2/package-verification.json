@@ -1,0 +1,15 @@
+{
+  "version": "0.5.2",
+  "files": 44,
+  "archiveBytes": 111584,
+  "sha256": "2bed177df8b338f9549cdb286fe11a6d80a3c9a43837854caebc87d0c3423f74",
+  "structuralChecks": 228,
+  "skillFormatChecks": 6,
+  "isolatedClaudePluginInstall": "PASS",
+  "installedLocalSkillCopies": "PASS (Codex and Claude, backups retained)",
+  "nativeCodexRuns": 3,
+  "nativeClaudeAttempt": "BLOCKED_AUTH_401",
+  "nativeClaudeSkillInvocation": "NOT_VERIFIED",
+  "freshnessPolicyDecisions": "6/6 PASS",
+  "realKnowledgePublished": 0
+}

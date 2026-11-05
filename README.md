@@ -24,7 +24,7 @@
 ```text
 https://github.com/thisisnew/dougle 저장소에서
 skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
-skills/dougle-publish, skills/dougle-fetch, skills/i-have-adhd를 참조 파일까지 설치해 줘.
+skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/i-have-adhd를 참조 파일까지 설치해 줘.
 ```
 
 ## 2. 자료 연결하기
@@ -92,6 +92,17 @@ fetch는 기존 지식을 통째로 덮어쓰지 않고 출처·정정·충돌�
 | 자료 즉시 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
 | 팀에 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
 | 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
+| Slack 문의 확인·답변 준비 | `/dougle:dougle-schedule` | `$dougle-schedule` |
+
+## Slack 문의 답변 준비하기
+
+전용 AI 세션에서 실행하세요. **기본 5분마다 새 문의를 확인하고, 승인한 답변만 게시합니다.**
+
+```text
+/dougle:dougle-schedule #입하문의 채널을 확인하고 답변을 준비해 줘.
+```
+
+기존 Slack MCP와 호스트의 주기 실행 기능이 필요합니다. 더글이 작성하는 Slack 댓글 끝에는 **✦ dougle**을 붙입니다. [사용법·VDI 조회·지원 환경](docs/skills/schedule.md)
 
 ## 질문에서 답변까지
 
@@ -163,7 +174,7 @@ claude plugin list
 
 ```text
 https://github.com/thisisnew/dougle 의 최신 main으로
-dougle-connect, dougle-ask, dougle-reload, dougle-publish, dougle-fetch, i-have-adhd를 갱신해 줘.
+dougle-connect, dougle-ask, dougle-reload, dougle-publish, dougle-fetch, dougle-schedule, i-have-adhd를 갱신해 줘.
 실제로 로드되는 설치 경로를 확인하고 SKILL.md와 참조 파일을 함께 업데이트해.
 개인 수정본은 보존하고 ~/.dougle/의 업무 지식은 건드리지 마.
 ```
@@ -183,4 +194,4 @@ dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 �
 
 저장된 지식은 세션을 닫아도 남습니다. [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
-[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.5.3-skills-preview.1)
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.6.0-skills-preview.1)

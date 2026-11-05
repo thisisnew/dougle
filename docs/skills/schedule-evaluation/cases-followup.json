@@ -1,0 +1,22 @@
+[
+  {
+    "id": "S31",
+    "scenario": "Same owner receives concurrent manual and timer checks. Host serialization is unknown, no atomic claim primitive."
+  },
+  {
+    "id": "S32",
+    "scenario": "Local user approved exact draft for account U_A; writer now authenticates as U_B."
+  },
+  {
+    "id": "S33",
+    "scenario": "Thread page2 fails and page3 may contain a correction; local user approved draft based on page1."
+  },
+  {
+    "id": "S34",
+    "scenario": "Start monitoring from general coding session, no automatic session creation requested."
+  },
+  {
+    "id": "S35",
+    "scenario": "Oldest two inquiries need VDI input; a third pending inquiry is answerable. Batch capacity2."
+  }
+]

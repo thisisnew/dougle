@@ -119,3 +119,15 @@ User requested replacement of remaining diagram-design/other diagram images. Reb
 ## 0.5.3 companion invocation visibility
 
 User clarified i-have-adhd must install with Dougle and activate automatically during ask, not be an extra user command. Bundled upstream-based companion retained; user-invocable:false added for Claude menu hiding while model invocation remains enabled. Description/direct-invocation docs corrected. Codex hiding not claimed. Structural229 and Claude manifest validation pass; actual Claude invocation remains unverified due prior authentication failure.
+
+## 0.6.0 dougle-schedule
+
+User authorized implementation using existing Slack MCP, dedicated session, default5min/explicit interval, inquiry channel all human root posts, exact local approval before reply, final by dougle. No separate Slack app installation or live posting authorized in this development turn. Implemented Markdown-only skill with host timer discovery, one-owner/serialization, bounded paginated history and thread recovery, independent inquiry queue, exact draft/account-bound approval, consumed send intent and ambiguous delivery hold, pause/resume/interval/status controls. No daemon, automatic universal terminal opener or unavailable timer claimed. VDI-only DB needs user lookup with permitted minimal findings; no bypass or raw rows. Common organization allows only this explicitly approved Slack exception; schedule operational state not shared.
+
+Independent host review found5 protocol gaps, patched. Native Codex2 synthetic evaluations30+5 cases, all expected decisions manually matched, only file-read commands, no gold reads/live services. External completed calls184→186/200; prior separate host evaluations preserved. Generic validator passes6 business skills; companion official user-invocable field unsupported by generic validator, not a product failure; structural245 plus official Claude manifests pass. See schedule-evaluation. Real timer/Slack posting/VDI E2E unverified.
+
+User asked about ASCII banner token cost while work ongoing. Recommended one-time session banner + short draft heading, Slack by dougle unchanged. No banner behavior implemented yet; user has not chosen that proposal.
+
+Signature steering: user rejected plain by dougle as visually weak. Changed current schedule signature to standalone **✦ dougle** (Slack mrkdwn *✦ dougle*, plain fallback). Approval includes the final signature. Previous synthetic decision evaluation used by dougle; behavioral approval/pagination results predate this presentation-only change. No large banner.
+
+User extended compact signature to ALL Dougle-authored Slack comments, not only schedule. Added common organization rule in all five existing business skills and schedule explicitly loads common rule. Formatting does not grant posting permission; unrelated host actions cannot be globally enforced.

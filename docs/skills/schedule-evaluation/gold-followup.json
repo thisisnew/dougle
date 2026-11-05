@@ -1,0 +1,7 @@
+{
+  "S31": "disable_overlap",
+  "S32": "invalidate_account",
+  "S33": "hold_partial_thread",
+  "S34": "dedicated_handoff",
+  "S35": "skip_waiting_fairness"
+}

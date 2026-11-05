@@ -1,0 +1,26 @@
+{
+  "evaluation": "native Codex synthetic policy decisions, manually reviewed",
+  "cases": 35,
+  "expectedDecisionMatches": 35,
+  "realSlackCalls": 0,
+  "realSchedulerCalls": 0,
+  "realVDIAccess": 0,
+  "realPosts": 0,
+  "completedExternalModelCallsBefore": 184,
+  "completedExternalModelCallsAfter": 186,
+  "independentHostReviewPasses": 2,
+  "reads": {
+    "trace": [
+      "/bin/zsh -lc 'cat /Users/thisisnew/Desktop/dougle/skills/dougle-schedule/SKILL.md /Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/host.md /Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/state.md /Users/thisisnew/Desktop/dougle/docs/skills/schedule-evaluation/cases.json'"
+    ],
+    "trace-followup": [
+      "/bin/zsh -lc 'cat /Users/thisisnew/Desktop/dougle/skills/dougle-schedule/SKILL.md /Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/host.md /Users/thisisnew/Desktop/dougle/skills/dougle-schedule/references/state.md /Users/thisisnew/Desktop/dougle/docs/skills/schedule-evaluation/cases-followup.json'"
+    ]
+  },
+  "limitations": [
+    "No actual timed execution, queue transaction, connector identity or posting behavior tested",
+    "No actual company data read",
+    "Claude local CLI 2.1.31 and expired-auth history; native scheduling not verified",
+    "Generic validator does not recognize official user-invocable field; six business skills pass it; companion field checked separately"
+  ]
+}
