@@ -118,21 +118,6 @@ fetch는 기존 지식을 통째로 덮어쓰지 않고 출처·정정·충돌�
 
 목차에서 못 찾으면 등록된 지식과 허용된 원본 범위로 검색을 넓힙니다. 이 절차는 **Claude·Codex가 스킬 지침에 따라 기존 조회·검색 도구로 수행**합니다. 비공개 GitHub 레포 등은 해당 도구에 접근 권한이 있어야 읽을 수 있습니다.
 
-[그림으로 보기](docs/diagrams/ask-flow.png) · [구동 방식 자세히 보기](docs/skills/how-it-works.md)
-
-<details>
-<summary>갱신 주기 바꾸기 · 지금 갱신하기</summary>
-
-```text
-이 컨플루언스 문서는 일주일마다 확인해 줘.
-더글의 기본 확인 간격을 1시간으로 바꿔 줘.
-```
-
-즉시 갱신하려면 Claude는 `/dougle:dougle-reload 전체`, Codex는 `$dougle-reload 전체`를 사용하세요.
-
-[갱신 상세](docs/skills/reload.md) · [토큰 최적화](docs/skills/context-optimization.md)
-
-</details>
 
 ## 업데이트하기
 
