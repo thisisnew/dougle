@@ -1,0 +1,50 @@
+{
+  "version": "0.5.1",
+  "evaluation": "Two independent host-agent runs, six synthetic questions each; manually reviewed against prewritten gold, not lexical grading.",
+  "results": [
+    {
+      "id": "Q1",
+      "baseline": "PASS",
+      "candidate": "PASS"
+    },
+    {
+      "id": "Q2",
+      "baseline": "PASS",
+      "candidate": "PASS"
+    },
+    {
+      "id": "Q3",
+      "baseline": "PASS",
+      "candidate": "PASS"
+    },
+    {
+      "id": "Q4",
+      "baseline": "PASS",
+      "candidate": "PASS"
+    },
+    {
+      "id": "Q5",
+      "baseline": "PASS",
+      "candidate": "PASS"
+    },
+    {
+      "id": "Q6",
+      "baseline": "PASS",
+      "candidate": "PASS"
+    }
+  ],
+  "loadedInstructionBytes": {
+    "baseline": 42779,
+    "candidate": 36733
+  },
+  "candidateInitialInstructionBytes": 21532,
+  "tokenUsage": "NOT_MEASURED",
+  "latency": "NOT_MEASURED",
+  "limitations": [
+    "One run per version on six small synthetic questions; not a statistical non-inferiority test.",
+    "No native Claude CLI model or real company data evaluated.",
+    "Memory writes prohibited; persistence, concurrent edits, refresh interval boundary and semantic merges not evaluated.",
+    "Candidate legacy directory discovery returned missing-path error; fallback read succeeded, no answer regression observed.",
+    "Same model family used for evaluation and manual review; no independent human adjudication."
+  ]
+}

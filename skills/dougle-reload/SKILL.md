@@ -35,3 +35,7 @@ Give a brief per-source or grouped summary with counts: changed, unchanged (conf
 Persist each source's completed update separately. On interruption, retain completed work and the remaining target list when permitted; never advance a store-wide freshness marker for unfinished work. A retry checks current records again, processes unresolved targets, and does not create duplicate sources. Do not promise automatic retries or monitoring after this conversation ends.
 
 Reload is explicit maintenance and bypasses the interval even for recently checked sources; `dougle-ask` uses the shared ask-time freshness policy and always checks fresh evidence for current-state questions. A completed reload is an observation at a time, not a guarantee that the source cannot change later. Source code, company documents, databases and infrastructure remain read-only; the skill does not globally sandbox the host AI.
+
+## Load task details before acting
+
+Read the [organization core](references/organization.md) and follow its conditional reference triggers. Before source or topic memory writes read [record rules](references/records.md); before verification or verification-record updates read [freshness rules](references/freshness.md). For reload/publish/fetch also read [operation scope](references/operations.md). Do not load unrelated detail files or reread unchanged instructions still in active context. Never omit needed evidence or scope checks to reduce context.

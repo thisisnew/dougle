@@ -16,3 +16,7 @@ Perform the sharing protocol's claim-level three-way merge when a base exists. O
 Prepare merged notes and backups, reread active files, then apply only affected notes/indexes using conflict-aware host tools. Keep an interruption record. Advance the last-merged revision and base only after the whole planned merge/reference check finishes. A repeat fetch must not duplicate notes or overwrite changes made locally since the prior fetch.
 
 Report added, enriched, unchanged, conflicts, withdrawals, unverified and unprocessed items. Explain any missing recipient source access. Fetch never triggers publish and never replaces the whole memory directory. `dougle-reload` is the separate operation for refreshing the original documents/code/databases afterward.
+
+## Load task details before acting
+
+Read the [organization core](references/organization.md) and follow its conditional reference triggers. Before source or topic memory writes read [record rules](references/records.md); before verification or verification-record updates read [freshness rules](references/freshness.md). For reload/publish/fetch also read [operation scope](references/operations.md). Do not load unrelated detail files or reread unchanged instructions still in active context. Never omit needed evidence or scope checks to reduce context.

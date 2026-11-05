@@ -19,4 +19,8 @@
 - 원본은 읽기만 합니다. 권한을 강제하는 장치는 아니므로 읽기 전용 계정을 사용하세요.
 - 관련 자료는 기본 24시간 간격을 기준으로 질문 시 갱신합니다. 백그라운드 감시는 없습니다.
 
-현재 버전은 **0.5.0 Preview**입니다. [검증된 범위](verification.md) · [내부 구조](architecture.md)
+현재 버전은 **0.5.1 Preview**입니다. [검증된 범위](verification.md) · [내부 구조](architecture.md)
+
+[문맥 최적화와 정확도 비교](context-optimization.md)
+
+[실행·자료 연결·기억 저장·검색·갱신의 전체 흐름](how-it-works.md)

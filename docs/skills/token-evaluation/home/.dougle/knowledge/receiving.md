@@ -1,0 +1,1 @@
+Receiving service: summary says confirm writes receipt. Scope/exception must be verified in /tmp/dougle-token-eval-051/originals/ReceivingService.java (R1). Older design /tmp/dougle-token-eval-051/originals/design.md (R2) says legacy_receipt; preserve conflict/provenance.

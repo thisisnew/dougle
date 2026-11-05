@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.5.0', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.5.1', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -25,7 +25,7 @@ async function files(dir) {
 for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
- check(all.length===(name==='dougle-ask'?4:['dougle-publish','dougle-fetch'].includes(name)?3:2),'only declared Markdown skill resources')
+ check(all.length===(name==='dougle-ask'?9:['dougle-publish','dougle-fetch'].includes(name)?8:7),'only declared Markdown skill resources')
  for(const p of all) {
   check(p.endsWith('.md'),'no executable/runtime dependency')
   const text=await readFile(p,'utf8')
@@ -49,5 +49,9 @@ for (const [file, expected] of [
 ]) {
  const bytes=await readFile(resolve(root,'skills/dougle-ask/references',file))
  check(createHash('sha256').update(bytes).digest('hex')===expected, 'pinned upstream guide/license bytes')
+}
+for (const resource of ['store.md','retrieval.md','records.md','freshness.md','operations.md']) {
+ const canonical=await readFile(resolve(root,'skills/dougle-ask/references',resource),'utf8')
+ for (const name of ['connect','reload','publish','fetch']) check(canonical===await readFile(resolve(root,`skills/dougle-${name}/references`,resource),'utf8'),'shared detail identical')
 }
 console.log(JSON.stringify({status:'PASS',structuralChecks:checks,semanticModelEvaluation:false}))

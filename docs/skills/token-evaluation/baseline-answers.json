@@ -1,0 +1,26 @@
+[
+  {
+    "id": "Q1",
+    "answer": "확인한 코드에서는 Flipt를 씁니다. FeatureFlagClient가 FliptClient를 보유하고, enabled(key)에서 client.evaluate(key)를 호출합니다.[1] 실제 운영 배포 상태까지 확인한 것은 아닙니다.\n\n출처: [1] [Flags.java](/tmp/dougle-token-eval-051/originals/Flags.java), FeatureFlagClient.enabled.\n\n원본 확인 결과는 이번 답변에만 반영했고, 평가 조건에 따라 메모리는 갱신하지 않았습니다."
+  },
+  {
+    "id": "Q2",
+    "answer": "입하 확정이 항상 테이블에 저장되는 것은 아닙니다. 확인한 ReceivingService.confirm에서는 취소되지 않은 건을 receipt에 넣습니다.[1]\n\n- r.cancelled()가 참이면 cancelled_receipt_skipped 감사 이벤트를 내고 바로 반환하므로 insert하지 않습니다.\n- 그 외에는 receiptRepository.insert(\"receipt\", r)를 호출한 뒤 receipt_confirmed 감사 이벤트를 냅니다.[1]\n\n이 파일에서 확인되는 명시적 예외 분기는 취소 건입니다. 저장소 내부 동작이나 DB 실패 처리는 이 코드만으로 확정할 수 없습니다.\n\n출처: [1] [ReceivingService.java](/tmp/dougle-token-eval-051/originals/ReceivingService.java), ReceivingService.confirm.\n\n원본 확인 결과와 예외 보완은 메모리에 저장하지 않았습니다."
+  },
+  {
+    "id": "Q3",
+    "answer": "입하 확정과 정산 확정 중 어느 쪽을 말씀하시나요? 입하는 취소 건을 제외하고 receipt에 넣고,[1] 정산은 billing_receipt에 넣습니다.[2]\n\n출처: [1] [ReceivingService.java](/tmp/dougle-token-eval-051/originals/ReceivingService.java), ReceivingService.confirm. [2] [BillingService.java](/tmp/dougle-token-eval-051/originals/BillingService.java), BillingService.confirm.\n\n확인 결과는 메모리에 저장하지 않았습니다."
+  },
+  {
+    "id": "Q4",
+    "answer": "지금 입하 대기 건수는 확인할 수 없습니다. 이 평가에는 실시간 DB 조회 도구가 없어서 현재 수치를 읽을 수 없습니다. 과거 수치를 현재 건수로 대신 제시하지 않겠습니다. 현재 건수를 알려면 입하 DB에 대한 승인된 읽기 전용 조회가 필요합니다. 메모리는 변경하지 않았습니다."
+  },
+  {
+    "id": "Q5",
+    "answer": "실제로 위임하는 쪽은 Player입니다. Player.nextHand()가 자신이 가진 strategy의 nextHand()를 호출합니다.[1] Strategy는 nextHand()와 study(boolean win)를 선언하는 인터페이스입니다.[2]\n\n출처: [1] [Player.java](/tmp/dougle-token-eval-051/originals/Player.java), Player.nextHand. [2] [Strategy.java](/tmp/dougle-token-eval-051/originals/Strategy.java), Strategy.\n\n후속 답변 — 위임 흐름을 이해하려면 Player.nextHand()를 먼저 보세요. strategy.nextHand()로 넘기는 지점이 핵심입니다.[1] 그다음 Strategy의 메서드 선언을 보면 위임 대상의 계약을 확인할 수 있습니다.[2] 제공된 코드에는 구체 전략 구현이나 전략 선택·교체 과정은 나타나지 않습니다.\n\n후속 출처: [1] [Player.java](/tmp/dougle-token-eval-051/originals/Player.java), Player.nextHand. [2] [Strategy.java](/tmp/dougle-token-eval-051/originals/Strategy.java), Strategy.\n\n확인 결과는 메모리에 저장하지 않았습니다."
+  },
+  {
+    "id": "Q6",
+    "answer": "현재 제공된 코드의 입하 확정 저장 대상은 receipt입니다. ReceivingService.confirm은 취소 건이면 감사 이벤트만 내고 반환하며, 그 외에는 receiptRepository.insert(\"receipt\", r)를 호출합니다.[1]\n\nlegacy_receipt는 옛 설계 문서의 이름입니다. 문서도 그 리비전 이후 코드가 바뀌었다고 명시하므로, 옛 설계와 지금 읽은 구현을 구분해야 합니다.[2] 실제 운영 DB의 스키마나 마이그레이션 완료 여부까지 확인한 것은 아닙니다.\n\n출처: [1] [ReceivingService.java](/tmp/dougle-token-eval-051/originals/ReceivingService.java), ReceivingService.confirm. [2] [design.md](/tmp/dougle-token-eval-051/originals/design.md), ‘Receiving design — old revision’.\n\n현재 코드 확인 결과와 옛 문서의 차이는 메모리에 저장하지 않았습니다."
+  }
+]

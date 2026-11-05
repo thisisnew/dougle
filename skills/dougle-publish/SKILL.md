@@ -14,3 +14,7 @@ Prepare a concrete scoped export of curated concepts/rules/relationships, correc
 Reconcile existing remote knowledge before committing. Preserve teammates' additions and local user corrections. Record contradictions; do not resolve by timestamp. Use checked-base writes/normal fast-forward pushes, never force push or modify the source project checkout. Stop when the safe write capability or required disclosure approval is missing.
 
 Verify the resulting remote commit and update local checkpoints only after confirmation. On a rejected/ambiguous upload, inspect remote state before a bounded retry. Report the commit link and exact scope, exclusions and unresolved conflicts. No automatic background push follows.
+
+## Load task details before acting
+
+Read the [organization core](references/organization.md) and follow its conditional reference triggers. Before source or topic memory writes read [record rules](references/records.md); before verification or verification-record updates read [freshness rules](references/freshness.md). For reload/publish/fetch also read [operation scope](references/operations.md). Do not load unrelated detail files or reread unchanged instructions still in active context. Never omit needed evidence or scope checks to reduce context.

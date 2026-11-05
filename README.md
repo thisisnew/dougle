@@ -4,7 +4,7 @@
 
 더글은 코드·문서·DB에서 업무 지식을 정리하고, 출처를 찾아 답하는 Claude Code·Codex 스킬입니다.
 
-[처음 설치](#1-설치하기) · [바로 질문](#3-질문하기) · [이미 설치했다면](#업데이트하기)
+[처음 설치](#1-설치하기) · [바로 질문](#3-질문하기) · [이미 설치했다면](#업데이트하기) · [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
 ## 1. 설치하기
 
@@ -65,6 +65,12 @@ skills/dougle-publish, skills/dougle-fetch를 참조 파일까지 설치해 줘.
 | 자료 즉시 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
 | 팀에 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
 | 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
+
+## 필요한 내용부터 읽습니다
+
+더글은 관련 지침과 근거부터 읽고, 이미 확인한 내용을 불필요하게 다시 읽지 않습니다. **근거가 부족하면 검색을 넓히며, 예외·최신성·출처 확인은 생략하지 않습니다.**
+
+[토큰 최적화와 정확도 검증](docs/skills/context-optimization.md)
 
 ## 오래된 자료는 질문할 때 갱신합니다
 

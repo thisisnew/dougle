@@ -138,3 +138,7 @@ flowchart LR
 [자료 정리 세부 규칙](../../skills/dougle-connect/references/organization.md) · [공유 세부 규칙](../../skills/dougle-fetch/references/sharing.md)
 
 [검색 속도와 Lucene 비교](search-performance.md) · [답변 출처 표시](answer-sources.md)
+
+## 필요한 지침만 읽기
+
+공통 organization.md는 항상 적용할 핵심 규칙과 참조 조건을 담습니다. store.md·retrieval.md·records.md·freshness.md·operations.md는 해당 작업에만 읽습니다. [문맥 최적화](context-optimization.md)는 근거·예외·최신성 검사를 유지합니다.

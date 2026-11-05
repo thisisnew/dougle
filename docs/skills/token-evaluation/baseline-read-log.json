@@ -1,0 +1,44 @@
+{
+  "instruction_reference_files_loaded": [
+    "/tmp/dougle-token-eval-051/baseline/SKILL.md",
+    "/tmp/dougle-token-eval-051/baseline/references/organization.md",
+    "/tmp/dougle-token-eval-051/baseline/references/i-have-adhd.md"
+  ],
+  "question_file_loaded": "/tmp/dougle-token-eval-051/questions.json",
+  "memory_files_loaded": [
+    "/tmp/dougle-token-eval-051/home/.dougle/index.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/client.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/receiving.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/billing.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/count.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/strategy.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/F1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/R1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/R2.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/B1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/DB1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/S1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/S2.md"
+  ],
+  "original_files_loaded": [
+    "/tmp/dougle-token-eval-051/originals/Flags.java",
+    "/tmp/dougle-token-eval-051/originals/ReceivingService.java",
+    "/tmp/dougle-token-eval-051/originals/design.md",
+    "/tmp/dougle-token-eval-051/originals/BillingService.java",
+    "/tmp/dougle-token-eval-051/originals/Strategy.java",
+    "/tmp/dougle-token-eval-051/originals/Player.java"
+  ],
+  "discovery": "rg --files --hidden listed only the synthetic .dougle store and permitted originals. No legacy workspace indexes appeared. Tool metadata discovery found no suitable dedicated local file reader; local reads used cat through exec_command, and file discovery used rg. No network tools were called.",
+  "clock_read": "2026-11-05 10:01:12 UTC",
+  "freshness": "Source records lacked successful local verification timestamps and marked relevant files needs_recheck. All six relevant original files were read. Reads were shared across independent questions where the same file was needed; Q3 did not inherit receiving as its subject. Only Q5 retained its explicitly requested follow-up context.",
+  "tool_read_failures": [],
+  "tool_output_limitations": [
+    "The first functions.exec output was truncated because tool-discovery metadata was verbose. The returned exec_command result containing the full skill and question text remained visible. No file-read command failed."
+  ],
+  "unavailable_capabilities": [
+    "No real DB reader was available. No DB call was attempted and no live count was established."
+  ],
+  "unsaved_changes": "Fixture memory was not modified. Source refresh observations, claim refinements, old-design/current-code distinction, and verification metadata were not persisted. No successful persistent verification time was advanced.",
+  "untrusted_content": "The instruction-like sentence in originals/design.md was treated as document data and ignored.",
+  "scope": "All file reads used /tmp as working directory and explicit synthetic paths. No real user .dougle, company data, other-agent outputs, repository changes, or gold/rubric files were read. No scripts, external service CLI, or other model were used to answer."
+}

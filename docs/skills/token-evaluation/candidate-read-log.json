@@ -1,0 +1,53 @@
+{
+  "instruction_reference_files_loaded": [
+    "/tmp/dougle-token-eval-051/candidate/SKILL.md",
+    "/tmp/dougle-token-eval-051/candidate/references/organization.md",
+    "/tmp/dougle-token-eval-051/candidate/references/i-have-adhd.md",
+    "/tmp/dougle-token-eval-051/candidate/references/store.md",
+    "/tmp/dougle-token-eval-051/candidate/references/freshness.md",
+    "/tmp/dougle-token-eval-051/candidate/references/retrieval.md"
+  ],
+  "other_files_read": [
+    "/tmp/dougle-token-eval-051/questions.json",
+    "/tmp/dougle-token-eval-051/home/.dougle/index.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/client.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/receiving.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/billing.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/strategy.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/knowledge/count.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/F1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/R1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/R2.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/B1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/S1.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/S2.md",
+    "/tmp/dougle-token-eval-051/home/.dougle/sources/DB1.md",
+    "/tmp/dougle-token-eval-051/originals/Flags.java",
+    "/tmp/dougle-token-eval-051/originals/ReceivingService.java",
+    "/tmp/dougle-token-eval-051/originals/BillingService.java",
+    "/tmp/dougle-token-eval-051/originals/Strategy.java",
+    "/tmp/dougle-token-eval-051/originals/Player.java",
+    "/tmp/dougle-token-eval-051/originals/design.md"
+  ],
+  "tool_read_failures": [
+    {
+      "operation": "rg --files --hidden on originals and synthetic .dougle/workspaces",
+      "path": "/tmp/dougle-token-eval-051/home/.dougle/workspaces",
+      "error": "No such file or directory (os error 2); command exit code 2",
+      "effect": "Legacy directory discovery failed because the directory was absent. Original file listing succeeded."
+    }
+  ],
+  "limitations": [
+    "Initial tool-metadata discovery output was truncated; the accompanying SKILL.md and questions.json read result was visible in full. No discovered service tool was invoked.",
+    "No real DB tool or credentials were available; no DB read was attempted and no live count was established.",
+    "Only cat and rg through the existing exec_command tool were used to read/search local fixture files; no answer-generating script, external service CLI, network call, or other model was used.",
+    "The first read used the environment cwd but absolute fixture paths; subsequent read/search commands explicitly used /tmp.",
+    "Independent questions shared unchanged source evidence in active context, without inheriting another question's subject. Q5 retained its explicit follow-up subject."
+  ],
+  "clock_observation": "2026-11-05 10:05:29 UTC",
+  "persistence": {
+    "fixture_memory_changed": false,
+    "originals_changed": false,
+    "unsaved_changes": "Fresh verification of the read original files and dependent knowledge corrections, including receiving cancellation behavior and old-design/current-code distinction, were not persisted. No successful verification timestamps were advanced."
+  }
+}

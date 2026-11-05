@@ -5,7 +5,7 @@ description: Answer domain questions using connected work material and Dougle's 
 
 # Dougle ask
 
-Use the already-running AI and its available read/search/file tools. No separate runtime, database, embedding model or AI subprocess is required. Read [the organization protocol](references/organization.md) to locate shared memory, interpret confidence/provenance and update it correctly.
+Use the already-running AI and its available read/search/file tools. No separate runtime, database, embedding model or AI subprocess is required. Read [the organization core](references/organization.md) once per active context, then only the detail files whose triggers apply. It governs store discovery, retrieval, freshness and memory writes.
 
 ## Required answer style
 
