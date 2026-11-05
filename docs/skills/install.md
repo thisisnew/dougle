@@ -31,7 +31,7 @@
    ```text
    https://github.com/thisisnew/dougle 저장소에서
    skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
-   skills/dougle-publish, skills/dougle-fetch를 스킬로 설치해 줘.
+   skills/dougle-publish, skills/dougle-fetch, skills/i-have-adhd를 스킬로 설치해 줘.
    ```
 
 2. 설치 후 새 세션에서 자료를 연결합니다. `/path/to/project`를 실제 자료 경로로 바꾸세요.
@@ -40,9 +40,9 @@
    $dougle-connect /path/to/project를 읽고 업무 지식을 정리해 줘.
    ```
 
-직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.5.0-skills-preview.1)을 풀고 `Dougle/skills/` 안의 다섯 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.5.2-skills-preview.1)을 풀고 `Dougle/skills/` 안의 여섯 폴더를 `~/.agents/skills/`에 복사하세요.
 
-설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`도 함께 포함하세요. ask의 `i-have-adhd` 지침과 라이선스도 이 폴더에 있습니다.
+설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`도 함께 포함하세요. 독립된 `i-have-adhd/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 
 ## 설치 후 확인하기
 
@@ -96,11 +96,11 @@ claude plugin list
 ```text
 https://github.com/thisisnew/dougle 의 최신 main 기준으로
 현재 설치된 dougle-connect, dougle-ask, dougle-reload,
-dougle-publish, dougle-fetch 다섯 스킬을 갱신해 줘.
+dougle-publish, dougle-fetch, i-have-adhd 여섯 스킬을 갱신해 줘.
 
 실제로 로드되는 설치 경로를 먼저 확인하고 그 위치를 업데이트해.
 개인 수정본은 보존하고, ~/.dougle/의 업무 지식은 건드리지 마.
-완료 후 다섯 SKILL.md와 참조 파일이 최신 저장소와 일치하는지 확인해.
+완료 후 여섯 SKILL.md와 참조 파일이 최신 저장소와 일치하는지 확인해.
 ```
 
 **2. Codex를 다시 실행하고 `$dougle-fetch`를 입력해 확인하세요.**
@@ -132,14 +132,14 @@ dougle-publish, dougle-fetch 다섯 스킬을 갱신해 줘.
 
 ## 제거하기
 
-Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설치했다면 설치한 다섯 스킬 폴더를 제거합니다.
+Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설치했다면 더글 업무 스킬 다섯 폴더와 함께 설치한 답변 스킬 폴더를 제거합니다.
 
 **설치한 스킬과 저장된 지식은 별개입니다.** 스킬을 제거해도 `~/.dougle/`의 지식은 자동 삭제되지 않습니다.
 
 <details>
 <summary>Claude에 폴더로 직접 설치하려면</summary>
 
-다섯 스킬 폴더를 `~/.claude/skills/`에 복사하세요. 이때 명령은 `/dougle-connect`, `/dougle-ask`, `/dougle-reload`, `/dougle-publish`, `/dougle-fetch`입니다. 플러그인 설치의 `/dougle:` 접두사는 붙이지 않습니다.
+여섯 스킬 폴더를 `~/.claude/skills/`에 복사하세요. 이때 명령은 `/dougle-connect`, `/dougle-ask`, `/dougle-reload`, `/dougle-publish`, `/dougle-fetch`, `/i-have-adhd`입니다. 플러그인 설치의 `/dougle:` 접두사는 붙이지 않습니다.
 
 명령이 중복되지 않도록 개인 폴더 설치와 플러그인 설치 중 하나만 사용하세요.
 
@@ -148,7 +148,7 @@ Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설�
 <details>
 <summary>예전 앱이나 0.2.0~0.3.x를 사용했다면</summary>
 
-0.5.0은 connect·ask·reload·publish·fetch 다섯 스킬을 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
+0.5.2는 connect·ask·reload·publish·fetch와 답변 정리용 i-have-adhd를 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
 
 0.2.0 SQLite 데이터는 `~/Library/Application Support/Dougle Skills/`에 남아 있으며 자동으로 읽거나 삭제하지 않습니다. 원본 자료를 다시 연결하면 새 Markdown 지식을 만듭니다.
 

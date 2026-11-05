@@ -29,8 +29,6 @@
 
 ## 가독성 기본값
 
-`dougle-ask` 안에 [i-have-adhd 원본 지침](../../skills/dougle-ask/references/i-have-adhd.md)과 [라이선스](../../skills/dougle-ask/references/i-have-adhd-LICENSE.md)를 함께 배포합니다. 새로운 사용자가 ask를 참조 파일까지 설치하면 기본 답변에서 이 지침을 읽도록 되어 있습니다.
+`i-have-adhd`는 별도 스킬 폴더로 함께 설치됩니다. Claude에서 ask는 Skill 도구로 `dougle:i-have-adhd`를 호출하도록 연결되어 있습니다. Codex는 등록된 스킬을 선택하고 실제 SKILL.md를 읽는 방식으로 활성화합니다.
 
-별도의 `/i-have-adhd` 명령을 실행해야만 작동하는 구조가 아닙니다. 더글 내부에 포함된 참조 문서로 적용하므로, 더글 설치만으로 독립된 i-have-adhd 명령이 목록에 등록되는 것은 아닙니다.
-
-결론부터 답하고 절차는 번호로 나누되, 요청한 상세 설명과 중요한 예외·불확실성은 생략하지 않습니다. 스타일 적용은 더글 답변 범위이며 사용자가 다른 형식을 요청하면 그 요청을 따릅니다. 호스트 AI가 따르는 지침이므로 렌더러가 형식을 강제하는 기능은 아닙니다.
+호출 실패·미설치를 성공으로 표시하지 않습니다. [호스트별 호출 방식과 검증 범위](skill-activation.md)

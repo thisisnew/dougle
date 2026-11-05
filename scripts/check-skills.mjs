@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.5.1', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.5.2', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -22,10 +22,10 @@ async function files(dir) {
  }
  return out
 }
-for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch']) {
+for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch','i-have-adhd']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
- check(all.length===(name==='dougle-ask'?9:['dougle-publish','dougle-fetch'].includes(name)?8:7),'only declared Markdown skill resources')
+ check(all.length===(name==='i-have-adhd'?2:name==='dougle-ask'?9:['dougle-publish','dougle-fetch'].includes(name)?8:7),'only declared Markdown skill resources')
  for(const p of all) {
   check(p.endsWith('.md'),'no executable/runtime dependency')
   const text=await readFile(p,'utf8')
@@ -53,5 +53,13 @@ for (const [file, expected] of [
 for (const resource of ['store.md','retrieval.md','records.md','freshness.md','operations.md']) {
  const canonical=await readFile(resolve(root,'skills/dougle-ask/references',resource),'utf8')
  for (const name of ['connect','reload','publish','fetch']) check(canonical===await readFile(resolve(root,`skills/dougle-${name}/references`,resource),'utf8'),'shared detail identical')
+}
+const companion=await readFile(resolve(root,'skills/i-have-adhd/SKILL.md'),'utf8')
+check(!companion.includes('disable-model-invocation:'),'companion model invocation enabled')
+check(await readFile(resolve(root,'skills/i-have-adhd/LICENSE.md'),'utf8')===await readFile(resolve(root,'skills/dougle-ask/references/i-have-adhd-LICENSE.md'),'utf8'),'companion license retained')
+for (const name of ['connect','ask','reload','publish','fetch']) {
+ const core=await readFile(resolve(root,`skills/dougle-${name}/references/organization.md`),'utf8')
+ const policy=await readFile(resolve(root,`skills/dougle-${name}/references/freshness.md`),'utf8')
+ check(core.includes('3600 seconds') && policy.includes('3600 seconds (1 elapsed hour)'), 'one-hour built-in fallback')
 }
 console.log(JSON.stringify({status:'PASS',structuralChecks:checks,semanticModelEvaluation:false}))

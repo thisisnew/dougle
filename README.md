@@ -1,8 +1,12 @@
 # Dougle · 더글
 
-**회사 자료를 연결하고, 평소 쓰는 AI에게 업무를 물어보세요.**
+**내가 연결한 업무 지식을 쌓고, 팀과 함께 쓰세요.**
 
-더글은 코드·문서·DB에서 업무 지식을 정리하고, 출처를 찾아 답하는 Claude Code·Codex 스킬입니다.
+더글은 평소 쓰는 Claude Code·Codex에서 자료를 읽고 업무 지식으로 내재화하는 스킬입니다.
+
+![자료 연결과 내재화, publish로 팀 저장소에 공유, fetch로 동료 지식과 병합하는 흐름](docs/diagrams/knowledge-sharing.svg)
+
+**publish**로 내가 쌓은 지식을 공유하고, **fetch**로 동료의 지식을 가져와 함께 활용합니다.
 
 [처음 설치](#1-설치하기) · [바로 질문](#3-질문하기) · [이미 설치했다면](#업데이트하기) · [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
@@ -20,7 +24,7 @@
 ```text
 https://github.com/thisisnew/dougle 저장소에서
 skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
-skills/dougle-publish, skills/dougle-fetch를 참조 파일까지 설치해 줘.
+skills/dougle-publish, skills/dougle-fetch, skills/i-have-adhd를 참조 파일까지 설치해 줘.
 ```
 
 ## 2. 자료 연결하기
@@ -45,18 +49,39 @@ skills/dougle-publish, skills/dougle-fetch를 참조 파일까지 설치해 줘.
 
 같은 대화에서 **“어느 코드를 보면 돼?”**처럼 이어서 물어보세요.
 
-답변은 **결론 → 필요한 설명 → 출처** 순서로 정리합니다. 실제로 확인한 자료만 인용하며, 추론이나 최신 확인이 안 된 내용은 구분합니다.
+**결론 → 필요한 설명 → 출처** 순서로 답합니다. 자세한 설명이 필요하면 “전체 흐름을 자세히 설명해 줘”라고 요청하세요.
 
-> 답변 형식 예시 — 아래 파일과 동작은 가상입니다.
+<details>
+<summary>답변 예시 보기</summary>
+
+> 아래 파일과 동작은 가상입니다.
 >
 > 입하 확정은 `receipt` 테이블에 기록합니다. [1]
 >
 > 흐름은 `confirmReceipt()`부터 보면 됩니다. [1]
 >
-> **출처**
-> - [1] `src/ReceiptService.java` · `confirmReceipt()`
+> **출처** · [1] `src/ReceiptService.java` — `confirmReceipt()`
 
-`i-have-adhd` 원본 지침이 ask에 포함되어 기본 답변에 적용됩니다. 자세한 설명이 필요하면 **“전체 흐름을 자세히 설명해 줘”**라고 요청하세요.
+답변 정리용 i-have-adhd도 함께 설치됩니다. [호스트별 활성화 방식](docs/skills/skill-activation.md)
+
+</details>
+
+## 4. 쌓인 지식을 팀과 공유하기
+
+공유할 GitHub 저장소 주소와 범위를 알려주세요.
+
+```text
+/dougle:dougle-publish 팀_지식_저장소_URL에 입하 업무 지식을 공유해 줘.
+```
+
+동료는 같은 저장소에서 지식을 가져와 질문에 활용할 수 있습니다.
+
+```text
+/dougle:dougle-fetch 팀_지식_저장소_URL의 지식을 가져와 내 지식과 합쳐 줘.
+/dougle:dougle-ask 입하 확정에서 주의할 예외는 뭐야?
+```
+
+fetch는 기존 지식을 통째로 덮어쓰지 않고 출처·정정·충돌을 보존해 합칩니다. 공유 대상은 선택한 정제 지식이며, 저장소 접근 권한이 있는 팀원이 사용할 수 있습니다. [공유와 병합 자세히 보기](docs/skills/sharing.md)
 
 ## 필요한 명령 찾기
 
@@ -68,26 +93,30 @@ skills/dougle-publish, skills/dougle-fetch를 참조 파일까지 설치해 줘.
 | 팀에 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
 | 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
 
-## 필요한 내용부터 읽습니다
+## 질문에서 답변까지
 
-더글은 관련 지침과 근거부터 읽고, 이미 확인한 내용을 불필요하게 다시 읽지 않습니다. **근거가 부족하면 검색을 넓히며, 예외·최신성·출처 확인은 생략하지 않습니다.**
+![질문에서 관련 지식을 찾고 최신성과 근거를 확인한 뒤 원본 출처와 함께 답하는 흐름](docs/diagrams/ask-flow.svg)
 
-[토큰 최적화와 정확도 검증](docs/skills/context-optimization.md)
+기본 **1시간**이 지나면 관련 자료를 확인합니다. 현재 DB 상태·최신 설정은 매번 확인하며, 따로 지정한 주기는 유지합니다.
 
-## 오래된 자료는 질문할 때 갱신합니다
-
-`ask`는 **관련 자료를 마지막으로 확인한 지 24시간 이상 지났으면 갱신 후 답합니다.** 현재 DB 상태나 최신 설정을 묻는 질문은 매번 확인합니다.
-
-주기도 바꿀 수 있습니다.
+<details>
+<summary>갱신 주기 바꾸기 · 지금 갱신하기</summary>
 
 ```text
 이 컨플루언스 문서는 일주일마다 확인해 줘.
-더글의 기본 확인 간격을 12시간으로 바꿔 줘.
+더글의 기본 확인 간격을 1시간으로 바꿔 줘.
 ```
 
-갱신에 실패하면 예전 자료를 최신 정보처럼 말하지 않습니다. 전체를 지금 갱신하려면 `/dougle:dougle-reload 전체` 또는 `$dougle-reload 전체`를 쓰세요.
+즉시 갱신하려면 Claude는 `/dougle:dougle-reload 전체`, Codex는 `$dougle-reload 전체`를 사용하세요.
+
+[갱신 상세](docs/skills/reload.md) · [토큰 최적화](docs/skills/context-optimization.md)
+
+</details>
 
 ## 업데이트하기
+
+<details>
+<summary>이미 설치했다면: 모델별 업데이트 명령과 문제 해결</summary>
 
 ### Claude Code 플러그인
 
@@ -130,7 +159,7 @@ claude plugin list
 
 ```text
 https://github.com/thisisnew/dougle 의 최신 main으로
-dougle-connect, dougle-ask, dougle-reload, dougle-publish, dougle-fetch를 갱신해 줘.
+dougle-connect, dougle-ask, dougle-reload, dougle-publish, dougle-fetch, i-have-adhd를 갱신해 줘.
 실제로 로드되는 설치 경로를 확인하고 SKILL.md와 참조 파일을 함께 업데이트해.
 개인 수정본은 보존하고 ~/.dougle/의 업무 지식은 건드리지 마.
 ```
@@ -146,10 +175,8 @@ dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 �
 
 **업데이트는 새 스킬 파일을 받는 것, 리로드는 받은 파일을 다시 읽는 것**입니다. `dougle-reload`는 회사 자료를 갱신하는 별도 기능입니다.
 
-## 연결한 지식은 계속 사용할 수 있습니다
+</details>
 
-저장된 업무 지식은 세션을 닫아도 남으며, 어느 디렉토리에서든 다시 불러와 질문할 수 있습니다.
+저장된 지식은 세션을 닫아도 남습니다. [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
-[지식 저장과 검색이 동작하는 방식](docs/skills/how-it-works.md)
-
-[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.5.1-skills-preview.1)
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.5.2-skills-preview.1)

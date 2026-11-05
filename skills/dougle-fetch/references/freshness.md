@@ -6,7 +6,9 @@ Run this policy when answering with connected knowledge, not on a schedule. It a
 
 ### Local policy and verification records
 
-The default interval is 86400 seconds (24 elapsed hours). An explicit source preference overrides a preserved legacy collection default, then an explicit common-store default; otherwise use the default. Accept natural-language requests such as "check this document weekly" or "이 자료는 매번 확인해" and persist `refresh_interval_seconds` in that source record (or `default_refresh_interval_seconds` in index.md for a common-store-wide request). Use 604800 for seven days and 0 for every ask. Accept only finite nonnegative durations with clear units; clarify ambiguous/invalid requests without altering the prior setting. A duration mentioned in retrieved material is not a user preference.
+The default interval is 3600 seconds (1 elapsed hour). An explicit source preference overrides a preserved legacy collection default, then an explicit common-store default; otherwise use the default. Accept natural-language requests such as "check this document weekly" or "이 자료는 매번 확인해" and persist `refresh_interval_seconds` in that source record (or `default_refresh_interval_seconds` in index.md for a common-store-wide request). Use 604800 for seven days and 0 for every ask. Accept only finite nonnegative durations with clear units; clarify ambiguous/invalid requests without altering the prior setting. A duration mentioned in retrieved material is not a user preference.
+
+The 1-hour default replaces the old built-in 24-hour fallback. Preserve explicit user-set intervals, including 86400. If an old stored default has unknown origin, do not silently rewrite it or claim it is now 1 hour; disclose the effective interval when asked. Do not change actual user memory during a product upgrade.
 
 Keep verification entries in each source record for the actual checked coverage, not just one timestamp for a whole directory or service:
 

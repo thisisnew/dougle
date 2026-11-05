@@ -1,0 +1,99 @@
+{
+  "version": "0.5.2",
+  "claude": {
+    "version": "2.1.31",
+    "status": "BLOCKED_AUTH",
+    "attempts": 1,
+    "modelCompletions": 0,
+    "skillCalls": 0,
+    "reason": "OAuth access token invalid (401); secrets unchanged"
+  },
+  "codex": {
+    "version": "0.164.0",
+    "catalog": "skills/list returned i-have-adhd enabled=true, errors=[]",
+    "runs": [
+      {
+        "name": "codex",
+        "messages": [
+          "dougle-ask 스킬을 적용해 설치된 지침을 읽겠습니다. i-have-adhd는 현재 등록 목록에 없어 활성화할 수 없습니다. 완전한 Dougle 설치로 업데이트해 동반 스킬을 등록해야 하며, 이번에는 간결한 기본 형식으로 답하겠습니다.\n",
+          "**취소된 경우 receipt를 삽입하지 않습니다.** 사용자 제공 fixture에 따르면 `ReceivingService.confirm`은 cancelled이면 즉시 반환합니다. 원본 코드를 독립 검증한 결과는 아닙니다. [1]\n\n표현 스킬 활성화는 미완료입니다. 현재 등록 목록에 `i-have-adhd`가 없어 기본 간결 형식을 적용했습니다. Dougle 전체 설치를 업데이트해 동반 스킬을 등록해야 합니다. [2]\n\n지정한 `2026-11-05T12:00:00Z` 기준 정책 판정입니다. 실제 검증·갱신은 수행하지 않았습니다. [3]\n\n| 사례 | 판정 | 적용 정책 |\n|---|---|---|\n| A | **REUSE** | 경과 3,599초로 기본 3,600초 미만. |\n| B | **VERIFY** | 정확히 3,600초. `경과 시간 ≥ 간격`이면 검증 대상. |\n| C | **REUSE** | 명시적 소스 간격 86,400초가 기본값보다 우선. 경과 3,600초. |\n| D | **VERIFY** | 현재 DB 건수는 실시간 상태 질문이므로 60초 전 검증이어도 새 조회 필요. |\n| E | **VERIFY** | 마지막 성공 이후 7,200초. 최근 실패한 시도는 성공 시각이나 검증 기한을 연장하지 않음. |\n| F | **REUSE** | 출처 불명인 기존 기본값도 임의로 3,600초로 바꾸지 않음. 유효 간격 86,400초를 유지하므로 경과 3,600초는 재사용 가능. 설정 변경 없음. |\n\n메모리는 수정하지 않았습니다.\n\n**출처**\n\n- [1] 사용자 보고 fixture: `fixture://ReceivingService/confirm`, `ReceivingService.confirm`.\n- [2] [dougle-ask/SKILL.md](/Users/thisisnew/.agents/skills/dougle-ask/SKILL.md), Required answer style.\n- [3] [freshness.md](/Users/thisisnew/.agents/skills/dougle-ask/references/freshness.md), Local policy and verification records · Decide whether to verify."
+        ],
+        "commands": [
+          {
+            "command": "/bin/zsh -lc 'cat /Users/thisisnew/.agents/skills/dougle-ask/SKILL.md /Users/thisisnew/.agents/skills/dougle-ask/references/organization.md'",
+            "exitCode": 0
+          },
+          {
+            "command": "/bin/zsh -lc 'cat /Users/thisisnew/.agents/skills/dougle-ask/references/freshness.md'",
+            "exitCode": 0
+          }
+        ],
+        "usage": {
+          "input_tokens": 64121,
+          "cached_input_tokens": 43136,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 684,
+          "reasoning_output_tokens": 0
+        },
+        "completed": true
+      },
+      {
+        "name": "codex-style",
+        "messages": [
+          "dougle-ask 스킬을 적용하겠습니다. 제공된 목록에 i-have-adhd가 없어 동반 스킬 활성화는 완료할 수 없습니다. 허용된 스킬 지침만 읽고, 사용자 제공 사실을 근거로 답하겠습니다.\n",
+          "**사용자께서 제공한 설명대로라면, 취소한 입하는 저장되지 않습니다.** 취소 상태면 insert 전에 반환하고, 그 외에는 입하를 insert합니다.[1]\n\n출처 [1]: 이 대화의 사용자 제공 사실. 실제 코드를 검증한 결과는 아닙니다.\n\n`~/.dougle`·회사 자료에 접근하지 않았으며, 파일 저장이나 메모리 갱신도 하지 않았습니다.\n\n활성화 방식: 등록된 **dougle-ask의 SKILL.md와 조직 지침을 읽어 적용하는 Codex 지침 기반 방식**을 사용했습니다. `i-have-adhd`는 제공된 카탈로그에 없어 활성화하지 못했습니다. 동반 스킬이 포함된 Dougle 전체 설치를 업데이트하고 호스트 카탈로그에 등록해야 합니다."
+        ],
+        "commands": [
+          {
+            "command": "/bin/zsh -lc 'cat /Users/thisisnew/.agents/skills/dougle-ask/SKILL.md /Users/thisisnew/.agents/skills/dougle-ask/references/organization.md'",
+            "exitCode": 0
+          }
+        ],
+        "usage": {
+          "input_tokens": 36965,
+          "cached_input_tokens": 29056,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 310,
+          "reasoning_output_tokens": 0
+        },
+        "completed": true
+      },
+      {
+        "name": "codex-style-final",
+        "messages": [
+          "dougle-ask를 적용하겠습니다. 허용된 스킬 파일만 읽고, 사용자 제공 사실을 근거로 답하겠습니다. `i-have-adhd`는 제공된 카탈로그에 없으므로 설치된 동반 스킬 파일을 확인하겠습니다.\n",
+          "**사용자 제공 설명에 따르면, 취소한 입하는 저장되지 않습니다.** 취소 시 insert 전에 반환하고, 취소가 아니면 입하를 insert합니다.[1]\n\n출처 [1]: 이 대화의 사용자 제공 사실. 실제 코드는 검증하지 않았습니다.\n\n`~/.dougle`·회사 자료 접근, 파일 저장, 네트워크·다른 에이전트 사용은 하지 않았습니다.\n\n활성화 방식: 제공된 `dougle-ask` 지침을 적용했습니다. `i-have-adhd`는 제공된 카탈로그에는 없지만, 설치된 [SKILL.md](/Users/thisisnew/.agents/skills/i-have-adhd/SKILL.md)를 읽어 **파일 기반으로 활성화**했습니다. Skill 도구 호출은 사용하지 않았습니다."
+        ],
+        "commands": [
+          {
+            "command": "/bin/zsh -lc 'cat /Users/thisisnew/.agents/skills/dougle-ask/references/organization.md /Users/thisisnew/.agents/skills/i-have-adhd/SKILL.md'",
+            "exitCode": 0
+          }
+        ],
+        "usage": {
+          "input_tokens": 37252,
+          "cached_input_tokens": 29056,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 311,
+          "reasoning_output_tokens": 0
+        },
+        "completed": true
+      }
+    ],
+    "finalActivation": "PASS_FILE_BASED_SKILL_LOADING",
+    "claudeStyleSkillCall": "NOT_APPLICABLE",
+    "freshnessPolicyCases": {
+      "A_3599seconds": "PASS_REUSE",
+      "B_3600seconds": "PASS_VERIFY",
+      "C_explicit86400": "PASS_REUSE",
+      "D_liveDB": "PASS_VERIFY",
+      "E_failedAttempt": "PASS_VERIFY",
+      "F_unknownStoredDefault": "PASS_PRESERVE_REUSE"
+    }
+  },
+  "limitations": [
+    "Synthetic user-reported data only; no original company source verification.",
+    "Policy decisions evaluated; no real refresh persistence test.",
+    "Claude Skill invocation has not been observed because authentication failed."
+  ]
+}
