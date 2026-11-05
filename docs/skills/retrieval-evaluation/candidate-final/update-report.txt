@@ -1,0 +1,5 @@
+Refreshed S01 and saved updates to `store/sources/S01.md`, `store/knowledge/receiving.md`, and `store/index.md`.
+
+Added `archived` to the confirmation exclusions, rechecked dependent insertion behavior, and updated provenance, verification time, and navigation pointers. Preserved the user correction, unresolved `legacy_receipt` conflict, cancellation claim, and billing note.
+
+Coverage was limited to the requested Java file. All writes stayed within the fixture store; the source was unchanged.

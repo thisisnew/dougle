@@ -1,0 +1,14 @@
+{
+  "version": "0.6.3",
+  "files": 49,
+  "archiveBytes": 132547,
+  "sha256": "db835a653a8acf0fed08429f627895ed3d8fb5d4e76e7bdb7f5fdb738aeab9bd",
+  "structuralChecks": 255,
+  "scheduleFormatCheck": "PASS",
+  "manifestChecks": "PASS",
+  "localScheduleCopies": "PASS with backups",
+  "change": "new monitors default2minutes; stored intervals preserved",
+  "actualLoadTokensAndTimerRuntime": "NOT_MEASURED",
+  "newNativeModelRuns": 0,
+  "realSlackPosts": 0
+}

@@ -134,3 +134,7 @@
 ## 필요한 지침만 읽기
 
 공통 organization.md는 항상 적용할 핵심 규칙과 참조 조건을 담습니다. store.md·retrieval.md·records.md·freshness.md·operations.md는 해당 작업에만 읽습니다. [문맥 최적화](context-optimization.md)는 근거·예외·최신성 검사를 유지합니다.
+
+## 토픽 안내와 부분 갱신
+
+새로 저장하거나 실제로 갱신하는 토픽은 설명 위치·조건·예외로 가는 안내를 보완합니다. 기존 기록을 일괄 변환하지 않습니다. [저장·탐색 세부 방식](topic-navigation.md)

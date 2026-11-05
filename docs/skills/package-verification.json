@@ -1,14 +1,13 @@
 {
-  "version": "0.6.3",
+  "version": "0.7.0",
   "files": 49,
-  "archiveBytes": 132547,
-  "sha256": "db835a653a8acf0fed08429f627895ed3d8fb5d4e76e7bdb7f5fdb738aeab9bd",
+  "archiveBytes": 140716,
+  "sha256": "2bf87453fc99311664ebf8ca9011cc7ae592dd1666c646b1fdb998effb67670d",
   "structuralChecks": 255,
-  "scheduleFormatCheck": "PASS",
-  "manifestChecks": "PASS",
-  "localScheduleCopies": "PASS with backups",
-  "change": "new monitors default2minutes; stored intervals preserved",
-  "actualLoadTokensAndTimerRuntime": "NOT_MEASURED",
-  "newNativeModelRuns": 0,
-  "realSlackPosts": 0
+  "nativeRuns": 11,
+  "quality": "final baseline12/12 and candidate12/12 manually matched",
+  "actualSyntheticUpdate": "PASS source/unrelated/IDs/guards/corrections/conflicts",
+  "totalTokenReduction": "not established universally; batch input increased, last focused input decreased4.7percent with output increase and cache variance",
+  "realCompanyAccessOrUserStoreChanges": 0,
+  "extraRuntimeOrEmbedding": false
 }

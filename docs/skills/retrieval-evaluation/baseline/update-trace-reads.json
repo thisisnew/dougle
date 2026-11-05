@@ -1,0 +1,47 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline/skills/dougle-connect/SKILL.md'",
+    "outputBytes": 6118,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"pwd; rg --files -g 'AGENTS.md' -g '\"'!store/**'\"' -g '\"'!originals/**'\"'; rg --files store; cat originals/ReceivingService.java\"",
+    "outputBytes": 331,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline/skills/dougle-connect/references/organization.md; cat /tmp/dougle-retrieval-070/baseline/skills/dougle-connect/references/records.md; cat /tmp/dougle-retrieval-070/baseline/skills/dougle-connect/references/freshness.md; cat /tmp/dougle-retrieval-070/baseline/skills/dougle-connect/references/operations.md'",
+    "outputBytes": 23444,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat store/index.md store/sources/S01.md store/knowledge/receiving.md store/knowledge/billing.md; ls -la originals; ls -la /tmp/dougle-retrieval-070/baseline/skills; if [ -f AGENTS.md ]; then cat AGENTS.md; fi'",
+    "outputBytes": 1972,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline/skills/dougle-reload/SKILL.md; cat /tmp/dougle-retrieval-070/baseline/skills/dougle-connect/references/retrieval.md; rg --files --hidden store; cd originals && pwd -P'",
+    "outputBytes": 9928,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat store/index.md store/sources/S01.md store/knowledge/receiving.md'",
+    "outputBytes": 1247,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba originals/ReceivingService.java; cat store/index.md store/sources/S01.md store/knowledge/receiving.md'",
+    "outputBytes": 1746,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat store/sources/S01.md'",
+    "outputBytes": 481,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat store/index.md store/sources/S01.md store/knowledge/receiving.md store/knowledge/billing.md'",
+    "outputBytes": 3860,
+    "exitCode": 0
+  }
+]

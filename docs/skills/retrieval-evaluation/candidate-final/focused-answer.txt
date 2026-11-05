@@ -1,0 +1,7 @@
+제공된 과거 스냅샷 기준, receiving에서 입고를 확정하면 **`receipt`에 기록**합니다. [1]
+
+- **예외:** `cancelled` 또는 `returnOrder`가 참이면 즉시 반환하여 `receipt`에 기록하지 않습니다. [1]
+- **취소 처리:** 별도 `cancel()`은 `receiptCancel`에 입고 ID를 기록합니다. [1]
+- **문서 불일치:** 2019년 설계에는 `legacy_receipt`로 되어 있지만, 스냅샷 코드와 조정되지 않은 상태입니다. 위 답변은 코드 기준입니다. [2]
+
+출처: [1] [ReceivingService.java — confirm 2~5행, cancel 6행](/tmp/dougle-retrieval-070/candidate-final/fixture/originals/ReceivingService.java:2) · [2] [old-design.md — 1행](/tmp/dougle-retrieval-070/candidate-final/fixture/originals/old-design.md:1)

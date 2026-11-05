@@ -1,0 +1,27 @@
+{
+  "baselineCases": 12,
+  "baselineMatched": 12,
+  "candidateCases": 12,
+  "candidateMatched": 12,
+  "reviewMethod": "manual comparison against withheld gold and original source snippets",
+  "updateFixtureChecks": "baseline and candidate passed source immutability, unrelated-topic preservation, all guards, stable claim IDs, user correction and conflict preservation",
+  "runtimeScope": "native host reads and synthetic file edits only, not company services",
+  "externalCompletedCallsBefore": 188,
+  "externalCompletedCallsAfter": 199,
+  "newNativeRuns": 11,
+  "limitations": [
+    "Batch12includes exhaustive request, so both models loaded all notes; lower total tokens not established",
+    "Cached/uncached token counts are model reports and not billed cost",
+    "Initial candidate increased input; final twelve-case input157805vs160576",
+    "No broad real-company precision/latency guarantee",
+    "Final wording adds locator-before-full-read; focused follow-up evaluated separately"
+  ],
+  "focusedLastInput": {
+    "baseline": 179829,
+    "candidate": 171334
+  },
+  "focusedLastOutput": {
+    "baseline": 845,
+    "candidate": 967
+  }
+}

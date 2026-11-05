@@ -51,38 +51,47 @@ Related topics: ../knowledge/receiving-confirmation.md
 
 Do not retain whole source copies by default. Save only necessary short evidence excerpts when permitted; otherwise use precise source locations and reread when needed. Do not treat access-denied pages as business content.
 
-## Organize domain knowledge
+## Organize searchable topic notes
 
-Use one note per coherent business concept/process and its established system scope, not one unstructured summary per file or one merged note for homonyms across systems. Search existing notes for synonyms before adding a topic. Each note should contain only useful, supported information:
+Use one coherent business concept/process per established system scope, not one summary per source file. Search known aliases before adding topics. Existing notes remain readable without this layout; no upgrade-time rewrite or new identity is required.
 
-- **Concept:** business meaning and terminology/synonyms, including code identifiers when known.
-- **Rules and flow:** preconditions, state transitions, invariants, exceptions and responsibilities that were actually established.
-- **Relationships:** document → API → function → table/event, with evidence for EACH edge. An endpoint and a table occurring in the same repository do not prove a call/write relationship.
-- **Claims:** stable claim ID, concise statement, provenance class, evidence locations, observation time and freshness state.
-- **Open questions/conflicts:** unknown links, alternative interpretations, or divergent sources.
+For NEW notes and the parts being genuinely refreshed, put a compact navigation card at the top: topic ID/title, project/service scope, established Korean/English aliases and code/API/table identifiers, one-line subject description, and a section map from likely subquestions to exact existing heading/claim IDs. Include a visible pointer to exceptions/conflicts/unknowns and their claim links even when details live elsewhere. Keep a Navigation state (complete or needs_rebuild) with the covered claim/section IDs; this is an advisory completeness marker, not source verification. This card is navigation, not authoritative answer text or a second copy of all facts. Do not invent aliases or a supported relationship just to improve matching.
 
-Claim provenance:
+Keep each useful answer-sized unit under a stable descriptive heading with its claim ID. Store statement, provenance, source/precise location/revision/actual observation time/freshness, applicable scope and preconditions, exceptions, linked dependent claims and unresolved conflicts together or through explicit links. Each relationship edge needs its own evidence. Preserve exact identifiers; a function and table co-occurring is not proof of a write.
 
-| Class | Meaning |
-|---|---|
-| observed | Directly supported by a cited source that was actually read |
-| reported | A user's statement or correction, not independently verified |
-| inferred | An interpretation with supporting clues, not a proven fact |
+Classes: observed = directly supported by an actually read source; reported = user statement/correction; inferred = interpretation with supporting clues. Freshness: current_at_observation, needs_recheck, unavailable, superseded. Observation is not live certainty.
 
-Claim freshness: `current_at_observation`, `needs_recheck`, `unavailable`, `superseded`. Even current_at_observation is NOT a guarantee of live correctness. Evidence includes source ID and precise URL/section or file/identifier/line, plus revision if available. Use relative links between notes so the memory directory can be moved without breaking internal references.
-
-Example claim:
+Synthetic layout (names and evidence illustrative only):
 
 ```markdown
-## C01 — Confirmation persists a receipt
+# T01 — 입하 확정
+Navigation: complete
+Covered sections: C01; C02; 확인할 점
+Scope: receiving
+Aliases: 입고 확정; confirmReceipt
+About: 입하 확정의 조건과 기록 흐름
+Sections: 저장 위치 -> C01; 취소 조건 -> C02
+Cautions: C01 requires C02; unresolved items -> 확인할 점
+
+## C01 — 저장 위치
+Statement: <behavior actually established>
 Provenance: observed
+Evidence: S001, src/ReceiptService.java, confirmReceipt(), <verified revision>
+Observed: <actual read time>
 Freshness: current_at_observation
-Evidence: S001, src/ReceiptService.java, confirmReceipt(); migrations/001_receipt.sql
-Observed: <actual observation time>
-Statement: <only the behavior established by these source reads>
+Requires: C02 — 취소 조건
+
+## C02 — 취소 조건
+Statement: <verified guard and consequence>
+Evidence: <exact supporting location and observation>
+
+## 확인할 점
+<actual gaps/conflicts, or none established; never guess>
 ```
 
-Keep observed facts, reported corrections and inferred relationships distinct within a topic. Do not fill empty headings with guesses. Do not save hidden reasoning, full chats, secrets, customer/employee records or transient database values as durable domain knowledge.
+Do not force every note into empty headings. Keep short notes intact. For long notes prefer a section map and passage reads first; split only when genuinely distinct subtopics warrant it AND affected source/index/cross-note/sharing references can be preserved. Keep existing topic/claim IDs and relative evidence identities stable. Before any split record old-to-new locations, preserve backward pointers for old locators and verify dependent links; interrupted/unsafe edits must leave the original usable. Do not make all existing records migrate to enable ask/publish/fetch. Formatting/navigation additions alone do not advance observation or verification times.
+
+Keep facts, reported corrections and inference distinct. Do not save hidden reasoning, full chats, secrets, employee/customer records or transient DB rows as durable knowledge.
 
 ## Updating and correcting
 
@@ -94,3 +103,7 @@ Keep observed facts, reported corrections and inferred relationships distinct wi
 - Disconnect requests mark the source disconnected and prevent its dependent claims being used as current facts. Delete only Dougle records if the user explicitly requests forgetting/deletion; never delete business originals.
 - Save task handoff context under an explicitly scoped context ID only if useful: user goal, established findings with claim/source links, unresolved questions and next read. No full session transcript. Do not assume a new AI has prior chat context.
 
+
+## Patch affected knowledge, not the entire note
+
+When connecting, refreshing or merging, identify affected claim IDs and their dependencies, read their complete existing content plus new evidence, and patch those sections. Preserve untouched statements, exact identifiers, corrections, provenance, prior observation times and unresolved conflicts. Invalidate claims dependent on changed evidence rather than replacing them with an optimistic summary. A deletion is not the same as access failure. Re-read the affected note before writing; reconcile concurrent edits instead of replacing from an old snapshot. Before a claim/dependency/split update mark the affected navigation needs_rebuild durably, then patch content, rebuild section/caveat pointers and validate them against actual headings before marking complete and updating the index. A failed marker write prevents the update; an interrupted update leaves needs_rebuild and usable prior content for full-note/original fallback. Save note edits successfully before updating section/index pointers; validate links and report partial work on failure. A formatting-only card addition is not a fresh source check. Do not replace a whole topic with a new summary that erases caveats.

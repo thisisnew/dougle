@@ -1,0 +1,5 @@
+{
+  "topic": "# 入荷 / 입하 확정\nScope: receiving\nAliases: 입고 확정; confirmReceipt\n\n## C01 — 저장 위치\nStatement: confirm inserts receipt when guards permit.\nProvenance: observed\nEvidence: S01, ReceivingService.java, confirm\nObserved:2026-01-01T00:00:00Z\nRequires: C02\n\n## C02 — 제외 조건\nStatement: cancelled or returnOrder causes early return.\nProvenance: observed\nEvidence: S01, ReceivingService.java, confirm\nObserved:2026-01-01T00:00:00Z\n\n## C03 — 취소 기록\nStatement: cancel inserts receiptCancel.\nProvenance: observed\nEvidence: S01, ReceivingService.java, cancel\nObserved:2026-01-01T00:00:00Z\n\n## C90 — 사용자 정정\nStatement: 야간에는 담당자 확인이 필요하다는 사용자 설명. 원본 확인 전.\nProvenance: reported\nObserved:2026-01-02T00:00:00Z\n\n## 확인할 점\nThe old design says legacy_receipt; this unresolved conflict is not removed by this code update.\n",
+  "originalSha": "e1cc09a5a685c5ac132896694e28a513fdaeb13233ce2d8e487093bfb0b57f67",
+  "unrelatedSha": "269d1b6584419375e6308de1839f71c9094be09db4e6a593a87aa3cade947693"
+}

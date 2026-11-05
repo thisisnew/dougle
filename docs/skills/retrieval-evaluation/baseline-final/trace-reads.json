@@ -1,0 +1,102 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/skills/dougle-ask/SKILL.md'",
+    "outputBytes": 10503,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/questions.json'",
+    "outputBytes": 1582,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/skills/i-have-adhd/SKILL.md'",
+    "outputBytes": 7870,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/skills/dougle-ask/references/organization.md'",
+    "outputBytes": 6498,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg --files /tmp/dougle-retrieval-070/baseline-final/fixture/store'",
+    "outputBytes": 1231,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"date -u '+%Y-%m-%dT%H:%M:%SZ'\"",
+    "outputBytes": 21,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/store/index.md'",
+    "outputBytes": 762,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/skills/dougle-ask/references/retrieval.md /tmp/dougle-retrieval-070/baseline-final/skills/dougle-ask/references/freshness.md'",
+    "outputBytes": 9693,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/receiving.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/strategy.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/billing.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/feature.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/legacy-note.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/count.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/hostile.md'",
+    "outputBytes": 21101,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S01.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S02.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S03.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S04.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S05.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S06.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S07.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S08.md /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S09.md'",
+    "outputBytes": 1333,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/Player.java'",
+    "outputBytes": 91,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/counter.md'",
+    "outputBytes": 110,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/Flags.java'",
+    "outputBytes": 69,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/ReceivingService.java'",
+    "outputBytes": 227,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/Strategy.java'",
+    "outputBytes": 72,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/old-design.md'",
+    "outputBytes": 125,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/Legacy.java'",
+    "outputBytes": 66,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/hostile.md'",
+    "outputBytes": 123,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/BillingService.java'",
+    "outputBytes": 79,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg --files /tmp/dougle-retrieval-070/baseline-final/fixture/originals'",
+    "outputBytes": 658,
+    "exitCode": 0
+  }
+]

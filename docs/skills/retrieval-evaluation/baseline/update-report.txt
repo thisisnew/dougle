@@ -1,0 +1,5 @@
+Refreshed existing S01 and saved updates to `store/knowledge/receiving.md`, `store/sources/S01.md`, and `store/index.md`.
+
+Confirmation now records `archived` alongside `cancelled` and `returnOrder` as exclusions. Rechecked insert/cancel claims and saved verification metadata and pointers.
+
+Preserved the user correction and unresolved `legacy_receipt` conflict. Coverage was limited to the requested Java file; billing and source files were unchanged.

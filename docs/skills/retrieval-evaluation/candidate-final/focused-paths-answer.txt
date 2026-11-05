@@ -1,0 +1,4 @@
+제공된 과거 스냅샷에서 입고 확정(`confirm`)은 **`receipt`에 기록**합니다. 단, **취소 상태(`cancelled`)이거나 반품 주문(`returnOrder`)이면 즉시 종료하여 기록하지 않습니다.** [코드 2–4행]( /tmp/dougle-retrieval-070/candidate-final/fixture/originals/ReceivingService.java:2)
+
+- **취소 처리:** 별도 `cancel()`은 `receiptCancel`에 입고 ID를 기록합니다. [코드 6행](/tmp/dougle-retrieval-070/candidate-final/fixture/originals/ReceivingService.java:6)
+- **문서 불일치:** 2019년 설계에는 `legacy_receipt`로 되어 있지만, 스냅샷 코드는 `receipt`를 사용합니다. 설계와 코드의 차이는 미해결 상태입니다. [옛 설계 1행](/tmp/dougle-retrieval-070/candidate-final/fixture/originals/old-design.md:1)

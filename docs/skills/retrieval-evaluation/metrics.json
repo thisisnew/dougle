@@ -1,0 +1,131 @@
+{
+  "baseline": {
+    "trace": {
+      "usage": {
+        "input_tokens": 158667,
+        "cached_input_tokens": 136832,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3973,
+        "reasoning_output_tokens": 361
+      },
+      "toolOutputBytes": 61827,
+      "readCalls": 21
+    },
+    "update-trace": {
+      "usage": {
+        "input_tokens": 175614,
+        "cached_input_tokens": 158592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2606,
+        "reasoning_output_tokens": 499
+      },
+      "toolOutputBytes": 49127,
+      "readCalls": 9
+    }
+  },
+  "candidate": {
+    "trace": {
+      "usage": {
+        "input_tokens": 190667,
+        "cached_input_tokens": 158976,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3137,
+        "reasoning_output_tokens": 206
+      },
+      "toolOutputBytes": 66477,
+      "readCalls": 23
+    },
+    "update-trace": {
+      "usage": {
+        "input_tokens": 209272,
+        "cached_input_tokens": 190720,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2973,
+        "reasoning_output_tokens": 381
+      },
+      "toolOutputBytes": 55575,
+      "readCalls": 8
+    }
+  },
+  "baseline-final": {
+    "trace": {
+      "usage": {
+        "input_tokens": 157805,
+        "cached_input_tokens": 121344,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3801,
+        "reasoning_output_tokens": 562
+      },
+      "toolOutputBytes": 62214,
+      "readCalls": 20
+    },
+    "focused-trace": {
+      "usage": {
+        "input_tokens": 179829,
+        "cached_input_tokens": 159744,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 845,
+        "reasoning_output_tokens": 24
+      },
+      "toolOutputBytes": 34815,
+      "readCalls": 11
+    }
+  },
+  "candidate-final": {
+    "trace": {
+      "usage": {
+        "input_tokens": 160576,
+        "cached_input_tokens": 137984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3419,
+        "reasoning_output_tokens": 160
+      },
+      "toolOutputBytes": 64508,
+      "readCalls": 20
+    },
+    "update-trace": {
+      "usage": {
+        "input_tokens": 244137,
+        "cached_input_tokens": 223744,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3726,
+        "reasoning_output_tokens": 614
+      },
+      "toolOutputBytes": 62290,
+      "readCalls": 14
+    },
+    "focused-trace": {
+      "usage": {
+        "input_tokens": 180836,
+        "cached_input_tokens": 161664,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 972,
+        "reasoning_output_tokens": 26
+      },
+      "toolOutputBytes": 45412,
+      "readCalls": 12
+    },
+    "focused-final-trace": {
+      "usage": {
+        "input_tokens": 239075,
+        "cached_input_tokens": 200576,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1153,
+        "reasoning_output_tokens": 63
+      },
+      "toolOutputBytes": 61669,
+      "readCalls": 13
+    },
+    "focused-paths-trace": {
+      "usage": {
+        "input_tokens": 171334,
+        "cached_input_tokens": 159360,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 967,
+        "reasoning_output_tokens": 92
+      },
+      "toolOutputBytes": 36611,
+      "readCalls": 11
+    }
+  }
+}

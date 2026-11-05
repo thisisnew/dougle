@@ -1,0 +1,62 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/skills/dougle-ask/SKILL.md'",
+    "outputBytes": 10657,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/skills/i-have-adhd/SKILL.md'",
+    "outputBytes": 7870,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/skills/dougle-ask/references/organization.md'",
+    "outputBytes": 6578,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'ls -la /tmp/dougle-retrieval-070/candidate-final/fixture/store'",
+    "outputBytes": 290,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/skills/dougle-ask/references/retrieval.md'",
+    "outputBytes": 3263,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/fixture/store/index.md'",
+    "outputBytes": 762,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/fixture/store/knowledge/receiving.md'",
+    "outputBytes": 8000,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'ls -la /tmp/dougle-retrieval-070/candidate-final/fixture/store/sources'",
+    "outputBytes": 627,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/fixture/store/sources/S01.md /tmp/dougle-retrieval-070/candidate-final/fixture/store/sources/S07.md'",
+    "outputBytes": 304,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"rg -n 'receiving|receipt|입하|입고|예외|취소' /tmp/dougle-retrieval-070/candidate-final/fixture/store/knowledge --glob '\"'!receiving.md'\"'\"",
+    "outputBytes": 6709,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/candidate-final/fixture/originals/old-design.md'",
+    "outputBytes": 125,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/candidate-final/fixture/originals/ReceivingService.java'",
+    "outputBytes": 227,
+    "exitCode": 0
+  }
+]

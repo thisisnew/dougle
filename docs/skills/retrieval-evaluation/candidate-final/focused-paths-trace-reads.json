@@ -1,0 +1,57 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/skills/dougle-ask/SKILL.md'",
+    "outputBytes": 10809,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/skills/dougle-ask/references/organization.md'",
+    "outputBytes": 6684,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/skills/i-have-adhd/SKILL.md'",
+    "outputBytes": 7870,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg --files /tmp/dougle-retrieval-070/candidate-final/fixture/store'",
+    "outputBytes": 1248,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/fixture/store/index.md'",
+    "outputBytes": 762,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"rg -n '\"'^#|입고|확정|예외|receiving'\"' /tmp/dougle-retrieval-070/candidate-final/fixture/store/knowledge/receiving.md\"",
+    "outputBytes": 7115,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc \"sed -n '1,94p' /tmp/dougle-retrieval-070/candidate-final/fixture/store/knowledge/receiving.md\"",
+    "outputBytes": 1467,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/fixture/store/sources/S01.md'",
+    "outputBytes": 156,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/candidate-final/fixture/store/sources/S07.md'",
+    "outputBytes": 148,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/candidate-final/fixture/originals/old-design.md'",
+    "outputBytes": 125,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/candidate-final/fixture/originals/ReceivingService.java'",
+    "outputBytes": 227,
+    "exitCode": 0
+  }
+]

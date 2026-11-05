@@ -34,3 +34,7 @@ Legacy sharing bindings remain tied to their original repository/package and sel
 
 Index registration is incremental and repeatable: add only missing collection/record pointers, do not advance source observation/freshness times, and preserve completed work if interrupted. Inaccessible/malformed indexes are partial discovery, not proof of an empty store; disclose gaps when they affect a question or reload-all. Do not claim legacy conversion is completed without reading the relevant indexes. Older SQLite stores are handled by the existing read-only policy below, not silently migrated.
 
+
+## Compatible topic navigation
+
+Navigation cards and stable claim-section maps are optional enrichments to existing Markdown notes, not a new storage format. Keep reading old common and legacy layouts through scoped search/full-note fallback. Installation or skill update never moves/rewrites the user's knowledge. New notes use the enriched form; update old notes only during their actual scoped save/refresh. Existing sources, IDs, relative evidence and sharing bindings survive. No permission to write means no enrichment, not no search.

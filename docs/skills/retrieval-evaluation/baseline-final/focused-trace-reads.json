@@ -1,0 +1,57 @@
+[
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/skills/dougle-ask/SKILL.md'",
+    "outputBytes": 10503,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/skills/i-have-adhd/SKILL.md'",
+    "outputBytes": 7870,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/skills/dougle-ask/references/organization.md'",
+    "outputBytes": 6498,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'ls -la /tmp/dougle-retrieval-070/baseline-final/fixture/store'",
+    "outputBytes": 290,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/store/index.md'",
+    "outputBytes": 762,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/store/knowledge/receiving.md'",
+    "outputBytes": 7606,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'rg --files /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources'",
+    "outputBytes": 630,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S01.md'",
+    "outputBytes": 156,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'cat /tmp/dougle-retrieval-070/baseline-final/fixture/store/sources/S07.md'",
+    "outputBytes": 148,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/ReceivingService.java'",
+    "outputBytes": 227,
+    "exitCode": 0
+  },
+  {
+    "command": "/bin/zsh -lc 'nl -ba /tmp/dougle-retrieval-070/baseline-final/fixture/originals/old-design.md'",
+    "outputBytes": 125,
+    "exitCode": 0
+  }
+]

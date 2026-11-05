@@ -1,0 +1,5 @@
+Saved the refresh to [receiving.md](/tmp/dougle-retrieval-070/candidate/update-test/store/knowledge/receiving.md), [S01.md](/tmp/dougle-retrieval-070/candidate/update-test/store/sources/S01.md), and [index.md](/tmp/dougle-retrieval-070/candidate/update-test/store/index.md).
+
+Added `archived` to the confirmation exclusions, rechecked insertion/cancellation claims, and updated verification records and pointers.
+
+Preserved the unverified night-time rule and unresolved `legacy_receipt` conflict. Only fixture-store files were edited; billing and original source remain unchanged.
