@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.6.0', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.6.1', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -25,7 +25,7 @@ async function files(dir) {
 for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch','dougle-schedule','i-have-adhd']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
- check(all.length===(name==='dougle-schedule'?3:name==='i-have-adhd'?2:name==='dougle-ask'?9:['dougle-publish','dougle-fetch'].includes(name)?8:7),'only declared Markdown skill resources')
+ check(all.length===(name==='dougle-schedule'?4:name==='i-have-adhd'?2:name==='dougle-ask'?9:['dougle-publish','dougle-fetch'].includes(name)?8:7),'only declared Markdown skill resources')
  for(const p of all) {
   check(p.endsWith('.md'),'no executable/runtime dependency')
   const text=await readFile(p,'utf8')

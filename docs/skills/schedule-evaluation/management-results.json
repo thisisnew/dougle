@@ -1,0 +1,17 @@
+{
+  "version": "0.6.1",
+  "evaluation": "native Codex synthetic management decisions, manually reviewed",
+  "cases": 12,
+  "expectedDecisionMatches": 12,
+  "actualTimerOrSlackCalls": 0,
+  "actualUserStoreReadsOrWrites": 0,
+  "completedExternalModelCallsBefore": 186,
+  "completedExternalModelCallsAfter": 187,
+  "commands": [
+    "/bin/zsh -lc 'cat skills/dougle-schedule/SKILL.md skills/dougle-schedule/references/host.md skills/dougle-schedule/references/state.md skills/dougle-schedule/references/management.md docs/skills/schedule-evaluation/management-cases.json'"
+  ],
+  "limitations": [
+    "Instruction decisions, not actual persistent state/scheduler execution",
+    "Two extra crash-recovery issues subsequently identified by independent review and patched; those are separate tabletop review, not part of native12-case run"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "version": "0.6.0",
+  "files": 47,
+  "archiveBytes": 123763,
+  "sha256": "7b6c257d81d47fba695c38edbc005082cb4413fe74cf98ac9f64b6619bd6ba0d",
+  "structuralChecks": 246,
+  "businessSkillFormatChecks": 6,
+  "companionFormat": "Official Claude user-invocable field unsupported by generic validator; checked separately",
+  "claudeManifest": "PASS",
+  "marketplaceManifest": "PASS",
+  "installedLocalSkillCopies": "PASS with backups",
+  "syntheticPolicyCases": "35/35 manually reviewed expected decisions",
+  "nativeModelRuns": 2,
+  "independentHostReviewPasses": 2,
+  "actualSlackTimerPostingVDI": "NOT_VERIFIED",
+  "realSlackPosts": 0
+}

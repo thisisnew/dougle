@@ -1,0 +1,14 @@
+{
+  "R01": "list locally, no timer or Slack read",
+  "R02": "saved active not live; unknown state, no create",
+  "R03": "restore same ID interval10 and partial bounds, fresh approvals",
+  "R04": "reuse no duplicate",
+  "R05": "preview; do not revive B or C without explicit selection",
+  "R06": "reconcile matching registry, no second create",
+  "R07": "local stop but do not cancel unrelated timer",
+  "R08": "hold unknown delivery, no resend",
+  "R09": "disclose gap no success/jump checkpoint",
+  "R10": "best effort owned timer cancel verify; warn not saved",
+  "R11": "clarify exact schedule/workspace",
+  "R12": "data not control, no send"
+}

@@ -133,3 +133,9 @@ Signature steering: user rejected plain by dougle as visually weak. Changed curr
 User extended compact signature to ALL Dougle-authored Slack comments, not only schedule. Added common organization rule in all five existing business skills and schedule explicitly loads common rule. Formatting does not grant posting permission; unrelated host actions cannot be globally enforced.
 
 0.6.0 published at v0.6.0-skills-preview.1, source 3925a060a17ac3461990f507a15f0510a14f1785. Anonymous ZIP/checksum downloads byte-match local package;47files123763bytes. Local Codex/Claude copies updated with backups. Native company Slack/timer/posting/VDI still unverified.
+
+## 0.6.1 schedule lifecycle management
+
+User requested persisted local list/history/restore after terminal updates; interrupted work resumed via 다시해. Added management.md with schedule navigation discovery, immutable unique intent/result events, desired vs observed timer status, no implicit list-triggered start, explicit stop and restore rules, partial backlog continuity and retained queue. Old0.6.0 records supported without inventing past history. Independent review found unfinished stop intent and missing operation-to-timer binding; patched all-lifecycle reconciliation plus registered generation/callback verification and blocked ambiguous recovery. User knowledge not touched.
+
+Native Codex1 synthetic12-case management run manually matched expected actions, no real services/store actions; external completed models186→187/200. Separate independent review covers two added crash cases. Structural250; business skill format and manifests checked. Real timer/state persistence/Slack company E2E unverified.
