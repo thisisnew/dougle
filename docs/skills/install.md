@@ -30,7 +30,7 @@
 
    ```text
    https://github.com/thisisnew/dougle 저장소에서
-   skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
+   skills/dougle-connect, skills/dougle-ask,
    skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/dougle-bot, skills/i-have-adhd, skills/plain-language를 스킬로 설치해 줘.
    ```
 
@@ -40,7 +40,7 @@
    $dougle-connect 연결할_URL을 읽고 업무 지식으로 정리해 줘.
    ```
 
-직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.7-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.8-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 내부 답변 스킬인 `i-have-adhd/`, `plain-language/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 
@@ -95,11 +95,13 @@ claude plugin list
 
 ```text
 https://github.com/thisisnew/dougle 의 최신 main 기준으로
-현재 설치된 dougle-connect, dougle-ask, dougle-reload,
+현재 설치된 dougle-connect, dougle-ask,
 dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd, plain-language를 갱신해 줘.
 
 실제로 로드되는 설치 경로를 먼저 확인하고 그 위치를 업데이트해.
 개인 수정본은 보존하고, ~/.dougle/의 업무 지식은 건드리지 마.
+제거된 dougle-reload는 출처와 개인 수정 여부를 확인하고,
+더글 배포본으로 확인된 경우에만 스킬 검색 경로 밖에 백업해 줘.
 완료 후 모든 SKILL.md와 참조 파일이 최신 저장소와 일치하는지 확인해.
 ```
 
@@ -118,13 +120,14 @@ dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd, plain-la
 
 `~/.claude/skills/`에 직접 설치했다면 플러그인 업데이트 명령으로 갱신되지 않습니다. **위 Codex의 갱신 요청을 Claude 대화창에 입력한 뒤 새 세션을 시작하세요.** 확인할 명령은 접두사 없는 `/dougle-fetch`입니다.
 
-### 업데이트와 리로드의 차이
+0.8.8부터 별도 자료 갱신 명령은 없습니다. 질문하면 필요한 자료만 확인합니다. 업데이트 후에도 `dougle-reload`가 보이면 개인 폴더에 남은 이전 설치본인지 확인하세요. 백업 폴더는 스킬 검색 경로 밖에 두고 새 세션을 시작하세요. 기존 업무 지식과 명시적인 확인 주기는 보존합니다.
+
+### 업데이트와 플러그인 리로드의 차이
 
 | 작업 | 하는 일 |
 |---|---|
 | 플러그인 업데이트·스킬 파일 갱신 | GitHub의 새 스킬 파일을 받음 |
 | 플러그인·스킬 리로드 | 현재 설치된 파일을 세션에 다시 반영 |
-| `dougle-reload` | 연결한 회사 자료를 다시 읽어 업무 지식을 갱신 |
 
 **새 기능을 받으려면 파일 업데이트가 먼저입니다.** 플러그인 리로드 후 스킬 리로드까지 따로 반복할 필요는 보통 없습니다.
 
@@ -139,7 +142,7 @@ Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설�
 <details>
 <summary>Claude에 폴더로 직접 설치하려면</summary>
 
-배포물의 모든 스킬 폴더를 `~/.claude/skills/`에 복사하세요. 이때 명령은 `/dougle-connect`, `/dougle-ask`, `/dougle-reload`, `/dougle-publish`, `/dougle-fetch`, `/dougle-schedule`, `/dougle-bot`입니다. 답변 정리용 두 스킬은 내부 호출용입니다. 플러그인 설치의 `/dougle:` 접두사는 붙이지 않습니다.
+배포물의 모든 스킬 폴더를 `~/.claude/skills/`에 복사하세요. 이때 명령은 `/dougle-connect`, `/dougle-ask`, `/dougle-publish`, `/dougle-fetch`, `/dougle-schedule`, `/dougle-bot`입니다. 답변 정리용 두 스킬은 내부 호출용입니다. 플러그인 설치의 `/dougle:` 접두사는 붙이지 않습니다.
 
 명령이 중복되지 않도록 개인 폴더 설치와 플러그인 설치 중 하나만 사용하세요.
 

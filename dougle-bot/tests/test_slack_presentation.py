@@ -37,7 +37,7 @@ def test_business_answer_public_preview_matches_post_without_evidence_or_signatu
     preview = cards.final_text(draft)
     card = app.slack.cards[(ref[2], ref[3])]
     assert preview in visible(card)
-    assert "검토용 출처" in visible(card)
+    assert "승인자에게만 표시" in json.dumps(card, ensure_ascii=False)
     assert "ExampleConfig.java" in visible(card)
     assert "[1] [1]" not in visible(card)
     post(app, ref)
@@ -117,11 +117,16 @@ def test_initial_dm_and_reaction_exist_before_engine_and_same_card_becomes_appro
     assert not app.engine.calls
     original = app.engine.run
 
-    def observed(*args):
+    def observed(*args, **kwargs):
         assert next(iter(app.slack.cards)) == key
         assert "답변 작성 중" in visible(app.slack.cards[key])
-        assert not any(b.get("type") == "actions" for b in app.slack.cards[key]["blocks"])
-        return original(*args)
+        assert [
+            e["action_id"]
+            for b in app.slack.cards[key]["blocks"]
+            if b["type"] == "actions"
+            for e in b["elements"]
+        ] == ["cancel"]
+        return original(*args, **kwargs)
 
     app.engine.run = observed
     app.worker.run_once()
@@ -283,7 +288,7 @@ def test_old_unsent_payload_cannot_republish_sources_after_upgrade(app):
     assert not any(c[0] == "post" for c in app.slack.calls)
 
 
-@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.4", True), ("0.1.5", False)])
+@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.4", True), ("0.1.6", False)])
 def test_status_checks_daemon_version_not_cli_version(app, monkeypatch, version, expected):
     import dougle_bot.main as main
     from dougle_bot.config import save

@@ -34,6 +34,8 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 /dougle:dougle-ask 회송과 폐기는 어떻게 달라?
 ```
 
+**질문에 필요한 자료의 변경을 확인하고, 바뀐 지식만 갱신해 답합니다.** 전체 자료를 다시 읽을 때까지 기다리지 않습니다.
+
 **짧은 설명과 출처**를 함께 답합니다. 저장한 지식은 세션을 닫아도 남습니다. 원본을 읽으려면 해당 서비스의 조회 도구와 권한이 필요합니다.
 
 ## 3. 팀과 지식 나누기
@@ -62,7 +64,6 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 |---|---|---|
 | 자료 연결 | `/dougle:dougle-connect` | `$dougle-connect` |
 | 업무 질문 | `/dougle:dougle-ask` | `$dougle-ask` |
-| 자료 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
 | 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
 | 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
 | Slack 봇 관리 | `/dougle:dougle-bot` | `$dougle-bot` |
@@ -92,6 +93,8 @@ claude plugin update dougle@dougle-marketplace
 ```text
 https://github.com/thisisnew/dougle 최신 main으로 설치된 skills/의 모든 스킬을
 참조 파일까지 갱신해 줘. 개인 수정본과 ~/.dougle/ 지식은 보존해.
+제거된 dougle-reload 설치본은 출처와 개인 수정 여부를 확인하고,
+더글 배포본으로 확인된 경우에만 스킬 검색 경로 밖에 백업해 줘.
 ```
 
-[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.7-skills-preview.1)
+[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.8-skills-preview.1)

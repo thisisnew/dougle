@@ -127,6 +127,11 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
             if body.get("team", {}).get("id") != identity["team_id"]:
                 raise BotError("wrong_workspace")
             item = body["actions"][0]
+            if item["action_id"] == "cancel":
+                ident = actions.cancel(user, item["value"], channel, ts)
+                ack()
+                executor.submit(safe, worker.notify, ident)
+                return
             inquiry, _ = actions.resolve(user, item["value"], channel, ts)
             if item["action_id"] == "reject":
                 ident = actions.reject(user, item["value"], channel, ts)
@@ -151,7 +156,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
                 gateway.warn,
                 channel,
                 user,
-                "현재 승인자와 최신 초안에서만 처리할 수 있습니다.",
+                "현재 승인자와 최신 카드에서만 처리할 수 있습니다.",
             )
             return
         ack()
@@ -185,7 +190,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
                 item["action_id"],
             )
 
-    for action in ("post", "edit", "regenerate", "lookup", "reject"):
+    for action in ("post", "edit", "regenerate", "lookup", "reject", "cancel"):
         app.action(action)(button)
 
     def submitted(ack, body):

@@ -12,7 +12,12 @@ from dougle_bot.safety import BotError
 
 
 def action_ids(card):
-    return [item["action_id"] for block in card["blocks"] for item in block.get("elements", [])]
+    return [
+        item["action_id"]
+        for block in card["blocks"]
+        if block["type"] == "actions"
+        for item in block.get("elements", [])
+    ]
 
 
 def button_request(ref, action, **changes):

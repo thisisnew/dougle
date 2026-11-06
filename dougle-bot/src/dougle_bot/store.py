@@ -217,7 +217,7 @@ class Store:
             state = db.execute(
                 "SELECT status FROM inquiries WHERE id=?", (row["inquiry_id"],)
             ).fetchone()[0]
-            if state in ("posted", "rejected", "posting", "post_unknown"):
+            if state in ("posted", "rejected", "posting", "post_unknown", "cancelled"):
                 db.execute("UPDATE jobs SET status='cancelled' WHERE id=?", (row["id"],))
                 return None
             db.execute("UPDATE jobs SET status='running' WHERE id=?", (row["id"],))
@@ -281,7 +281,13 @@ class Store:
     ):
         with self.tx() as db:
             row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
-            if not row or row["status"] in ("posted", "rejected", "posting", "post_unknown"):
+            if not row or row["status"] in (
+                "posted",
+                "rejected",
+                "posting",
+                "post_unknown",
+                "cancelled",
+            ):
                 raise BotError("inquiry_closed")
             if expected_draft is not None and row["current_draft_id"] != expected_draft:
                 raise BotError("stale_draft")
@@ -314,9 +320,38 @@ class Store:
             )
             return draft
 
+    def cancel(self, ident, job_id, actor, channel, ts):
+        with self.tx() as db:
+            row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
+            job = db.execute(
+                "SELECT * FROM jobs WHERE id=? AND inquiry_id=?", (job_id, ident)
+            ).fetchone()
+            if not row or not job:
+                raise BotError("invalid_action")
+            if not channel or not ts or channel != row["card_channel_id"] or ts != row["card_ts"]:
+                raise BotError("wrong_card")
+            if row["status"] == "cancelled" and job["status"] == "cancelled":
+                return
+            if row["status"] not in ("queued", "drafting") or job["status"] not in (
+                "queued",
+                "running",
+            ):
+                raise BotError("stale_job")
+            db.execute(
+                "UPDATE inquiries SET status='cancelled',error=NULL,updated_at=? WHERE id=?",
+                (self.clock(), ident),
+            )
+            db.execute("UPDATE jobs SET status='cancelled' WHERE id=?", (job_id,))
+            db.execute(
+                "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,?,?,?,?)",
+                (ident, actor, "inquiry_cancelled", str(job_id), self.clock()),
+            )
+
     def fail_job(self, job, error):
         with self.tx() as db:
-            db.execute("UPDATE jobs SET status='failed' WHERE id=?", (job["id"],))
+            db.execute(
+                "UPDATE jobs SET status='failed' WHERE id=? AND status='running'", (job["id"],)
+            )
             db.execute(
                 "UPDATE inquiries SET status='failed',error=? WHERE id=? AND status='drafting'",
                 (error, job["inquiry_id"]),
@@ -324,7 +359,7 @@ class Store:
 
     def finish_job(self, ident):
         with self.tx() as db:
-            db.execute("UPDATE jobs SET status='done' WHERE id=?", (ident,))
+            db.execute("UPDATE jobs SET status='done' WHERE id=? AND status='running'", (ident,))
 
     def recover(self):
         with self.tx() as db:

@@ -60,7 +60,12 @@ def result(value, reads=None):
 
 def button_ids(app, row):
     card = app.slack.cards[(row["card_channel_id"], row["card_ts"])]
-    return [b["action_id"] for section in card["blocks"] for b in section.get("elements", [])]
+    return [
+        b["action_id"]
+        for section in card["blocks"]
+        if section["type"] == "actions"
+        for b in section.get("elements", [])
+    ]
 
 
 @pytest.mark.parametrize(

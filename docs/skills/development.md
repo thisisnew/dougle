@@ -6,7 +6,7 @@
 
 | 경로 | 역할 |
 |---|---|
-| `skills/dougle-connect`, `dougle-ask`, `dougle-reload` | 자료 연결·질문·갱신 |
+| `skills/dougle-connect`, `dougle-ask` | 자료 연결·질문 시 갱신·답변 |
 | `skills/dougle-publish`, `dougle-fetch` | 지식 공유·병합 |
 | `skills/dougle-schedule`, `dougle-bot` | Slack 문의 확인·봇 관리 |
 | `skills/i-have-adhd`, `plain-language` | 내부 답변 정리 |

@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.8.7', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.8.8', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -22,13 +22,13 @@ async function files(dir) {
  }
  return out
 }
-for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch','dougle-schedule','dougle-bot','i-have-adhd','plain-language']) {
+for (const name of ['dougle-connect','dougle-ask','dougle-publish','dougle-fetch','dougle-schedule','dougle-bot','i-have-adhd','plain-language']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
  check(all.length===(name==='dougle-bot'?7:name==='dougle-schedule'?5:['i-have-adhd','plain-language'].includes(name)?2:name==='dougle-ask'?9:name==='dougle-publish'?11:name==='dougle-fetch'?9:7),'only declared Markdown skill resources')
  for(const p of all) {
   const isPublishScanner = name==='dougle-publish' && p===resolve(dir,'scripts/check-sensitive.sh')
-  const isBotResource = name==='dougle-bot' && ['scripts/bot.sh','assets/slack-manifest.yaml','assets/requirements.txt','assets/runtime.sha256','assets/dougle_bot-0.1.5-py3-none-any.whl'].includes(p.slice(dir.length+1))
+  const isBotResource = name==='dougle-bot' && ['scripts/bot.sh','assets/slack-manifest.yaml','assets/requirements.txt','assets/runtime.sha256','assets/dougle_bot-0.1.6-py3-none-any.whl'].includes(p.slice(dir.length+1))
   check(p.endsWith('.md') || isPublishScanner || isBotResource,'only declared skill resources and optional bot runtime')
   if(p.endsWith('.whl')) {
     const relative=p.slice(resolve(root,'skills').length+1)
@@ -47,7 +47,6 @@ for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publis
  check(skill.startsWith(`---\nname: ${name}\ndescription: `),'skill metadata')
 }
 check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,'skills/dougle-ask/references/organization.md'),'utf8'),'shared protocol')
-check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,'skills/dougle-reload/references/organization.md'),'utf8'),'reload shared protocol')
 for (const name of ['dougle-publish','dougle-fetch']) check(await readFile(resolve(root,'skills/dougle-connect/references/organization.md'),'utf8')===await readFile(resolve(root,`skills/${name}/references/organization.md`),'utf8'),'shared organization')
 check(await readFile(resolve(root,'skills/dougle-publish/references/sharing.md'),'utf8')===await readFile(resolve(root,'skills/dougle-fetch/references/sharing.md'),'utf8'),'shared merge protocol')
 for (const [file, expected] of [
@@ -59,7 +58,7 @@ for (const [file, expected] of [
 }
 for (const resource of ['store.md','retrieval.md','records.md','freshness.md','operations.md']) {
  const canonical=await readFile(resolve(root,'skills/dougle-ask/references',resource),'utf8')
- for (const name of ['connect','reload','publish','fetch']) check(canonical===await readFile(resolve(root,`skills/dougle-${name}/references`,resource),'utf8'),'shared detail identical')
+ for (const name of ['connect','publish','fetch']) check(canonical===await readFile(resolve(root,`skills/dougle-${name}/references`,resource),'utf8'),'shared detail identical')
 }
 const plain=await readFile(resolve(root,'skills/plain-language/SKILL.md'),'utf8')
 check(plain.includes('user-invocable: false'),'plain-language hidden from user commands')
@@ -69,9 +68,6 @@ const companion=await readFile(resolve(root,'skills/i-have-adhd/SKILL.md'),'utf8
 check(!companion.includes('disable-model-invocation:'),'companion model invocation enabled')
 check(companion.includes('user-invocable: false'),'companion hidden from Claude user commands')
 check(await readFile(resolve(root,'skills/i-have-adhd/LICENSE.md'),'utf8')===await readFile(resolve(root,'skills/dougle-ask/references/i-have-adhd-LICENSE.md'),'utf8'),'companion license retained')
-for (const name of ['connect','ask','reload','publish','fetch']) {
- const core=await readFile(resolve(root,`skills/dougle-${name}/references/organization.md`),'utf8')
- const policy=await readFile(resolve(root,`skills/dougle-${name}/references/freshness.md`),'utf8')
- check(core.includes('3600 seconds') && policy.includes('3600 seconds (1 elapsed hour)'), 'one-hour built-in fallback')
-}
+const expected=['dougle-connect','dougle-ask','dougle-publish','dougle-fetch','dougle-schedule','dougle-bot','i-have-adhd','plain-language'].sort()
+for(const base of ['skills','plugins/dougle/skills']) check(JSON.stringify((await readdir(resolve(root,base))).sort())===JSON.stringify(expected),'only current skills distributed')
 console.log(JSON.stringify({status:'PASS',structuralChecks:checks,semanticModelEvaluation:false}))

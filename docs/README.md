@@ -8,7 +8,7 @@
 |---|---|
 | 설치하고 첫 질문하기 | [설치](skills/install.md) · [사용 예시](skills/usage.md) |
 | 코드·문서·DB 연결하기 | [자료 연결](skills/connections.md) |
-| 바뀐 자료 다시 읽기 | [자료 갱신](skills/reload.md) |
+| 질문할 때 최신 정보 확인 | [자동 갱신](skills/freshness.md) |
 | 팀에 공유하거나 가져오기 | [팀 지식 공유](skills/sharing.md) |
 | 기억이 어떻게 저장되는지 알기 | [지식 저장 방식](skills/architecture.md) |
 

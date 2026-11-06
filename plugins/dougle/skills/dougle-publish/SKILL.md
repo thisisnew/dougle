@@ -21,4 +21,4 @@ Verify the resulting remote commit, then reconcile affected shared claims locall
 
 ## Load task details before acting
 
-Read the [organization core](references/organization.md) and follow its conditional reference triggers. Before source or topic memory writes read [record rules](references/records.md); before verification or verification-record updates read [freshness rules](references/freshness.md). For reload/publish/fetch also read [operation scope](references/operations.md). Do not load unrelated detail files or reread unchanged instructions still in active context. Never omit needed evidence or scope checks to reduce context.
+Read the [organization core](references/organization.md) and follow its conditional reference triggers. Before source or topic memory writes read [record rules](references/records.md); before verification or verification-record updates read [freshness rules](references/freshness.md). For publish/fetch also read [operation scope](references/operations.md). Do not load unrelated detail files or reread unchanged instructions still in active context. Never omit needed evidence or scope checks to reduce context.

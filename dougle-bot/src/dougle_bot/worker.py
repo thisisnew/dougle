@@ -7,12 +7,15 @@ from . import cards
 from .evidence import KINDS, QUESTION_KINDS, validate_verification
 from .images import collect_images, prompt_messages
 from .presentation import reaction_names
+from .progress import Progress
 from .prompts import prompt, validate_output
 from .safety import BotError, check_content
 from .slack_gateway import SlackFailure, history_hash
 
 
 class Worker:
+    progress_interval = 30
+
     def __init__(self, store, config, engine, slack):
         self.store, self.config, self.engine, self.slack = store, config, engine, slack
         self.cards_lock = threading.RLock()
@@ -83,6 +86,22 @@ class Worker:
                     link = self.slack.permalink(inquiry["channel_id"], inquiry["posted_ts"])
                 except SlackFailure:
                     pass
+            if inquiry["status"] == "drafting":
+                latest = self.store.one(
+                    "SELECT detail FROM audit WHERE inquiry_id=? AND action='answer_progress' ORDER BY id DESC LIMIT 1",
+                    (ident,),
+                )
+                if latest:
+                    try:
+                        inquiry["progress"] = json.loads(latest["detail"])
+                    except (ValueError, TypeError):
+                        pass
+            if inquiry["status"] in ("queued", "drafting"):
+                job = self.store.one(
+                    "SELECT id FROM jobs WHERE inquiry_id=? AND status IN ('queued','running') ORDER BY id DESC LIMIT 1",
+                    (ident,),
+                )
+                inquiry["job_id"] = job["id"] if job else None
             text, blocks = cards.render(inquiry, draft, link)
             channel = inquiry["card_channel_id"] or self.slack.open_dm(
                 self.config.slack.approver_user_id
@@ -119,9 +138,39 @@ class Worker:
         job = self.store.claim_job()
         if job is None:
             return False
+        progress = Progress()
+        stop = threading.Event()
+
+        def report():
+            while not stop.wait(self.progress_interval):
+                self.report_progress(job["inquiry_id"], progress)
+
+        reporter = threading.Thread(target=report, daemon=True)
+        reporter.start()
+        try:
+            return self.process_job(job, progress)
+        finally:
+            stop.set()
+            # A slow Slack update must not delay pipe reads or keep a completed job running.
+            reporter.join(timeout=0.1)
+
+    def report_progress(self, ident, progress):
+        try:
+            with self.cards_lock:
+                if self.store.inquiry(ident)["status"] != "drafting":
+                    return
+                self.store.audit(
+                    ident, "system", "answer_progress", json.dumps(progress.snapshot())
+                )
+                self.notify(ident)
+        except Exception:
+            # Observability cannot authorize a draft or prevent research/timeout handling.
+            pass
+
+    def process_job(self, job, progress):
         ident = job["inquiry_id"]
         inquiry = self.store.inquiry(ident)
-        self.notify(ident)
+        self.report_progress(ident, progress)
         try:
             if inquiry["channel_id"] not in self.config.slack.allowed_channel_ids:
                 raise BotError("channel_not_allowed")
@@ -132,6 +181,7 @@ class Worker:
             payload = json.loads(job["payload"]) if job["payload"] else {}
             if payload.get("attachment_error"):
                 raise BotError(payload["attachment_error"])
+            progress.phase("attachments")
             images = collect_images(self.slack, messages)
             if not set(payload.get("expected_image_ids", [])) <= {img.file_id for img in images}:
                 raise BotError("image_access_denied")
@@ -149,13 +199,19 @@ class Worker:
             correction = ""
             schema_retried = False
             required_evidence = set()
+            attempt = 0
             previous_draft = self.store.current(inquiry)
             if previous_draft and previous_draft.get("verification_json"):
                 previous_checks = json.loads(previous_draft["verification_json"])
                 required_evidence.update(previous_checks["required"])
             while True:
+                if self.store.inquiry(ident)["status"] == "cancelled":
+                    raise BotError("inquiry_cancelled")
                 if self.store.control()["desired"] != "running":
                     raise BotError("bot_stopped")
+                remaining = progress.remaining(self.config.engine.timeout_seconds)
+                if remaining <= 0:
+                    raise BotError("engine_timeout")
                 run_id, budget = self.store.reserve(
                     ident,
                     self.config.engine.max_budget_usd_per_call,
@@ -182,11 +238,19 @@ class Worker:
                 )
                 start = time.monotonic()
                 try:
-                    result = (
-                        self.engine.run(text, session, budget, images=images)
-                        if images
-                        else self.engine.run(text, session, budget)
+                    attempt += 1
+                    progress.phase("retry" if attempt > 1 else "engine", attempt=attempt)
+                    result = self.engine.run(
+                        text,
+                        session,
+                        budget,
+                        images=images,
+                        on_progress=progress.activity,
+                        cancel_requested=lambda: self.store.inquiry(ident)["status"] == "cancelled",
+                        timeout_seconds=progress.remaining(self.config.engine.timeout_seconds),
                     )
+                    if progress.remaining(self.config.engine.timeout_seconds) <= 0:
+                        raise BotError("engine_timeout")
                 except BotError as exc:
                     self.store.finish_run(
                         run_id, error=exc.code, duration=int((time.monotonic() - start) * 1000)
@@ -203,7 +267,10 @@ class Worker:
                     ok=True,
                     duration=int((time.monotonic() - start) * 1000),
                 )
+                if self.store.inquiry(ident)["status"] == "cancelled":
+                    raise BotError("inquiry_cancelled")
                 session = result.session_id
+                progress.phase("validation")
                 try:
                     if not set(self.config.engine.required_skills) <= result.activated:
                         raise BotError("required_skill_not_activated")

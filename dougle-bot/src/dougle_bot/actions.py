@@ -71,6 +71,20 @@ class Actions:
             raise BotError("lookup_not_editable")
         self.slack.modal(trigger, cards.modal(action, inquiry, draft))
 
+    def cancel(self, user, value, channel, ts):
+        self.authorized(user)
+        if self.store.control()["desired"] != "running":
+            raise BotError("bot_stopped")
+        try:
+            data = json.loads(value) if isinstance(value, str) else value
+            ident, job_id = data["inquiry_id"], data["job_id"]
+            if type(ident) is not int or type(job_id) is not int or ident <= 0 or job_id <= 0:
+                raise ValueError()
+        except (ValueError, TypeError, KeyError):
+            raise BotError("invalid_action") from None
+        self.store.cancel(ident, job_id, user, channel, ts)
+        return ident
+
     def reject(self, user, value, channel, ts):
         with self.lock:
             inquiry, draft = self.resolve(user, value, channel, ts)

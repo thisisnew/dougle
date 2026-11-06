@@ -56,6 +56,10 @@ condition/call path during THIS call, even if a topic note is recent. Include re
 Add live to verification.required when actual records/configuration/runtime state determines the answer;
 use available authorized read-only DB tools when needed. Code alone cannot prove an actual delivery/record.
 Do not query DB for a visual or stable conceptual question solely because a screenshot is attached.
+Start with the exact source locator and authorized available reader. If the required source/tool is
+unavailable or denied, return needs_lookup/cannot_answer promptly with the specific missing check;
+do not repeatedly search unrelated sources, refresh the whole store or try the same denied reader.
+Do not label this a permission issue unless the reader actually reported denial.
 Read enough evidence, then apply audience/length formatting. Hide unnecessary code details in body,
 not from the investigation. A disclaimer that code/DB was not checked cannot replace a required check.
 

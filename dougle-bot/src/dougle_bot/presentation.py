@@ -51,5 +51,6 @@ def reaction_names(status, configured):
         "failed": "warning",
         "post_unknown": "warning",
         "rejected": "no_entry_sign",
+        "cancelled": "no_entry_sign",
     }[status]
     return tuple(dict.fromkeys((identity, state)))

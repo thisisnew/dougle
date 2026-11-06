@@ -14,6 +14,7 @@ from typing import Protocol
 
 from .config import BUILTINS, private_dir
 from .evidence import read_receipts
+from .progress import StreamProgress
 from .prompts import OUTPUT_SCHEMA, valid_cost
 from .safety import BotError
 
@@ -28,7 +29,17 @@ class EngineResult:
 
 
 class Engine(Protocol):
-    def run(self, text: str, session: str | None, budget: float, *, images=()) -> EngineResult: ...
+    def run(
+        self,
+        text: str,
+        session: str | None,
+        budget: float,
+        *,
+        images=(),
+        on_progress=None,
+        timeout_seconds=None,
+        cancel_requested=None,
+    ) -> EngineResult: ...
 
 
 def parse_trace(raw: bytes):
@@ -164,7 +175,17 @@ class ClaudeCliEngine:
         # A literal configured name only. Prompt never appears in this shell program or argv.
         return ["/bin/zsh", "-lic", name + ' "$@"', "dougle-launch", *args]
 
-    def run(self, text, session, budget, *, images=()):
+    def run(
+        self,
+        text,
+        session,
+        budget,
+        *,
+        images=(),
+        on_progress=None,
+        timeout_seconds=None,
+        cancel_requested=None,
+    ):
         cwd = private_dir(Path(self.config.workdir).expanduser())
         policy_dir = private_dir(self.home / "policy")
         policy = policy_dir / "tools.json"
@@ -227,6 +248,12 @@ class ClaudeCliEngine:
         err = bytearray()
         start = time.monotonic()
         streams = None
+        telemetry = StreamProgress(on_progress or (lambda event: None))
+        limit = (
+            min(self.config.timeout_seconds, timeout_seconds)
+            if timeout_seconds is not None
+            else self.config.timeout_seconds
+        )
         try:
             # stdin is bounded; write in its own selector to avoid full-pipe deadlock.
             streams = selectors.DefaultSelector()
@@ -252,9 +279,11 @@ class ClaudeCliEngine:
             pending = memoryview(text.encode())
             streams.register(proc.stdin, selectors.EVENT_WRITE, "input")
             while streams.get_map():
+                if cancel_requested and cancel_requested():
+                    raise BotError("inquiry_cancelled")
                 if self.cancelled():
                     raise BotError("bot_stopped")
-                if time.monotonic() - start > self.config.timeout_seconds:
+                if time.monotonic() - start >= limit:
                     raise BotError("engine_timeout")
                 for key, _ in streams.select(0.2):
                     if key.data == "input":
@@ -275,6 +304,8 @@ class ClaudeCliEngine:
                             key.data.extend(chunk)
                             if len(out) + len(err) > 4_000_000:
                                 raise BotError("engine_output_too_large")
+                            if key.data is out:
+                                telemetry.feed(chunk)
             proc.wait(timeout=2)
             if proc.returncode:
                 # Only classify a known error; never store raw output.
@@ -327,10 +358,22 @@ class FakeEngine:
         self.results = list(results)
         self.calls = []
         self.image_calls = []
+        self.timeouts = []
 
-    def run(self, text, session, budget, *, images=()):
+    def run(
+        self,
+        text,
+        session,
+        budget,
+        *,
+        images=(),
+        on_progress=None,
+        timeout_seconds=None,
+        cancel_requested=None,
+    ):
         self.calls.append((text, session, budget))
         self.image_calls.append(tuple(images))
+        self.timeouts.append(timeout_seconds)
         result = self.results.pop(0)
         if isinstance(result, Exception):
             raise result

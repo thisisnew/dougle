@@ -37,8 +37,8 @@ The host writes only the Dougle memory directory. If permitted persistent storag
 
 Report connection outcome and significant gaps briefly. Do not expose an internal knowledge browser. If continuation choices are useful, offer only `1 계속 연결하기` and `0 이전으로`. Going back retains connections; do not add a question shortcut.
 
-For an explicit refresh of existing material, use the companion dougle-reload skill when available. A normal question applies ask-time freshness to its relevant evidence; it does not trigger a full-store reload.
+After connection, ordinary questions automatically verify and update their relevant evidence through dougle-ask. Reconnecting an existing source reuses its identity and updates only the requested scope; do not send the user to a separate maintenance command.
 
 ## Load task details before acting
 
-Read the [organization core](references/organization.md) and follow its conditional reference triggers. Before source or topic memory writes read [record rules](references/records.md); before verification or verification-record updates read [freshness rules](references/freshness.md). For reload/publish/fetch also read [operation scope](references/operations.md). Do not load unrelated detail files or reread unchanged instructions still in active context. Never omit needed evidence or scope checks to reduce context.
+Read the [organization core](references/organization.md) and follow its conditional reference triggers. Before source or topic memory writes read [record rules](references/records.md); before verification or verification-record updates read [freshness rules](references/freshness.md). For publish/fetch also read [operation scope](references/operations.md). Do not load unrelated detail files or reread unchanged instructions still in active context. Never omit needed evidence or scope checks to reduce context.

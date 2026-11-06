@@ -315,7 +315,7 @@ def test_late_engine_result_does_not_revive_rejected_inquiry(app):
     app.store.enqueue(ref[0], row["current_draft_id"], "regenerated", "{}")
 
     class LateEngine:
-        def run(self, *args):
+        def run(self, *args, **kwargs):
             app.actions.reject("UAPPROVER", ref[1], ref[2], ref[3])
             return EngineResult(SESSION, answer(), 0.02, SKILLS, READS)
 

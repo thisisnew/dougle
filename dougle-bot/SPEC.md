@@ -81,3 +81,12 @@ Slack files 객체와 files.info로 권한 있는 직접 업로드 PNG/JPEG를 �
 ## 필수 근거 확인
 
 응답 JSON에 verification(question_kind, required, checks, missing)을 추가한다. checks는 종류·이번 호출의 성공한 읽기 ID·sources 인덱스를 연결하며, 이미지/개발자 결과는 별도 영수증 식별자를 사용한다. answered는 모든 필수 종류를 검증해야 한다. 보완 시 필수 종류를 줄이지 않으며 조회 결과 반영 작업도 이전 요구를 보존한다. 기존 schema/style와 같은 1회 보완 예산을 공유한다. drafts.verification_json을 SQLite user_version2로 추가한다. 이전 미게시 초안은 자동 게시하지 않고 다시 조사·검토한다. 의미적 정확성을 도구 성공만으로 보장하지 않는다. 상세 계약은 [근거 확인](../docs/dougle-bot/research-verification.md)을 따른다.
+
+## 0.1.6 변경: 진행 표시와 문의별 중단
+
+- 문의별 같은 승인 DM에 질문, 답변, 게시/직접 수정/거절, 검토 자료를 구분한다. 사용자 화면에서 초안·revision 표현은 제거한다. 내부 revision 검증은 유지한다.
+- queued/drafting 카드에는 최신 job_id를 담은 중단 버튼만 표시한다. 승인자·workspace·카드·작업 ID를 확인한 뒤 트랜잭션으로 inquiry와 job을 cancelled로 만든다.
+- cancelled는 재시작해도 복구하지 않는 종료 상태다. 늦은 엔진 결과의 저장과 세션 갱신을 차단한다. 전체 봇 stop과 별개다. 실행 중인 CLI의 소유 process group만 TERM/KILL하며 이미 수행한 원격 읽기는 되돌리지 않는다.
+- 약30초마다 실제 stream-json에서 추출한 제한된 단계·도구 응답 수·경과·무신호 시간을 같은 DM에 갱신한다. 원문, 도구 인자, 경로, 토큰은 진행 정보에 넣지 않는다. 도구 응답 수는 성공한 근거 수가 아니다.
+- 제한 시간은 문의 처리 시작 기준으로 누적되며 보완/세션 복원 호출에서 초기화하지 않는다.
+- 기존 근거 검증 및 게시 승인 조건을 낮추지 않는다. 회사의 실제 연결·답변 지연은 fake 검사만으로 해결됐다고 주장하지 않는다.

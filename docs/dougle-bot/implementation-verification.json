@@ -1,11 +1,11 @@
 {
   "date": "2026-11-07",
-  "plugin_version": "0.8.5",
-  "runtime_version": "0.1.5",
+  "plugin_version": "0.8.8",
+  "runtime_version": "0.1.6",
   "python": "3.13.5",
   "slack_bolt": "1.30.0",
   "slack_sdk": "3.46.0",
-  "automated_test_count": 398,
+  "automated_test_count": 422,
   "failed": 0,
   "external_network": "blocked by test fixture",
   "real_model_calls": 0,
@@ -1248,6 +1248,114 @@
       "status": "PASS"
     },
     {
+      "test": "tests.test_progress_cancel::test_queued_cancel_is_durable_and_does_not_stop_other_inquiry",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_rejects_untrusted_or_stale_context",
+      "status": "PASS",
+      "variant_sha256": "63fb751ee1c7"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_rejects_untrusted_or_stale_context",
+      "status": "PASS",
+      "variant_sha256": "f29f65935ecc"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_rejects_untrusted_or_stale_context",
+      "status": "PASS",
+      "variant_sha256": "4d38e2e0b4ef"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_rejects_untrusted_or_stale_context",
+      "status": "PASS",
+      "variant_sha256": "b0d982c321bf"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_rejects_untrusted_or_stale_context",
+      "status": "PASS",
+      "variant_sha256": "08710ef6ba19"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_rejects_untrusted_or_stale_context",
+      "status": "PASS",
+      "variant_sha256": "62c202a6bd43"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_rejects_untrusted_or_stale_context",
+      "status": "PASS",
+      "variant_sha256": "957e323b0301"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_bolt_checks_workspace_and_commits_before_ack",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_stale_cancel_cannot_cancel_ready_or_new_job",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_late_engine_result_cannot_resurrect_cancelled_inquiry_or_session",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_cancel_during_lookup_never_launches_engine",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_owned_cli_is_terminated_on_cancel_while_bot_remains_enabled",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_progress_stream_only_exposes_safe_stage_enums_with_split_utf8",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_progress_counts_responses_not_success_and_flags_silence",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_corrupt_progress_cannot_render_arbitrary_text",
+      "status": "PASS",
+      "variant_sha256": "c1d4d6ed2e3b"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_corrupt_progress_cannot_render_arbitrary_text",
+      "status": "PASS",
+      "variant_sha256": "e92053a504d7"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_corrupt_progress_cannot_render_arbitrary_text",
+      "status": "PASS",
+      "variant_sha256": "c797f6a9a438"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_corrupt_progress_cannot_render_arbitrary_text",
+      "status": "PASS",
+      "variant_sha256": "1dd1ca8da8bf"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_corrupt_progress_cannot_render_arbitrary_text",
+      "status": "PASS",
+      "variant_sha256": "cf415019fa93"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_periodic_progress_updates_same_dm_and_never_overwrites_final",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_retries_share_one_deadline",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_expired_total_budget_prevents_retry",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_card_order_labels_and_public_payload_are_distinct",
+      "status": "PASS"
+    },
+    {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
       "variant_sha256": "e63abe200f62"
@@ -1790,7 +1898,7 @@
     {
       "test": "tests.test_slack_presentation::test_status_checks_daemon_version_not_cli_version",
       "status": "PASS",
-      "variant_sha256": "679e9692ffdc"
+      "variant_sha256": "4e9889cbd975"
     },
     {
       "test": "tests.test_slack_presentation::test_bootstrap_upgrade_preserves_existing_config_and_requires_prepare",
@@ -1902,5 +2010,7 @@
     "tests": 398,
     "status": "PASS",
     "runtime_changed": false
-  }
+  },
+  "progress_and_cancellation": "PASS synthetic Slack / SQLite / owned fake CLI; actual company latency not measured",
+  "slack_dm_layout": "Block structure and source/public payload isolation tested; actual Slack client rendering not verified"
 }

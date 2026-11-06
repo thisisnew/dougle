@@ -32,7 +32,7 @@ Preserve explicit legacy refresh defaults as collection-scoped inherited prefere
 
 Legacy sharing bindings remain tied to their original repository/package and selected source scope. Reuse them through a qualified pointer or a verified non-destructive copy, preserving base/commit checkpoints; never broaden an old export to the whole store. Never import an old context.md as the new conversation's active subject just because it was modified most recently. Use old task context only when the user or current conversation identifies that task.
 
-Index registration is incremental and repeatable: add only missing collection/record pointers, do not advance source observation/freshness times, and preserve completed work if interrupted. Inaccessible/malformed indexes are partial discovery, not proof of an empty store; disclose gaps when they affect a question or reload-all. Do not claim legacy conversion is completed without reading the relevant indexes. Older SQLite stores are handled by the existing read-only policy below, not silently migrated.
+Index registration is incremental and repeatable: add only missing collection/record pointers, do not advance source observation/freshness times, and preserve completed work if interrupted. Inaccessible/malformed indexes are partial discovery, not proof of an empty store; disclose gaps when they affect the current question or explicitly selected connection scope. Do not claim legacy conversion is completed without reading the relevant indexes. Older SQLite stores are handled by the existing read-only policy below, not silently migrated.
 
 
 ## Compatible topic navigation
