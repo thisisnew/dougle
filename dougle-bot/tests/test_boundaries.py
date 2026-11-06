@@ -296,12 +296,13 @@ def test_late_engine_result_does_not_revive_rejected_inquiry(app):
     from dougle_bot.engine import EngineResult
 
     ref = ready(app)
-    metadata = json.dumps({**json.loads(ref[1]), "channel": ref[2], "ts": ref[3]})
-    app.actions.submit("UAPPROVER", metadata, "regenerate", "조금 더 짧게 작성해 주세요.")
+    row = app.store.inquiry(ref[0])
+    # A previously queued job (e.g. after changed thread) can complete after rejection.
+    app.store.enqueue(ref[0], row["current_draft_id"], "regenerated", "{}")
 
     class LateEngine:
         def run(self, *args):
-            app.actions.submit("UAPPROVER", metadata, "reject", "중복 문의입니다.")
+            app.actions.reject("UAPPROVER", ref[1], ref[2], ref[3])
             return EngineResult(SESSION, answer(), 0.02, SKILLS)
 
     app.worker.engine = LateEngine()

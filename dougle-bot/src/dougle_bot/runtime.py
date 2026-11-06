@@ -127,7 +127,23 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
             if body.get("team", {}).get("id") != identity["team_id"]:
                 raise BotError("wrong_workspace")
             item = body["actions"][0]
-            actions.resolve(user, item["value"], channel, ts)
+            inquiry, _ = actions.resolve(user, item["value"], channel, ts)
+            if item["action_id"] == "reject":
+                ident = actions.reject(user, item["value"], channel, ts)
+                ack()
+                executor.submit(safe, worker.notify, ident)
+                return
+            if item["action_id"] == "regenerate":
+                ack()
+                executor.submit(safe, worker.notify, inquiry["id"])
+                executor.submit(
+                    safe,
+                    gateway.warn,
+                    channel,
+                    user,
+                    "다시 생성 기능은 제거되었습니다. 최신 카드의 ‘직접 수정’을 이용해 주세요.",
+                )
+                return
         except (BotError, KeyError, IndexError, TypeError):
             ack()
             executor.submit(
@@ -189,10 +205,15 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
                 content,
                 observed,
             )
-        except (BotError, KeyError, TypeError):
+        except (BotError, KeyError, TypeError) as exc:
+            message = (
+                "다시 생성 기능은 제거되었습니다. 이 창을 닫고 최신 카드의 ‘직접 수정’을 이용해 주세요."
+                if isinstance(exc, BotError) and exc.code == "action_unavailable"
+                else "최신 초안과 입력 내용·조회 시각을 확인해 주세요."
+            )
             ack(
                 response_action="errors",
-                errors={"content": "최신 초안과 입력 내용·조회 시각을 확인해 주세요."},
+                errors={"content": message},
             )
             return
         ack()

@@ -44,19 +44,21 @@ class Actions:
 
     def open_modal(self, user, value, channel, ts, trigger, action):
         inquiry, draft = self.resolve(user, value, channel, ts)
-        if action not in ("edit", "regenerate", "lookup", "reject"):
-            raise BotError("invalid_action")
-        if inquiry["status"] not in (
-            ("awaiting_approval", "needs_lookup", "queued", "drafting", "failed")
-            if action == "reject"
-            else ("awaiting_approval", "needs_lookup")
-        ):
+        if action not in ("edit", "lookup"):
+            raise BotError("action_unavailable")
+        if inquiry["status"] not in ("awaiting_approval", "needs_lookup"):
             raise BotError("stale_draft")
         if action == "lookup" and inquiry["status"] != "needs_lookup":
             raise BotError("lookup_not_requested")
         if action == "edit" and inquiry["status"] != "awaiting_approval":
             raise BotError("lookup_not_editable")
         self.slack.modal(trigger, cards.modal(action, inquiry, draft))
+
+    def reject(self, user, value, channel, ts):
+        with self.lock:
+            inquiry, draft = self.resolve(user, value, channel, ts)
+            self.store.reject(inquiry["id"], draft["id"], user)
+            return inquiry["id"]
 
     def submit(self, user, metadata, action, content, observed_at=None):
         with self.lock:
@@ -67,6 +69,8 @@ class Actions:
                 raise BotError("invalid_action") from None
             inquiry, draft = self.resolve(user, data, data.get("channel"), data.get("ts"))
             ident = inquiry["id"]
+            if action == "regenerate":
+                raise BotError("action_unavailable")
             if inquiry["status"] not in (
                 ("awaiting_approval", "needs_lookup", "queued", "drafting", "failed")
                 if action == "reject"
@@ -102,15 +106,6 @@ class Actions:
                 )
             elif action == "reject":
                 self.store.reject(ident, draft["id"], user)
-            elif action == "regenerate":
-                if not content.strip():
-                    raise BotError("instruction_required")
-                self.store.enqueue(
-                    ident,
-                    draft["id"],
-                    "regenerated",
-                    json.dumps({"instruction": content}, ensure_ascii=False),
-                )
             elif action == "lookup":
                 if inquiry["status"] != "needs_lookup":
                     raise BotError("lookup_not_requested")

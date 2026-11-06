@@ -133,7 +133,6 @@ def render(inquiry, draft, permalink=None):
             if len(draft["body"]) <= 3000:
                 button("edit", "직접 수정")
         if status in ("awaiting_approval", "needs_lookup"):
-            button("regenerate", "다시 생성")
             if status == "needs_lookup":
                 button("lookup", "조회 결과 입력")
             button("reject", "거절")
@@ -149,17 +148,17 @@ def render(inquiry, draft, permalink=None):
 
 
 def modal(action, inquiry, draft):
+    if action not in ("edit", "lookup"):
+        raise BotError("action_unavailable")
     labels = {
         "edit": "직접 수정",
-        "regenerate": "다시 생성",
         "lookup": "조회 결과 입력",
-        "reject": "거절 사유",
     }
     block = {
         "type": "input",
         "block_id": "content",
         "label": {"type": "plain_text", "text": labels[action]},
-        "optional": action == "reject",
+        "optional": False,
         "element": {
             "type": "plain_text_input",
             "action_id": "value",

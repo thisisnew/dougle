@@ -1,17 +1,17 @@
 {
-  "version": "0.8.1",
+  "version": "0.8.2",
   "files": 58,
-  "archiveBytes": 195444,
-  "sha256": "ef2acbf5f4f27c50f3da1d4779555c5faccda8e3242d0db8e02ba90934f47e1e",
+  "archiveBytes": 196505,
+  "sha256": "64e30f2526dbe9fb27084a32a9135623b4e346ccd7c751e9fee26f31b028c3a1",
   "structuralChecks": 292,
   "claudeManifests": "PASS",
   "packageBytes": "PASS canonical resources and tested wheel source match",
-  "botTests": 217,
+  "botTests": 243,
   "answerStyleTests": 60,
   "realModelCalls": 0,
   "actualCompanyIntegration": "USER_REPORTED_BASIC_FLOW_ON_PREVIOUS_RELEASE; latest release NOT_VERIFIED",
   "appleSiliconFirstInstall": "NOT_RUN",
   "coreSkillsRequirePython": false,
-  "optionalBotRuntime": "0.1.1; separate explicit preparation",
+  "optionalBotRuntime": "0.1.2; separate explicit preparation",
   "planned231Scenarios": "NOT_ALL_IMPLEMENTED_OR_MAPPED"
 }

@@ -4,7 +4,7 @@ import time
 from decimal import Decimal
 
 from . import cards
-from .presentation import reaction_name
+from .presentation import reaction_names
 from .prompts import prompt, validate_output
 from .safety import BotError, check_content
 from .slack_gateway import SlackFailure, history_hash
@@ -16,38 +16,47 @@ class Worker:
         self.cards_lock = threading.RLock()
 
     def update_reaction(self, inquiry):
-        target = reaction_name(inquiry["status"], self.config.slack.ack_reaction)
-        if not target:
+        targets = reaction_names(inquiry["status"], self.config.slack.ack_reaction)
+        if not targets:
             return
         ident = inquiry["id"]
+
+        def names(detail):
+            # Previous releases recorded a single raw name, not a JSON array.
+            return set(json.loads(detail)) if detail.startswith("[") else {detail}
+
         applied = self.store.one(
             "SELECT action,detail FROM audit WHERE inquiry_id=? AND action IN ('reaction_applied','reaction_intent') ORDER BY id DESC LIMIT 1",
             (ident,),
         )
-        if applied and applied["detail"] == target and applied["action"] == "reaction_applied":
+        if (
+            applied
+            and applied["action"] == "reaction_applied"
+            and names(applied["detail"]) == set(targets)
+        ):
             return
-        attempted = {
-            r["detail"]
-            for r in self.store.all(
-                "SELECT DISTINCT detail FROM audit WHERE inquiry_id=? AND action='reaction_intent'",
-                (ident,),
-            )
-        }
-        # Old releases used eyes without tracking it. Remove only this bot's own reaction.
-        attempted.add("eyes")
-        self.store.audit(ident, "system", "reaction_intent", target)
+        attempted = {"eyes"}
+        for row in self.store.all(
+            "SELECT DISTINCT detail FROM audit WHERE inquiry_id=? AND action='reaction_intent'",
+            (ident,),
+        ):
+            attempted.update(names(row["detail"]))
+        # Record the whole desired set before any remote write. Partial adds/removals
+        # can then be reconciled after a worker restart without losing identity.
+        self.store.audit(ident, "system", "reaction_intent", json.dumps(targets))
         args = (inquiry["channel_id"], inquiry["trigger_ts"])
-        try:
-            self.slack.reaction(*args, target)
-        except SlackFailure as exc:
-            if target != "dougle" or exc.code != "invalid_name":
-                raise
-            target = "hourglass_flowing_sand"
-            self.store.audit(ident, "system", "reaction_intent", target)
-            self.slack.reaction(*args, target)
-        for previous in attempted - {target}:
+        actual = set()
+        for target in targets:
+            try:
+                self.slack.reaction(*args, target)
+                actual.add(target)
+            except SlackFailure as exc:
+                if target != "dougle" or exc.code != "invalid_name":
+                    raise
+                # The built-in state emoji still works when the custom identity is absent.
+        for previous in attempted - actual:
             self.slack.remove_reaction(*args, previous)
-        self.store.audit(ident, "system", "reaction_applied", target)
+        self.store.audit(ident, "system", "reaction_applied", json.dumps(sorted(actual)))
 
     def notify(self, ident):
         # A progress display failure must not prevent answering or create another card.

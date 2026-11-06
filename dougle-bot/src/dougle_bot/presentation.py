@@ -37,18 +37,19 @@ def chat_text(body, source_count):
     return "".join(rendered).strip()
 
 
-def reaction_name(status, configured):
+def reaction_names(status, configured):
     if not configured:
-        return None
-    active = "dougle" if configured in ("eyes", "hourglass_flowing_sand") else configured
-    return {
-        "queued": active,
-        "drafting": active,
-        "awaiting_approval": "memo",
-        "needs_lookup": "mag",
-        "posting": active,
+        return ()
+    identity = "dougle" if configured in ("eyes", "hourglass_flowing_sand") else configured
+    state = {
+        "queued": "hourglass_flowing_sand",
+        "drafting": "hourglass_flowing_sand",
+        "awaiting_approval": "hourglass_flowing_sand",
+        "needs_lookup": "hourglass_flowing_sand",
+        "posting": "hourglass_flowing_sand",
         "posted": "white_check_mark",
         "failed": "warning",
         "post_unknown": "warning",
         "rejected": "no_entry_sign",
     }[status]
+    return tuple(dict.fromkeys((identity, state)))

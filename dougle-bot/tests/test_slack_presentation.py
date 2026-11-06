@@ -15,7 +15,7 @@ from dougle_bot import cards
 from dougle_bot.engine import EngineResult
 from dougle_bot.intake import receive
 from dougle_bot.main import status
-from dougle_bot.presentation import chat_text, reaction_name
+from dougle_bot.presentation import chat_text, reaction_names
 from dougle_bot.prompts import validate_output
 from dougle_bot.safety import BotError
 from dougle_bot.slack_gateway import BoltSlackGateway, SlackFailure
@@ -127,14 +127,20 @@ def test_initial_dm_and_reaction_exist_before_engine_and_same_card_becomes_appro
     app.worker.run_once()
     assert len(app.slack.cards) == 1
     assert "게시 승인 대기" in visible(app.slack.cards[key])
-    assert app.slack.reactions == {("CTEST", "1001.000001", "memo")}
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+    }
     assert not any(c[0] == "post" for c in app.slack.calls)
 
 
 def test_post_changes_reaction_to_done_and_never_reacts_to_answer(app):
     ref = ready(app)
     post(app, ref)
-    assert app.slack.reactions == {("CTEST", "1001.000001", "white_check_mark")}
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "white_check_mark"),
+    }
 
 
 @pytest.mark.parametrize("fault", ["reaction", "remove_reaction", "card_before"])
@@ -159,12 +165,17 @@ def test_uncertain_first_progress_dm_is_not_sent_twice(app):
 def test_reaction_cleanup_survives_worker_recreation_and_partial_failure(app):
     ident = receive(app.store, app.cfg, event(), "UBOT")
     app.worker.notify(ident)
+    app.slack.reactions.add(("CTEST", "1001.000001", "memo"))
+    app.store.audit(ident, "system", "reaction_intent", "memo")
     app.slack.failures["remove_reaction"] = SlackFailure(uncertain=True)
     app.worker.run_once()
     # Retry only the cosmetic state, never the answer or posting operation.
     worker = Worker(app.store, app.cfg, app.engine, app.slack)
     worker.notify(ident)
-    assert app.slack.reactions == {("CTEST", "1001.000001", "memo")}
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+    }
 
 
 @pytest.mark.parametrize(
@@ -177,7 +188,9 @@ def test_reaction_cleanup_survives_worker_recreation_and_partial_failure(app):
     ],
 )
 def test_legacy_reaction_and_explicit_disable(configured, expected):
-    assert reaction_name("queued", configured) == expected
+    assert reaction_names("queued", configured) == (
+        (expected, "hourglass_flowing_sand") if expected else ()
+    )
 
 
 def test_disabled_reactions_still_allow_progress_dm(app):
@@ -270,7 +283,7 @@ def test_old_unsent_payload_cannot_republish_sources_after_upgrade(app):
     assert not any(c[0] == "post" for c in app.slack.calls)
 
 
-@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.0", True), ("0.1.1", False)])
+@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.1", True), ("0.1.2", False)])
 def test_status_checks_daemon_version_not_cli_version(app, monkeypatch, version, expected):
     import dougle_bot.main as main
     from dougle_bot.config import save
@@ -302,7 +315,7 @@ def test_bootstrap_upgrade_preserves_existing_config_and_requires_prepare(tmp_pa
     assert config.read_text() == "existing configuration untouched"
 
 
-def test_absent_dougle_emoji_falls_back_then_replacement_removes_hourglass(app):
+def test_absent_dougle_emoji_falls_back_and_restored_identity_keeps_loading(app):
     ident = receive(app.store, app.cfg, event(), "UBOT")
     app.slack.failures["reaction"] = SlackFailure("invalid_name")
     app.worker.notify(ident)
@@ -310,9 +323,15 @@ def test_absent_dougle_emoji_falls_back_then_replacement_removes_hourglass(app):
     assert app.store.inquiry(ident)["status"] == "queued"
     # Emoji has been re-added; a later stage refresh can use it again.
     app.worker.notify(ident)
-    assert app.slack.reactions == {("CTEST", "1001.000001", "dougle")}
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+    }
     app.worker.run_once()
-    assert app.slack.reactions == {("CTEST", "1001.000001", "memo")}
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+    }
 
 
 @pytest.mark.parametrize("code", ["missing_scope", "ratelimited", "slack_connection_failed"])
@@ -331,4 +350,84 @@ def test_deleted_emoji_is_replaced_on_next_inquiry(app):
     app.slack.failures["reaction"] = SlackFailure("invalid_name")
     app.worker.notify(ident)
     assert ("CTEST", "1002.000001", "hourglass_flowing_sand") in app.slack.reactions
-    assert ("CTEST", "1001.000001", "memo") in app.slack.reactions
+    assert ("CTEST", "1001.000001", "dougle") in app.slack.reactions
+
+
+@pytest.mark.parametrize(
+    "status,state",
+    [
+        (status, "hourglass_flowing_sand")
+        for status in ("queued", "drafting", "awaiting_approval", "needs_lookup", "posting")
+    ]
+    + [
+        ("posted", "white_check_mark"),
+        ("failed", "warning"),
+        ("post_unknown", "warning"),
+        ("rejected", "no_entry_sign"),
+    ],
+)
+def test_identity_stays_while_only_state_changes(app, status, state):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    app.worker.notify(ident)
+    inquiry = app.store.inquiry(ident)
+    inquiry["status"] = status
+    app.worker.update_reaction(inquiry)
+    assert app.slack.reactions == {("CTEST", "1001.000001", name) for name in ("dougle", state)}
+    assert not any(c[0] == "remove_reaction" and c[-1] == "dougle" for c in app.slack.calls)
+    before = len(app.slack.calls)
+    app.worker.update_reaction(inquiry)
+    assert len(app.slack.calls) == before
+
+
+def test_second_reaction_failure_reconciles_after_restart(app):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    original = app.slack.reaction
+
+    def fail_state(*args):
+        if args[-1] == "hourglass_flowing_sand":
+            raise SlackFailure(uncertain=True)
+        original(*args)
+
+    app.slack.reaction = fail_state
+    app.worker.notify(ident)
+    assert app.slack.reactions == {("CTEST", "1001.000001", "dougle")}
+    app.slack.reaction = original
+    Worker(app.store, app.cfg, app.engine, app.slack).notify(ident)
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+    }
+    assert not app.engine.calls
+
+
+def test_posted_loading_cleanup_failure_does_not_duplicate_reply(app):
+    ref = ready(app)
+    app.slack.failures["remove_reaction"] = SlackFailure(uncertain=True)
+    post(app, ref)
+    assert app.store.inquiry(ref[0])["status"] == "posted"
+    Worker(app.store, app.cfg, app.engine, app.slack).notify(ref[0])
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "white_check_mark"),
+    }
+    assert len([c for c in app.slack.calls if c[0] == "post"]) == 1
+
+
+def test_missing_identity_at_completion_still_removes_loading(app):
+    ref = ready(app)
+    app.slack.reactions.discard(("CTEST", "1001.000001", "dougle"))
+    app.slack.failures["reaction"] = SlackFailure("invalid_name")
+    post(app, ref)
+    assert app.slack.reactions == {("CTEST", "1001.000001", "white_check_mark")}
+
+
+def test_legacy_single_reaction_record_migrates_without_removing_identity(app):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    app.slack.reactions.update({("CTEST", "1001.000001", "memo"), ("CTEST", "1001.000001", "eyes")})
+    app.store.audit(ident, "system", "reaction_intent", "memo")
+    app.store.audit(ident, "system", "reaction_applied", "memo")
+    app.worker.notify(ident)
+    assert app.slack.reactions == {
+        ("CTEST", "1001.000001", "dougle"),
+        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+    }
