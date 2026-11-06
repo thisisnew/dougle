@@ -16,10 +16,10 @@
    /plugin install dougle@dougle-marketplace
    ```
 
-3. 어느 디렉토리에서든 자료를 연결합니다. 아래 `/path/to/project`를 실제 자료 경로로 바꾸세요.
+3. 어느 디렉토리에서든 자료를 연결합니다. 아래 `연결할_URL`을 읽고 싶은 자료 링크로 바꾸세요.
 
    ```text
-   /dougle:dougle-connect /path/to/project를 읽고 업무 지식을 정리해 줘.
+   /dougle:dougle-connect 연결할_URL을 읽고 업무 지식으로 정리해 줘.
    ```
 
 명령을 찾을 수 없다면 설치 상태를 확인하고 새 세션에서 다시 시도하세요.
@@ -34,13 +34,13 @@
    skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/dougle-bot, skills/i-have-adhd, skills/plain-language를 스킬로 설치해 줘.
    ```
 
-2. 설치 후 새 세션에서 자료를 연결합니다. `/path/to/project`를 실제 자료 경로로 바꾸세요.
+2. 설치 후 새 세션에서 자료를 연결합니다. `연결할_URL`을 읽고 싶은 자료 링크로 바꾸세요.
 
    ```text
-   $dougle-connect /path/to/project를 읽고 업무 지식을 정리해 줘.
+   $dougle-connect 연결할_URL을 읽고 업무 지식으로 정리해 줘.
    ```
 
-직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.3-skills-preview.1)을 풀고 `Dougle/skills/` 안의 여덟 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.7-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 내부 답변 스킬인 `i-have-adhd/`, `plain-language/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 
@@ -63,15 +63,13 @@ claude plugin marketplace update dougle-marketplace
 claude plugin update dougle@dougle-marketplace
 ```
 
-평소 `claude-work`로 실행한다면 위 명령의 `claude`도 `claude-work`로 바꾸세요. 같은 실행 명령을 사용해야 회사 설정을 유지할 수 있습니다.
-
 **2. 실행 중인 Claude 대화창에서 입력하세요.**
 
 ```text
 /reload-plugins
 ```
 
-이 명령을 지원하지 않는 버전이면 Claude를 종료하고 평소 쓰는 명령(`claude` 또는 `claude-work`)으로 다시 실행하세요.
+이 명령을 지원하지 않는 버전이면 Claude를 종료하고 다시 실행하세요.
 
 **3. Claude 대화창에서 `/dougle:`을 입력해 새 명령을 확인하세요.** 예: `/dougle:dougle-fetch`.
 
@@ -89,7 +87,7 @@ claude plugin list
 | 비활성 상태 | `claude plugin enable dougle@dougle-marketplace` 실행 후 리로드 |
 | 설치돼 있는데 명령이 없음 | Claude 대화창에서 `/plugin`의 Errors 항목 확인. 개인 스킬과 플러그인이 중복 설치됐는지도 확인 |
 
-위 확인·설치 명령도 회사 실행명이 다르면 `claude`를 해당 이름으로 바꾸세요. 관리자가 관리하는 설치는 관리자에게 업데이트를 요청하세요.
+관리자가 관리하는 설치는 관리자에게 업데이트를 요청하세요.
 
 ### Codex: 스킬 폴더로 설치한 경우
 
@@ -98,11 +96,11 @@ claude plugin list
 ```text
 https://github.com/thisisnew/dougle 의 최신 main 기준으로
 현재 설치된 dougle-connect, dougle-ask, dougle-reload,
-dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd, plain-language 아홉 스킬을 갱신해 줘.
+dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd, plain-language를 갱신해 줘.
 
 실제로 로드되는 설치 경로를 먼저 확인하고 그 위치를 업데이트해.
 개인 수정본은 보존하고, ~/.dougle/의 업무 지식은 건드리지 마.
-완료 후 일곱 SKILL.md와 참조 파일이 최신 저장소와 일치하는지 확인해.
+완료 후 모든 SKILL.md와 참조 파일이 최신 저장소와 일치하는지 확인해.
 ```
 
 **2. Codex를 다시 실행하고 `$dougle-fetch`를 입력해 확인하세요.**
@@ -134,25 +132,16 @@ dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd, plain-la
 
 ## 제거하기
 
-Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설치했다면 더글 업무 스킬 여섯 폴더와 함께 설치한 답변 스킬 폴더를 제거합니다.
+Claude 플러그인은 플러그인 관리에서 제거합니다. 폴더로 설치했다면 설치한 더글 스킬 폴더를 제거합니다. 공유 답변 스킬을 다른 용도로도 쓴다면 보존하세요. 봇을 사용 중이면 먼저 중지하세요.
 
 **설치한 스킬과 저장된 지식은 별개입니다.** 스킬을 제거해도 `~/.dougle/`의 지식은 자동 삭제되지 않습니다.
 
 <details>
 <summary>Claude에 폴더로 직접 설치하려면</summary>
 
-일곱 스킬 폴더를 `~/.claude/skills/`에 복사하세요. 이때 명령은 `/dougle-connect`, `/dougle-ask`, `/dougle-reload`, `/dougle-publish`, `/dougle-fetch`, `/dougle-schedule`입니다. 플러그인 설치의 `/dougle:` 접두사는 붙이지 않습니다.
+배포물의 모든 스킬 폴더를 `~/.claude/skills/`에 복사하세요. 이때 명령은 `/dougle-connect`, `/dougle-ask`, `/dougle-reload`, `/dougle-publish`, `/dougle-fetch`, `/dougle-schedule`, `/dougle-bot`입니다. 답변 정리용 두 스킬은 내부 호출용입니다. 플러그인 설치의 `/dougle:` 접두사는 붙이지 않습니다.
 
 명령이 중복되지 않도록 개인 폴더 설치와 플러그인 설치 중 하나만 사용하세요.
-
-</details>
-
-<details>
-<summary>예전 앱이나 0.2.0~0.3.x를 사용했다면</summary>
-
-0.7.2은 connect·ask·reload·publish·fetch·schedule과 답변 정리용 i-have-adhd를 함께 설치합니다. 예전 두세 개만 갱신하면 새 기능이 빠집니다. 기존 스킬을 직접 수정했다면 변경 내용을 먼저 확인하세요. 예전 Python 실행 파일은 새 스킬 폴더에 섞지 않습니다.
-
-0.2.0 SQLite 데이터는 `~/Library/Application Support/Dougle Skills/`에 남아 있으며 자동으로 읽거나 삭제하지 않습니다. 원본 자료를 다시 연결하면 새 Markdown 지식을 만듭니다.
 
 </details>
 

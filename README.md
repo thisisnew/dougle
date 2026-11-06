@@ -94,4 +94,4 @@ https://github.com/thisisnew/dougle 최신 main으로 설치된 skills/의 모�
 참조 파일까지 갱신해 줘. 개인 수정본과 ~/.dougle/ 지식은 보존해.
 ```
 
-[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.6-skills-preview.1)
+[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.7-skills-preview.1)

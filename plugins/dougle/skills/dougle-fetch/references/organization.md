@@ -24,7 +24,7 @@ Preserve verbatim quotations, source titles, code, identifiers and commands when
 
 Only Dougle's local memory files may be written during connect/ask/reload/fetch. An explicitly requested publish may additionally write the selected curated package to the designated knowledge repository under the sharing protocol. When explicitly using dougle-schedule, only its exact-preview, local-user-approved Slack thread reply is an additional write exception; timer callbacks never post. Its operational state stays local under ~/.dougle/schedules/ and is excluded from knowledge sharing. Company documents, code, DB, AWS/Kafka resources remain read-only. The host must supply authorized readers and appropriate read-only credentials. The skill cannot enforce a global sandbox or cryptographically verify that the host read a claimed source. Never promise otherwise. Installing Dougle does not set up company SSO or install connectors. If a required tool is missing, state the gap rather than inventing results or generating an unrestricted execution workaround.
 
-Old 0.2.0 SQLite memory is not automatically migrated. Do not install Python or open it through generated programs just to migrate. If old context is needed, reconnect the authorized original materials or use an existing permitted reader with an explicit migration request. Preserve old data unless the user asks to remove it.
+Memory in an earlier SQLite format is not automatically migrated. Do not install Python or open it through generated programs just to migrate. If old context is needed, reconnect the authorized original materials or use an existing permitted reader with an explicit migration request. Preserve old data unless the user asks to remove it.
 
 ## Slack reply signature
 

@@ -1,39 +1,36 @@
-# 스킬 개발하기
+# 개발하기
 
-**지침은 `skills/`에서 수정하고, `plugins/dougle/skills/`에 같은 내용을 반영하세요.**
+**`skills/`가 정본이고 `plugins/dougle/skills/`는 동일한 배포 사본입니다.**
 
-사용자용 실행 스크립트·패키지 의존성·서버·후크는 추가하지 않습니다. 자료를 읽고 정리하는 작업은 호스트 AI의 기존 도구가 수행합니다.
+## 현재 구성
 
-## 변경 후 확인
+| 경로 | 역할 |
+|---|---|
+| `skills/dougle-connect`, `dougle-ask`, `dougle-reload` | 자료 연결·질문·갱신 |
+| `skills/dougle-publish`, `dougle-fetch` | 지식 공유·병합 |
+| `skills/dougle-schedule`, `dougle-bot` | Slack 문의 확인·봇 관리 |
+| `skills/i-have-adhd`, `plain-language` | 내부 답변 정리 |
+| `dougle-bot/` | 선택형 Python 봇 실행기·테스트 |
 
-1. 정본과 배포 사본을 맞춥니다. 공통 정리 규칙은 다섯 스킬에 같은 버전으로 유지합니다.
-2. 구조 검사를 실행합니다.
+지식 스킬은 호스트 AI의 도구를 사용합니다. 봇을 선택한 사용자만 별도 실행기를 설치합니다. publish의 민감정보 검사는 번들 셸 스크립트를 실행합니다.
 
-   ```sh
-   node scripts/check-skills.mjs
-   ```
+## 변경 후 검사
 
-3. Claude 플러그인과 마켓플레이스 형식을 검사합니다.
+```sh
+node scripts/check-skills.mjs
+node scripts/check-sharing-merge.mjs
+node scripts/check-current-tree.mjs
+node scripts/test-publish-sensitive.mjs
+claude plugin validate ./plugins/dougle
+claude plugin validate .
+```
 
-   ```sh
-   claude plugin validate ./plugins/dougle
-   claude plugin validate .
-   ```
+봇 코드를 바꿨다면 [봇 개발 검증](../../dougle-bot/README.md#개발-검증)도 실행하고, 테스트한 소스와 배포 wheel을 맞추세요. CI는 현재 스킬·봇 검사만 실행합니다.
 
-4. 설치 검증이 필요하면 별도 `CLAUDE_CONFIG_DIR`에서 등록·설치를 확인합니다.
+공통 참조 문서를 수정하면 사용하는 모든 스킬과 배포 사본을 함께 갱신합니다. 배포 ZIP은 전체 스킬·참조·번들 자원·플러그인 매니페스트를 포함합니다. Node와 검사 도구는 개발용이며 지식 스킬 사용자의 설치 조건이 아닙니다.
 
-Node는 개발용 검사에만 필요합니다. 사용자 배포물에는 검사기를 포함하지 않습니다.
+## 외부 스킬과 검증 범위
 
-## 검사 결과를 해석할 때
+`i-have-adhd`와 `plain-language`의 원본 출처·라이선스는 각 스킬에 포함합니다. 적용 범위와 호출 메타데이터를 수정한 배포본이므로 수정 없는 원본이라고 표시하지 않습니다. 원본 스냅샷을 바꾸면 출처·라이선스·해시를 함께 검토하세요.
 
-구조 검사는 참조·매니페스트·배포 사본 일치를 확인합니다. **AI의 답변 정확도나 의미 병합 품질을 검증하는 테스트는 아닙니다.** 실제 모델 평가는 별도 승인과 호출 예산을 따릅니다. [검증 범위](verification.md)
-
-배포 ZIP에는 업무 스킬 다섯 개와 답변 정리 스킬, 공통 정리 문서, publish·fetch의 공유 규칙, ask에 내장된 i-have-adhd 원본 지침·라이선스, 플러그인 매니페스트와 설치 안내를 포함합니다.
-
-과거 실행기는 Git 이력과 0.2.0 릴리스에 보존합니다. 예전 사용자 데이터를 자동 삭제하거나 이전하지 않습니다.
-
-## 포함된 외부 지침
-
-ask의 `references/i-have-adhd.md`는 ayghri/i-have-adhd의 커밋 `1ecea1993b7fce257ffbd686c070948b5e07eda6` 원본입니다. 원본 바이트와 MIT 라이선스를 함께 보존합니다. 구조 검사기는 두 파일의 고정 해시와 배포 사본 일치를 확인합니다. 업데이트할 때 원본·라이선스·출처·해시를 함께 검토하세요.
-
-0.5.2부터 skills/i-have-adhd/SKILL.md를 독립 스킬로 배포합니다. upstream의 모델 호출 금지 설정을 제거하고 더글 답변 범위·근거 보존 규칙을 추가한 배포본이며, 원본 그대로라고 표시하지 않습니다. 원본 스냅샷과 MIT 라이선스는 별도로 보존합니다. [호출 검증](skill-activation.md)
+구조 검사와 가짜 외부 서비스 테스트는 실제 AI의 의미 판단·회사 연결 검증과 다릅니다. 실제 모델 평가는 별도 호출 예산을 따릅니다. [검증 범위](verification.md) · [저장소 구성](../repository.md)

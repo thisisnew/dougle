@@ -1,9 +1,9 @@
 name: Verify skills and optional bot
 on:
   push:
-    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
   pull_request:
-    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
 permissions:
   contents: read
 jobs:

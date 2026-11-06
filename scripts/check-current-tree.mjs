@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {access,readFile,readdir} from 'node:fs/promises'
 import {resolve,dirname} from 'node:path'
 const root=resolve(import.meta.dirname,'..')
-for(const name of ['backend','frontend','desktop','fixtures','third-party']) {
+for(const name of ['backend','frontend','desktop','fixtures','third-party','updates']) {
  let exists=true;try{await access(resolve(root,name))}catch{exists=false}
  assert(!exists,`retired source returned: ${name}`)
 }
@@ -18,8 +18,14 @@ async function markdown(dir) {
  }
  return result
 }
+const manifest=JSON.parse(await readFile(resolve(root,'plugins/dougle/.claude-plugin/plugin.json'),'utf8'))
+for(const name of ['README.md','docs/skills/install.md']) {
+ const doc=await readFile(resolve(root,name),'utf8')
+ for(const [,version] of doc.matchAll(/releases\/tag\/v([0-9]+\.[0-9]+\.[0-9]+)-skills/g)) assert.equal(version,manifest.version,`outdated download in ${name}`)
+}
+assert(!(await readdir(resolve(root,'docs/skills'))).some(n=>n.startsWith('history-')),'historical copies returned to current docs')
 let links=0;const errors=[]
-for(const file of [resolve(root,'README.md'),...await markdown(resolve(root,'docs')),...await markdown(resolve(root,'skills'))]) {
+for(const file of [...['README.md','AGENTS.md','HANDOFF.md','dougle-bot/README.md','dougle-bot/SPEC.md'].map(n=>resolve(root,n)),...await markdown(resolve(root,'docs')),...await markdown(resolve(root,'skills'))]) {
  const text=(await readFile(file,'utf8')).replace(/```[\s\S]*?```/g,'')
  for(const [,target] of text.matchAll(/\]\(([^)]+)\)/g)) {
   if(/^[a-z]+:|^#/i.test(target))continue
@@ -28,4 +34,4 @@ for(const file of [resolve(root,'README.md'),...await markdown(resolve(root,'doc
  }
 }
 assert.deepEqual(errors,[],'broken local documentation links')
-console.log(JSON.stringify({status:'PASS',retiredRoots:5,currentWorkflows:1,localLinks:links}))
+console.log(JSON.stringify({status:'PASS',retiredRoots:6,currentWorkflows:1,localLinks:links}))

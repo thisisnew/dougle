@@ -12,8 +12,8 @@
 
 ### 처음 사용할 때
 
-1. [설치 안내](install.md)에 따라 필요한 더글 스킬과 답변 정리용 i-have-adhd, 참조 파일을 설치합니다.
-2. 평소처럼 AI를 실행합니다. 회사에서 `claude-work`를 쓴다면 그대로 실행합니다.
+1. [설치 안내](install.md)에 따라 배포물의 스킬과 참조 파일을 설치합니다.
+2. 평소처럼 AI를 실행합니다.
 3. 자료 연결 요청을 합니다.
 4. 업무를 질문합니다. 다음 질문은 같은 대화의 주제를 이어받습니다.
 
@@ -157,4 +157,4 @@ Claude와 Codex가 같은 사용자 계정에서 이 경로에 접근할 수 있
 
 ## Optional Slack bot
 
-The core knowledge skills use the host AI. Only the separately requested dougle-bot feature installs a local Python runtime. It handles Slack intake, per-thread Claude sessions, approver DM cards and approved replies; existing Dougle skills own knowledge retrieval. [Setup and operation](../../dougle-bot/README.md).
+일반 지식 스킬은 호스트 AI를 사용합니다. 선택형 Slack 봇만 로컬 Python 실행기를 설치하며, 멘션 접수·대화 세션·승인 DM·게시를 맡습니다. 지식 조회는 기존 스킬이 수행합니다. [봇 사용법](../../dougle-bot/README.md)
