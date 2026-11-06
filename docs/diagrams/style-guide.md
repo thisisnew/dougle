@@ -1,6 +1,6 @@
 # Dougle diagram style
 
-All current skill diagrams use visual-explainer, preserving Dougle white and blue.
+User-guide illustrations use visual-explainer. Structural/design diagrams use native Excalidraw scenes and PNG exports. Both preserve Dougle white and blue.
 
 - Background #ffffff; text #292f3e; secondary #56647a; accent #2866c2; tint #edf4ff.
 - Korean fonts: Apple SD Gothic Neo, Malgun Gothic, sans-serif. Phrase-based wrapping.
@@ -11,3 +11,14 @@ All current skill diagrams use visual-explainer, preserving Dougle white and blu
 - No reverse arrows, English category tags or small diamond labels. Keep source access failures, evidence limits and refresh conditions explicit.
 
 See [production notes and attribution](README.md).
+
+## Structure/design scenes
+
+- Hand-authored `.excalidraw` source; high-resolution PNG for GitHub. No Mermaid.
+- `roughness: 0`, white/blue palette above; sans-serif Korean fallback (fontFamily 2).
+- Measure actual Korean text widths, use explicit phrase breaks, never truncate labels.
+- Relations use arrows and counts; file records and original services are distinct.
+- Native source keeps full element IDs, arrow bindings and measurable text bounds.
+- Each figure answers one question. Keep implementation references in adjacent Markdown.
+- Inspect actual PNGs, labels, routes and a README-sized preview before publishing.
+- Current diagrams describe implemented behavior; channel-wide inquiry detection remains a separate proposal.

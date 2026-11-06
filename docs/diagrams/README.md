@@ -2,6 +2,24 @@
 
 기존 더글의 흰 바탕·파란 강조색을 유지합니다.
 
+## 구조·설계 도식
+
+[설계 문서](../design.md)는 편집 가능한 Excalidraw 원본과 PNG를 함께 제공합니다.
+
+| 도식 | GitHub에서 보기 | 편집 원본 |
+|---|---|---|
+| 목차·토픽·주장·소스 관계 | [PNG](knowledge-model.png) | [Excalidraw](knowledge-model.excalidraw) |
+| 스레드·문의·초안·전송 관계 | [PNG](bot-model.png) | [Excalidraw](bot-model.excalidraw) |
+| 조사·수동 조회·승인·게시 흐름 | [PNG](bot-flow.png) | [Excalidraw](bot-flow.excalidraw) |
+
+[excalidraw-diagram 스킬](https://github.com/coleam00/excalidraw-diagram-skill)의 관계 중심 설계·렌더링 검토 절차를 적용했습니다. 스킬 원문과 실행 코드는 이 저장소에 포함하지 않습니다. 그림은 더글의 현재 코드와 스킬 지침을 바탕으로 새로 작성했습니다.
+
+Excalidraw에서 원본을 열어 편집할 수 있습니다. GitHub에는 글꼴에 따라 한글 배치가 달라지지 않도록 고해상도 PNG를 표시합니다. 이미지 안에는 짧은 이름과 관계를 넣고, 조건·한계·코드 근거는 설계 문서에 적습니다. 제작 도구는 더글 사용자의 설치 의존성이 아닙니다.
+
+제작 시 Excalidraw 0.18.1의 `exportToSvg`를 사용했습니다. 스킬 기본 CDN의 의존성 링크 오류는 `@braintree/sanitize-url@7.1.1` 지정으로 해결했고, 헤드리스 Chrome에서 한글 글자 폭을 확인했습니다. PNG는 글꼴을 포함한 최종 화면이므로 GitHub에서 외부 라이브러리를 불러오지 않습니다. 원본을 다른 환경에서 편집할 때는 한글 글꼴과 줄바꿈을 다시 확인하세요.
+
+## 기존 사용 안내 그림
+
 | 도식 | README 이미지 | 편집 원본 |
 |---|---|---|
 | 자료를 지식으로 정리 → 팀에 공유 → 동료가 가져와 질문 | [PNG](knowledge-sharing.png) | [HTML 원본](knowledge-sharing.src.html) · [렌더링 HTML](knowledge-sharing.html) |
@@ -23,7 +41,7 @@ PNG는 Chrome의 1000px viewport, deviceScaleFactor 2에서 글꼴 로딩 후 ma
 
 ## 전체 도식의 표현
 
-현재 스킬 문서의 네 도식 모두 visual-explainer 방식의 HTML·PNG로 통일했습니다. 질문·내재화·실행 흐름은 위에서 아래로 읽는 세 단계이며, 조건과 예외를 해당 단계 안에 적었습니다. 기존 diagram-design SVG와 현재 스킬 문서의 Mermaid 블록은 교체했습니다.
+기존 사용 안내의 네 도식은 visual-explainer 방식의 HTML·PNG입니다. 새 구조·설계 도식은 위 Excalidraw 원본을 사용합니다. 질문·내재화·실행 흐름은 위에서 아래로 읽는 세 단계이며, 조건과 예외를 해당 단계 안에 적었습니다. 기존 diagram-design SVG와 현재 스킬 문서의 Mermaid 블록은 교체했습니다.
 
 과거 데스크톱 앱 문서의 Mermaid 설계 기록과 실제 UI 스크린샷은 당시 동작의 기록이므로 보존합니다. 현재 스킬 버전의 그림이 아닙니다.
 

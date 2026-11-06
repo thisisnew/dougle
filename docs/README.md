@@ -14,6 +14,8 @@
 
 ## 개발하거나 지원 범위를 확인할 때
 
+**[그림으로 보는 구조·도메인 모델·승인 흐름](design.md)**
+
 [Slack 봇 설치·실행](../dougle-bot/README.md) · [자동 검증 기록](dougle-bot/implementation-verification.json) · [답변·이미지 평가](dougle-bot/answer-evaluation/README.md) · [문의 채널 감지 설계](dougle-bot/channel-detection-design.md)
 
 [231개 설계 시나리오](dougle-bot/TEST_PLAN.md)는 자동 테스트 개수와 별개이며 전체 대응 검증은 아직 완료하지 않았습니다.
