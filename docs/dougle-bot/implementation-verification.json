@@ -1158,5 +1158,17 @@
       "test": "tests.test_slack_presentation::test_legacy_single_reaction_record_migrates_without_removing_identity",
       "status": "PASS"
     }
-  ]
+  ],
+  "ci": {
+    "url": "https://github.com/thisisnew/dougle/actions/runs/42251990657",
+    "source_commit": "411340e7b5680efc16ddbc25fb4ab47c6627e32f",
+    "python_versions": [
+      "3.12",
+      "3.13"
+    ],
+    "result": "PASS",
+    "test_cases_per_job": 243,
+    "unique_test_case_count": 243,
+    "external_integrations": "fake only; no company credentials or real model calls"
+  }
 }
