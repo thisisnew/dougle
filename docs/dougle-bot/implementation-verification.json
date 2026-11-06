@@ -1486,5 +1486,17 @@
   ],
   "real_claude_model_calls": 0,
   "automated_tests_real_model_calls": 0,
-  "synthetic_model_evaluation": "answer-evaluation/results.json"
+  "synthetic_model_evaluation": "answer-evaluation/results.json",
+  "ci": {
+    "url": "https://github.com/thisisnew/dougle/actions/runs/42259082432",
+    "source_commit": "68c092aadccac34e88ef9043cf96371d2af31a4b",
+    "python_versions": [
+      "3.12",
+      "3.13"
+    ],
+    "result": "PASS",
+    "test_cases_per_job": 314,
+    "unique_test_case_count": 314,
+    "external_integrations": "fake only in CI; separate native synthetic evaluation described above"
+  }
 }
