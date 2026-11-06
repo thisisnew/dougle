@@ -11,6 +11,6 @@
     }
   ],
   "metadata": {
-    "description": "Runtime-free domain knowledge skills for your existing AI."
+    "description": "Domain knowledge skills with an optional local Slack approval bot."
   }
 }

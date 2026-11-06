@@ -1,0 +1,26 @@
+name: Verify skills and optional bot
+on:
+  push:
+    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', '.github/workflows/verify-skills-and-bot.yml']
+  pull_request:
+    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', '.github/workflows/verify-skills-and-bot.yml']
+permissions:
+  contents: read
+jobs:
+  fake-integrations:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '${{ matrix.python }}'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: python -m pip install ./dougle-bot pytest==9.2.0 ruff==0.17.4
+      - run: node scripts/check-skills.mjs
+      - run: ruff check dougle-bot
+      - run: pytest -q dougle-bot/tests

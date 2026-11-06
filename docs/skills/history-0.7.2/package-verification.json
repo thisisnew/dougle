@@ -1,0 +1,16 @@
+{
+  "version": "0.7.2",
+  "files": 51,
+  "archiveBytes": 150663,
+  "sha256": "9d5498d1405d68c64c8547cede35c888d915ef9d9f7f42727f0ffdb4827f8fe4",
+  "structuralChecks": 264,
+  "claudeManifests": "PASS",
+  "packageBytes": "PASS canonical skill resources match archive",
+  "tonePolicy": "Shared organization + ask + companion + schedule",
+  "toneModelOutputEvaluation": "NOT_RUN; regression scenarios documented, not execution results",
+  "previousSensitiveScannerCases": 60,
+  "sensitiveScannerChanged": false,
+  "actualCompanyIntegration": "NOT_VERIFIED",
+  "extraPythonOrNodeUserDependency": false,
+  "localSkillCopies": "PASS 14 skill directories; existing modifications checked, backups retained; host-only metadata preserved"
+}

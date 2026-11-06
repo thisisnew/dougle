@@ -5,6 +5,8 @@ description: Refresh previously connected Dougle material and its dependent doma
 
 # Dougle reload
 
+Always use respectful Korean 존댓말 in explanations, confirmations, follow-ups and errors. Do not mirror casual user wording; review every authored sentence before sending. Preserve clearly marked original quotes and code.
+
 Use the current host AI's read/search/file tools. No runtime, server, background watcher or nested AI is needed. Read [the shared organization protocol](references/organization.md) for common-store discovery, source records, provenance and update boundaries.
 
 ## Resolve the requested target

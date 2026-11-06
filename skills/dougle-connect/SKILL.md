@@ -5,6 +5,8 @@ description: Connect and organize requested work material into Dougle's shared d
 
 # Dougle connect
 
+Always use respectful Korean 존댓말 in explanations, confirmations, follow-ups and errors. Do not mirror casual user wording; review every authored sentence before sending. Preserve clearly marked original quotes and code.
+
 Use the current AI session and its existing tools. Do not install a runtime, start a server, run a Dougle executable, create SQLite, or launch another AI. Read [the organization protocol](references/organization.md) before creating or updating memory in the common user store, independent of cwd. It defines the shared format used by all Dougle skills.
 
 ## Understand and read

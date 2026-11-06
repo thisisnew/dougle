@@ -26,7 +26,7 @@
 ```text
 https://github.com/thisisnew/dougle 저장소에서
 skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
-skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/i-have-adhd를 참조 파일까지 설치해 줘.
+skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/dougle-bot, skills/i-have-adhd를 참조 파일까지 설치해 줘.
 ```
 
 ## 2. 자료 연결하기
@@ -51,7 +51,7 @@ skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/i-hav
 
 같은 대화에서 **“어느 코드를 보면 돼?”**처럼 이어서 물어보세요.
 
-**결론 → 필요한 설명 → 출처** 순서로 답합니다. 자세한 설명이 필요하면 “전체 흐름을 자세히 설명해 줘”라고 요청하세요.
+**결론 → 필요한 설명 → 출처** 순서로 존댓말로 답합니다. ask는 질문마다 `i-have-adhd` 스킬 적용을 확인합니다. 자세한 설명이 필요하면 “전체 흐름을 자세히 설명해 줘”라고 요청하세요.
 
 <details>
 <summary>답변 예시 보기</summary>
@@ -94,7 +94,20 @@ fetch는 기존 지식을 통째로 덮어쓰지 않고 출처·정정·충돌�
 | 자료 즉시 갱신 | `/dougle:dougle-reload` | `$dougle-reload` |
 | 팀에 지식 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
 | 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
+| Slack 봇 시작·중지·채널 추가 | `/dougle:dougle-bot` | `$dougle-bot` |
 | Slack 문의 확인·답변 준비 | `/dougle:dougle-schedule` | `$dougle-schedule` |
+
+## Slack에서 @dougle로 질문하기
+
+```text
+/dougle:dougle-bot
+```
+
+처음에는 설정을 안내하고, 이후에는 **1. 시작 / 2. 상태 확인 / 3. 중지 / 4. 채널 추가**를 보여 줍니다.
+
+`@dougle 질문`이 오면 승인자에게 초안을 DM으로 보냅니다. **[게시]를 누를 때만** 원래 스레드에 답합니다. 중지 중 올라온 질문은 재시작해도 가져오지 않습니다.
+
+Slack 앱과 로컬 봇 실행 환경은 봇을 사용할 때만 준비합니다. [처음 설정·실행 방법](dougle-bot/README.md)
 
 ## Slack 문의 답변 준비하기
 
@@ -180,7 +193,7 @@ claude plugin list
 
 ```text
 https://github.com/thisisnew/dougle 의 최신 main으로
-dougle-connect, dougle-ask, dougle-reload, dougle-publish, dougle-fetch, dougle-schedule, i-have-adhd를 갱신해 줘.
+dougle-connect, dougle-ask, dougle-reload, dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd를 갱신해 줘.
 실제로 로드되는 설치 경로를 확인하고 SKILL.md와 참조 파일을 함께 업데이트해.
 개인 수정본은 보존하고 ~/.dougle/의 업무 지식은 건드리지 마.
 ```
@@ -200,4 +213,4 @@ dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 �
 
 저장된 지식은 세션을 닫아도 남습니다. [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
-[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.7.2-skills-preview.1)
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.0-skills-preview.1)

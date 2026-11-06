@@ -1,6 +1,6 @@
 {
   "name": "dougle",
-  "version": "0.7.2",
-  "description": "Provider-neutral domain knowledge skills with no runtime dependency.",
+  "version": "0.8.0",
+  "description": "Domain knowledge skills with an optional local Slack approval bot.",
   "skills": "./skills/"
 }

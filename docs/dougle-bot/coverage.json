@@ -1,13 +1,13 @@
 {
   "asOf": "2026-11-06",
   "project": "dougle-bot",
-  "implementationExists": false,
+  "implementationExists": true,
   "totalDesignedCases": 231,
   "automatedCasesDesigned": 211,
   "manualCompanyCasesDesigned": 20,
-  "automatedTestsImplemented": 0,
-  "productTestsExecuted": 0,
-  "productTestsPassed": 0,
+  "automatedTestsImplemented": 171,
+  "productTestsExecuted": 171,
+  "productTestsPassed": 171,
   "companyCasesExecuted": 0,
   "priorDougleSkillResultsCounted": false,
   "priorModelCallsAdded": 0,
@@ -46,6 +46,9 @@
     "allCasesHaveRequirementAndInvariant": true,
     "allCasesUnexecuted": true
   },
-  "releaseReadiness": "NOT_READY: no bot implementation, automated execution, or company verification",
-  "missingSpecificationSections": "8–15 referenced but not supplied; proposed contracts documented in TEST_PLAN.md"
+  "releaseReadiness": "DEVELOPMENT_PREVIEW_ONLY; full planned-scenario coverage and company verification are incomplete",
+  "missingSpecificationSections": "Runtime contracts are now in dougle-bot/SPEC.md",
+  "executedTestCountUnit": "pytest parametrized cases, NOT the 231 designed scenario IDs",
+  "designCaseMapping": "NOT_COMPLETED",
+  "implementationReport": "implementation-verification.json"
 }

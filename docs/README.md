@@ -28,3 +28,5 @@
 </details>
 
 - [Slack 문의 확인·승인 후 답변](skills/schedule.md)
+
+- [Dougle Slack bot](../dougle-bot/README.md) · [Runtime contracts](../dougle-bot/SPEC.md) · [Executed checks](dougle-bot/implementation-verification.json)

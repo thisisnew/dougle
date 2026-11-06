@@ -154,3 +154,7 @@ Claude와 Codex가 같은 사용자 계정에서 이 경로에 접근할 수 있
 [dougle-schedule](schedule.md)은 기존 Slack MCP와 실제 호스트 타이머로 문의를 읽고 초안을 준비합니다. 타이머는 게시하지 않으며 로컬 사용자가 해당 초안을 승인해야 답글을 작성합니다. 운영 기록은 공통 지식과 분리합니다.
 
 [찾기용 안내와 항목별 읽기·기존 형식 호환](topic-navigation.md)
+
+## Optional Slack bot
+
+The core knowledge skills use the host AI. Only the separately requested dougle-bot feature installs a local Python runtime. It handles Slack intake, per-thread Claude sessions, approver DM cards and approved replies; existing Dougle skills own knowledge retrieval. [Setup and operation](../../dougle-bot/README.md).

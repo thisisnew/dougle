@@ -5,6 +5,8 @@ description: Publish selected curated Dougle domain knowledge to a user-designat
 
 # Dougle publish
 
+Always use respectful Korean 존댓말 in explanations, confirmations, follow-ups and errors. Do not mirror casual user wording; review every authored sentence before sending. Preserve clearly marked original quotes and code.
+
 Read [the organization protocol](references/organization.md), [the sharing protocol](references/sharing.md) and [the required sensitive-data gate](references/sensitive.md). Use the host's existing tools; do not install a runtime or generate an uploader.
 
 Open the common user store and resolve the requested repository and selected business/source scope independently of cwd. If scope is not established and several projects/services could be exported, ask which material to share; a repository alone never authorizes exporting the whole common store. Legacy bindings retain their old export scope. A saved binding can be reused only within the user's intended scope. If no target exists, ask for a repository; never infer the Dougle software repository or a connected source repository as the destination. Check repository identity, visibility and authenticated access using available host tools. Missing credentials/tools require host setup guidance, never tokens pasted into chat.

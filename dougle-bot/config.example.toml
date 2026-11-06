@@ -1,0 +1,24 @@
+# 승인자·채널·회사 Claude 명령을 실제 값으로 바꾸세요. 토큰은 키체인에만 저장합니다.
+[slack]
+approver_user_id = "UYOURID"
+allowed_channel_ids = ["CYOURCHANNEL"]
+workspace_id = ""
+ack_reaction = "eyes"
+thread_history_limit = 50
+
+[engine]
+claude_bin = "claude"
+model = ""
+workdir = "~/.dougle-bot/engine"
+timeout_seconds = 900
+max_turns = 60
+max_budget_usd_per_call = 3.0
+daily_budget_usd = 30.0
+max_parallel = 1
+allowed_tools = ["Edit", "Glob", "Grep", "Read", "Skill", "WebFetch", "Write", "mcp__claude_ai_Google_Cloud_BigQuery__execute_sql_readonly", "mcp__claude_ai_Google_Cloud_BigQuery__get_table_info", "mcp__claude_ai_Google_Cloud_BigQuery__list_table_ids", "mcp__claude_ai_Google_Cloud_BigQuery__list_dataset_ids", "mcp__claude_ai_Google_Cloud_BigQuery__get_dataset_info", "mcp__claude_ai_Atlassian__getConfluencePage", "mcp__claude_ai_Atlassian__searchConfluenceUsingCql", "mcp__claude_ai_Slack__slack_read_thread", "mcp__claude_ai_Slack__slack_search_public"]
+disallowed_tools = ["Bash", "Agent", "Task"]
+ask_skill = "dougle:dougle-ask"
+style_skill = "dougle:i-have-adhd"
+
+[storage]
+home = "~/.dougle-bot"
