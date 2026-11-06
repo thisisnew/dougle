@@ -9,7 +9,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
-from test_answer_style import SESSION, SKILLS, answer
+from test_answer_style import READS, SESSION, SKILLS, answer
 
 from dougle_bot.actions import Actions
 from dougle_bot.config import Config, EngineConfig, SlackConfig
@@ -17,6 +17,22 @@ from dougle_bot.engine import EngineResult, FakeEngine
 from dougle_bot.slack_gateway import FakeSlack
 from dougle_bot.store import Store
 from dougle_bot.worker import Worker
+
+
+def isolated_processes(event, args):
+    if event != "subprocess.Popen":
+        return
+    executable, argv = args[:2]
+    commands = [str(executable), *(argv if isinstance(argv, (list, tuple)) else [argv])]
+    forbidden = {"open", "osascript", "dougle-desktop", "claude", "claude-work", "codex"}
+    if any(Path(str(command)).name in forbidden for command in commands) or any(
+        command in ("-c", "-lc", "-ic", "-lic") for command in commands
+    ):
+        raise AssertionError("Tests must not launch desktop apps or real AI tools")
+
+
+# An audit hook also covers Popen captured in a default argument before monkeypatching.
+sys.addaudithook(isolated_processes)
 
 
 @pytest.fixture(autouse=True)
@@ -39,7 +55,7 @@ def app(tmp_path):
     store = Store(tmp_path / "bot.db", clock=lambda: now[0])
     store.begin_run(1, "TTEST", "UBOT")
     slack = FakeSlack()
-    engine = FakeEngine([EngineResult(SESSION, answer(), 0.02, SKILLS)] * 10)
+    engine = FakeEngine([EngineResult(SESSION, answer(), 0.02, SKILLS, READS)] * 10)
     worker = Worker(store, config, engine, slack)
     actions = Actions(store, config, slack, worker)
     obj = SimpleNamespace(

@@ -4,7 +4,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
-from test_answer_style import SESSION, SKILLS, answer
+from test_answer_style import READS, SESSION, SKILLS, answer
 
 from dougle_bot import cards
 from dougle_bot.config import channel_id, load, save
@@ -219,7 +219,7 @@ def test_session_not_found_gets_only_one_fresh_retry(app):
         db.execute("UPDATE threads SET engine_session_id=?", (SESSION,))
     app.engine.results = [
         BotError("session_not_found"),
-        EngineResult(SESSION, answer(), 0.03, SKILLS),
+        EngineResult(SESSION, answer(), 0.03, SKILLS, READS),
     ]
     app.worker.run_once()
     assert [c[1] for c in app.engine.calls] == [SESSION, None]

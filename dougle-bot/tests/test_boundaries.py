@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from slack_bolt.request import BoltRequest
 from slack_sdk import WebClient
-from test_answer_style import SESSION, SKILLS, answer, call, outcome, trace
+from test_answer_style import READS, SESSION, SKILLS, answer, call, outcome, trace
 from test_runtime import event, post, ready
 
 from dougle_bot.engine import ClaudeCliEngine
@@ -180,6 +180,12 @@ def test_resume_command_keeps_alias_and_prompt_out_of_shell_program(app):
 )
 def test_lookup_never_accepts_unsafe_or_unbounded_sql(sql):
     data = {
+        "verification": {
+            "question_kind": "current_state",
+            "required": ["live"],
+            "checks": [],
+            "missing": ["live"],
+        },
         "status": "needs_lookup",
         "body": "운영 DB 확인이 필요합니다.",
         "sources": [],
@@ -201,6 +207,12 @@ def test_needs_lookup_card_has_no_post_button(app):
         EngineResult(
             SESSION,
             {
+                "verification": {
+                    "question_kind": "current_state",
+                    "required": ["live"],
+                    "checks": [],
+                    "missing": ["live"],
+                },
                 "status": "needs_lookup",
                 "body": "운영 DB 확인이 필요합니다.",
                 "sources": [],
@@ -213,6 +225,7 @@ def test_needs_lookup_card_has_no_post_button(app):
             },
             0.02,
             SKILLS,
+            READS,
         )
     ]
     from dougle_bot.intake import receive
@@ -246,7 +259,7 @@ def test_partial_multimessage_failure_cannot_repost_first_part(app):
     from dougle_bot.engine import EngineResult
 
     app.engine.results = [
-        EngineResult(SESSION, answer("확정 후 저장됩니다. [1]\n" * 400), 0.02, SKILLS)
+        EngineResult(SESSION, answer("확정 후 저장됩니다. [1]\n" * 400), 0.02, SKILLS, READS)
     ]
     ref = ready(app)
     real = app.slack.post
@@ -303,7 +316,7 @@ def test_late_engine_result_does_not_revive_rejected_inquiry(app):
     class LateEngine:
         def run(self, *args):
             app.actions.reject("UAPPROVER", ref[1], ref[2], ref[3])
-            return EngineResult(SESSION, answer(), 0.02, SKILLS)
+            return EngineResult(SESSION, answer(), 0.02, SKILLS, READS)
 
     app.worker.engine = LateEngine()
     app.worker.run_once()
@@ -350,6 +363,12 @@ def test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval(ap
     from dougle_bot.intake import receive
 
     pending = {
+        "verification": {
+            "question_kind": "current_state",
+            "required": ["live"],
+            "checks": [],
+            "missing": ["live"],
+        },
         "status": "needs_lookup",
         "body": "운영 확인이 필요합니다.",
         "sources": [],
@@ -361,13 +380,21 @@ def test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval(ap
         },
     }
     stamp = "1970-01-01T00:16:00+00:00"
+    completed = answer("개발자 조회 결과 기준 (" + stamp + ") 미처리 2건입니다. [1]")
+    completed["verification"] = {
+        "question_kind": "current_state",
+        "required": ["live"],
+        "missing": [],
+        "checks": [{"kind": "live", "receipt": "developer_report", "source_index": 0}],
+    }
     app.engine.results = [
-        EngineResult(SESSION, pending, 0.02, SKILLS),
+        EngineResult(SESSION, pending, 0.02, SKILLS, READS),
         EngineResult(
             SESSION,
-            answer("개발자 조회 결과 기준 (" + stamp + ") 미처리 2건입니다. [1]"),
+            completed,
             0.02,
             SKILLS,
+            READS,
         ),
     ]
     ident = receive(app.store, app.cfg, event(), "UBOT")

@@ -7,7 +7,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-from test_answer_style import SESSION, SKILLS, answer
+from test_answer_style import READS, SESSION, SKILLS, answer
 from test_boundaries import bolt, request
 from test_runtime import event, post, ready
 
@@ -30,7 +30,7 @@ def test_business_answer_public_preview_matches_post_without_evidence_or_signatu
     body = "**매일 오전 9시에 발송합니다.** [1]\n\n- 승인 다음 날부터 발송합니다.\n- 담당자가 없으면 발송하지 않습니다.\n\n현재 운영 설정은 확인하지 못했습니다.\n\n✦ dougle"
     output = answer(body)
     output["sources"][0]["title"] = "[1] [1] 가상 설정 · ExampleConfig.java · draft abc123"
-    app.engine.results = [EngineResult(SESSION, output, 0.02, SKILLS)]
+    app.engine.results = [EngineResult(SESSION, output, 0.02, SKILLS, READS)]
     ref = ready(app)
     inquiry = app.store.inquiry(ref[0])
     draft = app.store.current(inquiry)
@@ -94,7 +94,7 @@ def test_public_bibliography_is_not_silently_deleted(heading):
 
 def test_bibliography_causes_one_retry_then_no_approvable_draft(app):
     app.engine.results = [
-        EngineResult(SESSION, answer("설명입니다.\n출처\n가상 자료입니다."), 0.02, SKILLS)
+        EngineResult(SESSION, answer("설명입니다.\n출처\n가상 자료입니다."), 0.02, SKILLS, READS)
     ] * 2
     ident = receive(app.store, app.cfg, event(), "UBOT")
     app.worker.run_once()
@@ -247,7 +247,7 @@ def test_status_exposes_elapsed_and_state_without_question_or_source(app):
 def test_new_top_level_message_never_inherits_channel_session(app):
     ready(app)
     app.engine.results = [
-        EngineResult("22222222-2222-4333-8444-555555555555", answer(), 0.02, SKILLS)
+        EngineResult("22222222-2222-4333-8444-555555555555", answer(), 0.02, SKILLS, READS)
     ]
     ready(app, ts="1002.000001")
     assert app.engine.calls[0][1] is None
@@ -283,7 +283,7 @@ def test_old_unsent_payload_cannot_republish_sources_after_upgrade(app):
     assert not any(c[0] == "post" for c in app.slack.calls)
 
 
-@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.2", True), ("0.1.3", False)])
+@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.3", True), ("0.1.4", False)])
 def test_status_checks_daemon_version_not_cli_version(app, monkeypatch, version, expected):
     import dougle_bot.main as main
     from dougle_bot.config import save

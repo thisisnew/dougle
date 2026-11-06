@@ -1,6 +1,9 @@
 """Answer selection policy, independent of retrieval and Slack transport."""
 
 ANSWER_POLICY = """QUESTION SCOPE — apply AFTER reading enough evidence, not by narrowing research prematurely.
+Brevity, nontechnical audience and hiding implementation detail affect the final prose ONLY.
+They never waive original-code inspection or fresh live reads required by the question.
+A caveat such as “코드로 확인하지 않았습니다” is not a substitute for a necessary check.
 Privately identify the latest question's requested facts/actions and resolve references from the thread.
 The latest question determines what to explain. Earlier answers provide context, not a template to repeat.
 Select the smallest complete answer; do not turn every reply into a topic handbook.

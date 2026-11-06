@@ -10,7 +10,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
-from test_answer_style import SESSION, SKILLS, answer, call, outcome, trace
+from test_answer_style import READS, SESSION, SKILLS, answer, call, outcome, trace
 from test_boundaries import fake_cli
 from test_runtime import event, post, ready
 
@@ -103,8 +103,8 @@ def test_session_restore_and_validation_retry_keep_images(app):
     first = ready(app, files=[file()])
     app.engine.results = [
         BotError("session_not_found"),
-        EngineResult(SESSION, answer("하면 돼."), 0.01, SKILLS),
-        EngineResult(SESSION, answer(), 0.01, SKILLS),
+        EngineResult(SESSION, answer("하면 돼."), 0.01, SKILLS, READS),
+        EngineResult(SESSION, answer(), 0.01, SKILLS, READS),
     ]
     ready(app, ts="1002.000001", thread_ts="1001.000001")
     assert app.store.inquiry(first[0])["status"] == "awaiting_approval"

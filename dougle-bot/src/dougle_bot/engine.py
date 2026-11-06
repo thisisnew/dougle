@@ -8,11 +8,12 @@ import subprocess
 import sys
 import time
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol
 
 from .config import BUILTINS, private_dir
+from .evidence import read_receipts
 from .prompts import OUTPUT_SCHEMA, valid_cost
 from .safety import BotError
 
@@ -23,6 +24,7 @@ class EngineResult:
     output: dict
     cost_usd: float | None
     activated: set[str]
+    reads: dict[str, set[str]] = field(default_factory=dict)
 
 
 class Engine(Protocol):
@@ -116,6 +118,7 @@ def parse_trace(raw: bytes):
         result.get("structured_output"),
         valid_cost(result.get("total_cost_usd")),
         successful,
+        read_receipts(raw),
     )
 
 

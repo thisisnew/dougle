@@ -77,3 +77,7 @@ Slack files 객체와 files.info로 권한 있는 직접 업로드 PNG/JPEG를 �
 이미지는 메모리에서 base64 image content로 변환하여 Claude --input-format stream-json의 stdin으로 전달한다. 키체인 값·다운로드 URL·이미지 본문을 프롬프트 텍스트나 DB·audit에 저장하지 않는다. 이미지 입력 자체는 호스트 AI 제공자에게 전달되며 Claude 세션 보관 정책은 별개다. 원본은 읽기 전용이다. 같은 스레드의 이미지 최대4장/장당5MiB/합계12MiB를 매번 확인하며 일부만 조용히 생략하지 않는다. 초기 event에 첨부가 있었지만 history에서 보이지 않는 경우도 중단한다. 오류 시 모델을 호출하지 않고 승인자 카드에 안내한다. 첨부 변경/삭제 정보는 history_hash에 포함되어 재승인이 필요하다. 실제 이미지 픽셀 내용을 해석하는 정확성이나 이미지 내부 비밀정보의 완전 탐지는 별도 검증 대상이다.
 
 프로토콜 근거: [Claude streaming image input](https://code.claude.com/docs/en/agent-sdk/streaming-vs-single-mode), [CLI input format](https://code.claude.com/docs/en/cli-reference), [Slack file downloads](https://docs.slack.dev/messaging/working-with-files/).
+
+## 0.8.4 필수 근거 확인
+
+응답 JSON에 verification(question_kind, required, checks, missing)을 추가한다. checks는 종류·이번 호출의 성공한 읽기 ID·sources 인덱스를 연결하며, 이미지/개발자 결과는 별도 영수증 식별자를 사용한다. answered는 모든 필수 종류를 검증해야 한다. 보완 시 필수 종류를 줄이지 않으며 조회 결과 반영 작업도 이전 요구를 보존한다. 기존 schema/style와 같은 1회 보완 예산을 공유한다. drafts.verification_json을 SQLite user_version2로 추가한다. 이전 미게시 초안은 자동 게시하지 않고 다시 조사·검토한다. 의미적 정확성을 도구 성공만으로 보장하지 않는다. 상세 계약은 [근거 확인](../docs/dougle-bot/research-verification.md)을 따른다.

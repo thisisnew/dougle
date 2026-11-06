@@ -2,7 +2,7 @@
 
 import json
 
-from test_answer_style import SESSION, SKILLS, answer
+from test_answer_style import READS, SESSION, SKILLS, answer
 from test_runtime import ready
 
 from dougle_bot import cards
@@ -46,8 +46,8 @@ def test_followup_receives_new_question_and_posted_manual_context(app):
 def test_retry_retains_original_scope_and_material_conditions(app):
     body = "식품은 일반 화면에서 등록할 수 없습니다. 품질팀 확인 후 식품 접수 화면에서 등록합니다."
     app.engine.results = [
-        EngineResult(SESSION, answer("하면 돼."), 0.01, SKILLS),
-        EngineResult(SESSION, answer(body), 0.01, SKILLS),
+        EngineResult(SESSION, answer("하면 돼."), 0.01, SKILLS, READS),
+        EngineResult(SESSION, answer(body), 0.01, SKILLS, READS),
     ]
     ref = ready(app, text="<@UBOT> 식품도 거기서 등록하나요?")
     assert len(app.engine.calls) == 2
@@ -62,7 +62,7 @@ def test_explicit_details_are_not_subject_to_new_character_truncation(app):
     # A long requested answer must reach preview/public splitting intact, including its final exception.
     body = "\n".join(f"{i}. 단계 {i}의 확인 조건과 결과를 설명합니다." for i in range(1, 120))
     body += "\n식품은 반드시 품질팀 확인 후 별도 화면에서 등록합니다."
-    app.engine.results = [EngineResult(SESSION, answer(body), 0.01, SKILLS)]
+    app.engine.results = [EngineResult(SESSION, answer(body), 0.01, SKILLS, READS)]
     ref = ready(app, text="<@UBOT> 모든 단계와 예외를 빠짐없이 상세하게 설명해 주세요.")
     draft = app.store.current(app.store.inquiry(ref[0]))
     assert cards.final_text(draft) == body

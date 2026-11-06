@@ -14,11 +14,18 @@ from dougle_bot.store import Store
 from dougle_bot.worker import Worker
 
 SESSION = "11111111-2222-4333-8444-555555555555"
+READS = {"read1": {"knowledge"}}
 SKILLS = {"dougle:dougle-ask", "dougle:i-have-adhd"}
 
 
 def answer(body="입고 확정 뒤에 저장됩니다. [1]"):
     return {
+        "verification": {
+            "question_kind": "domain",
+            "required": ["knowledge"],
+            "checks": [{"kind": "knowledge", "receipt": "read1", "source_index": 0}],
+            "missing": [],
+        },
         "status": "answered",
         "body": body,
         "sources": [{"title": "가상 입고 문서", "location": "https://example.test/inbound"}],
@@ -199,6 +206,7 @@ def test_invalid_style_gets_one_retry_and_never_becomes_approvable(setup, invali
         answer("하면 돼." if invalid == "casual" else "저장됩니다. [1]"),
         0.02,
         SKILLS if invalid == "casual" else {cfg.engine.ask_skill},
+        READS,
     )
     engine = FakeEngine([bad, bad])
     worker = Worker(store, cfg, engine, slack)
@@ -215,8 +223,8 @@ def test_corrected_style_becomes_approval_draft_without_auto_post(setup):
     cfg, store, ident, slack = setup
     engine = FakeEngine(
         [
-            EngineResult(SESSION, answer("하면 돼."), 0.02, SKILLS),
-            EngineResult(SESSION, answer(), 0.02, SKILLS),
+            EngineResult(SESSION, answer("하면 돼."), 0.02, SKILLS, READS),
+            EngineResult(SESSION, answer(), 0.02, SKILLS, READS),
         ]
     )
     assert Worker(store, cfg, engine, slack).run_once()
@@ -231,7 +239,7 @@ def test_resume_still_requires_current_call_style_activation(setup):
     cfg, store, ident, slack = setup
     with store.tx() as db:
         db.execute("UPDATE threads SET engine_session_id=?", (SESSION,))
-    engine = FakeEngine([EngineResult(SESSION, answer(), 0.02, {cfg.engine.ask_skill})] * 2)
+    engine = FakeEngine([EngineResult(SESSION, answer(), 0.02, {cfg.engine.ask_skill}, READS)] * 2)
     assert Worker(store, cfg, engine, slack).run_once()
     assert all(c[1] == SESSION for c in engine.calls)
     assert store.inquiry(ident)["error"] == "required_skill_not_activated"

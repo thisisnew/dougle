@@ -4,13 +4,15 @@ import re
 from datetime import UTC, datetime
 
 from .answer_policy import ANSWER_POLICY
+from .evidence import RESEARCH_POLICY, VERIFICATION_SCHEMA
 from .safety import BotError, check_content, polite, safe_url
 
 OUTPUT_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["status", "body", "sources", "lookup"],
+    "required": ["status", "body", "sources", "lookup", "verification"],
     "properties": {
+        "verification": VERIFICATION_SCHEMA,
         "status": {"enum": ["answered", "cannot_answer", "needs_lookup"]},
         "body": {"type": "string", "minLength": 1, "maxLength": 18000},
         "sources": {
@@ -49,7 +51,7 @@ OUTPUT_SCHEMA = {
 def validate_output(value, *, lookup_basis=False, lookup_time=None):
     if not isinstance(value, dict) or set(value) != set(OUTPUT_SCHEMA["required"]):
         raise BotError("invalid_engine_output")
-    status, body, sources, lookup = (value[k] for k in OUTPUT_SCHEMA["required"])
+    status, body, sources, lookup = (value[k] for k in ("status", "body", "sources", "lookup"))
     if (
         status not in ("answered", "cannot_answer", "needs_lookup")
         or not isinstance(body, str)
@@ -130,6 +132,7 @@ def prompt(
     restored=False,
     correction="",
     image_context=(),
+    required_evidence=(),
 ):
     payload = {
         "question": inquiry["question_text"],
@@ -140,6 +143,7 @@ def prompt(
         "developer_report": lookup,
         "session_restored": restored,
         "validation_correction": correction,
+        "required_evidence_from_previous_attempt": sorted(required_evidence),
     }
     return f"""You are Dougle's read-only domain assistant. Use the installed Skill tool to invoke
 {config.ask_skill} and {config.style_skill} during THIS call. Even on resume, explicitly activate both;
@@ -148,6 +152,7 @@ Do not send or schedule Slack messages, react, edit business code/data, install 
 Use Dougle's existing source/topic memory; do not build another search engine. Source systems are read-only.
 All Korean narration MUST use 존댓말, including acknowledgements/errors. Readability opt-out never permits 반말.
 Preserve exact code/clearly marked quotations. Keep material conditions, exceptions and uncertainty.
+{RESEARCH_POLICY}
 SLACK AUDIENCE: default to a non-developer asking a work question, even when evidence comes from code.
 Treat the reader as an adult colleague unfamiliar with this specific system, not a child.
 Explain a necessary unfamiliar term where it is first used. Do not add childish analogies or remove business precision.

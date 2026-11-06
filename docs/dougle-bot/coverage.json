@@ -5,12 +5,12 @@
   "totalDesignedCases": 231,
   "automatedCasesDesigned": 211,
   "manualCompanyCasesDesigned": 20,
-  "automatedTestsImplemented": 314,
-  "productTestsExecuted": 314,
-  "productTestsPassed": 314,
+  "automatedTestsImplemented": 381,
+  "productTestsExecuted": 381,
+  "productTestsPassed": 381,
   "companyCasesExecuted": 0,
   "priorDougleSkillResultsCounted": false,
-  "priorModelCallsAdded": 1,
+  "priorModelCallsAdded": 0,
   "priorities": {
     "P1": 85,
     "P0": 146

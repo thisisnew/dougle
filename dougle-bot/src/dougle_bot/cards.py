@@ -6,6 +6,16 @@ from .images import IMAGE_ERRORS
 from .presentation import chat_text
 from .safety import BotError, check_content, escape_slack
 
+RESEARCH_ERRORS = {
+    code: "필요한 근거 확인을 완료하지 못했습니다. 코드·운영 조회 권한과 연결을 확인해 주세요. 미확인 답변은 게시할 수 없습니다."
+    for code in (
+        "invalid_verification",
+        "verification_requirements_missing",
+        "required_read_not_verified",
+        "invalid_read_trace",
+    )
+}
+
 LABELS = {
     "queued": "처리 대기",
     "drafting": "답변 작성 중",
@@ -75,7 +85,9 @@ def render(inquiry, draft, permalink=None):
     if inquiry.get("error"):
         blocks.append(
             section(
-                IMAGE_ERRORS.get(inquiry["error"], "확인이 필요합니다: `" + inquiry["error"] + "`")
+                (IMAGE_ERRORS | RESEARCH_ERRORS).get(
+                    inquiry["error"], "확인이 필요합니다: `" + inquiry["error"] + "`"
+                )
             )
         )
     if status in ("queued", "drafting"):

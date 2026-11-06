@@ -38,7 +38,7 @@ def status(home, config_path):
     result.update(channels=cfg.slack.allowed_channel_ids, approver=cfg.slack.approver_user_id)
     result["running"] = running(home)
     if (home / "bot.db").exists():
-        store = Store(home / "bot.db")
+        store = Store(home / "bot.db", migrate=False)
         try:
             control = store.control()
             version = store.one(
@@ -211,7 +211,7 @@ def execute(args, secrets=None):
         return doctor(cfg, secrets, args.online)
     if args.command == "stop":
         if (cfg.home / "bot.db").exists():
-            store = Store(cfg.home / "bot.db")
+            store = Store(cfg.home / "bot.db", migrate=False)
             store.stop()
             store.close()
         for _ in range(40):

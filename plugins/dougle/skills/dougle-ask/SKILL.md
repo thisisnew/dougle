@@ -30,6 +30,19 @@ The companion is installed with Dougle. It adapts [ayghri/i-have-adhd at 1ecea19
 
 If sources are not connected, explain that the user can ask Dougle to connect the current project or a link. Do not silently scan unrelated directories. If the companion connect skill is unavailable, follow the same protocol with the user's authorized source and available tools; do not install it automatically.
 
+## Research before presentation
+
+Decide which evidence the question needs BEFORE applying short-answer formatting. A short question, follow-up, screenshot, nontechnical reader or “explain simply” request never reduces the required investigation. The companion skill shapes the final answer only, not search depth, tool use or verification.
+
+- Visible labels/layout: inspect the image; do not infer hidden behavior from pixels.
+- Actual implementation, unexpected behavior, errors or causes: use the topic/source index to locate the relevant original code and read the condition/call path for this case. A recent topic summary is navigation, not a substitute for this investigation. Check relevant configuration/documentation too when it determines behavior. If the system has no accessible implementation, obtain the authoritative behavior evidence or leave the implementation/cause unresolved.
+- Actual records, delivery, counts or current state: perform a fresh bounded authorized read against the relevant system. Use the existing read-only DB tool when needed. Code explains what should happen; it does not prove what happened to a particular record. Table metadata, empty search results and a different environment do not prove production state.
+- Stable domain explanations may still use sufficiently evidenced recent topic knowledge under the freshness policy; do not query DB or reread all code for every question.
+
+Before answering, check each necessary evidence requirement against what was actually inspected. If required code/live evidence is missing, continue the authorized investigation or request the exact missing read/access/result. Do not present the unverified conclusion and append “코드로 확인하지 않았습니다” to compensate. Acknowledge confirmed visible facts separately from an unresolved cause. When manual results are required, request only the minimal non-sensitive summary and observation time. Never bypass VDI, permissions or read-only rules.
+
+Once the evidence supports the answer, write the short answer. Keep facts, material conditions, provenance and genuine uncertainty; omit the research diary. Brevity is an output choice, not a stopping condition for research.
+
 ## Concise defaults and source-output contract
 
 Start with the conclusion in one or two sentences, followed by only the supporting points needed. Number procedures, use tables for genuine comparisons and keep code excerpts minimal. Do not repeat the whole answer on a follow-up. Avoid greetings, investigation diaries, closing recaps and routine memory-save reports. Explicit requests for a full explanation override the short default; never drop a material exception or uncertainty to shorten an answer.

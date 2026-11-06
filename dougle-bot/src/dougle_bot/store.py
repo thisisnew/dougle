@@ -35,7 +35,7 @@ BEGIN SELECT RAISE(ABORT,'draft_inquiry_mismatch'); END;
 
 
 class Store:
-    def __init__(self, path: Path, clock=time.time):
+    def __init__(self, path: Path, clock=time.time, *, migrate=True):
         self.path, self.clock = Path(path), clock
         private_dir(self.path.parent)
         if self.path.is_symlink():
@@ -47,11 +47,19 @@ class Store:
         self.db.execute("PRAGMA foreign_keys=ON")
         self.db.execute("PRAGMA journal_mode=WAL")
         version = self.db.execute("PRAGMA user_version").fetchone()[0]
-        if version > 1:
+        if version > 2:
             self.db.close()
             raise BotError("database_newer_than_runtime")
         if version == 0:
+            if not migrate:
+                self.db.close()
+                raise BotError("database_not_initialized")
             self.db.executescript("BEGIN IMMEDIATE;" + SCHEMA + "PRAGMA user_version=1;COMMIT;")
+        if version < 2 and migrate:
+            self.db.executescript(
+                "BEGIN IMMEDIATE;ALTER TABLE drafts ADD COLUMN verification_json TEXT;"
+                "PRAGMA user_version=2;COMMIT;"
+            )
         try:
             self.check_post_intents()
         except Exception:
@@ -281,7 +289,7 @@ class Store:
                 "SELECT COALESCE(MAX(revision),0)+1 FROM drafts WHERE inquiry_id=?", (ident,)
             ).fetchone()[0]
             draft = db.execute(
-                "INSERT INTO drafts(inquiry_id,revision,kind,engine_status,body,sources_json,lookup_json,approver_notes,created_at) VALUES(?,?,?,?,?,?,?,?,?)",
+                "INSERT INTO drafts(inquiry_id,revision,kind,engine_status,body,sources_json,lookup_json,approver_notes,created_at,verification_json) VALUES(?,?,?,?,?,?,?,?,?,?)",
                 (
                     ident,
                     rev,
@@ -292,6 +300,7 @@ class Store:
                     json.dumps(result.get("lookup"), ensure_ascii=False),
                     notes,
                     self.clock(),
+                    json.dumps(result["verification"], ensure_ascii=False),
                 ),
             ).lastrowid
             status = "needs_lookup" if result["status"] == "needs_lookup" else "awaiting_approval"

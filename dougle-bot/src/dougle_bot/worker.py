@@ -4,6 +4,7 @@ import time
 from decimal import Decimal
 
 from . import cards
+from .evidence import KINDS, QUESTION_KINDS, validate_verification
 from .images import collect_images, prompt_messages
 from .presentation import reaction_names
 from .prompts import prompt, validate_output
@@ -147,6 +148,11 @@ class Worker:
             restored = False
             correction = ""
             schema_retried = False
+            required_evidence = set()
+            previous_draft = self.store.current(inquiry)
+            if previous_draft and previous_draft.get("verification_json"):
+                previous_checks = json.loads(previous_draft["verification_json"])
+                required_evidence.update(previous_checks["required"])
             while True:
                 if self.store.control()["desired"] != "running":
                     raise BotError("bot_stopped")
@@ -169,6 +175,7 @@ class Worker:
                     lookup=lookup,
                     restored=restored,
                     correction=correction,
+                    required_evidence=required_evidence,
                     image_context=[
                         {"file_id": img.file_id, "message_ts": img.message_ts} for img in images
                     ],
@@ -203,10 +210,40 @@ class Worker:
                         <= result.activated
                     ):
                         raise BotError("required_skill_not_activated")
+                    # Retain declared obligations across the one allowed correction attempt.
+                    verification = (
+                        result.output.get("verification", {})
+                        if isinstance(result.output, dict)
+                        else {}
+                    )
+                    declared = (
+                        verification.get("required", []) if isinstance(verification, dict) else []
+                    )
+                    if isinstance(declared, list):
+                        required_evidence.update(
+                            x for x in declared if isinstance(x, str) and x in KINDS
+                        )
+                    category = (
+                        verification.get("question_kind")
+                        if isinstance(verification, dict)
+                        else None
+                    )
+                    if isinstance(category, str):
+                        required_evidence.update(QUESTION_KINDS.get(category, set()))
                     output = validate_output(
                         result.output,
                         lookup_basis=bool(lookup),
                         lookup_time=lookup["observed_at"] if lookup else None,
+                    )
+                    validate_verification(
+                        output,
+                        result.reads,
+                        image_ids={img.file_id for img in images},
+                        report=bool(lookup),
+                        required_floor=required_evidence,
+                    )
+                    self.store.audit(
+                        ident, "system", "evidence_checks_verified", json.dumps(verification)
                     )
                     self.store.audit(
                         ident,

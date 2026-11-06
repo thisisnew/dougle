@@ -16,6 +16,23 @@ class Actions:
         if user != self.config.slack.approver_user_id:
             raise BotError("approver_only")
 
+    def ensure_research_record(self, inquiry, draft):
+        if draft.get("verification_json"):
+            return json.loads(draft["verification_json"])
+        # Pre-upgrade drafts have no research contract. Never infer proof from their prose.
+        self.store.enqueue(
+            inquiry["id"],
+            draft["id"],
+            "regenerated",
+            json.dumps(
+                {
+                    "instruction": "필요한 코드·현재 상태 근거를 확인하고 새 검토용 초안을 작성해 주세요."
+                },
+                ensure_ascii=False,
+            ),
+        )
+        raise BotError("research_required_regenerating")
+
     def resolve(self, user, value, channel=None, ts=None):
         self.authorized(user)
         if self.store.control()["desired"] != "running":
@@ -84,6 +101,7 @@ class Actions:
                 if inquiry["status"] != "awaiting_approval":
                     raise BotError("lookup_not_editable")
                 output = {
+                    "verification": self.ensure_research_record(inquiry, draft),
                     "status": draft["engine_status"],
                     "body": content,
                     "sources": json.loads(draft["sources_json"]),
@@ -146,6 +164,7 @@ class Actions:
                 )
                 raise BotError("thread_changed_regenerating")
             output = {
+                "verification": self.ensure_research_record(inquiry, draft),
                 "status": draft["engine_status"],
                 "body": draft["body"],
                 "sources": json.loads(draft["sources_json"]),
