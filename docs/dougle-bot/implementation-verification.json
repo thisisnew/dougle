@@ -1804,7 +1804,16 @@
   "real_claude_model_calls": 0,
   "automated_tests_real_model_calls": 0,
   "ci": {
-    "result": "PENDING_ON_SOURCE_PUSH"
+    "url": "https://github.com/thisisnew/dougle/actions/runs/42265416580",
+    "source_commit": "8729eb57090a509c7e7388cc0b740494c1558db9",
+    "python_versions": [
+      "3.12",
+      "3.13"
+    ],
+    "result": "PASS",
+    "test_cases_per_job": 381,
+    "unique_test_case_count": 381,
+    "external_integrations": "fake only; no additional native model calls"
   },
   "native_model_call_ledger": "200/200; no additional calls",
   "previous_synthetic_model_evaluation": "0.8.3 only: answer-evaluation/results.json"

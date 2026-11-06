@@ -1,22 +1,22 @@
 {
-  "tag": "v0.8.3-skills-preview.1",
-  "sourceCommit": "68c092aadccac34e88ef9043cf96371d2af31a4b",
+  "tag": "v0.8.4-skills-preview.1",
+  "sourceCommit": "8729eb57090a509c7e7388cc0b740494c1558db9",
   "prerelease": true,
   "requestedLatest": false,
   "assets": [
     {
-      "name": "Dougle_Skills_0.8.3.zip",
-      "bytes": 203665,
-      "sha256": "e03dca790f8926088b049aa83bc19050ac305ec91cb00d517f92cbfd7ea6327e",
+      "name": "Dougle_Skills_0.8.4.zip",
+      "bytes": 209597,
+      "sha256": "14dd30d54e558f74f4b50436c2472637c762348ba56e812d77a7cf5317476fe5",
       "anonymousDownload": "PASS",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.3-skills-preview.1/Dougle_Skills_0.8.3.zip"
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.4-skills-preview.1/Dougle_Skills_0.8.4.zip"
     },
     {
-      "name": "Dougle_Skills_0.8.3_SHA256SUMS",
+      "name": "Dougle_Skills_0.8.4_SHA256SUMS",
       "bytes": 90,
-      "sha256": "fdfdc4c9bc6b8ec391ecb92a40c66fd2301f02d38cd86349d93957f352c17ff2",
+      "sha256": "f76dc10792f0cffc572ac929b876d23a42d7b20879d12d18e197af37eca8a533",
       "anonymousDownload": "PASS",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.3-skills-preview.1/Dougle_Skills_0.8.3_SHA256SUMS"
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.4-skills-preview.1/Dougle_Skills_0.8.4_SHA256SUMS"
     }
   ]
 }
