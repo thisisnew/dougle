@@ -4,7 +4,7 @@
 
 호스트 실행 스킬 + 선택형 로컬 Slack 봇. `skills/`와 `plugins/dougle/skills/`는 동일하다. 봇 런타임은0.1.5이며 원본 시스템은 읽기 전용, Slack 게시에는 지정 승인자의 확인이 필요하다. 사용자 지식은 `~/.dougle/`, 봇 상태는 `~/.dougle-bot/`이며 제품 개발에서 읽거나 수정하지 않는다.
 
-현재 작업: 스킬0.8.7의 남은 코드·문서 정리. 공개 완료 여부는 `docs/skills/public-release.json`을 확인한다. 기존 상세 작업 이력은 https://github.com/thisisnew/dougle/blob/bbf2918/HANDOFF.md 에 보존한다.
+스킬0.8.7의 남은 코드·문서 정리를 완료했다. 소스 c89081f4dc6282bf78534aeab1883db8417cd42a, 공개 태그 v0.8.7-skills-preview.1이다. GitHub CI 42277838623에서 Python3.12/3.13 모두 통과했다. 공개 ZIP과 체크섬의 익명 다운로드 바이트 일치를 확인했다. 증거는 `docs/skills/public-release.json`에 있다. 기존 상세 작업 이력은 https://github.com/thisisnew/dougle/blob/bbf2918/HANDOFF.md 에 보존한다.
 
 ## 유지할 동작
 
