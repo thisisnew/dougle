@@ -201,7 +201,9 @@ def render(inquiry, draft, permalink=None):
         blocks.append(section("게시된 답변: " + permalink))
     if len(blocks) > 45:
         raise BotError("card_too_large")
-    return "dougle · " + LABELS[status] + " · " + inquiry["question_text"][:100], blocks
+    return "dougle · " + LABELS[status] + " · " + escape_slack(
+        inquiry["question_text"][:100]
+    ), blocks
 
 
 def modal(action, inquiry, draft):

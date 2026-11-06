@@ -298,3 +298,14 @@ def test_card_order_labels_and_public_payload_are_distinct(app):
     assert blocks[q + 1]["text"]["type"] == "plain_text"
     assert cards.final_text(draft) == blocks[a + 1]["text"]["text"]
     assert blocks[action]["elements"][0]["style"] == "primary"
+
+
+def test_dm_notification_question_cannot_trigger_mentions(app):
+    ref = ready(app)
+    row = app.store.inquiry(ref[0])
+    row["question_text"] = "<!channel> <@UOTHER> 관련 질문입니다."
+    text, blocks = cards.render(row, app.store.current(row))
+    assert "<!channel>" not in text and "<@UOTHER>" not in text
+    assert "&lt;!channel&gt;" in text
+    question = next(b for b in blocks if b.get("text", {}).get("text") == row["question_text"])
+    assert question["text"]["type"] == "plain_text"

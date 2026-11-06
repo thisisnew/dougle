@@ -5,7 +5,7 @@
   "python": "3.13.5",
   "slack_bolt": "1.30.0",
   "slack_sdk": "3.46.0",
-  "automated_test_count": 422,
+  "automated_test_count": 423,
   "failed": 0,
   "external_network": "blocked by test fixture",
   "real_model_calls": 0,
@@ -1353,6 +1353,10 @@
     },
     {
       "test": "tests.test_progress_cancel::test_card_order_labels_and_public_payload_are_distinct",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_progress_cancel::test_dm_notification_question_cannot_trigger_mentions",
       "status": "PASS"
     },
     {
