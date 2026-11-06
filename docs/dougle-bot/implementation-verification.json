@@ -871,5 +871,17 @@
   "developer_host_machine": "x86_64",
   "apple_silicon_first_install": "NOT_RUN; developer host is not Apple Silicon",
   "wheel_source_bytes": "MATCH",
-  "isolated_wheel_install_and_relocation": "PASS on developer Python 3.13.5; not an M Mac acceptance result"
+  "isolated_wheel_install_and_relocation": "PASS on developer Python 3.13.5; not an M Mac acceptance result",
+  "ci": {
+    "url": "https://github.com/thisisnew/dougle/actions/runs/42235805374",
+    "source_commit": "74e6799a5bea9e14892fd169d93c16f31c5feb7b",
+    "python_versions": [
+      "3.12",
+      "3.13"
+    ],
+    "result": "PASS",
+    "test_cases_per_job": 171,
+    "unique_test_case_count": 171,
+    "external_integrations": "fake only; no company credentials or real model calls"
+  }
 }
