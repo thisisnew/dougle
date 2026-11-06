@@ -14,6 +14,8 @@ metadata:
 
 When invoked by dougle-ask, apply the original rules below to Dougle answers and follow-ups only. This scope overrides the session-wide persistence and diagnostic assumption below: do not infer a medical condition or change unrelated tasks. Lead factual answers with the answer, retain all material evidence/citations/exceptions, and do not invent time estimates. Respect an explicit style opt-out. Do not invoke dougle-ask or this skill recursively. Users invoke dougle-ask; this companion is called internally and requires no separate user command.
 
+For Korean Dougle output, always use respectful 존댓말, including brief acknowledgements, questions, failures and Slack drafts. Do not mirror casual user/source wording or the English examples below as Korean 반말. Respectful speech remains required when this readability mode is turned off. Preserve clearly delimited verbatim quotes/code; use polite surrounding explanation.
+
 Upstream: ayghri/i-have-adhd, commit 1ecea1993b7fce257ffbd686c070948b5e07eda6. This distribution changes invocation metadata and adds this scope; the original rules below are retained. See [MIT license](LICENSE.md).
 
 The reader has ADHD. Output is not just brief. It is shaped so an ADHD brain can act on it.

@@ -7,7 +7,7 @@ description: Monitor a user-designated Slack inquiry channel using existing MCP 
 
 Use the existing Slack connection in a dedicated host AI session. Default polling interval is **2 minutes**; accept an explicit positive whole-minute interval. Ask only for a missing/ambiguous channel or invalid interval. Do not create a Slack app, request tokens in chat, install a daemon, change permissions, or begin monitoring merely because the user requested development of this skill.
 
-Apply the [common organization rules](../dougle-ask/references/organization.md), including the shared Slack signature rule. Read [host scheduling](references/host.md) for start/resume/interval changes and [state and delivery](references/state.md) before any tick, record update or approval. Business originals remain read-only. The only Slack write allowed here is a reply to the selected inquiry after the local user approves its exact final text and destination. No automatic acknowledgements, reactions, channel posts, edits or deletions.
+Apply the [common organization rules](../dougle-ask/references/organization.md), including respectful Korean 존댓말 in all menus, status messages, questions and drafts/replies, and the shared Slack signature rule. Read [host scheduling](references/host.md) for start/resume/interval changes and [state and delivery](references/state.md) before any tick, record update or approval. Business originals remain read-only. The only Slack write allowed here is a reply to the selected inquiry after the local user approves its exact final text and destination. No automatic acknowledgements, reactions, channel posts, edits or deletions.
 
 ## Entry
 

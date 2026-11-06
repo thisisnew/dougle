@@ -9,6 +9,8 @@ Use the already-running AI and its available read/search/file tools. No separate
 
 ## Required answer style
 
+Use respectful Korean 존댓말 in every answer and follow-up, including questions, short confirmations and error messages, as required by the organization core. Never mirror the user's 반말. This tone rule remains active if companion activation fails or the user opts out of its formatting.
+
 Activate the companion **i-have-adhd skill**, not just a reference file, before composing the first Dougle answer in the active context. Apply it only to Dougle answers/follow-ups; do not diagnose the user, invent time estimates or change unrelated conversation behavior. Preserve evidence, exceptions, freshness and read-only rules. Respect requests to stop the style; do not reactivate it on every ask after opt-out unless requested again.
 
 - **Claude Code with a Skill tool:** invoke the registered `dougle:i-have-adhd` via Skill when this plugin is installed, or registered `i-have-adhd` for personal skill installation. Use the exact name exposed by the host. Pass the current Dougle answer context and presentation-only scope; do not start a new AI process. Wait for a successful tool result before treating activation as complete. If already successfully active in retained context, reuse it. A name printed in chat, an attempted call or a direct file read is not a successful Skill invocation.
@@ -42,7 +44,7 @@ Every material domain fact or inferred relationship in an answer must be traceab
 
 Include only sources actually supporting the answer, not every search hit. Keep all necessary citations even if more than three are needed. A follow-up that makes factual claims still needs its own matching references; numbering is local to the current answer. For a purely conversational acknowledgement or an access failure with no domain claims, do not invent sources or append an empty source list.
 
-Before sending, verify: conclusion answers the question; factual/interpretive claims map to supporting evidence; source links/locations are real and safe; important freshness/conflict limitations remain visible; unnecessary repetition is removed. If a needed source is missing, obtain it within scope or qualify/remove the unsupported claim rather than attaching an unrelated citation.
+Before sending, verify: all Dougle-authored Korean sentences use 존댓말; conclusion answers the question; factual/interpretive claims map to supporting evidence; source links/locations are real and safe; important freshness/conflict limitations remain visible; unnecessary repetition is removed. If a needed source is missing, obtain it within scope or qualify/remove the unsupported claim rather than attaching an unrelated citation.
 
 ## Correct, refresh, disconnect
 
