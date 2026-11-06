@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.8.5', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.8.6', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -25,7 +25,7 @@ async function files(dir) {
 for (const name of ['dougle-connect','dougle-ask','dougle-reload','dougle-publish','dougle-fetch','dougle-schedule','dougle-bot','i-have-adhd','plain-language']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
- check(all.length===(name==='dougle-bot'?7:name==='dougle-schedule'?5:['i-have-adhd','plain-language'].includes(name)?2:name==='dougle-ask'?9:name==='dougle-publish'?10:name==='dougle-fetch'?8:7),'only declared Markdown skill resources')
+ check(all.length===(name==='dougle-bot'?7:name==='dougle-schedule'?5:['i-have-adhd','plain-language'].includes(name)?2:name==='dougle-ask'?9:name==='dougle-publish'?11:name==='dougle-fetch'?9:7),'only declared Markdown skill resources')
  for(const p of all) {
   const isPublishScanner = name==='dougle-publish' && p===resolve(dir,'scripts/check-sensitive.sh')
   const isBotResource = name==='dougle-bot' && ['scripts/bot.sh','assets/slack-manifest.yaml','assets/requirements.txt','assets/runtime.sha256','assets/dougle_bot-0.1.5-py3-none-any.whl'].includes(p.slice(dir.length+1))
@@ -64,6 +64,7 @@ for (const resource of ['store.md','retrieval.md','records.md','freshness.md','o
 const plain=await readFile(resolve(root,'skills/plain-language/SKILL.md'),'utf8')
 check(plain.includes('user-invocable: false'),'plain-language hidden from user commands')
 check(!plain.includes('disable-model-invocation:'),'plain-language model callable')
+check(await readFile(resolve(root,'skills/dougle-publish/references/merge.md'),'utf8')===await readFile(resolve(root,'skills/dougle-fetch/references/merge.md'),'utf8'),'shared ordered merge rules')
 const companion=await readFile(resolve(root,'skills/i-have-adhd/SKILL.md'),'utf8')
 check(!companion.includes('disable-model-invocation:'),'companion model invocation enabled')
 check(companion.includes('user-invocable: false'),'companion hidden from Claude user commands')

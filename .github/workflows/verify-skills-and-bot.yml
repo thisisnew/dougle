@@ -1,9 +1,9 @@
 name: Verify skills and optional bot
 on:
   push:
-    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
   pull_request:
-    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
 permissions:
   contents: read
 jobs:
@@ -22,5 +22,7 @@ jobs:
           node-version: '24'
       - run: python -m pip install ./dougle-bot pytest==9.2.0 ruff==0.17.4
       - run: node scripts/check-skills.mjs
+      - run: node scripts/check-sharing-merge.mjs
+      - run: node scripts/check-current-tree.mjs
       - run: ruff check dougle-bot
       - run: pytest -q dougle-bot/tests

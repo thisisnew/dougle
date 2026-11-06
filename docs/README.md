@@ -22,7 +22,7 @@
 
 [제품 개요](skills/README.md) · [개발 안내](skills/development.md) · [답변과 출처](skills/answer-sources.md) · [검색 속도](skills/search-performance.md) · [검증 범위](skills/verification.md)
 
-현재 제품은 **0.8.5 스킬 모음과 선택형 Slack 봇**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
+현재 제품은 **0.8.6 스킬 모음과 선택형 Slack 봇**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
 
 <details>
 <summary>이전 버전 기록</summary>
@@ -34,3 +34,5 @@
 - [Slack 문의 확인·승인 후 답변](skills/schedule.md)
 
 - [Dougle Slack bot](../dougle-bot/README.md) · [Runtime contracts](../dougle-bot/SPEC.md) · [Executed checks](dougle-bot/implementation-verification.json)
+
+[현재 저장소 구성과 이전 코드 정리](repository.md)

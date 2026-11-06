@@ -7,7 +7,7 @@ description: Publish selected curated Dougle domain knowledge to a user-designat
 
 Always use respectful Korean 존댓말 in explanations, confirmations, follow-ups and errors. Do not mirror casual user wording; review every authored sentence before sending. Preserve clearly marked original quotes and code.
 
-Read [the organization protocol](references/organization.md), [the sharing protocol](references/sharing.md) and [the required sensitive-data gate](references/sensitive.md). Use the host's existing tools; do not install a runtime or generate an uploader.
+Read [the organization protocol](references/organization.md), [the sharing protocol](references/sharing.md) and [the required sensitive-data gate](references/sensitive.md). Before reconciling claims, read and apply the [ordered merge decisions](references/merge.md); record the matched decision for every changed claim. Use the host's existing tools; do not install a runtime or generate an uploader.
 
 Open the common user store and resolve the requested repository and selected business/source scope independently of cwd. If scope is not established and several projects/services could be exported, ask which material to share; a repository alone never authorizes exporting the whole common store. Legacy bindings retain their old export scope. A saved binding can be reused only within the user's intended scope. If no target exists, ask for a repository; never infer the Dougle software repository or a connected source repository as the destination. Check repository identity, visibility and authenticated access using available host tools. Missing credentials/tools require host setup guidance, never tokens pasted into chat.
 
@@ -15,9 +15,9 @@ Prepare a concrete scoped export of curated concepts/rules/relationships, correc
 
 A sensitive-data finding or incomplete/failed check blocks the entire publish, including private targets. Do not auto-redact and continue or claim a pass from reading instructions. Complete staged-content semantic review AND run the bundled local shell scanner successfully for the exact final package immediately before upload. A changed stage invalidates the previous review/receipt. If a shell/tool is unavailable, do not publish.
 
-Reconcile existing remote knowledge before committing. Preserve teammates' additions and local user corrections. Record contradictions; do not resolve by timestamp. Use checked-base writes/normal fast-forward pushes, never force push or modify the source project checkout. Stop when the safe write capability or required disclosure approval is missing.
+Reconcile existing remote knowledge before committing. Preserve teammates' additions and local user corrections. Record contradictions; do not resolve by timestamp. Apply the merged result directly without a PR; branch protection is a stop condition, not permission to bypass it. Use checked-base writes/normal fast-forward pushes, never force push or modify the source project checkout. Stop when the safe write capability or required disclosure approval is missing.
 
-Verify the resulting remote commit and update local checkpoints only after confirmation. On a rejected/ambiguous upload, inspect remote state before a bounded retry. Report the commit link and exact scope, exclusions and unresolved conflicts. No automatic background push follows.
+Verify the resulting remote commit, then reconcile affected shared claims locally before advancing the common comparison base. A push receipt and a fully synchronized base are separate checkpoints. On a rejected/ambiguous upload, inspect remote state before a bounded retry. Report the commit link and exact scope, exclusions and unresolved conflicts. No automatic background push follows.
 
 ## Load task details before acting
 

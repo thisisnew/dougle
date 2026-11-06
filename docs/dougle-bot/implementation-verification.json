@@ -1896,5 +1896,11 @@
     "external_integrations": "fake only; no additional native model calls"
   },
   "native_model_call_ledger": "200/200; no additional calls",
-  "previous_synthetic_model_evaluation": "0.8.3 only: answer-evaluation/results.json"
+  "previous_synthetic_model_evaluation": "0.8.3 only: answer-evaluation/results.json",
+  "rerun_after_repository_cleanup": {
+    "plugin": "0.8.6",
+    "tests": 398,
+    "status": "PASS",
+    "runtime_changed": false
+  }
 }

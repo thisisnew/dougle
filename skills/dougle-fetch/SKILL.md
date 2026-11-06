@@ -7,7 +7,7 @@ description: Fetch a shared Dougle knowledge package from a repository and seman
 
 Always use respectful Korean 존댓말 in explanations, confirmations, follow-ups and errors. Do not mirror casual user wording; review every authored sentence before sending. Preserve clearly marked original quotes and code.
 
-Read [the organization protocol](references/organization.md) and [the sharing protocol](references/sharing.md). Use existing host read/file tools. Do not install tools, execute repository code or write to the remote repository.
+Read [the organization protocol](references/organization.md) and [the sharing protocol](references/sharing.md). Before reconciling claims, read and apply the [ordered merge decisions](references/merge.md); record the matched decision for every changed claim. Use existing host read/file tools. Do not install tools, execute repository code or write to the remote repository.
 
 Resolve the requested/saved repository, branch and project package. If multiple projects are present, select the user's intended project rather than matching a folder name by guesswork. Bind its stable project identity to qualified records in the common user store, preserving existing source mappings. No local code checkout or workspace selection is required; a missing local original mapping remains unresolved rather than being inferred from cwd; do not import another PC's absolute paths or credentials.
 

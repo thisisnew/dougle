@@ -35,12 +35,14 @@ Sensitive-data findings/suspicions or incomplete scans block the ENTIRE publish 
 
 Summaries can themselves contain confidential information. Do not rely on filename checks alone. If redaction removes required evidence, omit the affected claim or explicitly record that evidence was withheld; never create a falsely verified claim. Do not silently drop contradictory evidence to make a cleaner export. Report exclusions and actual size/file count. Large original artifacts stay at authorized original sources; do not auto-upload them or introduce LFS/install dependencies. If a genuine curated-text package is too large for host/provider limits, narrow or batch scope with the user; no hardcoded invented GitHub size guarantee.
 
-## Fetch is semantic merge, not replacement
+## Fetch is conservative claim merge, not replacement
+
+Read [ordered merge decisions](merge.md) before reconciliation. Its exact identity/equality and ordered decision table govern the summary below. Semantic similarity may suggest relationships, never authorize dropping an alternative.
 
 Resolve a repository, branch and project package using a saved binding or the user's explicit target. Read a fixed remote commit ID and all package files at that SAME commit into local staging under the Dougle memory directory. Do not git-pull into the code project or copy a remote workspace wholesale over local memory. Never publish/push during fetch.
 
 1. Validate manifest/version, scope, paths, IDs and evidence links. Inspect the full selected package before mutating active knowledge. Invalid/unreadable/incomplete packages leave active memory and last-merged commit unchanged.
-2. Compare remote, local and the last fully merged/published base for this binding. A first fetch has no base: preserve local claims and compare identities/evidence cautiously. An existing name or identical wording is not enough to merge independent evidence.
+2. Compare remote, local and the last completely synchronized common base (not merely the last upload receipt) for this binding. A first fetch has no base: preserve local claims and compare identities/evidence cautiously. An existing name or identical wording is not enough to merge independent evidence.
 3. Match source identities through the organization protocol and portable local mappings. Keep original remote IDs in an import mapping and reuse this mapping on repeated fetch. Ask only when mapping is genuinely ambiguous; never copy another user's root path into the local source mapping.
 4. Classify claim-level outcomes:
 
@@ -48,10 +50,10 @@ Resolve a repository, branch and project package using a saved binding or the us
 |---|---|
 | Same claim/content/evidence already imported | No-op; no duplicate notes or newer observation date |
 | Remote adds a new supported claim | Add with its original provenance and imported revision; mark needs_recheck until locally verified |
-| Same meaning with additional evidence | Combine references without discarding either source/lineage |
+| Exactly equal core with additional evidence | Combine references without discarding either source/lineage |
 | Only local changed since base | Preserve local change |
 | Only remote changed since base | Update that claim, preserving prior provenance/history; mark remote-dependent facts needs_recheck |
-| Both changed compatibly | Merge the nonconflicting additions, preserving provenance |
+| Both changed to the same core | Merge the nonconflicting additions, preserving provenance |
 | Both changed incompatibly, or meaning uncertain | Preserve both alternatives and base, create an explicit unresolved conflict; do not select by timestamp |
 | Local user correction conflicts with remote | Preserve the user's statement and source evidence separately; no silent override |
 | Remote omitted/deleted a claim or file | Do not delete local knowledge; record remote withdrawal only when explicit and retain local provenance/corrections |
@@ -65,14 +67,14 @@ A successful fetch does not mean the source systems were accessed, the document 
 
 ## Publish without losing teammates' changes
 
-Prepare a scoped portable export in a separate scratch area, never in the user's code checkout. If the remote branch already exists, pin its head and reconcile that package with the local export/base using the same claim-level rules before writing. Do not silently replace remote-only additions. Unresolved conflicts remain explicit or are omitted from publication with a clear pending report; never resolve them by last writer wins.
+Prepare a scoped portable export in a separate scratch area, never in the user's code checkout. If the remote branch already exists, pin its head and reconcile that package with the local export/base using the [ordered merge decisions](merge.md) before writing. Do not silently replace remote-only additions. Unresolved conflicts remain explicit; if representation is unsafe, withhold affected local changes and dependents while preserving all existing remote alternatives with a clear pending report; never resolve them by last writer wins.
 
-Use the host's authenticated GitHub write tool with expected-base checks, or existing Git with normal fast-forward push from a safe separate workspace. Never force push, reset a user checkout, run repository hooks/scripts/filters, or modify unrelated paths. If the host tool cannot safely inspect/commit against a known base, explain the missing capability rather than issuing unchecked overwrites. Respect protected branches; offer a separate branch/PR only when needed and covered by the user's request. No silent permissions/policy changes.
+Use the host's authenticated GitHub write tool with expected-base checks, or existing Git with normal fast-forward push from a safe separate workspace. Never force push, reset a user checkout, run repository hooks/scripts/filters, or modify unrelated paths. If the host tool cannot safely inspect/commit against a known base, explain the missing capability rather than issuing unchecked overwrites. Publish directly without a PR. Respect protected branches: if direct writes are disallowed, stop and report the constraint; do not create a PR or change policy automatically.
 
 For publish using Git, build one reviewed/scanned package commit directly on the verified remote base, verify its parent and committed tree, and never push additional unpublished ancestry. A cleaned final tree does not clear secret-containing intermediate commits. Direct file APIs use exact reviewed content and expected-base checks. Missing safe ancestry/tree inspection blocks publication.
 
 Immediately before upload, recheck target identity, visibility, diff scope and remote base. If the head changed or a push is rejected, fetch the new head and recompute the merge. One bounded retry is enough before reporting an ongoing concurrent edit; do not spin or force push. If the remote already contains the intended export, report unchanged without a duplicate commit.
 
-After publishing, read back the resulting commit/tree at the target branch and verify the expected scoped files. Only then update local published/base checkpoints. A timeout is ambiguous: inspect remote history before retrying. If remote success occurred but local checkpointing failed, record it and reconcile the commit on the next attempt, not duplicate the upload. Return repository/branch/package path, commit link and shared/excluded/conflicting counts. Do not claim company originals were changed.
+After publishing, read back the resulting commit/tree at the target branch and verify the expected scoped files. Only then record the publication receipt. Complete the affected local reconciliation before advancing the common base, as specified in merge.md; remote success with local failure remains a resumable pending operation. A timeout is ambiguous: inspect remote history before retrying. If remote success occurred but local checkpointing failed, record it and reconcile the commit on the next attempt, not duplicate the upload. Return repository/branch/package path, commit link and shared/excluded/conflicting counts. Do not claim company originals were changed.
 
 Local freshness policy and verification entries (`refresh_interval_seconds`, `default_refresh_interval_seconds`, `last_attempt_at`, `last_verified_at`, `last_check_result`, and local coverage checkpoints) are not portable evidence. Exclude these settings/checkpoints from exports and preserve the recipient’s local settings during merges. Remote original observation dates/revisions remain provenance, not local verification. Imported or remotely changed claims require local rechecking even if the donor checked recently or the recipient verified an older version recently.

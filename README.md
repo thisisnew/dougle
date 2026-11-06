@@ -45,7 +45,7 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 /dougle:dougle-fetch 팀_지식_저장소_URL의 지식을 가져와 합쳐 줘.
 ```
 
-선택한 지식만 공유합니다. 민감정보 검사를 통과해야 게시하며, 가져올 때는 기존 지식·정정·충돌을 보존합니다. [자세히](docs/skills/sharing.md)
+선택한 지식을 기존 팀 지식과 합쳐 바로 반영합니다. PR은 만들지 않고, 서로 다른 주장은 둘 다 남깁니다. 민감정보 검사를 통과해야 게시하며, 가져올 때는 기존 지식·정정·충돌을 보존합니다. [자세히](docs/skills/sharing.md)
 
 ## Slack에서 쓰기
 
@@ -94,4 +94,4 @@ https://github.com/thisisnew/dougle 최신 main으로 설치된 skills/의 모�
 참조 파일까지 갱신해 줘. 개인 수정본과 ~/.dougle/ 지식은 보존해.
 ```
 
-[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.5-skills-preview.1)
+[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.6-skills-preview.1)
