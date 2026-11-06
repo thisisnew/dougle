@@ -14,9 +14,11 @@
 
 ## 개발하거나 지원 범위를 확인할 때
 
+[개발 예정 Slack 봇: 테스트 계획과 231개 시나리오](dougle-bot/TEST_PLAN.md) — 설계 완료, 봇 구현·테스트 실행 전입니다.
+
 [제품 개요](skills/README.md) · [개발 안내](skills/development.md) · [답변과 출처](skills/answer-sources.md) · [검색 속도](skills/search-performance.md) · [검증 범위](skills/verification.md)
 
-현재 제품은 **0.5.0 스킬 모음**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
+현재 제품은 **0.7.2 스킬 모음**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
 
 <details>
 <summary>이전 버전 기록</summary>

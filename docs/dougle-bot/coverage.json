@@ -1,0 +1,51 @@
+{
+  "asOf": "2026-11-06",
+  "project": "dougle-bot",
+  "implementationExists": false,
+  "totalDesignedCases": 231,
+  "automatedCasesDesigned": 211,
+  "manualCompanyCasesDesigned": 20,
+  "automatedTestsImplemented": 0,
+  "productTestsExecuted": 0,
+  "productTestsPassed": 0,
+  "companyCasesExecuted": 0,
+  "priorDougleSkillResultsCounted": false,
+  "priorModelCallsAdded": 0,
+  "priorities": {
+    "P1": 85,
+    "P0": 146
+  },
+  "categories": {
+    "CFG": 10,
+    "KEY": 10,
+    "MASK": 10,
+    "INT": 11,
+    "DB": 10,
+    "QUE": 10,
+    "HIS": 10,
+    "CLI": 10,
+    "ENG": 10,
+    "PRM": 10,
+    "CARD": 10,
+    "AUTH": 10,
+    "EDIT": 10,
+    "POST": 10,
+    "PART": 10,
+    "LOOK": 10,
+    "BUD": 10,
+    "REC": 10,
+    "ACL": 10,
+    "OPS": 10,
+    "E2E": 10,
+    "MAN": 20
+  },
+  "designValidation": {
+    "uniqueIds": true,
+    "uniqueConditions": true,
+    "uniqueExpectedResults": true,
+    "allCasesHaveRequirementAndInvariant": true,
+    "allCasesUnexecuted": true
+  },
+  "releaseReadiness": "NOT_READY: no bot implementation, automated execution, or company verification",
+  "missingSpecificationSections": "8–15 referenced but not supplied; proposed contracts documented in TEST_PLAN.md"
+}
