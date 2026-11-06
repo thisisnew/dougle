@@ -174,7 +174,7 @@ class ClaudeCliEngine:
             json.dumps(
                 {
                     "allowed": self.config.allowed_tools,
-                    "skills": [self.config.ask_skill, self.config.style_skill],
+                    "skills": list(self.config.required_skills),
                     "memory": str(Path.home() / ".dougle"),
                     "runtime_home": str(self.home.resolve()),
                 }

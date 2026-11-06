@@ -124,7 +124,8 @@ def fake_cli(tmp_path, code):
 
 def test_real_subprocess_fake_cli_uses_stdin_and_stream_parser(app, tmp_path):
     events = [call(name, f"t{i}") for i, name in enumerate(sorted(SKILLS))] + [
-        outcome(f"t{i}") for i in range(2)
+        outcome(f"t{i}", content=f"Launching skill: {name}")
+        for i, name in enumerate(sorted(SKILLS))
     ]
     payload = trace(events).decode()
     script = fake_cli(

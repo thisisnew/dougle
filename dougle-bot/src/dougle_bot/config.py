@@ -73,6 +73,11 @@ class EngineConfig:
     disallowed_tools: list[str] = field(default_factory=lambda: ["Bash", "Agent", "Task"])
     ask_skill: str = "dougle:dougle-ask"
     style_skill: str = "dougle:i-have-adhd"
+    plain_language_skill: str = "dougle:plain-language"
+
+    @property
+    def required_skills(self) -> tuple[str, str, str]:
+        return self.ask_skill, self.style_skill, self.plain_language_skill
 
 
 @dataclass(frozen=True)
@@ -132,9 +137,11 @@ class Config:
             raise BotError("invalid_engine_path")
         if not isinstance(self.engine.model, str) or any(ord(c) < 32 for c in self.engine.model):
             raise BotError("invalid_model")
-        for name in (self.engine.ask_skill, self.engine.style_skill):
+        for name in self.engine.required_skills:
             if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9:_-]{1,100}", name):
                 raise BotError("invalid_skill_name")
+        if len(set(self.engine.required_skills)) != 3:
+            raise BotError("invalid_skill_name")
         return self
 
 

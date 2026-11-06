@@ -335,7 +335,8 @@ def test_html_login_page_and_size_mismatch_not_sent_to_model():
 
 def test_cli_receives_actual_base64_block_on_stdin_not_argv(app, tmp_path):
     events = [call(name, f"t{i}") for i, name in enumerate(sorted(SKILLS))] + [
-        outcome(f"t{i}") for i in range(2)
+        outcome(f"t{i}", content=f"Launching skill: {name}")
+        for i, name in enumerate(sorted(SKILLS))
     ]
     code = (
         """import sys,json,base64

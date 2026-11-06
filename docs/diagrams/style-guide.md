@@ -17,7 +17,7 @@ See [production notes and attribution](README.md).
 - Hand-authored `.excalidraw` source; high-resolution PNG for GitHub. No Mermaid.
 - `roughness: 0`, white/blue palette above; sans-serif Korean fallback (fontFamily 2).
 - Measure actual Korean text widths, use explicit phrase breaks, never truncate labels.
-- Relations use arrows and counts; file records and original services are distinct.
+- Use only three or four ideas per figure, short labels and recognizable icons. Put record fields and cardinality in the developer reference.
 - Native source keeps full element IDs, arrow bindings and measurable text bounds.
 - Each figure answers one question. Keep implementation references in adjacent Markdown.
 - Inspect actual PNGs, labels, routes and a README-sized preview before publishing.

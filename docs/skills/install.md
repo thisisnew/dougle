@@ -31,7 +31,7 @@
    ```text
    https://github.com/thisisnew/dougle 저장소에서
    skills/dougle-connect, skills/dougle-ask, skills/dougle-reload,
-   skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/dougle-bot, skills/i-have-adhd를 스킬로 설치해 줘.
+   skills/dougle-publish, skills/dougle-fetch, skills/dougle-schedule, skills/dougle-bot, skills/i-have-adhd, skills/plain-language를 스킬로 설치해 줘.
    ```
 
 2. 설치 후 새 세션에서 자료를 연결합니다. `/path/to/project`를 실제 자료 경로로 바꾸세요.
@@ -42,7 +42,7 @@
 
 직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.3-skills-preview.1)을 풀고 `Dougle/skills/` 안의 여덟 폴더를 `~/.agents/skills/`에 복사하세요.
 
-설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 독립된 `i-have-adhd/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
+설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 내부 답변 스킬인 `i-have-adhd/`, `plain-language/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 
 Slack 봇을 사용할 때는 `/dougle:dougle-bot`에서 최초 설정을 진행합니다. 지식 스킬만 사용할 때는 봇 런타임을 설치하지 않습니다. [봇 설치·실행 안내](../../dougle-bot/README.md)
 
@@ -98,7 +98,7 @@ claude plugin list
 ```text
 https://github.com/thisisnew/dougle 의 최신 main 기준으로
 현재 설치된 dougle-connect, dougle-ask, dougle-reload,
-dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd 여덟 스킬을 갱신해 줘.
+dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd, plain-language 아홉 스킬을 갱신해 줘.
 
 실제로 로드되는 설치 경로를 먼저 확인하고 그 위치를 업데이트해.
 개인 수정본은 보존하고, ~/.dougle/의 업무 지식은 건드리지 마.

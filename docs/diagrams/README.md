@@ -1,48 +1,27 @@
 # 더글 다이어그램
 
-기존 더글의 흰 바탕·파란 강조색을 유지합니다.
+흰 바탕과 파란 강조색으로, 한 그림에 한 가지를 설명합니다.
 
-## 구조·설계 도식
-
-[설계 문서](../design.md)는 편집 가능한 Excalidraw 원본과 PNG를 함께 제공합니다.
-
-| 도식 | GitHub에서 보기 | 편집 원본 |
+| 설명 | 이미지 | 편집 원본 |
 |---|---|---|
-| 목차·토픽·주장·소스 관계 | [PNG](knowledge-model.png) | [Excalidraw](knowledge-model.excalidraw) |
-| 스레드·문의·초안·전송 관계 | [PNG](bot-model.png) | [Excalidraw](bot-model.excalidraw) |
-| 조사·수동 조회·승인·게시 흐름 | [PNG](bot-flow.png) | [Excalidraw](bot-flow.excalidraw) |
+| 목차 → 토픽 → 소스 → 원본 | [PNG](knowledge-model.png) | [Excalidraw](knowledge-model.excalidraw) |
+| 같은 스레드에서는 대화 이어가기 | [PNG](bot-model.png) | [Excalidraw](bot-model.excalidraw) |
+| 질문 → 조사 → 내 승인 → 댓글 | [PNG](bot-flow.png) | [Excalidraw](bot-flow.excalidraw) |
 
-[excalidraw-diagram 스킬](https://github.com/coleam00/excalidraw-diagram-skill)의 관계 중심 설계·렌더링 검토 절차를 적용했습니다. 스킬 원문과 실행 코드는 이 저장소에 포함하지 않습니다. 그림은 더글의 현재 코드와 스킬 지침을 바탕으로 새로 작성했습니다.
+[쉬운 설명](../design.md) · [개발 설계](../design-reference.md) · [그림 스타일](style-guide.md)
 
-Excalidraw에서 원본을 열어 편집할 수 있습니다. GitHub에는 글꼴에 따라 한글 배치가 달라지지 않도록 고해상도 PNG를 표시합니다. 이미지 안에는 짧은 이름과 관계를 넣고, 조건·한계·코드 근거는 설계 문서에 적습니다. 제작 도구는 더글 사용자의 설치 의존성이 아닙니다.
+[ELI5](https://github.com/anthropics/claude-plugins-community/tree/main/eli5)로 설명을 줄이고,
+[excalidraw-diagram](https://github.com/coleam00/excalidraw-diagram-skill)으로 새로 그렸습니다.
+원본은 Excalidraw에서 편집하며, GitHub에는 한글 배치를 유지하는 PNG를 표시합니다.
+제작용 스킬·도구는 더글 사용자의 설치 항목이 아닙니다.
 
-제작 시 Excalidraw 0.18.1의 `exportToSvg`를 사용했습니다. 스킬 기본 CDN의 의존성 링크 오류는 `@braintree/sanitize-url@7.1.1` 지정으로 해결했고, 헤드리스 Chrome에서 한글 글자 폭을 확인했습니다. PNG는 글꼴을 포함한 최종 화면이므로 GitHub에서 외부 라이브러리를 불러오지 않습니다. 원본을 다른 환경에서 편집할 때는 한글 글꼴과 줄바꿈을 다시 확인하세요.
+## 기존 사용 안내
 
-## 기존 사용 안내 그림
-
-| 도식 | README 이미지 | 편집 원본 |
+| 설명 | 이미지 | 편집 원본 |
 |---|---|---|
-| 자료를 지식으로 정리 → 팀에 공유 → 동료가 가져와 질문 | [PNG](knowledge-sharing.png) | [HTML 원본](knowledge-sharing.src.html) · [렌더링 HTML](knowledge-sharing.html) |
-| 질문 → 근거 확인 → 출처 있는 답변 | [PNG](ask-flow.png) | [원본](ask-flow.src.html) · [HTML](ask-flow.html) |
-| 원본 → 지식 저장 → 질문에 활용 | [PNG](knowledge-memory.png) | [원본](knowledge-memory.src.html) · [HTML](knowledge-memory.html) |
-| 스킬 실행 → 지식·원본 확인 → 답변·기억 반영 | [PNG](skill-execution.png) | [원본](skill-execution.src.html) · [HTML](skill-execution.html) |
+| 지식 공유 | [PNG](knowledge-sharing.png) | [HTML](knowledge-sharing.src.html) |
+| 질문과 근거 확인 | [PNG](ask-flow.png) | [HTML](ask-flow.src.html) |
+| 지식 저장 | [PNG](knowledge-memory.png) | [HTML](knowledge-memory.src.html) |
+| 스킬 실행 | [PNG](skill-execution.png) | [HTML](skill-execution.src.html) |
 
-## 지식 공유 그림
-
-[visual-explainer](https://github.com/nicobailon/visual-explainer) 0.15.0 스킬을 설치하고 적용했습니다. 한글 문장 단위 줄바꿈, 큰 제목, 한 방향의 세 단계 흐름으로 구성했습니다. 650px 이하의 HTML 화면은 세로로 배치됩니다. README는 글꼴 차이를 막기 위해 Apple SD Gothic Neo로 렌더링한 2배 해상도 PNG를 사용합니다. README 이미지 자체는 화면에 맞춰 축소되며 반응형 HTML처럼 재배치되지는 않습니다.
-
-제작 환경에서 다음 명령으로 HTML을 렌더링합니다.
-
-```sh
-node ~/.agents/skills/visual-explainer/kit/render.mjs docs/diagrams/knowledge-sharing.src.html
-```
-
-PNG는 Chrome의 1000px viewport, deviceScaleFactor 2에서 글꼴 로딩 후 main 영역을 내보낸 것입니다. 렌더러의 390px·1280px 검사와 밝은/어두운 화면 시트를 확인했습니다. HTML에는 스킬의 CSS·스크립트가 포함됩니다. README PNG에는 실행 코드나 외부 요청이 없습니다. 제작 도구는 더글 사용자의 실행 의존성이 아닙니다. [MIT 고지](visual-explainer-LICENSE).
-
-## 전체 도식의 표현
-
-기존 사용 안내의 네 도식은 visual-explainer 방식의 HTML·PNG입니다. 새 구조·설계 도식은 위 Excalidraw 원본을 사용합니다. 질문·내재화·실행 흐름은 위에서 아래로 읽는 세 단계이며, 조건과 예외를 해당 단계 안에 적었습니다. 기존 diagram-design SVG와 현재 스킬 문서의 Mermaid 블록은 교체했습니다.
-
-과거 데스크톱 앱 문서의 Mermaid 설계 기록과 실제 UI 스크린샷은 당시 동작의 기록이므로 보존합니다. 현재 스킬 버전의 그림이 아닙니다.
-
-지식 공유는 선택한 정제 지식의 명시적 publish/fetch이며 원본 전체 업로드나 자동 동기화가 아닙니다. 질문 흐름의 근거 재사용은 충분한 근거와 유효한 확인 이력이 있는 경우입니다. 세부 조건은 [구동 방식](../skills/how-it-works.md)을 참고하세요.
+기존 안내 그림은 [visual-explainer](https://github.com/nicobailon/visual-explainer)로 제작했습니다. [MIT 고지](visual-explainer-LICENSE)

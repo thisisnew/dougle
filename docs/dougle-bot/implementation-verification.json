@@ -1,11 +1,11 @@
 {
   "date": "2026-11-07",
-  "plugin_version": "0.8.4",
-  "runtime_version": "0.1.4",
+  "plugin_version": "0.8.5",
+  "runtime_version": "0.1.5",
   "python": "3.13.5",
   "slack_bolt": "1.30.0",
   "slack_sdk": "3.46.0",
-  "automated_test_count": 381,
+  "automated_test_count": 398,
   "failed": 0,
   "external_network": "blocked by test fixture",
   "real_model_calls": 0,
@@ -13,7 +13,7 @@
   "real_company_slack": "NOT_RUN_BY_AGENT",
   "user_report": "User reports basic mention → draft DM → approved thread post worked on previous release; not a full acceptance test",
   "apple_silicon_first_install": "NOT_RUN",
-  "new_model_business_readability": "NOT_RUN for this change; evidence execution gate tested with fake traces, semantic question classification remains model-dependent",
+  "new_model_business_readability": "NOT_RUN; mandatory three-skill activation tested with fake traces, not actual model semantic quality",
   "planned_231_scenarios": "NOT_ALL_IMPLEMENTED_OR_MAPPED; pytest cases counted separately",
   "tests": [
     {
@@ -35,275 +35,275 @@
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "53f383ea1324"
+      "variant_sha256": "024537dfc7db"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "fdbfb92d204b"
+      "variant_sha256": "710788987938"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "3108167d3b11"
+      "variant_sha256": "64acf92bbe08"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "ac5a7e2bd42f"
+      "variant_sha256": "8920535d4da2"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "29ff31dc2c4c"
+      "variant_sha256": "262a73e9a126"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "1b68e83120fe"
+      "variant_sha256": "7c5f4b137d82"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "ad223e7beaa1"
+      "variant_sha256": "6b439d89bf0b"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "f7bb138cd464"
+      "variant_sha256": "dab447fe570c"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "6f7adc54b202"
+      "variant_sha256": "9c332382b96e"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "ece4c2753db7"
+      "variant_sha256": "8fe3f03e8c3d"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "9472087d194e"
+      "variant_sha256": "ad44e7e05aad"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "124f3a19605a"
+      "variant_sha256": "93864318e878"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "1591882ff3e1"
+      "variant_sha256": "3aef4aee4ca0"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "79b539ddb585"
+      "variant_sha256": "2b12b4bc0854"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "fb05ac9763ad"
+      "variant_sha256": "99847dd7fdd9"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "71b8d8b28942"
+      "variant_sha256": "bd0788e9b311"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "f749b42af069"
+      "variant_sha256": "9c04bd9004ff"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "4cc67a8d4419"
+      "variant_sha256": "3bd906f348d4"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "58488fb37c7f"
+      "variant_sha256": "05ee8ab23bee"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "27cad328c1f5"
+      "variant_sha256": "0ce838e171e9"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "566c2b908091"
+      "variant_sha256": "0b45989f28c2"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "50b58e0e63d6"
+      "variant_sha256": "eee4e82bfab8"
     },
     {
       "test": "tests.test_answer_style::test_casual_draft_is_rejected",
       "status": "PASS",
-      "variant_sha256": "1e431473f117"
+      "variant_sha256": "eb7d5de3548a"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "a3288ce1b179"
+      "variant_sha256": "2a3641f1f9d5"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "236527334cc6"
+      "variant_sha256": "84e5c8f64eae"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "0ede90ffb328"
+      "variant_sha256": "a3686420fc70"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "1b0a1d2498d9"
+      "variant_sha256": "96f72363972f"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "28f277fdade5"
+      "variant_sha256": "0f8437580777"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "48b6ee45c85b"
+      "variant_sha256": "acd4ff2931e6"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "941d7399c6f2"
+      "variant_sha256": "9fe8a58571c1"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "e0525ad75d9a"
+      "variant_sha256": "98e249ac5c3f"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "fbfac56ede9b"
+      "variant_sha256": "b4841fc70a5d"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "004a826d20fc"
+      "variant_sha256": "d05b35324e5f"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "442a8aa6f746"
+      "variant_sha256": "b4ea2c8a4150"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "3722169253b1"
+      "variant_sha256": "4972f6c90a1f"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "d03c1c17e38f"
+      "variant_sha256": "7bd48df79a20"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "ca2df691dbcc"
+      "variant_sha256": "be1e6e1e7227"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "36bf2c3fb693"
+      "variant_sha256": "d408d3eeb853"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "6236f755b111"
+      "variant_sha256": "8328fd5e587e"
     },
     {
       "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
       "status": "PASS",
-      "variant_sha256": "88310dae18e8"
+      "variant_sha256": "35f8d3870f80"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "7c7e3a74efcf"
+      "variant_sha256": "317e594178ed"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "c99b9284943d"
+      "variant_sha256": "4572480fb52c"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "1740b2b2a8cd"
+      "variant_sha256": "f9951f00774a"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "9116c822d7fe"
+      "variant_sha256": "b6cb403c3869"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "3ff345ac06c6"
+      "variant_sha256": "7e25dc6cc2d9"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "1ffcb4246e0b"
+      "variant_sha256": "f5b1ef585374"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "1a84a89117c1"
+      "variant_sha256": "d8ab8cb588df"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "b4899ea6267a"
+      "variant_sha256": "e4767566491c"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "222b4cc5ed48"
+      "variant_sha256": "2ab98aedb82f"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "7a6fbd4bfbbb"
+      "variant_sha256": "b4580cc914a8"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "cd2db2e14f8f"
+      "variant_sha256": "79caf8a8eac3"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "4a886f98ce47"
+      "variant_sha256": "8f0f1d111c7e"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "1d8a5b21600a"
+      "variant_sha256": "2561dac73f38"
     },
     {
       "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
       "status": "PASS",
-      "variant_sha256": "52c1af139d05"
+      "variant_sha256": "2aba6e4f4e6a"
     },
     {
-      "test": "tests.test_answer_style::test_actual_successful_trace_counts_both_calls",
+      "test": "tests.test_answer_style::test_actual_successful_trace_counts_all_required_calls",
       "status": "PASS"
     },
     {
@@ -313,12 +313,12 @@
     {
       "test": "tests.test_answer_style::test_invalid_style_gets_one_retry_and_never_becomes_approvable",
       "status": "PASS",
-      "variant_sha256": "361888a4e080"
+      "variant_sha256": "855b070931e1"
     },
     {
       "test": "tests.test_answer_style::test_invalid_style_gets_one_retry_and_never_becomes_approvable",
       "status": "PASS",
-      "variant_sha256": "a2f57cf3759c"
+      "variant_sha256": "c9e3891930bb"
     },
     {
       "test": "tests.test_answer_style::test_corrected_style_becomes_approval_draft_without_auto_post",
@@ -339,52 +339,52 @@
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "333e792f513c"
+      "variant_sha256": "ba0febbbe3e5"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "59b870810b66"
+      "variant_sha256": "b573799fd8d9"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "3514efa257cd"
+      "variant_sha256": "927739fea815"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "fde9a13d3de5"
+      "variant_sha256": "55963ec38f5a"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "362dcd50a51f"
+      "variant_sha256": "2ed286a916b0"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "f72513c96046"
+      "variant_sha256": "5a64b0b3ee65"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "3b62dec8367d"
+      "variant_sha256": "5fccf280829b"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "7ff272fe4640"
+      "variant_sha256": "252396e29238"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "0a5d40ed0448"
+      "variant_sha256": "28cdafac8ae3"
     },
     {
       "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
       "status": "PASS",
-      "variant_sha256": "f361da62ad33"
+      "variant_sha256": "91408fe0fc1f"
     },
     {
       "test": "tests.test_boundaries::test_hook_allows_only_memory_writes_and_rejects_symlink_escape",
@@ -409,32 +409,32 @@
     {
       "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
       "status": "PASS",
-      "variant_sha256": "2bcfed6d6303"
+      "variant_sha256": "623f89ca5484"
     },
     {
       "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
       "status": "PASS",
-      "variant_sha256": "e227bfffcfbe"
+      "variant_sha256": "08fa381fc7c9"
     },
     {
       "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
       "status": "PASS",
-      "variant_sha256": "09a90f56985a"
+      "variant_sha256": "e4e9870c28f1"
     },
     {
       "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
       "status": "PASS",
-      "variant_sha256": "b2d020c309c7"
+      "variant_sha256": "efccae39f158"
     },
     {
       "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
       "status": "PASS",
-      "variant_sha256": "c33f964f27ff"
+      "variant_sha256": "68bbd8827b34"
     },
     {
       "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
       "status": "PASS",
-      "variant_sha256": "93db995f9eb4"
+      "variant_sha256": "da22e43f4e0a"
     },
     {
       "test": "tests.test_boundaries::test_needs_lookup_card_has_no_post_button",
@@ -443,22 +443,22 @@
     {
       "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
       "status": "PASS",
-      "variant_sha256": "b5d3f5ad5640"
+      "variant_sha256": "fdf1c222fcd5"
     },
     {
       "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
       "status": "PASS",
-      "variant_sha256": "4292dbfb25f5"
+      "variant_sha256": "9d16aa78fd2b"
     },
     {
       "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
       "status": "PASS",
-      "variant_sha256": "73946ea34510"
+      "variant_sha256": "adeb8ad752c8"
     },
     {
       "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
       "status": "PASS",
-      "variant_sha256": "da3d2ca68205"
+      "variant_sha256": "c1d4d6ed2e3b"
     },
     {
       "test": "tests.test_boundaries::test_developer_evidence_requires_attribution",
@@ -487,27 +487,27 @@
     {
       "test": "tests.test_boundaries::test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval",
       "status": "PASS",
-      "variant_sha256": "8d0b6470f5ce"
+      "variant_sha256": "51fbe2330ace"
     },
     {
       "test": "tests.test_boundaries::test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval",
       "status": "PASS",
-      "variant_sha256": "f1ce2480b393"
+      "variant_sha256": "f84335f9deb9"
     },
     {
       "test": "tests.test_boundaries::test_unsafe_source_url_blocked",
       "status": "PASS",
-      "variant_sha256": "064db2f0a595"
+      "variant_sha256": "b73f785bac5b"
     },
     {
       "test": "tests.test_boundaries::test_unsafe_source_url_blocked",
       "status": "PASS",
-      "variant_sha256": "21f3043f4019"
+      "variant_sha256": "a0d605c10fb4"
     },
     {
       "test": "tests.test_boundaries::test_unsafe_source_url_blocked",
       "status": "PASS",
-      "variant_sha256": "3f80dab60750"
+      "variant_sha256": "0c572e4d8674"
     },
     {
       "test": "tests.test_boundaries::test_sensitive_thread_never_reaches_engine_or_draft",
@@ -540,127 +540,127 @@
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "1424a396f130"
+      "variant_sha256": "d753a26b8905"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "0c0fdae66061"
+      "variant_sha256": "2de4e0c2eea7"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "14e7d076aca5"
+      "variant_sha256": "7b18c2a84203"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "eb7f753d4989"
+      "variant_sha256": "a2a9e5ba91ca"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "14c261a8bfee"
+      "variant_sha256": "dbaa99dc8c06"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "a77453452d07"
+      "variant_sha256": "1c5631d0ec6c"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "c01d45460673"
+      "variant_sha256": "40381ce77a2c"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "1205438ca0cd"
+      "variant_sha256": "d3151c082e6b"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "67666d103d6b"
+      "variant_sha256": "c5c9325d97e5"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "98a109367229"
+      "variant_sha256": "d18eeff9dca6"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "30899bf2a7d8"
+      "variant_sha256": "dcb7b4125fbf"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "0e61723b9ef0"
+      "variant_sha256": "6d6861bc2e3b"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "6a7686a11f6e"
+      "variant_sha256": "06360346a9de"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "8ca52983fe8e"
+      "variant_sha256": "d0d6831632c0"
     },
     {
       "test": "tests.test_evidence::test_receipt_capability_distinguishes_actual_content_from_navigation",
       "status": "PASS",
-      "variant_sha256": "058a8d11adef"
+      "variant_sha256": "a3571b66a331"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "d6c267198da1"
+      "variant_sha256": "317e594178ed"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "ceab8da94ada"
+      "variant_sha256": "4572480fb52c"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "52a41be65810"
+      "variant_sha256": "f9951f00774a"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "624d4e5ee77c"
+      "variant_sha256": "b6cb403c3869"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "813b766d1b04"
+      "variant_sha256": "7e25dc6cc2d9"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "fde0a2fe273c"
+      "variant_sha256": "f5b1ef585374"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "9460eecd4e7b"
+      "variant_sha256": "d8ab8cb588df"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "ea1ffa353b99"
+      "variant_sha256": "e4767566491c"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "0ee1fb1c0c67"
+      "variant_sha256": "2ab98aedb82f"
     },
     {
       "test": "tests.test_evidence::test_unperformed_failed_or_fabricated_reads_do_not_create_proof",
       "status": "PASS",
-      "variant_sha256": "9944ffc901db"
+      "variant_sha256": "b4580cc914a8"
     },
     {
       "test": "tests.test_evidence::test_real_trace_proof_preserves_no_tool_contents",
@@ -673,17 +673,17 @@
     {
       "test": "tests.test_evidence::test_code_caveat_does_not_turn_missing_verification_into_approvable_answer",
       "status": "PASS",
-      "variant_sha256": "664a51699746"
+      "variant_sha256": "609c1c313e2c"
     },
     {
       "test": "tests.test_evidence::test_code_caveat_does_not_turn_missing_verification_into_approvable_answer",
       "status": "PASS",
-      "variant_sha256": "6d35bd060a6e"
+      "variant_sha256": "e6511e0bd556"
     },
     {
       "test": "tests.test_evidence::test_code_caveat_does_not_turn_missing_verification_into_approvable_answer",
       "status": "PASS",
-      "variant_sha256": "6f2ad966ef5e"
+      "variant_sha256": "4d038ba7d4a3"
     },
     {
       "test": "tests.test_evidence::test_code_read_retry_keeps_image_and_only_final_answer_is_short",
@@ -704,17 +704,17 @@
     {
       "test": "tests.test_evidence::test_live_answer_requires_query_not_code_metadata_or_screenshot",
       "status": "PASS",
-      "variant_sha256": "9e256f1ad73f"
+      "variant_sha256": "7099fa7f860e"
     },
     {
       "test": "tests.test_evidence::test_live_answer_requires_query_not_code_metadata_or_screenshot",
       "status": "PASS",
-      "variant_sha256": "bdd492daad78"
+      "variant_sha256": "f39f82d5af99"
     },
     {
       "test": "tests.test_evidence::test_live_answer_requires_query_not_code_metadata_or_screenshot",
       "status": "PASS",
-      "variant_sha256": "906a9e45883b"
+      "variant_sha256": "14277082f3bd"
     },
     {
       "test": "tests.test_evidence::test_combined_code_and_live_question_needs_both",
@@ -735,42 +735,42 @@
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "cd86bc95f0a0"
+      "variant_sha256": "3e7d65b55baa"
     },
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "a7084d7184b1"
+      "variant_sha256": "b69e26471a00"
     },
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "722930138b30"
+      "variant_sha256": "d9cd4d9351f6"
     },
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "af9d0868c771"
+      "variant_sha256": "aca537b0899a"
     },
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "1536b3643ffd"
+      "variant_sha256": "ea0f60f44ae8"
     },
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "04caffb505b0"
+      "variant_sha256": "f68bac56d6b4"
     },
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "9bfe426adfc9"
+      "variant_sha256": "d4575d7e9ab4"
     },
     {
       "test": "tests.test_evidence::test_malformed_or_incomplete_research_contract_fails",
       "status": "PASS",
-      "variant_sha256": "f8c045c20062"
+      "variant_sha256": "0ecf2d59c02a"
     },
     {
       "test": "tests.test_evidence::test_resume_does_not_reuse_prior_call_read_receipts",
@@ -791,22 +791,22 @@
     {
       "test": "tests.test_evidence::test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures",
       "status": "PASS",
-      "variant_sha256": "a12171f1c728"
+      "variant_sha256": "bd88245744f6"
     },
     {
       "test": "tests.test_evidence::test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures",
       "status": "PASS",
-      "variant_sha256": "cc60001e9be4"
+      "variant_sha256": "4dd5d86c9c1f"
     },
     {
       "test": "tests.test_evidence::test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures",
       "status": "PASS",
-      "variant_sha256": "6e165be8743e"
+      "variant_sha256": "7159e5795e07"
     },
     {
       "test": "tests.test_evidence::test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures",
       "status": "PASS",
-      "variant_sha256": "360ef156fd38"
+      "variant_sha256": "eceadb10850d"
     },
     {
       "test": "tests.test_evidence::test_old_draft_cannot_be_manually_edited_to_bypass_research",
@@ -823,32 +823,32 @@
     {
       "test": "tests.test_evidence::test_test_harness_blocks_gui_and_real_model_launch_before_execution",
       "status": "PASS",
-      "variant_sha256": "09393a85c746"
+      "variant_sha256": "e073007517d7"
     },
     {
       "test": "tests.test_evidence::test_test_harness_blocks_gui_and_real_model_launch_before_execution",
       "status": "PASS",
-      "variant_sha256": "aa73aea414e0"
+      "variant_sha256": "4c855e48dd33"
     },
     {
       "test": "tests.test_evidence::test_test_harness_blocks_gui_and_real_model_launch_before_execution",
       "status": "PASS",
-      "variant_sha256": "34267ffabe41"
+      "variant_sha256": "369ebc0c08fd"
     },
     {
       "test": "tests.test_evidence::test_test_harness_blocks_gui_and_real_model_launch_before_execution",
       "status": "PASS",
-      "variant_sha256": "d6537f9367f6"
+      "variant_sha256": "d4f4949ae4c7"
     },
     {
       "test": "tests.test_evidence::test_test_harness_blocks_gui_and_real_model_launch_before_execution",
       "status": "PASS",
-      "variant_sha256": "a5ac3c773454"
+      "variant_sha256": "d6b42c26666c"
     },
     {
       "test": "tests.test_evidence::test_test_harness_blocks_gui_and_real_model_launch_before_execution",
       "status": "PASS",
-      "variant_sha256": "19fcd19d60cf"
+      "variant_sha256": "40c1b0b0b70d"
     },
     {
       "test": "tests.test_evidence::test_status_and_stop_do_not_upgrade_a_still_running_old_database",
@@ -877,37 +877,37 @@
     {
       "test": "tests.test_images::test_image_failure_creates_actionable_dm_without_model_or_public_answer",
       "status": "PASS",
-      "variant_sha256": "864bf9d875c2"
+      "variant_sha256": "5ce32afc9ca3"
     },
     {
       "test": "tests.test_images::test_image_failure_creates_actionable_dm_without_model_or_public_answer",
       "status": "PASS",
-      "variant_sha256": "c84a1e7f0662"
+      "variant_sha256": "8fb4e6221a19"
     },
     {
       "test": "tests.test_images::test_image_failure_creates_actionable_dm_without_model_or_public_answer",
       "status": "PASS",
-      "variant_sha256": "2e1b3578348e"
+      "variant_sha256": "01789de9abc0"
     },
     {
       "test": "tests.test_images::test_image_failure_creates_actionable_dm_without_model_or_public_answer",
       "status": "PASS",
-      "variant_sha256": "7abcb0878296"
+      "variant_sha256": "fb565321c617"
     },
     {
       "test": "tests.test_images::test_changed_image_invalidates_approval",
       "status": "PASS",
-      "variant_sha256": "eec9b7ea8ac1"
+      "variant_sha256": "8d4b34e72692"
     },
     {
       "test": "tests.test_images::test_changed_image_invalidates_approval",
       "status": "PASS",
-      "variant_sha256": "1180626666ac"
+      "variant_sha256": "b49b447457f0"
     },
     {
       "test": "tests.test_images::test_changed_image_invalidates_approval",
       "status": "PASS",
-      "variant_sha256": "0b7307580b0f"
+      "variant_sha256": "676a3fbdc9ff"
     },
     {
       "test": "tests.test_images::test_history_image_order_and_metadata_change_hash",
@@ -928,92 +928,92 @@
     {
       "test": "tests.test_images::test_unsupported_types_fail",
       "status": "PASS",
-      "variant_sha256": "c22d179c12d5"
+      "variant_sha256": "3ac80cac7bbb"
     },
     {
       "test": "tests.test_images::test_unsupported_types_fail",
       "status": "PASS",
-      "variant_sha256": "e97a20d3fa49"
+      "variant_sha256": "c014fafb5104"
     },
     {
       "test": "tests.test_images::test_unsupported_types_fail",
       "status": "PASS",
-      "variant_sha256": "e5ad30d6c549"
+      "variant_sha256": "a7b90cdbf0b1"
     },
     {
       "test": "tests.test_images::test_unsupported_types_fail",
       "status": "PASS",
-      "variant_sha256": "e9318e0367d1"
+      "variant_sha256": "44bab315353f"
     },
     {
       "test": "tests.test_images::test_unsupported_types_fail",
       "status": "PASS",
-      "variant_sha256": "51f1d521f789"
+      "variant_sha256": "69422d5bd9ae"
     },
     {
       "test": "tests.test_images::test_invalid_or_oversize_bytes_fail",
       "status": "PASS",
-      "variant_sha256": "b136cc0fb90a"
+      "variant_sha256": "cfae0d4248f7"
     },
     {
       "test": "tests.test_images::test_invalid_or_oversize_bytes_fail",
       "status": "PASS",
-      "variant_sha256": "522345bf212e"
+      "variant_sha256": "f0039702d05d"
     },
     {
       "test": "tests.test_images::test_invalid_or_oversize_bytes_fail",
       "status": "PASS",
-      "variant_sha256": "14ee02e12218"
+      "variant_sha256": "0af4ff8ed9a7"
     },
     {
       "test": "tests.test_images::test_invalid_or_oversize_bytes_fail",
       "status": "PASS",
-      "variant_sha256": "5274a4c12980"
+      "variant_sha256": "1c6af62a1b2c"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "55469759c7f1"
+      "variant_sha256": "36c1776c144f"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "234f02ccdf62"
+      "variant_sha256": "8eefc05ce5b5"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "8de7ffb3c0bd"
+      "variant_sha256": "33a4efa9b99a"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "f576eac13354"
+      "variant_sha256": "5ee60831287f"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "0d3d6f30b6fa"
+      "variant_sha256": "c79e837e26b4"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "925f2e3c0e81"
+      "variant_sha256": "f328cb683319"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "fb128bc1575b"
+      "variant_sha256": "37907ee81c31"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "f40213c79b61"
+      "variant_sha256": "e1ec00b8f7d7"
     },
     {
       "test": "tests.test_images::test_private_token_cannot_be_sent_to_arbitrary_url",
       "status": "PASS",
-      "variant_sha256": "902b47227197"
+      "variant_sha256": "c1d4d6ed2e3b"
     },
     {
       "test": "tests.test_images::test_bounded_download_uses_authorization_only_in_header",
@@ -1022,17 +1022,17 @@
     {
       "test": "tests.test_images::test_download_read_is_bounded",
       "status": "PASS",
-      "variant_sha256": "6860e48d2baa"
+      "variant_sha256": "6d07a0868a01"
     },
     {
       "test": "tests.test_images::test_download_read_is_bounded",
       "status": "PASS",
-      "variant_sha256": "92ab2857c1e5"
+      "variant_sha256": "d38440847df0"
     },
     {
       "test": "tests.test_images::test_download_read_is_bounded",
       "status": "PASS",
-      "variant_sha256": "c5acad732c05"
+      "variant_sha256": "cb3f462c17f2"
     },
     {
       "test": "tests.test_images::test_redirect_is_never_followed_with_bearer",
@@ -1041,22 +1041,22 @@
     {
       "test": "tests.test_images::test_http_errors_do_not_leak_url_or_token",
       "status": "PASS",
-      "variant_sha256": "ad00ce36da9d"
+      "variant_sha256": "e13e48b7d747"
     },
     {
       "test": "tests.test_images::test_http_errors_do_not_leak_url_or_token",
       "status": "PASS",
-      "variant_sha256": "b7e0aaaa4b2d"
+      "variant_sha256": "e00f779b8943"
     },
     {
       "test": "tests.test_images::test_http_errors_do_not_leak_url_or_token",
       "status": "PASS",
-      "variant_sha256": "c0aae012bc93"
+      "variant_sha256": "8cabe5d2453b"
     },
     {
       "test": "tests.test_images::test_http_errors_do_not_leak_url_or_token",
       "status": "PASS",
-      "variant_sha256": "137ceaf20cc5"
+      "variant_sha256": "0f17e7fec5c1"
     },
     {
       "test": "tests.test_images::test_file_info_is_resolved_before_image_download",
@@ -1065,32 +1065,32 @@
     {
       "test": "tests.test_images::test_invalid_file_info_never_downloads",
       "status": "PASS",
-      "variant_sha256": "a2f55cf8b294"
+      "variant_sha256": "e63abe200f62"
     },
     {
       "test": "tests.test_images::test_invalid_file_info_never_downloads",
       "status": "PASS",
-      "variant_sha256": "20c39167e78e"
+      "variant_sha256": "75f8845a8b97"
     },
     {
       "test": "tests.test_images::test_invalid_file_info_never_downloads",
       "status": "PASS",
-      "variant_sha256": "152aa6dfae0c"
+      "variant_sha256": "040f0cbffc47"
     },
     {
       "test": "tests.test_images::test_invalid_file_info_never_downloads",
       "status": "PASS",
-      "variant_sha256": "903a0ca399ce"
+      "variant_sha256": "3518e7017985"
     },
     {
       "test": "tests.test_images::test_invalid_file_info_never_downloads",
       "status": "PASS",
-      "variant_sha256": "f58fa64ad369"
+      "variant_sha256": "23e84a0ee921"
     },
     {
       "test": "tests.test_images::test_invalid_file_info_never_downloads",
       "status": "PASS",
-      "variant_sha256": "6cd4878c7f46"
+      "variant_sha256": "90817d1bef8d"
     },
     {
       "test": "tests.test_images::test_missing_scope_has_file_specific_guidance",
@@ -1119,17 +1119,17 @@
     {
       "test": "tests.test_images::test_invalid_blocks_are_a_clear_attachment_error",
       "status": "PASS",
-      "variant_sha256": "e6c24584de8b"
+      "variant_sha256": "c1d4d6ed2e3b"
     },
     {
       "test": "tests.test_images::test_invalid_blocks_are_a_clear_attachment_error",
       "status": "PASS",
-      "variant_sha256": "deebe09273a4"
+      "variant_sha256": "ebcbf7d4e978"
     },
     {
       "test": "tests.test_images::test_invalid_blocks_are_a_clear_attachment_error",
       "status": "PASS",
-      "variant_sha256": "7f0d182bde79"
+      "variant_sha256": "aa42788d4964"
     },
     {
       "test": "tests.test_images::test_two_images_keep_order_and_original_timestamps",
@@ -1168,69 +1168,149 @@
       "status": "PASS"
     },
     {
-      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "test": "tests.test_plain_language::test_missing_plain_language_never_becomes_approvable",
       "status": "PASS",
-      "variant_sha256": "46bc0997c928"
+      "variant_sha256": "ce905dc776fd"
+    },
+    {
+      "test": "tests.test_plain_language::test_missing_plain_language_never_becomes_approvable",
+      "status": "PASS",
+      "variant_sha256": "804ebf5e907c"
+    },
+    {
+      "test": "tests.test_plain_language::test_failed_or_claimed_activation_is_not_a_successful_call",
+      "status": "PASS",
+      "variant_sha256": "957e323b0301"
+    },
+    {
+      "test": "tests.test_plain_language::test_failed_or_claimed_activation_is_not_a_successful_call",
+      "status": "PASS",
+      "variant_sha256": "57768a899e46"
+    },
+    {
+      "test": "tests.test_plain_language::test_failed_or_claimed_activation_is_not_a_successful_call",
+      "status": "PASS",
+      "variant_sha256": "8699993abc6d"
+    },
+    {
+      "test": "tests.test_plain_language::test_failed_or_claimed_activation_is_not_a_successful_call",
+      "status": "PASS",
+      "variant_sha256": "f8c38cd7164a"
+    },
+    {
+      "test": "tests.test_plain_language::test_failed_or_claimed_activation_is_not_a_successful_call",
+      "status": "PASS",
+      "variant_sha256": "6b5bcf82a63d"
+    },
+    {
+      "test": "tests.test_plain_language::test_successful_correction_can_be_approved_but_never_auto_posts",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_plain_language::test_lookup_result_requires_activation_again",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_plain_language::test_plain_language_cannot_be_disabled_or_alias_another_required_skill",
+      "status": "PASS",
+      "variant_sha256": "cfae0d4248f7"
+    },
+    {
+      "test": "tests.test_plain_language::test_plain_language_cannot_be_disabled_or_alias_another_required_skill",
+      "status": "PASS",
+      "variant_sha256": "00c43a1ca728"
+    },
+    {
+      "test": "tests.test_plain_language::test_plain_language_cannot_be_disabled_or_alias_another_required_skill",
+      "status": "PASS",
+      "variant_sha256": "401e8018542b"
+    },
+    {
+      "test": "tests.test_plain_language::test_plain_language_cannot_be_disabled_or_alias_another_required_skill",
+      "status": "PASS",
+      "variant_sha256": "a8d7de5c4fcb"
+    },
+    {
+      "test": "tests.test_plain_language::test_plain_language_cannot_be_disabled_or_alias_another_required_skill",
+      "status": "PASS",
+      "variant_sha256": "c1d4d6ed2e3b"
+    },
+    {
+      "test": "tests.test_plain_language::test_existing_config_receives_hidden_companion_default",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_plain_language::test_explicit_personal_skill_names_are_allowed_without_allowing_arbitrary_skills",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_plain_language::test_companion_ships_hidden_model_callable_and_with_license",
+      "status": "PASS"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "2d2cd3fecb01"
+      "variant_sha256": "e63abe200f62"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "6738041168af"
+      "variant_sha256": "75f8845a8b97"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "20f86bf105a4"
+      "variant_sha256": "040f0cbffc47"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "03aefa276fd8"
+      "variant_sha256": "3518e7017985"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "1136655e6c5d"
+      "variant_sha256": "23e84a0ee921"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "40e663fd76dc"
+      "variant_sha256": "90817d1bef8d"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "88f42c685ddd"
+      "variant_sha256": "1f8eb75c796b"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "20d615e81d1f"
+      "variant_sha256": "579a9a36f2f0"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "0b7ed1cc8977"
+      "variant_sha256": "9184629d2c36"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "0bf089bae186"
+      "variant_sha256": "abfe3a917366"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "6b75533d5d4d"
+      "variant_sha256": "25797dc8cfdb"
     },
     {
       "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
       "status": "PASS",
-      "variant_sha256": "41c200695485"
+      "variant_sha256": "fafc2ac8bc9c"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "status": "PASS",
+      "variant_sha256": "74c03b94226d"
     },
     {
       "test": "tests.test_runtime::test_duplicate_intake_is_atomic_and_cross_channel_is_distinct",
@@ -1255,27 +1335,27 @@
     {
       "test": "tests.test_runtime::test_exact_approval_binding",
       "status": "PASS",
-      "variant_sha256": "5a8e253cd07f"
+      "variant_sha256": "63fb751ee1c7"
     },
     {
       "test": "tests.test_runtime::test_exact_approval_binding",
       "status": "PASS",
-      "variant_sha256": "600f601224e1"
+      "variant_sha256": "529256a1d6a9"
     },
     {
       "test": "tests.test_runtime::test_exact_approval_binding",
       "status": "PASS",
-      "variant_sha256": "29e5a65833dc"
+      "variant_sha256": "9112ff96dcc1"
     },
     {
       "test": "tests.test_runtime::test_exact_approval_binding",
       "status": "PASS",
-      "variant_sha256": "5c9d7f78358f"
+      "variant_sha256": "2afd706a6e1b"
     },
     {
       "test": "tests.test_runtime::test_exact_approval_binding",
       "status": "PASS",
-      "variant_sha256": "b29c66863e95"
+      "variant_sha256": "08710ef6ba19"
     },
     {
       "test": "tests.test_runtime::test_manual_edit_invalidates_old_button_and_preserves_published_text",
@@ -1288,12 +1368,12 @@
     {
       "test": "tests.test_runtime::test_unknown_delivery_never_blindly_resends",
       "status": "PASS",
-      "variant_sha256": "7343757086bf"
+      "variant_sha256": "ce905dc776fd"
     },
     {
       "test": "tests.test_runtime::test_unknown_delivery_never_blindly_resends",
       "status": "PASS",
-      "variant_sha256": "00a94d38e87d"
+      "variant_sha256": "804ebf5e907c"
     },
     {
       "test": "tests.test_runtime::test_definite_unsent_failure_can_be_manually_retried",
@@ -1314,57 +1394,57 @@
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "d5860b20e40a"
+      "variant_sha256": "c4f93de14e9d"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "6c3730d1c7b1"
+      "variant_sha256": "14ced8545ce0"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "5c7763d342a6"
+      "variant_sha256": "3fb82cc922d0"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "f4e3d5c78830"
+      "variant_sha256": "e34456b41122"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "c2797f3eb45c"
+      "variant_sha256": "af3397759f78"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "14daf0fc8937"
+      "variant_sha256": "7ac55f47f063"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "45bc16980907"
+      "variant_sha256": "f3780ecec460"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "3824f2af17b6"
+      "variant_sha256": "bb0d6c6cdb84"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "b3dce4b827d0"
+      "variant_sha256": "81ad063ba193"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "0cc10d856dc3"
+      "variant_sha256": "7333b9426717"
     },
     {
       "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
       "status": "PASS",
-      "variant_sha256": "19e4959bbb80"
+      "variant_sha256": "01d0334dfd51"
     },
     {
       "test": "tests.test_runtime::test_config_round_trip_permissions_and_no_secret_fields",
@@ -1373,32 +1453,32 @@
     {
       "test": "tests.test_runtime::test_channel_id_or_channel_url",
       "status": "PASS",
-      "variant_sha256": "e9df9b119566"
+      "variant_sha256": "0948b9e655f4"
     },
     {
       "test": "tests.test_runtime::test_channel_id_or_channel_url",
       "status": "PASS",
-      "variant_sha256": "a16eeb2704d8"
+      "variant_sha256": "8d1c14e01f03"
     },
     {
       "test": "tests.test_runtime::test_channel_id_or_channel_url",
       "status": "PASS",
-      "variant_sha256": "9f3756853b76"
+      "variant_sha256": "1d39a806d3e9"
     },
     {
       "test": "tests.test_runtime::test_invalid_channel_links",
       "status": "PASS",
-      "variant_sha256": "20ab6b282a33"
+      "variant_sha256": "4957585dbaae"
     },
     {
       "test": "tests.test_runtime::test_invalid_channel_links",
       "status": "PASS",
-      "variant_sha256": "203a7261bba9"
+      "variant_sha256": "01ec0082a614"
     },
     {
       "test": "tests.test_runtime::test_invalid_channel_links",
       "status": "PASS",
-      "variant_sha256": "a350442d4d3f"
+      "variant_sha256": "b520d25e91e9"
     },
     {
       "test": "tests.test_runtime::test_keychain_stores_without_password_argument_or_capture",
@@ -1407,12 +1487,12 @@
     {
       "test": "tests.test_runtime::test_keychain_read",
       "status": "PASS",
-      "variant_sha256": "d61e2655bb29"
+      "variant_sha256": "bb31ca74b32e"
     },
     {
       "test": "tests.test_runtime::test_keychain_read",
       "status": "PASS",
-      "variant_sha256": "24943d01f38a"
+      "variant_sha256": "216183e8b1f2"
     },
     {
       "test": "tests.test_runtime::test_keychain_wrong_prefix_is_deleted_without_leak",
@@ -1449,27 +1529,27 @@
     {
       "test": "tests.test_runtime::test_masking_never_returns_secret",
       "status": "PASS",
-      "variant_sha256": "a0fcfc8b2ba6"
+      "variant_sha256": "03c561cc83ce"
     },
     {
       "test": "tests.test_runtime::test_masking_never_returns_secret",
       "status": "PASS",
-      "variant_sha256": "ed75a2ef731f"
+      "variant_sha256": "f4b90d56e891"
     },
     {
       "test": "tests.test_runtime::test_masking_never_returns_secret",
       "status": "PASS",
-      "variant_sha256": "23580076080e"
+      "variant_sha256": "d2d0b3ac3f8b"
     },
     {
       "test": "tests.test_runtime::test_masking_never_returns_secret",
       "status": "PASS",
-      "variant_sha256": "1c302cdbf7d0"
+      "variant_sha256": "6f617b607fd8"
     },
     {
       "test": "tests.test_runtime::test_masking_never_returns_secret",
       "status": "PASS",
-      "variant_sha256": "b3b98b0ec9c4"
+      "variant_sha256": "89fe33da5bfe"
     },
     {
       "test": "tests.test_simple_approval::test_short_approval_card_has_only_post_edit_reject",
@@ -1486,22 +1566,22 @@
     {
       "test": "tests.test_simple_approval::test_wrong_identity_or_card_cannot_reject",
       "status": "PASS",
-      "variant_sha256": "8b4586325750"
+      "variant_sha256": "e63abe200f62"
     },
     {
       "test": "tests.test_simple_approval::test_wrong_identity_or_card_cannot_reject",
       "status": "PASS",
-      "variant_sha256": "0d051c3d8a22"
+      "variant_sha256": "75f8845a8b97"
     },
     {
       "test": "tests.test_simple_approval::test_wrong_identity_or_card_cannot_reject",
       "status": "PASS",
-      "variant_sha256": "65c194f5fe41"
+      "variant_sha256": "040f0cbffc47"
     },
     {
       "test": "tests.test_simple_approval::test_wrong_identity_or_card_cannot_reject",
       "status": "PASS",
-      "variant_sha256": "4b4a11a33dcc"
+      "variant_sha256": "3518e7017985"
     },
     {
       "test": "tests.test_simple_approval::test_double_reject_only_records_one_transition",
@@ -1518,12 +1598,12 @@
     {
       "test": "tests.test_simple_approval::test_removed_modals_cannot_be_constructed",
       "status": "PASS",
-      "variant_sha256": "cfaecb57f7fc"
+      "variant_sha256": "09d2b42a7602"
     },
     {
       "test": "tests.test_simple_approval::test_removed_modals_cannot_be_constructed",
       "status": "PASS",
-      "variant_sha256": "fcbacbecbd77"
+      "variant_sha256": "e1549a29334d"
     },
     {
       "test": "tests.test_simple_approval::test_already_open_old_reject_modal_can_finish_without_reason",
@@ -1536,72 +1616,72 @@
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "1814860a22df"
+      "variant_sha256": "a14544cde165"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "681f43951b7b"
+      "variant_sha256": "ca49bf939040"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "2dcd9103e47f"
+      "variant_sha256": "40c30e9022d5"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "cc12f8673d27"
+      "variant_sha256": "c7d8f8c00a0f"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "0463ff96f36a"
+      "variant_sha256": "4927101d199d"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "1f82dc86ef82"
+      "variant_sha256": "3c914b35c0e5"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "6f6b84bf2786"
+      "variant_sha256": "29cbdc3640cc"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "abc0bcb8e3da"
+      "variant_sha256": "a20c3f4b95bc"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "0037f2c2c259"
+      "variant_sha256": "f7d6703eb1db"
     },
     {
       "test": "tests.test_slack_presentation::test_renderer_preserves_meaning_and_protected_text",
       "status": "PASS",
-      "variant_sha256": "96531d48fa8c"
+      "variant_sha256": "64f45a34a529"
     },
     {
       "test": "tests.test_slack_presentation::test_public_bibliography_is_not_silently_deleted",
       "status": "PASS",
-      "variant_sha256": "2ecdc004cdec"
+      "variant_sha256": "5b556ae1a8b8"
     },
     {
       "test": "tests.test_slack_presentation::test_public_bibliography_is_not_silently_deleted",
       "status": "PASS",
-      "variant_sha256": "9d06a10adef0"
+      "variant_sha256": "e88ee0c8b614"
     },
     {
       "test": "tests.test_slack_presentation::test_public_bibliography_is_not_silently_deleted",
       "status": "PASS",
-      "variant_sha256": "7a0fcbb67a29"
+      "variant_sha256": "56f00da78d40"
     },
     {
       "test": "tests.test_slack_presentation::test_public_bibliography_is_not_silently_deleted",
       "status": "PASS",
-      "variant_sha256": "8c9d22240069"
+      "variant_sha256": "27eedd8c1e6d"
     },
     {
       "test": "tests.test_slack_presentation::test_bibliography_causes_one_retry_then_no_approvable_draft",
@@ -1618,17 +1698,17 @@
     {
       "test": "tests.test_slack_presentation::test_progress_transport_failure_does_not_block_answer",
       "status": "PASS",
-      "variant_sha256": "e9ff63807910"
+      "variant_sha256": "a764bcf16ff6"
     },
     {
       "test": "tests.test_slack_presentation::test_progress_transport_failure_does_not_block_answer",
       "status": "PASS",
-      "variant_sha256": "ef647303e948"
+      "variant_sha256": "7b7b88d8f198"
     },
     {
       "test": "tests.test_slack_presentation::test_progress_transport_failure_does_not_block_answer",
       "status": "PASS",
-      "variant_sha256": "c9319a6201c7"
+      "variant_sha256": "524056eadaec"
     },
     {
       "test": "tests.test_slack_presentation::test_uncertain_first_progress_dm_is_not_sent_twice",
@@ -1641,22 +1721,22 @@
     {
       "test": "tests.test_slack_presentation::test_legacy_reaction_and_explicit_disable",
       "status": "PASS",
-      "variant_sha256": "701a24533a13"
+      "variant_sha256": "e84e2ba7dc47"
     },
     {
       "test": "tests.test_slack_presentation::test_legacy_reaction_and_explicit_disable",
       "status": "PASS",
-      "variant_sha256": "1eff8476bd60"
+      "variant_sha256": "571a900aa04b"
     },
     {
       "test": "tests.test_slack_presentation::test_legacy_reaction_and_explicit_disable",
       "status": "PASS",
-      "variant_sha256": "2affb7995b20"
+      "variant_sha256": "202d878abcac"
     },
     {
       "test": "tests.test_slack_presentation::test_legacy_reaction_and_explicit_disable",
       "status": "PASS",
-      "variant_sha256": "b7dc2a5c7c94"
+      "variant_sha256": "7cb6a786a810"
     },
     {
       "test": "tests.test_slack_presentation::test_disabled_reactions_still_allow_progress_dm",
@@ -1665,17 +1745,17 @@
     {
       "test": "tests.test_slack_presentation::test_slack_idempotent_reaction_errors_are_safe",
       "status": "PASS",
-      "variant_sha256": "504b2bbdb837"
+      "variant_sha256": "c675665e21bc"
     },
     {
       "test": "tests.test_slack_presentation::test_slack_idempotent_reaction_errors_are_safe",
       "status": "PASS",
-      "variant_sha256": "20a74ad8f8ab"
+      "variant_sha256": "0d0bd3fe7e9b"
     },
     {
       "test": "tests.test_slack_presentation::test_slack_idempotent_reaction_errors_are_safe",
       "status": "PASS",
-      "variant_sha256": "85605108931d"
+      "variant_sha256": "13fe6c982815"
     },
     {
       "test": "tests.test_slack_presentation::test_maximum_normal_sources_fit_card_and_stay_private",
@@ -1700,17 +1780,17 @@
     {
       "test": "tests.test_slack_presentation::test_status_checks_daemon_version_not_cli_version",
       "status": "PASS",
-      "variant_sha256": "afb35b21102a"
+      "variant_sha256": "955c92ae4e8a"
     },
     {
       "test": "tests.test_slack_presentation::test_status_checks_daemon_version_not_cli_version",
       "status": "PASS",
-      "variant_sha256": "6090132d117f"
+      "variant_sha256": "e550b77f793f"
     },
     {
       "test": "tests.test_slack_presentation::test_status_checks_daemon_version_not_cli_version",
       "status": "PASS",
-      "variant_sha256": "e3094e7cf42b"
+      "variant_sha256": "679e9692ffdc"
     },
     {
       "test": "tests.test_slack_presentation::test_bootstrap_upgrade_preserves_existing_config_and_requires_prepare",
@@ -1723,17 +1803,17 @@
     {
       "test": "tests.test_slack_presentation::test_non_emoji_failure_does_not_try_a_second_emoji",
       "status": "PASS",
-      "variant_sha256": "243b6782b5eb"
+      "variant_sha256": "0769366a9ff6"
     },
     {
       "test": "tests.test_slack_presentation::test_non_emoji_failure_does_not_try_a_second_emoji",
       "status": "PASS",
-      "variant_sha256": "7d7983a6303b"
+      "variant_sha256": "5de0939632a6"
     },
     {
       "test": "tests.test_slack_presentation::test_non_emoji_failure_does_not_try_a_second_emoji",
       "status": "PASS",
-      "variant_sha256": "1d0429efb7dc"
+      "variant_sha256": "bb20c52d9b29"
     },
     {
       "test": "tests.test_slack_presentation::test_deleted_emoji_is_replaced_on_next_inquiry",
@@ -1742,47 +1822,47 @@
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "5bf7425227ca"
+      "variant_sha256": "57088a8e0422"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "91faa4640e58"
+      "variant_sha256": "5aa43e58505e"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "9074676ff545"
+      "variant_sha256": "50b2b45bcce2"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "09f121688db0"
+      "variant_sha256": "0e9086073fd4"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "dab04bc309ae"
+      "variant_sha256": "e0f3c9c79c48"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "0e0ff92b9ced"
+      "variant_sha256": "6f5d164fb2c4"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "b61f7e0a340e"
+      "variant_sha256": "02d9ed6234e8"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "90fb6bd4c011"
+      "variant_sha256": "e4c1f7f0f638"
     },
     {
       "test": "tests.test_slack_presentation::test_identity_stays_while_only_state_changes",
       "status": "PASS",
-      "variant_sha256": "38030f61cbc0"
+      "variant_sha256": "f464a4257fa7"
     },
     {
       "test": "tests.test_slack_presentation::test_second_reaction_failure_reconciles_after_restart",

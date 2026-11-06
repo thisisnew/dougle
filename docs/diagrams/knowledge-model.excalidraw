@@ -6,7 +6,7 @@
     {
       "angle": 0,
       "strokeColor": "#292f3e",
-      "backgroundColor": "transparent",
+      "backgroundColor": "#ffffff",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
       "strokeStyle": "solid",
@@ -14,7 +14,9 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": null,
+      "roundness": {
+        "type": 3
+      },
       "seed": 100000,
       "version": 1,
       "versionNonce": 200000,
@@ -23,25 +25,16 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "title",
-      "type": "text",
-      "x": 40,
-      "y": 30,
-      "text": "토픽은 설명을, 소스는 원본 위치를 기억합니다",
-      "fontSize": 32,
-      "width": 581.2636108398438,
-      "height": 40.0,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "토픽은 설명을, 소스는 원본 위치를 기억합니다",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "index",
+      "type": "rectangle",
+      "x": 55,
+      "y": 40,
+      "width": 115,
+      "height": 135
     },
     {
       "angle": 0,
-      "strokeColor": "#56647a",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
@@ -59,70 +52,78 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "subtitle",
-      "type": "text",
-      "x": 40,
-      "y": 85,
-      "text": "저장된 지식의 관계 · 아래 입하 예시는 가상입니다",
-      "fontSize": 20,
-      "width": 392.452880859375,
-      "height": 25.0,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "저장된 지식의 관계 · 아래 입하 예시는 가상입니다",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "index-line1",
+      "type": "line",
+      "x": 75,
+      "y": 75,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          70,
+          0
+        ]
+      ],
+      "width": 70,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
     },
     {
       "angle": 0,
-      "strokeColor": "#292f3e",
-      "backgroundColor": "#ffffff",
-      "fillStyle": "solid",
-      "strokeWidth": 1.5,
-      "strokeStyle": "solid",
-      "roughness": 0,
-      "opacity": 100,
-      "groupIds": [
-        "group-index"
-      ],
-      "frameId": null,
-      "roundness": {
-        "type": 3
-      },
-      "seed": 100002,
-      "version": 1,
-      "versionNonce": 200002,
-      "isDeleted": false,
-      "boundElements": [
-        {
-          "id": "find",
-          "type": "arrow"
-        }
-      ],
-      "updated": 1,
-      "link": null,
-      "locked": false,
-      "id": "index",
-      "type": "rectangle",
-      "x": 40,
-      "y": 165,
-      "width": 255,
-      "height": 185
-    },
-    {
-      "angle": 0,
-      "strokeColor": "#292f3e",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-index"
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 100002,
+      "version": 1,
+      "versionNonce": 200002,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "id": "index-line2",
+      "type": "line",
+      "x": 75,
+      "y": 105,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          70,
+          0
+        ]
       ],
+      "width": 70,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
+    },
+    {
+      "angle": 0,
+      "strokeColor": "#2866c2",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
       "frameId": null,
       "roundness": null,
       "seed": 100003,
@@ -133,14 +134,55 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "index-title",
+      "id": "index-line3",
+      "type": "line",
+      "x": 75,
+      "y": 135,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "width": 45,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
+    },
+    {
+      "angle": 0,
+      "strokeColor": "#292f3e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 100004,
+      "version": 1,
+      "versionNonce": 200004,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "id": "index-label",
       "type": "text",
-      "x": 62,
-      "y": 185,
+      "x": 80,
+      "y": 200,
       "text": "목차",
-      "fontSize": 26,
-      "width": 46.97998046875,
-      "height": 32.5,
+      "fontSize": 30,
+      "width": 53.899993896484375,
+      "height": 37.5,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
@@ -158,47 +200,7 @@
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-index"
-      ],
-      "frameId": null,
-      "roundness": null,
-      "seed": 100004,
-      "version": 1,
-      "versionNonce": 200004,
-      "isDeleted": false,
-      "boundElements": null,
-      "updated": 1,
-      "link": null,
-      "locked": false,
-      "id": "index-file",
-      "type": "text",
-      "x": 62,
-      "y": 225,
-      "text": "index.md",
-      "fontSize": 18,
-      "width": 75.037109375,
-      "height": 22.5,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "index.md",
-      "lineHeight": 1.25,
-      "autoResize": true
-    },
-    {
-      "angle": 0,
-      "strokeColor": "#292f3e",
-      "backgroundColor": "transparent",
-      "fillStyle": "solid",
-      "strokeWidth": 1.5,
-      "strokeStyle": "solid",
-      "roughness": 0,
-      "opacity": 100,
-      "groupIds": [
-        "group-index"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": null,
       "seed": 100005,
@@ -209,19 +211,19 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "index-content",
+      "id": "index-detail",
       "type": "text",
-      "x": 62,
-      "y": 267,
-      "text": "입하 확정 · 입고 확정\nconfirmReceipt → T01",
-      "fontSize": 20,
-      "width": 200.955078125,
-      "height": 50.0,
+      "x": 42,
+      "y": 250,
+      "text": "어디에 있지?",
+      "fontSize": 23,
+      "width": 120.65658569335938,
+      "height": 28.75,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "입하 확정 · 입고 확정\nconfirmReceipt → T01",
+      "originalText": "어디에 있지?",
       "lineHeight": 1.25,
       "autoResize": true
     },
@@ -234,9 +236,7 @@
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-topic"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": {
         "type": 3
@@ -245,29 +245,16 @@
       "version": 1,
       "versionNonce": 200006,
       "isDeleted": false,
-      "boundElements": [
-        {
-          "id": "find",
-          "type": "arrow"
-        },
-        {
-          "id": "evidence-code",
-          "type": "arrow"
-        },
-        {
-          "id": "evidence-doc",
-          "type": "arrow"
-        }
-      ],
+      "boundElements": null,
       "updated": 1,
       "link": null,
       "locked": false,
       "id": "topic",
       "type": "rectangle",
-      "x": 395,
-      "y": 165,
-      "width": 535,
-      "height": 185
+      "x": 285,
+      "y": 40,
+      "width": 115,
+      "height": 135
     },
     {
       "angle": 0,
@@ -278,9 +265,7 @@
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-topic"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": null,
       "seed": 100007,
@@ -291,34 +276,37 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "topic-title",
-      "type": "text",
-      "x": 420,
-      "y": 185,
-      "text": "토픽 T01 · 입하 확정",
-      "fontSize": 26,
-      "width": 217.85986328125,
-      "height": 32.5,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "토픽 T01 · 입하 확정",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "topic-spine",
+      "type": "line",
+      "x": 310,
+      "y": 40,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          135
+        ]
+      ],
+      "width": 0,
+      "height": 135,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
     },
     {
       "angle": 0,
-      "strokeColor": "#56647a",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-topic"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": null,
       "seed": 100008,
@@ -329,34 +317,37 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "topic-file",
-      "type": "text",
-      "x": 420,
-      "y": 225,
-      "text": "knowledge/*.md",
-      "fontSize": 18,
-      "width": 130.07421875,
-      "height": 22.5,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "knowledge/*.md",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "topic-line1",
+      "type": "line",
+      "x": 328,
+      "y": 82,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          50,
+          0
+        ]
+      ],
+      "width": 50,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
     },
     {
       "angle": 0,
-      "strokeColor": "#292f3e",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-topic"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": null,
       "seed": 100009,
@@ -367,21 +358,26 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "topic-claims",
-      "type": "text",
-      "x": 420,
-      "y": 266,
-      "text": "C01 저장 위치 → S001의 함수\nC02 확정 조건 → S001 + S002의 근거",
-      "fontSize": 21,
-      "width": 339.8727111816406,
-      "height": 52.5,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "C01 저장 위치 → S001의 함수\nC02 확정 조건 → S001 + S002의 근거",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "topic-line2",
+      "type": "line",
+      "x": 328,
+      "y": 112,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          35,
+          0
+        ]
+      ],
+      "width": 35,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
     },
     {
       "angle": 0,
@@ -403,40 +399,25 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "find",
-      "type": "arrow",
-      "x": 300,
-      "y": 255,
-      "points": [
-        [
-          0,
-          0
-        ],
-        [
-          85,
-          0
-        ]
-      ],
-      "startBinding": {
-        "elementId": "index",
-        "focus": 0,
-        "gap": 5
-      },
-      "endBinding": {
-        "elementId": "topic",
-        "focus": 0,
-        "gap": 10
-      },
-      "width": 85,
-      "height": 0,
-      "startArrowhead": null,
-      "endArrowhead": "arrow",
-      "lastCommittedPoint": null,
-      "elbowed": false
+      "id": "topic-label",
+      "type": "text",
+      "x": 308,
+      "y": 200,
+      "text": "토픽",
+      "fontSize": 30,
+      "width": 53.899993896484375,
+      "height": 37.5,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "토픽",
+      "lineHeight": 1.25,
+      "autoResize": true
     },
     {
       "angle": 0,
-      "strokeColor": "#292f3e",
+      "strokeColor": "#56647a",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
@@ -454,19 +435,19 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "find-label",
+      "id": "topic-detail",
       "type": "text",
-      "x": 310,
-      "y": 220,
-      "text": "찾기",
-      "fontSize": 19,
-      "width": 34.8699951171875,
-      "height": 23.75,
+      "x": 287,
+      "y": 250,
+      "text": "업무 설명",
+      "fontSize": 23,
+      "width": 87.9700927734375,
+      "height": 28.75,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "찾기",
+      "originalText": "업무 설명",
       "lineHeight": 1.25,
       "autoResize": true
     },
@@ -479,9 +460,7 @@
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-source-code"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": {
         "type": 3
@@ -490,38 +469,27 @@
       "version": 1,
       "versionNonce": 200012,
       "isDeleted": false,
-      "boundElements": [
-        {
-          "id": "evidence-code",
-          "type": "arrow"
-        },
-        {
-          "id": "code-original-arrow",
-          "type": "arrow"
-        }
-      ],
+      "boundElements": null,
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "source-code",
+      "id": "source",
       "type": "rectangle",
-      "x": 395,
-      "y": 455,
-      "width": 250,
+      "x": 515,
+      "y": 40,
+      "width": 115,
       "height": 135
     },
     {
       "angle": 0,
-      "strokeColor": "#292f3e",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-source-code"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": null,
       "seed": 100013,
@@ -532,34 +500,49 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "source-code-name",
-      "type": "text",
-      "x": 415,
-      "y": 475,
-      "text": "소스 S001",
-      "fontSize": 25,
-      "width": 110.58203125,
-      "height": 31.25,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "소스 S001",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "source-bookmark",
+      "type": "line",
+      "x": 580,
+      "y": 40,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          50
+        ],
+        [
+          12,
+          38
+        ],
+        [
+          24,
+          50
+        ],
+        [
+          24,
+          0
+        ]
+      ],
+      "width": 24,
+      "height": 50,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
     },
     {
       "angle": 0,
-      "strokeColor": "#292f3e",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-source-code"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": null,
       "seed": 100014,
@@ -570,19 +553,137 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "source-code-detail",
+      "id": "source-line1",
+      "type": "line",
+      "x": 535,
+      "y": 112,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          65,
+          0
+        ]
+      ],
+      "width": 65,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
+    },
+    {
+      "angle": 0,
+      "strokeColor": "#2866c2",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 100015,
+      "version": 1,
+      "versionNonce": 200015,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "id": "source-line2",
+      "type": "line",
+      "x": 535,
+      "y": 140,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          45,
+          0
+        ]
+      ],
+      "width": 45,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "lastCommittedPoint": null,
+      "elbowed": false
+    },
+    {
+      "angle": 0,
+      "strokeColor": "#292f3e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 100016,
+      "version": 1,
+      "versionNonce": 200016,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "id": "source-label",
       "type": "text",
-      "x": 415,
-      "y": 518,
-      "text": "코드 경로 · 읽은 범위\n확인 시각 · 버전",
-      "fontSize": 20,
-      "width": 168.18310546875,
-      "height": 50.0,
+      "x": 539,
+      "y": 200,
+      "text": "소스",
+      "fontSize": 30,
+      "width": 53.899993896484375,
+      "height": 37.5,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "코드 경로 · 읽은 범위\n확인 시각 · 버전",
+      "originalText": "소스",
+      "lineHeight": 1.25,
+      "autoResize": true
+    },
+    {
+      "angle": 0,
+      "strokeColor": "#56647a",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 100017,
+      "version": 1,
+      "versionNonce": 200017,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "id": "source-detail",
+      "type": "text",
+      "x": 493,
+      "y": 250,
+      "text": "원본 주소·시각",
+      "fontSize": 23,
+      "width": 134.15020751953125,
+      "height": 28.75,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "원본 주소·시각",
       "lineHeight": 1.25,
       "autoResize": true
     },
@@ -595,125 +696,11 @@
       "strokeStyle": "solid",
       "roughness": 0,
       "opacity": 100,
-      "groupIds": [
-        "group-source-doc"
-      ],
+      "groupIds": [],
       "frameId": null,
       "roundness": {
         "type": 3
       },
-      "seed": 100015,
-      "version": 1,
-      "versionNonce": 200015,
-      "isDeleted": false,
-      "boundElements": [
-        {
-          "id": "evidence-doc",
-          "type": "arrow"
-        },
-        {
-          "id": "doc-original-arrow",
-          "type": "arrow"
-        }
-      ],
-      "updated": 1,
-      "link": null,
-      "locked": false,
-      "id": "source-doc",
-      "type": "rectangle",
-      "x": 680,
-      "y": 455,
-      "width": 250,
-      "height": 135
-    },
-    {
-      "angle": 0,
-      "strokeColor": "#292f3e",
-      "backgroundColor": "transparent",
-      "fillStyle": "solid",
-      "strokeWidth": 1.5,
-      "strokeStyle": "solid",
-      "roughness": 0,
-      "opacity": 100,
-      "groupIds": [
-        "group-source-doc"
-      ],
-      "frameId": null,
-      "roundness": null,
-      "seed": 100016,
-      "version": 1,
-      "versionNonce": 200016,
-      "isDeleted": false,
-      "boundElements": null,
-      "updated": 1,
-      "link": null,
-      "locked": false,
-      "id": "source-doc-name",
-      "type": "text",
-      "x": 700,
-      "y": 475,
-      "text": "소스 S002",
-      "fontSize": 25,
-      "width": 110.58203125,
-      "height": 31.25,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "소스 S002",
-      "lineHeight": 1.25,
-      "autoResize": true
-    },
-    {
-      "angle": 0,
-      "strokeColor": "#292f3e",
-      "backgroundColor": "transparent",
-      "fillStyle": "solid",
-      "strokeWidth": 1.5,
-      "strokeStyle": "solid",
-      "roughness": 0,
-      "opacity": 100,
-      "groupIds": [
-        "group-source-doc"
-      ],
-      "frameId": null,
-      "roundness": null,
-      "seed": 100017,
-      "version": 1,
-      "versionNonce": 200017,
-      "isDeleted": false,
-      "boundElements": null,
-      "updated": 1,
-      "link": null,
-      "locked": false,
-      "id": "source-doc-detail",
-      "type": "text",
-      "x": 700,
-      "y": 518,
-      "text": "문서 URL · 읽은 범위\n확인 시각 · 버전",
-      "fontSize": 20,
-      "width": 173.5928955078125,
-      "height": 50.0,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "문서 URL · 읽은 범위\n확인 시각 · 버전",
-      "lineHeight": 1.25,
-      "autoResize": true
-    },
-    {
-      "angle": 0,
-      "strokeColor": "#2866c2",
-      "backgroundColor": "transparent",
-      "fillStyle": "solid",
-      "strokeWidth": 1.5,
-      "strokeStyle": "solid",
-      "roughness": 0,
-      "opacity": 100,
-      "groupIds": [],
-      "frameId": null,
-      "roundness": null,
       "seed": 100018,
       "version": 1,
       "versionNonce": 200018,
@@ -722,41 +709,17 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "evidence-code",
-      "type": "arrow",
-      "x": 520,
-      "y": 355,
-      "points": [
-        [
-          0,
-          0
-        ],
-        [
-          0,
-          90
-        ]
-      ],
-      "startBinding": {
-        "elementId": "topic",
-        "focus": -0.53,
-        "gap": 5
-      },
-      "endBinding": {
-        "elementId": "source-code",
-        "focus": 0,
-        "gap": 10
-      },
-      "width": 0,
-      "height": 90,
-      "startArrowhead": null,
-      "endArrowhead": "arrow",
-      "lastCommittedPoint": null,
-      "elbowed": false
+      "id": "original-back",
+      "type": "rectangle",
+      "x": 760,
+      "y": 25,
+      "width": 115,
+      "height": 135
     },
     {
       "angle": 0,
-      "strokeColor": "#2866c2",
-      "backgroundColor": "transparent",
+      "strokeColor": "#292f3e",
+      "backgroundColor": "#ffffff",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
       "strokeStyle": "solid",
@@ -764,7 +727,9 @@
       "opacity": 100,
       "groupIds": [],
       "frameId": null,
-      "roundness": null,
+      "roundness": {
+        "type": 3
+      },
       "seed": 100019,
       "version": 1,
       "versionNonce": 200019,
@@ -773,40 +738,16 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "evidence-doc",
-      "type": "arrow",
-      "x": 805,
-      "y": 355,
-      "points": [
-        [
-          0,
-          0
-        ],
-        [
-          0,
-          90
-        ]
-      ],
-      "startBinding": {
-        "elementId": "topic",
-        "focus": 0.53,
-        "gap": 5
-      },
-      "endBinding": {
-        "elementId": "source-doc",
-        "focus": 0,
-        "gap": 10
-      },
-      "width": 0,
-      "height": 90,
-      "startArrowhead": null,
-      "endArrowhead": "arrow",
-      "lastCommittedPoint": null,
-      "elbowed": false
+      "id": "original",
+      "type": "rectangle",
+      "x": 745,
+      "y": 40,
+      "width": 115,
+      "height": 135
     },
     {
       "angle": 0,
-      "strokeColor": "#56647a",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
@@ -824,25 +765,25 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "evidence-label",
+      "id": "original-mark",
       "type": "text",
-      "x": 560,
-      "y": 395,
-      "text": "각 설명에 근거 연결",
-      "fontSize": 20,
-      "width": 157.06982421875,
-      "height": 25.0,
+      "x": 770,
+      "y": 82,
+      "text": "< / >",
+      "fontSize": 27,
+      "width": 56.03955078125,
+      "height": 33.75,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "각 설명에 근거 연결",
+      "originalText": "< / >",
       "lineHeight": 1.25,
       "autoResize": true
     },
     {
       "angle": 0,
-      "strokeColor": "#56647a",
+      "strokeColor": "#292f3e",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
@@ -860,25 +801,25 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "note",
+      "id": "original-label",
       "type": "text",
-      "x": 42,
-      "y": 457,
-      "text": "하나의 토픽에\n여러 자료의 근거를\n함께 모읍니다.",
-      "fontSize": 22,
-      "width": 166.464599609375,
-      "height": 82.5,
+      "x": 768,
+      "y": 200,
+      "text": "원본",
+      "fontSize": 30,
+      "width": 53.899993896484375,
+      "height": 37.5,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "하나의 토픽에\n여러 자료의 근거를\n함께 모읍니다.",
+      "originalText": "원본",
       "lineHeight": 1.25,
       "autoResize": true
     },
     {
       "angle": 0,
-      "strokeColor": "#2866c2",
+      "strokeColor": "#56647a",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
@@ -896,31 +837,21 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "code-original-arrow",
-      "type": "arrow",
-      "x": 520,
-      "y": 595,
-      "points": [
-        [
-          0,
-          0
-        ],
-        [
-          0,
-          58
-        ]
-      ],
-      "startBinding": {
-        "elementId": "source-code",
-        "focus": 0,
-        "gap": 5
-      },
-      "width": 0,
-      "height": 58,
-      "startArrowhead": null,
-      "endArrowhead": "arrow",
-      "lastCommittedPoint": null,
-      "elbowed": false
+      "id": "original-detail",
+      "type": "text",
+      "x": 728,
+      "y": 250,
+      "text": "코드·문서·DB",
+      "fontSize": 23,
+      "width": 126.3109130859375,
+      "height": 28.75,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "코드·문서·DB",
+      "lineHeight": 1.25,
+      "autoResize": true
     },
     {
       "angle": 0,
@@ -942,27 +873,22 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "doc-original-arrow",
+      "id": "index-topic",
       "type": "arrow",
-      "x": 805,
-      "y": 595,
+      "x": 180,
+      "y": 105,
       "points": [
         [
           0,
           0
         ],
         [
-          0,
-          58
+          95,
+          0
         ]
       ],
-      "startBinding": {
-        "elementId": "source-doc",
-        "focus": 0,
-        "gap": 5
-      },
-      "width": 0,
-      "height": 58,
+      "width": 95,
+      "height": 0,
       "startArrowhead": null,
       "endArrowhead": "arrow",
       "lastCommittedPoint": null,
@@ -970,7 +896,7 @@
     },
     {
       "angle": 0,
-      "strokeColor": "#292f3e",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
@@ -988,29 +914,34 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "original-code",
-      "type": "text",
-      "x": 400,
-      "y": 670,
-      "text": "원본 코드\nReceiptService.java",
-      "fontSize": 21,
-      "width": 187.58544921875,
-      "height": 52.5,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "원본 코드\nReceiptService.java",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "topic-source",
+      "type": "arrow",
+      "x": 410,
+      "y": 105,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          95,
+          0
+        ]
+      ],
+      "width": 95,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "lastCommittedPoint": null,
+      "elbowed": false
     },
     {
       "angle": 0,
-      "strokeColor": "#292f3e",
+      "strokeColor": "#2866c2",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 1.5,
-      "strokeStyle": "solid",
+      "strokeStyle": "dashed",
       "roughness": 0,
       "opacity": 100,
       "groupIds": [],
@@ -1024,21 +955,26 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "original-doc",
-      "type": "text",
-      "x": 695,
-      "y": 670,
-      "text": "원본 업무 문서\nConfluence 페이지",
-      "fontSize": 21,
-      "width": 168.57017517089844,
-      "height": 52.5,
-      "fontFamily": 2,
-      "textAlign": "left",
-      "verticalAlign": "top",
-      "containerId": null,
-      "originalText": "원본 업무 문서\nConfluence 페이지",
-      "lineHeight": 1.25,
-      "autoResize": true
+      "id": "source-original",
+      "type": "arrow",
+      "x": 640,
+      "y": 105,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          95,
+          0
+        ]
+      ],
+      "width": 95,
+      "height": 0,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "lastCommittedPoint": null,
+      "elbowed": false
     },
     {
       "angle": 0,
@@ -1060,26 +996,25 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "id": "footer",
+      "id": "original-when",
       "type": "text",
-      "x": 40,
-      "y": 765,
-      "text": "소스 기록은 원문 복사본이 아닙니다. 필요할 때 기록된 위치에서 다시 읽습니다.",
+      "x": 646,
+      "y": 63,
+      "text": "필요할 때",
       "fontSize": 20,
-      "width": 622.279296875,
+      "width": 76.756591796875,
       "height": 25.0,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "소스 기록은 원문 복사본이 아닙니다. 필요할 때 기록된 위치에서 다시 읽습니다.",
+      "originalText": "필요할 때",
       "lineHeight": 1.25,
       "autoResize": true
     }
   ],
   "appState": {
-    "viewBackgroundColor": "#ffffff",
-    "gridSize": null
+    "viewBackgroundColor": "#ffffff"
   },
   "files": {}
 }

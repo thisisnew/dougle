@@ -205,10 +205,7 @@ class Worker:
                 )
                 session = result.session_id
                 try:
-                    if (
-                        not {self.config.engine.ask_skill, self.config.engine.style_skill}
-                        <= result.activated
-                    ):
+                    if not set(self.config.engine.required_skills) <= result.activated:
                         raise BotError("required_skill_not_activated")
                     # Retain declared obligations across the one allowed correction attempt.
                     verification = (

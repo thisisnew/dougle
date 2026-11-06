@@ -22,7 +22,7 @@ scripts/bot.sh setup --approver U승인자ID --channel 채널URL또는ID --claud
 scripts/bot.sh doctor --online
 ```
 
-doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slack 조회 성공과 실제 Claude 답변 성공은 별개입니다. 설치된 개인 스킬 이름을 쓰는 경우 config.toml의 engine.ask_skill/style_skill을 호스트에 등록된 정확한 이름으로 설정합니다. 기본은 Claude 플러그인의 dougle:dougle-ask / dougle:i-have-adhd입니다.
+doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slack 조회 성공과 실제 Claude 답변 성공은 별개입니다. 설치된 개인 스킬 이름을 쓰는 경우 config.toml의 engine.ask_skill/style_skill/plain_language_skill을 호스트에 등록된 정확한 이름으로 설정합니다. 기본은 Claude 플러그인의 dougle:dougle-ask / dougle:i-have-adhd / dougle:plain-language입니다. plain-language는 함께 설치되는 내부 스킬이며 사용자 명령 목록에는 표시하지 않습니다. 이전 설정에 새 항목이 없어도 기본값이 적용됩니다.
 
 모든 준비가 끝나면 **1. 시작 / 2. 상태 확인 / 3. 중지 / 4. 채널 추가**를 보여 줍니다. 최초 설정만으로 봇을 시작하지 않습니다.
 
@@ -43,7 +43,7 @@ doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slac
 
 1. `scripts/bot.sh status`에서 새 실행 환경 준비가 필요하면 `scripts/bot.sh prepare`를 실행합니다. 기존 설정·키체인·지식은 재등록하지 않습니다.
 2. 실행 중이면 업데이트 적용을 위해 중지하고 다시 시작할 것을 안내합니다. 사용자가 업데이트 적용을 요청했다면 `scripts/bot.sh stop` 후 실제 중지를 확인합니다.
-3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.4`을 확인합니다. 멈추는 중이면 시작하지 않습니다.
+3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.5`을 확인합니다. 멈추는 중이면 시작하지 않습니다.
 
 `preview_updated_review_again`은 업데이트된 게시 미리보기를 다시 확인하라는 뜻입니다. 기존 카드를 누르자마자 예전 형식의 답변을 보내지 않습니다. `publication_changed_regenerating`이면 새 초안을 준비하므로 새 카드에서 다시 승인합니다.
 

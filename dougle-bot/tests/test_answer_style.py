@@ -15,7 +15,7 @@ from dougle_bot.worker import Worker
 
 SESSION = "11111111-2222-4333-8444-555555555555"
 READS = {"read1": {"knowledge"}}
-SKILLS = {"dougle:dougle-ask", "dougle:i-have-adhd"}
+SKILLS = {"dougle:dougle-ask", "dougle:i-have-adhd", "dougle:plain-language"}
 
 
 def answer(body="입고 확정 뒤에 저장됩니다. [1]"):
@@ -169,9 +169,12 @@ def test_only_correlated_successful_skill_results_count(events):
     assert "dougle:i-have-adhd" not in parse_trace(trace(events)).activated
 
 
-def test_actual_successful_trace_counts_both_calls():
+def test_actual_successful_trace_counts_all_required_calls():
     events = [call(name, f"tool{i}") for i, name in enumerate(sorted(SKILLS))]
-    events += [outcome(f"tool{i}") for i in range(2)]
+    events += [
+        outcome(f"tool{i}", content=f"Launching skill: {name}")
+        for i, name in enumerate(sorted(SKILLS))
+    ]
     assert parse_trace(trace(events)).activated == SKILLS
 
 

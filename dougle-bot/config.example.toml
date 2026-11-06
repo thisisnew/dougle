@@ -19,6 +19,7 @@ allowed_tools = ["Edit", "Glob", "Grep", "Read", "Skill", "WebFetch", "Write", "
 disallowed_tools = ["Bash", "Agent", "Task"]
 ask_skill = "dougle:dougle-ask"
 style_skill = "dougle:i-have-adhd"
+plain_language_skill = "dougle:plain-language"
 
 [storage]
 home = "~/.dougle-bot"
