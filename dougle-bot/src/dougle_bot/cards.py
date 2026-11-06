@@ -2,6 +2,7 @@ import hashlib
 import json
 import re
 
+from .images import IMAGE_ERRORS
 from .presentation import chat_text
 from .safety import BotError, check_content, escape_slack
 
@@ -72,7 +73,11 @@ def render(inquiry, draft, permalink=None):
         section("질문: " + escape_slack(inquiry["question_text"][:1000])),
     ]
     if inquiry.get("error"):
-        blocks.append(section("확인이 필요합니다: `" + inquiry["error"] + "`"))
+        blocks.append(
+            section(
+                IMAGE_ERRORS.get(inquiry["error"], "확인이 필요합니다: `" + inquiry["error"] + "`")
+            )
+        )
     if status in ("queued", "drafting"):
         blocks.append(
             section(

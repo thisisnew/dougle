@@ -4,6 +4,7 @@ import uuid
 from decimal import Decimal
 from typing import Protocol
 
+from .images import MAX_IMAGE_BYTES, download_image
 from .safety import BotError
 
 
@@ -15,6 +16,7 @@ class SlackFailure(BotError):
 
 class SlackGateway(Protocol):
     def history(self, channel, thread, limit): ...
+    def image(self, file_id): ...
     def open_dm(self, user): ...
     def card(self, channel, text, blocks, ts=None): ...
     def post(self, channel, thread, text, delivery_id): ...
@@ -25,21 +27,33 @@ class SlackGateway(Protocol):
 
 
 def history_hash(messages):
-    rows = [
-        {k: m.get(k) for k in ("ts", "user", "text", "edited")}
-        for m in messages
-        if not m.get("bot_id")
-    ]
+    rows = []
+    for message in messages:
+        if message.get("bot_id"):
+            continue
+        row = {k: message.get(k) for k in ("ts", "user", "text", "edited")}
+        if message.get("files"):
+            row["files"] = message["files"]
+        blocks = message.get("blocks", [])
+        if isinstance(blocks, list):
+            images = [b for b in blocks if isinstance(b, dict) and b.get("type") == "image"]
+            if images:
+                row["image_blocks"] = images
+        elif blocks is not None:
+            row["invalid_blocks"] = True
+        rows.append(row)
     return hashlib.sha256(json.dumps(rows, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
 class BoltSlackGateway:
-    def __init__(self, token, client=None):
+    def __init__(self, token, client=None, *, image_downloader=download_image):
         if client is None:
             from slack_sdk import WebClient
 
             client = WebClient(token=token, retry_handlers=[], timeout=15)
         self.client = client
+        self._token = token
+        self._image_downloader = image_downloader
         self.cancelled = lambda: False
 
     def call(self, method, **kwargs):
@@ -55,6 +69,8 @@ class BoltSlackGateway:
         except SlackApiError as exc:
             code = exc.response.get("error", "")
             known = {
+                "file_not_found",
+                "access_denied",
                 "channel_not_found",
                 "not_in_channel",
                 "missing_scope",
@@ -115,6 +131,32 @@ class BoltSlackGateway:
             seen.add(cursor)
         raise SlackFailure("thread_history_limit")
 
+    def image(self, file_id):
+        try:
+            info = self.call("files_info", file=file_id).get("file", {})
+        except SlackFailure as exc:
+            if exc.code == "bot_stopped":
+                raise
+            if exc.code in ("missing_scope", "file_not_found", "access_denied"):
+                raise BotError("image_access_denied") from None
+            raise BotError("image_download_failed") from None
+        if not isinstance(info, dict) or info.get("id") != file_id:
+            raise BotError("image_metadata_invalid")
+        if info.get("is_external") or info.get("mode") != "hosted":
+            raise BotError("image_attachment_unsupported")
+        mime = info.get("mimetype")
+        if mime not in ("image/png", "image/jpeg"):
+            raise BotError("image_type_unsupported")
+        size = info.get("size")
+        if type(size) is not int or not 0 < size <= MAX_IMAGE_BYTES:
+            raise BotError("image_size_limit")
+        if self.cancelled():
+            raise SlackFailure("bot_stopped")
+        data, received_mime = self._image_downloader(info.get("url_private"), self._token)
+        if received_mime != mime or len(data) != size:
+            raise BotError("image_data_invalid")
+        return data, mime
+
     def open_dm(self, user):
         return self.call("conversations_open", users=user)["channel"]["id"]
 
@@ -173,6 +215,7 @@ class FakeSlack:
         self.failures = {}
         self.count = 0
         self.reactions = set()
+        self.images = {}
 
     def fault(self, kind):
         exc = self.failures.pop(kind, None)
@@ -190,6 +233,13 @@ class FakeSlack:
         if len(rows) > limit:
             raise SlackFailure("thread_history_limit")
         return rows
+
+    def image(self, file_id):
+        self.calls.append(("image", file_id))
+        self.fault("image")
+        if file_id not in self.images:
+            raise BotError("image_access_denied")
+        return self.images[file_id]
 
     def open_dm(self, user):
         self.fault("dm")

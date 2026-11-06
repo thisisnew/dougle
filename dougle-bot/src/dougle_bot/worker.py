@@ -4,6 +4,7 @@ import time
 from decimal import Decimal
 
 from . import cards
+from .images import collect_images, prompt_messages
 from .presentation import reaction_names
 from .prompts import prompt, validate_output
 from .safety import BotError, check_content
@@ -128,6 +129,11 @@ class Worker:
             )
             check_content(json.dumps(messages, ensure_ascii=False), personal=True)
             payload = json.loads(job["payload"]) if job["payload"] else {}
+            if payload.get("attachment_error"):
+                raise BotError(payload["attachment_error"])
+            images = collect_images(self.slack, messages)
+            if not set(payload.get("expected_image_ids", [])) <= {img.file_id for img in images}:
+                raise BotError("image_access_denied")
             lookup = payload.get("lookup") or (
                 json.loads(inquiry["lookup_basis"]) if inquiry["lookup_basis"] else None
             )
@@ -158,15 +164,22 @@ class Worker:
                 text = prompt(
                     self.config.engine,
                     inquiry,
-                    context_messages,
+                    prompt_messages(context_messages),
                     instruction=payload.get("instruction", ""),
                     lookup=lookup,
                     restored=restored,
                     correction=correction,
+                    image_context=[
+                        {"file_id": img.file_id, "message_ts": img.message_ts} for img in images
+                    ],
                 )
                 start = time.monotonic()
                 try:
-                    result = self.engine.run(text, session, budget)
+                    result = (
+                        self.engine.run(text, session, budget, images=images)
+                        if images
+                        else self.engine.run(text, session, budget)
+                    )
                 except BotError as exc:
                     self.store.finish_run(
                         run_id, error=exc.code, duration=int((time.monotonic() - start) * 1000)

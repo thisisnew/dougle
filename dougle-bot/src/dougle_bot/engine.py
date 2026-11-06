@@ -26,7 +26,7 @@ class EngineResult:
 
 
 class Engine(Protocol):
-    def run(self, text: str, session: str | None, budget: float) -> EngineResult: ...
+    def run(self, text: str, session: str | None, budget: float, *, images=()) -> EngineResult: ...
 
 
 def parse_trace(raw: bytes):
@@ -44,6 +44,17 @@ def parse_trace(raw: bytes):
             result = item
         message = item.get("message", {})
         content = message.get("content", []) if isinstance(message, dict) else []
+        if (
+            item.get("type") == "user"
+            and isinstance(content, list)
+            and any(
+                isinstance(block, dict)
+                and block.get("type") == "text"
+                and str(block.get("text", "")).startswith("[Image could not be processed:")
+                for block in content
+            )
+        ):
+            raise BotError("image_input_failed")
         if not isinstance(content, list):
             continue
         for block in content:
@@ -86,6 +97,12 @@ def parse_trace(raw: bytes):
         raise BotError("invalid_engine_output")
     if result.get("is_error") or result.get("subtype", "success") != "success":
         errors = str(result.get("result", "")) + " " + str(result.get("errors", ""))
+        if re.search(
+            r"image.{0,80}(?:invalid|decode|process|too large|exceed)|(?:invalid|decode).{0,40}image",
+            errors,
+            re.I,
+        ):
+            raise BotError("image_input_failed")
         if re.search(r"(?:No conversation found|session.{0,40}not found)", errors, re.I):
             raise BotError("session_not_found")
         raise BotError("engine_failed")
@@ -106,7 +123,7 @@ class ClaudeCliEngine:
     def __init__(self, config, home, *, cancelled=lambda: False, popen=subprocess.Popen):
         self.config, self.home, self.cancelled, self.popen = config, Path(home), cancelled, popen
 
-    def command(self, session, budget, settings):
+    def command(self, session, budget, settings, *, images=False):
         cfg = self.config
         args = [
             "-p",
@@ -130,6 +147,8 @@ class ClaudeCliEngine:
             "--max-budget-usd",
             str(budget),
         ]
+        if images:
+            args += ["--input-format", "stream-json"]
         if session:
             args += ["--resume", session]
         if cfg.model:
@@ -142,7 +161,7 @@ class ClaudeCliEngine:
         # A literal configured name only. Prompt never appears in this shell program or argv.
         return ["/bin/zsh", "-lic", name + ' "$@"', "dougle-launch", *args]
 
-    def run(self, text, session, budget):
+    def run(self, text, session, budget, *, images=()):
         cwd = private_dir(Path(self.config.workdir).expanduser())
         policy_dir = private_dir(self.home / "policy")
         policy = policy_dir / "tools.json"
@@ -191,7 +210,7 @@ class ClaudeCliEngine:
         env.pop("CLAUDECODE", None)
         try:
             proc = self.popen(
-                self.command(session, budget, settings),
+                self.command(session, budget, settings, images=bool(images)),
                 cwd=cwd,
                 env=env,
                 stdin=subprocess.PIPE,
@@ -212,6 +231,21 @@ class ClaudeCliEngine:
                 os.set_blocking(f.fileno(), False)
             streams.register(proc.stdout, selectors.EVENT_READ, out)
             streams.register(proc.stderr, selectors.EVENT_READ, err)
+            if images:
+                content = [{"type": "text", "text": text}]
+                for image in images:
+                    content.extend(image.blocks())
+                text = (
+                    json.dumps(
+                        {
+                            "type": "user",
+                            "message": {"role": "user", "content": content},
+                            "parent_tool_use_id": None,
+                        },
+                        ensure_ascii=False,
+                    )
+                    + "\n"
+                )
             pending = memoryview(text.encode())
             streams.register(proc.stdin, selectors.EVENT_WRITE, "input")
             while streams.get_map():
@@ -247,6 +281,12 @@ class ClaudeCliEngine:
                     re.I,
                 ):
                     raise BotError("session_not_found")
+                if images and re.search(
+                    rb"image[^\n]{0,80}(?:invalid|decode|process|too large|exceed)|(?:invalid|decode)[^\n]{0,40}image|unknown option[^\n]{0,40}input-format",
+                    bytes(out) + bytes(err),
+                    re.I,
+                ):
+                    raise BotError("image_input_failed")
                 raise BotError("engine_failed")
             return parse_trace(bytes(out))
         finally:
@@ -283,9 +323,11 @@ class FakeEngine:
     def __init__(self, results):
         self.results = list(results)
         self.calls = []
+        self.image_calls = []
 
-    def run(self, text, session, budget):
+    def run(self, text, session, budget, *, images=()):
         self.calls.append((text, session, budget))
+        self.image_calls.append(tuple(images))
         result = self.results.pop(0)
         if isinstance(result, Exception):
             raise result

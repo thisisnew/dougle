@@ -1,0 +1,149 @@
+{
+  "date": "2026-11-07",
+  "kind": "isolated native Codex answer-policy probe; NOT production Claude bot E2E",
+  "cases": 14,
+  "literal_fixture_checks_passed": 14,
+  "manual_scope_passed": 12,
+  "manual_scope_needs_refinement": 2,
+  "native_cli_calls": 1,
+  "native_calls_before": 199,
+  "native_calls_after": 200,
+  "real_company_slack_calls": 0,
+  "real_keychain_calls": 0,
+  "tools_used": [],
+  "synthetic_visual_cases": 1,
+  "synthetic_image_result": "Read E42, task418, PAUSED; did not invent cause",
+  "usage": {
+    "input_tokens": 18967,
+    "cached_input_tokens": 9856,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1105,
+    "reasoning_output_tokens": 23
+  },
+  "tested_policy_sha256": "87c4de43cc0855a92d62db31e4ff8325c07aeb87882f4d9eef8f99668bbd6430",
+  "followup_changes": [
+    "S05: detailed means the requested topic; exclude unrelated business workflows",
+    "S12: code explanation does not automatically need a production DB disclaimer"
+  ],
+  "final_wording_native_retest": "NOT_RUN; external model evaluation allowance200/200 consumed",
+  "limitations": [
+    "Supplied synthetic source instead of real retrieval",
+    "Component scope/style prompt, not full Claude runtime prompt or actual Skill activation",
+    "One batch/run; not a measured improvement rate or universal guarantee",
+    "Synthetic vision via Codex; real Slack image download and Claude CLI vision require company acceptance"
+  ],
+  "checks": [
+    {
+      "id": "S01",
+      "characters": 58,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S02",
+      "characters": 24,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S03",
+      "characters": 52,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S04",
+      "characters": 220,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S05",
+      "characters": 710,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "NEEDS_REFINEMENT"
+    },
+    {
+      "id": "S06",
+      "characters": 64,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S07",
+      "characters": 57,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S08",
+      "characters": 67,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S09",
+      "characters": 38,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S10",
+      "characters": 115,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S11",
+      "characters": 74,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S12",
+      "characters": 141,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "NEEDS_REFINEMENT"
+    },
+    {
+      "id": "S13",
+      "characters": 92,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    },
+    {
+      "id": "S14",
+      "characters": 108,
+      "required_missing": [],
+      "unrelated_terms_found": [],
+      "within_fixture_length": true,
+      "manual_scope_review": "PASS"
+    }
+  ]
+}

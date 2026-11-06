@@ -35,6 +35,8 @@ def receive(store, config, body, bot_user):
     if not isinstance(text, str) or len(text) > 12000 or f"<@{bot_user}>" not in text:
         return None
     question = text.replace(f"<@{bot_user}>", "").strip()
+    if not question and event.get("files"):
+        question = "첨부 이미지에서 무엇을 확인할 수 있나요?"
     if not question:
         return None
     try:

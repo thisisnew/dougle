@@ -5,12 +5,12 @@
   "totalDesignedCases": 231,
   "automatedCasesDesigned": 211,
   "manualCompanyCasesDesigned": 20,
-  "automatedTestsImplemented": 243,
-  "productTestsExecuted": 243,
-  "productTestsPassed": 243,
+  "automatedTestsImplemented": 314,
+  "productTestsExecuted": 314,
+  "productTestsPassed": 314,
   "companyCasesExecuted": 0,
   "priorDougleSkillResultsCounted": false,
-  "priorModelCallsAdded": 0,
+  "priorModelCallsAdded": 1,
   "priorities": {
     "P1": 85,
     "P0": 146
@@ -50,5 +50,7 @@
   "missingSpecificationSections": "Runtime contracts are now in dougle-bot/SPEC.md",
   "executedTestCountUnit": "pytest parametrized cases, NOT the 231 designed scenario IDs",
   "designCaseMapping": "NOT_COMPLETED",
-  "implementationReport": "implementation-verification.json"
+  "implementationReport": "implementation-verification.json",
+  "syntheticModelQuestions": 14,
+  "syntheticModelEvaluation": "answer-evaluation/results.json"
 }

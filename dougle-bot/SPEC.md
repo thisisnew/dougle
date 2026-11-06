@@ -67,3 +67,13 @@ Slack 서식은 [공식 mrkdwn 안내](https://docs.slack.dev/messaging/formatti
 수동 다시 생성 버튼·모달은 제거한다. 이전 카드 버튼은 안내와 카드 갱신만 하고 AI 작업을 만들지 않는다. 이전 모달 제출도 차단한다. 이미 등록된 작업과 스레드 변경/스키마 실패 등 내부 재검증은 별개로 유지하며 결과는 다시 승인해야 한다.
 
 불필요한 후속 질문 권유/자료 읽은 날짜/운영 미조회 문구는 관성적으로 붙이지 않는다. 답에 영향을 주는 오래된·충돌하는 근거나 필요한 실시간 조회 실패는 짧게 표시하거나 확인을 요청한다. i-have-adhd의 구조화 + 성인 비전문가용 설명을 결합하며 별도 ELI5 스킬 실행을 주장하지 않는다. 이는 출력 지침이고 새 모델 의미 품질을 실측한 결과는 아니다.
+
+## 0.8.3 답변 범위와 이미지 입력
+
+답변 선택 정책은 answer_policy.py에서 매 호출/resume/재검증/조회 결과 입력에 전달한다. 질문의 의미에 따라 범위를 정하고, 상세 요청도 요청 주제에 한정한다. 이는 프롬프트 계약이며 문자 수 절단이나 완전한 의미 검증기가 아니다.
+
+Slack files 객체와 files.info로 권한 있는 직접 업로드 PNG/JPEG를 확인한다. files:read를 요구한다. 다운로드는 files.slack.com의 HTTPS /files-pri/만 허용하고 리다이렉트를 따르지 않는다. 응답을 제한된 크기/시간 안에서 읽고 MIME·기본 파일 프레이밍을 확인한다. 완전한 이미지 디코더는 아니며 CLI의 알려진 이미지 처리 오류도 실패로 처리한다. Slack 호스팅 방식이 바뀌거나 리다이렉트가 필요한 경우 명확한 다운로드 오류로 중단한다.
+
+이미지는 메모리에서 base64 image content로 변환하여 Claude --input-format stream-json의 stdin으로 전달한다. 키체인 값·다운로드 URL·이미지 본문을 프롬프트 텍스트나 DB·audit에 저장하지 않는다. 이미지 입력 자체는 호스트 AI 제공자에게 전달되며 Claude 세션 보관 정책은 별개다. 원본은 읽기 전용이다. 같은 스레드의 이미지 최대4장/장당5MiB/합계12MiB를 매번 확인하며 일부만 조용히 생략하지 않는다. 초기 event에 첨부가 있었지만 history에서 보이지 않는 경우도 중단한다. 오류 시 모델을 호출하지 않고 승인자 카드에 안내한다. 첨부 변경/삭제 정보는 history_hash에 포함되어 재승인이 필요하다. 실제 이미지 픽셀 내용을 해석하는 정확성이나 이미지 내부 비밀정보의 완전 탐지는 별도 검증 대상이다.
+
+프로토콜 근거: [Claude streaming image input](https://code.claude.com/docs/en/agent-sdk/streaming-vs-single-mode), [CLI input format](https://code.claude.com/docs/en/cli-reference), [Slack file downloads](https://docs.slack.dev/messaging/working-with-files/).

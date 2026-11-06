@@ -14,11 +14,13 @@
 
 ## 개발하거나 지원 범위를 확인할 때
 
-[개발 예정 Slack 봇: 테스트 계획과 231개 시나리오](dougle-bot/TEST_PLAN.md) — 설계 완료, 봇 구현·테스트 실행 전입니다.
+[Slack 봇 설치·실행](../dougle-bot/README.md) · [자동 검증 기록](dougle-bot/implementation-verification.json) · [답변·이미지 평가](dougle-bot/answer-evaluation/README.md) · [문의 채널 감지 설계](dougle-bot/channel-detection-design.md)
+
+[231개 설계 시나리오](dougle-bot/TEST_PLAN.md)는 자동 테스트 개수와 별개이며 전체 대응 검증은 아직 완료하지 않았습니다.
 
 [제품 개요](skills/README.md) · [개발 안내](skills/development.md) · [답변과 출처](skills/answer-sources.md) · [검색 속도](skills/search-performance.md) · [검증 범위](skills/verification.md)
 
-현재 제품은 **0.7.2 스킬 모음**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
+현재 제품은 **0.8.3 스킬 모음과 선택형 Slack 봇**입니다. 아래 과거 문서는 현재 설치 방법이 아닙니다.
 
 <details>
 <summary>이전 버전 기록</summary>

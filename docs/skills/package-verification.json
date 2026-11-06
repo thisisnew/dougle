@@ -1,17 +1,18 @@
 {
-  "version": "0.8.2",
+  "version": "0.8.3",
   "files": 58,
-  "archiveBytes": 196505,
-  "sha256": "64e30f2526dbe9fb27084a32a9135623b4e346ccd7c751e9fee26f31b028c3a1",
+  "archiveBytes": 203665,
+  "sha256": "e03dca790f8926088b049aa83bc19050ac305ec91cb00d517f92cbfd7ea6327e",
   "structuralChecks": 292,
   "claudeManifests": "PASS",
   "packageBytes": "PASS canonical resources and tested wheel source match",
-  "botTests": 243,
+  "botTests": 314,
   "answerStyleTests": 60,
-  "realModelCalls": 0,
+  "realModelCalls": 1,
   "actualCompanyIntegration": "USER_REPORTED_BASIC_FLOW_ON_PREVIOUS_RELEASE; latest release NOT_VERIFIED",
   "appleSiliconFirstInstall": "NOT_RUN",
   "coreSkillsRequirePython": false,
-  "optionalBotRuntime": "0.1.2; separate explicit preparation",
-  "planned231Scenarios": "NOT_ALL_IMPLEMENTED_OR_MAPPED"
+  "optionalBotRuntime": "0.1.3; separate explicit preparation",
+  "planned231Scenarios": "NOT_ALL_IMPLEMENTED_OR_MAPPED",
+  "syntheticModelProbe": "14questions;12manualscopepasses;2policyrefinementsnotrerun;notClaudeSlackE2E"
 }

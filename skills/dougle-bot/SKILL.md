@@ -42,3 +42,7 @@ Public replies contain a concise, respectful explanation for non-developers by d
 
 
 Approval controls are Post / Edit / Reject; Reject acts immediately without a reason form. Needs-lookup cards have Submit lookup results / Reject. Manual Regenerate is removed; do not suggest it or invoke a legacy action. Existing queued work and automatic refresh after a changed thread still require a new approved draft. Avoid routine closing offers and boilerplate date/production caveats; retain only limitations material to the question. Explain to an adult colleague unfamiliar with the system, preserving necessary business precision.
+
+For Slack answers, the latest question sets the scope: where/who/when gets a direct answer; overview gets the main path; explicit detailed requests expand within the requested topic. Follow-ups add only new requested information. Preserve relevant conditions and unknowns; never truncate to a character count.
+
+Uploaded Slack PNG/JPEG images are passed as actual image inputs, including prior images in the same thread (max4, 5MiB each, 12MiB total). Existing apps need files:read and workspace reinstallation for this feature; read setup for guidance. Missing/unsupported/failed images stop the draft with an actionable DM. Do not claim a private URL or filename is vision input. Other image formats, external image previews and freeform DM image lookup results are unsupported. The bot does not store image bodies; provider session retention is separate.

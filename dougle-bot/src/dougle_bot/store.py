@@ -12,6 +12,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from .config import private_dir
+from .images import image_files
 from .safety import BotError, redact
 
 SCHEMA = """
@@ -171,9 +172,16 @@ class Store:
                 "INSERT INTO inquiries(thread_key,trigger_ts,asker_user_id,question_text,status,created_at,updated_at) VALUES(?,?,?,?,'queued',?,?)",
                 (thread, event["ts"], event["user"], question, now, now),
             ).lastrowid
+            attachment_context = {}
+            try:
+                refs = image_files([event])
+                if refs:
+                    attachment_context["expected_image_ids"] = [row[0]["id"] for row in refs]
+            except BotError as exc:
+                attachment_context["attachment_error"] = exc.code
             db.execute(
-                "INSERT INTO jobs(inquiry_id,kind,payload,created_at) VALUES(?,'engine','',?)",
-                (ident, now),
+                "INSERT INTO jobs(inquiry_id,kind,payload,created_at) VALUES(?,'engine',?,?)",
+                (ident, json.dumps(attachment_context) if attachment_context else "", now),
             )
             return ident
 
