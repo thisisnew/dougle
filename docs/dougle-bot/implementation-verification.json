@@ -1039,5 +1039,17 @@
       "test": "tests.test_slack_presentation::test_deleted_emoji_is_replaced_on_next_inquiry",
       "status": "PASS"
     }
-  ]
+  ],
+  "ci": {
+    "url": "https://github.com/thisisnew/dougle/actions/runs/42247689916",
+    "source_commit": "dd4ae26f47b6678eeaebad19425c46c222ada35f",
+    "python_versions": [
+      "3.12",
+      "3.13"
+    ],
+    "result": "PASS",
+    "test_cases_per_job": 217,
+    "unique_test_case_count": 217,
+    "external_integrations": "fake only; no company credentials or real model calls"
+  }
 }
