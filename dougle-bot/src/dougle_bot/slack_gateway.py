@@ -20,6 +20,7 @@ class SlackGateway(Protocol):
     def post(self, channel, thread, text, delivery_id): ...
     def permalink(self, channel, ts): ...
     def reaction(self, channel, ts, name): ...
+    def remove_reaction(self, channel, ts, name): ...
     def modal(self, trigger, view): ...
 
 
@@ -69,6 +70,9 @@ class BoltSlackGateway:
                 "cannot_dm_bot",
                 "expired_trigger_id",
                 "trigger_exchanged",
+                "already_reacted",
+                "no_reaction",
+                "invalid_name",
             }
             raise SlackFailure(
                 code if code in known else "slack_failed", uncertain=code not in known
@@ -138,7 +142,18 @@ class BoltSlackGateway:
         return self.call("chat_getPermalink", channel=channel, message_ts=ts)["permalink"]
 
     def reaction(self, channel, ts, name):
-        self.call("reactions_add", channel=channel, timestamp=ts, name=name)
+        try:
+            self.call("reactions_add", channel=channel, timestamp=ts, name=name)
+        except SlackFailure as exc:
+            if exc.code != "already_reacted":
+                raise
+
+    def remove_reaction(self, channel, ts, name):
+        try:
+            self.call("reactions_remove", channel=channel, timestamp=ts, name=name)
+        except SlackFailure as exc:
+            if exc.code not in ("no_reaction", "invalid_name"):
+                raise
 
     def modal(self, trigger, view):
         return self.call("views_open", trigger_id=trigger, view=view)
@@ -157,6 +172,7 @@ class FakeSlack:
         self.calls = []
         self.failures = {}
         self.count = 0
+        self.reactions = set()
 
     def fault(self, kind):
         exc = self.failures.pop(kind, None)
@@ -213,6 +229,12 @@ class FakeSlack:
     def reaction(self, *args):
         self.calls.append(("reaction", *args))
         self.fault("reaction")
+        self.reactions.add(args)
+
+    def remove_reaction(self, *args):
+        self.calls.append(("remove_reaction", *args))
+        self.fault("remove_reaction")
+        self.reactions.discard(args)
 
     def modal(self, trigger, view):
         self.calls.append(("modal", trigger, view))

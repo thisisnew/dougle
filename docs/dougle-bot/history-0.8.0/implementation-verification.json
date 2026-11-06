@@ -1,0 +1,887 @@
+{
+  "date": "2026-11-06",
+  "python": "3.13.5",
+  "slack_bolt": "1.30.0",
+  "slack_sdk": "3.46.0",
+  "automated_test_count": 171,
+  "failed": 0,
+  "external_network": "blocked by test fixture",
+  "real_model_calls": 0,
+  "real_keychain_calls": 0,
+  "real_company_slack": "NOT_RUN",
+  "planned_231_scenarios": "NOT_ALL_IMPLEMENTED_OR_MAPPED; executed pytest tests are a separate count",
+  "tests": [
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "53f383ea1324",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "fdbfb92d204b",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "3108167d3b11",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "ac5a7e2bd42f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "29ff31dc2c4c",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "1b68e83120fe",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "ad223e7beaa1",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "f7bb138cd464",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "6f7adc54b202",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "ece4c2753db7",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "9472087d194e",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "124f3a19605a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "1591882ff3e1",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "79b539ddb585",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "fb05ac9763ad",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "71b8d8b28942",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "f749b42af069",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "4cc67a8d4419",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "58488fb37c7f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "27cad328c1f5",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "566c2b908091",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "50b58e0e63d6",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_casual_draft_is_rejected",
+      "variant_sha256": "1e431473f117",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "a3288ce1b179",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "236527334cc6",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "0ede90ffb328",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "1b0a1d2498d9",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "28f277fdade5",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "48b6ee45c85b",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "941d7399c6f2",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "e0525ad75d9a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "87b1c588c7dd",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "004a826d20fc",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "442a8aa6f746",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "3722169253b1",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "d03c1c17e38f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "ca2df691dbcc",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "36bf2c3fb693",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "6236f755b111",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_polite_answers_and_verbatim_quotes_are_preserved",
+      "variant_sha256": "88310dae18e8",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "7c7e3a74efcf",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "c99b9284943d",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "1740b2b2a8cd",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "9116c822d7fe",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "3ff345ac06c6",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "1ffcb4246e0b",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "1a84a89117c1",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "b4899ea6267a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "222b4cc5ed48",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "7a6fbd4bfbbb",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "cd2db2e14f8f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "4a886f98ce47",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "1d8a5b21600a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_only_correlated_successful_skill_results_count",
+      "variant_sha256": "52c1af139d05",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_actual_successful_trace_counts_both_calls",
+      "variant_sha256": "10d4ca754a0e",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_untrusted_question_text_cannot_inject_trace_events",
+      "variant_sha256": "c94b1635734d",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_invalid_style_gets_one_retry_and_never_becomes_approvable",
+      "variant_sha256": "361888a4e080",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_invalid_style_gets_one_retry_and_never_becomes_approvable",
+      "variant_sha256": "a2f57cf3759c",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_corrected_style_becomes_approval_draft_without_auto_post",
+      "variant_sha256": "7c180e9a2917",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_answer_style::test_resume_still_requires_current_call_style_activation",
+      "variant_sha256": "466c4fb9054a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_actual_bolt_ack_follows_durable_intake",
+      "variant_sha256": "c8020869a29b",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_actual_bolt_does_not_ack_persistence_failure",
+      "variant_sha256": "0197d0b572d7",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "333e792f513c",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "59b870810b66",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "3514efa257cd",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "fde9a13d3de5",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "362dcd50a51f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "f72513c96046",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "3b62dec8367d",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "7ff272fe4640",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "0a5d40ed0448",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_blocks_unapproved_tools_and_sensitive_paths",
+      "variant_sha256": "f361da62ad33",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_hook_allows_only_memory_writes_and_rejects_symlink_escape",
+      "variant_sha256": "f70b3aabfc0c",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_real_subprocess_fake_cli_uses_stdin_and_stream_parser",
+      "variant_sha256": "b096688a551f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_subprocess_timeout_is_bounded_and_does_not_leak_stderr",
+      "variant_sha256": "efd260e7debb",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_cancelled_engine_does_not_return_draft",
+      "variant_sha256": "d2bc53829df2",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_resume_command_keeps_alias_and_prompt_out_of_shell_program",
+      "variant_sha256": "a2d11acc25ba",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
+      "variant_sha256": "2bcfed6d6303",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
+      "variant_sha256": "e227bfffcfbe",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
+      "variant_sha256": "09a90f56985a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
+      "variant_sha256": "b2d020c309c7",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
+      "variant_sha256": "c33f964f27ff",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_never_accepts_unsafe_or_unbounded_sql",
+      "variant_sha256": "93db995f9eb4",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_needs_lookup_card_has_no_post_button",
+      "variant_sha256": "e88d0412c8e4",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
+      "variant_sha256": "b5d3f5ad5640",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
+      "variant_sha256": "4292dbfb25f5",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
+      "variant_sha256": "73946ea34510",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_time_requires_explicit_zone_and_not_future",
+      "variant_sha256": "da3d2ca68205",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_developer_evidence_requires_attribution",
+      "variant_sha256": "2ef3c28fc561",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_partial_multimessage_failure_cannot_repost_first_part",
+      "variant_sha256": "5eb2e4599b3b",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_internal_result_and_discovery_tools_do_not_unblock_writes",
+      "variant_sha256": "41607f8a2cb5",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_parallel_duplicate_events_have_exactly_one_job",
+      "variant_sha256": "65c9ec1a6ef6",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_late_engine_result_does_not_revive_rejected_inquiry",
+      "variant_sha256": "36d11713acc2",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_followup_resumes_and_includes_published_manual_edit",
+      "variant_sha256": "7577a66d59ee",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval",
+      "variant_sha256": "2bf92a9863ce",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_unsafe_source_url_blocked",
+      "variant_sha256": "064db2f0a595",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_unsafe_source_url_blocked",
+      "variant_sha256": "21f3043f4019",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_unsafe_source_url_blocked",
+      "variant_sha256": "3f80dab60750",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_sensitive_thread_never_reaches_engine_or_draft",
+      "variant_sha256": "c3d7f2cf5b62",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_database_rejects_cross_inquiry_draft_link",
+      "variant_sha256": "b8acdd24bc06",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_memory_root_symlink_cannot_authorize_business_writes",
+      "variant_sha256": "cb580fe86f68",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_other_bot_cannot_supply_positive_delivery_evidence",
+      "variant_sha256": "e4fd109a035b",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_slack_secret_in_unexpected_environment_name_is_not_inherited",
+      "variant_sha256": "fc0acc56c1dd",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_old_database_snapshot_cannot_hide_a_later_post",
+      "variant_sha256": "bdc683442aa8",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_boundaries::test_definite_failure_retry_preserves_external_send_identity",
+      "variant_sha256": "8f0036c3398c",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_package::test_bundled_wheel_matches_tested_source_and_declared_hashes",
+      "variant_sha256": "9c97f77cdb5a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "46bc0997c928",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "2d2cd3fecb01",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "6738041168af",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "20f86bf105a4",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "03aefa276fd8",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "1136655e6c5d",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "40e663fd76dc",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "88f42c685ddd",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "20d615e81d1f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "0b7ed1cc8977",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "0bf089bae186",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "6b75533d5d4d",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_intake_ignores_invalid_or_unapproved_messages",
+      "variant_sha256": "41c200695485",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_duplicate_intake_is_atomic_and_cross_channel_is_distinct",
+      "variant_sha256": "d6effdf47e85",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_other_workspace_is_ignored",
+      "variant_sha256": "e14470f904c5",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_stopped_interval_is_never_replayed",
+      "variant_sha256": "f41d1a859a02",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_stop_blocks_post_and_does_not_delete_state",
+      "variant_sha256": "b3fe2a8a1c37",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_post_only_after_exact_approval_and_double_click_safe",
+      "variant_sha256": "359184a58c07",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_exact_approval_binding",
+      "variant_sha256": "5a8e253cd07f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_exact_approval_binding",
+      "variant_sha256": "600f601224e1",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_exact_approval_binding",
+      "variant_sha256": "29e5a65833dc",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_exact_approval_binding",
+      "variant_sha256": "5c9d7f78358f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_exact_approval_binding",
+      "variant_sha256": "b29c66863e95",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_manual_edit_invalidates_old_button_and_preserves_published_text",
+      "variant_sha256": "b83ea6d04bfc",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_thread_change_requires_regeneration_and_new_approval",
+      "variant_sha256": "6bccff3207a1",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_unknown_delivery_never_blindly_resends",
+      "variant_sha256": "7343757086bf",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_unknown_delivery_never_blindly_resends",
+      "variant_sha256": "00a94d38e87d",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_definite_unsent_failure_can_be_manually_retried",
+      "variant_sha256": "415fa2ccb88d",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_crash_recovery_holds_post_and_requeues_draft",
+      "variant_sha256": "0beaca3ba952",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_budget_reservations_are_not_zero_on_unknown_cost",
+      "variant_sha256": "8d579971126f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_session_not_found_gets_only_one_fresh_retry",
+      "variant_sha256": "034d36c15b7a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "d5860b20e40a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "6c3730d1c7b1",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "5c7763d342a6",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "f4e3d5c78830",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "c2797f3eb45c",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "14daf0fc8937",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "45bc16980907",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "3824f2af17b6",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "b3dce4b827d0",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "0cc10d856dc3",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_config_fails_before_any_external_call",
+      "variant_sha256": "19e4959bbb80",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_config_round_trip_permissions_and_no_secret_fields",
+      "variant_sha256": "a9e4b9d02ea2",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_channel_id_or_channel_url",
+      "variant_sha256": "e9df9b119566",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_channel_id_or_channel_url",
+      "variant_sha256": "a16eeb2704d8",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_channel_id_or_channel_url",
+      "variant_sha256": "9f3756853b76",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_channel_links",
+      "variant_sha256": "20ab6b282a33",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_channel_links",
+      "variant_sha256": "203a7261bba9",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_invalid_channel_links",
+      "variant_sha256": "a350442d4d3f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_keychain_stores_without_password_argument_or_capture",
+      "variant_sha256": "f67a54115648",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_keychain_read",
+      "variant_sha256": "d61e2655bb29",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_keychain_read",
+      "variant_sha256": "24943d01f38a",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_keychain_wrong_prefix_is_deleted_without_leak",
+      "variant_sha256": "d2f22ccd13bd",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_nonmac_keychain_never_calls_security",
+      "variant_sha256": "6a35d4e67e18",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_cli_first_setup_status_menu_and_channel_add",
+      "variant_sha256": "2b3f21d5fd23",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_process_lock_prevents_two_runtimes",
+      "variant_sha256": "f40362a555e0",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_transaction_rollback_keeps_database_usable",
+      "variant_sha256": "4aa3b10ca000",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_thread_pagination_no_silent_truncation",
+      "variant_sha256": "7876ff836c7e",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_pagination_loop_is_failure",
+      "variant_sha256": "1adc1122e490",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_large_code_reply_preserves_fences_and_signature",
+      "variant_sha256": "7d886fe14219",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_masking_never_returns_secret",
+      "variant_sha256": "a0fcfc8b2ba6",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_masking_never_returns_secret",
+      "variant_sha256": "ed75a2ef731f",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_masking_never_returns_secret",
+      "variant_sha256": "23580076080e",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_masking_never_returns_secret",
+      "variant_sha256": "1c302cdbf7d0",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_runtime::test_masking_never_returns_secret",
+      "variant_sha256": "b3b98b0ec9c4",
+      "status": "PASS"
+    }
+  ],
+  "style_tests": 60,
+  "developer_host_machine": "x86_64",
+  "apple_silicon_first_install": "NOT_RUN; developer host is not Apple Silicon",
+  "wheel_source_bytes": "MATCH",
+  "isolated_wheel_install_and_relocation": "PASS on developer Python 3.13.5; not an M Mac acceptance result",
+  "ci": {
+    "url": "https://github.com/thisisnew/dougle/actions/runs/42235805374",
+    "source_commit": "74e6799a5bea9e14892fd169d93c16f31c5feb7b",
+    "python_versions": [
+      "3.12",
+      "3.13"
+    ],
+    "result": "PASS",
+    "test_cases_per_job": 171,
+    "unique_test_case_count": 171,
+    "external_integrations": "fake only; no company credentials or real model calls"
+  }
+}

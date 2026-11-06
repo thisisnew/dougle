@@ -41,6 +41,14 @@ def status(home, config_path):
         store = Store(home / "bot.db")
         try:
             control = store.control()
+            version = store.one(
+                "SELECT detail FROM audit WHERE action='runtime_started' AND at>=? ORDER BY id DESC LIMIT 1",
+                (control["started"],),
+            )
+            result["running_version"] = version["detail"] if result["running"] and version else None
+            result["update_required"] = (
+                result["running"] and result["running_version"] != __version__
+            )
             result.update(
                 state=control["desired"] if result["running"] else "stopped",
                 heartbeat=control["heartbeat"],
@@ -49,6 +57,18 @@ def status(home, config_path):
                 inquiries=store.all(
                     "SELECT status,COUNT(*) AS count FROM inquiries GROUP BY status"
                 ),
+                active_inquiries=[
+                    {
+                        "id": row["id"],
+                        "status": row["status"],
+                        "elapsed_seconds": max(0, int(store.clock() - row["created_at"])),
+                        "channel": row["channel_id"],
+                        "thread_ts": row["thread_ts"],
+                    }
+                    for row in store.all(
+                        "SELECT i.id,i.status,i.created_at,t.channel_id,t.thread_ts FROM inquiries i JOIN threads t USING(thread_key) WHERE i.status IN ('queued','drafting','needs_lookup','awaiting_approval','posting','post_unknown') ORDER BY i.id LIMIT 50"
+                    )
+                ],
             )
             result["healthy"] = (
                 result["running"]

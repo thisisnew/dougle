@@ -1,6 +1,8 @@
+import hashlib
 import json
 import re
 
+from .presentation import chat_text
 from .safety import BotError, check_content, escape_slack
 
 LABELS = {
@@ -17,14 +19,20 @@ LABELS = {
 
 
 def final_text(draft):
-    body = re.sub(r"\n?\s*\*?✦ dougle\*?\s*$", "", draft["body"]).strip()
+    body = draft["body"]
     sources = json.loads(draft["sources_json"])
-    if sources:
-        body += "\n\n출처\n" + "\n".join(
-            f"[{i}] {s['title']} · {s['location']}" for i, s in enumerate(sources, 1)
-        )
     check_content(body, personal=True)
-    return escape_slack(body) + "\n\n✦ dougle"
+    text = chat_text(body, len(sources))
+    if not text:
+        raise BotError("empty_public_answer")
+    return text
+
+
+def preview_receipt(draft):
+    return json.dumps(
+        {"draft_id": draft["id"], "sha256": hashlib.sha256(final_text(draft).encode()).hexdigest()},
+        sort_keys=True,
+    )
 
 
 def split_text(text, limit=3500):
@@ -65,15 +73,46 @@ def render(inquiry, draft, permalink=None):
     ]
     if inquiry.get("error"):
         blocks.append(section("확인이 필요합니다: `" + inquiry["error"] + "`"))
+    if status in ("queued", "drafting"):
+        blocks.append(
+            section(
+                "접수했습니다. 앞선 문의가 끝나면 답변을 준비하겠습니다."
+                if status == "queued"
+                else "답변을 준비하고 있습니다. 완료되면 이 카드에 초안과 게시 버튼이 표시됩니다."
+            )
+        )
+        blocks.append(
+            section(
+                "상태는 단계가 바뀔 때 갱신됩니다. 연결 상태는 더글 봇 메뉴의 ‘상태 확인’에서 확인하실 수 있습니다."
+            )
+        )
     if draft:
         if status == "needs_lookup":
             lookup = json.loads(draft["lookup_json"])
-            display = f"{draft['body']}\n\n조회 대상: {lookup['target']}\n{lookup['reason']}\n\n{lookup['sql'] or '스키마를 확인한 뒤 조회 방법을 결정해 주세요.'}\n\n최소한의 비민감 결과 요약과 조회 시각을 입력해 주세요."
+            display = f"{draft['body']}\n\n조회 대상: {lookup['target']}\n{lookup['reason']}\n\n{lookup['sql'] or '위 안내에 따라 확인하신 내용만 알려 주세요.'}\n\n최소한의 비민감 결과 요약과 조회 시각을 입력해 주세요."
             display = escape_slack(display)
         else:
             display = final_text(draft)
+            blocks.append(section("*Slack에 게시될 답변*"))
         for idx in range(0, len(display), 2800):
             blocks.append(section(display[idx : idx + 2800], f"d{draft['id']}-{idx}"))
+        sources = json.loads(draft["sources_json"])
+        if sources:
+            blocks.append({"type": "divider"})
+            blocks.append(section("*검토용 출처 · Slack 답글에는 포함되지 않습니다*"))
+            source_block = ""
+            for idx, source in enumerate(sources, 1):
+                title = re.sub(r"^(?:\s*\[(?:R)?\d+\]\s*)+", "", source["title"])
+                line = escape_slack(f"[{idx}] {title} · {source['location']}")
+                # Escaped URLs can grow; split safely within Slack's per-section limit.
+                for offset in range(0, len(line), 2700):
+                    piece = line[offset : offset + 2700]
+                    if len(source_block) + len(piece) + 2 > 2800:
+                        blocks.append(section(source_block))
+                        source_block = ""
+                    source_block += ("\n\n" if source_block else "") + piece
+            if source_block:
+                blocks.append(section(source_block))
         value = json.dumps(
             {"inquiry_id": inquiry["id"], "draft_id": draft["id"]}, separators=(",", ":")
         )

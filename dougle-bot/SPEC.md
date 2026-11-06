@@ -47,3 +47,15 @@ awaiting_approval→posting 조건부 UPDATE로 선점한 뒤 조각별 전달 I
 - [Claude permissions](https://code.claude.com/docs/en/permissions): 도구 권한과 실제 hook 경계를 구분합니다.
 
 실제 회사 연동·실제 모델의 의미/존댓말 준수·채널별 자료 공개 적합성은 가짜 외부 구현만으로 입증하지 않습니다.
+
+## 0.8.1 게시 표시 계약
+
+일반 ask는 출처 포함, 봇 게시 body는 비개발자용 업무 설명을 기본으로 한다. sources는 별도 승인 DM에만 표시한다. 게시 답변에는 서명이 없다. 구현 상세는 명시적 기술 질문에만 포함하며 조건·예외·최신성 불확실성은 유지한다. 렌더러는 사실을 요약하지 않고 제한된 서식/등록된 인용표시만 변환한다. 코드·인용은 보존한다.
+
+성공한 카드 표시의 본문 해시와 revision을 기록해 게시 직전에 대조한다. 기존 카드/형식 변경 시 갱신된 미리보기를 다시 승인받는다. 이미 저장된 미전송 전달 조각의 본문이 다르면 새 revision을 생성하며 오래된 sources/서명 payload를 재사용하지 않는다.
+
+내구성 있는 접수와 ack 후 진행 DM을 비동기로 보낸다. worker 시작 전 작성 중, 완료 후 승인 대기로 같은 카드를 갱신한다. 질문에 상태 리액션을 추가/교체하며 실패는 답변 처리를 막지 않는다. 시도한 리액션 이름을 audit에 먼저 기록하여 worker 재생성 후에도 자신의 이전 표시를 정리한다. 중복 추가/이미 없는 삭제는 멱등 성공이다. 이모지는 마지막 단계이며 heartbeat를 대신하지 않는다. 기존 eyes/hourglass_flowing_sand는 dougle로 해석하고, dougle 추가가 invalid_name이면 hourglass_flowing_sand로 대체한다. 권한/네트워크 실패에는 다른 이모지로 재시도하지 않고 명시적 빈 값은 유지한다.
+
+실행 버전은 daemon 시작 audit로 확인한다. 스킬 버전/CLI 파일 버전을 실제 실행 프로세스 버전으로 간주하지 않는다. 플러그인 갱신만으로 실행 중인 프로세스는 바뀌지 않는다. 세션은 기존 thread_key 기준이며 채널 단위 자동 연결은 하지 않는다.
+
+Slack 서식은 [공식 mrkdwn 안내](https://docs.slack.dev/messaging/formatting-message-text/)에 맞춰 굵게·글머리표·줄 간격을 사용한다.

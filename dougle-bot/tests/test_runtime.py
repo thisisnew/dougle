@@ -115,8 +115,10 @@ def test_post_only_after_exact_approval_and_double_click_safe(app):
     posted = [c for c in app.slack.calls if c[0] == "post"]
     assert len(posted) == 1
     assert posted[0][1:3] == ("CTEST", "1001.000001")
-    assert posted[0][3].endswith("\n\n✦ dougle")
-    assert "https://example.test/inbound" in posted[0][3]
+    assert "✦ dougle" not in posted[0][3]
+    assert "https://example.test/inbound" not in posted[0][3]
+    assert "[1]" not in posted[0][3]
+    assert "https://example.test/inbound" in json.dumps(list(app.slack.cards.values()))
 
 
 @pytest.mark.parametrize("wrong", ["user", "card_channel", "card_ts", "draft", "inquiry"])
@@ -149,6 +151,7 @@ def test_manual_edit_invalidates_old_button_and_preserves_published_text(app):
     inquiry = app.store.inquiry(ref[0])
     assert app.store.current(inquiry)["revision"] == 2
     value = json.dumps({"inquiry_id": ref[0], "draft_id": inquiry["current_draft_id"]})
+    app.worker.show_card(ref[0])
     app.actions.post("UAPPROVER", value, ref[2], ref[3])
     assert app.slack.messages[("CTEST", "1001.000001")][0]["text"].startswith("수정한 설명입니다.")
 
@@ -382,13 +385,13 @@ def test_pagination_loop_is_failure():
         BoltSlackGateway("unused", client).history("CTEST", "1.000000", 50)
 
 
-def test_large_code_reply_preserves_fences_and_signature():
-    text = "설명입니다.\n```sql\n" + ("SELECT 1;\n" * 1000) + "```\n\n✦ dougle"
+def test_large_code_reply_preserves_fences_without_footer():
+    text = "설명입니다.\n```sql\n" + ("SELECT 1;\n" * 1000) + "```"
     parts = cards.split_text(text)
     assert all(len(p) <= 3500 for p in parts)
     assert all(p.count("```") % 2 == 0 for p in parts)
-    assert sum(p.count("✦ dougle") for p in parts) == 1
-    assert parts[-1].endswith("✦ dougle")
+    assert all("✦ dougle" not in part for part in parts)
+    assert sum(part.count("SELECT 1;") for part in parts) == 1000
 
 
 @pytest.mark.parametrize(

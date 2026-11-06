@@ -1,0 +1,18 @@
+{
+  "version": "0.8.0",
+  "files": 58,
+  "archiveBytes": 190376,
+  "sha256": "9aaddddcab5d837482fb2155d75524609099c67744d63039b105c4b72e60c712",
+  "structuralChecks": 292,
+  "claudeManifests": "PASS",
+  "packageBytes": "PASS canonical skill resources and wheel source match archive",
+  "botTests": 171,
+  "answerStyleTests": 60,
+  "realModelCalls": 0,
+  "actualCompanyIntegration": "NOT_VERIFIED",
+  "appleSiliconFirstInstall": "NOT_RUN",
+  "coreSkillsRequirePython": false,
+  "optionalBotRuntime": "Python 3.12+ and slack-bolt; separate explicit preparation",
+  "localSkillCopies": "16 directories updated; backups and host-only metadata preserved",
+  "planned231Scenarios": "NOT_ALL_IMPLEMENTED_OR_MAPPED"
+}

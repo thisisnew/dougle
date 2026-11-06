@@ -164,6 +164,31 @@ class Actions:
                 else None,
             )
             parts = cards.split_text(cards.final_text(draft))
+            previous = self.store.all(
+                "SELECT text FROM deliveries WHERE inquiry_id=? AND draft_id=? ORDER BY part",
+                (ident, draft["id"]),
+            )
+            if previous and [row["text"] for row in previous] != parts:
+                self.store.enqueue(
+                    ident,
+                    draft["id"],
+                    "regenerated",
+                    json.dumps(
+                        {
+                            "instruction": "게시 형식이 변경되었습니다. 출처는 검토용 sources에 보존하고, 현재 질문에 대해 간결한 업무 설명으로 새 초안을 작성해 주세요."
+                        },
+                        ensure_ascii=False,
+                    ),
+                )
+                self.worker.notify(ident)
+                raise BotError("publication_changed_regenerating")
+            receipt = self.store.one(
+                "SELECT detail FROM audit WHERE inquiry_id=? AND action='card_preview' ORDER BY id DESC LIMIT 1",
+                (ident,),
+            )
+            if not receipt or receipt["detail"] != cards.preview_receipt(draft):
+                self.worker.show_card(ident)
+                raise BotError("preview_updated_review_again")
             self.store.claim_post(ident, draft["id"], parts, user)
             deliveries = self.store.all(
                 "SELECT * FROM deliveries WHERE inquiry_id=? AND draft_id=? ORDER BY part",

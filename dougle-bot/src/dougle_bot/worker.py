@@ -4,6 +4,7 @@ import time
 from decimal import Decimal
 
 from . import cards
+from .presentation import reaction_name
 from .prompts import prompt, validate_output
 from .safety import BotError, check_content
 from .slack_gateway import SlackFailure, history_hash
@@ -14,9 +15,54 @@ class Worker:
         self.store, self.config, self.engine, self.slack = store, config, engine, slack
         self.cards_lock = threading.RLock()
 
+    def update_reaction(self, inquiry):
+        target = reaction_name(inquiry["status"], self.config.slack.ack_reaction)
+        if not target:
+            return
+        ident = inquiry["id"]
+        applied = self.store.one(
+            "SELECT action,detail FROM audit WHERE inquiry_id=? AND action IN ('reaction_applied','reaction_intent') ORDER BY id DESC LIMIT 1",
+            (ident,),
+        )
+        if applied and applied["detail"] == target and applied["action"] == "reaction_applied":
+            return
+        attempted = {
+            r["detail"]
+            for r in self.store.all(
+                "SELECT DISTINCT detail FROM audit WHERE inquiry_id=? AND action='reaction_intent'",
+                (ident,),
+            )
+        }
+        # Old releases used eyes without tracking it. Remove only this bot's own reaction.
+        attempted.add("eyes")
+        self.store.audit(ident, "system", "reaction_intent", target)
+        args = (inquiry["channel_id"], inquiry["trigger_ts"])
+        try:
+            self.slack.reaction(*args, target)
+        except SlackFailure as exc:
+            if target != "dougle" or exc.code != "invalid_name":
+                raise
+            target = "hourglass_flowing_sand"
+            self.store.audit(ident, "system", "reaction_intent", target)
+            self.slack.reaction(*args, target)
+        for previous in attempted - {target}:
+            self.slack.remove_reaction(*args, previous)
+        self.store.audit(ident, "system", "reaction_applied", target)
+
+    def notify(self, ident):
+        # A progress display failure must not prevent answering or create another card.
+        try:
+            self.show_card(ident)
+        except BotError:
+            pass
+
     def show_card(self, ident):
         with self.cards_lock:
             inquiry = self.store.inquiry(ident)
+            try:
+                self.update_reaction(inquiry)
+            except BotError:
+                self.store.audit(ident, "system", "reaction_update_failed")
             if inquiry["card_state"] == "unknown":
                 return
             draft = self.store.current(inquiry)
@@ -43,6 +89,8 @@ class Worker:
                         "UPDATE inquiries SET card_channel_id=?,card_ts=?,card_state='sent' WHERE id=?",
                         (channel, ts, ident),
                     )
+                if draft and inquiry["status"] == "awaiting_approval":
+                    self.store.audit(ident, "system", "card_preview", cards.preview_receipt(draft))
             except SlackFailure as exc:
                 with self.store.tx() as db:
                     state = (
@@ -62,6 +110,7 @@ class Worker:
             return False
         ident = job["inquiry_id"]
         inquiry = self.store.inquiry(ident)
+        self.notify(ident)
         try:
             if inquiry["channel_id"] not in self.config.slack.allowed_channel_ids:
                 raise BotError("channel_not_allowed")

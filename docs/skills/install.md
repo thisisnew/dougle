@@ -40,7 +40,7 @@
    $dougle-connect /path/to/project를 읽고 업무 지식을 정리해 줘.
    ```
 
-직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.0-skills-preview.1)을 풀고 `Dougle/skills/` 안의 여덟 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.1-skills-preview.1)을 풀고 `Dougle/skills/` 안의 여덟 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 독립된 `i-have-adhd/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 
@@ -98,7 +98,7 @@ claude plugin list
 ```text
 https://github.com/thisisnew/dougle 의 최신 main 기준으로
 현재 설치된 dougle-connect, dougle-ask, dougle-reload,
-dougle-publish, dougle-fetch, dougle-schedule, i-have-adhd 일곱 스킬을 갱신해 줘.
+dougle-publish, dougle-fetch, dougle-schedule, dougle-bot, i-have-adhd 여덟 스킬을 갱신해 줘.
 
 실제로 로드되는 설치 경로를 먼저 확인하고 그 위치를 업데이트해.
 개인 수정본은 보존하고, ~/.dougle/의 업무 지식은 건드리지 마.

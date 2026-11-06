@@ -105,7 +105,7 @@ fetch는 기존 지식을 통째로 덮어쓰지 않고 출처·정정·충돌�
 
 처음에는 설정을 안내하고, 이후에는 **1. 시작 / 2. 상태 확인 / 3. 중지 / 4. 채널 추가**를 보여 줍니다.
 
-`@dougle 질문`이 오면 승인자에게 초안을 DM으로 보냅니다. **[게시]를 누를 때만** 원래 스레드에 답합니다. 중지 중 올라온 질문은 재시작해도 가져오지 않습니다.
+`@dougle 질문`이 오면 `:dougle:` 처리 중(없으면 ⏳) → 📝 승인 대기 → ✅ 게시 완료를 표시하고, 승인자 DM의 같은 카드에 진행 상태와 초안을 보여 줍니다. **[게시]를 누를 때만** 원래 스레드에 답합니다. 게시 답변은 쉬운 업무 설명으로 정리하며 출처·서명은 붙이지 않습니다. 근거는 승인 DM에 남습니다. 중지 중 올라온 질문은 재시작해도 가져오지 않습니다.
 
 Slack 앱과 로컬 봇 실행 환경은 봇을 사용할 때만 준비합니다. [처음 설정·실행 방법](dougle-bot/README.md)
 
@@ -213,4 +213,4 @@ dougle-fetch가 안 보여. 실제 스킬 검색 경로의 SKILL.md와 참조 �
 
 저장된 지식은 세션을 닫아도 남습니다. [구동 방식 자세히 보기](docs/skills/how-it-works.md)
 
-[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.0-skills-preview.1)
+[사용 예시](docs/skills/usage.md) · [팀 지식 공유](docs/skills/sharing.md) · [전체 문서](docs/README.md) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.1-skills-preview.1)

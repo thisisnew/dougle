@@ -55,7 +55,7 @@ class SlackConfig:
     approver_user_id: str = ""
     allowed_channel_ids: list[str] = field(default_factory=list)
     workspace_id: str = ""
-    ack_reaction: str = "eyes"
+    ack_reaction: str = "dougle"
     thread_history_limit: int = 50
 
 

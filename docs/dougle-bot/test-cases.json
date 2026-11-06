@@ -2268,7 +2268,7 @@
       "layer": "render-and-adapter",
       "fixture": "isolated-default",
       "condition_and_action": "answered와 cannot_answer 초안을 각각 카드로 렌더링합니다.",
-      "expected": "상태·질문·최종 답변·출처·revision·서명이 나타나며 최신 초안에만 게시 동작을 연결합니다.",
+      "expected": "상태·질문·게시용 답변·별도 검토용 출처·revision이 나타나며 최신 초안에만 게시 동작을 연결합니다.",
       "status": "NOT_IMPLEMENTED",
       "test_node_id": null,
       "execution_evidence": []
@@ -2899,7 +2899,7 @@
       "layer": "fault-integration",
       "fixture": "isolated-default",
       "condition_and_action": "최신 승인자가 awaiting_approval 초안의 게시를 누릅니다.",
-      "expected": "정확한 채널/스레드/최신 본문/출처/서명으로 한 번 전송하고 응답 ts를 저장합니다.",
+      "expected": "정확한 채널/스레드/최신 게시용 본문으로 한 번 전송(출처는 승인 DM에 유지, 공개 서명 없음)하고 응답 ts를 저장합니다.",
       "status": "NOT_IMPLEMENTED",
       "test_node_id": null,
       "execution_evidence": []
@@ -3128,7 +3128,7 @@
       "layer": "fault-integration",
       "fixture": "isolated-default",
       "condition_and_action": "최종 표시 본문을 분할 경계 전후 길이로 준비합니다.",
-      "expected": "본문과 서명/출처를 포함한 실제 payload 한도를 지키고 짧은 답은 한 건만 게시합니다.",
+      "expected": "공개 본문만 포함한 실제 payload 한도를 지키고 짧은 답은 한 건만 게시합니다.",
       "status": "NOT_IMPLEMENTED",
       "test_node_id": null,
       "execution_evidence": []

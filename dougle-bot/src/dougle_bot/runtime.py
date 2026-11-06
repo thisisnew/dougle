@@ -115,14 +115,8 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
         # process_before_response=True: local durable intake precedes Socket Mode ack.
         ident = receive(store, config, body, identity["user_id"])
         ack()
-        if ident and config.slack.ack_reaction:
-            executor.submit(
-                safe,
-                gateway.reaction,
-                body["event"]["channel"],
-                body["event"]["ts"],
-                config.slack.ack_reaction,
-            )
+        if ident:
+            executor.submit(safe, worker.notify, ident)
 
     def button(ack, body):
         user = body.get("user", {}).get("id")
@@ -256,6 +250,9 @@ def serve(config, secrets):
         try:
             store.recover()
             store.begin_run(os.getpid(), identity["team_id"], identity["user_id"])
+            from . import __version__
+
+            store.audit(None, "system", "runtime_started", __version__)
             handler.connect()
             thread = threading.Thread(target=work, daemon=True)
             thread.start()

@@ -318,6 +318,7 @@ def test_followup_resumes_and_includes_published_manual_edit(app):
     metadata = json.dumps({**json.loads(ref[1]), "channel": ref[2], "ts": ref[3]})
     app.actions.submit("UAPPROVER", metadata, "edit", "취소 후에는 저장하지 않습니다. [1]")
     row = app.store.inquiry(ref[0])
+    app.worker.show_card(ref[0])
     app.actions.post(
         "UAPPROVER",
         json.dumps({"inquiry_id": ref[0], "draft_id": row["current_draft_id"]}),
@@ -336,7 +337,14 @@ def test_followup_resumes_and_includes_published_manual_edit(app):
     assert "취소 후에는 저장하지 않습니다." in app.engine.calls[-1][0]
 
 
-def test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval(app):
+@pytest.mark.parametrize(
+    "target,reason",
+    [
+        ("운영 DB", "VDI에서 확인해 주세요."),
+        ("Kafka UI", "대상 그룹의 지연 건수와 확인 시각을 읽기만 해서 알려 주세요."),
+    ],
+)
+def test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval(app, target, reason):
     from dougle_bot.engine import EngineResult
     from dougle_bot.intake import receive
 
@@ -345,8 +353,8 @@ def test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval(ap
         "body": "운영 확인이 필요합니다.",
         "sources": [],
         "lookup": {
-            "target": "운영",
-            "reason": "VDI에서 확인해 주세요.",
+            "target": target,
+            "reason": reason,
             "sql": "",
             "schema_verified": False,
         },
@@ -364,6 +372,14 @@ def test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval(ap
     ident = receive(app.store, app.cfg, event(), "UBOT")
     app.worker.run_once()
     row = app.store.inquiry(ident)
+    card = app.slack.cards[(row["card_channel_id"], row["card_ts"])]
+    assert reason in json.dumps(card, ensure_ascii=False)
+    assert "스키마를 확인한 뒤" not in json.dumps(card, ensure_ascii=False)
+    assert not any(
+        button.get("action_id") == "post"
+        for block in card["blocks"]
+        for button in block.get("elements", [])
+    )
     metadata = json.dumps(
         {
             "inquiry_id": ident,

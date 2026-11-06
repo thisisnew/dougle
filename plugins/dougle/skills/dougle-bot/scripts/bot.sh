@@ -3,7 +3,7 @@
 set -eu
 umask 077
 skill_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-version=0.1.0
+version=0.1.1
 bot_home=${DOUGLE_BOT_HOME:-"$HOME/.dougle-bot"}
 runtime="$bot_home/runtime/$version"
 command_name=${1:-status}
@@ -22,7 +22,7 @@ if [ "$command_name" = prepare ]; then
   trap 'rm -rf "$stage"' EXIT HUP INT TERM
   uv venv --relocatable --python cpython-3.12-macos-aarch64-none --managed-python "$stage/env"
   uv pip install --python "$stage/env/bin/python" --require-hashes -r "$skill_dir/assets/requirements.txt"
-  uv pip install --python "$stage/env/bin/python" --no-deps "$skill_dir/assets/dougle_bot-0.1.0-py3-none-any.whl"
+  uv pip install --python "$stage/env/bin/python" --no-deps "$skill_dir/assets/dougle_bot-0.1.1-py3-none-any.whl"
   "$stage/env/bin/dougle-bot" version >/dev/null
   [ ! -e "$runtime" ] || { echo '다른 설치가 완료되었습니다. 상태를 다시 확인해 주세요.' >&2; exit 1; }
   mv "$stage/env" "$runtime"
@@ -31,7 +31,11 @@ if [ "$command_name" = prepare ]; then
   exec "$runtime/bin/dougle-bot" --home "$bot_home" version
 fi
 if [ ! -x "$runtime/bin/dougle-bot" ]; then
-  echo '{"configured":false,"runtime_installed":false,"next":"prepare","message":"처음 사용하신다면 봇 실행 환경을 설치해 주세요."}'
+  if [ -f "$bot_home/config.toml" ]; then
+    echo '{"configured":true,"runtime_installed":false,"next":"prepare","message":"새 봇 실행 환경을 준비해 주세요. 기존 설정과 키체인 토큰은 그대로 사용합니다. 실행 중인 봇은 준비 후 중지하고 다시 시작해야 업데이트가 적용됩니다."}'
+  else
+    echo '{"configured":false,"runtime_installed":false,"next":"prepare","message":"처음 사용하신다면 봇 실행 환경을 설치해 주세요."}'
+  fi
   [ "$command_name" = status ] && exit 0
   exit 1
 fi

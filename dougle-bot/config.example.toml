@@ -3,7 +3,7 @@
 approver_user_id = "UYOURID"
 allowed_channel_ids = ["CYOURCHANNEL"]
 workspace_id = ""
-ack_reaction = "eyes"
+ack_reaction = "dougle" # 회사 이모지가 없으면 ⏳로 대체. 빈 문자열이면 상태 이모지 생략
 thread_history_limit = 50
 
 [engine]
