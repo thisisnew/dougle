@@ -12,6 +12,7 @@ from pathlib import Path
 from . import __version__
 from .config import Config, EngineConfig, SlackConfig, channel_id, load, private_dir, save
 from .evidence import safe_failure_summary
+from .monitor import recent_activity
 from .progress import safe_profile
 from .recovery import reconcile
 from .runtime import apple_silicon, running, serve
@@ -43,6 +44,7 @@ def status(home, config_path):
         approver=cfg.slack.approver_user_id,
         reply_mode="review" if cfg.slack.require_approval else "automatic",
         monitor_command=shlex.join(["tail", "-n", "30", "-F", str(home / "progress.log")]),
+        recent_activity=recent_activity(home),
     )
     result["running"] = running(home)
     if (home / "bot.db").exists():

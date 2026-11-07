@@ -288,7 +288,7 @@ def test_old_unsent_payload_cannot_republish_sources_after_upgrade(app):
     assert not any(c[0] == "post" for c in app.slack.calls)
 
 
-@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.4", True), ("0.1.11", False)])
+@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.4", True), ("0.1.12", False)])
 def test_status_checks_daemon_version_not_cli_version(app, monkeypatch, version, expected):
     import dougle_bot.main as main
     from dougle_bot.config import save

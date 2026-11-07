@@ -1,15 +1,14 @@
 {
-  "version": "0.8.14",
-  "optionalBotRuntime": "0.1.11",
+  "version": "0.8.15",
+  "optionalBotRuntime": "0.1.12",
   "files": 57,
-  "archiveBytes": 231884,
-  "sha256": "303c7f33fa9ffd84a6a5ea48f2be914a1f783485d2a7d11208a5ce4b7a4681e1",
+  "archiveBytes": 233377,
+  "sha256": "0c20d920b2c1dd1837248b2326b9adf1722f74dff9accfb4298225dff8ed5476",
   "structuralChecks": 280,
-  "botTests": 647,
-  "newMonitorTests": 12,
-  "newOperationalTests": 21,
-  "localDocumentationLinks": 404,
+  "botTests": 655,
+  "newMonitorTests": 8,
+  "localDocumentationLinks": 405,
   "packageBytes": "PASS including monitor module",
-  "realModelCalls": 1,
+  "realModelCalls": 0,
   "actualCompanyIntegration": "NOT_RUN"
 }

@@ -5,7 +5,7 @@ import pytest
 from test_runtime import event
 
 from dougle_bot.intake import receive
-from dougle_bot.monitor import Monitor
+from dougle_bot.monitor import Monitor, recent_activity
 from dougle_bot.progress import Progress, StreamProgress, safe_profile
 
 
@@ -123,3 +123,73 @@ def test_parallel_lines_keep_inquiry_identity(tmp_path):
     lines = (tmp_path / "progress.log").read_text().splitlines()
     assert len(lines) == 30
     assert {int(line.split("문의 #")[1].split(" |")[0]) for line in lines} == set(range(1, 31))
+
+
+def test_current_conversation_status_includes_latest_per_inquiry(app):
+    from dougle_bot.config import save
+    from dougle_bot.main import status
+
+    save(app.cfg, app.cfg.home / "config.toml")
+    monitor = Monitor(app.cfg.home)
+    progress = Progress()
+    monitor.emit(1, progress.snapshot(), "queued")
+    progress.phase("code")
+    monitor.emit(2, progress.snapshot())
+    monitor.emit(1, progress.snapshot(), "posted")
+    result = status(app.cfg.home, app.cfg.home / "config.toml")
+    assert not result["running"]  # Old observations do not turn a stopped bot into a live bot.
+    assert [(r["inquiry_id"], r["label"]) for r in result["recent_activity"]] == [
+        (1, "답변 게시 완료"),
+        (2, "원본 코드 확인"),
+    ]
+    assert result["recent_activity"][0]["observed_clock"]
+
+
+def test_reader_rejects_arbitrary_text_and_partial_append(tmp_path):
+    monitor = Monitor(tmp_path)
+    monitor.emit(1, Progress().snapshot(), "posted")
+    path = tmp_path / "progress.log"
+    valid = path.read_text()
+    with path.open("a") as f:
+        f.write("SECRET raw payload\n" + valid.replace("답변 게시 완료", "SECRET"))
+        f.write(valid.replace("문의 #1", "문의 #2").rstrip("\n"))
+    result = recent_activity(tmp_path)
+    assert len(result) == 1 and result[0]["inquiry_id"] == 1
+    assert "SECRET" not in json.dumps(result)
+
+
+@pytest.mark.parametrize("kind", ["missing", "directory", "symlink", "fifo"])
+def test_reader_unavailable_or_special_file_never_blocks(tmp_path, kind):
+    import os
+
+    path = tmp_path / "progress.log"
+    if kind == "directory":
+        path.mkdir()
+    elif kind == "symlink":
+        private = tmp_path / "private"
+        private.write_text("private")
+        path.symlink_to(private)
+    elif kind == "fifo":
+        os.mkfifo(path)
+    assert recent_activity(tmp_path) == []
+
+
+def test_reader_bounds_io_and_result_count(tmp_path):
+    path = tmp_path / "progress.log"
+    path.write_bytes(b"x" * 1_000_000 + b"\n")
+    monitor = Monitor(tmp_path)
+    monitor.max_bytes = 2_000_000
+    for ident in range(1, 31):
+        monitor.emit(ident, Progress().snapshot(), "posted")
+    assert [x["inquiry_id"] for x in recent_activity(tmp_path)] == list(range(30, 20, -1))
+    assert recent_activity(tmp_path, limit=0) == []
+
+
+def test_reader_keeps_observation_values_not_current_estimates(tmp_path):
+    value = Progress().snapshot()
+    value.update(stage="live", elapsed_seconds=300, quiet_seconds=120, attempt=2)
+    Monitor(tmp_path).emit(1, value)
+    record = recent_activity(tmp_path)[0]
+    assert record["elapsed_seconds"] == 300
+    assert record["quiet_seconds_at_observation"] == 120
+    assert record["label"] == "운영 데이터 조회" and record["attempt"] == 2
