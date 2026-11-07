@@ -24,4 +24,6 @@ skills/ 정본과 plugins/dougle/skills/ 사본을 동일하게 유지한다. �
 
 GitHub push와 Preview 릴리스는 사용자 상시 승인 범위다. Python3.12/3.13 CI와 익명 다운로드 바이트 검증을 마치고 public-release.json에 기록한다. 로컬 설치본은 이전 Git 바이트와 전체가 일치할 때만 .tools/skill-backups/0.8.10에 백업 후 갱신하고 개인 수정본은 보존한다.
 
+0.8.10 Preview 배포 완료: 소스 c3312fa8738ac04643ecc871efd29a5895229055, CI42323502490의 Python3.12/3.13 통과. ZIP과 체크섬의 익명 다운로드가 로컬 배포 바이트와 일치함을 docs/skills/public-release.json에 기록했다. ZIP215,143바이트, SHA2567330af9fa09d2778af7dda5799f8b626bd6573bf2a71b331ac74414c8331acbc.
+
 개발 도구 .tools/bot-dev/bin/, gh /usr/local/bin/gh. push는 HTTP/1.1 + postBuffer524288000. GUI 앱 금지. 제품 지침은 AGENTS.md. 이전0.8.9 측정은 large-corpus-benchmark.json에 당시 결과로 보존한다.
