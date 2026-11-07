@@ -20,3 +20,5 @@
 skills/ 정본과 plugins/dougle/skills/ 사본 동일. 로컬 설치본은 폴더 전체가 작업 전 Git 바이트와 같을 때만 백업 후 갱신한다. 사용자 설정·지식·인증은 수정하지 않으며 실제 봇도 재시작하지 않는다. 적용은 플러그인 업데이트/리로드→실행환경 준비→중지 확인→시작, running_version=0.1.9/update_required=false/reply_mode=automatic 확인.
 
 사용자의 GitHub push/Preview 릴리스 상시 승인 있음. 개발 도구 .tools/bot-dev/bin, gh /usr/local/bin/gh. push는 HTTP/1.1+postBuffer524288000. 결과/현재 제한은 docs/dougle-bot/internal-handoff.md. 이전0.8.10 성능 결과는 historical 측정으로 그대로 유지한다.
+
+0.8.11 Preview 공개 완료: 소스 b6e4d8be83d318b8bb8f3c75f8193314fd2933af, CI42329880716 Python3.12/3.13 모두 성공. 익명 ZIP/체크섬 다운로드 바이트 일치. ~/.agents/skills 및 ~/.claude/skills의 dougle-bot은 작업 전 Git 바이트와 폴더 전체 일치 확인 후 .tools/skill-backups/0.8.11에 백업하고 갱신했다. 실제 실행 중인 봇은 건드리지 않았다.
