@@ -80,7 +80,7 @@ uv run --project dougle-bot dougle-bot stop
 
 ## 업데이트 적용
 
-플러그인 업데이트·리로드 → `/dougle:dougle-bot`의 새 실행 환경 준비 → **중지 확인 → 시작** 순서입니다. 상태에서 `running_version: 0.1.10`, `update_required: false`, `reply_mode: automatic`을 확인하세요.
+플러그인 업데이트·리로드 → `/dougle:dougle-bot`의 새 실행 환경 준비 → **중지 확인 → 시작** 순서입니다. 상태에서 `running_version: 0.1.11`, `update_required: false`, `reply_mode: automatic`을 확인하세요.
 
 0.8.11부터 기본값은 자동 답변입니다. 기존 설정에 `require_approval`이 없으면 새로 접수하는 문의부터 자동으로 답합니다. 예전 승인 대기 답변을 업데이트만으로 자동 게시하지 않습니다. 검토 방식을 유지하려면 `config.toml`의 `[slack]`에 `require_approval = true`를 지정하세요. 이때만 기존 게시·직접 수정·거절 절차를 사용합니다.
 
@@ -100,3 +100,15 @@ uv run --project dougle-bot ruff check dougle-bot
 ```
 
 테스트는 가짜 서비스와 임시 DB로 실행합니다. 실제 회사 Slack·키체인·AI CLI를 호출하지 않습니다. 배포 wheel의 소스와 테스트한 소스가 같은지도 검사합니다.
+
+## 터미널에서 진행 상황 보기
+
+봇0.1.11 이상에서 별도 터미널을 열고 실행하세요.
+
+```sh
+tail -n 30 -F ~/.dougle-bot/progress.log
+```
+
+문의 번호별로 자료 검색·원본 코드 확인·운영 조회·답변 준비·게시 결과와 경과 시간을 표시합니다. 약10초마다 마지막 진행 신호를 갱신하며, 신호가 없다는 이유만으로 멈췄다고 단정하지 않습니다. AI의 생각이나 자료 원문을 출력하는 로그는 아닙니다.
+
+첫 문의 전에는 파일이 없어 기다릴 수 있습니다. Ctrl+C는 로그 보기만 종료하며 봇은 계속 동작합니다. 저장 위치를 바꿨다면 상태 확인의 `monitor_command`를 사용하세요. 로그는 최대1MiB씩3개로 순환하며 질문·자료 원문·토큰은 남기지 않습니다.

@@ -8,6 +8,7 @@ from . import cards
 from .evidence import KINDS, QUESTION_KINDS, failure_summary, validate_verification
 from .handoff import reported_evidence, route_unresolved
 from .images import collect_images, prompt_messages
+from .monitor import Monitor
 from .presentation import reaction_names
 from .progress import Progress
 from .prompts import prompt, validate_output
@@ -21,6 +22,7 @@ class Worker:
     def __init__(self, store, config, engine, slack):
         self.store, self.config, self.engine, self.slack = store, config, engine, slack
         self.cards_lock = threading.RLock()
+        self.monitor = Monitor(config.home)
 
     def update_reaction(self, inquiry):
         targets = reaction_names(inquiry["status"], self.config.slack.ack_reaction)
@@ -68,6 +70,8 @@ class Worker:
     def notify(self, ident):
         # A progress display failure must not prevent answering or create another card.
         try:
+            if self.store.inquiry(ident)["status"] == "queued":
+                self.monitor.emit(ident, Progress().snapshot(), "queued")
             self.show_card(ident)
         except BotError:
             pass
@@ -166,13 +170,17 @@ class Worker:
         job = self.store.claim_job()
         if job is None:
             return False
-        progress = Progress()
+        progress = Progress(observer=lambda value: self.monitor.emit(job["inquiry_id"], value))
         queue_ms = max(0, (self.store.clock() - job["created_at"]) * 1000)
         stop = threading.Event()
 
         def report():
-            while not stop.wait(self.progress_interval):
-                self.report_progress(job["inquiry_id"], progress)
+            last_card = time.monotonic()
+            while not stop.wait(min(5, self.progress_interval)):
+                self.monitor.emit(job["inquiry_id"], progress.snapshot())
+                if time.monotonic() - last_card >= self.progress_interval:
+                    self.report_progress(job["inquiry_id"], progress)
+                    last_card = time.monotonic()
 
         reporter = threading.Thread(target=report, daemon=True)
         reporter.start()
@@ -180,6 +188,14 @@ class Worker:
             return self.process_job(job, progress)
         finally:
             stop.set()
+            try:
+                self.monitor.emit(
+                    job["inquiry_id"],
+                    progress.snapshot(),
+                    self.store.inquiry(job["inquiry_id"])["status"],
+                )
+            except Exception:
+                pass
             # A slow Slack update must not delay pipe reads or keep a completed job running.
             reporter.join(timeout=0.1)
             try:

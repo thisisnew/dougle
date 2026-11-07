@@ -247,7 +247,9 @@ def test_retries_share_one_deadline(app, monkeypatch):
     import dougle_bot.worker as worker
 
     now = [0]
-    monkeypatch.setattr(worker, "Progress", lambda: Progress(clock=lambda: now[0]))
+    monkeypatch.setattr(
+        worker, "Progress", lambda **kwargs: Progress(clock=lambda: now[0], **kwargs)
+    )
     app.engine.results[0] = BotError("session_not_found")
     # A style-invalid result requires one correction, without resetting the budget.
     app.engine.results.pop(0)
@@ -267,7 +269,9 @@ def test_expired_total_budget_prevents_retry(app, monkeypatch):
     import dougle_bot.worker as worker
 
     now = [0]
-    monkeypatch.setattr(worker, "Progress", lambda: Progress(clock=lambda: now[0]))
+    monkeypatch.setattr(
+        worker, "Progress", lambda **kwargs: Progress(clock=lambda: now[0], **kwargs)
+    )
     original = app.engine.run
 
     def overdue(*args, **kwargs):

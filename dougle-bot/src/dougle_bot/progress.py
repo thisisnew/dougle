@@ -4,11 +4,15 @@ import json
 import threading
 import time
 
+from .evidence import read_kinds
+
 STAGES = {
     "search": "관련 지식 찾기",
     "prepare": "질문 입력 준비",
     "persist": "답변 기록 저장",
-    "delivery": "승인 카드 갱신",
+    "delivery": "답변 게시·내부 알림 처리",
+    "code": "원본 코드 확인",
+    "live": "운영 데이터 조회",
     "thread": "질문과 스레드 확인",
     "attachments": "첨부 자료 확인",
     "engine": "AI 응답 대기",
@@ -22,8 +26,9 @@ STAGES = {
 
 
 class Progress:
-    def __init__(self, clock=time.monotonic):
+    def __init__(self, clock=time.monotonic, observer=None):
         self.clock = clock
+        self.observer = observer
         self.started = self.last_activity = clock()
         self.stage = "thread"
         self.changed_at = self.started
@@ -33,7 +38,7 @@ class Progress:
             key: 0 for key in ("presentation", "research", "activation", "schema", "session")
         }
         self.attempt = self.completed_tools = 0
-        self.lock = threading.Lock()
+        self.lock = threading.RLock()
 
     def _transition(self, stage):
         now = self.clock()
@@ -66,12 +71,20 @@ class Progress:
                 retries=dict(self.retries),
             )
 
+    def _notify(self):
+        if self.observer:
+            try:
+                self.observer(self.snapshot())
+            except Exception:
+                pass
+
     def phase(self, stage, *, attempt=None):
         with self.lock:
             self._transition(stage if stage in STAGES else "engine")
             self.last_activity = self.clock()
             if attempt is not None:
                 self.attempt = attempt
+            self._notify()
 
     def activity(self, event):
         with self.lock:
@@ -83,6 +96,8 @@ class Progress:
             elif event != "activity":
                 return
             self.last_activity = self.clock()
+            if event != "activity":
+                self._notify()
 
     def snapshot(self):
         with self.lock:
@@ -132,7 +147,12 @@ class StreamProgress:
                     name = block.get("name", "")
                     if not isinstance(name, str):
                         continue
-                    if name == "Skill":
+                    kinds = read_kinds(name, block.get("input"))
+                    if "live" in kinds:
+                        self.emit("live")
+                    elif "code" in kinds:
+                        self.emit("code")
+                    elif name == "Skill":
                         self.emit("skill")
                     elif name in {"Edit", "Write"}:
                         self.emit("memory")
@@ -204,7 +224,12 @@ def safe_profile(raw):
             ("observed_stage_ms", STAGES),
             ("retries", ("presentation", "research", "activation", "schema", "session")),
         ):
-            result[field] = {key: value[field][key] for key in names}
+            result[field] = {
+                key: value[field].get(key, 0)
+                if field == "observed_stage_ms" and key in {"code", "live"}
+                else value[field][key]
+                for key in names
+            }
         numbers = (
             [result[k] for k in keys]
             + list(result["observed_stage_ms"].values())

@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import platform
+import shlex
 import subprocess
 import sys
 import time
@@ -41,6 +42,7 @@ def status(home, config_path):
         channels=cfg.slack.allowed_channel_ids,
         approver=cfg.slack.approver_user_id,
         reply_mode="review" if cfg.slack.require_approval else "automatic",
+        monitor_command=shlex.join(["tail", "-n", "30", "-F", str(home / "progress.log")]),
     )
     result["running"] = running(home)
     if (home / "bot.db").exists():

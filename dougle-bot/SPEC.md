@@ -1,6 +1,6 @@
 # 현재 실행 명세
 
-0.8.11 / runtime0.1.10: 기본 자동 답변, 내부 확인이 필요한 경우만 담당자 DM입니다. [현재 상태 전이와 검증](../docs/dougle-bot/internal-handoff.md)이 아래 이전 검토 모드 명세보다 우선합니다. `require_approval=true`일 때만 아래 승인 절차를 적용합니다. 기존 대기 답변을 자동 게시하지 않습니다.
+0.8.11 / runtime0.1.11: 기본 자동 답변, 내부 확인이 필요한 경우만 담당자 DM입니다. [현재 상태 전이와 검증](../docs/dougle-bot/internal-handoff.md)이 아래 이전 검토 모드 명세보다 우선합니다. `require_approval=true`일 때만 아래 승인 절차를 적용합니다. 기존 대기 답변을 자동 게시하지 않습니다.
 
 # dougle-bot 실행 계약
 

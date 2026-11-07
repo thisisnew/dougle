@@ -90,7 +90,7 @@ def test_progress_classifies_paths_without_emitting_them():
             },
         }
         parser.feed((json.dumps(envelope) + "\n").encode())
-    assert emitted == ["activity", "search", "activity", "lookup"]
+    assert emitted == ["activity", "search", "activity", "code"]
 
 
 def test_same_inquiry_style_repair_reuses_proven_evidence(app):

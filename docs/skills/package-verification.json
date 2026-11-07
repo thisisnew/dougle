@@ -1,17 +1,14 @@
 {
-  "version": "0.8.13",
-  "optionalBotRuntime": "0.1.10",
+  "version": "0.8.14",
+  "optionalBotRuntime": "0.1.11",
   "files": 57,
-  "archiveBytes": 227043,
-  "sha256": "cc210db71f530fe0a37148fe9b4c20cb1bb9ac679e049c1a5d7b22aa998946e7",
+  "archiveBytes": 229395,
+  "sha256": "14a93b192e8f41b5948c273ba6d4be9313b45b5fdd71ff27dc2cdc6b1c148eb1",
   "structuralChecks": 280,
-  "botTests": 615,
-  "newReceiptTests": 18,
+  "botTests": 627,
+  "newMonitorTests": 12,
   "localDocumentationLinks": 402,
-  "packageBytes": "PASS including new receipt hook source",
-  "actualCodexCalls": 2,
-  "claudeAvailabilityProbe": "FAILED_EXPIRED_AUTH",
-  "companyRootCause": "NOT_CONFIRMED_WITH_COMPANY_TRACE",
-  "companyIntegration": "NOT_RUN",
-  "actualSlackLatency": "NOT_MEASURED"
+  "packageBytes": "PASS including monitor module",
+  "realModelCalls": 0,
+  "actualCompanyIntegration": "NOT_RUN"
 }

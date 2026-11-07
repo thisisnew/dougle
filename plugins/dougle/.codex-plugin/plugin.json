@@ -1,6 +1,6 @@
 {
   "name": "dougle",
-  "version": "0.8.13",
+  "version": "0.8.14",
   "description": "Domain knowledge skills with an optional local Slack approval bot.",
   "skills": "./skills/"
 }
