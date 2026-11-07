@@ -76,6 +76,12 @@ if [ "${1-}" = --scan ]; then
    if(!redacted(value))emit("credential_assignment")
   }
   if(text ~ /[A-Za-z][A-Za-z0-9+.-]*:\/\/[^[:space:]@\/]+:[^[:space:]@\/]+@/)emit("credential_uri")
+  rest=text
+  while(match(tolower(rest), /[?&](amp;)?(x-amz-signature|x-goog-signature|x-amz-credential|signature|sig|access_token|refresh_token|api_key)[=][^&[:space:]"<>]+/)) {
+   value=substr(rest,RSTART,RLENGTH); rest=substr(rest,RSTART+RLENGTH)
+   sub(/^[^=]*=/,"",value)
+   if(!redacted(value))emit("signed_or_credential_url")
+  }
   if(text ~ /[A-Za-z0-9.!#$%&*+\/=?^_`{|}~-]+@[A-Za-z0-9-]+([.][A-Za-z0-9-]+)+/) emit("email_address")
   if(text ~ /01[016789][- .]?[0-9][0-9][0-9][0-9]?[- .]?[0-9][0-9][0-9][0-9]/)emit("phone_number")
   if(text ~ /[+]82[- .]?10[- .]?[0-9][0-9][0-9][0-9]?[- .]?[0-9][0-9][0-9][0-9]/)emit("phone_number")

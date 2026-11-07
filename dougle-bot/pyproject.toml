@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dougle-bot"
-version = "0.1.7"
+version = "0.1.8"
 description = "Local Slack approval runtime for Dougle skills"
 requires-python = ">=3.12"
 dependencies = ["slack-bolt==1.30.0"]

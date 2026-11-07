@@ -1,0 +1,88 @@
+{
+  "version": "0.8.10",
+  "runtime": "0.1.8",
+  "realModelCalls": 0,
+  "botTests": 456,
+  "sensitiveFixtures": 77,
+  "regressions": [
+    {
+      "name": "research requirement lost after missing skill activation",
+      "before": "2 tests failed: code/live became approval-ready without the required read",
+      "after": "requirements retained across retries; both blocked"
+    },
+    {
+      "name": "crash after durable answer repeated engine work",
+      "before": "recovery ran the engine again",
+      "after": "draft and job completion commit atomically; engine called once"
+    },
+    {
+      "name": "signed resource URL accepted by scanner",
+      "before": "synthetic X-Amz-Signature URL passed",
+      "after": "signed/credential query patterns blocked; 15 additional scanner cases"
+    },
+    {
+      "name": "duplicate full scan instruction",
+      "before": "step 3 scan plus mandatory rerun before upload",
+      "after": "one scan after final review; same-operation exact stage may reuse PASS; changes/session reset invalidate it",
+      "validation": "instruction review, not a live host-AI publish run"
+    }
+  ],
+  "largeGit": {
+    "status": "PASS",
+    "filesAtBaseline": 10000,
+    "changedPaths": 10,
+    "unchangedBlobs": 9993,
+    "checks": 20,
+    "seconds": 24.36,
+    "hostAiMergeEvaluation": false,
+    "massChangedPaths": 2500,
+    "repeatedInventoryComparisons": 3
+  },
+  "scannerStress": {
+    "synthetic": true,
+    "hostModelCalls": 0,
+    "scannerSha256": "60e314268c625a254a65867c8c1ac60d39c4984773755d752bcd62a7b66b3ff5",
+    "runs": [
+      {
+        "name": "mixed_sizes_full_scan",
+        "status": "PASS",
+        "files": 1000,
+        "seconds": 66.606,
+        "digest": "e0ce8375495de319bcb0f1a1aaf6ca9a5679470f0f39b61a995751d406ba1451"
+      },
+      {
+        "name": "one_modified_file_blocks_entire_rescan",
+        "status": "BLOCK",
+        "files": 1000,
+        "seconds": 78.924,
+        "digest": "c77966289c8e35fd385a787fa0b237ff974845071fc014f59a03d694644c7b73"
+      },
+      {
+        "name": "unchanged_repeat_is_stable",
+        "status": "PASS",
+        "files": 1000,
+        "seconds": 71.509,
+        "digest": "e0ce8375495de319bcb0f1a1aaf6ca9a5679470f0f39b61a995751d406ba1451"
+      },
+      {
+        "name": "interruption_never_emits_pass",
+        "status": "PASS",
+        "seconds": 0.01
+      },
+      {
+        "name": "fresh_scan_after_interruption",
+        "status": "PASS",
+        "files": 1,
+        "seconds": 0.225,
+        "digest": "575fcc5db4a3d266b6a931bff186630f14489a4d6d05ded05e5af4e8fd599b67"
+      }
+    ],
+    "packageBytes": 9625600
+  },
+  "limits": [
+    "Real Claude/Codex skill workflows and semantic merge not executed",
+    "Company Slack/Mac end-to-end latency not measured",
+    "Crash before durable answer may still require new work",
+    "No universal secret detection guarantee; semantic review still mandatory"
+  ]
+}

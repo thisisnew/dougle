@@ -1,5 +1,5 @@
 // Developer-only transport experiment, not a semantic merge implementation.
-// Real Git + 5,000 synthetic Markdown files; no network, model or user knowledge.
+// Real Git + 10,000 synthetic Markdown files; no network, model or user knowledge.
 import assert from 'node:assert/strict'
 import {mkdtemp, writeFile, mkdir, rm} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
@@ -28,21 +28,21 @@ try {
  git(['init','-b','main'])
  await mkdir(join(root,'knowledge'))
  const path=i=>`knowledge/topic-${String(i).padStart(5,'0')}.md`
- for(let start=0;start<5000;start+=100)await Promise.all(Array.from({length:100},(_,j)=>{
+ for(let start=0;start<10000;start+=100)await Promise.all(Array.from({length:100},(_,j)=>{
   const i=start+j;return writeFile(join(root,path(i)),`Claim: C${i}\nCondition: only after approval.\n`)
  }))
  git(['add','knowledge']);git(['commit','-m','synthetic baseline'])
  const base=git(['rev-parse','HEAD']).trim();const before=tree(base)
- assert.equal(before.size,5000);checks++
+ assert.equal(before.size,10000);checks++
  for(let i=0;i<5;i++)await writeFile(join(root,path(i)),`Claim: C${i}\nCondition: after independent review and approval.\n`)
- for(let i=5000;i<5003;i++)await writeFile(join(root,path(i)),`Claim: C${i}\nNew supported observation.\n`)
+ for(let i=10000;i<10003;i++)await writeFile(join(root,path(i)),`Claim: C${i}\nNew supported observation.\n`)
  for(let i=5;i<7;i++)await rm(join(root,path(i)))
  git(['add','knowledge']);git(['commit','-m','ten changed paths'])
  const pinned=git(['rev-parse','HEAD']).trim();const after=tree(pinned)
- assert.equal(after.size,5001);checks++
+ assert.equal(after.size,10001);checks++
  const changed=new Set([...before.keys(),...after.keys()].filter(path=>before.get(path)!==after.get(path)))
  assert.equal(changed.size,10);checks++
- assert.equal([...after].filter(([path,oid])=>before.get(path)===oid).length,4993);checks++
+ assert.equal([...after].filter(([path,oid])=>before.get(path)===oid).length,9993);checks++
  assert.equal([...before].filter(([path])=>!after.has(path)).length,2);checks++
  assert.deepEqual(new Set(git(['diff','--name-only',base,pinned,'--','knowledge/']).trim().split('\n')),changed);checks++
  // Same path is not enough for cache reuse: check actual bytes against the recorded blob.
@@ -54,5 +54,28 @@ try {
  git(['add','knowledge']);git(['commit','-m','head moves after pin'])
  assert.equal(git(['show',`${pinned}:${path(0)}`]),'Claim: C0\nCondition: after independent review and approval.\n');checks++
  assert.equal(tree(pinned).get(path(0)),after.get(path(0)));checks++
- console.log(JSON.stringify({status:'PASS',filesAtBaseline:5000,changedPaths:10,unchangedBlobs:4993,checks,seconds:Math.round((performance.now()-started)/10)/100,hostAiMergeEvaluation:false}))
+ // Unrelated remote commits must not force package-body reprocessing.
+ const beforeUnrelated=tree('HEAD')
+ await writeFile(join(root,'outside.md'),'Unrelated branch update.\n')
+ git(['add','outside.md']);git(['commit','-m','outside package'])
+ assert.deepEqual(tree('HEAD'),beforeUnrelated);checks++
+ // Large real change set, followed by repeated comparison without rewriting files.
+ const massBase=git(['rev-parse','HEAD']).trim()
+ for(let start=100;start<2600;start+=100)await Promise.all(Array.from({length:100},(_,j)=>{
+  const i=start+j;return writeFile(join(root,path(i)),`Claim: C${i}\nChanged condition, evidence retained.\n`)
+ }))
+ git(['add','knowledge']);git(['commit','-m','mass change'])
+ const massHead=git(['rev-parse','HEAD']).trim()
+ assert.equal(git(['diff','--name-only',massBase,massHead,'--','knowledge/']).trim().split('\n').length,2500);checks++
+ const massTree=tree(massHead)
+ for(let i=0;i<3;i++){assert.deepEqual(tree(massHead),massTree);checks++}
+ assert.equal(git(['rev-parse','HEAD']).trim(),massHead);checks++
+ // Rename has the same bytes but different inventory paths, both must be considered.
+ git(['mv',path(3000),'knowledge/한글 자료.md']);git(['commit','-m','rename stable knowledge'])
+ const renamed=tree('HEAD')
+ assert.equal(renamed.get('knowledge/한글 자료.md'),massTree.get(path(3000)));checks++
+ assert(!renamed.has(path(3000)));checks++
+ assert.notEqual(git(['diff','--name-status','--no-renames',massHead,'HEAD','--','knowledge/']).trim(),'');checks++
+ assert.equal(git(['status','--porcelain']).trim(),'');checks++
+ console.log(JSON.stringify({status:'PASS',filesAtBaseline:10000,changedPaths:10,unchangedBlobs:9993,checks,seconds:Math.round((performance.now()-started)/10)/100,hostAiMergeEvaluation:false,massChangedPaths:2500,repeatedInventoryComparisons:3}))
 } finally {await rm(root,{recursive:true,force:true})}

@@ -66,3 +66,5 @@ python3 scripts/benchmark-publish-sensitive.py --counts 100 1000 5000 --output b
 이전 검사 스크립트를 `--baseline /path/to/old-check-sensitive.sh`로 지정하면 같은 파일에서 전후 비교합니다.
 
 [상세 공유 절차](../../skills/dougle-publish/references/sharing.md) · [질문 시 갱신](freshness.md) · [검증 범위](verification.md)
+
+0.8.10에서는 [중단·복구·반복 실행 검사](stress-verification.md)를 추가했습니다. 같은 작업에서 동일한 최종 패키지를 두 번 검사하라는 지침을 제거했습니다. 내용·기준점·세션이 바뀌면 새 검사가 필요합니다.

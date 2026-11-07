@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.8.9', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.8.10', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -28,7 +28,7 @@ for (const name of ['dougle-connect','dougle-ask','dougle-publish','dougle-fetch
  check(all.length===(name==='dougle-bot'?7:name==='dougle-schedule'?5:['i-have-adhd','plain-language'].includes(name)?2:name==='dougle-ask'?9:name==='dougle-publish'?11:name==='dougle-fetch'?9:7),'only declared Markdown skill resources')
  for(const p of all) {
   const isPublishScanner = name==='dougle-publish' && p===resolve(dir,'scripts/check-sensitive.sh')
-  const isBotResource = name==='dougle-bot' && ['scripts/bot.sh','assets/slack-manifest.yaml','assets/requirements.txt','assets/runtime.sha256','assets/dougle_bot-0.1.7-py3-none-any.whl'].includes(p.slice(dir.length+1))
+  const isBotResource = name==='dougle-bot' && ['scripts/bot.sh','assets/slack-manifest.yaml','assets/requirements.txt','assets/runtime.sha256','assets/dougle_bot-0.1.8-py3-none-any.whl'].includes(p.slice(dir.length+1))
   check(p.endsWith('.md') || isPublishScanner || isBotResource,'only declared skill resources and optional bot runtime')
   if(p.endsWith('.whl')) {
     const relative=p.slice(resolve(root,'skills').length+1)
@@ -38,7 +38,7 @@ for (const name of ['dougle-connect','dougle-ask','dougle-publish','dougle-fetch
   const text=await readFile(p,'utf8')
   const relative=p.slice(resolve(root,'skills').length+1)
   check(text===await readFile(resolve(root,'plugins/dougle/skills',relative),'utf8'),'plugin copy current')
-  for(const match of text.matchAll(/\]\(([^)]+)\)/g)) {
+  for(const match of (p.endsWith('.md') ? text : '').matchAll(/\]\(([^)]+)\)/g)) {
    if(match[1].includes('://')) continue
    check((await stat(resolve(dirname(p),match[1]))).isFile(),'reference resolves')
   }

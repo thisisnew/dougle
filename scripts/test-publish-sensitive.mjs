@@ -33,6 +33,19 @@ try {
  assert.equal(batch.report.filesChecked,25)
  assert.equal(batch.report.findingCount,24)
  assert.equal(new Set(batch.report.findings.map(f=>f.fileId)).size,20) // report deliberately caps details
+ for(const key of ['X-Amz-Signature','X-Goog-Signature','X-Amz-Credential','sig','signature','access_token','refresh_token','api_key']) {
+  await run('signed URL '+key,'https://example.invalid/object?'+key+'='+'A'.repeat(40)+'\n',1)
+ }
+ await run('HTML escaped signed URL','https://example.invalid/object?q=1&amp;sig='+'A'.repeat(40)+'\n',1)
+ await run('redacted URL token','https://example.invalid/object?sig=REDACTED\n',0)
+ await run('signed URL in filename','safe\n',1,{file:'link?sig='+'A'.repeat(40)+'.md'})
+ await run('non-sensitive URL query','https://example.invalid/object?page=2&limit=30\n',0)
+ await run('unterminated final line','password: synthetic-final-line',1)
+ await run('CRLF secret line','safe\r\npassword: synthetic-crlf\r\n',1)
+ await run('late binary invalidates whole batch','safe\n',2,{extra:async d=>{
+  for(let i=0;i<25;i++)await writeFile(join(d,`late-${i}.md`),'safe\n')
+  await writeFile(join(d,'late-binary.md'),Buffer.from([65,0,66]))
+ }})
  await run('unlabelled commit hashes','Revision: '+ 'a'.repeat(40)+'\nClaim ID: C01\n',0)
  await run('explicit redaction','password: <redacted>\napi_key = [REDACTED]\nsecret: ***\ntoken: ${TOKEN}\n',0)
  await run('quoted redacted JSON','{"password":"REDACTED"}\n',0)

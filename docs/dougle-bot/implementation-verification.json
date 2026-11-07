@@ -1,11 +1,11 @@
 {
   "date": "2026-11-07",
-  "plugin_version": "0.8.9",
-  "runtime_version": "0.1.7",
+  "plugin_version": "0.8.10",
+  "runtime_version": "0.1.8",
   "python": "3.13.5",
   "slack_bolt": "1.30.0",
   "slack_sdk": "3.46.0",
-  "automated_test_count": 444,
+  "automated_test_count": 456,
   "failed": 0,
   "external_network": "blocked by test fixture",
   "real_model_calls": 0,
@@ -1997,7 +1997,7 @@
     {
       "test": "tests.test_slack_presentation::test_status_checks_daemon_version_not_cli_version",
       "status": "PASS",
-      "variant_sha256": "ba640e908151"
+      "variant_sha256": "6cadf3a670a7"
     },
     {
       "test": "tests.test_slack_presentation::test_bootstrap_upgrade_preserves_existing_config_and_requires_prepare",
@@ -2085,6 +2085,60 @@
     },
     {
       "test": "tests.test_slack_presentation::test_legacy_single_reaction_record_migrates_without_removing_identity",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_missing_style_activation_cannot_drop_research_requirement",
+      "status": "PASS",
+      "variant_sha256": "10e26efed496"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_missing_style_activation_cannot_drop_research_requirement",
+      "status": "PASS",
+      "variant_sha256": "6f013a33caed"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_crash_after_saved_answer_does_not_repeat_paid_engine_call",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_failed_draft_transaction_does_not_mark_job_done",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_concurrent_duplicate_events_never_enqueue_duplicate_model_work",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_validation_retry_and_lost_session_have_bounded_engine_calls",
+      "status": "PASS",
+      "variant_sha256": "c9e3891930bb"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_validation_retry_and_lost_session_have_bounded_engine_calls",
+      "status": "PASS",
+      "variant_sha256": "83008e5d061a"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_validation_retry_and_lost_session_have_bounded_engine_calls",
+      "status": "PASS",
+      "variant_sha256": "c55d753c6444"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_validation_retry_and_lost_session_have_bounded_engine_calls",
+      "status": "PASS",
+      "variant_sha256": "8f370157318e"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_daily_limit_blocks_style_retry_without_extra_call",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_cancel_during_presentation_repair_prevents_late_save",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_stress_regressions::test_repeated_missing_session_does_not_loop",
       "status": "PASS"
     }
   ],

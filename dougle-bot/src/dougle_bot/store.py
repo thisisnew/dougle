@@ -278,6 +278,7 @@ class Store:
         session=None,
         notes=None,
         expected_draft=None,
+        job_id=None,
     ):
         with self.tx() as db:
             row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
@@ -291,6 +292,14 @@ class Store:
                 raise BotError("inquiry_closed")
             if expected_draft is not None and row["current_draft_id"] != expected_draft:
                 raise BotError("stale_draft")
+            if (
+                job_id is not None
+                and not db.execute(
+                    "UPDATE jobs SET status='done' WHERE id=? AND inquiry_id=? AND status='running'",
+                    (job_id, ident),
+                ).rowcount
+            ):
+                raise BotError("stale_job")
             rev = db.execute(
                 "SELECT COALESCE(MAX(revision),0)+1 FROM drafts WHERE inquiry_id=?", (ident,)
             ).fetchone()[0]

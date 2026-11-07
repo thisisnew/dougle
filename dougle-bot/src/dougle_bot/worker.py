@@ -293,8 +293,6 @@ class Worker:
                 session = result.session_id
                 progress.phase("validation")
                 try:
-                    if not set(self.config.engine.required_skills) <= result.activated:
-                        raise BotError("required_skill_not_activated")
                     # Retain declared obligations across the one allowed correction attempt.
                     verification = (
                         result.output.get("verification", {})
@@ -315,6 +313,8 @@ class Worker:
                     )
                     if isinstance(category, str):
                         required_evidence.update(QUESTION_KINDS.get(category, set()))
+                    if not set(self.config.engine.required_skills) <= result.activated:
+                        raise BotError("required_skill_not_activated")
                     output = validate_output(
                         result.output,
                         lookup_basis=bool(lookup),
@@ -407,8 +407,8 @@ class Worker:
                 last_seen,
                 session,
                 payload.get("instruction"),
+                job_id=job["id"],
             )
-            self.store.finish_job(job["id"])
             if restored:
                 with self.store.tx() as db:
                     db.execute(
