@@ -1,7 +1,7 @@
 {
   "version": "0.8.16",
   "optionalBotRuntime": "0.1.13",
-  "publication": "NOT_PUBLISHED",
+  "publication": "v0.8.16-skills-preview.1",
   "files": 57,
   "archiveBytes": 234923,
   "sha256": "9a794972d7d504cebbb3fb2967b37d3716dbbce7ce536638f4b1eb01d974e28f",
@@ -20,6 +20,9 @@
   },
   "realModelCalls": 0,
   "actualCompanyIntegration": "NOT_RUN",
-  "ciPython312": "NOT_RUN_FOR_THIS_WORKING_TREE",
-  "ciPython313": "NOT_RUN_FOR_THIS_WORKING_TREE"
+  "ciPython312": "PASS",
+  "ciPython313": "PASS",
+  "source": "79c9942d427e21c412c89498c5b2d666235cec52",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42367569384",
+  "anonymous_download": "PASS byte-for-byte"
 }

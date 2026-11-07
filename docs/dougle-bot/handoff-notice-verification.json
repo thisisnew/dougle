@@ -2,8 +2,8 @@
   "date": "2026-11-07",
   "plugin_version": "0.8.16",
   "runtime_version": "0.1.13",
-  "publication": "NOT_PUBLISHED",
-  "source_state": "Local working tree; parent must record final commit and CI before public Preview",
+  "publication": "v0.8.16-skills-preview.1",
+  "source_state": "Released source commit; runtime source hashes are listed below",
   "python": "3.13.5",
   "slack_bolt": "1.30.0",
   "slack_sdk": "3.46.0",
@@ -99,9 +99,9 @@
   "real_keychain_calls": 0,
   "real_company_slack": "NOT_RUN",
   "user_installation_or_running_bot_changed": false,
-  "ciPython312": "NOT_RUN_FOR_THIS_WORKING_TREE",
-  "ciPython313": "NOT_RUN_FOR_THIS_WORKING_TREE",
-  "anonymous_download": "NOT_RUN; unpublished",
+  "ciPython312": "PASS",
+  "ciPython313": "PASS",
+  "anonymous_download": "PASS byte-for-byte",
   "tests": [
     {
       "test": "tests.test_handoff_notice::test_confirmed_dm_precedes_exact_safe_notice_and_preserves_pending_state[lookup]",
@@ -259,5 +259,7 @@
       "test": "tests.test_handoff_notice::test_success_receipt_and_independent_ledger_share_delivery_identity",
       "status": "PASS"
     }
-  ]
+  ],
+  "source": "79c9942d427e21c412c89498c5b2d666235cec52",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42367569384"
 }
