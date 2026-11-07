@@ -116,7 +116,7 @@ def test_unsafe_query_withheld_but_actionable_private_request_survives(app, sql,
     assert len(app.engine.calls) == 1
     assert [c[3] for c in app.slack.calls if c[0] == "post"] == [NOTICE]
     assert ("CTEST", row["trigger_ts"], "speech_balloon") in app.slack.reactions
-    assert ("CTEST", row["trigger_ts"], "hourglass_flowing_sand") not in app.slack.reactions
+    assert ("CTEST", row["trigger_ts"], "loadingg") not in app.slack.reactions
 
 
 def test_sql_withholding_does_not_bypass_fabricated_code_receipt(app):

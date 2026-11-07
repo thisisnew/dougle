@@ -11,6 +11,7 @@ from test_developer_handoff import AT, failed, metadata, pending, submit
 from test_evidence import output, result
 from test_runtime import event
 
+from dougle_bot.developer_notice import RESULT_NOTICE
 from dougle_bot.handoff_notice import NOTICE
 from dougle_bot.intake import receive
 from dougle_bot.safety import BotError
@@ -92,7 +93,8 @@ def test_notice_failure_is_held_across_reopen_and_final_answer_still_posts(auto,
         worker.show_card(row["id"])
         assert len(posts(auto)) == count
         assert finish(auto, row)["status"] == "posted"
-        assert len(posts(auto)) == count + 1
+        assert len(posts(auto)) == count + 2
+        assert posts(auto)[-2][3] == RESULT_NOTICE
         assert posts(auto)[-1][1:3] == (row["channel_id"], row["thread_ts"])
     finally:
         reopened.close()
@@ -284,7 +286,7 @@ def test_customer_change_during_resumed_answer_still_rejects_final(auto, monkeyp
     monkeypatch.setattr(auto.engine, "run", run)
     current = finish(auto, row)
     assert current["status"] == "failed" and current["error"] == "thread_changed_during_answer"
-    assert len(posts(auto)) == 1 and posts(auto)[0][3] == NOTICE
+    assert [p[3] for p in posts(auto)] == [NOTICE, RESULT_NOTICE]
 
 
 def test_additional_developer_request_gets_no_second_notice(auto):
@@ -294,9 +296,10 @@ def test_additional_developer_request_gets_no_second_notice(auto):
         result(output("current_state", ("live",), ("live",), status="needs_lookup"))
     ]
     auto.worker.run_once()
-    assert len(posts(auto)) == 1
+    assert [p[3] for p in posts(auto)] == [NOTICE, RESULT_NOTICE]
     assert finish(auto, auto.store.inquiry(row["id"]))["status"] == "posted"
-    assert len(posts(auto)) == 2
+    assert len(posts(auto)) == 4
+    assert [p[3] for p in posts(auto)].count(NOTICE) == 1
 
 
 def test_each_inquiry_in_same_thread_has_its_own_notice(auto):

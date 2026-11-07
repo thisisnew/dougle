@@ -80,8 +80,9 @@ def section(text, block_id=None):
 
 def render(inquiry, draft, permalink=None):
     status = inquiry["status"]
+    label = "개발자 직접 응대" if inquiry.get("human_takeover") else LABELS[status]
     blocks = [
-        {"type": "header", "text": {"type": "plain_text", "text": LABELS[status]}},
+        {"type": "header", "text": {"type": "plain_text", "text": label}},
         {"type": "context", "elements": [{"type": "plain_text", "text": f"문의 #{inquiry['id']}"}]},
         section("*질문*"),
         {
@@ -121,7 +122,15 @@ def render(inquiry, draft, permalink=None):
                             "value": json.dumps(
                                 {"inquiry_id": inquiry["id"], "job_id": inquiry["job_id"]}
                             ),
-                        }
+                        },
+                        {
+                            "type": "button",
+                            "text": {"type": "plain_text", "text": "직접 응대할게요"},
+                            "action_id": "take_over",
+                            "value": json.dumps(
+                                {"inquiry_id": inquiry["id"], "job_id": inquiry["job_id"]}
+                            ),
+                        },
                     ],
                 }
             )
@@ -157,7 +166,9 @@ def render(inquiry, draft, permalink=None):
     if status == "cancelled":
         blocks.append(
             section(
-                "이 문의의 처리를 중단했습니다. 실행 중인 AI에는 종료를 요청하며, 늦게 도착하는 답변은 게시하지 않습니다. 다른 문의는 계속 처리합니다."
+                "개발자께서 직접 응대하십니다. 더글은 이 문의에 자동 답변을 이어서 게시하지 않습니다."
+                if inquiry.get("human_takeover")
+                else "이 문의의 처리를 중단했습니다. 실행 중인 AI에는 종료를 요청하며, 늦게 도착하는 답변은 게시하지 않습니다. 다른 문의는 계속 처리합니다."
             )
         )
     if draft and status not in ("queued", "drafting", "cancelled", "failed"):
@@ -243,7 +254,9 @@ def render(inquiry, draft, permalink=None):
         if status in ("awaiting_approval", "needs_lookup"):
             if status == "needs_lookup":
                 button("lookup", "확인 결과 입력")
-            button("reject", "거절")
+                button("take_over", "직접 응대할게요")
+            else:
+                button("reject", "거절")
         if status == "failed":
             button("reject", "거절")
         if actions:
@@ -252,7 +265,7 @@ def render(inquiry, draft, permalink=None):
         blocks.append(section("게시된 답변: " + permalink))
     if len(blocks) > 45:
         raise BotError("card_too_large")
-    return "dougle · " + LABELS[status] + " · " + escape_slack(
+    return "dougle · " + label + " · " + escape_slack(
         inquiry["question_text"][:100]
     ), blocks
 

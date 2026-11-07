@@ -52,7 +52,7 @@ def test_lookup_card_has_no_post_edit_or_regenerate(app):
         }
     )
     _, blocks = cards.render(row, draft)
-    assert action_ids({"blocks": blocks}) == ["lookup", "reject"]
+    assert action_ids({"blocks": blocks}) == ["lookup", "take_over"]
 
 
 def test_reject_button_commits_before_ack_without_modal_reason_or_engine(app):

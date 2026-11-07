@@ -11,6 +11,7 @@ from test_evidence import button_ids, output, result
 from test_runtime import event
 
 from dougle_bot.config import SlackConfig, load, save
+from dougle_bot.developer_notice import RESULT_NOTICE
 from dougle_bot.engine import EngineResult
 from dougle_bot.handoff_notice import NOTICE
 from dougle_bot.intake import receive
@@ -51,7 +52,7 @@ def test_normal_answer_posts_once_without_opening_a_dm(auto):
 def test_only_exception_opens_dm_and_result_posts_back_to_original_thread(auto):
     row = pending(auto, output("current_state", ("live",), ("live",), status="needs_lookup"))
     assert row["status"] == "needs_lookup" and len(auto.slack.cards) == 1
-    assert button_ids(auto, row) == ["lookup", "reject"]
+    assert button_ids(auto, row) == ["lookup", "take_over"]
     assert [c[3] for c in auto.slack.calls if c[0] == "post"] == [NOTICE]
     submit(auto, metadata(auto, row, "lookup"), "lookup", "해당 건의 처리가 완료되었습니다.")
     value = output(
@@ -66,7 +67,7 @@ def test_only_exception_opens_dm_and_result_posts_back_to_original_thread(auto):
     assert current["status"] == "posted" and current["card_ts"] == row["card_ts"]
     assert button_ids(auto, current) == []
     posts = [c for c in auto.slack.calls if c[0] == "post"]
-    assert len(posts) == 2 and posts[0][3] == NOTICE
+    assert len(posts) == 3 and [p[3] for p in posts[:2]] == [NOTICE, RESULT_NOTICE]
     assert all(p[1:3] == (row["channel_id"], row["thread_ts"]) for p in posts)
 
 
@@ -95,7 +96,7 @@ def test_delivery_failure_is_private_and_never_automatically_repeated(auto, unce
     assert not auto.worker.run_once()
     assert "post" not in button_ids(auto, row)
     if not uncertain:
-        assert button_ids(auto, row) == ["assist"]
+        assert button_ids(auto, row) == ["assist", "take_over"]
 
 
 def test_history_change_does_not_publish_an_outdated_answer_or_loop(auto, monkeypatch):
@@ -159,7 +160,7 @@ def test_crash_after_auto_claim_without_send_requires_developer(auto, monkeypatc
     auto.store.recover()
     assert auto.store.inquiry(ident)["status"] == "failed"
     auto.worker.show_card(ident)
-    assert button_ids(auto, auto.store.inquiry(ident)) == ["assist"]
+    assert button_ids(auto, auto.store.inquiry(ident)) == ["assist", "take_over"]
     assert [c[3] for c in auto.slack.calls if c[0] == "post"] == [NOTICE]
 
 

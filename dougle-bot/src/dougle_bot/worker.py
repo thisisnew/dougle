@@ -4,13 +4,13 @@ import threading
 import time
 from decimal import Decimal
 
-from . import cards
+from . import cards, developer_notice
 from .evidence import KINDS, QUESTION_KINDS, failure_summary, validate_verification
 from .handoff import reported_evidence, route_unresolved
 from .handoff_notice import after_developer_dm
 from .images import collect_images, prompt_messages
 from .monitor import Monitor
-from .presentation import reaction_names
+from .presentation import REACTION_FALLBACKS, reaction_names
 from .progress import Progress
 from .prompts import prompt, validate_output
 from .safety import BotError, check_content
@@ -26,7 +26,8 @@ class Worker:
         self.monitor = Monitor(config.home)
 
     def update_reaction(self, inquiry):
-        targets = reaction_names(inquiry["status"], self.config.slack.ack_reaction)
+        status = "needs_lookup" if inquiry.get("human_takeover") else inquiry["status"]
+        targets = reaction_names(status, self.config.slack.ack_reaction)
         if not targets:
             return
         ident = inquiry["id"]
@@ -53,7 +54,8 @@ class Worker:
             attempted.update(names(row["detail"]))
         # Record the whole desired set before any remote write. Partial adds/removals
         # can then be reconciled after a worker restart without losing identity.
-        self.store.audit(ident, "system", "reaction_intent", json.dumps(targets))
+        intent = set(targets) | {REACTION_FALLBACKS[t] for t in targets if t in REACTION_FALLBACKS}
+        self.store.audit(ident, "system", "reaction_intent", json.dumps(sorted(intent)))
         args = (inquiry["channel_id"], inquiry["trigger_ts"])
         actual = set()
         for target in targets:
@@ -61,9 +63,15 @@ class Worker:
                 self.slack.reaction(*args, target)
                 actual.add(target)
             except SlackFailure as exc:
-                if target != "dougle" or exc.code != "invalid_name":
+                if exc.code != "invalid_name":
                     raise
-                # The built-in state emoji still works when the custom identity is absent.
+                if target in REACTION_FALLBACKS:
+                    fallback = REACTION_FALLBACKS[target]
+                    self.slack.reaction(*args, fallback)
+                    actual.add(fallback)
+                elif target != "dougle":
+                    raise
+                # A missing identity does not hide the state. Only invalid_name permits fallback.
         for previous in attempted - actual:
             self.slack.remove_reaction(*args, previous)
         self.store.audit(ident, "system", "reaction_applied", json.dumps(sorted(actual)))
@@ -80,6 +88,10 @@ class Worker:
     def show_card(self, ident):
         with self.cards_lock:
             inquiry = self.store.inquiry(ident)
+            try:
+                developer_notice.notify(self.store, self.config, self.slack, ident)
+            except Exception:
+                self.store.audit(ident, "system", "developer_notice_failed")
             try:
                 self.update_reaction(inquiry)
             except BotError:
@@ -171,7 +183,9 @@ class Worker:
     def notify_recovered(self):
         # One startup pass, not a polling loop. Uncertain DM delivery remains held.
         for row in self.store.all(
-            "SELECT id FROM inquiries WHERE status IN ('needs_lookup','failed','post_unknown') AND card_state!='unknown'"
+            "SELECT id FROM inquiries WHERE (status IN ('needs_lookup','failed','post_unknown') "
+            "OR (status='cancelled' AND EXISTS(SELECT 1 FROM audit a WHERE a.inquiry_id=inquiries.id "
+            "AND a.action='developer_takeover'))) AND card_state!='unknown'"
         ):
             self.notify(row["id"])
 

@@ -134,7 +134,7 @@ def test_initial_dm_and_reaction_exist_before_engine_and_same_card_becomes_appro
     assert "게시 승인 대기" in visible(app.slack.cards[key])
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+        ("CTEST", "1001.000001", "loadingg"),
     }
     assert not any(c[0] == "post" for c in app.slack.calls)
 
@@ -144,7 +144,7 @@ def test_post_changes_reaction_to_done_and_never_reacts_to_answer(app):
     post(app, ref)
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "white_check_mark"),
+        ("CTEST", "1001.000001", "처리완료"),
     }
 
 
@@ -179,7 +179,7 @@ def test_reaction_cleanup_survives_worker_recreation_and_partial_failure(app):
     worker.notify(ident)
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+        ("CTEST", "1001.000001", "loadingg"),
     }
 
 
@@ -193,9 +193,7 @@ def test_reaction_cleanup_survives_worker_recreation_and_partial_failure(app):
     ],
 )
 def test_legacy_reaction_and_explicit_disable(configured, expected):
-    assert reaction_names("queued", configured) == (
-        (expected, "hourglass_flowing_sand") if expected else ()
-    )
+    assert reaction_names("queued", configured) == ((expected, "loadingg") if expected else ())
 
 
 def test_disabled_reactions_still_allow_progress_dm(app):
@@ -288,7 +286,7 @@ def test_old_unsent_payload_cannot_republish_sources_after_upgrade(app):
     assert not any(c[0] == "post" for c in app.slack.calls)
 
 
-@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.4", True), ("0.1.13", False)])
+@pytest.mark.parametrize("version,expected", [(None, True), ("0.1.4", True), ("0.1.14", False)])
 def test_status_checks_daemon_version_not_cli_version(app, monkeypatch, version, expected):
     import dougle_bot.main as main
     from dougle_bot.config import save
@@ -324,18 +322,18 @@ def test_absent_dougle_emoji_falls_back_and_restored_identity_keeps_loading(app)
     ident = receive(app.store, app.cfg, event(), "UBOT")
     app.slack.failures["reaction"] = SlackFailure("invalid_name")
     app.worker.notify(ident)
-    assert app.slack.reactions == {("CTEST", "1001.000001", "hourglass_flowing_sand")}
+    assert app.slack.reactions == {("CTEST", "1001.000001", "loadingg")}
     assert app.store.inquiry(ident)["status"] == "queued"
     # Emoji has been re-added; a later stage refresh can use it again.
     app.worker.notify(ident)
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+        ("CTEST", "1001.000001", "loadingg"),
     }
     app.worker.run_once()
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+        ("CTEST", "1001.000001", "loadingg"),
     }
 
 
@@ -354,19 +352,16 @@ def test_deleted_emoji_is_replaced_on_next_inquiry(app):
     ident = receive(app.store, app.cfg, event(ts="1002.000001"), "UBOT")
     app.slack.failures["reaction"] = SlackFailure("invalid_name")
     app.worker.notify(ident)
-    assert ("CTEST", "1002.000001", "hourglass_flowing_sand") in app.slack.reactions
+    assert ("CTEST", "1002.000001", "loadingg") in app.slack.reactions
     assert ("CTEST", "1001.000001", "dougle") in app.slack.reactions
 
 
 @pytest.mark.parametrize(
     "status,state",
-    [
-        (status, "hourglass_flowing_sand")
-        for status in ("queued", "drafting", "awaiting_approval", "posting")
-    ]
+    [(status, "loadingg") for status in ("queued", "drafting", "awaiting_approval", "posting")]
     + [
         ("needs_lookup", "speech_balloon"),
-        ("posted", "white_check_mark"),
+        ("posted", "처리완료"),
         ("failed", "warning"),
         ("post_unknown", "warning"),
         ("rejected", "no_entry_sign"),
@@ -390,7 +385,7 @@ def test_second_reaction_failure_reconciles_after_restart(app):
     original = app.slack.reaction
 
     def fail_state(*args):
-        if args[-1] == "hourglass_flowing_sand":
+        if args[-1] == "loadingg":
             raise SlackFailure(uncertain=True)
         original(*args)
 
@@ -401,7 +396,7 @@ def test_second_reaction_failure_reconciles_after_restart(app):
     Worker(app.store, app.cfg, app.engine, app.slack).notify(ident)
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+        ("CTEST", "1001.000001", "loadingg"),
     }
     assert not app.engine.calls
 
@@ -414,7 +409,7 @@ def test_posted_loading_cleanup_failure_does_not_duplicate_reply(app):
     Worker(app.store, app.cfg, app.engine, app.slack).notify(ref[0])
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "white_check_mark"),
+        ("CTEST", "1001.000001", "처리완료"),
     }
     assert len([c for c in app.slack.calls if c[0] == "post"]) == 1
 
@@ -424,7 +419,7 @@ def test_missing_identity_at_completion_still_removes_loading(app):
     app.slack.reactions.discard(("CTEST", "1001.000001", "dougle"))
     app.slack.failures["reaction"] = SlackFailure("invalid_name")
     post(app, ref)
-    assert app.slack.reactions == {("CTEST", "1001.000001", "white_check_mark")}
+    assert app.slack.reactions == {("CTEST", "1001.000001", "처리완료")}
 
 
 def test_legacy_single_reaction_record_migrates_without_removing_identity(app):
@@ -435,5 +430,96 @@ def test_legacy_single_reaction_record_migrates_without_removing_identity(app):
     app.worker.notify(ident)
     assert app.slack.reactions == {
         ("CTEST", "1001.000001", "dougle"),
-        ("CTEST", "1001.000001", "hourglass_flowing_sand"),
+        ("CTEST", "1001.000001", "loadingg"),
     }
+
+
+@pytest.mark.parametrize(
+    "status,custom,fallback",
+    [
+        ("drafting", "loadingg", "hourglass_flowing_sand"),
+        ("posted", "처리완료", "white_check_mark"),
+    ],
+)
+def test_missing_custom_state_falls_back_then_recovers_without_stale_emoji(
+    app, status, custom, fallback
+):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    row = app.store.inquiry(ident)
+    row["status"] = status
+    original = app.slack.reaction
+
+    def missing(*args):
+        if args[-1] == custom:
+            raise SlackFailure("invalid_name")
+        original(*args)
+
+    app.slack.reaction = missing
+    app.worker.update_reaction(row)
+    assert app.slack.reactions == {("CTEST", row["trigger_ts"], n) for n in ("dougle", fallback)}
+    app.slack.reaction = original
+    Worker(app.store, app.cfg, app.engine, app.slack).update_reaction(row)
+    assert app.slack.reactions == {("CTEST", row["trigger_ts"], n) for n in ("dougle", custom)}
+
+
+def test_custom_loading_failure_does_not_fallback_on_permissions_error(app):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    original = app.slack.reaction
+
+    def blocked(*args):
+        if args[-1] == "loadingg":
+            raise SlackFailure("missing_scope")
+        original(*args)
+
+    app.slack.reaction = blocked
+    app.worker.notify(ident)
+    assert not any(
+        c[0] == "reaction" and c[-1] == "hourglass_flowing_sand" for c in app.slack.calls
+    )
+
+
+def test_old_hourglass_is_removed_when_new_runtime_completes(app):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    row = app.store.inquiry(ident)
+    app.slack.reactions.add(("CTEST", row["trigger_ts"], "hourglass_flowing_sand"))
+    app.store.audit(ident, "system", "reaction_intent", "hourglass_flowing_sand")
+    row["status"] = "posted"
+    app.worker.update_reaction(row)
+    assert app.slack.reactions == {("CTEST", row["trigger_ts"], n) for n in ("dougle", "처리완료")}
+
+
+def test_both_identity_and_state_missing_still_show_fallback_and_finish(app):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    original = app.slack.reaction
+
+    def missing(*args):
+        if args[-1] in ("dougle", "loadingg", "처리완료"):
+            raise SlackFailure("invalid_name")
+        original(*args)
+
+    app.slack.reaction = missing
+    row = app.store.inquiry(ident)
+    app.worker.update_reaction(row)
+    assert app.slack.reactions == {("CTEST", row["trigger_ts"], "hourglass_flowing_sand")}
+    row["status"] = "posted"
+    app.worker.update_reaction(row)
+    assert app.slack.reactions == {("CTEST", row["trigger_ts"], "white_check_mark")}
+
+
+def test_partial_fallback_add_is_cleaned_after_restart(app):
+    ident = receive(app.store, app.cfg, event(), "UBOT")
+    original = app.slack.reaction
+
+    def uncertain(*args):
+        if args[-1] == "loadingg":
+            raise SlackFailure("invalid_name")
+        original(*args)
+        if args[-1] == "hourglass_flowing_sand":
+            raise SlackFailure(uncertain=True)
+
+    app.slack.reaction = uncertain
+    app.worker.notify(ident)
+    assert ("CTEST", "1001.000001", "hourglass_flowing_sand") in app.slack.reactions
+    app.slack.reaction = original
+    Worker(app.store, app.cfg, app.engine, app.slack).notify(ident)
+    assert app.slack.reactions == {("CTEST", "1001.000001", n) for n in ("dougle", "loadingg")}

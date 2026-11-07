@@ -1,0 +1,246 @@
+{
+  "version": "0.8.17",
+  "optionalBotRuntime": "0.1.14",
+  "publication": "NOT_PUBLISHED",
+  "files": 57,
+  "archiveBytes": 236970,
+  "sha256": "a84737165c922c0c2e29fdc08d84842927f9d765dd0859c2fca740710aa5f55d",
+  "wheelSha256": "c78c7ccc0cbac44208a4fa7998f0ba954fc5f47c61462247a74c7e335dff8ac7",
+  "structuralChecks": 280,
+  "botTests": 745,
+  "newTests": 51,
+  "packageBytes": "PASS archive/mirrors/wheel source/checksums",
+  "realModelCalls": 0,
+  "actualCompanyIntegration": "NOT_RUN",
+  "date": "2026-11-07",
+  "test_command": ".tools/bot-dev/bin/pytest -q dougle-bot/tests --junitxml=.tools/developer-response/tests.xml",
+  "junit_sha256": "27d726fc56fef3487f03ff09820216d1adfa9dbd0e9622c0b01dfac81314cb7f",
+  "source_sha256": {
+    "dougle-bot/src/dougle_bot/__init__.py": "fa37bc57b2e0cbbfd2fbde6a4dc2648d0e69c2f24bc27f43c06ad479ee99adf2",
+    "dougle-bot/src/dougle_bot/actions.py": "0b3a3d7524f5454ff276090367afea6c28a5908818bb559ac30182d383c1a036",
+    "dougle-bot/src/dougle_bot/answer_policy.py": "86a1f813b5d3f8a8142814984159a847ca7e98e0de0a6313d9a4c3a5728e671b",
+    "dougle-bot/src/dougle_bot/cards.py": "88838a8fd3ded9042b49b52b40b8de3a9f1c80c0e40f427539a9a2466ab7514c",
+    "dougle-bot/src/dougle_bot/config.py": "c4e5d198c4f4316324177c31d0ac540d5daebaae195dd15c20343a7d35cd7189",
+    "dougle-bot/src/dougle_bot/developer_notice.py": "b458941874c75a0cf6a2da0edc1d9992b23b664deb1c413e0a82782c36b03659",
+    "dougle-bot/src/dougle_bot/engine.py": "cae31a1a759023b86b8efab698ef51b11d01354d8be0f8ab109aad883093bc6d",
+    "dougle-bot/src/dougle_bot/evidence.py": "475302d32921905c59f601aa8858a16335d197884ee5c20df3db9e03a60fb58f",
+    "dougle-bot/src/dougle_bot/guard.py": "215e65c6970de8069a4e2dfdb7578d14136e9c68eaea32cf1e944b524a2c3812",
+    "dougle-bot/src/dougle_bot/handoff.py": "88f6fb34211e65352e3545dc528e3ac35c0a5083b80b3157776bb542320d032a",
+    "dougle-bot/src/dougle_bot/handoff_notice.py": "54d152eb76d6d702efe688aa2eadb0539e5c03b7bf26d69cb30ff0db13531765",
+    "dougle-bot/src/dougle_bot/images.py": "f22da350c5a33f57eaf43ac8639b37813708202040b0cbb10ee998ae08f5daf9",
+    "dougle-bot/src/dougle_bot/intake.py": "7d37751cb1e54111b96471e2b471bcd58288941995c70247b445a3a03f83130a",
+    "dougle-bot/src/dougle_bot/main.py": "ec74acc2805c1d3ec015af1de5e6ece177bec9733c0551dbbb1dde43e7c37577",
+    "dougle-bot/src/dougle_bot/monitor.py": "033daca08bf12e8457a4b70ad3785a800148eb9ffe5cd0fe7d11c668ec406b5b",
+    "dougle-bot/src/dougle_bot/presentation.py": "22d6903aa2b7644f74b63fc99530bf17eca0edee57e4f1b17b276527b746b497",
+    "dougle-bot/src/dougle_bot/progress.py": "ff7f65f28db1a91f994a10da04e7b40f701b1a3e4f244b4ba931f915631ba134",
+    "dougle-bot/src/dougle_bot/prompts.py": "8f8143ea7d49031e178ddc9b88707e3915a4cd3ec4d1fe4caec53151c1732942",
+    "dougle-bot/src/dougle_bot/receipt_hook.py": "fa224995be6c26f4331fcc04ec70abfc046bc059a8f407662ca5f0ec9d7b5299",
+    "dougle-bot/src/dougle_bot/recovery.py": "b1e65c1c075bb084fb6fa0cd982267f146533452c0a9a8007ace802a0b513d1a",
+    "dougle-bot/src/dougle_bot/runtime.py": "1adaaa30c06ba62371121a650827d0eecef31dd1004db529a0e3940580691970",
+    "dougle-bot/src/dougle_bot/safety.py": "e062f24cd290f930cb88715d5004e30df7971bbf63e3f534d604ce4d426ba94f",
+    "dougle-bot/src/dougle_bot/secrets.py": "bc9177e1ff367df479f3e1a032bc8f97ff4b863e511e42927f75859963fb92e8",
+    "dougle-bot/src/dougle_bot/slack_gateway.py": "f51223cc4aee97f66a6500b310859b14591ba9eca9c0a4e40c405fa66c277af9",
+    "dougle-bot/src/dougle_bot/store.py": "89a30237d7242055d643433d26c5d11d564cb24a45d3f7bf2df59632a93c5656",
+    "dougle-bot/src/dougle_bot/worker.py": "80b01d895451ea430e024cccc97f4040643147aff5374c1654a5802debdd2ef8"
+  },
+  "covered": [
+    "Custom loadingg/처리완료 with invalid_name-only fallbacks and partial add/removal recovery",
+    "Both needs_lookup and failed takeover buttons through real Bolt dispatch; transitions precede ack",
+    "Approver/team/card/draft/job/status validation; stale modal, duplicate click and submission rejection",
+    "Concurrent takeover/result and independent-worker notice claims",
+    "Saved result notice precedes verified final answer; actual query evidence still required",
+    "Crash after durable claim/ledger/send and missing/ambiguous receipts never replay notices",
+    "Database-only restoration fails closed against independent post ledger",
+    "Stop/channel removal/current work/review mode checked before notice",
+    "Takeover prevents same inquiry work; new mentions still allowed"
+  ],
+  "limits": [
+    "Fake Slack and engine, temporary SQLite; actual company emojis/network not exercised",
+    "At most one notice attempt per event, not guaranteed delivery",
+    "In-flight Slack calls cannot be recalled; no distributed exactly-once guarantee",
+    "Explicit review mode remains private until normal approval"
+  ],
+  "tests": [
+    {
+      "test": "tests.test_developer_response::test_takeover_dispatch_closes_only_this_inquiry_before_ack_and_announces_after[lookup]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_dispatch_closes_only_this_inquiry_before_ack_and_announces_after[failure]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_saved_result_gets_one_notice_before_processing_even_if_dm_update_fails[lookup]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_saved_result_gets_one_notice_before_processing_even_if_dm_update_fails[failure]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_result_notice_precedes_verified_final_answer",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_rejects_unauthorized_or_stale_input[user]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_rejects_unauthorized_or_stale_input[channel]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_rejects_unauthorized_or_stale_input[ts]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_rejects_unauthorized_or_stale_input[draft]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_rejects_unauthorized_or_stale_input[stopped]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_rejects_unauthorized_or_stale_input[boolean]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_and_result_race_has_one_winner",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_failure_or_uncertainty_is_not_replayed_after_restart[post_before-result]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_failure_or_uncertainty_is_not_replayed_after_restart[post_before-takeover]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_failure_or_uncertainty_is_not_replayed_after_restart[post_after-result]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_failure_or_uncertainty_is_not_replayed_after_restart[post_after-takeover]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_rechecks_lifecycle_after_ledger_write[stopped]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_rechecks_lifecycle_after_ledger_write[removed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_rechecks_lifecycle_after_ledger_write[review]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_rechecks_lifecycle_after_ledger_write[finished]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_review_mode_takeover_remains_private",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_separate_workers_claim_one_public_notice[result]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_separate_workers_claim_one_public_notice[takeover]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_crash_after_claim_never_replays_notice[ledger-result]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_crash_after_claim_never_replays_notice[ledger-takeover]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_crash_after_claim_never_replays_notice[send-result]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_crash_after_claim_never_replays_notice[send-takeover]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_crash_after_claim_never_replays_notice[receipt-result]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_crash_after_claim_never_replays_notice[receipt-takeover]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_fault_does_not_prevent_final_answer[ledger]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_fault_does_not_prevent_final_answer[missing_receipt]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_notice_fault_does_not_prevent_final_answer[unexpected_error]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_database_only_rollback_cannot_forget_transition_notice",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_two_submissions_create_one_job_and_one_public_result_notice[lookup]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_two_submissions_create_one_job_and_one_public_result_notice[failure]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_takeover_does_not_disable_new_mention_or_other_threads",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[None]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[payload1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[payload2]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[bad]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[payload4]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[payload5]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[payload6]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_malformed_takeover_does_not_change_any_inquiry[payload7]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_response::test_wrong_team_takeover_dispatch_cannot_close_inquiry",
+      "status": "PASS"
+    }
+  ],
+  "isolated_install": "PASS --no-index --no-deps; version and complete source bytes"
+}

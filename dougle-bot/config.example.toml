@@ -3,7 +3,7 @@
 approver_user_id = "UYOURID"
 allowed_channel_ids = ["CYOURCHANNEL"]
 workspace_id = ""
-ack_reaction = "dougle" # 회사 이모지가 없으면 ⏳로 대체. 빈 문자열이면 상태 이모지 생략
+ack_reaction = "dougle" # 정체성 이모지. 진행 loadingg / 완료 처리완료, 없으면 ⏳ / ✅. 빈 문자열이면 모두 생략
 thread_history_limit = 50
 require_approval = false # 기본: 바로 답변, 도움이 필요한 문의만 담당자 DM. true는 기존 검토 모드
 

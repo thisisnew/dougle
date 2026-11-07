@@ -86,7 +86,7 @@ class Store:
             for ident in rows:
                 uuid.UUID(ident)
                 if not self.one("SELECT id FROM deliveries WHERE id=?", (ident,)) and not self.one(
-                    "SELECT id FROM audit WHERE action='handoff_notice_intent' AND detail=?",
+                    "SELECT id FROM audit WHERE action IN ('handoff_notice_intent','developer_notice_intent') AND detail=?",
                     (ident,),
                 ):
                     raise BotError("restored_database_requires_review")
@@ -205,7 +205,7 @@ class Store:
 
     def inquiry(self, ident):
         return self.one(
-            "SELECT i.*,t.channel_id,t.thread_ts,t.engine_session_id,t.last_seen_ts FROM inquiries i JOIN threads t USING(thread_key) WHERE i.id=?",
+            "SELECT i.*,EXISTS(SELECT 1 FROM audit a WHERE a.inquiry_id=i.id AND a.action='developer_takeover') AS human_takeover,t.channel_id,t.thread_ts,t.engine_session_id,t.last_seen_ts FROM inquiries i JOIN threads t USING(thread_key) WHERE i.id=?",
             (ident,),
         )
 
@@ -236,8 +236,10 @@ class Store:
             )
             return dict(row)
 
-    def enqueue(self, ident, draft, kind, payload):
+    def enqueue(self, ident, draft, kind, payload, actor="system"):
         with self.tx() as db:
+            if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
+                raise BotError("bot_stopped")
             row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
             if (
                 not row
@@ -246,13 +248,18 @@ class Store:
             ):
                 raise BotError("stale_draft")
             try:
-                db.execute(
+                job_id = db.execute(
                     "INSERT INTO jobs(inquiry_id,kind,payload,created_at) VALUES(?,?,?,?)",
                     (ident, kind, payload, self.clock()),
-                )
+                ).lastrowid
             except sqlite3.IntegrityError:
                 raise BotError("already_processing") from None
             db.execute("UPDATE inquiries SET status='queued' WHERE id=?", (ident,))
+            if kind == "lookup_result":
+                db.execute(
+                    "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,?,'developer_result_received',?,?)",
+                    (ident, actor, str(job_id), self.clock()),
+                )
 
     def reserve(self, inquiry, maximum, daily, resumed):
         now = self.clock()
@@ -291,7 +298,7 @@ class Store:
                 raise BotError("stale_job")
             if not channel or not ts or row["card_channel_id"] != channel or row["card_ts"] != ts:
                 raise BotError("wrong_card")
-            db.execute(
+            new_job = db.execute(
                 "INSERT INTO jobs(inquiry_id,kind,payload,created_at) VALUES(?,?,?,?)",
                 (
                     ident,
@@ -299,11 +306,11 @@ class Store:
                     json.dumps({"lookup": report}, ensure_ascii=False),
                     self.clock(),
                 ),
-            )
+            ).lastrowid
             db.execute("UPDATE inquiries SET status='queued',error=NULL WHERE id=?", (ident,))
             db.execute(
                 "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,?,?,?,?)",
-                (ident, actor, "developer_result_received", str(job_id), self.clock()),
+                (ident, actor, "developer_result_received", str(new_job), self.clock()),
             )
 
     def finish_run(self, ident, *, cost=None, session=None, ok=False, error=None, duration=0):
@@ -379,6 +386,37 @@ class Store:
                     (ident, str(draft), self.clock()),
                 )
             return draft
+
+    def take_over(self, ident, draft_id, job_id, actor, channel, ts):
+        with self.tx() as db:
+            row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
+            if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
+                raise BotError("bot_stopped")
+            if not row or row["status"] not in ("needs_lookup", "failed"):
+                raise BotError("stale_action")
+            if not channel or not ts or channel != row["card_channel_id"] or ts != row["card_ts"]:
+                raise BotError("wrong_card")
+            if row["status"] == "needs_lookup":
+                if job_id is not None or draft_id != row["current_draft_id"]:
+                    raise BotError("stale_draft")
+            else:
+                latest = db.execute(
+                    "SELECT id FROM jobs WHERE inquiry_id=? ORDER BY id DESC LIMIT 1", (ident,)
+                ).fetchone()
+                if draft_id is not None or not latest or job_id != latest["id"]:
+                    raise BotError("stale_job")
+            db.execute(
+                "UPDATE inquiries SET status='cancelled',error=NULL,updated_at=? WHERE id=?",
+                (self.clock(), ident),
+            )
+            db.execute(
+                "UPDATE jobs SET status='cancelled' WHERE inquiry_id=? AND status IN ('queued','running')",
+                (ident,),
+            )
+            db.execute(
+                "INSERT INTO audit(inquiry_id,actor,action,at) VALUES(?,?,'developer_takeover',?)",
+                (ident, actor, self.clock()),
+            )
 
     def cancel(self, ident, job_id, actor, channel, ts):
         with self.tx() as db:

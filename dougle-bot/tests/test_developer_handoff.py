@@ -60,7 +60,7 @@ def test_unavailable_required_reads_route_to_private_developer_not_public_failur
     value["body"] = "현재 처리 여부를 확인하지 못했습니다."
     row = pending(app, value)
     assert row["status"] == "needs_lookup"
-    assert button_ids(app, row) == ["lookup", "reject"]
+    assert button_ids(app, row) == ["lookup", "take_over"]
     assert len(app.engine.calls) == 1
     assert not app.worker.run_once()  # Wait for an actual developer result, not a timer/retry loop.
     assert not any(call[0] == "post" for call in app.slack.calls)
@@ -128,13 +128,13 @@ def test_developer_result_resumes_same_inquiry_and_requires_final_approval(app, 
 def test_internal_failures_have_one_private_action_and_never_post_or_rerun(app, error):
     row, _ = failed(app, error)
     assert row["status"] == "failed" and app.store.current(row) is None
-    assert button_ids(app, row) == ["assist"]
+    assert button_ids(app, row) == ["assist", "take_over"]
     assert not app.worker.run_once()
     assert len(app.engine.calls) == 1
     assert not any(c[0] == "post" for c in app.slack.calls)
     app.store.recover()
     app.worker.show_card(row["id"])
-    assert len(app.slack.cards) == 1 and button_ids(app, row) == ["assist"]
+    assert len(app.slack.cards) == 1 and button_ids(app, row) == ["assist", "take_over"]
     assert not app.worker.run_once()
 
 

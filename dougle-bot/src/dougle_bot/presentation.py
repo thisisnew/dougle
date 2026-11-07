@@ -40,17 +40,20 @@ def chat_text(body, source_count):
     return "".join(rendered).strip()
 
 
+REACTION_FALLBACKS = {"loadingg": "hourglass_flowing_sand", "처리완료": "white_check_mark"}
+
+
 def reaction_names(status, configured):
     if not configured:
         return ()
     identity = "dougle" if configured in ("eyes", "hourglass_flowing_sand") else configured
     state = {
-        "queued": "hourglass_flowing_sand",
-        "drafting": "hourglass_flowing_sand",
-        "awaiting_approval": "hourglass_flowing_sand",
+        "queued": "loadingg",
+        "drafting": "loadingg",
+        "awaiting_approval": "loadingg",
         "needs_lookup": "speech_balloon",
-        "posting": "hourglass_flowing_sand",
-        "posted": "white_check_mark",
+        "posting": "loadingg",
+        "posted": "처리완료",
         "failed": "warning",
         "post_unknown": "warning",
         "rejected": "no_entry_sign",

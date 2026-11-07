@@ -127,6 +127,11 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
             if body.get("team", {}).get("id") != identity["team_id"]:
                 raise BotError("wrong_workspace")
             item = body["actions"][0]
+            if item["action_id"] == "take_over":
+                ident = actions.take_over(user, item["value"], channel, ts)
+                ack()
+                executor.submit(safe, worker.notify, ident)
+                return
             if item["action_id"] == "cancel":
                 ident = actions.cancel(user, item["value"], channel, ts)
                 ack()
@@ -193,7 +198,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
                 item["action_id"],
             )
 
-    for action in ("post", "edit", "regenerate", "lookup", "reject", "cancel", "assist"):
+    for action in ("post", "edit", "regenerate", "lookup", "reject", "cancel", "assist", "take_over"):
         app.action(action)(button)
 
     def submitted(ack, body):

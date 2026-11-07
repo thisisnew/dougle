@@ -1,28 +1,15 @@
 {
-  "version": "0.8.16",
-  "optionalBotRuntime": "0.1.13",
-  "publication": "v0.8.16-skills-preview.1",
+  "version": "0.8.17",
+  "optionalBotRuntime": "0.1.14",
+  "publication": "NOT_PUBLISHED",
   "files": 57,
-  "archiveBytes": 234923,
-  "sha256": "9a794972d7d504cebbb3fb2967b37d3716dbbce7ce536638f4b1eb01d974e28f",
-  "wheel": "dougle_bot-0.1.13-py3-none-any.whl",
-  "wheelSha256": "6b2078f485794e2de0c32e2b7218674a504e9b5c66b7282937568d1663385892",
+  "archiveBytes": 236970,
+  "sha256": "a84737165c922c0c2e29fdc08d84842927f9d765dd0859c2fca740710aa5f55d",
+  "wheelSha256": "c78c7ccc0cbac44208a4fa7998f0ba954fc5f47c61462247a74c7e335dff8ac7",
   "structuralChecks": 280,
-  "botTests": 694,
-  "newHandoffNoticeTests": 39,
-  "packageBytes": "PASS: archive/mirrors/wheel source/checksums; includes handoff_notice module",
-  "isolatedWheelInstall": "PASS: --no-index --no-deps, version and source byte parity",
-  "documentationCheck": {
-    "status": "PASS",
-    "retiredRoots": 6,
-    "currentWorkflows": 1,
-    "localLinks": 437
-  },
+  "botTests": 745,
+  "newTests": 51,
+  "packageBytes": "PASS archive/mirrors/wheel source/checksums",
   "realModelCalls": 0,
-  "actualCompanyIntegration": "NOT_RUN",
-  "ciPython312": "PASS",
-  "ciPython313": "PASS",
-  "source": "79c9942d427e21c412c89498c5b2d666235cec52",
-  "ci": "https://github.com/thisisnew/dougle/actions/runs/42367569384",
-  "anonymous_download": "PASS byte-for-byte"
+  "actualCompanyIntegration": "NOT_RUN"
 }

@@ -118,6 +118,22 @@ class Actions:
         self.store.cancel(ident, job_id, user, channel, ts)
         return ident
 
+    def take_over(self, user, value, channel, ts):
+        self.authorized(user)
+        try:
+            data = json.loads(value) if isinstance(value, str) else value
+            ident = data["inquiry_id"]
+            draft_id, job_id = data.get("draft_id"), data.get("job_id")
+            if type(ident) is not int or ident <= 0 or (draft_id is None) == (job_id is None):
+                raise ValueError()
+            ref = draft_id if draft_id is not None else job_id
+            if type(ref) is not int or ref <= 0:
+                raise ValueError()
+        except (ValueError, TypeError, KeyError, AttributeError):
+            raise BotError("invalid_action") from None
+        self.store.take_over(ident, draft_id, job_id, user, channel, ts)
+        return ident
+
     def reject(self, user, value, channel, ts):
         with self.lock:
             inquiry, draft = self.resolve(user, value, channel, ts)
@@ -198,6 +214,7 @@ class Actions:
                     draft["id"],
                     "lookup_result",
                     json.dumps({"lookup": report}, ensure_ascii=False),
+                    actor=user,
                 )
             else:
                 raise BotError("invalid_action")
