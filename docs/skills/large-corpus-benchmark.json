@@ -30,6 +30,20 @@
           "digest": "ded2372058101bff665b287bb15f7d401f1eae7b6dc979d3ea024009914d6c3b"
         }
       }
+    },
+    {
+      "files": 5000,
+      "bytes": 20480000,
+      "runs": {
+        "before": {
+          "seconds": 474.274,
+          "digest": "b00416dfa70f8ab3abc83c87d088a5960632f1135f91fd7a90b6b5a97053659e"
+        },
+        "after": {
+          "seconds": 338.318,
+          "digest": "b00416dfa70f8ab3abc83c87d088a5960632f1135f91fd7a90b6b5a97053659e"
+        }
+      }
     }
   ],
   "scope": "Real full-package sensitive scanner; synthetic Markdown; one sequential run per variant/size; other developer checks may run concurrently",
