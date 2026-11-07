@@ -5,6 +5,10 @@ import threading
 import time
 
 STAGES = {
+    "search": "관련 지식 찾기",
+    "prepare": "질문 입력 준비",
+    "persist": "답변 기록 저장",
+    "delivery": "승인 카드 갱신",
     "thread": "질문과 스레드 확인",
     "attachments": "첨부 자료 확인",
     "engine": "AI 응답 대기",
@@ -22,12 +26,49 @@ class Progress:
         self.clock = clock
         self.started = self.last_activity = clock()
         self.stage = "thread"
+        self.changed_at = self.started
+        self.stage_ms = {key: 0.0 for key in STAGES}
+        self.prompt_characters = self.output_characters = 0
+        self.retries = {
+            key: 0 for key in ("presentation", "research", "activation", "schema", "session")
+        }
         self.attempt = self.completed_tools = 0
         self.lock = threading.Lock()
 
+    def _transition(self, stage):
+        now = self.clock()
+        self.stage_ms[self.stage] += max(0, now - self.changed_at) * 1000
+        self.changed_at = now
+        self.stage = stage
+
+    def sizes(self, prompt=0, output=0):
+        with self.lock:
+            self.prompt_characters += max(0, prompt)
+            self.output_characters += max(0, output)
+
+    def retry(self, reason):
+        with self.lock:
+            if reason in self.retries:
+                self.retries[reason] += 1
+
+    def profile(self, queue_ms=0):
+        with self.lock:
+            self._transition(self.stage)
+            return dict(
+                version=1,
+                queue_ms=max(0, int(queue_ms)),
+                processing_ms=max(0, int((self.clock() - self.started) * 1000)),
+                observed_stage_ms={key: int(value) for key, value in self.stage_ms.items()},
+                attempts=self.attempt,
+                tool_responses=self.completed_tools,
+                prompt_characters=self.prompt_characters,
+                output_characters=self.output_characters,
+                retries=dict(self.retries),
+            )
+
     def phase(self, stage, *, attempt=None):
         with self.lock:
-            self.stage = stage if stage in STAGES else "engine"
+            self._transition(stage if stage in STAGES else "engine")
             self.last_activity = self.clock()
             if attempt is not None:
                 self.attempt = attempt
@@ -36,9 +77,9 @@ class Progress:
         with self.lock:
             if event == "tool_result":
                 self.completed_tools += 1
-                self.stage = "thinking"
+                self._transition("thinking")
             elif event in STAGES:
-                self.stage = event
+                self._transition(event)
             elif event != "activity":
                 return
             self.last_activity = self.clock()
@@ -95,7 +136,21 @@ class StreamProgress:
                         self.emit("skill")
                     elif name in {"Edit", "Write"}:
                         self.emit("memory")
-                    elif name in {"Read", "Grep", "Glob", "WebFetch", "ToolSearch"} or (
+                    elif name in {"Glob", "ToolSearch"}:
+                        self.emit("search")
+                    elif name in {"Read", "Grep"}:
+                        args = block.get("input")
+                        target = (
+                            (args.get("file_path") or args.get("path"))
+                            if isinstance(args, dict)
+                            else None
+                        )
+                        self.emit(
+                            "search"
+                            if isinstance(target, str) and "/.dougle/" in target
+                            else "lookup"
+                        )
+                    elif name in {"WebFetch"} or (
                         isinstance(name, str) and name.startswith("mcp__")
                     ):
                         self.emit("lookup")
@@ -127,3 +182,36 @@ def progress_text(value):
         text += "\n한동안 새 진행 신호를 받지 못했습니다. 외부 응답 대기 또는 정체 여부를 확인해야 합니다."
     text += "\n마지막 갱신 기준입니다."
     return text
+
+
+def safe_profile(raw):
+    """Only return bounded numeric metrics from a stored record, never arbitrary log text."""
+    try:
+        value = json.loads(raw)
+        if not isinstance(value, dict) or value.get("version") != 1:
+            return None
+        keys = (
+            "version",
+            "queue_ms",
+            "processing_ms",
+            "attempts",
+            "tool_responses",
+            "prompt_characters",
+            "output_characters",
+        )
+        result = {key: value[key] for key in keys}
+        for field, names in (
+            ("observed_stage_ms", STAGES),
+            ("retries", ("presentation", "research", "activation", "schema", "session")),
+        ):
+            result[field] = {key: value[field][key] for key in names}
+        numbers = (
+            [result[k] for k in keys]
+            + list(result["observed_stage_ms"].values())
+            + list(result["retries"].values())
+        )
+        if any(type(n) is not int or not 0 <= n <= 10**12 for n in numbers):
+            return None
+        return result
+    except (ValueError, TypeError, KeyError):
+        return None

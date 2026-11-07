@@ -8,6 +8,7 @@ from .progress import progress_text
 from .safety import BotError, check_content, escape_slack
 
 RESEARCH_ERRORS = {
+    "repair_changed_evidence": "표현을 다듬는 과정에서 검증한 근거 정보가 달라졌습니다. 이 답변은 게시할 수 없습니다.",
     "invalid_verification": "AI가 반환한 근거 확인 기록의 형식이 올바르지 않습니다. 권한 오류로 확인된 것은 아니며 이 답변은 게시할 수 없습니다.",
     "verification_requirements_missing": "질문에 필요한 확인 항목이 답변 기록에서 누락되었습니다. 이 답변은 게시할 수 없습니다.",
     "required_read_not_verified": "답변이 인용한 코드·자료 조회를 이번 실행의 성공 기록과 연결하지 못했습니다. 실제 조회 누락 또는 기록 불일치일 수 있으며 이 답변은 게시할 수 없습니다.",

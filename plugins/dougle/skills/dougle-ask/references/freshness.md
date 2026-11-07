@@ -20,6 +20,10 @@ Accept requests such as "check this document weekly" or "이 자료는 매번 �
 
 ## Checkpoints, failure and compatibility
 
+For a large source, keep a bounded changed-item list at the actual reader revision: relevant IDs/paths, changed or unknown coverage, affected claim IDs, completed/pending checks. Read the provider's revision/change listing before bodies when available; complete its pagination for the coverage being checked. A partial listing never proves the omitted pages unchanged. Without trustworthy change metadata, use bounded original reads for the requested coverage, not a fabricated cache hit.
+
+Process many changed items in context-sized batches. Save completed coverage and pending dependencies after each successful batch; on resume, compare the saved revision and local note content again before applying. Do not rewrite already unchanged topics or rebuild the whole index. Missing dependency maps require broader relevant validation, not an assumption that nothing depends on the changed source. Batch size limits work in context, never the evidence needed for a correct answer. Unrelated unfinished coverage stays pending, without delaying this answer or becoming falsely current.
+
 Keep these verification entries in source records for the actual checked coverage:
 
 - `coverage`: exact document, file set, schema portion and dependent claim IDs when available.

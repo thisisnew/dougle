@@ -1,3 +1,4 @@
+import copy
 import json
 import threading
 import time
@@ -139,6 +140,7 @@ class Worker:
         if job is None:
             return False
         progress = Progress()
+        queue_ms = max(0, (self.store.clock() - job["created_at"]) * 1000)
         stop = threading.Event()
 
         def report():
@@ -153,6 +155,15 @@ class Worker:
             stop.set()
             # A slow Slack update must not delay pipe reads or keep a completed job running.
             reporter.join(timeout=0.1)
+            try:
+                self.store.audit(
+                    job["inquiry_id"],
+                    "system",
+                    "answer_timing",
+                    json.dumps(progress.profile(queue_ms)),
+                )
+            except Exception:
+                pass
 
     def report_progress(self, ident, progress):
         try:
@@ -198,6 +209,9 @@ class Worker:
             restored = False
             correction = ""
             schema_retried = False
+            presentation_repair = None
+            repair_reads = None
+            repair_run_id = None
             required_evidence = set()
             attempt = 0
             previous_draft = self.store.current(inquiry)
@@ -223,6 +237,7 @@ class Worker:
                     context_messages = [
                         m for m in messages if Decimal(m["ts"]) > Decimal(inquiry["last_seen_ts"])
                     ]
+                progress.phase("prepare")
                 text = prompt(
                     self.config.engine,
                     inquiry,
@@ -232,10 +247,12 @@ class Worker:
                     restored=restored,
                     correction=correction,
                     required_evidence=required_evidence,
+                    presentation_repair=presentation_repair,
                     image_context=[
                         {"file_id": img.file_id, "message_ts": img.message_ts} for img in images
                     ],
                 )
+                progress.sizes(prompt=len(text))
                 start = time.monotonic()
                 try:
                     attempt += 1
@@ -256,7 +273,10 @@ class Worker:
                         run_id, error=exc.code, duration=int((time.monotonic() - start) * 1000)
                     )
                     if exc.code == "session_not_found" and session and not restored:
+                        progress.retry("session")
                         session = None
+                        presentation_repair = repair_reads = None
+                        repair_run_id = None
                         restored = True
                         continue
                     raise
@@ -269,6 +289,7 @@ class Worker:
                 )
                 if self.store.inquiry(ident)["status"] == "cancelled":
                     raise BotError("inquiry_cancelled")
+                progress.sizes(output=len(json.dumps(result.output, ensure_ascii=False)))
                 session = result.session_id
                 progress.phase("validation")
                 try:
@@ -299,9 +320,14 @@ class Worker:
                         lookup_basis=bool(lookup),
                         lookup_time=lookup["observed_at"] if lookup else None,
                     )
+                    if presentation_repair is not None and any(
+                        output[key] != presentation_repair[key]
+                        for key in ("status", "sources", "lookup", "verification")
+                    ):
+                        raise BotError("repair_changed_evidence")
                     validate_verification(
                         output,
-                        result.reads,
+                        repair_reads if presentation_repair is not None else result.reads,
                         image_ids={img.file_id for img in images},
                         report=bool(lookup),
                         required_floor=required_evidence,
@@ -309,6 +335,13 @@ class Worker:
                     self.store.audit(
                         ident, "system", "evidence_checks_verified", json.dumps(verification)
                     )
+                    if presentation_repair is not None:
+                        self.store.audit(
+                            ident,
+                            "system",
+                            "presentation_evidence_reused",
+                            json.dumps({"evidence_run_id": repair_run_id, "repair_run_id": run_id}),
+                        )
                     self.store.audit(
                         ident,
                         "system",
@@ -321,7 +354,51 @@ class Worker:
                         raise
                     schema_retried = True
                     correction = exc.code
+                    reason = (
+                        "research"
+                        if exc.code
+                        in {
+                            "invalid_verification",
+                            "verification_requirements_missing",
+                            "required_read_not_verified",
+                            "invalid_read_trace",
+                        }
+                        else "activation"
+                        if exc.code == "required_skill_not_activated"
+                        else "schema"
+                    )
+                    if exc.code in {"polite_language_required", "sources_belong_in_review_field"}:
+                        # Reuse proof only after independent validation; never reuse live reads,
+                        # partial investigation, an earlier inquiry or a lost engine session.
+                        try:
+                            candidate = validate_output(
+                                result.output,
+                                lookup_basis=bool(lookup),
+                                lookup_time=lookup["observed_at"] if lookup else None,
+                                presentation=False,
+                            )
+                            validate_verification(
+                                candidate,
+                                result.reads,
+                                image_ids={img.file_id for img in images},
+                                report=bool(lookup),
+                                required_floor=required_evidence,
+                            )
+                            if (
+                                "live" not in candidate["verification"]["required"]
+                                and not candidate["verification"]["missing"]
+                                and candidate["status"] == "answered"
+                                and set(self.config.engine.required_skills) <= result.activated
+                            ):
+                                presentation_repair = copy.deepcopy(candidate)
+                                repair_reads = copy.deepcopy(result.reads)
+                                repair_run_id = run_id
+                                reason = "presentation"
+                        except (BotError, TypeError, KeyError):
+                            pass
+                    progress.retry(reason)
             last_seen = max((m["ts"] for m in messages), key=Decimal, default=inquiry["trigger_ts"])
+            progress.phase("persist")
             self.store.save_draft(
                 ident,
                 output,
@@ -342,6 +419,7 @@ class Worker:
             self.store.fail_job(job, exc.code)
         except Exception:
             self.store.fail_job(job, "processing_failed")
+        progress.phase("delivery")
         try:
             self.show_card(ident)
         except BotError:

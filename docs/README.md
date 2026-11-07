@@ -20,6 +20,6 @@
 
 [231개 설계 시나리오](dougle-bot/TEST_PLAN.md)는 자동 테스트 개수와 별개이며 전체 대응 검증은 아직 완료하지 않았습니다.
 
-[제품 개요](skills/README.md) · [개발 안내](skills/development.md) · [답변과 출처](skills/answer-sources.md) · [검색 속도](skills/search-performance.md) · [검증 범위](skills/verification.md)
+[제품 개요](skills/README.md) · [개발 안내](skills/development.md) · [답변과 출처](skills/answer-sources.md) · [검색 속도](skills/search-performance.md) · [대용량 처리와 측정](skills/large-corpus.md) · [검증 범위](skills/verification.md)
 
 [Slack 주기 확인](skills/schedule.md) · [봇 실행 계약](../dougle-bot/SPEC.md) · [저장소 구성](repository.md) · [이전 기록](history.md)

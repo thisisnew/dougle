@@ -10,6 +10,7 @@ from pathlib import Path
 
 from . import __version__
 from .config import Config, EngineConfig, SlackConfig, channel_id, load, private_dir, save
+from .progress import safe_profile
 from .recovery import reconcile
 from .runtime import apple_silicon, running, serve
 from .safety import BotError
@@ -70,6 +71,13 @@ def status(home, config_path):
                     )
                 ],
             )
+            result["recent_timings"] = [
+                {"inquiry_id": row["inquiry_id"], **profile}
+                for row in store.all(
+                    "SELECT inquiry_id,detail FROM audit WHERE action='answer_timing' ORDER BY id DESC LIMIT 10"
+                )
+                if (profile := safe_profile(row["detail"])) is not None
+            ]
             result["healthy"] = (
                 result["running"]
                 and control["desired"] == "running"

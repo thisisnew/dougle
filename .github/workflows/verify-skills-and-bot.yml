@@ -1,9 +1,9 @@
 name: Verify skills and optional bot
 on:
   push:
-    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', 'scripts/check-large-package.mjs', 'scripts/test-publish-sensitive.mjs', 'scripts/benchmark-publish-sensitive.py', '.github/workflows/verify-skills-and-bot.yml']
   pull_request:
-    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', 'scripts/check-large-package.mjs', 'scripts/test-publish-sensitive.mjs', 'scripts/benchmark-publish-sensitive.py', '.github/workflows/verify-skills-and-bot.yml']
 permissions:
   contents: read
 jobs:
@@ -24,5 +24,9 @@ jobs:
       - run: node scripts/check-skills.mjs
       - run: node scripts/check-sharing-merge.mjs
       - run: node scripts/check-current-tree.mjs
+      - run: node scripts/check-large-package.mjs
+      - run: node scripts/test-publish-sensitive.mjs
       - run: ruff check dougle-bot
+      - run: ruff check scripts/benchmark-publish-sensitive.py
+      - run: python scripts/benchmark-publish-sensitive.py --counts 3 --output /tmp/dougle-scanner-smoke.json
       - run: pytest -q dougle-bot/tests

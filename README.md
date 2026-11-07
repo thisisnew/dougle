@@ -47,7 +47,7 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 /dougle:dougle-fetch 팀_지식_저장소_URL의 지식을 가져와 합쳐 줘.
 ```
 
-선택한 지식을 기존 팀 지식과 합쳐 바로 반영합니다. PR은 만들지 않고, 서로 다른 주장은 둘 다 남깁니다. 민감정보 검사를 통과해야 게시하며, 가져올 때는 기존 지식·정정·충돌을 보존합니다. [자세히](docs/skills/sharing.md)
+선택한 지식을 기존 팀 지식과 합쳐 바로 반영합니다. PR은 만들지 않고, 서로 다른 주장은 둘 다 남깁니다. 민감정보 검사를 통과해야 게시하며, 가져올 때는 기존 지식·정정·충돌을 보존합니다. [자세히](docs/skills/sharing.md) · [자료가 많을 때의 처리 방식](docs/skills/large-corpus.md)
 
 ## Slack에서 쓰기
 
@@ -55,7 +55,7 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 /dougle:dougle-bot
 ```
 
-처음 설정을 안내합니다. 이후 `@dougle 질문`을 받으면 승인자 DM에 초안을 보내고, **[게시]를 눌러야 댓글이 나갑니다.** [봇 설정·사용법](dougle-bot/README.md)
+처음 설정을 안내합니다. 이후 `@dougle 질문`을 받으면 승인자 DM에 답변을 보내고, **[게시]를 눌러야 댓글이 나갑니다.** [봇 설정·사용법](dougle-bot/README.md)
 
 <details>
 <summary>다른 명령 보기</summary>
@@ -97,4 +97,4 @@ https://github.com/thisisnew/dougle 최신 main으로 설치된 skills/의 모�
 더글 배포본으로 확인된 경우에만 스킬 검색 경로 밖에 백업해 줘.
 ```
 
-[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.8-skills-preview.1)
+[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.9-skills-preview.1)

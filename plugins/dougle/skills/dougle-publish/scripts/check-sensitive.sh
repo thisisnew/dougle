@@ -5,16 +5,21 @@ export LC_ALL=C
 fail() { printf '{"status":"ERROR","reason":"%s"}\n' "$1"; exit 2; }
 hash_file() {
  if [ "$hash_tool" = sha256sum ]; then
-  raw=$(sha256sum -- "$1" 2>/dev/null) || return 1
+  raw=$(sha256sum < "$1" 2>/dev/null) || return 1
  else
-  raw=$(shasum -a 256 -- "$1" 2>/dev/null) || return 1
+  raw=$(shasum -a 256 < "$1" 2>/dev/null) || return 1
  fi
- printf '%s\n' "$raw" | awk '{print $1}'
+ value=${raw%% *}
+ [ "${#value}" = 64 ] || return 1
+ case "$value" in *[!0-9a-f]*) return 1;; esac
+ printf '%s\n' "$value"
 }
 if [ "${1-}" = --scan ]; then
  [ "${DOUGLE_SCAN_INTERNAL-}" = 1 ] || fail internal_only
- root=$2; path=$3; work=$4; hash_tool=$5
- n=$(cat "$work/count"); n=$((n + 1)); printf '%s\n' "$n" > "$work/count"
+ root=$2; work=$3; hash_tool=$4; shift 4
+ n=$(cat "$work/count")
+ scan_file() {
+ path=$1; n=$((n + 1)); printf '%s\n' "$n" > "$work/count"
  issue() { printf 'F%s\t%s\t%s\n' "$n" "$1" "$2" >> "$work/findings"; }
  error() { issue 0 "$1"; printf 'x\n' >> "$work/errors"; exit 0; }
  [ -f "$path" ] && [ ! -L "$path" ] && [ -r "$path" ] || error unreadable_or_nonregular
@@ -83,17 +88,21 @@ if [ "${1-}" = --scan ]; then
  after=$(hash_file "$path") || error hash_failed; [ "$before" = "$after" ] || error changed_during_scan
  printf '%s\t%s\n' "$rel" "$after" >> "$work/manifest"
  printf 'x\n' >> "$work/completed"
+ }
+ for path do scan_file "$path"; done
  exit 0
 fi
 if [ "${1-}" = --digest ]; then
  [ "${DOUGLE_SCAN_INTERNAL-}" = 1 ] || fail internal_only
- root=$2; path=$3; work=$4; hash_tool=$5
+ root=$2; work=$3; hash_tool=$4; shift 4
+ for path do
  [ -f "$path" ] && [ ! -L "$path" ] && [ -r "$path" ] || { printf 'x\n' >> "$work/errors"; exit 0; }
  rel=${path#"$root"/}; tab=$(printf '\t'); nl='
 '
  case "$rel" in *"$tab"*|*"$nl"*) printf 'x\n' >> "$work/errors"; exit 0;; esac
  value=$(hash_file "$path") || { printf 'x\n' >> "$work/errors"; exit 0; }; [ "${#value}" = 64 ] || { printf 'x\n' >> "$work/errors"; exit 0; }
  printf '%s\t%s\n' "$rel" "$value" >> "$work/recheck"
+ done
  exit 0
 fi
 [ "$#" = 1 ] || fail expected_one_staged_directory
@@ -112,12 +121,12 @@ for name in findings errors manifest completed recheck; do : > "$work/$name"; do
 printf '0\n' > "$work/count"
 export DOUGLE_SCAN_INTERNAL=1
 if ! find "$root" ! -type d ! -type f -exec sh -c 'printf "x\n" >> "$1/errors"' sh "$work" \; 2>/dev/null; then fail traversal_failed; fi
-if ! find "$root" -type f -exec printf 'x\n' \; > "$work/expected" 2>/dev/null; then fail enumeration_failed; fi
+if ! find "$root" -type f -exec sh -c 'for path do printf "x\n"; done' sh {} + > "$work/expected" 2>/dev/null; then fail enumeration_failed; fi
 expected=$(awk 'END{print NR}' "$work/expected") || fail enumeration_failed
 [ "$expected" -gt 0 ] || fail empty_package
-if ! find "$root" -type f -exec sh "$self" --scan "$root" {} "$work" "$hash_tool" \; >/dev/null 2>&1; then fail traversal_failed; fi
+if ! find "$root" -type f -exec sh "$self" --scan "$root" "$work" "$hash_tool" {} + >/dev/null 2>&1; then fail traversal_failed; fi
 completed=$(awk 'END{print NR}' "$work/completed") || fail completion_count_failed
-if ! find "$root" -type f -exec sh "$self" --digest "$root" {} "$work" "$hash_tool" \; >/dev/null 2>&1; then fail traversal_failed; fi
+if ! find "$root" -type f -exec sh "$self" --digest "$root" "$work" "$hash_tool" {} + >/dev/null 2>&1; then fail traversal_failed; fi
 if ! find "$root" ! -type d ! -type f -exec sh -c 'printf "x\n" >> "$1/errors"' sh "$work" \; 2>/dev/null; then fail traversal_failed; fi
 sort "$work/manifest" > "$work/manifest.sorted" 2>/dev/null || fail manifest_sort_failed
 sort "$work/recheck" > "$work/recheck.sorted" 2>/dev/null || fail manifest_sort_failed

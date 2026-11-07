@@ -1,0 +1,43 @@
+{
+  "environment": "macOS-26.7.2-x86_64-i386-64bit-Mach-O",
+  "synthetic": true,
+  "realModelCalls": 0,
+  "samples": [
+    {
+      "files": 100,
+      "bytes": 409600,
+      "runs": {
+        "before": {
+          "seconds": 8.823,
+          "digest": "8a9d5efcbd78947bdc0428ef78ccf35537e3596f639c36c3196e3d6cb4c2b924"
+        },
+        "after": {
+          "seconds": 4.826,
+          "digest": "8a9d5efcbd78947bdc0428ef78ccf35537e3596f639c36c3196e3d6cb4c2b924"
+        }
+      }
+    },
+    {
+      "files": 1000,
+      "bytes": 4096000,
+      "runs": {
+        "before": {
+          "seconds": 100.543,
+          "digest": "ded2372058101bff665b287bb15f7d401f1eae7b6dc979d3ea024009914d6c3b"
+        },
+        "after": {
+          "seconds": 57.058,
+          "digest": "ded2372058101bff665b287bb15f7d401f1eae7b6dc979d3ea024009914d6c3b"
+        }
+      }
+    }
+  ],
+  "scope": "Real full-package sensitive scanner; synthetic Markdown; one sequential run per variant/size; other developer checks may run concurrently",
+  "baseline_commit": "2fdd59a",
+  "not_measured": [
+    "host AI merge quality",
+    "end-to-end Slack latency",
+    "billed tokens",
+    "Apple Silicon first install"
+  ]
+}

@@ -1,11 +1,11 @@
 {
   "date": "2026-11-07",
-  "plugin_version": "0.8.8",
-  "runtime_version": "0.1.6",
+  "plugin_version": "0.8.9",
+  "runtime_version": "0.1.7",
   "python": "3.13.5",
   "slack_bolt": "1.30.0",
   "slack_sdk": "3.46.0",
-  "automated_test_count": 423,
+  "automated_test_count": 444,
   "failed": 0,
   "external_network": "blocked by test fixture",
   "real_model_calls": 0,
@@ -1164,6 +1164,101 @@
       "status": "PASS"
     },
     {
+      "test": "tests.test_latency::test_stage_accounting_separates_queue_and_processing",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned",
+      "status": "PASS",
+      "variant_sha256": "baf9bc4a4bbb"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned",
+      "status": "PASS",
+      "variant_sha256": "4051d285bf96"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned",
+      "status": "PASS",
+      "variant_sha256": "43fd895de7b4"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned",
+      "status": "PASS",
+      "variant_sha256": "984e97f94ece"
+    },
+    {
+      "test": "tests.test_latency::test_unknown_text_never_enters_status_profile",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_progress_classifies_paths_without_emitting_them",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_same_inquiry_style_repair_reuses_proven_evidence",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_verified_implementation_read_is_reused_only_for_wording",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata",
+      "status": "PASS",
+      "variant_sha256": "1ac5ab57dabc"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata",
+      "status": "PASS",
+      "variant_sha256": "0269b2bdb0c0"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata",
+      "status": "PASS",
+      "variant_sha256": "70fee6c35b2c"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata",
+      "status": "PASS",
+      "variant_sha256": "c219492d6a83"
+    },
+    {
+      "test": "tests.test_latency::test_repair_never_waives_missing_or_live_investigation",
+      "status": "PASS",
+      "variant_sha256": "8f370157318e"
+    },
+    {
+      "test": "tests.test_latency::test_repair_never_waives_missing_or_live_investigation",
+      "status": "PASS",
+      "variant_sha256": "0519bbd38182"
+    },
+    {
+      "test": "tests.test_latency::test_repair_never_waives_missing_or_live_investigation",
+      "status": "PASS",
+      "variant_sha256": "e986c6ae8604"
+    },
+    {
+      "test": "tests.test_latency::test_repair_still_requires_current_style_skill_activation",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_lost_session_discards_presentation_receipts",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_another_question_cannot_reuse_prior_repair_evidence",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_metrics_failure_does_not_fail_an_answer",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_failed_inquiry_has_timing_without_question_text",
+      "status": "PASS"
+    },
+    {
       "test": "tests.test_package::test_bundled_wheel_matches_tested_source_and_declared_hashes",
       "status": "PASS"
     },
@@ -1902,7 +1997,7 @@
     {
       "test": "tests.test_slack_presentation::test_status_checks_daemon_version_not_cli_version",
       "status": "PASS",
-      "variant_sha256": "4e9889cbd975"
+      "variant_sha256": "ba640e908151"
     },
     {
       "test": "tests.test_slack_presentation::test_bootstrap_upgrade_preserves_existing_config_and_requires_prepare",
@@ -2016,5 +2111,7 @@
     "runtime_changed": false
   },
   "progress_and_cancellation": "PASS synthetic Slack / SQLite / owned fake CLI; actual company latency not measured",
-  "slack_dm_layout": "Block structure and source/public payload isolation tested; actual Slack client rendering not verified"
+  "slack_dm_layout": "Block structure and source/public payload isolation tested; actual Slack client rendering not verified",
+  "latency_instrumentation": "PASS numeric-only stage observations, queue time and retry reasons; actual company latency not measured",
+  "presentation_repair": "PASS same-inquiry validated non-live receipts only; metadata equality and all style skills required; semantic equivalence still needs approval"
 }

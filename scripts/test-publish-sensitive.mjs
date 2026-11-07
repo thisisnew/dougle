@@ -26,6 +26,13 @@ async function run(name,text,expected,{file='manifest.md',extra,env}={}) {
 try {
  await run('ordinary domain claim','Statement: receiving confirms a receipt.\n',0)
  await run('Korean text and code names','입하 확정: receipt\nFeatureFlagClient is FliptClient.\n',0,{file:'입하 지식.md'})
+ await run('literal backslash and leading dash path','ordinary claim\n',0,{file:'-claim\\name.md'})
+ const batch=await run('batched files retain unique finding IDs','safe\n',1,{extra:async d=>{
+  for(let i=0;i<24;i++)await writeFile(join(d,`claim-${i}.md`),'password: synthetic-batch-value\n')
+ }})
+ assert.equal(batch.report.filesChecked,25)
+ assert.equal(batch.report.findingCount,24)
+ assert.equal(new Set(batch.report.findings.map(f=>f.fileId)).size,20) // report deliberately caps details
  await run('unlabelled commit hashes','Revision: '+ 'a'.repeat(40)+'\nClaim ID: C01\n',0)
  await run('explicit redaction','password: <redacted>\napi_key = [REDACTED]\nsecret: ***\ntoken: ${TOKEN}\n',0)
  await run('quoted redacted JSON','{"password":"REDACTED"}\n',0)
