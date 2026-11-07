@@ -4,6 +4,8 @@
 
 스킬0.8.14 / 봇0.1.11. progress.log에 문의ID·실제관측단계·경과/무신호시간·도구응답수·최종상태 기록. 원문·질문·토큰·추론 미출력. 1MiB×3 순환, thread lock, 모니터 오류가 응답을 막지 않음. 기존30초Slack갱신 유지, 터미널은 단계변화(최대초당1행)/10초유휴갱신. code/live 분류 추가, 구타이밍프로필호환. status.monitor_command로 실제경로tail명령제공. 보기종료Ctrl+C는 봇중지아님. 회사연결·실제AI호출없이 회귀검사 진행. 시간 입력 필드 제거(제출시각만 자동기록, 실제조회시각 아님), 실제설정 기반BigQuery 도구탐색/스키마/조회절차 지시, SQL검증실패시조회문만제외·근거검사는유지, DM구분·입력대기말풍선·한글조사옆강조정리. 실제Codex1회/합성MCP2사례로조회순서·권한거부확인. 회사/nativeClaude미검증. 공개릴리스확인예정.
 
+0.8.14 공개 완료: 소스 c6e373a40b3fa24087f8d6d3d9e4cab884308e7c, CI42356664437 Python3.12/3.13 성공. 자동647개 통과(로그12·운영조회21 신규, 이전 시간필수1개 대체). v0.8.14-skills-preview.1 익명ZIP/체크섬 바이트 일치 확인. 사용자 데이터·인증·실행 중 봇·로컬 설치 스킬은 수정하지 않았습니다. 적용은 플러그인 업데이트/리로드→새실행환경준비→중지확인→시작, running_version=0.1.11. 로그는 tail -n 30 -F ~/.dougle-bot/progress.log (사용자 지정 home은 status.monitor_command).
+
 ## 직전 수정 (2026-11-07 회사 기본 질문 실패)
 
 일반 업무/코드 질문이 required_read_not_verified로 실패한다는 제보. 공통 결함: 모델에 tool_use_id를 명시 전달하지 않으면서 정확한 ID를 요구했고 기존 fake는 정답ID를 미리 넣었음. PostToolUse receipt_hook 추가, 독립 stream검증 유지, 실패진단 counts만 status 노출. 회사 실제 원인은 로그 없으므로 확정금지.
