@@ -26,3 +26,5 @@ skills/ 정본과 plugins/dougle/skills/ 사본 동일. 로컬 설치본은 폴�
 사용자의 GitHub push/Preview 릴리스 상시 승인 있음. 개발 도구 .tools/bot-dev/bin, gh /usr/local/bin/gh. push는 HTTP/1.1+postBuffer524288000. 결과/현재 제한은 docs/dougle-bot/internal-handoff.md. 이전0.8.10 성능 결과는 historical 측정으로 그대로 유지한다.
 
 0.8.11 Preview 공개 완료: 소스 b6e4d8be83d318b8bb8f3c75f8193314fd2933af, CI42329880716 Python3.12/3.13 모두 성공. 익명 ZIP/체크섬 다운로드 바이트 일치. ~/.agents/skills 및 ~/.claude/skills의 dougle-bot은 작업 전 Git 바이트와 폴더 전체 일치 확인 후 .tools/skill-backups/0.8.11에 백업하고 갱신했다. 실제 실행 중인 봇은 건드리지 않았다.
+
+시나리오 목록 공개 완료: 소스 f95d7fe8ce3d43914642e1f3d91ce33559301351, CI42332824112 Python3.12/3.13 성공. 기존 v0.8.11-skills-preview.1 릴리스에 문서 전용 Dougle_Scenarios_0.8.11.zip(103,130바이트)을 추가했고 익명 다운로드·SHA256 일치를 확인했다. 설치 ZIP과 런타임은 그대로다. 증거: docs/scenarios/publication.json. 새 1,066개 시나리오 실행은 NOT_RUN이다.

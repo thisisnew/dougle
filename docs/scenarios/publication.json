@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-07",
+  "source_commit": "f95d7fe8ce3d43914642e1f3d91ce33559301351",
+  "type": "scenario_design_catalog_not_runtime",
+  "scenario_count": 1066,
+  "scenario_execution": "NOT_RUN",
+  "archive_url": "https://github.com/thisisnew/dougle/releases/download/v0.8.11-skills-preview.1/Dougle_Scenarios_0.8.11.zip",
+  "bytes": 103130,
+  "sha256": "696c82854c7798009564a0ff46e1dba63fa63b8e40594bd4a477d4508cbe2e04",
+  "anonymous_download_verified": true,
+  "catalog_checks": {
+    "unique_ids_and_required_fields": "PASS",
+    "basis_paths_and_existing_test_references": "PASS",
+    "generated_files_match": "PASS",
+    "csv_json_roundtrip": "PASS",
+    "markdown_case_ids": "PASS"
+  },
+  "real_model_calls": 0,
+  "real_company_slack_calls": 0,
+  "real_keychain_calls": 0,
+  "ci": {
+    "url": "https://github.com/thisisnew/dougle/actions/runs/42332824112",
+    "source_commit": "f95d7fe8ce3d43914642e1f3d91ce33559301351",
+    "python_3_12": "PASS",
+    "python_3_13": "PASS",
+    "note": "Catalog integrity checks and existing automated suite; not execution of the 1066 designed scenarios."
+  }
+}
