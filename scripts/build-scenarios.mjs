@@ -632,7 +632,7 @@ const files=new Map()
 files.set('catalog.json',JSON.stringify(catalog,null,2)+'\n')
 const columns=['id','area','title','priority','support','execution_layer','preconditions','steps','expected','forbidden','evidence_required','related_existing_tests','scenario_result']
 const csvCell=value=>'"'+String(Array.isArray(value)?value.join('\n'):value).replaceAll('"','""')+'"'
-files.set('catalog.csv','\uFEFF'+[columns.map(csvCell).join(','),...cases.map(c=>columns.map(k=>csvCell(c[k])).join(','))].join('\r\n')+'\r\n')
+files.set('catalog.csv','\uFEFF'+[columns.map(csvCell).join(','),...cases.map(c=>columns.map(k=>csvCell(c[k])).join(','))].join('\n')+'\n')
 const list=items=>items.map(s=>`- ${s}`).join('\n')
 for(const g of groups){
  const entries=cases.filter(c=>c.area===g.id).map(c=>`<details>\n<summary>${c.id} · ${c.title}</summary>\n\n**${c.priority} · ${supportLabels[c.support]} · ${layerLabels[c.execution_layer]} · NOT_RUN**\n\n**사전 조건**\n\n${list(c.preconditions)}\n\n**행동**\n\n${c.steps.map((s,i)=>`${i+1}. ${s}`).join('\n')}\n\n**기대 결과**\n\n${list(c.expected)}\n\n**금지 사항**\n\n${list(c.forbidden)}\n\n**남길 증거**\n\n${list(c.evidence_required)}${c.metrics?'\n\n**측정 항목**\n\n'+list(c.metrics):''}\n\n**관련 기존 검사:** ${c.related_existing_tests.length?c.related_existing_tests.map(t=>'`'+t+'`').join(', ')+' — 일부 동작의 과거 검증 기록이며 이 시나리오의 PASS가 아닙니다.':'개별 대응 미완료'}\n\n</details>`)
