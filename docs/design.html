@@ -15,9 +15,9 @@
 <section><h2>2. 같은 스레드에서는 대화가 이어집니다.</h2>
 <div class="picture" tabindex="0" role="region" aria-label="대화 구분 그림. 작은 화면에서는 옆으로 이동할 수 있습니다."><img src="diagrams/bot-model.png" alt="스레드 A에서는 첫 질문과 후속 질문을 이어서 이해하고, 스레드 B는 별도 대화로 시작합니다."></div>
 <p>같은 스레드에서 다시 멘션하면 앞선 질문을 기억하되, <strong>다른 스레드의 대화와 섞지 않습니다.</strong></p></section>
-<section><h2>3. 승인해야 Slack 댓글이 나갑니다.</h2>
-<div class="picture" tabindex="0" role="region" aria-label="답변 흐름 그림. 작은 화면에서는 옆으로 이동할 수 있습니다."><img src="diagrams/bot-flow.png" alt="질문 → 조사 → 지정 승인자 승인 → 댓글 게시"></div>
-<p><strong>지정 승인자가 [게시]를 눌러야 댓글이 나갑니다.</strong> DB를 직접 볼 수 없으면 조회 결과를 받아 답변을 다시 준비합니다.</p></section>
+<section><h2>3. 확인한 답은 바로 보내고, 어려운 건 내부에서 해결합니다.</h2>
+<p><strong>질문 → 근거 확인 → 스레드에 답변</strong></p>
+<p>운영 조회·개발자 도움·오류가 있을 때만 <strong>개발자 DM → 확인 결과 입력 → 원래 질문에 답변</strong>으로 이어집니다.</p></section>
 <footer><a href="design-reference.md">개발 설계 자세히</a> · <a href="../dougle-bot/README.md">봇 사용법</a></footer>
 </main>
 </html>

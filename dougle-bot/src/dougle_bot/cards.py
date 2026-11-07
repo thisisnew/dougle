@@ -2,6 +2,7 @@ import hashlib
 import json
 import re
 
+from .handoff import failure_request
 from .images import IMAGE_ERRORS
 from .presentation import chat_text
 from .progress import progress_text
@@ -20,12 +21,12 @@ LABELS = {
     "queued": "처리 대기",
     "drafting": "답변 작성 중",
     "awaiting_approval": "게시 승인 대기",
-    "needs_lookup": "개발자 조회 필요",
+    "needs_lookup": "개발자 확인 요청",
     "posting": "게시 중",
     "posted": "게시 완료",
     "rejected": "거절됨",
     "cancelled": "중단됨",
-    "failed": "처리 실패",
+    "failed": "개발자 확인 요청",
     "post_unknown": "전송 여부 확인 필요",
 }
 
@@ -99,6 +100,29 @@ def render(inquiry, draft, permalink=None):
                 )
             )
         )
+    if status == "failed":
+        blocks.append(section("*필요한 확인*\n" + failure_request(inquiry.get("error") or "")))
+        blocks.append(
+            section(
+                "처리 결과를 입력하면 같은 문의의 답변을 이어서 준비합니다. 고객 채널에는 오류나 내부 요청을 게시하지 않습니다."
+            )
+        )
+        if inquiry.get("job_id"):
+            blocks.append(
+                {
+                    "type": "actions",
+                    "elements": [
+                        {
+                            "type": "button",
+                            "text": {"type": "plain_text", "text": "처리 결과 입력"},
+                            "action_id": "assist",
+                            "value": json.dumps(
+                                {"inquiry_id": inquiry["id"], "job_id": inquiry["job_id"]}
+                            ),
+                        }
+                    ],
+                }
+            )
     if status in ("queued", "drafting"):
         blocks.append(
             section(
@@ -134,7 +158,7 @@ def render(inquiry, draft, permalink=None):
                 "이 문의의 처리를 중단했습니다. 실행 중인 AI에는 종료를 요청하며, 늦게 도착하는 답변은 게시하지 않습니다. 다른 문의는 계속 처리합니다."
             )
         )
-    if draft and status not in ("queued", "drafting", "cancelled"):
+    if draft and status not in ("queued", "drafting", "cancelled", "failed"):
         if status == "needs_lookup":
             blocks.append(section("*확인이 필요한 내용*"))
             lookup = json.loads(draft["lookup_json"])
@@ -192,7 +216,7 @@ def render(inquiry, draft, permalink=None):
                 button("edit", "직접 수정")
         if status in ("awaiting_approval", "needs_lookup"):
             if status == "needs_lookup":
-                button("lookup", "조회 결과 입력")
+                button("lookup", "확인 결과 입력")
             button("reject", "거절")
         if status == "failed":
             button("reject", "거절")
@@ -208,11 +232,12 @@ def render(inquiry, draft, permalink=None):
 
 
 def modal(action, inquiry, draft):
-    if action not in ("edit", "lookup"):
+    if action not in ("edit", "lookup", "assist"):
         raise BotError("action_unavailable")
     labels = {
         "edit": "직접 수정",
-        "lookup": "조회 결과 입력",
+        "lookup": "확인 결과 입력",
+        "assist": "처리 결과 입력",
     }
     block = {
         "type": "input",
@@ -231,14 +256,18 @@ def modal(action, inquiry, draft):
             raise BotError("edit_too_long")
         block["element"]["initial_value"] = draft["body"]
     blocks = [block]
-    if action == "lookup":
+    if action in ("lookup", "assist"):
+        block["hint"] = {
+            "type": "plain_text",
+            "text": "확인 대상·범위와 결과 또는 해결한 내용을 요약해 주세요. 토큰·개인정보·원본 데이터는 입력하지 마세요.",
+        }
         blocks.append(
             {
                 "type": "input",
                 "block_id": "observed_at",
                 "label": {
                     "type": "plain_text",
-                    "text": "조회 시각 · 예: 2026-11-06T15:00:00+09:00",
+                    "text": "확인 시각 · 예: 2026-11-06T15:00:00+09:00",
                 },
                 "element": {"type": "plain_text_input", "action_id": "value", "max_length": 40},
             }
@@ -249,7 +278,11 @@ def modal(action, inquiry, draft):
         "private_metadata": json.dumps(
             {
                 "inquiry_id": inquiry["id"],
-                "draft_id": draft["id"],
+                **(
+                    {"job_id": inquiry["job_id"]}
+                    if action == "assist"
+                    else {"draft_id": draft["id"]}
+                ),
                 "channel": inquiry["card_channel_id"],
                 "ts": inquiry["card_ts"],
             }

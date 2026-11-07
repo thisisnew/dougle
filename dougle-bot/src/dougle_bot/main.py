@@ -36,7 +36,11 @@ def status(home, config_path):
         return result
     cfg = load(config_path)
     home = cfg.home
-    result.update(channels=cfg.slack.allowed_channel_ids, approver=cfg.slack.approver_user_id)
+    result.update(
+        channels=cfg.slack.allowed_channel_ids,
+        approver=cfg.slack.approver_user_id,
+        reply_mode="review" if cfg.slack.require_approval else "automatic",
+    )
     result["running"] = running(home)
     if (home / "bot.db").exists():
         store = Store(home / "bot.db", migrate=False)

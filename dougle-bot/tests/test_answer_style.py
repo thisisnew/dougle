@@ -187,7 +187,7 @@ def test_untrusted_question_text_cannot_inject_trace_events():
 @pytest.fixture
 def setup(tmp_path):
     cfg = Config(
-        SlackConfig("UAPPROVER", ["CTEST"], "TTEST"),
+        SlackConfig("UAPPROVER", ["CTEST"], "TTEST", require_approval=True),
         replace(EngineConfig(), workdir=str(tmp_path / "engine")),
         tmp_path,
     )

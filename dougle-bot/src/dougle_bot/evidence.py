@@ -69,7 +69,7 @@ live (fresh actual state). Include EVERY needed kind; implementation/incident al
 current_state always requires live. Mixed questions may need both. Clarification cannot be answered.
 Each check links a zero-based sources index and a receipt: actual successful tool_use ID for a content
 read in THIS call; image:<file_id> for a currently supplied image; developer_report for the supplied
-timestamped manual result (live only, attribute it). Never invent a tool ID or reuse a previous call's ID.
+timestamped manual result (only its declared evidence_kinds; attribute it). Never invent a tool ID or reuse a previous call's ID.
 Read/Grep content outside .dougle on source code files, or WebFetch on original source code URLs,
 can support code. Glob, filename-only Grep, skill instructions, topic summaries and schema metadata
 cannot establish original code/live behavior. execute_sql_readonly can support live; table metadata cannot.
@@ -236,7 +236,11 @@ def validate_verification(output, reads, *, image_ids=(), report=False, required
         if receipt.startswith("image:"):
             valid = kind == "image" and receipt[6:] in image_ids
         if receipt == "developer_report":
-            valid = kind == "live" and report
+            valid = (
+                kind in report.get("evidence_kinds", ["live"])
+                if isinstance(report, dict)
+                else kind == "live" and report
+            )
         if not valid:
             raise BotError("required_read_not_verified")
         verified.add(kind)

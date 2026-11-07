@@ -1,11 +1,11 @@
 {
   "date": "2026-11-07",
-  "plugin_version": "0.8.10",
-  "runtime_version": "0.1.8",
+  "plugin_version": "0.8.11",
+  "runtime_version": "0.1.9",
   "python": "3.13.5",
   "slack_bolt": "1.30.0",
   "slack_sdk": "3.46.0",
-  "automated_test_count": 456,
+  "automated_test_count": 508,
   "failed": 0,
   "external_network": "blocked by test fixture",
   "real_model_calls": 0,
@@ -329,6 +329,91 @@
       "status": "PASS"
     },
     {
+      "test": "tests.test_automatic_reply::test_default_and_old_config_without_setting_use_automatic_replies",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_normal_answer_posts_once_without_opening_a_dm",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_only_exception_opens_dm_and_result_posts_back_to_original_thread",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_internal_failure_fix_requires_research_then_posts_without_confirmation",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_delivery_failure_is_private_and_never_automatically_repeated",
+      "status": "PASS",
+      "variant_sha256": "ce905dc776fd"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_delivery_failure_is_private_and_never_automatically_repeated",
+      "status": "PASS",
+      "variant_sha256": "804ebf5e907c"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_history_change_does_not_publish_an_outdated_answer_or_loop",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_durable_ready_answer_survives_crash_without_second_model_call",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_parallel_auto_delivery_claim_posts_once",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_old_review_draft_does_not_auto_post_after_upgrade",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_crash_after_auto_claim_without_send_requires_developer",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_insufficient_developer_report_waits_again_not_an_infinite_loop",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_developer_report_is_never_shared_with_another_inquiry",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_review_mode_cannot_be_bypassed_by_automatic_entrypoint",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_stop_before_post_preserves_ready_answer_without_sending",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_recovery_notifies_only_issues_without_duplicate_unknown_dm",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_approval_mode_requires_a_real_boolean",
+      "status": "PASS",
+      "variant_sha256": "fee4347ff94d"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_approval_mode_requires_a_real_boolean",
+      "status": "PASS",
+      "variant_sha256": "42f78f54f794"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_approval_mode_requires_a_real_boolean",
+      "status": "PASS",
+      "variant_sha256": "c1d4d6ed2e3b"
+    },
+    {
+      "test": "tests.test_automatic_reply::test_auto_queue_uses_indexes_with_large_existing_audit_log",
+      "status": "PASS"
+    },
+    {
       "test": "tests.test_boundaries::test_actual_bolt_ack_follows_durable_intake",
       "status": "PASS"
     },
@@ -535,6 +620,159 @@
     },
     {
       "test": "tests.test_boundaries::test_definite_failure_retry_preserves_external_send_identity",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_unavailable_required_reads_route_to_private_developer_not_public_failure",
+      "status": "PASS",
+      "variant_sha256": "6f013a33caed"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_unavailable_required_reads_route_to_private_developer_not_public_failure",
+      "status": "PASS",
+      "variant_sha256": "10e26efed496"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_customer_clarification_and_missing_material_remain_reviewable_answers",
+      "status": "PASS",
+      "variant_sha256": "1bd93d5c8c00"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_customer_clarification_and_missing_material_remain_reviewable_answers",
+      "status": "PASS",
+      "variant_sha256": "b0c56a24c9e2"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_developer_result_resumes_same_inquiry_and_requires_final_approval",
+      "status": "PASS",
+      "variant_sha256": "6f013a33caed"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_developer_result_resumes_same_inquiry_and_requires_final_approval",
+      "status": "PASS",
+      "variant_sha256": "10e26efed496"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_developer_result_resumes_same_inquiry_and_requires_final_approval",
+      "status": "PASS",
+      "variant_sha256": "1538df36c899"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_internal_failures_have_one_private_action_and_never_post_or_rerun",
+      "status": "PASS",
+      "variant_sha256": "d57b2720c655"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_internal_failures_have_one_private_action_and_never_post_or_rerun",
+      "status": "PASS",
+      "variant_sha256": "1bacc75434d6"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_internal_failures_have_one_private_action_and_never_post_or_rerun",
+      "status": "PASS",
+      "variant_sha256": "2ead7f5af876"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_internal_failures_have_one_private_action_and_never_post_or_rerun",
+      "status": "PASS",
+      "variant_sha256": "5ce32afc9ca3"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_internal_failures_have_one_private_action_and_never_post_or_rerun",
+      "status": "PASS",
+      "variant_sha256": "8ae348881d44"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_internal_failures_have_one_private_action_and_never_post_or_rerun",
+      "status": "PASS",
+      "variant_sha256": "5c91b3fe5d7a"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_internal_failures_have_one_private_action_and_never_post_or_rerun",
+      "status": "PASS",
+      "variant_sha256": "5843d72bc3c6"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_environment_repair_queues_once_and_requires_actual_reads",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_double_modal_submissions_create_one_job",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_assistance_rejects_wrong_identity_or_stale_binding",
+      "status": "PASS",
+      "variant_sha256": "63fb751ee1c7"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_assistance_rejects_wrong_identity_or_stale_binding",
+      "status": "PASS",
+      "variant_sha256": "f29f65935ecc"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_assistance_rejects_wrong_identity_or_stale_binding",
+      "status": "PASS",
+      "variant_sha256": "4d38e2e0b4ef"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_assistance_rejects_wrong_identity_or_stale_binding",
+      "status": "PASS",
+      "variant_sha256": "8ccc30ec2b87"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_assistance_rejects_wrong_identity_or_stale_binding",
+      "status": "PASS",
+      "variant_sha256": "96da24a26c0a"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_assistance_rejects_wrong_identity_or_stale_binding",
+      "status": "PASS",
+      "variant_sha256": "52a020e234a3"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_invalid_or_sensitive_results_do_not_change_state",
+      "status": "PASS",
+      "variant_sha256": "a8f02df05bf9"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_invalid_or_sensitive_results_do_not_change_state",
+      "status": "PASS",
+      "variant_sha256": "aac4c206bf8e"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_invalid_or_sensitive_results_do_not_change_state",
+      "status": "PASS",
+      "variant_sha256": "fc5a34411d0f"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_invalid_or_sensitive_results_do_not_change_state",
+      "status": "PASS",
+      "variant_sha256": "820d3b5af86d"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_invalid_or_sensitive_results_do_not_change_state",
+      "status": "PASS",
+      "variant_sha256": "0b30b9710318"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_old_failure_card_cannot_resubmit_after_a_new_failure",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_failed_submission_transaction_rolls_back",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_repair_report_is_not_code_or_live_evidence",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_failed_code_requirement_survives_developer_repair",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_developer_handoff::test_actual_bolt_assistance_button_and_modal_queue_durably_before_ack",
       "status": "PASS"
     },
     {
@@ -1997,7 +2235,7 @@
     {
       "test": "tests.test_slack_presentation::test_status_checks_daemon_version_not_cli_version",
       "status": "PASS",
-      "variant_sha256": "6cadf3a670a7"
+      "variant_sha256": "3f3639a29077"
     },
     {
       "test": "tests.test_slack_presentation::test_bootstrap_upgrade_preserves_existing_config_and_requires_prepare",
@@ -2167,5 +2405,7 @@
   "progress_and_cancellation": "PASS synthetic Slack / SQLite / owned fake CLI; actual company latency not measured",
   "slack_dm_layout": "Block structure and source/public payload isolation tested; actual Slack client rendering not verified",
   "latency_instrumentation": "PASS numeric-only stage observations, queue time and retry reasons; actual company latency not measured",
-  "presentation_repair": "PASS same-inquiry validated non-live receipts only; metadata equality and all style skills required; semantic equivalence still needs approval"
+  "presentation_repair": "PASS same-inquiry validated non-live receipts only; metadata equality and all style skills required; semantic equivalence still needs approval",
+  "automatic_reply": "PASS default normal reply without DM; issues-only DM; old pending review drafts not auto-posted",
+  "developer_handoff": "PASS same-inquiry typed reported evidence; repair alone grants no evidence; duplicate/stale/unauthorized input rejected"
 }

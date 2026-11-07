@@ -1,6 +1,6 @@
 display_information:
   name: dougle
-  description: 업무 질문에 근거와 함께 답하는 봇 (승인 후 게시)
+  description: 업무 질문에 근거와 함께 답하는 봇 (확인된 답변 자동 게시)
 features:
   app_home:
     messages_tab_enabled: true

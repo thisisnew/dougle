@@ -55,7 +55,7 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 /dougle:dougle-bot
 ```
 
-처음 설정을 안내합니다. 이후 `@dougle 질문`을 받으면 승인자 DM에 답변을 보내고, **[게시]를 눌러야 댓글이 나갑니다.** [봇 설정·사용법](dougle-bot/README.md)
+처음 설정을 안내합니다. 이후 `@dougle 질문`에 **근거를 확인해 바로 답합니다.** 운영 조회·개발자 도움·내부 오류가 있을 때만 담당자 DM으로 확인을 요청합니다. [봇 설정·사용법](dougle-bot/README.md)
 
 <details>
 <summary>다른 명령 보기</summary>
@@ -97,4 +97,4 @@ https://github.com/thisisnew/dougle 최신 main으로 설치된 skills/의 모�
 더글 배포본으로 확인된 경우에만 스킬 검색 경로 밖에 백업해 줘.
 ```
 
-[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.10-skills-preview.1)
+[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.11-skills-preview.1)

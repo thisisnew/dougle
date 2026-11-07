@@ -48,7 +48,7 @@ def no_network(monkeypatch):
 def app(tmp_path):
     now = [1000.0]
     config = Config(
-        SlackConfig("UAPPROVER", ["CTEST", "COTHER"], "TTEST"),
+        SlackConfig("UAPPROVER", ["CTEST", "COTHER"], "TTEST", require_approval=True),
         replace(EngineConfig(), workdir=str(tmp_path / "engine")),
         tmp_path,
     )

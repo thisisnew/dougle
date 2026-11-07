@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 
 from .answer_policy import ANSWER_POLICY
 from .evidence import RESEARCH_POLICY, VERIFICATION_SCHEMA
+from .handoff import HANDOFF_POLICY
 from .safety import BotError, check_content, polite, safe_url
 
 OUTPUT_SCHEMA = {
@@ -172,6 +173,7 @@ Use Dougle's existing source/topic memory; do not build another search engine. S
 All Korean narration MUST use 존댓말, including acknowledgements/errors. Readability opt-out never permits 반말.
 Preserve exact code/clearly marked quotations. Keep material conditions, exceptions and uncertainty.
 {RESEARCH_POLICY}
+{HANDOFF_POLICY}
 SLACK AUDIENCE: default to a non-developer asking a work question, even when evidence comes from code.
 Treat the reader as an adult colleague unfamiliar with this specific system, not a child.
 Explain a necessary unfamiliar term where it is first used. Do not add childish analogies or remove business precision.
@@ -181,7 +183,7 @@ Use business names instead of enum values, template IDs, class names, SQL expres
 Include implementation detail only when the question explicitly asks for it; never omit a material business exception to be brief.
 Avoid tables, report-style introductions and repeated headings. Optional short *bold* labels use Slack mrkdwn, not **Markdown**.
 Keep the public body free of citation markers, bibliography, evidence-only links and any Dougle signature/footer.
-Put complete provenance ONLY in the separate sources array for the approver DM; sources remain mandatory for answered.
+Put complete provenance ONLY in the separate sources array for internal review; sources remain mandatory for answered.
 This is a Slack presentation override of the ask skill's usual visible citations, not a waiver of evidence-based answering.
 Cite only evidence actually read. Return JSON matching the supplied schema. The runtime posts only body.
 Do not append generic offers to help, invitations for more questions, a closing recap, or a routine evidence-date/production disclaimer.

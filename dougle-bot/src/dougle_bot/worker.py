@@ -6,6 +6,7 @@ from decimal import Decimal
 
 from . import cards
 from .evidence import KINDS, QUESTION_KINDS, validate_verification
+from .handoff import reported_evidence, route_unresolved
 from .images import collect_images, prompt_messages
 from .presentation import reaction_names
 from .progress import Progress
@@ -78,6 +79,12 @@ class Worker:
                 self.update_reaction(inquiry)
             except BotError:
                 self.store.audit(ident, "system", "reaction_update_failed")
+            if (
+                not self.config.slack.require_approval
+                and not inquiry["card_ts"]
+                and inquiry["status"] not in ("needs_lookup", "failed", "post_unknown")
+            ):
+                return
             if inquiry["card_state"] == "unknown":
                 return
             draft = self.store.current(inquiry)
@@ -97,9 +104,9 @@ class Worker:
                         inquiry["progress"] = json.loads(latest["detail"])
                     except (ValueError, TypeError):
                         pass
-            if inquiry["status"] in ("queued", "drafting"):
+            if inquiry["status"] in ("queued", "drafting", "failed"):
                 job = self.store.one(
-                    "SELECT id FROM jobs WHERE inquiry_id=? AND status IN ('queued','running') ORDER BY id DESC LIMIT 1",
+                    "SELECT id FROM jobs WHERE inquiry_id=? AND status IN ('queued','running','failed','done') ORDER BY id DESC LIMIT 1",
                     (ident,),
                 )
                 inquiry["job_id"] = job["id"] if job else None
@@ -135,7 +142,27 @@ class Worker:
                     )
                 raise
 
+    def publish_ready(self):
+        if self.config.slack.require_approval:
+            return False
+        pending = self.store.pending_auto_reply()
+        if not pending:
+            return False
+        from .actions import Actions
+
+        Actions(self.store, self.config, self.slack, self).post_automatic(pending["id"])
+        return True
+
+    def notify_recovered(self):
+        # One startup pass, not a polling loop. Uncertain DM delivery remains held.
+        for row in self.store.all(
+            "SELECT id FROM inquiries WHERE status IN ('needs_lookup','failed','post_unknown') AND card_state!='unknown'"
+        ):
+            self.notify(row["id"])
+
     def run_once(self):
+        if self.publish_ready():
+            return True
         job = self.store.claim_job()
         if job is None:
             return False
@@ -214,6 +241,12 @@ class Worker:
             repair_run_id = None
             required_evidence = set()
             attempt = 0
+            saved_requirements = self.store.one(
+                "SELECT detail FROM audit WHERE inquiry_id=? AND action='research_requirements' ORDER BY id DESC LIMIT 1",
+                (ident,),
+            )
+            if saved_requirements:
+                required_evidence.update(json.loads(saved_requirements["detail"]))
             previous_draft = self.store.current(inquiry)
             if previous_draft and previous_draft.get("verification_json"):
                 previous_checks = json.loads(previous_draft["verification_json"])
@@ -313,12 +346,18 @@ class Worker:
                     )
                     if isinstance(category, str):
                         required_evidence.update(QUESTION_KINDS.get(category, set()))
+                    self.store.audit(
+                        ident,
+                        "system",
+                        "research_requirements",
+                        json.dumps(sorted(required_evidence)),
+                    )
                     if not set(self.config.engine.required_skills) <= result.activated:
                         raise BotError("required_skill_not_activated")
                     output = validate_output(
                         result.output,
-                        lookup_basis=bool(lookup),
-                        lookup_time=lookup["observed_at"] if lookup else None,
+                        lookup_basis=reported_evidence(lookup),
+                        lookup_time=lookup["observed_at"] if reported_evidence(lookup) else None,
                     )
                     if presentation_repair is not None and any(
                         output[key] != presentation_repair[key]
@@ -329,7 +368,7 @@ class Worker:
                         output,
                         repair_reads if presentation_repair is not None else result.reads,
                         image_ids={img.file_id for img in images},
-                        report=bool(lookup),
+                        report=lookup or False,
                         required_floor=required_evidence,
                     )
                     self.store.audit(
@@ -373,15 +412,17 @@ class Worker:
                         try:
                             candidate = validate_output(
                                 result.output,
-                                lookup_basis=bool(lookup),
-                                lookup_time=lookup["observed_at"] if lookup else None,
+                                lookup_basis=reported_evidence(lookup),
+                                lookup_time=lookup["observed_at"]
+                                if reported_evidence(lookup)
+                                else None,
                                 presentation=False,
                             )
                             validate_verification(
                                 candidate,
                                 result.reads,
                                 image_ids={img.file_id for img in images},
-                                report=bool(lookup),
+                                report=lookup or False,
                                 required_floor=required_evidence,
                             )
                             if (
@@ -397,6 +438,7 @@ class Worker:
                         except (BotError, TypeError, KeyError):
                             pass
                     progress.retry(reason)
+            output = route_unresolved(output)
             last_seen = max((m["ts"] for m in messages), key=Decimal, default=inquiry["trigger_ts"])
             progress.phase("persist")
             self.store.save_draft(
@@ -408,6 +450,7 @@ class Worker:
                 session,
                 payload.get("instruction"),
                 job_id=job["id"],
+                auto_reply=not self.config.slack.require_approval,
             )
             if restored:
                 with self.store.tx() as db:
@@ -420,6 +463,7 @@ class Worker:
         except Exception:
             self.store.fail_job(job, "processing_failed")
         progress.phase("delivery")
+        self.publish_ready()
         try:
             self.show_card(ident)
         except BotError:

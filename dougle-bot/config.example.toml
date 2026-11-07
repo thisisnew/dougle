@@ -1,10 +1,11 @@
-# 승인자·채널·회사 Claude 명령을 실제 값으로 바꾸세요. 토큰은 키체인에만 저장합니다.
+# 내부 확인 담당자·채널·회사 Claude 명령을 실제 값으로 바꾸세요. 토큰은 키체인에만 저장합니다.
 [slack]
 approver_user_id = "UYOURID"
 allowed_channel_ids = ["CYOURCHANNEL"]
 workspace_id = ""
 ack_reaction = "dougle" # 회사 이모지가 없으면 ⏳로 대체. 빈 문자열이면 상태 이모지 생략
 thread_history_limit = 50
+require_approval = false # 기본: 바로 답변, 도움이 필요한 문의만 담당자 DM. true는 기존 검토 모드
 
 [engine]
 claude_bin = "claude"

@@ -57,6 +57,7 @@ class SlackConfig:
     workspace_id: str = ""
     ack_reaction: str = "dougle"
     thread_history_limit: int = 50
+    require_approval: bool = False
 
 
 @dataclass(frozen=True)
@@ -97,6 +98,8 @@ class Config:
             raise BotError("duplicate_channel")
         if self.slack.workspace_id and not identifier(self.slack.workspace_id, "T"):
             raise BotError("invalid_workspace")
+        if type(self.slack.require_approval) is not bool:
+            raise BotError("invalid_approval_setting")
         ranges = [
             (self.slack.thread_history_limit, 1, 500),
             (self.engine.timeout_seconds, 10, 3600),

@@ -11,6 +11,6 @@
     }
   ],
   "metadata": {
-    "description": "Domain knowledge skills with an optional local Slack approval bot."
+    "description": "Domain knowledge skills with an optional local Slack bot with developer handoffs."
   }
 }

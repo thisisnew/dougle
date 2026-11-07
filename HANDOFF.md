@@ -1,29 +1,22 @@
 # 작업 인계
 
-## 현재 변경
+## 현재 작업
 
-스킬0.8.10 / 선택형 Slack 봇0.1.8. 사용자가 반복 실행 비용을 강조하며 강한 검증을 요청했다. 실제 회사 Slack·키체인·지식/DB·AI CLI에 접근하지 않고 합성 자료와 fake 서비스로 검증했다. 추가 실모델 호출0회, 누계200/200. 추가 허용 없이 모델 평가를 실행하지 않는다.
+스킬0.8.11 / 봇0.1.9. 사용자가 승인 DM을 없애고 정상 문의는 즉답, 운영 조회·개발자 도움·오류만 내부 DM으로 받도록 요청했다. 구현 완료, 테스트508개 통과. 회사 서비스·키체인·지식 DB·AI CLI를 테스트에서 호출하지 않았다. 실제 모델 평가 추가0회, 누계200/200, 추가 허용 없이 호출하지 않는다.
 
-재현 후 수정:
-1. required_skills 검사 실패가 먼저 발생하면 코드/live 조사 요구가 다음 시도에서 사라져 승인 가능해졌음. 요구 수집을 스킬 검사 앞으로 이동해 보존한다.
-2. save_draft 뒤 finish_job 전 중단 시 재시작 후 엔진을 재호출했음. job_id를 받아 답변·작업 완료를 같은 트랜잭션에 저장한다. 실패는 둘 다 롤백. 저장 이전 중단까지 무재호출을 보장하지 않는다.
-3. 합성 X-Amz-Signature URL이 scanner PASS였음. 서명/접근 토큰 쿼리 패턴을 추가하고 보고서는 값 없이 유지한다. 의미 검토와 전체 패키지 검사는 여전히 필수다.
-4. sensitive.md가 같은 최종 stage도 step3 뒤 무조건 다시 scan하도록 요구했음. 최종 검토 뒤1회, 같은 작업/동일 bytes/동일 remote base의 PASS만 사용한다. 변경·다른 세션·실패/불완전 검사에는 재사용하지 않는다. 이 지침의 호스트 AI 실제 수행은 미검증이다.
+## 변경
 
-## 검증
+- SlackConfig.require_approval=False 기본값. 기존 config에 없으면 새 문의부터 자동 답변; 명시적 true는 검토 모드 유지. status.reply_mode는 설정값이다. 실제 구프로세스가 도는지는 running_version/update_required도 확인한다.
+- 정상 문의는 DM 없이 자동 게시. 기존 approver_user_id는 내부 확인 담당자. lookup 결과 입력·실패 처리 결과 입력은 문의/최신 draft 또는 job/카드/사용자/workspace에 바인딩한다. 재시도·재생성 메뉴 없음. 자유 DM·DM 이미지 입력 없음.
+- missing code/live cannot_answer는 내부 needs_lookup으로 전환. 질문 명확화·자료 없음은 고객 답변 가능. 원본 확인을 하지 않은 내용을 확정 답변으로 게시하지 않는다.
+- 개발자 보고는 요청된 code/live/knowledge 종류만 지원. environment repair는 evidence_kinds=[]이므로 실제 조회를 다시 해야 한다. 기존 보고는 live 전용 호환. 조사 의무를 감사 기록으로 보존해 실패 후 처리 결과 작업에서도 낮추지 않는다.
+- 답변 저장/job done/auto_reply_ready를 같은 트랜잭션에 저장. 게시 시도 CAS와 auto_post actor=system 기록. 구 승인 대기 답변은 자동 게시하지 않는다. 전송 불명/부분 성공은 post_unknown, 확실한 실패는 담당자 DM. 재시작 시 남은 내부 확인 카드를 복구한다.
+- inquiries(status,id), audit(inquiry_id,action,detail) 보조 인덱스. 의미 스키마 버전2 유지. migrate=False는 인덱스도 변경하지 않는다. 지식용 SQLite 도입 아님.
 
-- 봇456개 자동 검사 통과: fake Slack/engine, 실제 SQLite·가짜 CLI·배포 wheel 바이트 일치. 동시 중복200이벤트는 테스트1개이며 엔진1회만 실행된다. 재시도/복원/예산/취소/저장 실패 경계를 포함한다.
-- 민감정보78개 합성 사례 통과. signed URL, HTML escape, 파일명, CRLF, 마지막 줄, batch 중 바이너리 포함.
-- 실제 Git1만 파일, 변경10개와 동일9,993개, 별도2,500개 일괄 변경, 동일목록3회, 관련 없는 커밋, rename, 변조/고정버전20개 확인.
-- 혼합크기1천파일(4KiB/64KiB/1MiB) 세 번 전체 검사66.606/78.924/71.509초. 합성 암호1파일 추가는 전체 BLOCK, 복구 시 원래digest. 강제종료에는 PASS 없음, 재실행 통과. docs/skills/stress-verification.json에 결과를 저장했다.
-- 단일 개발환경 측정이며 실제 M Mac·회사 Slack 응답속도·호스트 AI 의미 병합의 검증은 아니다. SQLite 지식 DB나 자동 Publish는 추가하지 않았다.
+## 검증/배포
 
-## 배포와 유지
+508개 fake 서비스/실제 SQLite·Bolt·소유 fake CLI 검사와 wheel 소스 일치 통과. 새 시나리오52개. Ruff·스킬 구조274·병합 판단64/로컬 전송6·문서 링크290·플러그인 검증 통과. 회사 동작·모델 의미 정확도는 미검증. 배포 전 CI3.12/3.13, 익명 ZIP 검증을 확인한다.
 
-skills/ 정본과 plugins/dougle/skills/ 사본을 동일하게 유지한다. 봇0.1.8은 실행환경 준비 후 중지 확인→시작이 필요하다. 개발 중 실제 봇을 재시작하지 않는다. 사용자 지식·설정·키체인은 보존한다.
+skills/ 정본과 plugins/dougle/skills/ 사본 동일. 로컬 설치본은 폴더 전체가 작업 전 Git 바이트와 같을 때만 백업 후 갱신한다. 사용자 설정·지식·인증은 수정하지 않으며 실제 봇도 재시작하지 않는다. 적용은 플러그인 업데이트/리로드→실행환경 준비→중지 확인→시작, running_version=0.1.9/update_required=false/reply_mode=automatic 확인.
 
-GitHub push와 Preview 릴리스는 사용자 상시 승인 범위다. Python3.12/3.13 CI와 익명 다운로드 바이트 검증을 마치고 public-release.json에 기록한다. 로컬 설치본은 이전 Git 바이트와 전체가 일치할 때만 .tools/skill-backups/0.8.10에 백업 후 갱신하고 개인 수정본은 보존한다.
-
-0.8.10 Preview 배포 완료: 소스 c3312fa8738ac04643ecc871efd29a5895229055, CI42323502490의 Python3.12/3.13 통과. ZIP과 체크섬의 익명 다운로드가 로컬 배포 바이트와 일치함을 docs/skills/public-release.json에 기록했다. ZIP215,143바이트, SHA2567330af9fa09d2778af7dda5799f8b626bd6573bf2a71b331ac74414c8331acbc.
-
-개발 도구 .tools/bot-dev/bin/, gh /usr/local/bin/gh. push는 HTTP/1.1 + postBuffer524288000. GUI 앱 금지. 제품 지침은 AGENTS.md. 이전0.8.9 측정은 large-corpus-benchmark.json에 당시 결과로 보존한다.
+사용자의 GitHub push/Preview 릴리스 상시 승인 있음. 개발 도구 .tools/bot-dev/bin, gh /usr/local/bin/gh. push는 HTTP/1.1+postBuffer524288000. 결과/현재 제한은 docs/dougle-bot/internal-handoff.md. 이전0.8.10 성능 결과는 historical 측정으로 그대로 유지한다.

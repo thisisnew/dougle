@@ -60,6 +60,13 @@ class Store:
                 "BEGIN IMMEDIATE;ALTER TABLE drafts ADD COLUMN verification_json TEXT;"
                 "PRAGMA user_version=2;COMMIT;"
             )
+        if migrate:
+            # Additive performance indexes: no record/schema contract change, and status/stop
+            # with migrate=False must not alter an active older runtime's database.
+            self.db.executescript(
+                "CREATE INDEX IF NOT EXISTS inquiry_status ON inquiries(status,id);"
+                "CREATE INDEX IF NOT EXISTS audit_inquiry_action_detail ON audit(inquiry_id,action,detail);"
+            )
         try:
             self.check_post_intents()
         except Exception:
@@ -261,6 +268,41 @@ class Store:
             ).lastrowid
             return ident, amount
 
+    def submit_assistance(self, ident, job_id, channel, ts, report, actor):
+        # Bind a repair result to the exact failed attempt, including failures without a draft.
+        # Checking and enqueueing together prevents duplicate modal submissions / stale cards.
+        with self.tx() as db:
+            row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
+            job = db.execute(
+                "SELECT * FROM jobs WHERE inquiry_id=? ORDER BY id DESC LIMIT 1", (ident,)
+            ).fetchone()
+            if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
+                raise BotError("bot_stopped")
+            if (
+                not row
+                or not job
+                or row["status"] != "failed"
+                or job["status"] not in ("failed", "done")
+                or job["id"] != job_id
+            ):
+                raise BotError("stale_job")
+            if not channel or not ts or row["card_channel_id"] != channel or row["card_ts"] != ts:
+                raise BotError("wrong_card")
+            db.execute(
+                "INSERT INTO jobs(inquiry_id,kind,payload,created_at) VALUES(?,?,?,?)",
+                (
+                    ident,
+                    "lookup_result",
+                    json.dumps({"lookup": report}, ensure_ascii=False),
+                    self.clock(),
+                ),
+            )
+            db.execute("UPDATE inquiries SET status='queued',error=NULL WHERE id=?", (ident,))
+            db.execute(
+                "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,?,?,?,?)",
+                (ident, actor, "developer_result_received", str(job_id), self.clock()),
+            )
+
     def finish_run(self, ident, *, cost=None, session=None, ok=False, error=None, duration=0):
         with self.tx() as db:
             db.execute(
@@ -279,6 +321,7 @@ class Store:
         notes=None,
         expected_draft=None,
         job_id=None,
+        auto_reply=False,
     ):
         with self.tx() as db:
             row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
@@ -327,6 +370,11 @@ class Store:
                 "UPDATE threads SET engine_session_id=COALESCE(?,engine_session_id),last_seen_ts=?,updated_at=? WHERE thread_key=?",
                 (session, last_seen, self.clock(), row["thread_key"]),
             )
+            if auto_reply and status == "awaiting_approval":
+                db.execute(
+                    "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,'system','auto_reply_ready',?,?)",
+                    (ident, str(draft), self.clock()),
+                )
             return draft
 
     def cancel(self, ident, job_id, actor, channel, ts):
@@ -376,6 +424,9 @@ class Store:
                 "UPDATE inquiries SET status='post_unknown',error='delivery_uncertain' WHERE status='posting'"
             )
             db.execute("UPDATE deliveries SET state='unknown' WHERE state='sending'")
+            db.execute(
+                "UPDATE inquiries SET status='failed',error='automatic_reply_interrupted' WHERE status='awaiting_approval' AND EXISTS(SELECT 1 FROM audit a WHERE a.inquiry_id=inquiries.id AND a.action='auto_reply_attempted' AND a.detail=CAST(inquiries.current_draft_id AS TEXT))"
+            )
             db.execute("UPDATE jobs SET status='queued' WHERE status='running'")
             db.execute("UPDATE inquiries SET status='queued' WHERE status='drafting'")
             db.execute("UPDATE inquiries SET card_state='unknown' WHERE card_state='sending'")
@@ -397,6 +448,47 @@ class Store:
                 (ident, actor, self.clock()),
             )
 
+    def pending_auto_reply(self):
+        return self.one(
+            "SELECT i.id FROM inquiries i WHERE i.status='awaiting_approval' "
+            "AND EXISTS(SELECT 1 FROM audit a WHERE a.inquiry_id=i.id AND a.action='auto_reply_ready' AND a.detail=CAST(i.current_draft_id AS TEXT)) "
+            "AND NOT EXISTS(SELECT 1 FROM audit a WHERE a.inquiry_id=i.id AND a.action='auto_reply_attempted' AND a.detail=CAST(i.current_draft_id AS TEXT)) ORDER BY i.id LIMIT 1"
+        )
+
+    def claim_auto_reply(self, ident, draft):
+        with self.tx() as db:
+            if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
+                return False
+            row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
+            if not row or row["status"] != "awaiting_approval" or row["current_draft_id"] != draft:
+                return False
+            actions = {
+                r[0]
+                for r in db.execute(
+                    "SELECT action FROM audit WHERE inquiry_id=? AND detail=? AND action IN ('auto_reply_ready','auto_reply_attempted')",
+                    (ident, str(draft)),
+                )
+            }
+            if actions != {"auto_reply_ready"}:
+                return False
+            db.execute(
+                "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,'system','auto_reply_attempted',?,?)",
+                (ident, str(draft), self.clock()),
+            )
+            return True
+
+    def fail_auto_reply(self, ident, error):
+        with self.tx() as db:
+            db.execute(
+                "UPDATE inquiries SET status='failed',error=? WHERE id=? AND status='awaiting_approval'",
+                (error, ident),
+            )
+            # If transmission may have begun, never turn uncertainty into permission to resend.
+            db.execute(
+                "UPDATE inquiries SET status='post_unknown',error=? WHERE id=? AND status='posting'",
+                (error, ident),
+            )
+
     def claim_post(self, ident, draft, parts, actor):
         with self.tx() as db:
             if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
@@ -412,8 +504,8 @@ class Store:
                     (str(uuid.uuid4()), ident, draft, n, text),
                 )
             db.execute(
-                "INSERT INTO audit(inquiry_id,actor,action,at) VALUES(?,?,'approve',?)",
-                (ident, actor, self.clock()),
+                "INSERT INTO audit(inquiry_id,actor,action,at) VALUES(?,?,?,?)",
+                (ident, actor, "auto_post" if actor == "system" else "approve", self.clock()),
             )
 
     def close(self):

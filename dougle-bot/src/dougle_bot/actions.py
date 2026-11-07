@@ -2,6 +2,7 @@ import json
 import threading
 
 from . import cards
+from .handoff import reported_evidence
 from .prompts import validate_output, validate_report
 from .safety import BotError, check_content
 from .slack_gateway import SlackFailure, history_hash
@@ -60,6 +61,10 @@ class Actions:
         return inquiry, draft
 
     def open_modal(self, user, value, channel, ts, trigger, action):
+        if action == "assist":
+            inquiry = self.resolve_assistance(user, value, channel, ts)
+            self.slack.modal(trigger, cards.modal(action, inquiry, None))
+            return
         inquiry, draft = self.resolve(user, value, channel, ts)
         if action not in ("edit", "lookup"):
             raise BotError("action_unavailable")
@@ -70,6 +75,34 @@ class Actions:
         if action == "edit" and inquiry["status"] != "awaiting_approval":
             raise BotError("lookup_not_editable")
         self.slack.modal(trigger, cards.modal(action, inquiry, draft))
+
+    def resolve_assistance(self, user, value, channel, ts):
+        self.authorized(user)
+        if self.store.control()["desired"] != "running":
+            raise BotError("bot_stopped")
+        try:
+            data = json.loads(value) if isinstance(value, str) else value
+            ident, job_id = data["inquiry_id"], data["job_id"]
+            if type(ident) is not int or type(job_id) is not int or min(ident, job_id) <= 0:
+                raise ValueError()
+        except (ValueError, TypeError, KeyError):
+            raise BotError("invalid_action") from None
+        row = self.store.inquiry(ident)
+        job = self.store.one(
+            "SELECT * FROM jobs WHERE inquiry_id=? ORDER BY id DESC LIMIT 1", (ident,)
+        )
+        if (
+            not row
+            or not job
+            or row["status"] != "failed"
+            or job["status"] not in ("failed", "done")
+            or job["id"] != job_id
+        ):
+            raise BotError("stale_job")
+        if not channel or not ts or channel != row["card_channel_id"] or ts != row["card_ts"]:
+            raise BotError("wrong_card")
+        row["job_id"] = job_id
+        return row
 
     def cancel(self, user, value, channel, ts):
         self.authorized(user)
@@ -98,6 +131,17 @@ class Actions:
                 data = json.loads(metadata)
             except (ValueError, TypeError):
                 raise BotError("invalid_action") from None
+            if not isinstance(data, dict):
+                raise BotError("invalid_action")
+            if action == "assist":
+                inquiry = self.resolve_assistance(user, data, data.get("channel"), data.get("ts"))
+                report = validate_report(content, observed_at, self.store.clock())
+                # An environment repair does not substitute for any code/live read.
+                report["evidence_kinds"] = []
+                self.store.submit_assistance(
+                    inquiry["id"], inquiry["job_id"], data["channel"], data["ts"], report, user
+                )
+                return inquiry["id"]
             inquiry, draft = self.resolve(user, data, data.get("channel"), data.get("ts"))
             ident = inquiry["id"]
             if action == "regenerate":
@@ -123,9 +167,12 @@ class Actions:
                 }
                 validate_output(
                     output,
-                    lookup_basis=bool(inquiry["lookup_basis"]),
+                    lookup_basis=reported_evidence(
+                        json.loads(inquiry["lookup_basis"]) if inquiry["lookup_basis"] else None
+                    ),
                     lookup_time=json.loads(inquiry["lookup_basis"])["observed_at"]
                     if inquiry["lookup_basis"]
+                    and reported_evidence(json.loads(inquiry["lookup_basis"]))
                     else None,
                 )
                 self.store.save_draft(
@@ -142,6 +189,10 @@ class Actions:
                 if inquiry["status"] != "needs_lookup":
                     raise BotError("lookup_not_requested")
                 report = validate_report(content, observed_at, self.store.clock())
+                checks = self.ensure_research_record(inquiry, draft)
+                report["evidence_kinds"] = sorted(
+                    set(checks["missing"]) & {"knowledge", "code", "live"}
+                )
                 self.store.enqueue(
                     ident,
                     draft["id"],
@@ -156,6 +207,26 @@ class Actions:
     def post(self, user, value, channel, ts):
         with self.lock:
             inquiry, draft = self.resolve(user, value, channel, ts)
+            self._post(inquiry, draft, user)
+
+    def post_automatic(self, ident):
+        if self.config.slack.require_approval:
+            raise BotError("approval_required")
+        with self.lock:
+            inquiry = self.store.inquiry(ident)
+            draft = self.store.current(inquiry)
+            if not draft or not self.store.claim_auto_reply(ident, draft["id"]):
+                return
+            try:
+                self._post(inquiry, draft, "system", automatic=True)
+            except BotError as exc:
+                self.store.fail_auto_reply(ident, exc.code)
+            except Exception:
+                self.store.fail_auto_reply(ident, "automatic_reply_failed")
+            self.worker.notify(ident)
+
+    def _post(self, inquiry, draft, user, *, automatic=False):
+        with self.lock:
             ident = inquiry["id"]
             if inquiry["status"] != "awaiting_approval":
                 raise BotError("stale_draft")
@@ -165,6 +236,8 @@ class Actions:
                 inquiry["channel_id"], inquiry["thread_ts"], self.config.slack.thread_history_limit
             )
             if history_hash(messages) != inquiry["history_hash"]:
+                if automatic:
+                    raise BotError("thread_changed_during_answer")
                 self.store.enqueue(
                     ident,
                     draft["id"],
@@ -186,9 +259,12 @@ class Actions:
             }
             validate_output(
                 output,
-                lookup_basis=bool(inquiry["lookup_basis"]),
+                lookup_basis=reported_evidence(
+                    json.loads(inquiry["lookup_basis"]) if inquiry["lookup_basis"] else None
+                ),
                 lookup_time=json.loads(inquiry["lookup_basis"])["observed_at"]
                 if inquiry["lookup_basis"]
+                and reported_evidence(json.loads(inquiry["lookup_basis"]))
                 else None,
             )
             parts = cards.split_text(cards.final_text(draft))
@@ -214,7 +290,7 @@ class Actions:
                 "SELECT detail FROM audit WHERE inquiry_id=? AND action='card_preview' ORDER BY id DESC LIMIT 1",
                 (ident,),
             )
-            if not receipt or receipt["detail"] != cards.preview_receipt(draft):
+            if not automatic and (not receipt or receipt["detail"] != cards.preview_receipt(draft)):
                 self.worker.show_card(ident)
                 raise BotError("preview_updated_review_again")
             self.store.claim_post(ident, draft["id"], parts, user)
@@ -246,7 +322,11 @@ class Actions:
                             ("unknown" if exc.uncertain else "not_sent", delivery["id"]),
                         )
                         state = (
-                            "post_unknown" if exc.uncertain or successful else "awaiting_approval"
+                            "post_unknown"
+                            if exc.uncertain or successful
+                            else "failed"
+                            if automatic
+                            else "awaiting_approval"
                         )
                         db.execute(
                             "UPDATE inquiries SET status=?,error=? WHERE id=?",

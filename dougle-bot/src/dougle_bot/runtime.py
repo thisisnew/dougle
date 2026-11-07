@@ -132,7 +132,10 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
                 ack()
                 executor.submit(safe, worker.notify, ident)
                 return
-            inquiry, _ = actions.resolve(user, item["value"], channel, ts)
+            if item["action_id"] == "assist":
+                inquiry = actions.resolve_assistance(user, item["value"], channel, ts)
+            else:
+                inquiry, _ = actions.resolve(user, item["value"], channel, ts)
             if item["action_id"] == "reject":
                 ident = actions.reject(user, item["value"], channel, ts)
                 ack()
@@ -190,7 +193,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
                 item["action_id"],
             )
 
-    for action in ("post", "edit", "regenerate", "lookup", "reject", "cancel"):
+    for action in ("post", "edit", "regenerate", "lookup", "reject", "cancel", "assist"):
         app.action(action)(button)
 
     def submitted(ack, body):
@@ -214,7 +217,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
             message = (
                 "다시 생성 기능은 제거되었습니다. 이 창을 닫고 최신 카드의 ‘직접 수정’을 이용해 주세요."
                 if isinstance(exc, BotError) and exc.code == "action_unavailable"
-                else "최신 초안과 입력 내용·조회 시각을 확인해 주세요."
+                else "최신 카드와 입력 내용·확인 시각을 확인해 주세요."
             )
             ack(
                 response_action="errors",
@@ -224,7 +227,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
         ack()
         executor.submit(safe, worker.show_card, ident)
 
-    for action in ("edit", "regenerate", "lookup", "reject"):
+    for action in ("edit", "regenerate", "lookup", "reject", "assist"):
         app.view("dougle_" + action)(submitted)
     return app
 
@@ -280,6 +283,7 @@ def serve(config, secrets):
 
             store.audit(None, "system", "runtime_started", __version__)
             handler.connect()
+            worker.notify_recovered()
             thread = threading.Thread(target=work, daemon=True)
             thread.start()
             while not stop.wait(0.5):
