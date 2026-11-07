@@ -1,7 +1,7 @@
 {
   "version": "0.8.17",
   "optionalBotRuntime": "0.1.14",
-  "publication": "NOT_PUBLISHED",
+  "publication": "v0.8.17-skills-preview.1",
   "files": 57,
   "archiveBytes": 236970,
   "sha256": "a84737165c922c0c2e29fdc08d84842927f9d765dd0859c2fca740710aa5f55d",
@@ -242,5 +242,10 @@
       "status": "PASS"
     }
   ],
-  "isolated_install": "PASS --no-index --no-deps; version and complete source bytes"
+  "isolated_install": "PASS --no-index --no-deps; version and complete source bytes",
+  "source": "3e9d2e0e3ada4824431624006ca95f4a1f0861db",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42372840055",
+  "ciPython312": "PASS",
+  "ciPython313": "PASS",
+  "anonymousDownload": "PASS byte-for-byte"
 }
