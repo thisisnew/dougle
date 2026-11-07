@@ -80,7 +80,7 @@ uv run --project dougle-bot dougle-bot stop
 
 ## 업데이트 적용
 
-플러그인 업데이트·리로드 → `/dougle:dougle-bot`의 새 실행 환경 준비 → **중지 확인 → 시작** 순서입니다. 상태에서 `running_version: 0.1.9`, `update_required: false`, `reply_mode: automatic`을 확인하세요.
+플러그인 업데이트·리로드 → `/dougle:dougle-bot`의 새 실행 환경 준비 → **중지 확인 → 시작** 순서입니다. 상태에서 `running_version: 0.1.10`, `update_required: false`, `reply_mode: automatic`을 확인하세요.
 
 0.8.11부터 기본값은 자동 답변입니다. 기존 설정에 `require_approval`이 없으면 새로 접수하는 문의부터 자동으로 답합니다. 예전 승인 대기 답변을 업데이트만으로 자동 게시하지 않습니다. 검토 방식을 유지하려면 `config.toml`의 `[slack]`에 `require_approval = true`를 지정하세요. 이때만 기존 게시·직접 수정·거절 절차를 사용합니다.
 

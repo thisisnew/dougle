@@ -97,4 +97,4 @@ https://github.com/thisisnew/dougle 최신 main으로 설치된 skills/의 모�
 더글 배포본으로 확인된 경우에만 스킬 검색 경로 밖에 백업해 줘.
 ```
 
-[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.12-skills-preview.1)
+[업데이트 문제 해결](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.13-skills-preview.1)

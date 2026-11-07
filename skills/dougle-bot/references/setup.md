@@ -43,7 +43,7 @@ doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slac
 
 1. `scripts/bot.sh status`에서 새 실행 환경 준비가 필요하면 `scripts/bot.sh prepare`를 실행합니다. 기존 설정·키체인·지식은 재등록하지 않습니다.
 2. 실행 중이면 업데이트 적용을 위해 중지하고 다시 시작할 것을 안내합니다. 사용자가 업데이트 적용을 요청했다면 `scripts/bot.sh stop` 후 실제 중지를 확인합니다.
-3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.9`을 확인합니다. 멈추는 중이면 시작하지 않습니다.
+3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.10`을 확인합니다. 멈추는 중이면 시작하지 않습니다.
 
 명시적 검토 모드의 `preview_updated_review_again`은 업데이트된 게시 미리보기를 다시 확인하라는 뜻입니다. 기존 카드를 누르자마자 예전 형식의 답변을 보내지 않습니다. `publication_changed_regenerating`이면 새 초안을 준비하므로 새 카드에서 다시 승인합니다.
 
@@ -55,4 +55,4 @@ Slack 앱 설정 → OAuth & Permissions → Bot Token Scopes에 `files:read`를
 
 ## 자동 답변 기본값
 
-0.8.12부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 토큰·scope 변경은 없으며 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요.
+0.8.11부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 토큰·scope 변경은 없으며 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요.

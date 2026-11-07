@@ -3,7 +3,7 @@
 set -eu
 umask 077
 skill_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-version=0.1.9
+version=0.1.10
 bot_home=${DOUGLE_BOT_HOME:-"$HOME/.dougle-bot"}
 runtime="$bot_home/runtime/$version"
 command_name=${1:-status}
@@ -22,7 +22,7 @@ if [ "$command_name" = prepare ]; then
   trap 'rm -rf "$stage"' EXIT HUP INT TERM
   uv venv --relocatable --python cpython-3.12-macos-aarch64-none --managed-python "$stage/env"
   uv pip install --python "$stage/env/bin/python" --require-hashes -r "$skill_dir/assets/requirements.txt"
-  uv pip install --python "$stage/env/bin/python" --no-deps "$skill_dir/assets/dougle_bot-0.1.9-py3-none-any.whl"
+  uv pip install --python "$stage/env/bin/python" --no-deps "$skill_dir/assets/dougle_bot-0.1.10-py3-none-any.whl"
   "$stage/env/bin/dougle-bot" version >/dev/null
   [ ! -e "$runtime" ] || { echo '다른 설치가 완료되었습니다. 상태를 다시 확인해 주세요.' >&2; exit 1; }
   mv "$stage/env" "$runtime"

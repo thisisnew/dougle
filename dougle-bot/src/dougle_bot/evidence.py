@@ -69,7 +69,12 @@ live (fresh actual state). Include EVERY needed kind; implementation/incident al
 current_state always requires live. Mixed questions may need both. Clarification cannot be answered.
 Each check links a zero-based sources index and a receipt: actual successful tool_use ID for a content
 read in THIS call; image:<file_id> for a currently supplied image; developer_report for the supplied
-timestamped manual result (only its declared evidence_kinds; attribute it). Never invent a tool ID or reuse a previous call's ID.
+timestamped manual result (only its declared evidence_kinds; attribute it).
+After a successful read, a Dougle PostToolUse reminder supplies the exact receipt and supported kinds.
+Copy that receipt verbatim. Do not infer it from a filename, invent toolu IDs, use citation numbers,
+or reuse a previous call's ID. If no receipt reminder is available, report the missing verification
+rather than guessing. For code, Read the exact original file; directory searches locate files but do
+not replace reading the relevant code. A receipt only proves the corresponding read, not its meaning.
 Read/Grep content outside .dougle on source code files, or WebFetch on original source code URLs,
 can support code. Glob, filename-only Grep, skill instructions, topic summaries and schema metadata
 cannot establish original code/live behavior. execute_sql_readonly can support live; table metadata cannot.
@@ -249,3 +254,47 @@ def validate_verification(output, reads, *, image_ids=(), report=False, required
     if output["status"] == "answered" and (missing or not required or category == "clarification"):
         raise BotError("required_read_not_verified")
     return required
+
+
+def failure_summary(output, reads):
+    """Bounded diagnostics without tool IDs, file paths, query rows or answer text."""
+    value = output.get("verification", {}) if isinstance(output, dict) else {}
+    checks = value.get("checks", []) if isinstance(value, dict) else []
+    checks = checks if isinstance(checks, list) else []
+    unknown = unsupported = 0
+    for check in checks:
+        if not isinstance(check, dict):
+            continue
+        receipt = check.get("receipt")
+        if (
+            not isinstance(receipt, str)
+            or receipt.startswith("image:")
+            or receipt == "developer_report"
+        ):
+            continue
+        if receipt not in reads:
+            unknown += 1
+        elif check.get("kind") not in reads[receipt]:
+            unsupported += 1
+    return {
+        "successful_reads": len(reads),
+        "available_kinds": sorted({k for kinds in reads.values() for k in kinds if k in KINDS}),
+        "unknown_receipts": unknown,
+        "unsupported_kinds": unsupported,
+    }
+
+
+def safe_failure_summary(raw):
+    try:
+        value = json.loads(raw)
+    except (ValueError, TypeError):
+        return None
+    keys = {"successful_reads", "available_kinds", "unknown_receipts", "unsupported_kinds"}
+    if not isinstance(value, dict) or set(value) != keys:
+        return None
+    if any(type(value[k]) is not int or value[k] < 0 for k in keys - {"available_kinds"}):
+        return None
+    kinds = value["available_kinds"]
+    if not isinstance(kinds, list) or any(not isinstance(k, str) or k not in KINDS for k in kinds):
+        return None
+    return value

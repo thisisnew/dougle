@@ -44,6 +44,8 @@ def failure_request(error):
         return "첨부 이미지를 확인하지 못했습니다. 파일 접근 권한과 지원 형식을 확인해 주세요. 처리 결과에는 필요한 내용만 요약해 주세요."
     if error in {"required_skill_not_activated", "polite_language_required"}:
         return "답변 준비 규칙을 완료하지 못했습니다. 설치된 스킬과 실행 환경을 확인한 뒤 처리 결과를 입력해 주세요."
+    if error == "required_read_not_verified":
+        return "봇이 자료 조회 기록과 답변 근거를 대조하지 못했습니다. 조회 권한 부족으로 확인된 것은 아닙니다. 문의 번호와 봇 버전을 개발 담당자에게 전달해 주세요."
     if error in {
         "invalid_verification",
         "verification_requirements_missing",

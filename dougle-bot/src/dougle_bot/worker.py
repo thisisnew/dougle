@@ -5,7 +5,7 @@ import time
 from decimal import Decimal
 
 from . import cards
-from .evidence import KINDS, QUESTION_KINDS, validate_verification
+from .evidence import KINDS, QUESTION_KINDS, failure_summary, validate_verification
 from .handoff import reported_evidence, route_unresolved
 from .images import collect_images, prompt_messages
 from .presentation import reaction_names
@@ -389,6 +389,13 @@ class Worker:
                     )
                     break
                 except BotError as exc:
+                    if exc.code == "required_read_not_verified":
+                        self.store.audit(
+                            ident,
+                            "system",
+                            "read_verification_failed",
+                            json.dumps(failure_summary(result.output, result.reads)),
+                        )
                     if schema_retried:
                         raise
                     schema_retried = True

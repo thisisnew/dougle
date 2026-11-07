@@ -10,6 +10,7 @@ from pathlib import Path
 
 from . import __version__
 from .config import Config, EngineConfig, SlackConfig, channel_id, load, private_dir, save
+from .evidence import safe_failure_summary
 from .progress import safe_profile
 from .recovery import reconcile
 from .runtime import apple_silicon, running, serve
@@ -81,6 +82,13 @@ def status(home, config_path):
                     "SELECT inquiry_id,detail FROM audit WHERE action='answer_timing' ORDER BY id DESC LIMIT 10"
                 )
                 if (profile := safe_profile(row["detail"])) is not None
+            ]
+            result["recent_read_failures"] = [
+                {"inquiry_id": row["inquiry_id"], **summary}
+                for row in store.all(
+                    "SELECT inquiry_id,detail FROM audit WHERE action='read_verification_failed' ORDER BY id DESC LIMIT 5"
+                )
+                if (summary := safe_failure_summary(row["detail"])) is not None
             ]
             result["healthy"] = (
                 result["running"]

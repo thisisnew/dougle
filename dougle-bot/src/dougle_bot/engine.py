@@ -207,6 +207,19 @@ class ClaudeCliEngine:
             json.dumps(
                 {
                     "hooks": {
+                        "PostToolUse": [
+                            {
+                                "matcher": ".*",
+                                "hooks": [
+                                    {
+                                        "type": "command",
+                                        "command": shlex.join(
+                                            [sys.executable, "-m", "dougle_bot.receipt_hook"]
+                                        ),
+                                    }
+                                ],
+                            }
+                        ],
                         "PreToolUse": [
                             {
                                 "matcher": ".*",
