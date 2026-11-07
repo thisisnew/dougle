@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "ba5e031e-3e11-49f5-90c8-d6f139d74880",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/thisisnew/Desktop/dougle/docs/server/diagrams/overview.json",
+  "output": "/Users/thisisnew/Desktop/dougle/docs/server/diagrams/overview.html",
+  "specification": {
+    "sha256": "3222b1f22e093d669e35d9b4ea081a31dfca446919d221d8a4529d7c89323587",
+    "bytes": 2801
+  },
+  "artifact": {
+    "sha256": "956ac8e14247e05241835fd2ef5e60a7b826dff15fbf0ca1bcccbe638391e337",
+    "bytes": 840624
+  }
+}

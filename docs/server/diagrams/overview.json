@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TO-BE · 로컬에서 만들고 서버에서 답합니다",
+    "locale": "ko",
+    "output": "docs/server/diagrams/overview.html",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "hidden"
+    }
+  },
+  "components": [
+    {
+      "id": "local",
+      "type": "external",
+      "label": "개발자 로컬 AI",
+      "sublabel": "connect · ask",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "git",
+      "type": "database",
+      "label": "공유 지식 Git",
+      "sublabel": "Markdown · 출처 · 정정",
+      "pos": [
+        350,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "snapshot",
+      "type": "database",
+      "label": "서버 지식 버전",
+      "sublabel": "변경분 검증 · 읽기 전용",
+      "pos": [
+        660,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "slack",
+      "type": "frontend",
+      "label": "Slack 질문",
+      "sublabel": "허용 채널의 멘션",
+      "pos": [
+        40,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "bot",
+      "type": "backend",
+      "label": "서버의 더글",
+      "sublabel": "원본 조사 · 근거 검사",
+      "pos": [
+        350,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "reply",
+      "type": "frontend",
+      "label": "같은 스레드 답변",
+      "sublabel": "필요하면 개발자에게 확인",
+      "pos": [
+        660,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "local-git",
+      "from": "local",
+      "to": "git",
+      "label": "publish"
+    },
+    {
+      "id": "git-local",
+      "from": "git",
+      "to": "local",
+      "label": "fetch"
+    },
+    {
+      "id": "git-snapshot",
+      "from": "git",
+      "to": "snapshot",
+      "label": "변경분 수신"
+    },
+    {
+      "id": "snapshot-bot",
+      "from": "snapshot",
+      "to": "bot",
+      "label": "버전 고정",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "slack-bot",
+      "from": "slack",
+      "to": "bot",
+      "label": "접수"
+    },
+    {
+      "id": "bot-reply",
+      "from": "bot",
+      "to": "reply",
+      "label": "검증 후 게시"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "구현 전 목표 구조",
+      "items": [
+        "개인 PC를 꺼도 서버가 질문을 처리합니다.",
+        "서버는 허용한 원본을 읽고, 공유 Git에는 자동 게시하지 않습니다."
+      ]
+    }
+  ]
+}

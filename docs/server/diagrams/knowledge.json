@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TO-BE · 읽는 버전과 수정 작업을 분리합니다",
+    "locale": "ko",
+    "output": "docs/server/diagrams/knowledge.html",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "hidden"
+    }
+  },
+  "components": [
+    {
+      "id": "git",
+      "type": "database",
+      "label": "공유 Git 변경",
+      "sublabel": "등록 커밋·경로만 수신",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "merge",
+      "type": "backend",
+      "label": "전담 지식 갱신기",
+      "sublabel": "병합 · 민감정보 · 참조 검사",
+      "pos": [
+        350,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "version",
+      "type": "database",
+      "label": "새 지식 버전",
+      "sublabel": "준비 완료 후 활성화",
+      "pos": [
+        660,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "proposal",
+      "type": "backend",
+      "label": "수정 제안",
+      "sublabel": "근거 · 기준 해시 · 충돌",
+      "pos": [
+        350,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "reader",
+      "type": "backend",
+      "label": "질문별 조사",
+      "sublabel": "시작한 버전을 계속 읽음",
+      "pos": [
+        660,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "git-merge",
+      "from": "git",
+      "to": "merge",
+      "label": "변경분"
+    },
+    {
+      "id": "merge-version",
+      "from": "merge",
+      "to": "version",
+      "label": "검증 성공"
+    },
+    {
+      "id": "version-reader",
+      "from": "version",
+      "to": "reader",
+      "label": "버전 고정"
+    },
+    {
+      "id": "reader-proposal",
+      "from": "reader",
+      "to": "proposal",
+      "label": "새로 확인"
+    },
+    {
+      "id": "proposal-merge",
+      "from": "proposal",
+      "to": "merge",
+      "label": "기준 비교"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "구현 전 목표 구조",
+      "items": [
+        "갱신 실패 시 이전 활성 버전을 유지합니다.",
+        "접근 권한 철회는 고정된 지식 버전보다 우선합니다.",
+        "질문에서 얻은 운영 원시 행은 공유 지식에 넣지 않습니다."
+      ]
+    }
+  ]
+}

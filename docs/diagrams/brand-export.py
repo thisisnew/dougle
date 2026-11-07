@@ -28,7 +28,7 @@ root.set('width',str(int(w)));root.set('height',str(int(h+80)))
 css=ET.SubElement(root,tag('style'))
 css.text='''text {font-family:"Apple SD Gothic Neo","Malgun Gothic",sans-serif; fill:#292f3e}
 .c-mask {fill:white;stroke:none}.c-region {fill:#f8faff;stroke:#cad8ea;stroke-dasharray:5 5}
-.c-backend,.c-external,.c-frontend {fill:#fff;stroke:#aabbd2}
+.c-backend,.c-external,.c-frontend,.c-security,.c-messagebus {fill:#fff;stroke:#aabbd2}
 .c-database,.c-cloud {fill:#edf4ff;stroke:#2866c2}
 .t-muted {fill:#56647a}.t-edge-default,.t-cloud {fill:#2866c2}
 .a-default,.a-emphasis {fill:none;stroke:#2866c2}
@@ -66,6 +66,9 @@ for group in root.iter(tag('g')):
   if len(points)==2:
    (x1,y1),(x2,y2)=points
    t.set('x',str((x1+x2)/2));t.set('y',str((y1+y2)/2+(4 if x1==x2 else -10)))
+   edge=next((e for e in data['connections'] if e.get('id')==group.get('data-edge-id')),None)
+   if edge and y1==y2 and x1<x2 and any(e['from']==edge['to'] and e['to']==edge['from'] for e in data['connections']):
+    t.set('y',str(y1+22))
   x,y=float(t.get('x')),float(t.get('y'))
   units=sum(1 if ord(c)>255 else .56 for c in (t.text or ''))
   width=units*14+16
@@ -81,5 +84,8 @@ notes={
  'memory':'코드 동작은 구현을, 현재 상태는 해당 시스템을 직접 확인합니다.',
  'bot':'개발자에게 요청하면 대기 안내를 남기고, 같은 스레드에 답변을 이어갑니다.'}
 footer=ET.SubElement(root,tag('text'),{'x':'24','y':str(h+62),'font-size':'14','class':'t-muted'})
-footer.text=notes[spec.stem]
+footer.text=(
+ '구현 전 목표 구조입니다. 권한·실패·복구 조건은 함께 제공한 서버 명세를 따릅니다.'
+ if 'TO-BE' in data['meta']['title'] else notes[spec.stem]
+)
 ET.ElementTree(root).write(output,encoding='utf-8',xml_declaration=True)

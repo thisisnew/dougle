@@ -30,6 +30,8 @@
 
 ## 개발과 검증
 
+[서버 전환 설계 · TO-BE](server/README.md): 목표 구조와 지식 갱신, 병렬 처리, 운영 DB 접근, 배포·복구, 수용 테스트를 연결한 구현 전 명세입니다.
+
 [개발 안내](skills/development.md) · [저장소 구성](repository.md) · [설계 참고](design-reference.md) · [봇 실행 계약](../dougle-bot/SPEC.md)
 
 [검증 범위](skills/verification.md) · [사용 시나리오 1,066개](scenarios/README.md) · [회사 PC 체크리스트](dougle-bot/company-acceptance.md)

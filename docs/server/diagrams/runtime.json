@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TO-BE · 질문은 나누고 게시 순서는 지킵니다",
+    "locale": "ko",
+    "output": "docs/server/diagrams/runtime.html",
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "hidden"
+    }
+  },
+  "components": [
+    {
+      "id": "intake",
+      "type": "backend",
+      "label": "이벤트 접수",
+      "sublabel": "저장 후 ack · 중복 제거",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "queue",
+      "type": "database",
+      "label": "PostgreSQL 작업",
+      "sublabel": "스레드 소유권 · 예산",
+      "pos": [
+        350,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "worker",
+      "type": "backend",
+      "label": "조사 작업자",
+      "sublabel": "다른 스레드는 병렬",
+      "pos": [
+        660,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "slack",
+      "type": "frontend",
+      "label": "Slack 스레드",
+      "sublabel": "전송 결과 · 안내 기록",
+      "pos": [
+        40,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "sender",
+      "type": "backend",
+      "label": "전용 게시기",
+      "sublabel": "outbox · 결과 불명 보류",
+      "pos": [
+        350,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "security",
+      "label": "근거·공개 권한 검사",
+      "sublabel": "최신 문의 상태도 확인",
+      "pos": [
+        660,
+        235
+      ],
+      "size": [
+        190,
+        76
+      ]
+    },
+    {
+      "id": "human",
+      "type": "external",
+      "label": "담당 개발자 DM",
+      "sublabel": "결과 보충 / 직접 응대",
+      "pos": [
+        660,
+        430
+      ],
+      "size": [
+        190,
+        76
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "intake-queue",
+      "from": "intake",
+      "to": "queue",
+      "label": "작업 등록"
+    },
+    {
+      "id": "queue-worker",
+      "from": "queue",
+      "to": "worker",
+      "label": "원자적 선점"
+    },
+    {
+      "id": "worker-gate",
+      "from": "worker",
+      "to": "gate",
+      "label": "답변과 근거"
+    },
+    {
+      "id": "gate-sender",
+      "from": "gate",
+      "to": "sender",
+      "label": "검증 통과"
+    },
+    {
+      "id": "sender-slack",
+      "from": "sender",
+      "to": "slack",
+      "label": "한 번씩 확인"
+    },
+    {
+      "id": "gate-human",
+      "from": "gate",
+      "to": "human",
+      "label": "확인 필요"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "구현 전 목표 구조",
+      "items": [
+        "같은 스레드의 조사는 순서대로 처리합니다.",
+        "개발자 보충은 새 작업으로, 직접 응대는 해당 문의의 자동 종료로 연결합니다.",
+        "작업·전송 기록은 같은 PostgreSQL에 보관합니다."
+      ]
+    }
+  ]
+}

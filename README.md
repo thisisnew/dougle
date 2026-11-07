@@ -11,6 +11,8 @@
 
 [구조 이해하기](docs/design.md) · [설치하기](docs/skills/install.md) · [Slack에서 쓰기](dougle-bot/README.md) · [전체 문서](docs/README.md)
 
+서버 운영을 준비하신다면 [서버 전환 설계 · TO-BE](docs/server/README.md)를 읽어 주세요. 지식 동기화, 병렬 질문, 운영 조회, 권한, 복구와 개발 순서를 정리한 구현 전 명세입니다.
+
 ## 연결하고 질문하세요
 
 Claude Code 대화창에서 설치합니다.

@@ -1,0 +1,106 @@
+{
+  "date": "2026-11-08",
+  "scope": "Documentation and proposed server architecture only",
+  "baseline_commit": "216ed14",
+  "authoring_skills": {
+    "archify": "3.2.0",
+    "humanizer-ko": "1.5.0"
+  },
+  "server_implementation": "NOT_IMPLEMENTED",
+  "planned_acceptance_tests": {
+    "count": 90,
+    "status": "NOT_RUN"
+  },
+  "company_integration": "NOT_RUN",
+  "diagrams": [
+    {
+      "name": "overview",
+      "native_gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "receipt_id": "ba5e031e-3e11-49f5-90c8-d6f139d74880",
+      "files": {
+        "json": "3222b1f22e093d669e35d9b4ea081a31dfca446919d221d8a4529d7c89323587",
+        "html": "956ac8e14247e05241835fd2ef5e60a7b826dff15fbf0ca1bcccbe638391e337",
+        "svg": "3ec4d43d9872ba7ceae9801eb42282f94c67d85fbc00fb0acaa14208ad97468b",
+        "png": "a400c07be9a86643188a12f596d8a582e4f12d3facb66a64a719701169a5f2bc"
+      }
+    },
+    {
+      "name": "runtime",
+      "native_gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "receipt_id": "2658bcd6-3809-4e48-89fd-eaff069227ca",
+      "files": {
+        "json": "487247074b9ef1021ad1d3f70269e0ee5c160345165a1a9413cbcbeb70ba6350",
+        "html": "d3ea143ff803194b468c2a1115b83046c0a55c717cc89a4a9119a145c9987174",
+        "svg": "48304fe7ae9a0825194812f3a012e82431fd7afef356470d73d71a6f2fb9c8a4",
+        "png": "84596efab6fb15adc73f4e9805991594dbd5af446b0960634ce5fea98768876c"
+      }
+    },
+    {
+      "name": "knowledge",
+      "native_gates": {
+        "validate": "pass",
+        "deliver": "pass",
+        "check": "pass",
+        "browser-check": "pass"
+      },
+      "receipt_id": "ddb44f80-d54d-4483-b296-98ec9f42f6c4",
+      "files": {
+        "json": "0c792ea44930a637d1b94bb54891c35a63d340b110dd38bd7293c76848650647",
+        "html": "9ca92dd752480daf4c87fe11f2667655b9387b3c02411fb8987134b399e97bcb",
+        "svg": "ca048582deef6e3520dca19a0bf481153ec3538c72c551ed50641efd336d0082",
+        "png": "071059ab7250ff0688a5cff710883c2d8838f992be2fa726b63580c098eae3da"
+      }
+    }
+  ],
+  "documentation_checks": {
+    "test_ids": "90 unique",
+    "toml_example": "PASS",
+    "markdown_code_fences": "PASS",
+    "language_review": "Korean prose reviewed; neutral technical style; no unsupported implementation claims",
+    "credential_shape_scan": "PASS for new prose"
+  },
+  "repository_checks": {
+    "skills": 280,
+    "merge_assignments": 64,
+    "git_transport": 6,
+    "sensitive_scanner_cases": 84,
+    "plugin_manifest": "PASS",
+    "marketplace_manifest": "PASS",
+    "local_document_links": 507
+  },
+  "viewport_checks": [
+    {
+      "width": 1100,
+      "overflow": false,
+      "images": [
+        {
+          "width": 1780,
+          "loaded": true
+        }
+      ],
+      "h1": "서버 전환 설계 · TO-BE"
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "images": [
+        {
+          "width": 1780,
+          "loaded": true
+        }
+      ],
+      "h1": "서버 전환 설계 · TO-BE"
+    }
+  ],
+  "visual_review": "Three final PNG diagrams and the 1100px/390px GitHub-rendered overview inspected. No clipped Korean labels or overlapping publish/fetch labels. Mobile diagram requires the adjacent SVG enlargement link for detailed reading. This is document review, not server testing."
+}
