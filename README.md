@@ -4,7 +4,7 @@
 
 자료를 연결하면 더글이 업무 지식으로 정리해 둡니다. 질문할 때 다시 읽고, 필요한 원본을 확인해 답합니다.
 
-[작동 원리 그림으로 보기](docs/design.md) · [설치 도움말](docs/skills/install.md) · [전체 문서](docs/README.md)
+[작동 원리 그림으로 보기](docs/design.md) · [설치 도움말](docs/skills/install.md) · [전체 문서](docs/README.md) · [사용 시나리오](docs/scenarios/README.md)
 
 ## 1. 설치하기
 
