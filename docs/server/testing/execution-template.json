@@ -1,0 +1,802 @@
+{
+  "schema_version": 1,
+  "purpose": "Future server test execution; not a test result",
+  "spec_commit": null,
+  "implementation_commit": null,
+  "environment": null,
+  "started_at": null,
+  "finished_at": null,
+  "release_decision": null,
+  "cases": [
+    {
+      "id": "K01",
+      "title": "동일 커밋 재수신",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K02",
+      "title": "원격·서버가 같은 주장을 서로 다르게 수정",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K03",
+      "title": "새 버전 생성 중 프로세스 종료",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K04",
+      "title": "질문 처리 중 활성 버전 교체",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K05",
+      "title": "같은 토픽에 수정 제안 2개",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K06",
+      "title": "원본 확인 실패",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K07",
+      "title": "source 일부만 재확인",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K08",
+      "title": "원격 삭제·force-push·공통 기준 소실",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K09",
+      "title": "토큰·개인정보·경로 탈출·symlink·크기 초과",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K10",
+      "title": "검색·검사기 버전 변경",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K11",
+      "title": "오래된 버전을 실행 중 문의가 참조",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "K12",
+      "title": "대량 변경 중 실패 후 재개",
+      "specification": "knowledge.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J01",
+      "title": "동일 이벤트 여러 번 도착",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J02",
+      "title": "DB 커밋 실패",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J03",
+      "title": "커밋 후 ack 직전 종료",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J04",
+      "title": "실제 어댑터의 이벤트 ack",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J05",
+      "title": "같은 스레드 동시 질문",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J06",
+      "title": "다른 스레드 다수 질문",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J07",
+      "title": "소유권 만료 후 새 작업자 선점",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J08",
+      "title": "작업자 추가 시작",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J09",
+      "title": "결과 저장 중 실패",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J10",
+      "title": "대기열 한도 초과",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J11",
+      "title": "일부 연결이 오래 지연",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "J12",
+      "title": "작업자 강제 종료·시계 차이",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "C01",
+      "title": "마지막 예산을 두 작업자가 동시 예약",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "C02",
+      "title": "엔진 비용 미반환·비정상 종료",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "C03",
+      "title": "완료 응답 중복 도착",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "C04",
+      "title": "UTC 날짜 경계에서 실행 종료",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "C05",
+      "title": "BigQuery 비용 한도 초과",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "C06",
+      "title": "알려진 확정 실패·재시도",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "E01",
+      "title": "세션 파일 없음",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "E02",
+      "title": "권한 축소 후 동일 스레드 질문",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "E03",
+      "title": "지식 버전·스킬 계약 변경",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "E04",
+      "title": "필수 스킬 누락·실패",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "E05",
+      "title": "모델의 근거 ID와 실제 도구 기록 불일치",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "E06",
+      "title": "질문이 짧거나 “간단히” 요청",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "E07",
+      "title": "작업별 파일·환경에 다른 문의 정보 삽입",
+      "specification": "runtime.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A01",
+      "title": "같은 channel ID를 다른 workspace로 제출",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A02",
+      "title": "허용되지 않은 채널·봇 자체 메시지",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A03",
+      "title": "질문자는 읽을 수 있지만 채널 공개는 불가",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A04",
+      "title": "검색 후 권한 철회",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A05",
+      "title": "Slack Connect 외부 참여 채널",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A06",
+      "title": "다른 담당자가 결과 입력·직접 응대",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A07",
+      "title": "옛 카드·다른 문의 ID·이전 세대 제출",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A08",
+      "title": "문서·이미지에 권한 확대·쓰기 명령",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A09",
+      "title": "허용 URL이 금지 목적지로 redirect",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A10",
+      "title": "민감 쿼리 결과·토큰 포함 오류",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A11",
+      "title": "이미지 손상·과대·흐림·변조 MIME",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "A12",
+      "title": "보관 만료·삭제 후 캐시·세션·백업 복구",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q01",
+      "title": "BigQuery가 실제 연결돼 있고 질문에 적합",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q02",
+      "title": "BigQuery 데이터 지연이 요구보다 큼",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q03",
+      "title": "갓 실행했지만 사본 적재 시각 불명",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q04",
+      "title": "활성·삭제 조건 또는 센터 정의 불명",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q05",
+      "title": "SQL CTE·주석·문자열에 키워드 포함",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q06",
+      "title": "다중 문장·쓰기 함수·export·허용 밖 컬럼",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q07",
+      "title": "결과 행·바이트 잘림",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q08",
+      "title": "조회 성공 0건과 권한·연결 실패",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q09",
+      "title": "Kafka 조회 요청",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "Q10",
+      "title": "VDI만 접근 가능·실제 연결 부재",
+      "specification": "access.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D01",
+      "title": "두 게시기가 같은 pending 선점",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D02",
+      "title": "같은 후보가 두 번 완료됨",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D03",
+      "title": "전송 성공 후 DB 저장 전 종료",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D04",
+      "title": "sending 소유권 만료",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D05",
+      "title": "여러 조각 중 중간 timeout",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D06",
+      "title": "확정 429",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D07",
+      "title": "timeout·5xx·연결 단절",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D08",
+      "title": "Slack 조회에서 메시지를 못 찾음",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D09",
+      "title": "게시 직전 사용자 정정",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D10",
+      "title": "DB만 과거로 복원",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D11",
+      "title": "custom 이모지 없음·일시 오류",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "D12",
+      "title": "검토 모드·기존 승인 대기 이관",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H01",
+      "title": "DM 전송 실패",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H02",
+      "title": "도움 카드 반복 갱신",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H03",
+      "title": "결과 입력 더블클릭·중복 모달 제출",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H04",
+      "title": "시간 없이 결과 입력",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H05",
+      "title": "“연결 복구함”만 입력",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H06",
+      "title": "직접 응대와 조사 완료 경합",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H07",
+      "title": "직접 응대와 외부 전송 시작 경합",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H08",
+      "title": "직접 응대 후 옛 결과 입력",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "H09",
+      "title": "고객 안내 실패",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O01",
+      "title": "중지 중 생성된 이벤트가 재개 후 도착",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O02",
+      "title": "장애 재시작",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O03",
+      "title": "drain 중 새 질문",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O04",
+      "title": "토큰 회전·만료",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O05",
+      "title": "DB 중단·모델 한도·원본 장애",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O06",
+      "title": "SQLite 이전",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O07",
+      "title": "옛 DM 카드 제출",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O08",
+      "title": "신구 실행기 동시 시작",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O09",
+      "title": "백업 복원·삭제 정책 재적용",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "O10",
+      "title": "관리자 상태 조회",
+      "specification": "delivery-operations.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U01",
+      "title": "기본 질문과 답변할 수 없는 질문",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U02",
+      "title": "코드 질문은 실제 코드 확인",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U03",
+      "title": "BigQuery가 적합하면 실제 조회",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U04",
+      "title": "오래된 사본을 현재값으로 답하지 않기",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U05",
+      "title": "운영 조회가 불가능할 때 읽기 쉬운 DM",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U06",
+      "title": "이미지가 있어도 코드·DB 조사 유지",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U07",
+      "title": "후속 질문과 다른 대화의 분리",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U08",
+      "title": "개발자 보충 후 같은 스레드에 완료",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U09",
+      "title": "개발자 직접 응대",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U10",
+      "title": "실제 공개 범위와 담당자 권한",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U11",
+      "title": "서버 독립 실행·중지·복구",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "U12",
+      "title": "공유 지식 변경부터 서버 답변까지",
+      "specification": "company.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "P01",
+      "title": "대량 지식의 증분 수신",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "P02",
+      "title": "검색 속도와 필요한 근거의 보존",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "P03",
+      "title": "병렬 처리·과부하·공정성",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "P04",
+      "title": "장시간 실행과 자원 정리",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "P05",
+      "title": "배포·복원·되돌리기 연습",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "L01",
+      "title": "서버 없는 기존 스킬 사용자",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "L02",
+      "title": "로컬 봇의 업데이트와 기존 상태",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    },
+    {
+      "id": "L03",
+      "title": "배포물과 자료 공유 호환",
+      "specification": "performance-regression.md",
+      "status": "NOT_RUN",
+      "runs": []
+    }
+  ],
+  "allowed_statuses": [
+    "PASS",
+    "FAIL",
+    "NOT_RUN",
+    "BLOCKED"
+  ],
+  "run_required_fields": [
+    "run_id",
+    "variant",
+    "status",
+    "actual_command",
+    "environment_id",
+    "seed",
+    "expected",
+    "observed",
+    "evidence_location",
+    "external_calls",
+    "actual_cost",
+    "limitations"
+  ]
+}
