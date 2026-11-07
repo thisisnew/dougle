@@ -4,7 +4,7 @@
 
 일반 업무/코드 질문이 required_read_not_verified로 실패한다는 제보. 공통 결함: 모델에 tool_use_id를 명시 전달하지 않으면서 정확한 ID를 요구했고 기존 fake는 정답ID를 미리 넣었음. PostToolUse receipt_hook 추가, 독립 stream검증 유지, 실패진단 counts만 status 노출. 회사 실제 원인은 로그 없으므로 확정금지.
 
-스킬0.8.13 / 봇0.1.10. 615자동테스트(신규18), 실제Codex2회 훅문맥으로ID연결통과. Claude가용성1회는 여전히인증만료. docs/dougle-bot/receipt-verification-fix.md 참조. 릴리스확인진행중. 업데이트는prepare→stop확인→start→running_version=0.1.10 필요.
+스킬0.8.13 / 봇0.1.10. 615자동테스트(신규18), 실제Codex2회 훅문맥으로ID연결통과. Claude가용성1회는 여전히인증만료. docs/dougle-bot/receipt-verification-fix.md 참조. cffac70 소스·CI42350152896 Python3.12/3.13 통과. v0.8.13-skills-preview.1 공개·익명다운로드 일치 확인. 업데이트는prepare→stop확인→start→running_version=0.1.10 필요.
 
 ## 직전 평가 (2026-11-07)
 
