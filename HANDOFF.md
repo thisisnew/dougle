@@ -13,7 +13,7 @@
 ## 검증
 
 - 봇456개 자동 검사 통과: fake Slack/engine, 실제 SQLite·가짜 CLI·배포 wheel 바이트 일치. 동시 중복200이벤트는 테스트1개이며 엔진1회만 실행된다. 재시도/복원/예산/취소/저장 실패 경계를 포함한다.
-- 민감정보77개 합성 사례 통과. signed URL, HTML escape, 파일명, CRLF, 마지막 줄, batch 중 바이너리 포함.
+- 민감정보78개 합성 사례 통과. signed URL, HTML escape, 파일명, CRLF, 마지막 줄, batch 중 바이너리 포함.
 - 실제 Git1만 파일, 변경10개와 동일9,993개, 별도2,500개 일괄 변경, 동일목록3회, 관련 없는 커밋, rename, 변조/고정버전20개 확인.
 - 혼합크기1천파일(4KiB/64KiB/1MiB) 세 번 전체 검사66.606/78.924/71.509초. 합성 암호1파일 추가는 전체 BLOCK, 복구 시 원래digest. 강제종료에는 PASS 없음, 재실행 통과. docs/skills/stress-verification.json에 결과를 저장했다.
 - 단일 개발환경 측정이며 실제 M Mac·회사 Slack 응답속도·호스트 AI 의미 병합의 검증은 아니다. SQLite 지식 DB나 자동 Publish는 추가하지 않았다.

@@ -87,6 +87,12 @@ try {
  await run('tab in filename blocked','safe\n',2,{file:'bad\tname.md'})
  await run('newline in filename blocked','safe\n',2,{file:'bad\nname.md'})
  if(process.geteuid?.()!==0)await run('unreadable file blocked','safe\n',2,{extra:async(d,p)=>chmod(p,0)})
+ const fallbackBin=join(root,'only-standard-tools');await mkdir(fallbackBin)
+ for(const tool of ['awk','find','sort','cmp','iconv','od','mktemp','dirname','basename','wc','tr','rm','sh','cat','shasum']) {
+  const resolved=spawnSync('which',[tool],{encoding:'utf8'});assert.equal(resolved.status,0)
+  await symlink(resolved.stdout.trim(),join(fallbackBin,tool))
+ }
+ await run('shasum fallback without GNU coreutils','ordinary domain claim\n',0,{env:{...process.env,PATH:fallbackBin}})
  await run('missing tool blocked','safe\n',2,{env:{PATH:'/nonexistent',TMPDIR:tmpdir()}})
  await run('later JSON assignment is checked','{"password":"REDACTED","client_secret":"synthetic-sensitive-value"}\n',1)
  await run('later bearer is checked','Bearer REDACTED; Bearer synthetic-sensitive-value\n',1)

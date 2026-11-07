@@ -8,7 +8,7 @@
   "decisionTableAssignments": 64,
   "localGitTransportChecks": 6,
   "largePackageInventoryChecks": 20,
-  "sensitiveFixtures": 77,
+  "sensitiveFixtures": 78,
   "packageBytes": "PASS exact canonical resources and tested wheel",
   "botTests": 456,
   "optionalBotRuntime": "0.1.8",

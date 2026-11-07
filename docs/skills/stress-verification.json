@@ -3,7 +3,7 @@
   "runtime": "0.1.8",
   "realModelCalls": 0,
   "botTests": 456,
-  "sensitiveFixtures": 77,
+  "sensitiveFixtures": 78,
   "regressions": [
     {
       "name": "research requirement lost after missing skill activation",
@@ -84,5 +84,6 @@
     "Company Slack/Mac end-to-end latency not measured",
     "Crash before durable answer may still require new work",
     "No universal secret detection guarantee; semantic review still mandatory"
-  ]
+  ],
+  "standardSystemToolsFallback": "PASS actual shasum with sha256sum absent from isolated PATH"
 }
