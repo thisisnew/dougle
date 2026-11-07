@@ -241,7 +241,7 @@ def test_needs_lookup_card_has_no_post_button(app):
 
 
 @pytest.mark.parametrize(
-    "observed", ["yesterday", "2026-11-06T15:00:00", "2999-01-01T00:00:00Z", None]
+    "observed", ["yesterday", "2026-11-06T15:00:00", "2999-01-01T00:00:00Z"]
 )
 def test_lookup_time_requires_explicit_zone_and_not_future(observed):
     with pytest.raises(BotError):

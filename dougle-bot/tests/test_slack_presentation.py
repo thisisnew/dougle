@@ -362,9 +362,10 @@ def test_deleted_emoji_is_replaced_on_next_inquiry(app):
     "status,state",
     [
         (status, "hourglass_flowing_sand")
-        for status in ("queued", "drafting", "awaiting_approval", "needs_lookup", "posting")
+        for status in ("queued", "drafting", "awaiting_approval", "posting")
     ]
     + [
+        ("needs_lookup", "speech_balloon"),
         ("posted", "white_check_mark"),
         ("failed", "warning"),
         ("post_unknown", "warning"),

@@ -30,6 +30,9 @@ def chat_text(body, source_count):
         block = re.sub(r"(?<![\w\]])(?:\[(?:R)?[1-9]\d*\])+(?=\s|[.,;:!?。]|$)", citations, block)
         block = escape_slack(block)
         block = re.sub(r"\*\*([^*\n]+)\*\*", r"*\1*", block)
+        # Slack clients can show literal asterisks when a closing marker touches a Korean particle.
+        # Drop only that emphasis; preserve the text, numbers and protected code verbatim.
+        block = re.sub(r"\*([^*\n]+)\*(?=[가-힣])", r"\1", block)
         block = re.sub(r"(?m)^#{1,6}\s+(.+)$", lambda m: "*" + m[1].strip("*") + "*", block)
         block = re.sub(r"(?m)^([ \t]*)[-*]\s+", r"\1• ", block)
         block = re.sub(r"\n{3,}", "\n\n", block)
@@ -45,7 +48,7 @@ def reaction_names(status, configured):
         "queued": "hourglass_flowing_sand",
         "drafting": "hourglass_flowing_sand",
         "awaiting_approval": "hourglass_flowing_sand",
-        "needs_lookup": "hourglass_flowing_sand",
+        "needs_lookup": "speech_balloon",
         "posting": "hourglass_flowing_sand",
         "posted": "white_check_mark",
         "failed": "warning",

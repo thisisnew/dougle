@@ -9,6 +9,7 @@ from .progress import progress_text
 from .safety import BotError, check_content, escape_slack
 
 RESEARCH_ERRORS = {
+    "unsafe_lookup_sql": "제안된 조회문을 검증하지 못했습니다. DB 접근 권한 오류로 확인된 것은 아닙니다.",
     "repair_changed_evidence": "표현을 다듬는 과정에서 검증한 근거 정보가 달라졌습니다. 이 답변은 게시할 수 없습니다.",
     "invalid_verification": "AI가 반환한 근거 확인 기록의 형식이 올바르지 않습니다. 권한 오류로 확인된 것은 아니며 이 답변은 게시할 수 없습니다.",
     "verification_requirements_missing": "질문에 필요한 확인 항목이 답변 기록에서 누락되었습니다. 이 답변은 게시할 수 없습니다.",
@@ -87,7 +88,8 @@ def render(inquiry, draft, permalink=None):
             "type": "section",
             "text": {
                 "type": "plain_text",
-                "text": inquiry["question_text"][:1000] or "질문 내용이 없습니다.",
+                "text": inquiry["question_text"][:1000].replace("```", "\n").strip()
+                or "질문 내용이 없습니다.",
             },
         },
         {"type": "divider"},
@@ -160,10 +162,34 @@ def render(inquiry, draft, permalink=None):
         )
     if draft and status not in ("queued", "drafting", "cancelled", "failed"):
         if status == "needs_lookup":
-            blocks.append(section("*확인이 필요한 내용*"))
             lookup = json.loads(draft["lookup_json"])
-            display = f"{draft['body']}\n\n조회 대상: {lookup['target']}\n{lookup['reason']}\n\n{lookup['sql'] or '위 안내에 따라 확인하신 내용만 알려 주세요.'}\n\n최소한의 비민감 결과 요약과 조회 시각을 입력해 주세요."
-            display = escape_slack(display)
+            blocks.append(section("*확인 대상*\n" + escape_slack(lookup["target"])))
+            # Preserve the whole request, but separate its short paragraphs on mobile.
+            # Older free-form requests are also readable; no semantic rewrite in this renderer.
+            reason = lookup["reason"]
+            for label in ("막힌 이유", "확인할 내용", "필요한 결과"):
+                reason = re.sub(rf"(?m)^\s*{label}\s*[:：]\s*", f"*{label}*\n", reason)
+            for paragraph in re.split(r"\n\s*\n", escape_slack(reason), maxsplit=2):
+                for offset in range(0, len(paragraph), 2800):
+                    blocks.append(section(paragraph[offset : offset + 2800]))
+            if inquiry.get("sql_withheld") and not lookup["sql"]:
+                blocks.append(
+                    section(
+                        "조회문은 안전성·스키마 검증을 통과하지 못해 제외했습니다. 확인 대상의 스키마부터 점검해 주세요."
+                    )
+                )
+            if lookup["sql"]:
+                sql = escape_slack(lookup["sql"])
+                if len(sql) <= 2700:
+                    blocks.append(section("*읽기 전용 조회문*\n```\n" + sql + "\n```"))
+                else:
+                    # Never show a truncated query whose filters/LIMIT might be missing.
+                    blocks.append(
+                        section(
+                            "조회문이 길어 카드에 표시하지 않았습니다. 위 확인 대상과 조건에 맞는 최소 결과만 알려 주세요."
+                        )
+                    )
+            display = "아래 버튼으로 필요한 결과만 요약해 주세요. 입력하시면 같은 문의의 답변을 이어서 준비합니다."
         else:
             display = final_text(draft)
             blocks.append(section("*답변*"))
@@ -261,17 +287,6 @@ def modal(action, inquiry, draft):
             "type": "plain_text",
             "text": "확인 대상·범위와 결과 또는 해결한 내용을 요약해 주세요. 토큰·개인정보·원본 데이터는 입력하지 마세요.",
         }
-        blocks.append(
-            {
-                "type": "input",
-                "block_id": "observed_at",
-                "label": {
-                    "type": "plain_text",
-                    "text": "확인 시각 · 예: 2026-11-06T15:00:00+09:00",
-                },
-                "element": {"type": "plain_text_input", "action_id": "value", "max_length": 40},
-            }
-        )
     return {
         "type": "modal",
         "callback_id": "dougle_" + action,

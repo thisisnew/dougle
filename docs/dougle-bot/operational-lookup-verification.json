@@ -1,0 +1,32 @@
+{
+  "calls": 1,
+  "exit": 0,
+  "duration_seconds": 35.67,
+  "usage": [
+    {
+      "input_tokens": 78230,
+      "cached_input_tokens": 72320,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 674,
+      "reasoning_output_tokens": 14
+    }
+  ],
+  "layer": "real_codex_with_synthetic_bigquery_mcp",
+  "company_integration": "NOT_RUN",
+  "native_claude": "NOT_RUN",
+  "result": "PASS",
+  "cases": 2,
+  "available_sequence": [
+    "ToolSearch",
+    "schema",
+    "read_only_count"
+  ],
+  "denied_sequence": [
+    "ToolSearch",
+    "schema_denied",
+    "private_request"
+  ],
+  "company_data_used": false,
+  "source": "production lookup_policy and ANSWER_POLICY with synthetic MCP, not native Claude engine E2E",
+  "cost_usd": null
+}

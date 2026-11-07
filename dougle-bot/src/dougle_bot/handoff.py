@@ -3,6 +3,36 @@
 import copy
 
 
+def lookup_policy(config):
+    readers = [
+        name
+        for name in config.allowed_tools
+        if name.startswith("mcp__") and name not in config.disallowed_tools
+    ]
+    return """OPERATIONAL LOOKUP — finish investigation before composing a short answer.
+Bash/terminal commands (including local database CLIs) are unavailable in this bot. That does NOT
+mean database access is unavailable. Check the authorized MCP readers below using ToolSearch first.
+For a database question, discover the configured BigQuery readers before requesting human help.
+Use the source registry to narrow the project/dataset; inspect matching tables and actual schema,
+then execute a bounded read-only query if the dataset and freshness fit the question. Do not invent
+projects, column names, permissions or a completed attempt. Avoid scanning unrelated datasets.
+Check whether BigQuery is a delayed replica: a row/count there is not automatically current production.
+If unavailable, denied, missing tables or too stale, state the specific observed blocker and request
+only the missing production check. Empty results do not prove absence in production.
+No authorized reader listed means configuration lacks that path, not proof the service denied access.
+Never bypass the allowlist, enable a shell, or use a write tool to obtain data.
+PRIVATE REQUEST: target names the system/table/environment. Write reason as THREE short paragraphs:
+막힌 이유: what you attempted and the actual blocker (or what remains unknown).
+확인할 내용: the precise read-only check, affected records/filters and relevant definition.
+필요한 결과: the minimum count/status/summary to return. No raw rows, credentials or timestamp field.
+Do not repeat the question, narrate architecture or paste all investigation history into the DM.
+Keep SQL in lookup.sql only. The display gate requires a single SELECT with LIMIT and verified schema;
+no comments, multiple statements or modifications. When schema is unknown leave sql empty and request
+the needed schema, never a guessed query. A blocked query is not a database permission failure.
+Authorized MCP reader names (configuration, not a claim that a connection works):
+""" + "\n".join(readers or ["None configured."])
+
+
 def reported_evidence(report):
     return bool(report and report.get("evidence_kinds", ["live"]))
 
@@ -32,6 +62,8 @@ def route_unresolved(output):
 
 
 def failure_request(error):
+    if error == "unsafe_lookup_sql":
+        return "대상 테이블과 컬럼을 확인한 뒤 필요한 상태·건수만 읽기 전용으로 조회해 주세요. 검증되지 않은 조회문은 표시하거나 실행하지 않습니다."
     if error == "thread_changed_during_answer":
         return "확인하는 동안 질문 스레드가 변경되었습니다. 최신 질문의 대상과 필요한 확인 범위를 정리해 처리 결과로 알려 주세요. 이전 질문에 대한 답을 그대로 게시하지 않았습니다."
     if error == "engine_timeout":

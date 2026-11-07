@@ -92,6 +92,14 @@ class Worker:
             if inquiry["card_state"] == "unknown":
                 return
             draft = self.store.current(inquiry)
+            if draft and inquiry["status"] == "needs_lookup":
+                inquiry["sql_withheld"] = bool(
+                    self.store.one(
+                        "SELECT 1 FROM audit WHERE inquiry_id=? AND action='lookup_sql_withheld' "
+                        "AND detail=(SELECT CAST(MAX(id) AS TEXT) FROM engine_runs WHERE inquiry_id=?) LIMIT 1",
+                        (ident, ident),
+                    )
+                )
             link = None
             if inquiry["status"] == "posted" and inquiry["posted_ts"]:
                 try:
@@ -370,11 +378,24 @@ class Worker:
                     )
                     if not set(self.config.engine.required_skills) <= result.activated:
                         raise BotError("required_skill_not_activated")
-                    output = validate_output(
-                        result.output,
-                        lookup_basis=reported_evidence(lookup),
-                        lookup_time=lookup["observed_at"] if reported_evidence(lookup) else None,
-                    )
+                    try:
+                        output = validate_output(
+                            result.output,
+                            lookup_basis=reported_evidence(lookup),
+                            lookup_time=lookup["observed_at"]
+                            if reported_evidence(lookup)
+                            else None,
+                        )
+                    except BotError as invalid:
+                        if invalid.code != "unsafe_lookup_sql":
+                            raise
+                        # Withhold only the optional SQL. All evidence gates still run below.
+                        # The runtime never executes suggested SQL or posts a lookup request.
+                        output = copy.deepcopy(result.output)
+                        output["lookup"]["sql"] = ""
+                        output["lookup"]["schema_verified"] = False
+                        output = validate_output(output)
+                        self.store.audit(ident, "system", "lookup_sql_withheld", str(run_id))
                     if presentation_repair is not None and any(
                         output[key] != presentation_repair[key]
                         for key in ("status", "sources", "lookup", "verification")

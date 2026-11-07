@@ -217,7 +217,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
             message = (
                 "다시 생성 기능은 제거되었습니다. 이 창을 닫고 최신 카드의 ‘직접 수정’을 이용해 주세요."
                 if isinstance(exc, BotError) and exc.code == "action_unavailable"
-                else "최신 카드와 입력 내용·확인 시각을 확인해 주세요."
+                else "최신 카드와 입력 내용을 확인해 주세요."
             )
             ack(
                 response_action="errors",
