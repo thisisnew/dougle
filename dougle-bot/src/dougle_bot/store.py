@@ -85,7 +85,10 @@ class Store:
             rows = ledger.read_text().splitlines()
             for ident in rows:
                 uuid.UUID(ident)
-                if not self.one("SELECT id FROM deliveries WHERE id=?", (ident,)):
+                if not self.one("SELECT id FROM deliveries WHERE id=?", (ident,)) and not self.one(
+                    "SELECT id FROM audit WHERE action='handoff_notice_intent' AND detail=?",
+                    (ident,),
+                ):
                     raise BotError("restored_database_requires_review")
         except (ValueError, UnicodeError):
             raise BotError("invalid_delivery_ledger") from None

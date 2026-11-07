@@ -1,0 +1,263 @@
+{
+  "date": "2026-11-07",
+  "plugin_version": "0.8.16",
+  "runtime_version": "0.1.13",
+  "publication": "NOT_PUBLISHED",
+  "source_state": "Local working tree; parent must record final commit and CI before public Preview",
+  "python": "3.13.5",
+  "slack_bolt": "1.30.0",
+  "slack_sdk": "3.46.0",
+  "automated_test_count": 694,
+  "new_handoff_notice_tests": 39,
+  "failed": 0,
+  "test_command": ".tools/bot-dev/bin/pytest -q dougle-bot/tests --junitxml=.tools/handoff-notice/tests.xml",
+  "junit_sha256": "d137e560883e46f8a8c92c319a9050d6694007dab1da2b5c7f834324ef1daf52",
+  "runtime_source_sha256": {
+    "dougle-bot/src/dougle_bot/__init__.py": "2628b000f514684eb1da48d31c2a59ff940a47343541a944c2b80e7934fb07a3",
+    "dougle-bot/src/dougle_bot/actions.py": "73c09ec75001f984bdc6d762b446c7f45d2d29b8f7108397f3e4a284bfd19e01",
+    "dougle-bot/src/dougle_bot/answer_policy.py": "86a1f813b5d3f8a8142814984159a847ca7e98e0de0a6313d9a4c3a5728e671b",
+    "dougle-bot/src/dougle_bot/cards.py": "a346bd7889b9566665a1652f7ffc50b6c3c1a2b3a5be8422bec12e13ef015c73",
+    "dougle-bot/src/dougle_bot/config.py": "c4e5d198c4f4316324177c31d0ac540d5daebaae195dd15c20343a7d35cd7189",
+    "dougle-bot/src/dougle_bot/engine.py": "cae31a1a759023b86b8efab698ef51b11d01354d8be0f8ab109aad883093bc6d",
+    "dougle-bot/src/dougle_bot/evidence.py": "475302d32921905c59f601aa8858a16335d197884ee5c20df3db9e03a60fb58f",
+    "dougle-bot/src/dougle_bot/guard.py": "215e65c6970de8069a4e2dfdb7578d14136e9c68eaea32cf1e944b524a2c3812",
+    "dougle-bot/src/dougle_bot/handoff.py": "88f6fb34211e65352e3545dc528e3ac35c0a5083b80b3157776bb542320d032a",
+    "dougle-bot/src/dougle_bot/handoff_notice.py": "54d152eb76d6d702efe688aa2eadb0539e5c03b7bf26d69cb30ff0db13531765",
+    "dougle-bot/src/dougle_bot/images.py": "f22da350c5a33f57eaf43ac8639b37813708202040b0cbb10ee998ae08f5daf9",
+    "dougle-bot/src/dougle_bot/intake.py": "7d37751cb1e54111b96471e2b471bcd58288941995c70247b445a3a03f83130a",
+    "dougle-bot/src/dougle_bot/main.py": "ec74acc2805c1d3ec015af1de5e6ece177bec9733c0551dbbb1dde43e7c37577",
+    "dougle-bot/src/dougle_bot/monitor.py": "033daca08bf12e8457a4b70ad3785a800148eb9ffe5cd0fe7d11c668ec406b5b",
+    "dougle-bot/src/dougle_bot/presentation.py": "3342f315ccd47fbc3582df3744ce7e63374d41de55423a7f34b97ba3c11ac64a",
+    "dougle-bot/src/dougle_bot/progress.py": "ff7f65f28db1a91f994a10da04e7b40f701b1a3e4f244b4ba931f915631ba134",
+    "dougle-bot/src/dougle_bot/prompts.py": "8f8143ea7d49031e178ddc9b88707e3915a4cd3ec4d1fe4caec53151c1732942",
+    "dougle-bot/src/dougle_bot/receipt_hook.py": "fa224995be6c26f4331fcc04ec70abfc046bc059a8f407662ca5f0ec9d7b5299",
+    "dougle-bot/src/dougle_bot/recovery.py": "b1e65c1c075bb084fb6fa0cd982267f146533452c0a9a8007ace802a0b513d1a",
+    "dougle-bot/src/dougle_bot/runtime.py": "2bd88363518fb511399a5446c0e118e1a10e7740c34ea4c7bc7940b47264f3cd",
+    "dougle-bot/src/dougle_bot/safety.py": "e062f24cd290f930cb88715d5004e30df7971bbf63e3f534d604ce4d426ba94f",
+    "dougle-bot/src/dougle_bot/secrets.py": "bc9177e1ff367df479f3e1a032bc8f97ff4b863e511e42927f75859963fb92e8",
+    "dougle-bot/src/dougle_bot/slack_gateway.py": "f51223cc4aee97f66a6500b310859b14591ba9eca9c0a4e40c405fa66c277af9",
+    "dougle-bot/src/dougle_bot/store.py": "fed74e48d068988158b9bf533a9de5d27a02e50db0b815bfbe9d5b26fd1b6008",
+    "dougle-bot/src/dougle_bot/worker.py": "4083411419f688ca73bd3067730755a2177000f6a166fc330acb0f0a9521bbd4"
+  },
+  "wheel_sha256": "6b2078f485794e2de0c32e2b7218674a504e9b5c66b7282937568d1663385892",
+  "checks": {
+    "wheel_source_parity": "PASS",
+    "canonical_plugin_mirror_parity": "PASS",
+    "isolated_wheel_install": "PASS --no-index --no-deps; imported version/new module and checked source bytes",
+    "ruff": "PASS dougle-bot, scripts/scenarios, scanner benchmark/stress helpers",
+    "skills_structure": {
+      "status": "PASS",
+      "checks": 280
+    },
+    "sharing_merge": {
+      "status": "PASS",
+      "decision_assignments": 64,
+      "local_git_transport_checks": 6
+    },
+    "large_package": {
+      "status": "PASS",
+      "checks": 20,
+      "baseline_files": 10000
+    },
+    "scenario_catalog": {
+      "status": "PASS",
+      "designed_cases": 1066,
+      "generated_files": 25,
+      "scenario_execution": "NOT_RUN; unchanged historical catalog"
+    },
+    "sensitive_scanner_default": {
+      "status": "PASS",
+      "cases": 84
+    },
+    "sensitive_scanner_legacy": {
+      "status": "PASS",
+      "cases": 84
+    },
+    "scanner_benchmark_smoke": "PASS --counts 3",
+    "scanner_stress_smoke": "PASS --files 3; expected sensitive mutation BLOCK verified",
+    "claude_plugin_validation": "PASS plugin and marketplace; validation only, no model call",
+    "current_tree": {
+      "status": "PASS",
+      "retiredRoots": 6,
+      "currentWorkflows": 1,
+      "localLinks": 437
+    }
+  },
+  "independent_review": {
+    "result": "No additional runtime changes required within the supported single-daemon lifecycle",
+    "failure": "Only confirmed developer card sends/updates may claim a notice. Intent precedes fsynced post ledger and network I/O. Missing receipts, generic exceptions and uncertain sends never authorize retries. Notice failures leave final-answer lifecycle unchanged.",
+    "multiworker": "BEGIN IMMEDIATE plus inquiry-scoped audit intent serializes public notice claims across separate Store/Worker instances. Production InstanceLock and shared cards_lock remain required for private card lifecycle; arbitrary multiple daemons creating the initial DM are not a new supported mode.",
+    "stop_and_channel_removal": "Control state, allowlist, inquiry status and draft/job binding are checked before claim and after ledger I/O. Already dispatched remote I/O cannot be recalled; no distributed atomicity with Slack is claimed. Configuration changes require the normal stop/restart lifecycle.",
+    "approval_and_history": "Explicit review mode emits no automatic notice. Existing approval gates remain. Bot notice messages are excluded by existing history hash behavior; customer edits still reject stale final answers.",
+    "tradeoffs": [
+      "At most one automatic notice attempt per inquiry, not guaranteed exactly-once delivery. Even definite failures or an interruption after claim may leave the customer without a notice; developer result processing remains available.",
+      "Restoring only the database fails closed when the independent post ledger references a missing notice intent. Older runtimes that do not recognize these audit-backed ledger entries cannot safely read a new notice history; do not bypass the ledger to downgrade.",
+      "Existing thread-history limits count messages, including notices; a full thread may still require private assistance."
+    ]
+  },
+  "real_model_calls": 0,
+  "real_keychain_calls": 0,
+  "real_company_slack": "NOT_RUN",
+  "user_installation_or_running_bot_changed": false,
+  "ciPython312": "NOT_RUN_FOR_THIS_WORKING_TREE",
+  "ciPython313": "NOT_RUN_FOR_THIS_WORKING_TREE",
+  "anonymous_download": "NOT_RUN; unpublished",
+  "tests": [
+    {
+      "test": "tests.test_handoff_notice::test_confirmed_dm_precedes_exact_safe_notice_and_preserves_pending_state[lookup]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_confirmed_dm_precedes_exact_safe_notice_and_preserves_pending_state[failed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_dm_failure_never_claims_notice_until_a_confirmed_request[False-dm]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_dm_failure_never_claims_notice_until_a_confirmed_request[False-card_before]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_dm_failure_never_claims_notice_until_a_confirmed_request[False-card_after]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_dm_failure_never_claims_notice_until_a_confirmed_request[True-dm]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_dm_failure_never_claims_notice_until_a_confirmed_request[True-card_before]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_dm_failure_never_claims_notice_until_a_confirmed_request[True-card_after]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_notice_failure_is_held_across_reopen_and_final_answer_still_posts[post_before-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_notice_failure_is_held_across_reopen_and_final_answer_still_posts[post_before-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_notice_failure_is_held_across_reopen_and_final_answer_still_posts[post_after-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_unexpected_send_exception_is_also_ambiguous",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_missing_send_receipt_is_ambiguous_and_never_retried",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_new_failed_attempt_cannot_authorize_notice_from_old_dm",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[stop-dm]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[stop-ledger]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[removed-dm]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[removed-ledger]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[queued-dm]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[queued-ledger]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[rejected-dm]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[rejected-ledger]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[cancelled-dm]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_rechecks_authorization_and_lifecycle_after_io[cancelled-ledger]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_ledger_failure_prevents_send_and_retry",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_crash_window_never_replays_notice[intent]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_crash_window_never_replays_notice[ledger]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_crash_window_never_replays_notice[send]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_crash_window_never_replays_notice[receipt]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_restoring_only_database_cannot_erase_a_notice_send",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_independent_workers_race_for_one_durable_notice",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_notice_does_not_change_thread_hash_but_customer_correction_does",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_customer_change_during_resumed_answer_still_rejects_final",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_additional_developer_request_gets_no_second_notice",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_each_inquiry_in_same_thread_has_its_own_notice",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_review_mode_never_posts_notice_even_on_recovery[lookup]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_review_mode_never_posts_notice_even_on_recovery[failed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_review_mode_after_notice_still_requires_final_approval",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_handoff_notice::test_success_receipt_and_independent_ledger_share_delivery_identity",
+      "status": "PASS"
+    }
+  ]
+}

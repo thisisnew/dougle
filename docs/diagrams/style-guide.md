@@ -1,24 +1,19 @@
-# Dougle diagram style
+# 더글 그림 스타일
 
-User-guide illustrations use visual-explainer. Structural/design diagrams use native Excalidraw scenes and PNG exports. Both preserve Dougle white and blue.
+흰 바탕과 파란 강조색을 유지합니다. 한 그림에는 한 질문의 답만 담고, 긴 조건은 인접 문서에 씁니다.
 
-- Background #ffffff; text #292f3e; secondary #56647a; accent #2866c2; tint #edf4ff.
-- Korean fonts: Apple SD Gothic Neo, Malgun Gothic, sans-serif. Phrase-based wrapping.
-- Titles32px; stage headings24–26px; body19–20px; supporting text18px; commands16px.
-- Sharing: left-to-right three stages, stacking below650px. Other diagrams: top-to-bottom three steps with conditions below each action; phrase-based wrapping on narrow screens.
-- Sources: *.src.html; skill renderer produces *.html. README/docs embed2x PNG exports at1000px CSS width to preserve Korean typography. Static PNG scales on mobile; it does not reflow.
-- Renderer390/1280 light/dark inspection and PNG visual review. Do not claim screenshots verify product behavior.
-- No reverse arrows, English category tags or small diamond labels. Keep source access failures, evidence limits and refresh conditions explicit.
+| 요소 | 기준 |
+|---|---|
+| 바탕·본문 | `#ffffff` · `#292f3e` |
+| 보조 설명 | `#56647a` |
+| 강조·옅은 배경 | `#2866c2` · `#edf4ff` |
+| 한글 글꼴 | Apple SD Gothic Neo, Malgun Gothic, sans-serif |
+| 문서용 SVG 글자 | 제목 25px, 노드 18px, 설명·연결 14px |
+| GitHub 이미지 | SVG를 2배 크기 PNG로 렌더링 |
+| 작은 화면 | 개요는 별도 세로형 이미지. 나머지는 확대 가능한 원본 링크 제공 |
 
-See [production notes and attribution](README.md).
+구성 요소와 화살표는 archify JSON에서 관리합니다. PC 경계는 실제 지식 저장 위치를 나타냅니다. publish·fetch 화살표는 사용자가 요청한 공유를 뜻하며 상시 동기화로 표시하지 않습니다.
 
-## Structure/design scenes
+그림의 한국어 글자 겹침·잘림, 연결 방향, README 너비와 작은 화면을 확인합니다. 이 검토는 제품의 실제 회사 연동 테스트를 대신하지 않습니다.
 
-- Hand-authored `.excalidraw` source; high-resolution PNG for GitHub. No Mermaid.
-- `roughness: 0`, white/blue palette above; sans-serif Korean fallback (fontFamily 2).
-- Measure actual Korean text widths, use explicit phrase breaks, never truncate labels.
-- Use only three or four ideas per figure, short labels and recognizable icons. Put record fields and cardinality in the developer reference.
-- Native source keeps full element IDs, arrow bindings and measurable text bounds.
-- Each figure answers one question. Keep implementation references in adjacent Markdown.
-- Inspect actual PNGs, labels, routes and a README-sized preview before publishing.
-- Current diagrams describe implemented behavior; channel-wide inquiry detection remains a separate proposal.
+[제작 방법과 원본](README.md)

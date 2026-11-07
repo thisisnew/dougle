@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "목차에서 찾고, 원본으로 확인합니다",
+    "locale": "ko",
+    "output": "docs/diagrams/archify/memory.html",
+    "quality_profile": "showcase",
+    "visual_preset": "editorial",
+    "legend": {
+      "mode": "hidden"
+    },
+    "repository": {
+      "url": "https://github.com/thisisnew/dougle.git",
+      "revision": "bff6e6cefbe29f7a20d6aa20933d47aba35d420a"
+    }
+  },
+  "components": [
+    {
+      "id": "index",
+      "type": "frontend",
+      "label": "목차",
+      "sublabel": "주제 · 동의어 · 식별자",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/references/organization.md"
+        }
+      ]
+    },
+    {
+      "id": "topic",
+      "type": "database",
+      "label": "토픽",
+      "sublabel": "업무 설명 · 조건 · 예외",
+      "pos": [
+        350,
+        60
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/references/organization.md"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "type": "database",
+      "label": "소스",
+      "sublabel": "원본 위치 · 확인 기록",
+      "pos": [
+        350,
+        225
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/references/organization.md"
+        }
+      ]
+    },
+    {
+      "id": "original",
+      "type": "external",
+      "label": "원본 확인",
+      "sublabel": "필요한 코드 · 문서 · DB",
+      "pos": [
+        40,
+        225
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "type": "backend",
+      "label": "근거 있는 답변",
+      "sublabel": "바뀐 지식만 함께 갱신",
+      "pos": [
+        40,
+        390
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/SKILL.md"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "index-topic",
+      "from": "index",
+      "to": "topic",
+      "label": "관련 주제"
+    },
+    {
+      "id": "topic-source",
+      "from": "topic",
+      "to": "source",
+      "label": "출처 연결"
+    },
+    {
+      "id": "source-original",
+      "from": "source",
+      "to": "original",
+      "label": "위치 확인"
+    },
+    {
+      "id": "original-answer",
+      "from": "original",
+      "to": "answer",
+      "label": "확인한 근거"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "무엇을 직접 확인하나요?",
+      "items": [
+        "코드 동작은 구현을, 현재 상태는 해당 시스템을 조회합니다.",
+        "변경이 없고 충분한 업무 근거는 재사용합니다."
+      ]
+    }
+  ]
+}

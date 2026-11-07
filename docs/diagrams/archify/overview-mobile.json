@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "연결한 지식을 함께 씁니다",
+    "locale": "ko",
+    "output": "docs/diagrams/archify/overview-mobile.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/thisisnew/dougle.git",
+      "revision": "bff6e6cefbe29f7a20d6aa20933d47aba35d420a"
+    },
+    "legend": {
+      "mode": "hidden"
+    },
+    "visual_preset": "editorial"
+  },
+  "components": [
+    {
+      "id": "my-ai",
+      "type": "backend",
+      "label": "내 AI가 자료 연결",
+      "sublabel": "내 PC에 지식으로 정리",
+      "pos": [
+        40,
+        65
+      ],
+      "size": [
+        230,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-connect/SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "team",
+      "type": "cloud",
+      "label": "팀 지식 저장소",
+      "sublabel": "선택한 지식과 출처 공유",
+      "pos": [
+        40,
+        210
+      ],
+      "size": [
+        230,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-publish/SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "use",
+      "type": "frontend",
+      "label": "동료 AI · Slack 봇",
+      "sublabel": "가져온 지식으로 답변",
+      "pos": [
+        40,
+        355
+      ],
+      "size": [
+        230,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-fetch/SKILL.md"
+        },
+        {
+          "path": "skills/dougle-ask/references/organization.md"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "my-ai",
+      "to": "team",
+      "label": "publish"
+    },
+    {
+      "from": "team",
+      "to": "use",
+      "label": "fetch · 내 지식과 합치기"
+    }
+  ],
+  "cards": []
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "5c23b8eb-421c-4763-9a26-9d628cd3f342",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/thisisnew/Desktop/dougle/docs/diagrams/archify/bot.json",
+  "output": "/Users/thisisnew/Desktop/dougle/docs/diagrams/archify/bot.html",
+  "specification": {
+    "sha256": "b160ca3ffa7c204bd2d31607ca25291329cb479bf6c89ec60d79180162c432ca",
+    "bytes": 3050
+  },
+  "artifact": {
+    "sha256": "34fd9cb0ef203343927a819721d68932416b940e7ec81e5c476c309e84d3d523",
+    "bytes": 839440
+  }
+}

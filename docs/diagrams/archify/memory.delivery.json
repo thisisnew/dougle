@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "7a01d466-e5e4-4b5f-90b2-d8e2dea4e001",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/thisisnew/Desktop/dougle/docs/diagrams/archify/memory.json",
+  "output": "/Users/thisisnew/Desktop/dougle/docs/diagrams/archify/memory.html",
+  "specification": {
+    "sha256": "80dcb4cf5f06212a699d16d807af38d11d9c0ca545deb54fd3d8d8eb0d43634d",
+    "bytes": 3020
+  },
+  "artifact": {
+    "sha256": "7c3f570dc2bdbe595554d3e9324c3df35321ea77395ecb4b49b64a0280a52a75",
+    "bytes": 838496
+  }
+}

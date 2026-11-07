@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-07",
+  "archify_version": "3.2.0",
+  "repository_evidence_commit": "bff6e6cefbe29f7a20d6aa20933d47aba35d420a",
+  "native_checks": "finalize validate/deliver/check/browser-check PASS for all four candidates",
+  "derived_visual_review": "PNG images inspected for Korean text, node/edge labels, arrow direction and clipping. SVG/PNG use repository brand-export.py; native HTML gate results do not certify these derivatives.",
+  "diagrams": [
+    {
+      "name": "overview",
+      "native_browser_check": "PASS",
+      "delivery_receipt": "4e7ce779-e04f-46cc-9f76-1ae1fcb8410d",
+      "files": {
+        "json": "a2d44697d3cdef7c66bd981eb509f8ce80ea900dfc41c123bb14698c1d6f063e",
+        "html": "8784a1e8667b138d7d06a6a8236609a951afbd28e63000683fa3e7c3f399b7a9",
+        "svg": "4dd9ca17a01c1403b556cf20a1f5061242bf8f7f8e03311137296bdb5cdfed6f",
+        "png": "28edbcf931e00bdcd65f477711db7dd23b270dda72ffd11a92a25eb32f3062b2"
+      }
+    },
+    {
+      "name": "overview-mobile",
+      "native_browser_check": "PASS",
+      "delivery_receipt": "8926da49-6507-4ee5-a9e7-31417565ea47",
+      "files": {
+        "json": "90a50b87e281f07c28cd548ba5fa7cb1de00c1368db2c2530bdc7848e29fcbae",
+        "html": "12ecbd41564e241cb932353fb862ad62146b5e1ad25fddf7445ecb7ed3363afd",
+        "svg": "5278713e05127bb1057b946e1328bca5f03f666134f753c767134e3d7401fdbd",
+        "png": "09b665391f6f582ae48b76a1df963b21839383d0edc00fd47c84e2179eea5434"
+      }
+    },
+    {
+      "name": "memory",
+      "native_browser_check": "PASS",
+      "delivery_receipt": "7a01d466-e5e4-4b5f-90b2-d8e2dea4e001",
+      "files": {
+        "json": "80dcb4cf5f06212a699d16d807af38d11d9c0ca545deb54fd3d8d8eb0d43634d",
+        "html": "7c3f570dc2bdbe595554d3e9324c3df35321ea77395ecb4b49b64a0280a52a75",
+        "svg": "3a9e1de526b4c30a92e519368c7e7a75e6a3b6d569d71ff2c3d8a910ebf65ef6",
+        "png": "c636c412c8b42d5843f64fee5fa7e7bb26af8c0d4556d73bcc2d6a831d872938"
+      }
+    },
+    {
+      "name": "bot",
+      "native_browser_check": "PASS",
+      "delivery_receipt": "5c23b8eb-421c-4763-9a26-9d628cd3f342",
+      "files": {
+        "json": "b160ca3ffa7c204bd2d31607ca25291329cb479bf6c89ec60d79180162c432ca",
+        "html": "34fd9cb0ef203343927a819721d68932416b940e7ec81e5c476c309e84d3d523",
+        "svg": "7787e655b15baa2479539e900d73ab1d244997b77dc4b261c20a537c4abe2a24",
+        "png": "c6fcfd9fa408f621bfb7105350e16c79412d7b29e840046e541862da463e708f"
+      }
+    }
+  ],
+  "readme_preview": {
+    "renderer": "GitHub markdown API with local layout wrapper",
+    "widths": [
+      1100,
+      390
+    ],
+    "picture_source_selection": "PASS desktop/mobile",
+    "horizontal_overflow": false,
+    "images_loaded": true,
+    "visual_review": "PASS Korean labels legible and unclipped",
+    "local_html_asset_links_checked": 8
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "각자 연결하고, 함께 씁니다",
+    "locale": "ko",
+    "output": "docs/diagrams/archify/overview.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/thisisnew/dougle.git",
+      "revision": "bff6e6cefbe29f7a20d6aa20933d47aba35d420a"
+    },
+    "legend": {
+      "mode": "hidden"
+    },
+    "visual_preset": "editorial"
+  },
+  "components": [
+    {
+      "id": "ai",
+      "type": "backend",
+      "label": "내 AI가 자료 연결",
+      "sublabel": "코드 · 문서 · DB",
+      "pos": [
+        40,
+        65
+      ],
+      "size": [
+        180,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-connect/SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "memory",
+      "type": "database",
+      "label": "내 지식",
+      "sublabel": "업무 설명 + 출처",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        180,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/references/organization.md"
+        }
+      ]
+    },
+    {
+      "id": "shared",
+      "type": "cloud",
+      "label": "팀 지식 저장소",
+      "sublabel": "GitHub · 선택한 지식",
+      "pos": [
+        350,
+        220
+      ],
+      "size": [
+        180,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-publish/SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "colleague",
+      "type": "database",
+      "label": "동료의 지식",
+      "sublabel": "기존 지식 + 공유 지식",
+      "pos": [
+        660,
+        220
+      ],
+      "size": [
+        180,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-fetch/SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "other-ai",
+      "type": "backend",
+      "label": "동료 AI가 자료 연결",
+      "sublabel": "코드 · 문서 · DB",
+      "pos": [
+        660,
+        65
+      ],
+      "size": [
+        180,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-connect/SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "type": "frontend",
+      "label": "AI 대화 · Slack 봇",
+      "sublabel": "같은 로컬 지식으로 답변",
+      "pos": [
+        40,
+        375
+      ],
+      "size": [
+        180,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/references/organization.md"
+        }
+      ]
+    },
+    {
+      "id": "other-answer",
+      "type": "frontend",
+      "label": "AI 대화 · Slack 봇",
+      "sublabel": "같은 로컬 지식으로 답변",
+      "pos": [
+        660,
+        375
+      ],
+      "size": [
+        180,
+        72
+      ],
+      "sources": [
+        {
+          "path": "skills/dougle-ask/references/organization.md"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "내 PC",
+      "wraps": [
+        "ai",
+        "memory",
+        "answer"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "region",
+      "label": "동료 PC",
+      "wraps": [
+        "other-ai",
+        "colleague",
+        "other-answer"
+      ],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "ai-memory",
+      "from": "ai",
+      "to": "memory",
+      "label": "connect · 내재화"
+    },
+    {
+      "id": "memory-shared",
+      "from": "memory",
+      "to": "shared",
+      "label": "publish"
+    },
+    {
+      "id": "shared-colleague",
+      "from": "shared",
+      "to": "colleague",
+      "label": "fetch"
+    },
+    {
+      "id": "other-ai-colleague",
+      "from": "other-ai",
+      "to": "colleague",
+      "label": "connect · 내재화"
+    },
+    {
+      "id": "memory-answer",
+      "from": "memory",
+      "to": "answer",
+      "label": "ask"
+    },
+    {
+      "id": "colleague-other-answer",
+      "from": "colleague",
+      "to": "other-answer",
+      "label": "ask"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "공유는 양쪽 모두",
+      "items": [
+        "누구나 publish로 보내고 fetch로 가져옵니다."
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Slack도 같은 지식",
+      "items": [
+        "봇을 실행한 PC의 지식을 ask로 읽습니다."
+      ]
+    }
+  ]
+}

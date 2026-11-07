@@ -7,6 +7,7 @@ from decimal import Decimal
 from . import cards
 from .evidence import KINDS, QUESTION_KINDS, failure_summary, validate_verification
 from .handoff import reported_evidence, route_unresolved
+from .handoff_notice import after_developer_dm
 from .images import collect_images, prompt_messages
 from .monitor import Monitor
 from .presentation import reaction_names
@@ -153,6 +154,8 @@ class Worker:
                         (state, "card_delivery_failed", ident),
                     )
                 raise
+
+            after_developer_dm(self.store, self.config, self.slack, inquiry)
 
     def publish_ready(self):
         if self.config.slack.require_approval:

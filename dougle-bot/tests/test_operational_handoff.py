@@ -13,6 +13,7 @@ from test_scenario_catalog import automatic
 
 from dougle_bot import cards
 from dougle_bot.handoff import lookup_policy
+from dougle_bot.handoff_notice import NOTICE
 from dougle_bot.intake import receive
 from dougle_bot.presentation import chat_text
 from dougle_bot.prompts import validate_report
@@ -113,7 +114,7 @@ def test_unsafe_query_withheld_but_actionable_private_request_survives(app, sql,
     assert "활성 항목 수" in rendered and "조회문은 안전성" in rendered
     assert "*막힌 이유*" in rendered and "*필요한 결과*" in rendered
     assert len(app.engine.calls) == 1
-    assert not any(c[0] == "post" for c in app.slack.calls)
+    assert [c[3] for c in app.slack.calls if c[0] == "post"] == [NOTICE]
     assert ("CTEST", row["trigger_ts"], "speech_balloon") in app.slack.reactions
     assert ("CTEST", row["trigger_ts"], "hourglass_flowing_sand") not in app.slack.reactions
 
@@ -146,7 +147,7 @@ def test_concise_answers_still_require_matching_actual_reads(app, kind, category
     ident = receive(app.store, app.cfg, event(), "UBOT")
     app.worker.run_once()
     assert app.store.inquiry(ident)["status"] == "failed"
-    assert not any(c[0] == "post" for c in app.slack.calls)
+    assert [c[3] for c in app.slack.calls if c[0] == "post"] == [NOTICE]
 
 
 @pytest.mark.parametrize(

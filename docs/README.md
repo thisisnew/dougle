@@ -1,27 +1,47 @@
-# 더글 사용 안내
+# 더글 문서
 
-**처음이라면 [설치하기](skills/install.md)부터 시작하세요.**
+**자료 연결부터 팀 공유, Slack 답변까지 같은 지식을 사용합니다.**
 
-## 지금 하려는 일
+<picture>
+  <source media="(max-width: 650px)" srcset="diagrams/archify/overview-mobile.png">
+  <img src="diagrams/archify/overview.png" alt="각자의 로컬 AI가 지식을 만들고 GitHub로 주고받습니다.">
+</picture>
 
-| 하고 싶은 일 | 읽을 문서 |
+## 처음 쓰신다면
+
+| 순서 | 읽을 문서 |
 |---|---|
-| 설치하고 첫 질문하기 | [설치](skills/install.md) · [사용 예시](skills/usage.md) |
-| 코드·문서·DB 연결하기 | [자료 연결](skills/connections.md) |
-| 질문할 때 최신 정보 확인 | [자동 갱신](skills/freshness.md) |
-| 팀에 공유하거나 가져오기 | [팀 지식 공유](skills/sharing.md) |
-| 기억이 어떻게 저장되는지 알기 | [지식 저장 방식](skills/architecture.md) |
+| 구조부터 이해하기 | [더글이 작동하는 방식](design.md) |
+| 내 AI에 설치하기 | [설치·업데이트](skills/install.md) |
+| 자료를 연결하고 질문하기 | [사용 예시](skills/usage.md) · [자료 연결](skills/connections.md) |
+| 동료와 지식 나누기 | [publish·fetch](skills/sharing.md) |
+| Slack에서 질문받기 | [봇 설정·실행](../dougle-bot/README.md) |
 
-## 개발하거나 지원 범위를 확인할 때
+## 동작을 자세히 보려면
 
-**[그림으로 보는 구조·도메인 모델·승인 흐름](design.md)**
+| 궁금한 점 | 읽을 문서 |
+|---|---|
+| 토픽·소스·목차의 역할 | [지식 저장](skills/architecture.md) · [검색 순서](skills/topic-navigation.md) |
+| 자료가 바뀌면 어떻게 반영하나요? | [질문 시 갱신](skills/freshness.md) |
+| 자료가 많으면 어디서 느려지나요? | [검색 성능](skills/search-performance.md) · [대용량 처리](skills/large-corpus.md) |
+| 답변을 어떻게 검증하나요? | [출처](skills/answer-sources.md) · [스킬 활성화](skills/skill-activation.md) · [봇 근거 검사](dougle-bot/research-verification.md) |
+| 운영 조회를 대신 해야 하나요? | [개발자 확인 요청](dougle-bot/internal-handoff.md) |
+| 공유 전에 무엇을 검사하나요? | [민감정보 차단](skills/publish-sensitive.md) |
 
-[Slack 봇 설치·실행](../dougle-bot/README.md) · [자동 검증 기록](dougle-bot/implementation-verification.json) · [답변·이미지 평가](dougle-bot/answer-evaluation/README.md) · [문의 채널 감지 설계](dougle-bot/channel-detection-design.md)
+## 개발과 검증
 
-[스킬·Slack 전체 사용 시나리오 1,066개](scenarios/README.md) · [엑셀용 목록](scenarios/catalog.csv) · [CSV·JSON 내려받기](https://github.com/thisisnew/dougle/releases/download/v0.8.11-skills-preview.1/Dougle_Scenarios_0.8.11.zip)
+[개발 안내](skills/development.md) · [저장소 구성](repository.md) · [설계 참고](design-reference.md) · [봇 실행 계약](../dougle-bot/SPEC.md)
 
-새 목록은 현재 동작을 기준으로 작성한 시험 설계입니다. 실제 실행 결과와 구분하며, [이전 봇 설계 231개](dougle-bot/TEST_PLAN.md)는 당시 기록으로 보존합니다.
+[검증 범위](skills/verification.md) · [사용 시나리오 1,066개](scenarios/README.md) · [회사 PC 체크리스트](dougle-bot/company-acceptance.md)
 
-[제품 개요](skills/README.md) · [개발 안내](skills/development.md) · [답변과 출처](skills/answer-sources.md) · [검색 속도](skills/search-performance.md) · [대용량 처리와 측정](skills/large-corpus.md) · [검증 범위](skills/verification.md)
+시나리오 목록, 가짜 서비스 테스트, 실제 모델 평가, 회사 연동 확인은 서로 다른 검증입니다. 결과와 한계는 각 기록에 남깁니다.
 
-[Slack 주기 확인](skills/schedule.md) · [봇 실행 계약](../dougle-bot/SPEC.md) · [저장소 구성](repository.md) · [이전 기록](history.md)
+<details>
+<summary>기존 기능·설계안·이전 기록</summary>
+
+- [schedule: 기존 채널 폴링](skills/schedule.md). 호스트 타이머와 초안별 승인을 사용하는 별도 기능입니다.
+- [멘션 없는 문의 감지](dougle-bot/channel-detection-design.md). 현재 봇 기능과 구분한 설계안입니다.
+- [이전 기록](history.md) · [초기 봇 시험 설계](dougle-bot/TEST_PLAN.md).
+- [그림 원본과 제작 방법](diagrams/README.md).
+
+</details>

@@ -1,34 +1,19 @@
-# 더글은 무엇인가요?
+# 더글 스킬
 
-**[설치 후 자료 하나를 연결해 보세요.](install.md)**
+더글은 평소 쓰는 AI가 업무 자료를 읽고, 정리한 지식을 다음 질문에도 쓰도록 돕습니다.
 
-더글은 평소 쓰는 AI에게 회사 자료를 읽고 기억하는 방법을 알려주는 스킬 모음입니다.
+[전체 구조](../design.md) · [설치](install.md) · [사용 예시](usage.md)
 
-## 이렇게 씁니다
+| 할 일 | Claude 플러그인 | Codex |
+|---|---|---|
+| 자료 연결 | `/dougle:dougle-connect` | `$dougle-connect` |
+| 업무 질문 | `/dougle:dougle-ask` | `$dougle-ask` |
+| 팀에 공유 | `/dougle:dougle-publish` | `$dougle-publish` |
+| 팀 지식 가져오기 | `/dougle:dougle-fetch` | `$dougle-fetch` |
+| Slack 봇 관리 | `/dougle:dougle-bot` | `$dougle-bot` |
 
-1. **연결:** 프로젝트 경로·문서 링크·DB 설명을 알려줍니다.
-2. **질문:** “입하 확정 시 어느 테이블에 저장해?”처럼 물어봅니다.
-3. **자동 갱신:** 질문에 필요한 자료의 변경을 확인하고, 바뀐 부분과 관련 지식만 갱신합니다.
+개인 스킬 폴더로 설치한 Claude에서는 `/dougle-ask`처럼 `/dougle:` 접두사를 빼고 사용합니다. 답변 정리를 맡는 `i-have-adhd`와 `plain-language`는 함께 설치되는 내부 스킬입니다.
 
-정리한 지식을 팀에 보내려면 `dougle-publish`, 가져오려면 `dougle-fetch`를 사용합니다. [사용 예시](usage.md) · [팀 공유](sharing.md)
+지식은 `~/.dougle/`에 저장합니다. 원본 읽기는 AI에 연결된 도구로 수행하며, 질문에 필요한 변경만 확인합니다. [저장 방식](architecture.md) · [답변과 출처](answer-sources.md)
 
-## 가능한 범위
-
-- AI가 가진 조회 도구와 권한으로 자료를 읽습니다. 설치만으로 회사 서비스에 로그인되지는 않습니다.
-- 지식은 `~/.dougle/`에 남으며 어디서 실행해도 같은 저장소를 검색합니다. 프로젝트·서비스는 자료별로 구분합니다.
-- 원본은 읽기만 합니다. 명시적으로 요청한 지식 publish와 승인한 Slack 답글 게시만 별도 쓰기 예외입니다. 권한을 강제하는 장치는 아니므로 읽기 전용 계정을 사용하세요.
-- 기본적으로 관련 질문마다 변경 여부를 확인합니다. 변경이 없으면 근거를 재사용하며 사용자가 정한 확인 주기는 유지합니다. 자료 전체를 상시 감시하지 않습니다. Slack 멘션 답변은 선택형 `dougle-bot`, 주기적인 문의 확인은 별도 `dougle-schedule`로 실행합니다.
-
-[검증된 범위](verification.md) · [내부 구조](architecture.md)
-
-[문맥 최적화와 정확도 비교](context-optimization.md)
-
-[실행·자료 연결·기억 저장·검색·갱신의 전체 흐름](how-it-works.md)
-
-[답변 정리 스킬 활성화](skill-activation.md)
-
-[Slack 문의 감시·승인 후 답변](schedule.md)
-
-[토픽 안내·항목별 저장과 검색](topic-navigation.md)
-
-[publish 민감정보 검사·차단](publish-sensitive.md)
+기존 채널 폴링 사용자는 [schedule 안내](schedule.md)를 참고하세요.

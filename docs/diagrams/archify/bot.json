@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Slack에서도 같은 지식으로 답합니다",
+    "locale": "ko",
+    "output": "docs/diagrams/archify/bot.html",
+    "quality_profile": "showcase",
+    "visual_preset": "editorial",
+    "legend": {
+      "mode": "hidden"
+    },
+    "repository": {
+      "url": "https://github.com/thisisnew/dougle.git",
+      "revision": "bff6e6cefbe29f7a20d6aa20933d47aba35d420a"
+    }
+  },
+  "components": [
+    {
+      "id": "question",
+      "type": "frontend",
+      "label": "Slack 질문",
+      "sublabel": "등록 채널의 @dougle",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "dougle-bot/src/dougle_bot/intake.py"
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "type": "backend",
+      "label": "로컬 봇 + ask",
+      "sublabel": "같은 지식 · 필요한 원본",
+      "pos": [
+        350,
+        60
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "dougle-bot/src/dougle_bot/worker.py"
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "type": "frontend",
+      "label": "스레드에 답변",
+      "sublabel": "검증한 답을 자동 게시",
+      "pos": [
+        660,
+        60
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "dougle-bot/src/dougle_bot/actions.py"
+        }
+      ]
+    },
+    {
+      "id": "dm",
+      "type": "external",
+      "label": "개발자 DM",
+      "sublabel": "확인할 대상과 항목",
+      "pos": [
+        350,
+        235
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "dougle-bot/src/dougle_bot/worker.py"
+        }
+      ]
+    },
+    {
+      "id": "result",
+      "type": "backend",
+      "label": "확인 결과 보충",
+      "sublabel": "카드에서 결과 입력",
+      "pos": [
+        660,
+        235
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "dougle-bot/src/dougle_bot/actions.py"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "question-research",
+      "from": "question",
+      "to": "research",
+      "label": "질문 전달"
+    },
+    {
+      "id": "research-answer",
+      "from": "research",
+      "to": "answer",
+      "label": "근거 충분"
+    },
+    {
+      "id": "research-dm",
+      "from": "research",
+      "to": "dm",
+      "label": "직접 확인 불가"
+    },
+    {
+      "id": "dm-result",
+      "from": "dm",
+      "to": "result",
+      "label": "개발자 확인"
+    },
+    {
+      "id": "result-answer",
+      "from": "result",
+      "to": "answer",
+      "label": "검증 후 답변"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "대화의 단위",
+      "items": [
+        "같은 스레드는 이어서, 다른 스레드는 별도로 기억합니다."
+      ]
+    }
+  ]
+}
