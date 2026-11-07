@@ -102,9 +102,9 @@ def main():
         tools = root / "bin"
         tools.mkdir()
         marker = root / "ready"
-        wrapper = tools / "iconv"
+        wrapper = tools / "awk"
         wrapper.write_text(
-            '#!/bin/sh\nprintf ready > "$DOUGLE_TEST_MARKER"\nsleep 10\nexec /usr/bin/iconv "$@"\n'
+            '#!/bin/sh\nprintf ready > "$DOUGLE_TEST_MARKER"\nsleep 10\nexec /usr/bin/awk "$@"\n'
         )
         wrapper.chmod(0o755)
         process = subprocess.Popen(

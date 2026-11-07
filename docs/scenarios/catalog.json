@@ -15138,7 +15138,7 @@
     {
       "id": "DG-MERGE-010",
       "area": "MERGE",
-      "title": "publish / SAME_FIRST / 관측 근거",
+      "title": "publish / SAME (첫 공유) / 관측 근거",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15172,7 +15172,7 @@
     {
       "id": "DG-MERGE-011",
       "area": "MERGE",
-      "title": "publish / SAME_FIRST / 사용자 정정",
+      "title": "publish / SAME (첫 공유) / 사용자 정정",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15206,7 +15206,7 @@
     {
       "id": "DG-MERGE-012",
       "area": "MERGE",
-      "title": "publish / SAME_FIRST / 추론",
+      "title": "publish / SAME (첫 공유) / 추론",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15240,7 +15240,7 @@
     {
       "id": "DG-MERGE-013",
       "area": "MERGE",
-      "title": "publish / CONFLICT_FIRST / 관측 근거",
+      "title": "publish / CONFLICT (첫 공유) / 관측 근거",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15274,7 +15274,7 @@
     {
       "id": "DG-MERGE-014",
       "area": "MERGE",
-      "title": "publish / CONFLICT_FIRST / 사용자 정정",
+      "title": "publish / CONFLICT (첫 공유) / 사용자 정정",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15308,7 +15308,7 @@
     {
       "id": "DG-MERGE-015",
       "area": "MERGE",
-      "title": "publish / CONFLICT_FIRST / 추론",
+      "title": "publish / CONFLICT (첫 공유) / 추론",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15444,7 +15444,7 @@
     {
       "id": "DG-MERGE-019",
       "area": "MERGE",
-      "title": "publish / KEEP_REMOTE_OMISSION / 관측 근거",
+      "title": "publish / KEEP_REMOTE (로컬 누락) / 관측 근거",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15478,7 +15478,7 @@
     {
       "id": "DG-MERGE-020",
       "area": "MERGE",
-      "title": "publish / KEEP_REMOTE_OMISSION / 사용자 정정",
+      "title": "publish / KEEP_REMOTE (로컬 누락) / 사용자 정정",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -15512,7 +15512,7 @@
     {
       "id": "DG-MERGE-021",
       "area": "MERGE",
-      "title": "publish / KEEP_REMOTE_OMISSION / 추론",
+      "title": "publish / KEEP_REMOTE (로컬 누락) / 추론",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16362,7 +16362,7 @@
     {
       "id": "DG-MERGE-046",
       "area": "MERGE",
-      "title": "fetch / SAME_FIRST / 관측 근거",
+      "title": "fetch / SAME (첫 공유) / 관측 근거",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16396,7 +16396,7 @@
     {
       "id": "DG-MERGE-047",
       "area": "MERGE",
-      "title": "fetch / SAME_FIRST / 사용자 정정",
+      "title": "fetch / SAME (첫 공유) / 사용자 정정",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16430,7 +16430,7 @@
     {
       "id": "DG-MERGE-048",
       "area": "MERGE",
-      "title": "fetch / SAME_FIRST / 추론",
+      "title": "fetch / SAME (첫 공유) / 추론",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16464,7 +16464,7 @@
     {
       "id": "DG-MERGE-049",
       "area": "MERGE",
-      "title": "fetch / CONFLICT_FIRST / 관측 근거",
+      "title": "fetch / CONFLICT (첫 공유) / 관측 근거",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16498,7 +16498,7 @@
     {
       "id": "DG-MERGE-050",
       "area": "MERGE",
-      "title": "fetch / CONFLICT_FIRST / 사용자 정정",
+      "title": "fetch / CONFLICT (첫 공유) / 사용자 정정",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16532,7 +16532,7 @@
     {
       "id": "DG-MERGE-051",
       "area": "MERGE",
-      "title": "fetch / CONFLICT_FIRST / 추론",
+      "title": "fetch / CONFLICT (첫 공유) / 추론",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16668,7 +16668,7 @@
     {
       "id": "DG-MERGE-055",
       "area": "MERGE",
-      "title": "fetch / KEEP_REMOTE_OMISSION / 관측 근거",
+      "title": "fetch / KEEP_REMOTE (로컬 누락) / 관측 근거",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16702,7 +16702,7 @@
     {
       "id": "DG-MERGE-056",
       "area": "MERGE",
-      "title": "fetch / KEEP_REMOTE_OMISSION / 사용자 정정",
+      "title": "fetch / KEEP_REMOTE (로컬 누락) / 사용자 정정",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",
@@ -16736,7 +16736,7 @@
     {
       "id": "DG-MERGE-057",
       "area": "MERGE",
-      "title": "fetch / KEEP_REMOTE_OMISSION / 추론",
+      "title": "fetch / KEEP_REMOTE (로컬 누락) / 추론",
       "priority": "P0",
       "support": "current_contract",
       "execution_layer": "host_evaluation",

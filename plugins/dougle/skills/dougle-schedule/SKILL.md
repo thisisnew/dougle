@@ -17,6 +17,8 @@ Read [menu and URL routing](references/menu.md) for user-facing invocation, menu
 
 For start, list, history, restore, resume, stop, pause, delete, interval changes or lifecycle/scan event writes, read [local management and recovery](references/management.md). `목록`, `스케줄 보여 줘`, `이력`, `복구`, `재개`, `일시정지`, `종료` are natural-language operations, not separate installed skills. If no action/channel is given, use the entry menu rather than directly listing or asking for a channel. Listing never starts or restores a timer.
 
+A stopped or paused record is not a request to resume. Resume only after an explicit current user request. Requested actions and planned steps are not observed results: report timer creation, cancellation, recovery or saved status as completed only after successful tool receipts and state verification. Without those results, say what remains unconfirmed.
+
 ## Start / resume
 
 1. Discover actual tools for channel resolution, paginated history, thread reads, identity, and reply posting. Resolve workspace and channel IDs, not names alone. Verify reads and posting capability without sending a test message. Store capability gaps; lack of a writer permits drafts only. Prior connect records are leads, not proof of current access. Confirm which account will post when the tools expose it; otherwise disclose unknown identity before requesting approval.

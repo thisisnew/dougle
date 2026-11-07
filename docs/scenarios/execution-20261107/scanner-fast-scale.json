@@ -1,0 +1,37 @@
+{
+  "environment": "macOS-26.7.2-x86_64-i386-64bit-Mach-O",
+  "synthetic": true,
+  "realModelCalls": 0,
+  "samples": [
+    {
+      "files": 1000,
+      "bytes": 4096000,
+      "runs": {
+        "after": {
+          "seconds": 3.225,
+          "digest": "ded2372058101bff665b287bb15f7d401f1eae7b6dc979d3ea024009914d6c3b"
+        }
+      }
+    },
+    {
+      "files": 10000,
+      "bytes": 40960000,
+      "runs": {
+        "after": {
+          "seconds": 31.919,
+          "digest": "284fd3fe387dc003acbb729b2fa9a603e4bdb3972a31e8444f92a8b2223d4e3f"
+        }
+      }
+    },
+    {
+      "files": 100000,
+      "bytes": 409600000,
+      "runs": {
+        "after": {
+          "seconds": 343.713,
+          "digest": "68306bf5a8769e90f5cad75beb47a1fc8686aafefadd76999560f47335a06e04"
+        }
+      }
+    }
+  ]
+}

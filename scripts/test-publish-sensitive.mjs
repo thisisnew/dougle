@@ -83,6 +83,8 @@ try {
  await run('non-Markdown blocked','synthetic\n',2,{file:'data.txt'})
  await run('binary Markdown blocked',Buffer.from([65,0,66]),2)
  await run('invalid encoding blocked',Buffer.from([0xff,0xfe,0x80]),2)
+ await run('out of Unicode range blocked',Buffer.from([0xf4,0x90,0x80,0x80]),2)
+ await run('surrogate UTF8 blocked',Buffer.from([0xed,0xa0,0x80]),2)
  await run('symlink blocked','safe\n',2,{extra:async d=>symlink('/does-not-exist',join(d,'linked.md'))})
  await run('tab in filename blocked','safe\n',2,{file:'bad\tname.md'})
  await run('newline in filename blocked','safe\n',2,{file:'bad\nname.md'})
@@ -101,7 +103,7 @@ try {
  await run('invalid identifying TMPDIR no stderr','safe\n',2,{env:{...process.env,TMPDIR:join(root,'synthetic.person@example.invalid','missing')}})
  for(const tool of ['od','sha256sum','find','sort','awk','iconv']) {
   const bin=join(root,'fault-'+tool);await mkdir(bin);await writeFile(join(bin,tool),'#!/bin/sh\nexit 1\n',{mode:0o755})
-  await run('failed '+tool+' is blocked','safe\n',2,{env:{...process.env,PATH:bin+':'+process.env.PATH}})
+  await run('failed '+tool+' is blocked','safe\n',2,{env:{...process.env,DOUGLE_SCAN_ENGINE:'legacy',PATH:bin+':'+process.env.PATH}})
  }
  for(const action of ['content','rename','addition']) {
   const bin=join(root,'mutate-'+action);await mkdir(bin)
@@ -118,8 +120,29 @@ fi
 exec /usr/bin/od "$@"
 `
   await writeFile(join(bin,'od'),hook,{mode:0o755})
-  const mutateEnv={...process.env,PATH:bin+':'+process.env.PATH,DOUGLE_MUTATE_ACTION:action}
+  const mutateEnv={...process.env,DOUGLE_SCAN_ENGINE:'legacy',PATH:bin+':'+process.env.PATH,DOUGLE_MUTATE_ACTION:action}
   await run('during-scan '+action+' change blocked','safe domain text\n',2,{env:mutateEnv,extra:async d=>{mutateEnv.DOUGLE_MUTATE_ROOT=d}})
+ }
+ // The batched path uses the same rules; inject its real AWK boundary too.
+ const perlAvailable=spawnSync('perl',['-MDigest::SHA','-MEncode','-MJSON::PP','-e','1']).status===0
+ if(perlAvailable) {
+  const bin=join(root,'fast-awk-failure');await mkdir(bin)
+  await writeFile(join(bin,'awk'),'#!/bin/sh\nexit 1\n',{mode:0o755})
+  await run('batched awk failure blocked','safe\n',2,{env:{...process.env,DOUGLE_SCAN_ENGINE:'fast',PATH:bin+':'+process.env.PATH}})
+  for(const action of ['content','rename','addition']) {
+   const bin=join(root,'fast-mutate-'+action);await mkdir(bin)
+   const hook=`#!/bin/sh
+case "$DOUGLE_MUTATE_ACTION" in
+content) printf 'changed domain text\\n' > "$DOUGLE_MUTATE_ROOT/manifest.md";;
+rename) mv "$DOUGLE_MUTATE_ROOT/manifest.md" "$DOUGLE_MUTATE_ROOT/renamed.md";;
+addition) printf 'extra domain text\\n' > "$DOUGLE_MUTATE_ROOT/extra.md";;
+esac
+exec /usr/bin/awk "$@"
+`
+   await writeFile(join(bin,'awk'),hook,{mode:0o755})
+   const e={...process.env,DOUGLE_SCAN_ENGINE:'fast',PATH:bin+':'+process.env.PATH,DOUGLE_MUTATE_ACTION:action}
+   await run('batched during-scan '+action+' blocked','safe domain text\n',2,{env:e,extra:async d=>{e.DOUGLE_MUTATE_ROOT=d}})
+  }
  }
  const changed=await run('clean digest emitted','original domain statement\n',0)
  await writeFile(changed.path,'changed domain statement\n')

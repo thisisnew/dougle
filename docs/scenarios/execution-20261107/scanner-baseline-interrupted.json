@@ -1,0 +1,10 @@
+{
+  "reason": "scalability_bottleneck_observed; stop owned benchmark before scanner refactor",
+  "at": 1794027217.4869099,
+  "files_started": [
+    54288
+  ],
+  "completed_100000": false,
+  "total_seconds": null,
+  "partial_is_not_pass": true
+}

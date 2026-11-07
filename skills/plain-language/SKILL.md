@@ -9,7 +9,10 @@ license: MIT
 
 Apply this skill when preparing a Dougle Slack reply. Always use respectful Korean 존댓말.
 First complete the evidence checks required by dougle-ask. This skill changes presentation, never
-research depth, read-only permissions, source verification or the designated approver requirement.
+research depth, read-only permissions, source verification or the runtime’s configured posting policy.
+For bot replies, keep citations and source lists in private structured fields and omit any signature.
+Automatic mode does not ask for approval on verified normal answers; explicit review mode does.
+Personal-account schedule approval and signature rules do not apply to bot replies.
 Infer the audience from the question; default to an adult non-specialist colleague. Do not ask
 background questions when the existing context is enough.
 

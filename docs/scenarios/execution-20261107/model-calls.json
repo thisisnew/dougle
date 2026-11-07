@@ -1,0 +1,4906 @@
+{
+  "started": [
+    {
+      "kind": "availability_probe",
+      "authorized_by": "user: ai호출필요하면 호출하고",
+      "started_at": 1794022178.036284
+    },
+    {
+      "kind": "codex_availability_probe",
+      "started_at": 1794022227.9182599
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-pilot",
+      "case_ids": [
+        "DG-CONNECT-001",
+        "DG-CONNECT-002",
+        "DG-CONNECT-008",
+        "DG-CONNECT-009"
+      ],
+      "started_at": 1794022903.414332,
+      "prompt_sha256": "879c01d28a1da7e3514509115ef420f159d9e87ad95dd3508c3d3adc0f6af56e",
+      "timeout_seconds": 420
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-pilot-2",
+      "case_ids": [
+        "DG-CONNECT-001",
+        "DG-CONNECT-002",
+        "DG-CONNECT-008",
+        "DG-CONNECT-009"
+      ],
+      "started_at": 1794023013.154932,
+      "prompt_sha256": "879c01d28a1da7e3514509115ef420f159d9e87ad95dd3508c3d3adc0f6af56e",
+      "timeout_seconds": 420
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-02",
+      "case_ids": [
+        "DG-CONNECT-013",
+        "DG-CONNECT-014",
+        "DG-CONNECT-015",
+        "DG-CONNECT-016",
+        "DG-CONNECT-017",
+        "DG-CONNECT-018",
+        "DG-CONNECT-019",
+        "DG-CONNECT-020",
+        "DG-CONNECT-021",
+        "DG-CONNECT-022",
+        "DG-CONNECT-023",
+        "DG-CONNECT-024"
+      ],
+      "started_at": 1794023273.678272,
+      "prompt_sha256": "8116028a17cf8a4bf167c6db496ccb5acad6878d68ef974a586666d9ec38720e",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-01",
+      "case_ids": [
+        "DG-CONNECT-001",
+        "DG-CONNECT-002",
+        "DG-CONNECT-003",
+        "DG-CONNECT-004",
+        "DG-CONNECT-005",
+        "DG-CONNECT-006",
+        "DG-CONNECT-007",
+        "DG-CONNECT-008",
+        "DG-CONNECT-009",
+        "DG-CONNECT-010",
+        "DG-CONNECT-011",
+        "DG-CONNECT-012"
+      ],
+      "started_at": 1794023273.678355,
+      "prompt_sha256": "3641ed927599905f99cdbcb1b35a0aa7d135532d75f8c4e7ce3ad0e39f42e3b8",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-03",
+      "case_ids": [
+        "DG-CONNECT-025",
+        "DG-CONNECT-026",
+        "DG-CONNECT-027",
+        "DG-CONNECT-028",
+        "DG-CONNECT-029",
+        "DG-CONNECT-030",
+        "DG-CONNECT-031",
+        "DG-CONNECT-032",
+        "DG-CONNECT-033",
+        "DG-CONNECT-034",
+        "DG-CONNECT-035",
+        "DG-CONNECT-036"
+      ],
+      "started_at": 1794023403.889554,
+      "prompt_sha256": "e17f33b6871cd02b47b4bfcfb6df37ce4ed83c9f9b45ea48819e2e97a79d051c",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-04",
+      "case_ids": [
+        "DG-CONNECT-037",
+        "DG-CONNECT-038",
+        "DG-CONNECT-039",
+        "DG-CONNECT-040",
+        "DG-CONNECT-041",
+        "DG-CONNECT-042",
+        "DG-CONNECT-043",
+        "DG-CONNECT-044",
+        "DG-CONNECT-045",
+        "DG-CONNECT-046",
+        "DG-CONNECT-047",
+        "DG-CONNECT-048"
+      ],
+      "started_at": 1794023403.920126,
+      "prompt_sha256": "1cb668f7daa308f5dbdcd0b33e7a240641678d7a1ac3fd5a196ab152222a8dc0",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-pilot",
+      "case_ids": [
+        "DG-ASK-001",
+        "DG-ASK-065",
+        "DG-ASK-081",
+        "DG-ASK-089"
+      ],
+      "started_at": 1794023486.23744,
+      "prompt_sha256": "b093c4cef49d65769ec1ec6e546e966dbd72ab8db17b46cb6cd666a682164679",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-05",
+      "case_ids": [
+        "DG-CONNECT-049",
+        "DG-CONNECT-050",
+        "DG-CONNECT-051",
+        "DG-CONNECT-052",
+        "DG-CONNECT-053",
+        "DG-CONNECT-054",
+        "DG-CONNECT-055",
+        "DG-CONNECT-056",
+        "DG-CONNECT-057",
+        "DG-CONNECT-058",
+        "DG-CONNECT-059",
+        "DG-CONNECT-060"
+      ],
+      "started_at": 1794023496.143175,
+      "prompt_sha256": "b8a2ebe33fc4d8b24284ac7e028caac771ee4de7fa48a20c43ac70a6f1189461",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-06",
+      "case_ids": [
+        "DG-CONNECT-061",
+        "DG-CONNECT-062",
+        "DG-CONNECT-063",
+        "DG-CONNECT-064",
+        "DG-CONNECT-065",
+        "DG-CONNECT-066",
+        "DG-CONNECT-067",
+        "DG-CONNECT-068",
+        "DG-CONNECT-069",
+        "DG-CONNECT-070",
+        "DG-CONNECT-071",
+        "DG-CONNECT-072"
+      ],
+      "started_at": 1794023508.397899,
+      "prompt_sha256": "64891729174136506010b13f7ed0db2b9d472bf5b4bb51874e0241253e3b7488",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-07",
+      "case_ids": [
+        "DG-CONNECT-073",
+        "DG-CONNECT-074",
+        "DG-CONNECT-075",
+        "DG-CONNECT-076",
+        "DG-CONNECT-077",
+        "DG-CONNECT-078",
+        "DG-CONNECT-079",
+        "DG-CONNECT-080",
+        "DG-CONNECT-081",
+        "DG-CONNECT-082",
+        "DG-CONNECT-083",
+        "DG-CONNECT-084"
+      ],
+      "started_at": 1794023586.504166,
+      "prompt_sha256": "e67e9d08c731c7ffa7affa30db9a9ecea64c8e82dd9980f59a0b9a4b0a8ebdb7",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-08",
+      "case_ids": [
+        "DG-CONNECT-085",
+        "DG-CONNECT-086",
+        "DG-CONNECT-087",
+        "DG-CONNECT-088",
+        "DG-CONNECT-089",
+        "DG-CONNECT-090",
+        "DG-CONNECT-091",
+        "DG-CONNECT-092",
+        "DG-CONNECT-093",
+        "DG-CONNECT-094",
+        "DG-CONNECT-095",
+        "DG-CONNECT-096"
+      ],
+      "started_at": 1794023618.043083,
+      "prompt_sha256": "7762262fc5d972acedfbe35494b3497e64bf8ab954880ba90f2fd90018eaabd1",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-02",
+      "case_ids": [
+        "DG-ASK-009",
+        "DG-ASK-010",
+        "DG-ASK-011",
+        "DG-ASK-012",
+        "DG-ASK-013",
+        "DG-ASK-014",
+        "DG-ASK-015",
+        "DG-ASK-016"
+      ],
+      "started_at": 1794023638.2640278,
+      "prompt_sha256": "c2e0e08d76f43afd344321bc606d0b2f66db73f6224ba3cb4803a92d8dd3f702",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-01",
+      "case_ids": [
+        "DG-ASK-001",
+        "DG-ASK-002",
+        "DG-ASK-003",
+        "DG-ASK-004",
+        "DG-ASK-005",
+        "DG-ASK-006",
+        "DG-ASK-007",
+        "DG-ASK-008"
+      ],
+      "started_at": 1794023638.2642298,
+      "prompt_sha256": "23c70d72289e7e8e6adeb23995abd427f4ea342f8d049cf21af018ea74708ccf",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-09",
+      "case_ids": [
+        "DG-CONNECT-097",
+        "DG-CONNECT-098",
+        "DG-CONNECT-099",
+        "DG-CONNECT-100",
+        "DG-CONNECT-101",
+        "DG-CONNECT-102",
+        "DG-CONNECT-103",
+        "DG-CONNECT-104",
+        "DG-CONNECT-105",
+        "DG-CONNECT-106",
+        "DG-CONNECT-107",
+        "DG-CONNECT-108"
+      ],
+      "started_at": 1794023706.411581,
+      "prompt_sha256": "8b64e1b80b73aa3bbffe286a12d1238493faf837fc21b403569e0075284464b0",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-10",
+      "case_ids": [
+        "DG-CONNECT-109",
+        "DG-CONNECT-110",
+        "DG-CONNECT-111",
+        "DG-CONNECT-112",
+        "DG-CONNECT-113",
+        "DG-CONNECT-114",
+        "DG-CONNECT-115",
+        "DG-CONNECT-116",
+        "DG-CONNECT-117",
+        "DG-CONNECT-118",
+        "DG-CONNECT-119",
+        "DG-CONNECT-120"
+      ],
+      "started_at": 1794023715.382557,
+      "prompt_sha256": "4bae952f67b98e387e29b57d5eefbb25601181d3c23a2e9231711c0b18b39bf5",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-03",
+      "case_ids": [
+        "DG-ASK-017",
+        "DG-ASK-018",
+        "DG-ASK-019",
+        "DG-ASK-020",
+        "DG-ASK-021",
+        "DG-ASK-022",
+        "DG-ASK-023",
+        "DG-ASK-024"
+      ],
+      "started_at": 1794023717.394221,
+      "prompt_sha256": "0a86c4f2ab7f70b82e7dd5aa9f0d838880a8c04c5aed6c6569b718116acedcd4",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-04",
+      "case_ids": [
+        "DG-ASK-025",
+        "DG-ASK-026",
+        "DG-ASK-027",
+        "DG-ASK-028",
+        "DG-ASK-029",
+        "DG-ASK-030",
+        "DG-ASK-031",
+        "DG-ASK-032"
+      ],
+      "started_at": 1794023739.4098291,
+      "prompt_sha256": "8dc4fdec72e704357da033368543cb02518835cd6546ecc10d06201789b03d9a",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-05",
+      "case_ids": [
+        "DG-ASK-033",
+        "DG-ASK-034",
+        "DG-ASK-035",
+        "DG-ASK-036",
+        "DG-ASK-037",
+        "DG-ASK-038",
+        "DG-ASK-039",
+        "DG-ASK-040"
+      ],
+      "started_at": 1794023787.4683251,
+      "prompt_sha256": "f69f0a25ae50e56827cb0cb3e1ba829632b71e0fc48927f116b36b75e384590a",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-11",
+      "case_ids": [
+        "DG-CONNECT-121",
+        "DG-CONNECT-122",
+        "DG-CONNECT-123",
+        "DG-CONNECT-124",
+        "DG-CONNECT-125",
+        "DG-CONNECT-126",
+        "DG-CONNECT-127",
+        "DG-CONNECT-128",
+        "DG-CONNECT-129",
+        "DG-CONNECT-130",
+        "DG-CONNECT-131",
+        "DG-CONNECT-132"
+      ],
+      "started_at": 1794023787.6484091,
+      "prompt_sha256": "1c262a7d1ba934b34478dfa1d86d9c4316377e64172cda2f1c67e686dd61c310",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-12",
+      "case_ids": [
+        "DG-CONNECT-133",
+        "DG-CONNECT-134",
+        "DG-CONNECT-135",
+        "DG-CONNECT-136",
+        "DG-CONNECT-137",
+        "DG-CONNECT-138",
+        "DG-CONNECT-139",
+        "DG-CONNECT-140",
+        "DG-CONNECT-141",
+        "DG-CONNECT-142",
+        "DG-CONNECT-143",
+        "DG-CONNECT-144"
+      ],
+      "started_at": 1794023802.990443,
+      "prompt_sha256": "d46e7c3242953b417c09dc4fd76ebaeeb095426c22d0e46953df37845b630bc4",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-06",
+      "case_ids": [
+        "DG-ASK-041",
+        "DG-ASK-042",
+        "DG-ASK-043",
+        "DG-ASK-044",
+        "DG-ASK-045",
+        "DG-ASK-046",
+        "DG-ASK-047",
+        "DG-ASK-048"
+      ],
+      "started_at": 1794023803.6606321,
+      "prompt_sha256": "8e06612615feac9a38012240c7b559826b98b6b5142f4ca392eac7892e9f7402",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-07",
+      "case_ids": [
+        "DG-ASK-049",
+        "DG-ASK-050",
+        "DG-ASK-051",
+        "DG-ASK-052",
+        "DG-ASK-053",
+        "DG-ASK-054",
+        "DG-ASK-055",
+        "DG-ASK-056"
+      ],
+      "started_at": 1794023893.070288,
+      "prompt_sha256": "81294b2d50af466e861a58008c5724b694e2692216f727a56de24623539ca6ec",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-08",
+      "case_ids": [
+        "DG-ASK-057",
+        "DG-ASK-058",
+        "DG-ASK-059",
+        "DG-ASK-060",
+        "DG-ASK-061",
+        "DG-ASK-062",
+        "DG-ASK-063",
+        "DG-ASK-064"
+      ],
+      "started_at": 1794023934.948194,
+      "prompt_sha256": "c12d579618f5adfb29c508587e4b7ee86b26df20493a674e7841d8eac87f3209",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-09",
+      "case_ids": [
+        "DG-ASK-065",
+        "DG-ASK-066",
+        "DG-ASK-067",
+        "DG-ASK-068",
+        "DG-ASK-069",
+        "DG-ASK-070",
+        "DG-ASK-071",
+        "DG-ASK-072"
+      ],
+      "started_at": 1794023971.9422731,
+      "prompt_sha256": "a2afd30d4feb9dbf89d8bf24d89e6d58133ce4233036b754f5ee4fbf5c216e19",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "merge-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794023976.9716082,
+      "prompt_sha256": "19919f3615abae709671330d42fca376e29d02711bb7e1f7c4cbf5c9fd6439f0"
+    },
+    {
+      "label": "merge-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794023976.971719,
+      "prompt_sha256": "63eb455dd6f7aafc571bc4bff1b3d2eba5e40fc77d04643a069b6691f8e0bdd4"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-10",
+      "case_ids": [
+        "DG-ASK-073",
+        "DG-ASK-074",
+        "DG-ASK-075",
+        "DG-ASK-076",
+        "DG-ASK-077",
+        "DG-ASK-078",
+        "DG-ASK-079",
+        "DG-ASK-080"
+      ],
+      "started_at": 1794023998.93762,
+      "prompt_sha256": "7b4c7814e72c18321ea4a92bd42e1c95d16f1a904624c52440b5ce28c7e0d0b6",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "merge-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024009.702519,
+      "prompt_sha256": "5b18a522ec547bd193fd2eb2328651297ee331904f1d30ab99eedef10cf143ec"
+    },
+    {
+      "label": "merge-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024009.987743,
+      "prompt_sha256": "5442f49549cf2287ef36d2c6ece6cf15b59f2bab7a6e8e21701e7c532d64d3ca"
+    },
+    {
+      "label": "merge-05",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024043.1963031,
+      "prompt_sha256": "1c454cd02bece34a5c5bde46a2bd331ce4346d65257c5e715b42363785f712db"
+    },
+    {
+      "label": "merge-06",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024045.576236,
+      "prompt_sha256": "0cd0d8a7a5dc118523b3cf363028dd9f28f2c188154e9e6cc571478c24372404"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-11",
+      "case_ids": [
+        "DG-ASK-081",
+        "DG-ASK-082",
+        "DG-ASK-083",
+        "DG-ASK-084",
+        "DG-ASK-085",
+        "DG-ASK-086",
+        "DG-ASK-087",
+        "DG-ASK-088"
+      ],
+      "started_at": 1794024056.492539,
+      "prompt_sha256": "efcba31f54c210d5b04550188562148027bd128e18a6d6ff1384a5de9214317f",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "merge-07",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024077.517333,
+      "prompt_sha256": "d508b6ca77903435d7056dceb2525a86091e85559cd62c48499d6ecd940ffb1f"
+    },
+    {
+      "label": "merge-08",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024078.954268,
+      "prompt_sha256": "3b4a9252e9e7ae40f100685b1bbe259853c875fdeb365b7cfb4994dd9e26f5e9"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-12",
+      "case_ids": [
+        "DG-ASK-089",
+        "DG-ASK-090",
+        "DG-ASK-091",
+        "DG-ASK-092",
+        "DG-ASK-093",
+        "DG-ASK-094",
+        "DG-ASK-095",
+        "DG-ASK-096"
+      ],
+      "started_at": 1794024094.371983,
+      "prompt_sha256": "df08774df1f4388e2e6d242906240105bcf36d288581d29706640106ed929f47",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-13",
+      "case_ids": [
+        "DG-ASK-097",
+        "DG-ASK-098",
+        "DG-ASK-099",
+        "DG-ASK-100",
+        "DG-ASK-101",
+        "DG-ASK-102",
+        "DG-ASK-103",
+        "DG-ASK-104"
+      ],
+      "started_at": 1794024105.6576378,
+      "prompt_sha256": "abfecd5f7fbe56f93dce406a5242678cd5c98385f159e9ac3c27c2152a85daab",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "merge-09",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024107.534569,
+      "prompt_sha256": "52ec7750ab1adbc69e7c07f306e05869951ba6c32d64266959db68592ef23d63"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-retest-id-handles",
+      "case_ids": [
+        "DG-CONNECT-097",
+        "DG-CONNECT-098",
+        "DG-CONNECT-099"
+      ],
+      "started_at": 1794024122.458254,
+      "prompt_sha256": "1c6e7c8f3fbcc4f51fa433e01bd406eb62f63ba7701005dd2e9f00d3e7f28c17",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-14",
+      "case_ids": [
+        "DG-ASK-105",
+        "DG-ASK-106",
+        "DG-ASK-107",
+        "DG-ASK-108",
+        "DG-ASK-109",
+        "DG-ASK-110",
+        "DG-ASK-111",
+        "DG-ASK-112"
+      ],
+      "started_at": 1794024164.57933,
+      "prompt_sha256": "b5b857f9abecc09af62bdc1aba8b41e23f2b2b888a49730c4564945e4490d5a4",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-15",
+      "case_ids": [
+        "DG-ASK-113",
+        "DG-ASK-114",
+        "DG-ASK-115",
+        "DG-ASK-116",
+        "DG-ASK-117",
+        "DG-ASK-118",
+        "DG-ASK-119",
+        "DG-ASK-120"
+      ],
+      "started_at": 1794024191.819026,
+      "prompt_sha256": "7432c793b37007106da143b3914e5dda603d7cc010aaa12d02b709095a7535bb",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-16",
+      "case_ids": [
+        "DG-ASK-121",
+        "DG-ASK-122",
+        "DG-ASK-123",
+        "DG-ASK-124",
+        "DG-ASK-125",
+        "DG-ASK-126",
+        "DG-ASK-127",
+        "DG-ASK-128"
+      ],
+      "started_at": 1794024233.203201,
+      "prompt_sha256": "af99a07358f3352c5d853ce54bf8d6f1a3f5297ad11dc42a3612d51d4eb9214a",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-pilot",
+      "case_ids": [
+        "DG-FRESH-002",
+        "DG-FRESH-004",
+        "DG-FRESH-005",
+        "DG-FRESH-007"
+      ],
+      "started_at": 1794024256.21964,
+      "prompt_sha256": "81f6a19ac325a12d07afe57d1ac1c374211658584cf76bb9727b347a29241de8",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-01",
+      "case_ids": [
+        "DG-FRESH-001",
+        "DG-FRESH-002",
+        "DG-FRESH-003",
+        "DG-FRESH-004",
+        "DG-FRESH-005",
+        "DG-FRESH-006",
+        "DG-FRESH-007",
+        "DG-FRESH-008"
+      ],
+      "started_at": 1794024563.761358,
+      "prompt_sha256": "b8a8e07aaf7904c0e72e3645eb056b8b0eaf1c9a39c0f429e62ac52f45ab7947",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-02",
+      "case_ids": [
+        "DG-FRESH-009",
+        "DG-FRESH-010",
+        "DG-FRESH-011",
+        "DG-FRESH-012",
+        "DG-FRESH-013",
+        "DG-FRESH-014",
+        "DG-FRESH-015",
+        "DG-FRESH-016"
+      ],
+      "started_at": 1794024563.7615302,
+      "prompt_sha256": "13071ececd10de2523541a3f4e8cf743ed35441e1075846abbf5de7ed4cebc46",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-03",
+      "case_ids": [
+        "DG-FRESH-017",
+        "DG-FRESH-018",
+        "DG-FRESH-019",
+        "DG-FRESH-020",
+        "DG-FRESH-021",
+        "DG-FRESH-022",
+        "DG-FRESH-023",
+        "DG-FRESH-024"
+      ],
+      "started_at": 1794024691.907924,
+      "prompt_sha256": "d9180d969c028c4ed3142b60537313983ef7f2973513c4f7e2bc242199d530a1",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-04",
+      "case_ids": [
+        "DG-FRESH-025",
+        "DG-FRESH-026",
+        "DG-FRESH-027",
+        "DG-FRESH-028",
+        "DG-FRESH-029",
+        "DG-FRESH-030",
+        "DG-FRESH-031",
+        "DG-FRESH-032"
+      ],
+      "started_at": 1794024716.459799,
+      "prompt_sha256": "8d877ff0689e710d7f44e68797fd4b702ac66fbc8e862e2f2849901aff3172c0",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-05",
+      "case_ids": [
+        "DG-FRESH-033",
+        "DG-FRESH-034",
+        "DG-FRESH-035",
+        "DG-FRESH-036",
+        "DG-FRESH-037",
+        "DG-FRESH-038",
+        "DG-FRESH-039",
+        "DG-FRESH-040"
+      ],
+      "started_at": 1794024782.926921,
+      "prompt_sha256": "da734f0726fa528c0facbe292556735e4bd013140156f460e253f2c158ba9df3",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "judge-ask-matrix-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024813.3014011,
+      "prompt_sha256": "e31238163404418870ae15e011795288ea9454ced536a93cebf2d1b5e244074a"
+    },
+    {
+      "label": "judge-ask-matrix-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024813.3015292,
+      "prompt_sha256": "c4212eeef129045cb10f6bf5db4281cf92d18a2f047e9965a403930b684fea86"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-06",
+      "case_ids": [
+        "DG-FRESH-041",
+        "DG-FRESH-042",
+        "DG-FRESH-043",
+        "DG-FRESH-044",
+        "DG-FRESH-045",
+        "DG-FRESH-046",
+        "DG-FRESH-047",
+        "DG-FRESH-048"
+      ],
+      "started_at": 1794024833.481268,
+      "prompt_sha256": "6c695dcc9b887ab4c6ec059a1784805a719afa355da846a76caad24de925938b",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "judge-ask-matrix-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024849.304736,
+      "prompt_sha256": "898ab1c6e5de46325862811ff039846afc3eb4d5b9e9436214ee155d0869d275"
+    },
+    {
+      "label": "judge-ask-matrix-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024849.521324,
+      "prompt_sha256": "df6cf187d2efb303c828100630c374263a1be8128479ad918fc25b6a47701895"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-07",
+      "case_ids": [
+        "DG-FRESH-049",
+        "DG-FRESH-050",
+        "DG-FRESH-051",
+        "DG-FRESH-052",
+        "DG-FRESH-053",
+        "DG-FRESH-054",
+        "DG-FRESH-055",
+        "DG-FRESH-056"
+      ],
+      "started_at": 1794024872.426176,
+      "prompt_sha256": "43160b70d3db1f58f9365e843337e574d5ccb12ff3ddf3e6182e9060699a3d2d",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "policy-install-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024874.908675,
+      "prompt_sha256": "26f6b12a72283f8b7c7bfdc6b44f3502b7776da89601f15e57b3f428c99df1ec"
+    },
+    {
+      "label": "policy-install-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024874.908941,
+      "prompt_sha256": "c9b0d2034b76969dc9a74f5692cecbc3a930ca2fdbb6206c03d6abaf9155dbfd"
+    },
+    {
+      "label": "judge-ask-matrix-05",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024881.694656,
+      "prompt_sha256": "b2033b779cf87a9b8eb510dc515e6b5109cfd6b1dcbef07689400fbca2be2334"
+    },
+    {
+      "label": "judge-ask-matrix-06",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024883.1855721,
+      "prompt_sha256": "61917f6ea1ba61a100e6a23c1a849278325103bb47fbbfd72ba02ee135a55d4f"
+    },
+    {
+      "label": "judge-ask-matrix-07",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024894.745497,
+      "prompt_sha256": "4242f45a06719deb4b94103f72afee1aea1b55e1dc803484f4d32d923472bd80"
+    },
+    {
+      "label": "judge-ask-matrix-08",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024896.321512,
+      "prompt_sha256": "c95ecb2183a3df61a08905cd047fe4524d6701f063993243a7e5d9568650cf0a"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-08",
+      "case_ids": [
+        "DG-FRESH-057",
+        "DG-FRESH-058",
+        "DG-FRESH-059",
+        "DG-FRESH-060",
+        "DG-FRESH-061",
+        "DG-FRESH-062",
+        "DG-FRESH-063",
+        "DG-FRESH-064"
+      ],
+      "started_at": 1794024904.525815,
+      "prompt_sha256": "e9b95da0b813087de2e33d7bbfeb4bfdc222ccb2d5acde7937e6bc19f8a931e9",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-02",
+      "case_ids": [
+        "DG-INGEST-007",
+        "DG-INGEST-008",
+        "DG-INGEST-009",
+        "DG-INGEST-010",
+        "DG-INGEST-011",
+        "DG-INGEST-012"
+      ],
+      "started_at": 1794024911.065474,
+      "prompt_sha256": "e69672e14c623e6a1436ba5ddc628c836787d5b986ae92a45f37678f4775c7c9",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-01",
+      "case_ids": [
+        "DG-INGEST-001",
+        "DG-INGEST-002",
+        "DG-INGEST-003",
+        "DG-INGEST-004",
+        "DG-INGEST-005",
+        "DG-INGEST-006"
+      ],
+      "started_at": 1794024911.065702,
+      "prompt_sha256": "951ba01d17e8360888bb902452dbf23fef2ab59396a248354ad0b6c94685fd2d",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "judge-ask-matrix-09",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024916.071294,
+      "prompt_sha256": "0f68dd841d97a58437aced905769400a2524eddacd061111c00b6f43c1c722ee"
+    },
+    {
+      "label": "judge-ask-matrix-10",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024921.207466,
+      "prompt_sha256": "398bc623c5aa9e8c9461505a95e96a9a7d77c0e441ef68592012f61a2ba0abf3"
+    },
+    {
+      "label": "review-policy-install-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024939.1931489,
+      "prompt_sha256": "96631f3238e0d6ed199983008ec8db0f740c26f25c5ec3c7ba18377568f63e34"
+    },
+    {
+      "label": "review-policy-install-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024945.176919,
+      "prompt_sha256": "b66b16372e893f7288ba8bed16996b3899d588957e0a378f36b80f5691297ed9"
+    },
+    {
+      "label": "judge-ask-matrix-11",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024970.145354,
+      "prompt_sha256": "7bb11e81e48caee4351eb7a65e353d664b8a4e20e6d70dd460b732012d06dee2"
+    },
+    {
+      "label": "judge-ask-matrix-12",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024977.238401,
+      "prompt_sha256": "f0182981f4c51a25556e9af4f5f6bcddd8c14765bfd4a4b247e13a6dcf12aeea"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-09",
+      "case_ids": [
+        "DG-FRESH-065",
+        "DG-FRESH-066",
+        "DG-FRESH-067",
+        "DG-FRESH-068",
+        "DG-FRESH-069",
+        "DG-FRESH-070",
+        "DG-FRESH-071",
+        "DG-FRESH-072"
+      ],
+      "started_at": 1794024995.083146,
+      "prompt_sha256": "3d5d11a3cb445fc2062b90110b1aeb8dc7d9da55188bd5156c1f1fd244ecefa9",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "policy-install-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024998.048733,
+      "prompt_sha256": "6d77456ef1b0a2e3f1eb0c711ad2170a2d25bcf516692f914e336486a66ef8ff"
+    },
+    {
+      "label": "policy-memory-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025005.174957,
+      "prompt_sha256": "2dd7f6f1f8518f0811bf7b8474cdd498471fd8d1e7b7feb60c495066a7b390c3"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-03",
+      "case_ids": [
+        "DG-INGEST-013",
+        "DG-INGEST-014",
+        "DG-INGEST-015",
+        "DG-INGEST-016",
+        "DG-INGEST-017",
+        "DG-INGEST-018"
+      ],
+      "started_at": 1794025018.9488058,
+      "prompt_sha256": "bb7eb00345997f2dc8fa8c994f43545dda8d3b5e9ed774fa44ed5380c293e826",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "judge-ask-matrix-13",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025021.33158,
+      "prompt_sha256": "b17f90a4c3bb36b6a8792c1bfd8eab962c2d2005b6a926cdab1c3a9800ed1fb0"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-04",
+      "case_ids": [
+        "DG-INGEST-019",
+        "DG-INGEST-020",
+        "DG-INGEST-021",
+        "DG-INGEST-022",
+        "DG-INGEST-023",
+        "DG-INGEST-024"
+      ],
+      "started_at": 1794025021.513197,
+      "prompt_sha256": "561f85a4838636f1e424eeb4767b9885bb9ae8e66e8625d222556e3d18e80ee8",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "judge-ask-matrix-14",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025022.407129,
+      "prompt_sha256": "740bc48fb92d592c8c8a9434a759620965db764851b92059aca9c2685e9b6349"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-10",
+      "case_ids": [
+        "DG-FRESH-073",
+        "DG-FRESH-074",
+        "DG-FRESH-075",
+        "DG-FRESH-076",
+        "DG-FRESH-077",
+        "DG-FRESH-078",
+        "DG-FRESH-079",
+        "DG-FRESH-080"
+      ],
+      "started_at": 1794025022.6670778,
+      "prompt_sha256": "2479a59c3237986e2235b93ec53fa90a2fb22a13287464af7b13ee47bc0fe0d8",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "judge-ask-matrix-15",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025037.051352,
+      "prompt_sha256": "ae075dfc5a394ad79e4769c28903a81d2cc028ed67f121d408aada2fa293ab4f"
+    },
+    {
+      "label": "judge-ask-matrix-16",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025038.280847,
+      "prompt_sha256": "fdd1cfbf555715d1a1b3dcc2a6f61dfc608c3ec603d7a1f5c477094d99259f1f"
+    },
+    {
+      "label": "review-policy-install-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025088.4067242,
+      "prompt_sha256": "222f3e2383cd729e0a054a7905defa3b4ede95f92d23dd891787099818e1b42d"
+    },
+    {
+      "label": "review-policy-memory-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025091.0373702,
+      "prompt_sha256": "060c227c614bfc894f85c01f19bb6ae6ada91941e7b28dd512025b7143d007a8"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-05",
+      "case_ids": [
+        "DG-INGEST-025",
+        "DG-INGEST-026",
+        "DG-INGEST-027",
+        "DG-INGEST-028",
+        "DG-INGEST-029",
+        "DG-INGEST-030"
+      ],
+      "started_at": 1794025094.240384,
+      "prompt_sha256": "f9df35cea1ff738b6687dc6ab63ea2c5708d00ad8f94cba13cdfae25f4a740c0",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-06",
+      "case_ids": [
+        "DG-INGEST-031",
+        "DG-INGEST-032",
+        "DG-INGEST-033",
+        "DG-INGEST-034",
+        "DG-INGEST-035",
+        "DG-INGEST-036"
+      ],
+      "started_at": 1794025096.351904,
+      "prompt_sha256": "d23d940d3db17d76e602af7448d641a7e0be842f283117ab3d6e8d817c0d83ac",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "policy-memory-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025111.222338,
+      "prompt_sha256": "df412effecc2cd6cc654c0181e848be575e97d2c6aec18b3f7c3ea1bcc9481da"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-11",
+      "case_ids": [
+        "DG-FRESH-081",
+        "DG-FRESH-082",
+        "DG-FRESH-083",
+        "DG-FRESH-084",
+        "DG-FRESH-085",
+        "DG-FRESH-086",
+        "DG-FRESH-087",
+        "DG-FRESH-088"
+      ],
+      "started_at": 1794025111.469624,
+      "prompt_sha256": "0e7d1685581339bb1f7a9637e17ef30a234cc31fee3b79374556b483e2186ee6",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-12",
+      "case_ids": [
+        "DG-FRESH-089",
+        "DG-FRESH-090",
+        "DG-FRESH-091",
+        "DG-FRESH-092",
+        "DG-FRESH-093",
+        "DG-FRESH-094",
+        "DG-FRESH-095",
+        "DG-FRESH-096"
+      ],
+      "started_at": 1794025114.644811,
+      "prompt_sha256": "3bff4ee6bedfcf56b7b48b8b81b0ab203d06f7cd25f03c9c929e6c4b0ae27b09",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "policy-memory-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025117.4774542,
+      "prompt_sha256": "5ad7de88476380bf1080b5a49c10dae677f676ad95e201f632e81e4c2926c4f5"
+    },
+    {
+      "label": "sensitive-semantic",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025128.688779,
+      "prompt_sha256": "212475ecf76171ee3d90b8dc14a7a4275f44d575787f4d1f8a75b46356dd1ea2"
+    },
+    {
+      "label": "review-policy-memory-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025181.3322492,
+      "prompt_sha256": "230265f117a2a336994136117ef2fc0eaea8897e45baf0194d08331ee61fdd37"
+    },
+    {
+      "label": "review-policy-memory-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025181.351777,
+      "prompt_sha256": "c82e832a914744985461631d377cfd5d37d46194b544dde1f529332354e4720e"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-07",
+      "case_ids": [
+        "DG-INGEST-037",
+        "DG-INGEST-038",
+        "DG-INGEST-039",
+        "DG-INGEST-040",
+        "DG-INGEST-041",
+        "DG-INGEST-042"
+      ],
+      "started_at": 1794025181.536287,
+      "prompt_sha256": "f78f9602d56c4bdc2b928846abf354843dd0ad041eba410f072996523692feeb",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-08",
+      "case_ids": [
+        "DG-INGEST-043",
+        "DG-INGEST-044",
+        "DG-INGEST-045",
+        "DG-INGEST-046",
+        "DG-INGEST-047",
+        "DG-INGEST-048"
+      ],
+      "started_at": 1794025181.589091,
+      "prompt_sha256": "f4a416f97825a6b1d8cf9d3df79282356c8d2d15d1ee6ce87957a62f69ff95f9",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "policy-memory-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025250.106365,
+      "prompt_sha256": "55f01a3dc0d98283241b9313aca435fc6d8864c5b90d48a681860f158c70212c"
+    },
+    {
+      "label": "policy-publish-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025262.9821172,
+      "prompt_sha256": "42a89b250627eeae81f00d1c13764fd4c8c99f62c23d3c2fb06b687d35a86ba1"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-09",
+      "case_ids": [
+        "DG-INGEST-049",
+        "DG-INGEST-050",
+        "DG-INGEST-051",
+        "DG-INGEST-052",
+        "DG-INGEST-053",
+        "DG-INGEST-054"
+      ],
+      "started_at": 1794025295.7525618,
+      "prompt_sha256": "25ba2c749cbed855eee4108a1fb2ea831964af0f09bf703ac3096e9c1165f310",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-10",
+      "case_ids": [
+        "DG-INGEST-055",
+        "DG-INGEST-056",
+        "DG-INGEST-057",
+        "DG-INGEST-058",
+        "DG-INGEST-059",
+        "DG-INGEST-060"
+      ],
+      "started_at": 1794025304.743933,
+      "prompt_sha256": "8c89b7de96566b2717d38987245510544ce4cd2ab7cfb8286fabdc3fbe256d17",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "review-policy-memory-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025309.4782,
+      "prompt_sha256": "2d0048c3faa5f65a6e42f91eb9d3ab05f5d1956e2e352916dedbbb3920d08537"
+    },
+    {
+      "label": "policy-publish-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025324.1446211,
+      "prompt_sha256": "a91dcf3d8cfb6facff3dd1ef24169184e8169003dce3b84d127b978b7820e639"
+    },
+    {
+      "label": "review-policy-publish-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025356.367739,
+      "prompt_sha256": "26240157de53583e1438aff277287d7cf8bd4c16bb91207094ade4087cc13def"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-11",
+      "case_ids": [
+        "DG-INGEST-061",
+        "DG-INGEST-062",
+        "DG-INGEST-063",
+        "DG-INGEST-064",
+        "DG-INGEST-065",
+        "DG-INGEST-066"
+      ],
+      "started_at": 1794025404.901409,
+      "prompt_sha256": "788df3a4c897dcf617822e4c87cc318751e80f4a313b29d8d4a2da89cc3587cd",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-12",
+      "case_ids": [
+        "DG-INGEST-067",
+        "DG-INGEST-068",
+        "DG-INGEST-069",
+        "DG-INGEST-070",
+        "DG-INGEST-071",
+        "DG-INGEST-072"
+      ],
+      "started_at": 1794025409.995954,
+      "prompt_sha256": "ef98de7518ffc1b01d1ca2ff797e947b3e753603a52650a0817e6a0695d6b33d",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "policy-publish-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025411.18,
+      "prompt_sha256": "e4543041c0fe6d094f746f8533789d579e7e9b4afe4359f602fb703369e8d95d"
+    },
+    {
+      "label": "review-policy-publish-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025411.191713,
+      "prompt_sha256": "3b3c6c88902dcb789aaae00c7b6ae01c2bd461921f5bd71821206e9bddff2f89"
+    },
+    {
+      "label": "policy-publish-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025452.306998,
+      "prompt_sha256": "bf51019632a2139519e707149ee1a53e34e73cd9bde81f8c6cc8ca5084c5c2cd"
+    },
+    {
+      "label": "review-policy-publish-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025467.604816,
+      "prompt_sha256": "c8844feb5c101f90dc49b61b4f7ea198eb2b80a72dc783dbc82b1f0b023569ce"
+    },
+    {
+      "label": "policy-fetch-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025480.792136,
+      "prompt_sha256": "f85fa55c22e36bae764572d51cb97182cf658fcf75b9990c7f9b3a1f7bd75d52"
+    },
+    {
+      "label": "review-policy-publish-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025513.563971,
+      "prompt_sha256": "0a2d51e96a8b1f88fc92da67d7a02decc72cb58e8b79c1d9bb2d41b9579d024c"
+    },
+    {
+      "label": "review-policy-fetch-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025543.025878,
+      "prompt_sha256": "89fb0a0b68b049eddfd35327432b1f3105705bb6622bbd29f72d60b1f94edb71"
+    },
+    {
+      "label": "policy-fetch-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025572.699017,
+      "prompt_sha256": "17c1740616b9aa77ca5258aad2211eb6aeaa1db8d3e5fe272ec280f570b9b98f"
+    },
+    {
+      "label": "policy-fetch-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025610.575986,
+      "prompt_sha256": "16ce8bfe53d068016cd213892207cca728c28f0357c9770e4ca32777196a879a"
+    },
+    {
+      "label": "review-policy-fetch-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025645.266499,
+      "prompt_sha256": "e66de2872c18695bc4fee135e59a298c9abeb78d4ef7e1f78bac3ea28beccb40"
+    },
+    {
+      "label": "policy-style-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025687.2358458,
+      "prompt_sha256": "d238141d0818aa83d9aa38fba52b3a515025968c2b8a687f341cca3b1b19d63b"
+    },
+    {
+      "label": "review-policy-fetch-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025696.2239559,
+      "prompt_sha256": "03419e2b59ceca61b54a62b8b007c0e6df0d8c9b2637e25eef9d352f4693a776"
+    },
+    {
+      "label": "policy-style-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025752.867796,
+      "prompt_sha256": "498d4b1d5619091adac1448e6d93b53a635d7ebb4ffec85c46f29e0cb43bec44"
+    },
+    {
+      "label": "review-policy-style-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025765.821633,
+      "prompt_sha256": "00907626cd3e26b9b7165d8e051d104ffa9cc41b6217af8640954a84a6e46b0b"
+    },
+    {
+      "label": "policy-style-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025805.090112,
+      "prompt_sha256": "58deb915cbf4a9a6da63d4e3d12caaa6e3b80eacebf75d281db6c8a181c13ecb"
+    },
+    {
+      "label": "review-policy-style-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025833.060184,
+      "prompt_sha256": "167cc9a11d4676fa7a2b8fe1a65e0b634bfe23453d89c60bfebdee312e843439"
+    },
+    {
+      "label": "review-policy-style-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025861.227183,
+      "prompt_sha256": "29223ef8a0e017bf89587096dfa16320d466842f3239ee12eba0c91655422d91"
+    },
+    {
+      "label": "policy-schedule-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025874.866576,
+      "prompt_sha256": "0ab03225e7120c7b8cfff52cc3c5bc9aecd39e2ebb8f1f10346ede9d6bb5c644"
+    },
+    {
+      "label": "policy-schedule-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025897.651663,
+      "prompt_sha256": "e8a32a6d022dde673145bd3131510dbf1584165deb0fddbea7043258c875d42b"
+    },
+    {
+      "label": "review-policy-schedule-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025941.116708,
+      "prompt_sha256": "4c7c55fca8bb3adb0fbb196221a301cbe86e5712e41e4648ed233b93933242d2"
+    },
+    {
+      "label": "policy-schedule-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025984.178339,
+      "prompt_sha256": "ccbbd3a0e6d5f24f025973f336de89aa08c84277768f8f95d0094601f9ad7972"
+    },
+    {
+      "label": "review-policy-schedule-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025986.431571,
+      "prompt_sha256": "ae7817aafe7ab072af02ed67df9f3b1b41a50f3f69310d0df533329d5cf99b28"
+    },
+    {
+      "label": "policy-schedule-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026055.0732532,
+      "prompt_sha256": "4ec94ce1a91525b4e96e7c1b20af77164c84459748a54e5cdab76789b91f12b7"
+    },
+    {
+      "label": "review-policy-schedule-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026064.043164,
+      "prompt_sha256": "8eb39ec84f83cfc1023788d785fae0bb9bcc4f89fda70bbbc5b9f5dd42d715f1"
+    },
+    {
+      "label": "policy-journey-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026095.076986,
+      "prompt_sha256": "af07a29ba531ea2cf3117c783c97fbca0843f9ede68d090a53ce7bba67d4d1a5"
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-fixture-retest-01",
+      "case_ids": [
+        "DG-FRESH-011",
+        "DG-FRESH-012",
+        "DG-FRESH-023",
+        "DG-FRESH-024",
+        "DG-FRESH-035",
+        "DG-FRESH-036",
+        "DG-FRESH-047",
+        "DG-FRESH-048"
+      ],
+      "started_at": 1794026132.689148,
+      "prompt_sha256": "7e3737bd2b5b3c26b3fc5141c7538334bc732569dcfd49beb963700c2e4de26b",
+      "timeout_seconds": 900
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-fixture-retest-02",
+      "case_ids": [
+        "DG-FRESH-059",
+        "DG-FRESH-060",
+        "DG-FRESH-071",
+        "DG-FRESH-072",
+        "DG-FRESH-083",
+        "DG-FRESH-084",
+        "DG-FRESH-095",
+        "DG-FRESH-096"
+      ],
+      "started_at": 1794026132.689342,
+      "prompt_sha256": "b1f2f3fbeece94c0fc9dfbf8a14d30f547b9647c4b2dc2d26368c021b4969bb5",
+      "timeout_seconds": 900
+    },
+    {
+      "label": "review-policy-schedule-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026140.9509199,
+      "prompt_sha256": "d71a552b87e334581cde1503161a460a49d4dd9616048f91401ef46fe3aeacea"
+    },
+    {
+      "label": "review-policy-journey-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026183.94274,
+      "prompt_sha256": "5bcd162dcefd825d9f0d460dde00ac89c7d115a5ab96b976c1fa0b00e65be283"
+    },
+    {
+      "label": "policy-journey-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026186.856728,
+      "prompt_sha256": "27fa256004c1570a3289ffeba2deb5d6aec38024000c6509251b3bb2baf61e19"
+    },
+    {
+      "label": "policy-journey-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026235.806018,
+      "prompt_sha256": "d65e32f6f0f29f9efab127fc289029bab4ade6ddc0d6a88f1740b03cc7843a94"
+    },
+    {
+      "label": "review-policy-journey-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026274.555955,
+      "prompt_sha256": "6ef328a1d26d669cfeef20c9de1428cb8c54293138492ca17a9202c6aea83dfb"
+    },
+    {
+      "label": "review-policy-journey-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026316.3891299,
+      "prompt_sha256": "65e18bd07c6d6ebed76a87da027b605b616a8f529e0b99ca3ac0e60249174789"
+    },
+    {
+      "label": "policy-style-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026664.949019,
+      "prompt_sha256": "a74d98f8b91148bfdb6a42069ef1bef0ce4f5f38ad8e3bd662d366f37ed33cc3"
+    },
+    {
+      "label": "review-policy-style-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026691.756259,
+      "prompt_sha256": "867435c3097b16b7b935ca93145937624601e6b16e0afc3e8b195d04c6cb207e"
+    },
+    {
+      "label": "policy-journey-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026701.788948,
+      "prompt_sha256": "1a09525e4ca884f8bd911f811cb36a6456d7e62a7430b5ed0be5d8fa9a24bec3"
+    },
+    {
+      "label": "review-policy-journey-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026729.365862,
+      "prompt_sha256": "871820fc0a37efb9e8730a60e304db1cb831829bf2a24cb5ecb143f4329930c9"
+    },
+    {
+      "label": "vision-15",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026738.152792,
+      "prompt_sha256": "4a9834b49857c49fc5181a1e4c2aec50cfede6ae9d85ea27314b3f85281333a6"
+    },
+    {
+      "label": "vision-16",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026738.1530612,
+      "prompt_sha256": "4a9834b49857c49fc5181a1e4c2aec50cfede6ae9d85ea27314b3f85281333a6"
+    },
+    {
+      "label": "policy-session-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026842.582423,
+      "prompt_sha256": "70d46623bafdbfde2442ad14246e2496ea450826632b54daded2faacc0611b01"
+    },
+    {
+      "label": "review-policy-session-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026868.723862,
+      "prompt_sha256": "4bc665418b9d00797a91c49f41aad399cc8e0d12a76c4e56eea500e9903b231e"
+    },
+    {
+      "label": "policy-handoff-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026878.5609899,
+      "prompt_sha256": "38d9b02a9cd1bcec72b93840990b9cb95137d705e9bd43087d3f51ca807ac69a"
+    },
+    {
+      "label": "review-policy-handoff-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026895.3110242,
+      "prompt_sha256": "1925886b7ea8cbbde3d18f48d6632b19700dae64e46e34e96644eb7c9303be45"
+    },
+    {
+      "label": "product-review-policy-fetch-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027025.371011,
+      "prompt_sha256": "b8fcfc979d2878cdb2595bdc7d7090a87590969e9d49b83148f37d2a37c21b57"
+    },
+    {
+      "label": "product-review-policy-fetch-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027025.3723469,
+      "prompt_sha256": "0b0b433d6e28886c8196f75311696f346d3c739b98f563bac570c39d21abf331"
+    },
+    {
+      "label": "product-review-policy-fetch-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027025.3732932,
+      "prompt_sha256": "a7f771186303c906ead1e9255198addd7abab77a149f4522a38544d9aa390e58"
+    },
+    {
+      "label": "product-review-policy-handoff-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027039.621464,
+      "prompt_sha256": "9905ae017a82d76688ae6da17a6a93abfc3f37016530d7051be8521e04c5387a"
+    },
+    {
+      "label": "product-review-policy-install-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027040.252458,
+      "prompt_sha256": "bdb8289320644a0ad9ccfb752efc0630970b24d4fca0f157707f02cd4b519076"
+    },
+    {
+      "label": "product-review-policy-install-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027040.366378,
+      "prompt_sha256": "f78c8e951f3f712a41a7119d0332d9fcb5d789b728177420db5c83012f3f1d85"
+    },
+    {
+      "label": "product-review-policy-install-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027046.06592,
+      "prompt_sha256": "7a08363326fce82617890b584d6128e471a7c7599a5ab32408d88e1c11a99db1"
+    },
+    {
+      "label": "product-review-policy-journey-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027053.28986,
+      "prompt_sha256": "49986c237a558782dca604c937eaf5ab67882fadc738897f333cb81d8234feb8"
+    },
+    {
+      "label": "product-review-policy-journey-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027056.881536,
+      "prompt_sha256": "4dccc4246f23a140f8b2570009a6a011a6654f63050656f33798bf7fb6d301d7"
+    },
+    {
+      "label": "product-review-policy-journey-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027056.93077,
+      "prompt_sha256": "8e93b4dbf38d87e663a2fd37be137adc01cb052e6a8e7b08f2076fa8c8bb6731"
+    },
+    {
+      "label": "product-review-policy-journey-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027068.43225,
+      "prompt_sha256": "c37c62750f571f10539c13356bd0dcc895404717b5e10cffe85d64482bf654a8"
+    },
+    {
+      "label": "product-review-policy-memory-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027069.6661062,
+      "prompt_sha256": "196c493bb22bfb051bc94fbbfdaa8ac58b964871ec2f6fd5272ddeb2a312b5db"
+    },
+    {
+      "label": "product-review-policy-memory-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027071.369865,
+      "prompt_sha256": "3aba79ef9315f7e29021b48aceaf104aae25ad80e4f3f3fecc37918633e2ed4b"
+    },
+    {
+      "label": "product-review-policy-memory-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027077.680789,
+      "prompt_sha256": "b0bba78462368b94370ae4d22ad00a901903918e4ddeebb82c7edd1547d5d137"
+    },
+    {
+      "label": "product-review-policy-memory-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027083.095912,
+      "prompt_sha256": "52b70e7f5b7f8bf219a328122ce25bee0110537387e32f2e7edbbbb1366a0be1"
+    },
+    {
+      "label": "policy-fetch-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027084.470411,
+      "prompt_sha256": "c4a4037d1b75713fe81b273f66b4c539eb2ea39425b8a0dcb879830d13240aee"
+    },
+    {
+      "label": "product-review-policy-publish-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027087.387106,
+      "prompt_sha256": "85466f7b0f484e5042e43b7da8b211bab2f2df924b7a6dc4161e4f11ce1edba0"
+    },
+    {
+      "label": "product-review-policy-publish-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027091.460742,
+      "prompt_sha256": "7f04c20d7f9bfda79c800bc53f1316e5ef4a078426f01e296fe1d4c40d77b64f"
+    },
+    {
+      "label": "product-review-policy-publish-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027093.24773,
+      "prompt_sha256": "053284ddaef21713b7a17b784f0a268eeb509a1730b801ba5f8e735ec98df0f7"
+    },
+    {
+      "label": "product-review-policy-publish-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027101.8134232,
+      "prompt_sha256": "2dcd65fbb605eadc5821a41dd58a55e5ba676c0b2420e03318edb082cac46bc4"
+    },
+    {
+      "label": "review-policy-fetch-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027103.2499762,
+      "prompt_sha256": "1256e45f0200de601e749061a7169b6831913891de45d4b22419be90f350ae3e"
+    },
+    {
+      "label": "product-review-policy-schedule-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027104.9216561,
+      "prompt_sha256": "3bc7c5dca218c28b43c1b0db058eef5d0a5d866025614fc2c035a29af765eccf"
+    },
+    {
+      "label": "product-review-policy-schedule-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027105.261201,
+      "prompt_sha256": "aa9f4458c73dd25e9871f8b5a2dcee335f41711add5f18a4ef4f31343d23ed3e"
+    },
+    {
+      "label": "product-review-policy-schedule-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027113.9756632,
+      "prompt_sha256": "3c176f6d38933c556a062f95d03f6c15267c45e40972bb3aec97b3152231c5c1"
+    },
+    {
+      "label": "product-review-policy-schedule-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027118.1933792,
+      "prompt_sha256": "563a0814b967dbd5de5e79d27b36930de89c0ab21f3e6f981f41b69fdea90bc7"
+    },
+    {
+      "label": "product-review-policy-session-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027118.828623,
+      "prompt_sha256": "9b4a43a71c86737afc02121fdf16f968265954bd83a41c2b7137dab5ef66f517"
+    },
+    {
+      "label": "product-review-policy-style-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027125.9276989,
+      "prompt_sha256": "c30e31127fb0884504686b194fbba7b133c288eb477eed0b44a3fe658aa75052"
+    },
+    {
+      "label": "product-review-policy-style-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027128.069205,
+      "prompt_sha256": "0a479d8e801a89f163846216c2efce9030047ebcccb24df594de159af7126031"
+    },
+    {
+      "label": "product-review-policy-style-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027132.233563,
+      "prompt_sha256": "5b9111f52a87ff74356cb3f5265258a397d09f1e356d30dea2d6a46d78b3d8a7"
+    },
+    {
+      "label": "product-review-policy-style-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027142.357583,
+      "prompt_sha256": "7cc2f14a0a4b3f6c5ef198c1406b5ff062acc3fd4f5d08ccce79ec6cb762394d"
+    },
+    {
+      "label": "policy-schedule-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027804.043158,
+      "prompt_sha256": "48cd474f0ad6e861f07e355812e347b1e09bd0e2e9f69d9175ac50b60b464c35"
+    },
+    {
+      "label": "policy-style-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027804.0457091,
+      "prompt_sha256": "9c850ab367a7aeefacf44b9268bc7e738d35f8872ec7896e827ade05732b23da"
+    },
+    {
+      "label": "review-policy-style-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027821.0050728,
+      "prompt_sha256": "d9c1608f35ea546c4642ff2e5400faf709451823077d7ad5948d2245f64177fb"
+    },
+    {
+      "label": "policy-journey-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027827.556253,
+      "prompt_sha256": "e437506eb319cbb73caa6127ef3e00dc967ed455453248303298c67f1efd8bcd"
+    },
+    {
+      "label": "review-policy-schedule-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027827.670018,
+      "prompt_sha256": "66ac5e80b5c489de145cf6b73548dff4f1b8342f14b208db95ba286d3ea98579"
+    },
+    {
+      "label": "review-policy-journey-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027848.395106,
+      "prompt_sha256": "59bd2b067c81d955b6f2392619ee04b484857c8d3fcabbae471b11ada317b2b2"
+    }
+  ],
+  "completed": [
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-08",
+      "case_ids": [
+        "DG-ASK-057",
+        "DG-ASK-058",
+        "DG-ASK-059",
+        "DG-ASK-060",
+        "DG-ASK-061",
+        "DG-ASK-062",
+        "DG-ASK-063",
+        "DG-ASK-064"
+      ],
+      "started_at": 1794023934.948194,
+      "prompt_sha256": "c12d579618f5adfb29c508587e4b7ee86b26df20493a674e7841d8eac87f3209",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 63.98366904258728
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-01",
+      "case_ids": [
+        "DG-ASK-001",
+        "DG-ASK-002",
+        "DG-ASK-003",
+        "DG-ASK-004",
+        "DG-ASK-005",
+        "DG-ASK-006",
+        "DG-ASK-007",
+        "DG-ASK-008"
+      ],
+      "started_at": 1794023638.2642298,
+      "prompt_sha256": "23c70d72289e7e8e6adeb23995abd427f4ea342f8d049cf21af018ea74708ccf",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 101.13820123672485
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-06",
+      "case_ids": [
+        "DG-ASK-041",
+        "DG-ASK-042",
+        "DG-ASK-043",
+        "DG-ASK-044",
+        "DG-ASK-045",
+        "DG-ASK-046",
+        "DG-ASK-047",
+        "DG-ASK-048"
+      ],
+      "started_at": 1794023803.6606321,
+      "prompt_sha256": "8e06612615feac9a38012240c7b559826b98b6b5142f4ca392eac7892e9f7402",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 131.28080987930298
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-07",
+      "case_ids": [
+        "DG-CONNECT-073",
+        "DG-CONNECT-074",
+        "DG-CONNECT-075",
+        "DG-CONNECT-076",
+        "DG-CONNECT-077",
+        "DG-CONNECT-078",
+        "DG-CONNECT-079",
+        "DG-CONNECT-080",
+        "DG-CONNECT-081",
+        "DG-CONNECT-082",
+        "DG-CONNECT-083",
+        "DG-CONNECT-084"
+      ],
+      "started_at": 1794023586.504166,
+      "prompt_sha256": "e67e9d08c731c7ffa7affa30db9a9ecea64c8e82dd9980f59a0b9a4b0a8ebdb7",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 119.89939022064209
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-09",
+      "case_ids": [
+        "DG-CONNECT-097",
+        "DG-CONNECT-098",
+        "DG-CONNECT-099",
+        "DG-CONNECT-100",
+        "DG-CONNECT-101",
+        "DG-CONNECT-102",
+        "DG-CONNECT-103",
+        "DG-CONNECT-104",
+        "DG-CONNECT-105",
+        "DG-CONNECT-106",
+        "DG-CONNECT-107",
+        "DG-CONNECT-108"
+      ],
+      "started_at": 1794023706.411581,
+      "prompt_sha256": "8b64e1b80b73aa3bbffe286a12d1238493faf837fc21b403569e0075284464b0",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 96.57286286354065
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-07",
+      "case_ids": [
+        "DG-ASK-049",
+        "DG-ASK-050",
+        "DG-ASK-051",
+        "DG-ASK-052",
+        "DG-ASK-053",
+        "DG-ASK-054",
+        "DG-ASK-055",
+        "DG-ASK-056"
+      ],
+      "started_at": 1794023893.070288,
+      "prompt_sha256": "81294b2d50af466e861a58008c5724b694e2692216f727a56de24623539ca6ec",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 78.86661124229431
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-fixture-retest-02",
+      "case_ids": [
+        "DG-FRESH-059",
+        "DG-FRESH-060",
+        "DG-FRESH-071",
+        "DG-FRESH-072",
+        "DG-FRESH-083",
+        "DG-FRESH-084",
+        "DG-FRESH-095",
+        "DG-FRESH-096"
+      ],
+      "started_at": 1794026132.689342,
+      "prompt_sha256": "b1f2f3fbeece94c0fc9dfbf8a14d30f547b9647c4b2dc2d26368c021b4969bb5",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 130.248526096344
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-09",
+      "case_ids": [
+        "DG-ASK-065",
+        "DG-ASK-066",
+        "DG-ASK-067",
+        "DG-ASK-068",
+        "DG-ASK-069",
+        "DG-ASK-070",
+        "DG-ASK-071",
+        "DG-ASK-072"
+      ],
+      "started_at": 1794023971.9422731,
+      "prompt_sha256": "a2afd30d4feb9dbf89d8bf24d89e6d58133ce4233036b754f5ee4fbf5c216e19",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 84.54468393325806
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-08",
+      "case_ids": [
+        "DG-CONNECT-085",
+        "DG-CONNECT-086",
+        "DG-CONNECT-087",
+        "DG-CONNECT-088",
+        "DG-CONNECT-089",
+        "DG-CONNECT-090",
+        "DG-CONNECT-091",
+        "DG-CONNECT-092",
+        "DG-CONNECT-093",
+        "DG-CONNECT-094",
+        "DG-CONNECT-095",
+        "DG-CONNECT-096"
+      ],
+      "started_at": 1794023618.043083,
+      "prompt_sha256": "7762262fc5d972acedfbe35494b3497e64bf8ab954880ba90f2fd90018eaabd1",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 97.32662510871887
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-01",
+      "case_ids": [
+        "DG-CONNECT-001",
+        "DG-CONNECT-002",
+        "DG-CONNECT-003",
+        "DG-CONNECT-004",
+        "DG-CONNECT-005",
+        "DG-CONNECT-006",
+        "DG-CONNECT-007",
+        "DG-CONNECT-008",
+        "DG-CONNECT-009",
+        "DG-CONNECT-010",
+        "DG-CONNECT-011",
+        "DG-CONNECT-012"
+      ],
+      "started_at": 1794023273.678355,
+      "prompt_sha256": "3641ed927599905f99cdbcb1b35a0aa7d135532d75f8c4e7ce3ad0e39f42e3b8",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 130.20130515098572
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-06",
+      "case_ids": [
+        "DG-CONNECT-061",
+        "DG-CONNECT-062",
+        "DG-CONNECT-063",
+        "DG-CONNECT-064",
+        "DG-CONNECT-065",
+        "DG-CONNECT-066",
+        "DG-CONNECT-067",
+        "DG-CONNECT-068",
+        "DG-CONNECT-069",
+        "DG-CONNECT-070",
+        "DG-CONNECT-071",
+        "DG-CONNECT-072"
+      ],
+      "started_at": 1794023508.397899,
+      "prompt_sha256": "64891729174136506010b13f7ed0db2b9d472bf5b4bb51874e0241253e3b7488",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 109.63847923278809
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-04",
+      "case_ids": [
+        "DG-INGEST-019",
+        "DG-INGEST-020",
+        "DG-INGEST-021",
+        "DG-INGEST-022",
+        "DG-INGEST-023",
+        "DG-INGEST-024"
+      ],
+      "started_at": 1794025021.513197,
+      "prompt_sha256": "561f85a4838636f1e424eeb4767b9885bb9ae8e66e8625d222556e3d18e80ee8",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 74.83461213111877
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-03",
+      "case_ids": [
+        "DG-INGEST-013",
+        "DG-INGEST-014",
+        "DG-INGEST-015",
+        "DG-INGEST-016",
+        "DG-INGEST-017",
+        "DG-INGEST-018"
+      ],
+      "started_at": 1794025018.9488058,
+      "prompt_sha256": "bb7eb00345997f2dc8fa8c994f43545dda8d3b5e9ed774fa44ed5380c293e826",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 75.28723931312561
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-05",
+      "case_ids": [
+        "DG-FRESH-033",
+        "DG-FRESH-034",
+        "DG-FRESH-035",
+        "DG-FRESH-036",
+        "DG-FRESH-037",
+        "DG-FRESH-038",
+        "DG-FRESH-039",
+        "DG-FRESH-040"
+      ],
+      "started_at": 1794024782.926921,
+      "prompt_sha256": "da734f0726fa528c0facbe292556735e4bd013140156f460e253f2c158ba9df3",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 89.49315404891968
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-pilot-2",
+      "case_ids": [
+        "DG-CONNECT-001",
+        "DG-CONNECT-002",
+        "DG-CONNECT-008",
+        "DG-CONNECT-009"
+      ],
+      "started_at": 1794023013.154932,
+      "prompt_sha256": "879c01d28a1da7e3514509115ef420f159d9e87ad95dd3508c3d3adc0f6af56e",
+      "timeout_seconds": 420,
+      "exit": 0,
+      "duration_seconds": 102.73470783233643
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-02",
+      "case_ids": [
+        "DG-FRESH-009",
+        "DG-FRESH-010",
+        "DG-FRESH-011",
+        "DG-FRESH-012",
+        "DG-FRESH-013",
+        "DG-FRESH-014",
+        "DG-FRESH-015",
+        "DG-FRESH-016"
+      ],
+      "started_at": 1794024563.7615302,
+      "prompt_sha256": "13071ececd10de2523541a3f4e8cf743ed35441e1075846abbf5de7ed4cebc46",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 128.1408507823944
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-pilot",
+      "case_ids": [
+        "DG-CONNECT-001",
+        "DG-CONNECT-002",
+        "DG-CONNECT-008",
+        "DG-CONNECT-009"
+      ],
+      "started_at": 1794022903.414332,
+      "prompt_sha256": "879c01d28a1da7e3514509115ef420f159d9e87ad95dd3508c3d3adc0f6af56e",
+      "timeout_seconds": 420,
+      "exit": 0,
+      "duration_seconds": 33.484498262405396
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-02",
+      "case_ids": [
+        "DG-INGEST-007",
+        "DG-INGEST-008",
+        "DG-INGEST-009",
+        "DG-INGEST-010",
+        "DG-INGEST-011",
+        "DG-INGEST-012"
+      ],
+      "started_at": 1794024911.065474,
+      "prompt_sha256": "e69672e14c623e6a1436ba5ddc628c836787d5b986ae92a45f37678f4775c7c9",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 107.87917184829712
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-05",
+      "case_ids": [
+        "DG-INGEST-025",
+        "DG-INGEST-026",
+        "DG-INGEST-027",
+        "DG-INGEST-028",
+        "DG-INGEST-029",
+        "DG-INGEST-030"
+      ],
+      "started_at": 1794025094.240384,
+      "prompt_sha256": "f9df35cea1ff738b6687dc6ab63ea2c5708d00ad8f94cba13cdfae25f4a740c0",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 87.29064702987671
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-03",
+      "case_ids": [
+        "DG-FRESH-017",
+        "DG-FRESH-018",
+        "DG-FRESH-019",
+        "DG-FRESH-020",
+        "DG-FRESH-021",
+        "DG-FRESH-022",
+        "DG-FRESH-023",
+        "DG-FRESH-024"
+      ],
+      "started_at": 1794024691.907924,
+      "prompt_sha256": "d9180d969c028c4ed3142b60537313983ef7f2973513c4f7e2bc242199d530a1",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 91.00922799110413
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-04",
+      "case_ids": [
+        "DG-FRESH-025",
+        "DG-FRESH-026",
+        "DG-FRESH-027",
+        "DG-FRESH-028",
+        "DG-FRESH-029",
+        "DG-FRESH-030",
+        "DG-FRESH-031",
+        "DG-FRESH-032"
+      ],
+      "started_at": 1794024716.459799,
+      "prompt_sha256": "8d877ff0689e710d7f44e68797fd4b702ac66fbc8e862e2f2849901aff3172c0",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 117.01425790786743
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-10",
+      "case_ids": [
+        "DG-FRESH-073",
+        "DG-FRESH-074",
+        "DG-FRESH-075",
+        "DG-FRESH-076",
+        "DG-FRESH-077",
+        "DG-FRESH-078",
+        "DG-FRESH-079",
+        "DG-FRESH-080"
+      ],
+      "started_at": 1794025022.6670778,
+      "prompt_sha256": "2479a59c3237986e2235b93ec53fa90a2fb22a13287464af7b13ee47bc0fe0d8",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 88.79509139060974
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-pilot",
+      "case_ids": [
+        "DG-FRESH-002",
+        "DG-FRESH-004",
+        "DG-FRESH-005",
+        "DG-FRESH-007"
+      ],
+      "started_at": 1794024256.21964,
+      "prompt_sha256": "81f6a19ac325a12d07afe57d1ac1c374211658584cf76bb9727b347a29241de8",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 73.92072892189026
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-11",
+      "case_ids": [
+        "DG-INGEST-061",
+        "DG-INGEST-062",
+        "DG-INGEST-063",
+        "DG-INGEST-064",
+        "DG-INGEST-065",
+        "DG-INGEST-066"
+      ],
+      "started_at": 1794025404.901409,
+      "prompt_sha256": "788df3a4c897dcf617822e4c87cc318751e80f4a313b29d8d4a2da89cc3587cd",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 130.212815284729
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-11",
+      "case_ids": [
+        "DG-FRESH-081",
+        "DG-FRESH-082",
+        "DG-FRESH-083",
+        "DG-FRESH-084",
+        "DG-FRESH-085",
+        "DG-FRESH-086",
+        "DG-FRESH-087",
+        "DG-FRESH-088"
+      ],
+      "started_at": 1794025111.469624,
+      "prompt_sha256": "0e7d1685581339bb1f7a9637e17ef30a234cc31fee3b79374556b483e2186ee6",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 110.59022283554077
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-10",
+      "case_ids": [
+        "DG-INGEST-055",
+        "DG-INGEST-056",
+        "DG-INGEST-057",
+        "DG-INGEST-058",
+        "DG-INGEST-059",
+        "DG-INGEST-060"
+      ],
+      "started_at": 1794025304.743933,
+      "prompt_sha256": "8c89b7de96566b2717d38987245510544ce4cd2ab7cfb8286fabdc3fbe256d17",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 105.24795007705688
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-12",
+      "case_ids": [
+        "DG-CONNECT-133",
+        "DG-CONNECT-134",
+        "DG-CONNECT-135",
+        "DG-CONNECT-136",
+        "DG-CONNECT-137",
+        "DG-CONNECT-138",
+        "DG-CONNECT-139",
+        "DG-CONNECT-140",
+        "DG-CONNECT-141",
+        "DG-CONNECT-142",
+        "DG-CONNECT-143",
+        "DG-CONNECT-144"
+      ],
+      "started_at": 1794023802.990443,
+      "prompt_sha256": "d46e7c3242953b417c09dc4fd76ebaeeb095426c22d0e46953df37845b630bc4",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 137.09690809249878
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-13",
+      "case_ids": [
+        "DG-ASK-097",
+        "DG-ASK-098",
+        "DG-ASK-099",
+        "DG-ASK-100",
+        "DG-ASK-101",
+        "DG-ASK-102",
+        "DG-ASK-103",
+        "DG-ASK-104"
+      ],
+      "started_at": 1794024105.6576378,
+      "prompt_sha256": "abfecd5f7fbe56f93dce406a5242678cd5c98385f159e9ac3c27c2152a85daab",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 86.15516018867493
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-retest-id-handles",
+      "case_ids": [
+        "DG-CONNECT-097",
+        "DG-CONNECT-098",
+        "DG-CONNECT-099"
+      ],
+      "started_at": 1794024122.458254,
+      "prompt_sha256": "1c6e7c8f3fbcc4f51fa433e01bd406eb62f63ba7701005dd2e9f00d3e7f28c17",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 123.37399506568909
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-14",
+      "case_ids": [
+        "DG-ASK-105",
+        "DG-ASK-106",
+        "DG-ASK-107",
+        "DG-ASK-108",
+        "DG-ASK-109",
+        "DG-ASK-110",
+        "DG-ASK-111",
+        "DG-ASK-112"
+      ],
+      "started_at": 1794024164.57933,
+      "prompt_sha256": "b5b857f9abecc09af62bdc1aba8b41e23f2b2b888a49730c4564945e4490d5a4",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 68.61900806427002
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-15",
+      "case_ids": [
+        "DG-ASK-113",
+        "DG-ASK-114",
+        "DG-ASK-115",
+        "DG-ASK-116",
+        "DG-ASK-117",
+        "DG-ASK-118",
+        "DG-ASK-119",
+        "DG-ASK-120"
+      ],
+      "started_at": 1794024191.819026,
+      "prompt_sha256": "7432c793b37007106da143b3914e5dda603d7cc010aaa12d02b709095a7535bb",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 62.78029108047485
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-12",
+      "case_ids": [
+        "DG-ASK-089",
+        "DG-ASK-090",
+        "DG-ASK-091",
+        "DG-ASK-092",
+        "DG-ASK-093",
+        "DG-ASK-094",
+        "DG-ASK-095",
+        "DG-ASK-096"
+      ],
+      "started_at": 1794024094.371983,
+      "prompt_sha256": "df08774df1f4388e2e6d242906240105bcf36d288581d29706640106ed929f47",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 70.20030283927917
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-03",
+      "case_ids": [
+        "DG-CONNECT-025",
+        "DG-CONNECT-026",
+        "DG-CONNECT-027",
+        "DG-CONNECT-028",
+        "DG-CONNECT-029",
+        "DG-CONNECT-030",
+        "DG-CONNECT-031",
+        "DG-CONNECT-032",
+        "DG-CONNECT-033",
+        "DG-CONNECT-034",
+        "DG-CONNECT-035",
+        "DG-CONNECT-036"
+      ],
+      "started_at": 1794023403.889554,
+      "prompt_sha256": "e17f33b6871cd02b47b4bfcfb6df37ce4ed83c9f9b45ea48819e2e97a79d051c",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 92.24826788902283
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-04",
+      "case_ids": [
+        "DG-CONNECT-037",
+        "DG-CONNECT-038",
+        "DG-CONNECT-039",
+        "DG-CONNECT-040",
+        "DG-CONNECT-041",
+        "DG-CONNECT-042",
+        "DG-CONNECT-043",
+        "DG-CONNECT-044",
+        "DG-CONNECT-045",
+        "DG-CONNECT-046",
+        "DG-CONNECT-047",
+        "DG-CONNECT-048"
+      ],
+      "started_at": 1794023403.920126,
+      "prompt_sha256": "1cb668f7daa308f5dbdcd0b33e7a240641678d7a1ac3fd5a196ab152222a8dc0",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 104.47026896476746
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-05",
+      "case_ids": [
+        "DG-ASK-033",
+        "DG-ASK-034",
+        "DG-ASK-035",
+        "DG-ASK-036",
+        "DG-ASK-037",
+        "DG-ASK-038",
+        "DG-ASK-039",
+        "DG-ASK-040"
+      ],
+      "started_at": 1794023787.4683251,
+      "prompt_sha256": "f69f0a25ae50e56827cb0cb3e1ba829632b71e0fc48927f116b36b75e384590a",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 105.5958468914032
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-02",
+      "case_ids": [
+        "DG-ASK-009",
+        "DG-ASK-010",
+        "DG-ASK-011",
+        "DG-ASK-012",
+        "DG-ASK-013",
+        "DG-ASK-014",
+        "DG-ASK-015",
+        "DG-ASK-016"
+      ],
+      "started_at": 1794023638.2640278,
+      "prompt_sha256": "c2e0e08d76f43afd344321bc606d0b2f66db73f6224ba3cb4803a92d8dd3f702",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 79.12237000465393
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-05",
+      "case_ids": [
+        "DG-CONNECT-049",
+        "DG-CONNECT-050",
+        "DG-CONNECT-051",
+        "DG-CONNECT-052",
+        "DG-CONNECT-053",
+        "DG-CONNECT-054",
+        "DG-CONNECT-055",
+        "DG-CONNECT-056",
+        "DG-CONNECT-057",
+        "DG-CONNECT-058",
+        "DG-CONNECT-059",
+        "DG-CONNECT-060"
+      ],
+      "started_at": 1794023496.143175,
+      "prompt_sha256": "b8a2ebe33fc4d8b24284ac7e028caac771ee4de7fa48a20c43ac70a6f1189461",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 90.35126113891602
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-02",
+      "case_ids": [
+        "DG-CONNECT-013",
+        "DG-CONNECT-014",
+        "DG-CONNECT-015",
+        "DG-CONNECT-016",
+        "DG-CONNECT-017",
+        "DG-CONNECT-018",
+        "DG-CONNECT-019",
+        "DG-CONNECT-020",
+        "DG-CONNECT-021",
+        "DG-CONNECT-022",
+        "DG-CONNECT-023",
+        "DG-CONNECT-024"
+      ],
+      "started_at": 1794023273.678272,
+      "prompt_sha256": "8116028a17cf8a4bf167c6db496ccb5acad6878d68ef974a586666d9ec38720e",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 130.2370240688324
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-fixture-retest-01",
+      "case_ids": [
+        "DG-FRESH-011",
+        "DG-FRESH-012",
+        "DG-FRESH-023",
+        "DG-FRESH-024",
+        "DG-FRESH-035",
+        "DG-FRESH-036",
+        "DG-FRESH-047",
+        "DG-FRESH-048"
+      ],
+      "started_at": 1794026132.689148,
+      "prompt_sha256": "7e3737bd2b5b3c26b3fc5141c7538334bc732569dcfd49beb963700c2e4de26b",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 135.23524594306946
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-03",
+      "case_ids": [
+        "DG-ASK-017",
+        "DG-ASK-018",
+        "DG-ASK-019",
+        "DG-ASK-020",
+        "DG-ASK-021",
+        "DG-ASK-022",
+        "DG-ASK-023",
+        "DG-ASK-024"
+      ],
+      "started_at": 1794023717.394221,
+      "prompt_sha256": "0a86c4f2ab7f70b82e7dd5aa9f0d838880a8c04c5aed6c6569b718116acedcd4",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 70.06792402267456
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-pilot",
+      "case_ids": [
+        "DG-ASK-001",
+        "DG-ASK-065",
+        "DG-ASK-081",
+        "DG-ASK-089"
+      ],
+      "started_at": 1794023486.23744,
+      "prompt_sha256": "b093c4cef49d65769ec1ec6e546e966dbd72ab8db17b46cb6cd666a682164679",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 75.02962493896484
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-04",
+      "case_ids": [
+        "DG-ASK-025",
+        "DG-ASK-026",
+        "DG-ASK-027",
+        "DG-ASK-028",
+        "DG-ASK-029",
+        "DG-ASK-030",
+        "DG-ASK-031",
+        "DG-ASK-032"
+      ],
+      "started_at": 1794023739.4098291,
+      "prompt_sha256": "8dc4fdec72e704357da033368543cb02518835cd6546ecc10d06201789b03d9a",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 64.24528384208679
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-01",
+      "case_ids": [
+        "DG-FRESH-001",
+        "DG-FRESH-002",
+        "DG-FRESH-003",
+        "DG-FRESH-004",
+        "DG-FRESH-005",
+        "DG-FRESH-006",
+        "DG-FRESH-007",
+        "DG-FRESH-008"
+      ],
+      "started_at": 1794024563.761358,
+      "prompt_sha256": "b8a8e07aaf7904c0e72e3645eb056b8b0eaf1c9a39c0f429e62ac52f45ab7947",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 152.69270396232605
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-06",
+      "case_ids": [
+        "DG-FRESH-041",
+        "DG-FRESH-042",
+        "DG-FRESH-043",
+        "DG-FRESH-044",
+        "DG-FRESH-045",
+        "DG-FRESH-046",
+        "DG-FRESH-047",
+        "DG-FRESH-048"
+      ],
+      "started_at": 1794024833.481268,
+      "prompt_sha256": "6c695dcc9b887ab4c6ec059a1784805a719afa355da846a76caad24de925938b",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 71.03824615478516
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-08",
+      "case_ids": [
+        "DG-FRESH-057",
+        "DG-FRESH-058",
+        "DG-FRESH-059",
+        "DG-FRESH-060",
+        "DG-FRESH-061",
+        "DG-FRESH-062",
+        "DG-FRESH-063",
+        "DG-FRESH-064"
+      ],
+      "started_at": 1794024904.525815,
+      "prompt_sha256": "e9b95da0b813087de2e33d7bbfeb4bfdc222ccb2d5acde7937e6bc19f8a931e9",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 118.13285613059998
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-07",
+      "case_ids": [
+        "DG-INGEST-037",
+        "DG-INGEST-038",
+        "DG-INGEST-039",
+        "DG-INGEST-040",
+        "DG-INGEST-041",
+        "DG-INGEST-042"
+      ],
+      "started_at": 1794025181.536287,
+      "prompt_sha256": "f78f9602d56c4bdc2b928846abf354843dd0ad041eba410f072996523692feeb",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 114.21159482002258
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-09",
+      "case_ids": [
+        "DG-INGEST-049",
+        "DG-INGEST-050",
+        "DG-INGEST-051",
+        "DG-INGEST-052",
+        "DG-INGEST-053",
+        "DG-INGEST-054"
+      ],
+      "started_at": 1794025295.7525618,
+      "prompt_sha256": "25ba2c749cbed855eee4108a1fb2ea831964af0f09bf703ac3096e9c1165f310",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 109.14426231384277
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-09",
+      "case_ids": [
+        "DG-FRESH-065",
+        "DG-FRESH-066",
+        "DG-FRESH-067",
+        "DG-FRESH-068",
+        "DG-FRESH-069",
+        "DG-FRESH-070",
+        "DG-FRESH-071",
+        "DG-FRESH-072"
+      ],
+      "started_at": 1794024995.083146,
+      "prompt_sha256": "3d5d11a3cb445fc2062b90110b1aeb8dc7d9da55188bd5156c1f1fd244ecefa9",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 119.55667090415955
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-07",
+      "case_ids": [
+        "DG-FRESH-049",
+        "DG-FRESH-050",
+        "DG-FRESH-051",
+        "DG-FRESH-052",
+        "DG-FRESH-053",
+        "DG-FRESH-054",
+        "DG-FRESH-055",
+        "DG-FRESH-056"
+      ],
+      "started_at": 1794024872.426176,
+      "prompt_sha256": "43160b70d3db1f58f9365e843337e574d5ccb12ff3ddf3e6182e9060699a3d2d",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 122.6515429019928
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-08",
+      "case_ids": [
+        "DG-INGEST-043",
+        "DG-INGEST-044",
+        "DG-INGEST-045",
+        "DG-INGEST-046",
+        "DG-INGEST-047",
+        "DG-INGEST-048"
+      ],
+      "started_at": 1794025181.589091,
+      "prompt_sha256": "f4a416f97825a6b1d8cf9d3df79282356c8d2d15d1ee6ce87957a62f69ff95f9",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 123.14973282814026
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-06",
+      "case_ids": [
+        "DG-INGEST-031",
+        "DG-INGEST-032",
+        "DG-INGEST-033",
+        "DG-INGEST-034",
+        "DG-INGEST-035",
+        "DG-INGEST-036"
+      ],
+      "started_at": 1794025096.351904,
+      "prompt_sha256": "d23d940d3db17d76e602af7448d641a7e0be842f283117ab3d6e8d817c0d83ac",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 85.23163294792175
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-01",
+      "case_ids": [
+        "DG-INGEST-001",
+        "DG-INGEST-002",
+        "DG-INGEST-003",
+        "DG-INGEST-004",
+        "DG-INGEST-005",
+        "DG-INGEST-006"
+      ],
+      "started_at": 1794024911.065702,
+      "prompt_sha256": "951ba01d17e8360888bb902452dbf23fef2ab59396a248354ad0b6c94685fd2d",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 110.44263696670532
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ingest-matrix-12",
+      "case_ids": [
+        "DG-INGEST-067",
+        "DG-INGEST-068",
+        "DG-INGEST-069",
+        "DG-INGEST-070",
+        "DG-INGEST-071",
+        "DG-INGEST-072"
+      ],
+      "started_at": 1794025409.995954,
+      "prompt_sha256": "ef98de7518ffc1b01d1ca2ff797e947b3e753603a52650a0817e6a0695d6b33d",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 134.02497601509094
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "fresh-matrix-12",
+      "case_ids": [
+        "DG-FRESH-089",
+        "DG-FRESH-090",
+        "DG-FRESH-091",
+        "DG-FRESH-092",
+        "DG-FRESH-093",
+        "DG-FRESH-094",
+        "DG-FRESH-095",
+        "DG-FRESH-096"
+      ],
+      "started_at": 1794025114.644811,
+      "prompt_sha256": "3bff4ee6bedfcf56b7b48b8b81b0ab203d06f7cd25f03c9c929e6c4b0ae27b09",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 102.68410086631775
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-10",
+      "case_ids": [
+        "DG-ASK-073",
+        "DG-ASK-074",
+        "DG-ASK-075",
+        "DG-ASK-076",
+        "DG-ASK-077",
+        "DG-ASK-078",
+        "DG-ASK-079",
+        "DG-ASK-080"
+      ],
+      "started_at": 1794023998.93762,
+      "prompt_sha256": "7b4c7814e72c18321ea4a92bd42e1c95d16f1a904624c52440b5ce28c7e0d0b6",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 95.4259741306305
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-11",
+      "case_ids": [
+        "DG-CONNECT-121",
+        "DG-CONNECT-122",
+        "DG-CONNECT-123",
+        "DG-CONNECT-124",
+        "DG-CONNECT-125",
+        "DG-CONNECT-126",
+        "DG-CONNECT-127",
+        "DG-CONNECT-128",
+        "DG-CONNECT-129",
+        "DG-CONNECT-130",
+        "DG-CONNECT-131",
+        "DG-CONNECT-132"
+      ],
+      "started_at": 1794023787.6484091,
+      "prompt_sha256": "1c262a7d1ba934b34478dfa1d86d9c4316377e64172cda2f1c67e686dd61c310",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 86.57296371459961
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-11",
+      "case_ids": [
+        "DG-ASK-081",
+        "DG-ASK-082",
+        "DG-ASK-083",
+        "DG-ASK-084",
+        "DG-ASK-085",
+        "DG-ASK-086",
+        "DG-ASK-087",
+        "DG-ASK-088"
+      ],
+      "started_at": 1794024056.492539,
+      "prompt_sha256": "efcba31f54c210d5b04550188562148027bd128e18a6d6ff1384a5de9214317f",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 49.16017293930054
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "ask-matrix-16",
+      "case_ids": [
+        "DG-ASK-121",
+        "DG-ASK-122",
+        "DG-ASK-123",
+        "DG-ASK-124",
+        "DG-ASK-125",
+        "DG-ASK-126",
+        "DG-ASK-127",
+        "DG-ASK-128"
+      ],
+      "started_at": 1794024233.203201,
+      "prompt_sha256": "af99a07358f3352c5d853ce54bf8d6f1a3f5297ad11dc42a3612d51d4eb9214a",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 72.17328000068665
+    },
+    {
+      "kind": "host_skill_execution",
+      "label": "connect-matrix-10",
+      "case_ids": [
+        "DG-CONNECT-109",
+        "DG-CONNECT-110",
+        "DG-CONNECT-111",
+        "DG-CONNECT-112",
+        "DG-CONNECT-113",
+        "DG-CONNECT-114",
+        "DG-CONNECT-115",
+        "DG-CONNECT-116",
+        "DG-CONNECT-117",
+        "DG-CONNECT-118",
+        "DG-CONNECT-119",
+        "DG-CONNECT-120"
+      ],
+      "started_at": 1794023715.382557,
+      "prompt_sha256": "4bae952f67b98e387e29b57d5eefbb25601181d3c23a2e9231711c0b18b39bf5",
+      "timeout_seconds": 900,
+      "exit": 0,
+      "duration_seconds": 72.25770902633667
+    },
+    {
+      "label": "product-review-policy-memory-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027071.369865,
+      "prompt_sha256": "3aba79ef9315f7e29021b48aceaf104aae25ad80e4f3f3fecc37918633e2ed4b",
+      "exit": 0,
+      "duration_seconds": 16.01337504386902,
+      "usage": [
+        {
+          "input_tokens": 15098,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 452,
+          "reasoning_output_tokens": 55
+        }
+      ]
+    },
+    {
+      "label": "policy-style-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025687.2358458,
+      "prompt_sha256": "d238141d0818aa83d9aa38fba52b3a515025968c2b8a687f341cca3b1b19d63b",
+      "exit": 0,
+      "duration_seconds": 78.58323931694031,
+      "usage": [
+        {
+          "input_tokens": 28403,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2360,
+          "reasoning_output_tokens": 55
+        }
+      ]
+    },
+    {
+      "label": "policy-journey-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027827.556253,
+      "prompt_sha256": "e437506eb319cbb73caa6127ef3e00dc967ed455453248303298c67f1efd8bcd",
+      "exit": 0,
+      "duration_seconds": 20.836904048919678,
+      "usage": [
+        {
+          "input_tokens": 47429,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 715,
+          "reasoning_output_tokens": 13
+        }
+      ]
+    },
+    {
+      "label": "review-policy-fetch-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025543.025878,
+      "prompt_sha256": "89fb0a0b68b049eddfd35327432b1f3105705bb6622bbd29f72d60b1f94edb71",
+      "exit": 0,
+      "duration_seconds": 67.54006004333496,
+      "usage": [
+        {
+          "input_tokens": 16041,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 937,
+          "reasoning_output_tokens": 126
+        }
+      ]
+    },
+    {
+      "label": "policy-publish-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025324.1446211,
+      "prompt_sha256": "a91dcf3d8cfb6facff3dd1ef24169184e8169003dce3b84d127b978b7820e639",
+      "exit": 0,
+      "duration_seconds": 87.04284381866455,
+      "usage": [
+        {
+          "input_tokens": 27040,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 3277,
+          "reasoning_output_tokens": 52
+        }
+      ]
+    },
+    {
+      "label": "vision-16",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026738.1530612,
+      "prompt_sha256": "4a9834b49857c49fc5181a1e4c2aec50cfede6ae9d85ea27314b3f85281333a6",
+      "exit": 0,
+      "duration_seconds": 7.92359185218811,
+      "usage": [
+        {
+          "input_tokens": 18950,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 47,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-style-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026664.949019,
+      "prompt_sha256": "a74d98f8b91148bfdb6a42069ef1bef0ce4f5f38ad8e3bd662d366f37ed33cc3",
+      "exit": 0,
+      "duration_seconds": 26.80449104309082,
+      "usage": [
+        {
+          "input_tokens": 28333,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1084,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-fetch-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027103.2499762,
+      "prompt_sha256": "1256e45f0200de601e749061a7169b6831913891de45d4b22419be90f350ae3e",
+      "exit": 0,
+      "duration_seconds": 9.510342836380005,
+      "usage": [
+        {
+          "input_tokens": 12796,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 133,
+          "reasoning_output_tokens": 33
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-journey-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027056.881536,
+      "prompt_sha256": "4dccc4246f23a140f8b2570009a6a011a6654f63050656f33798bf7fb6d301d7",
+      "exit": 0,
+      "duration_seconds": 14.482486009597778,
+      "usage": [
+        {
+          "input_tokens": 15618,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 528,
+          "reasoning_output_tokens": 82
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-15",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025037.051352,
+      "prompt_sha256": "ae075dfc5a394ad79e4769c28903a81d2cc028ed67f121d408aada2fa293ab4f",
+      "exit": 0,
+      "duration_seconds": 32.517728090286255,
+      "usage": [
+        {
+          "input_tokens": 17818,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 362,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-12",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024977.238401,
+      "prompt_sha256": "f0182981f4c51a25556e9af4f5f6bcddd8c14765bfd4a4b247e13a6dcf12aeea",
+      "exit": 0,
+      "duration_seconds": 45.1643762588501,
+      "usage": [
+        {
+          "input_tokens": 17587,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 344,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-schedule-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025874.866576,
+      "prompt_sha256": "0ab03225e7120c7b8cfff52cc3c5bc9aecd39e2ebb8f1f10346ede9d6bb5c644",
+      "exit": 0,
+      "duration_seconds": 66.24664807319641,
+      "usage": [
+        {
+          "input_tokens": 22608,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2548,
+          "reasoning_output_tokens": 18
+        }
+      ]
+    },
+    {
+      "label": "policy-publish-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025411.18,
+      "prompt_sha256": "e4543041c0fe6d094f746f8533789d579e7e9b4afe4359f602fb703369e8d95d",
+      "exit": 0,
+      "duration_seconds": 56.422394037246704,
+      "usage": [
+        {
+          "input_tokens": 27058,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1933,
+          "reasoning_output_tokens": 20
+        }
+      ]
+    },
+    {
+      "label": "policy-publish-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025452.306998,
+      "prompt_sha256": "bf51019632a2139519e707149ee1a53e34e73cd9bde81f8c6cc8ca5084c5c2cd",
+      "exit": 0,
+      "duration_seconds": 61.25384974479675,
+      "usage": [
+        {
+          "input_tokens": 26937,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1647,
+          "reasoning_output_tokens": 16
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-memory-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027077.680789,
+      "prompt_sha256": "b0bba78462368b94370ae4d22ad00a901903918e4ddeebb82c7edd1547d5d137",
+      "exit": 0,
+      "duration_seconds": 15.562509059906006,
+      "usage": [
+        {
+          "input_tokens": 14915,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 518,
+          "reasoning_output_tokens": 48
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-memory-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027083.095912,
+      "prompt_sha256": "52b70e7f5b7f8bf219a328122ce25bee0110537387e32f2e7edbbbb1366a0be1",
+      "exit": 0,
+      "duration_seconds": 8.359825134277344,
+      "usage": [
+        {
+          "input_tokens": 13093,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 214,
+          "reasoning_output_tokens": 34
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-13",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025021.33158,
+      "prompt_sha256": "b17f90a4c3bb36b6a8792c1bfd8eab962c2d2005b6a926cdab1c3a9800ed1fb0",
+      "exit": 0,
+      "duration_seconds": 15.715898036956787,
+      "usage": [
+        {
+          "input_tokens": 17538,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 388,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-session-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026842.582423,
+      "prompt_sha256": "70d46623bafdbfde2442ad14246e2496ea450826632b54daded2faacc0611b01",
+      "exit": 0,
+      "duration_seconds": 26.138195037841797,
+      "usage": [
+        {
+          "input_tokens": 28130,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1117,
+          "reasoning_output_tokens": 53
+        }
+      ]
+    },
+    {
+      "label": "review-policy-install-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024939.1931489,
+      "prompt_sha256": "96631f3238e0d6ed199983008ec8db0f740c26f25c5ec3c7ba18377568f63e34",
+      "exit": 0,
+      "duration_seconds": 58.846047163009644,
+      "usage": [
+        {
+          "input_tokens": 15720,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 811,
+          "reasoning_output_tokens": 88
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-14",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025022.407129,
+      "prompt_sha256": "740bc48fb92d592c8c8a9434a759620965db764851b92059aca9c2685e9b6349",
+      "exit": 0,
+      "duration_seconds": 15.868688821792603,
+      "usage": [
+        {
+          "input_tokens": 17331,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 376,
+          "reasoning_output_tokens": 31
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-journey-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027056.93077,
+      "prompt_sha256": "8e93b4dbf38d87e663a2fd37be137adc01cb052e6a8e7b08f2076fa8c8bb6731",
+      "exit": 0,
+      "duration_seconds": 11.497858047485352,
+      "usage": [
+        {
+          "input_tokens": 14511,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 340,
+          "reasoning_output_tokens": 41
+        }
+      ]
+    },
+    {
+      "label": "policy-install-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024998.048733,
+      "prompt_sha256": "6d77456ef1b0a2e3f1eb0c711ad2170a2d25bcf516692f914e336486a66ef8ff",
+      "exit": 0,
+      "duration_seconds": 90.35496687889099,
+      "usage": [
+        {
+          "input_tokens": 28257,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2076,
+          "reasoning_output_tokens": 16
+        }
+      ]
+    },
+    {
+      "label": "review-policy-publish-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025356.367739,
+      "prompt_sha256": "26240157de53583e1438aff277287d7cf8bd4c16bb91207094ade4087cc13def",
+      "exit": 0,
+      "duration_seconds": 54.80033016204834,
+      "usage": [
+        {
+          "input_tokens": 15685,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 411,
+          "reasoning_output_tokens": 41
+        }
+      ]
+    },
+    {
+      "label": "policy-fetch-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025480.792136,
+      "prompt_sha256": "f85fa55c22e36bae764572d51cb97182cf658fcf75b9990c7f9b3a1f7bd75d52",
+      "exit": 0,
+      "duration_seconds": 62.22899913787842,
+      "usage": [
+        {
+          "input_tokens": 25673,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2387,
+          "reasoning_output_tokens": 28
+        }
+      ]
+    },
+    {
+      "label": "review-policy-style-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025765.821633,
+      "prompt_sha256": "00907626cd3e26b9b7165d8e051d104ffa9cc41b6217af8640954a84a6e46b0b",
+      "exit": 0,
+      "duration_seconds": 39.25689172744751,
+      "usage": [
+        {
+          "input_tokens": 15790,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 652,
+          "reasoning_output_tokens": 198
+        }
+      ]
+    },
+    {
+      "label": "policy-install-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024874.908675,
+      "prompt_sha256": "26f6b12a72283f8b7c7bfdc6b44f3502b7776da89601f15e57b3f428c99df1ec",
+      "exit": 0,
+      "duration_seconds": 70.26550507545471,
+      "usage": [
+        {
+          "input_tokens": 28277,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2637,
+          "reasoning_output_tokens": 22
+        }
+      ]
+    },
+    {
+      "label": "policy-handoff-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026878.5609899,
+      "prompt_sha256": "38d9b02a9cd1bcec72b93840990b9cb95137d705e9bd43087d3f51ca807ac69a",
+      "exit": 0,
+      "duration_seconds": 16.748477935791016,
+      "usage": [
+        {
+          "input_tokens": 28031,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 505,
+          "reasoning_output_tokens": 31
+        }
+      ]
+    },
+    {
+      "label": "policy-fetch-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027084.470411,
+      "prompt_sha256": "c4a4037d1b75713fe81b273f66b4c539eb2ea39425b8a0dcb879830d13240aee",
+      "exit": 0,
+      "duration_seconds": 18.777203798294067,
+      "usage": [
+        {
+          "input_tokens": 25423,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 693,
+          "reasoning_output_tokens": 24
+        }
+      ]
+    },
+    {
+      "label": "review-policy-style-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026691.756259,
+      "prompt_sha256": "867435c3097b16b7b935ca93145937624601e6b16e0afc3e8b195d04c6cb207e",
+      "exit": 0,
+      "duration_seconds": 10.009506940841675,
+      "usage": [
+        {
+          "input_tokens": 13365,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 287,
+          "reasoning_output_tokens": 51
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-session-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027118.828623,
+      "prompt_sha256": "9b4a43a71c86737afc02121fdf16f968265954bd83a41c2b7137dab5ef66f517",
+      "exit": 0,
+      "duration_seconds": 9.236449956893921,
+      "usage": [
+        {
+          "input_tokens": 13370,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 243,
+          "reasoning_output_tokens": 37
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-schedule-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027105.261201,
+      "prompt_sha256": "aa9f4458c73dd25e9871f8b5a2dcee335f41711add5f18a4ef4f31343d23ed3e",
+      "exit": 0,
+      "duration_seconds": 12.92860221862793,
+      "usage": [
+        {
+          "input_tokens": 15032,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 430,
+          "reasoning_output_tokens": 21
+        }
+      ]
+    },
+    {
+      "label": "merge-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024009.702519,
+      "prompt_sha256": "5b18a522ec547bd193fd2eb2328651297ee331904f1d30ab99eedef10cf143ec",
+      "exit": 0,
+      "duration_seconds": 35.86942911148071,
+      "usage": [
+        {
+          "input_tokens": 20452,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1164,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "merge-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024009.987743,
+      "prompt_sha256": "5442f49549cf2287ef36d2c6ece6cf15b59f2bab7a6e8e21701e7c532d64d3ca",
+      "exit": 0,
+      "duration_seconds": 33.20416808128357,
+      "usage": [
+        {
+          "input_tokens": 24102,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1233,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-journey-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026235.806018,
+      "prompt_sha256": "d65e32f6f0f29f9efab127fc289029bab4ade6ddc0d6a88f1740b03cc7843a94",
+      "exit": 0,
+      "duration_seconds": 80.54200482368469,
+      "usage": [
+        {
+          "input_tokens": 47354,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2095,
+          "reasoning_output_tokens": 13
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-publish-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027093.24773,
+      "prompt_sha256": "053284ddaef21713b7a17b784f0a268eeb509a1730b801ba5f8e735ec98df0f7",
+      "exit": 0,
+      "duration_seconds": 12.008660793304443,
+      "usage": [
+        {
+          "input_tokens": 14587,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 408,
+          "reasoning_output_tokens": 16
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-publish-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027101.8134232,
+      "prompt_sha256": "2dcd65fbb605eadc5821a41dd58a55e5ba676c0b2420e03318edb082cac46bc4",
+      "exit": 0,
+      "duration_seconds": 12.158324956893921,
+      "usage": [
+        {
+          "input_tokens": 14155,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 370,
+          "reasoning_output_tokens": 33
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-style-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027142.357583,
+      "prompt_sha256": "7cc2f14a0a4b3f6c5ef198c1406b5ff062acc3fd4f5d08ccce79ec6cb762394d",
+      "exit": 0,
+      "duration_seconds": 9.915095806121826,
+      "usage": [
+        {
+          "input_tokens": 13398,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 274,
+          "reasoning_output_tokens": 49
+        }
+      ]
+    },
+    {
+      "label": "policy-journey-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026186.856728,
+      "prompt_sha256": "27fa256004c1570a3289ffeba2deb5d6aec38024000c6509251b3bb2baf61e19",
+      "exit": 0,
+      "duration_seconds": 87.6964180469513,
+      "usage": [
+        {
+          "input_tokens": 47598,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2959,
+          "reasoning_output_tokens": 25
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-schedule-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027118.1933792,
+      "prompt_sha256": "563a0814b967dbd5de5e79d27b36930de89c0ab21f3e6f981f41b69fdea90bc7",
+      "exit": 0,
+      "duration_seconds": 14.036601781845093,
+      "usage": [
+        {
+          "input_tokens": 14854,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 500,
+          "reasoning_output_tokens": 64
+        }
+      ]
+    },
+    {
+      "label": "merge-05",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024043.1963031,
+      "prompt_sha256": "1c454cd02bece34a5c5bde46a2bd331ce4346d65257c5e715b42363785f712db",
+      "exit": 0,
+      "duration_seconds": 35.753000020980835,
+      "usage": [
+        {
+          "input_tokens": 20094,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1224,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "merge-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794023976.9716082,
+      "prompt_sha256": "19919f3615abae709671330d42fca376e29d02711bb7e1f7c4cbf5c9fd6439f0",
+      "exit": 0,
+      "duration_seconds": 33.0102436542511,
+      "usage": [
+        {
+          "input_tokens": 20457,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1209,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-schedule-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027113.9756632,
+      "prompt_sha256": "3c176f6d38933c556a062f95d03f6c15267c45e40972bb3aec97b3152231c5c1",
+      "exit": 0,
+      "duration_seconds": 11.948379755020142,
+      "usage": [
+        {
+          "input_tokens": 14517,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 410,
+          "reasoning_output_tokens": 24
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-style-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027125.9276989,
+      "prompt_sha256": "c30e31127fb0884504686b194fbba7b133c288eb477eed0b44a3fe658aa75052",
+      "exit": 0,
+      "duration_seconds": 16.831870079040527,
+      "usage": [
+        {
+          "input_tokens": 14716,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 642,
+          "reasoning_output_tokens": 181
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-publish-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027091.460742,
+      "prompt_sha256": "7f04c20d7f9bfda79c800bc53f1316e5ef4a078426f01e296fe1d4c40d77b64f",
+      "exit": 0,
+      "duration_seconds": 13.45694899559021,
+      "usage": [
+        {
+          "input_tokens": 15946,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 448,
+          "reasoning_output_tokens": 33
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-handoff-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027039.621464,
+      "prompt_sha256": "9905ae017a82d76688ae6da17a6a93abfc3f37016530d7051be8521e04c5387a",
+      "exit": 0,
+      "duration_seconds": 6.441138982772827,
+      "usage": [
+        {
+          "input_tokens": 12619,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 135,
+          "reasoning_output_tokens": 37
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-07",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024894.745497,
+      "prompt_sha256": "4242f45a06719deb4b94103f72afee1aea1b55e1dc803484f4d32d923472bd80",
+      "exit": 0,
+      "duration_seconds": 21.321319103240967,
+      "usage": [
+        {
+          "input_tokens": 19276,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 372,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-schedule-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027804.043158,
+      "prompt_sha256": "48cd474f0ad6e861f07e355812e347b1e09bd0e2e9f69d9175ac50b60b464c35",
+      "exit": 0,
+      "duration_seconds": 23.624185800552368,
+      "usage": [
+        {
+          "input_tokens": 22367,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 935,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-09",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024916.071294,
+      "prompt_sha256": "0f68dd841d97a58437aced905769400a2524eddacd061111c00b6f43c1c722ee",
+      "exit": 0,
+      "duration_seconds": 54.069034814834595,
+      "usage": [
+        {
+          "input_tokens": 19331,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 309,
+          "reasoning_output_tokens": 29
+        }
+      ]
+    },
+    {
+      "label": "policy-memory-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025005.174957,
+      "prompt_sha256": "2dd7f6f1f8518f0811bf7b8474cdd498471fd8d1e7b7feb60c495066a7b390c3",
+      "exit": 0,
+      "duration_seconds": 85.85935282707214,
+      "usage": [
+        {
+          "input_tokens": 26027,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2471,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-style-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027821.0050728,
+      "prompt_sha256": "d9c1608f35ea546c4642ff2e5400faf709451823077d7ad5948d2245f64177fb",
+      "exit": 0,
+      "duration_seconds": 6.52313494682312,
+      "usage": [
+        {
+          "input_tokens": 12723,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 100,
+          "reasoning_output_tokens": 19
+        }
+      ]
+    },
+    {
+      "label": "policy-style-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027804.0457091,
+      "prompt_sha256": "9c850ab367a7aeefacf44b9268bc7e738d35f8872ec7896e827ade05732b23da",
+      "exit": 0,
+      "duration_seconds": 16.956209897994995,
+      "usage": [
+        {
+          "input_tokens": 28237,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 601,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-memory-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025091.0373702,
+      "prompt_sha256": "060c227c614bfc894f85c01f19bb6ae6ada91941e7b28dd512025b7143d007a8",
+      "exit": 0,
+      "duration_seconds": 20.17436170578003,
+      "usage": [
+        {
+          "input_tokens": 15989,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 574,
+          "reasoning_output_tokens": 138
+        }
+      ]
+    },
+    {
+      "label": "review-policy-journey-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027848.395106,
+      "prompt_sha256": "59bd2b067c81d955b6f2392619ee04b484857c8d3fcabbae471b11ada317b2b2",
+      "exit": 0,
+      "duration_seconds": 6.949609041213989,
+      "usage": [
+        {
+          "input_tokens": 12821,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 127,
+          "reasoning_output_tokens": 21
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-fetch-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027025.371011,
+      "prompt_sha256": "b8fcfc979d2878cdb2595bdc7d7090a87590969e9d49b83148f37d2a37c21b57",
+      "exit": 0,
+      "duration_seconds": 14.991199970245361,
+      "usage": [
+        {
+          "input_tokens": 15017,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 491,
+          "reasoning_output_tokens": 76
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-install-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027040.366378,
+      "prompt_sha256": "f78c8e951f3f712a41a7119d0332d9fcb5d789b728177420db5c83012f3f1d85",
+      "exit": 0,
+      "duration_seconds": 12.919667959213257,
+      "usage": [
+        {
+          "input_tokens": 15305,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 438,
+          "reasoning_output_tokens": 48
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-08",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024896.321512,
+      "prompt_sha256": "c95ecb2183a3df61a08905cd047fe4524d6701f063993243a7e5d9568650cf0a",
+      "exit": 0,
+      "duration_seconds": 24.8803608417511,
+      "usage": [
+        {
+          "input_tokens": 18134,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 346,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-journey-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026729.365862,
+      "prompt_sha256": "871820fc0a37efb9e8730a60e304db1cb831829bf2a24cb5ecb143f4329930c9",
+      "exit": 0,
+      "duration_seconds": 8.629930019378662,
+      "usage": [
+        {
+          "input_tokens": 13332,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 206,
+          "reasoning_output_tokens": 27
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024813.3014011,
+      "prompt_sha256": "e31238163404418870ae15e011795288ea9454ced536a93cebf2d1b5e244074a",
+      "exit": 0,
+      "duration_seconds": 36.21331572532654,
+      "usage": [
+        {
+          "input_tokens": 18199,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 343,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-06",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024883.1855721,
+      "prompt_sha256": "61917f6ea1ba61a100e6a23c1a849278325103bb47fbbfd72ba02ee135a55d4f",
+      "exit": 0,
+      "duration_seconds": 13.130332946777344,
+      "usage": [
+        {
+          "input_tokens": 19066,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 421,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-install-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027046.06592,
+      "prompt_sha256": "7a08363326fce82617890b584d6128e471a7c7599a5ab32408d88e1c11a99db1",
+      "exit": 0,
+      "duration_seconds": 10.861136674880981,
+      "usage": [
+        {
+          "input_tokens": 14721,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 358,
+          "reasoning_output_tokens": 49
+        }
+      ]
+    },
+    {
+      "label": "review-policy-schedule-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025941.116708,
+      "prompt_sha256": "4c7c55fca8bb3adb0fbb196221a301cbe86e5712e41e4648ed233b93933242d2",
+      "exit": 0,
+      "duration_seconds": 43.054659843444824,
+      "usage": [
+        {
+          "input_tokens": 18213,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 833,
+          "reasoning_output_tokens": 191
+        }
+      ]
+    },
+    {
+      "label": "review-policy-journey-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026183.94274,
+      "prompt_sha256": "5bcd162dcefd825d9f0d460dde00ac89c7d115a5ab96b976c1fa0b00e65be283",
+      "exit": 0,
+      "duration_seconds": 51.82877206802368,
+      "usage": [
+        {
+          "input_tokens": 16910,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 646,
+          "reasoning_output_tokens": 118
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-journey-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027053.28986,
+      "prompt_sha256": "49986c237a558782dca604c937eaf5ab67882fadc738897f333cb81d8234feb8",
+      "exit": 0,
+      "duration_seconds": 16.371886014938354,
+      "usage": [
+        {
+          "input_tokens": 15799,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 563,
+          "reasoning_output_tokens": 48
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-11",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024970.145354,
+      "prompt_sha256": "7bb11e81e48caee4351eb7a65e353d664b8a4e20e6d70dd460b732012d06dee2",
+      "exit": 0,
+      "duration_seconds": 51.18212389945984,
+      "usage": [
+        {
+          "input_tokens": 17763,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 443,
+          "reasoning_output_tokens": 44
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-16",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025038.280847,
+      "prompt_sha256": "fdd1cfbf555715d1a1b3dcc2a6f61dfc608c3ec603d7a1f5c477094d99259f1f",
+      "exit": 0,
+      "duration_seconds": 32.09135174751282,
+      "usage": [
+        {
+          "input_tokens": 18439,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 367,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-install-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025088.4067242,
+      "prompt_sha256": "222f3e2383cd729e0a054a7905defa3b4ede95f92d23dd891787099818e1b42d",
+      "exit": 0,
+      "duration_seconds": 29.06426692008972,
+      "usage": [
+        {
+          "input_tokens": 15787,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 962,
+          "reasoning_output_tokens": 93
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-memory-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027069.6661062,
+      "prompt_sha256": "196c493bb22bfb051bc94fbbfdaa8ac58b964871ec2f6fd5272ddeb2a312b5db",
+      "exit": 0,
+      "duration_seconds": 13.426370620727539,
+      "usage": [
+        {
+          "input_tokens": 14935,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 438,
+          "reasoning_output_tokens": 19
+        }
+      ]
+    },
+    {
+      "label": "review-policy-fetch-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025645.266499,
+      "prompt_sha256": "e66de2872c18695bc4fee135e59a298c9abeb78d4ef7e1f78bac3ea28beccb40",
+      "exit": 0,
+      "duration_seconds": 41.95249891281128,
+      "usage": [
+        {
+          "input_tokens": 15293,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 453,
+          "reasoning_output_tokens": 37
+        }
+      ]
+    },
+    {
+      "label": "policy-schedule-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025984.178339,
+      "prompt_sha256": "ccbbd3a0e6d5f24f025973f336de89aa08c84277768f8f95d0094601f9ad7972",
+      "exit": 0,
+      "duration_seconds": 79.86186599731445,
+      "usage": [
+        {
+          "input_tokens": 22586,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1882,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-publish-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025262.9821172,
+      "prompt_sha256": "42a89b250627eeae81f00d1c13764fd4c8c99f62c23d3c2fb06b687d35a86ba1",
+      "exit": 0,
+      "duration_seconds": 93.38212776184082,
+      "usage": [
+        {
+          "input_tokens": 27033,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1995,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-journey-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027068.43225,
+      "prompt_sha256": "c37c62750f571f10539c13356bd0dcc895404717b5e10cffe85d64482bf654a8",
+      "exit": 0,
+      "duration_seconds": 9.236321926116943,
+      "usage": [
+        {
+          "input_tokens": 13361,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 181,
+          "reasoning_output_tokens": 56
+        }
+      ]
+    },
+    {
+      "label": "vision-15",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026738.152792,
+      "prompt_sha256": "4a9834b49857c49fc5181a1e4c2aec50cfede6ae9d85ea27314b3f85281333a6",
+      "exit": 0,
+      "duration_seconds": 5.501657962799072,
+      "usage": [
+        {
+          "input_tokens": 18950,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 45,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-style-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025752.867796,
+      "prompt_sha256": "498d4b1d5619091adac1448e6d93b53a635d7ebb4ffec85c46f29e0cb43bec44",
+      "exit": 0,
+      "duration_seconds": 80.1893060207367,
+      "usage": [
+        {
+          "input_tokens": 28388,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1872,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-schedule-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026055.0732532,
+      "prompt_sha256": "4ec94ce1a91525b4e96e7c1b20af77164c84459748a54e5cdab76789b91f12b7",
+      "exit": 0,
+      "duration_seconds": 85.87298274040222,
+      "usage": [
+        {
+          "input_tokens": 22589,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2501,
+          "reasoning_output_tokens": 18
+        }
+      ]
+    },
+    {
+      "label": "review-policy-install-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024945.176919,
+      "prompt_sha256": "b66b16372e893f7288ba8bed16996b3899d588957e0a378f36b80f5691297ed9",
+      "exit": 0,
+      "duration_seconds": 59.98908019065857,
+      "usage": [
+        {
+          "input_tokens": 16365,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 939,
+          "reasoning_output_tokens": 141
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-10",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024921.207466,
+      "prompt_sha256": "398bc623c5aa9e8c9461505a95e96a9a7d77c0e441ef68592012f61a2ba0abf3",
+      "exit": 0,
+      "duration_seconds": 56.02628421783447,
+      "usage": [
+        {
+          "input_tokens": 18844,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 372,
+          "reasoning_output_tokens": 30
+        }
+      ]
+    },
+    {
+      "label": "policy-style-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025805.090112,
+      "prompt_sha256": "58deb915cbf4a9a6da63d4e3d12caaa6e3b80eacebf75d281db6c8a181c13ecb",
+      "exit": 0,
+      "duration_seconds": 56.13260102272034,
+      "usage": [
+        {
+          "input_tokens": 28223,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 907,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-schedule-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025897.651663,
+      "prompt_sha256": "e8a32a6d022dde673145bd3131510dbf1584165deb0fddbea7043258c875d42b",
+      "exit": 0,
+      "duration_seconds": 88.77476596832275,
+      "usage": [
+        {
+          "input_tokens": 22609,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2659,
+          "reasoning_output_tokens": 18
+        }
+      ]
+    },
+    {
+      "label": "review-policy-fetch-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025696.2239559,
+      "prompt_sha256": "03419e2b59ceca61b54a62b8b007c0e6df0d8c9b2637e25eef9d352f4693a776",
+      "exit": 0,
+      "duration_seconds": 56.63321399688721,
+      "usage": [
+        {
+          "input_tokens": 15399,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1082,
+          "reasoning_output_tokens": 218
+        }
+      ]
+    },
+    {
+      "label": "review-policy-handoff-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026895.3110242,
+      "prompt_sha256": "1925886b7ea8cbbde3d18f48d6632b19700dae64e46e34e96644eb7c9303be45",
+      "exit": 0,
+      "duration_seconds": 8.751157760620117,
+      "usage": [
+        {
+          "input_tokens": 12582,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 120,
+          "reasoning_output_tokens": 12
+        }
+      ]
+    },
+    {
+      "label": "review-policy-publish-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025411.191713,
+      "prompt_sha256": "3b3c6c88902dcb789aaae00c7b6ae01c2bd461921f5bd71821206e9bddff2f89",
+      "exit": 0,
+      "duration_seconds": 41.105652809143066,
+      "usage": [
+        {
+          "input_tokens": 16976,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 488,
+          "reasoning_output_tokens": 74
+        }
+      ]
+    },
+    {
+      "label": "policy-fetch-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025610.575986,
+      "prompt_sha256": "16ce8bfe53d068016cd213892207cca728c28f0357c9770e4ca32777196a879a",
+      "exit": 0,
+      "duration_seconds": 85.64495801925659,
+      "usage": [
+        {
+          "input_tokens": 25665,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1779,
+          "reasoning_output_tokens": 44
+        }
+      ]
+    },
+    {
+      "label": "review-policy-style-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025861.227183,
+      "prompt_sha256": "29223ef8a0e017bf89587096dfa16320d466842f3239ee12eba0c91655422d91",
+      "exit": 0,
+      "duration_seconds": 36.41581082344055,
+      "usage": [
+        {
+          "input_tokens": 13777,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 539,
+          "reasoning_output_tokens": 96
+        }
+      ]
+    },
+    {
+      "label": "review-policy-publish-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025513.563971,
+      "prompt_sha256": "0a2d51e96a8b1f88fc92da67d7a02decc72cb58e8b79c1d9bb2d41b9579d024c",
+      "exit": 0,
+      "duration_seconds": 59.12640595436096,
+      "usage": [
+        {
+          "input_tokens": 14911,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 407,
+          "reasoning_output_tokens": 55
+        }
+      ]
+    },
+    {
+      "label": "review-policy-publish-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025467.604816,
+      "prompt_sha256": "c8844feb5c101f90dc49b61b4f7ea198eb2b80a72dc783dbc82b1f0b023569ce",
+      "exit": 0,
+      "duration_seconds": 13.178234100341797,
+      "usage": [
+        {
+          "input_tokens": 15629,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 431,
+          "reasoning_output_tokens": 30
+        }
+      ]
+    },
+    {
+      "label": "review-policy-style-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025833.060184,
+      "prompt_sha256": "167cc9a11d4676fa7a2b8fe1a65e0b634bfe23453d89c60bfebdee312e843439",
+      "exit": 0,
+      "duration_seconds": 41.795114040374756,
+      "usage": [
+        {
+          "input_tokens": 15545,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 551,
+          "reasoning_output_tokens": 123
+        }
+      ]
+    },
+    {
+      "label": "policy-install-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024874.908941,
+      "prompt_sha256": "c9b0d2034b76969dc9a74f5692cecbc3a930ca2fdbb6206c03d6abaf9155dbfd",
+      "exit": 0,
+      "duration_seconds": 64.28187298774719,
+      "usage": [
+        {
+          "input_tokens": 28304,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1961,
+          "reasoning_output_tokens": 20
+        }
+      ]
+    },
+    {
+      "label": "review-policy-session-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026868.723862,
+      "prompt_sha256": "4bc665418b9d00797a91c49f41aad399cc8e0d12a76c4e56eea500e9903b231e",
+      "exit": 0,
+      "duration_seconds": 9.827322006225586,
+      "usage": [
+        {
+          "input_tokens": 13339,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 294,
+          "reasoning_output_tokens": 99
+        }
+      ]
+    },
+    {
+      "label": "policy-fetch-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025572.699017,
+      "prompt_sha256": "17c1740616b9aa77ca5258aad2211eb6aeaa1db8d3e5fe272ec280f570b9b98f",
+      "exit": 0,
+      "duration_seconds": 72.5640618801117,
+      "usage": [
+        {
+          "input_tokens": 25652,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1645,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-schedule-100",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027827.670018,
+      "prompt_sha256": "66ac5e80b5c489de145cf6b73548dff4f1b8342f14b208db95ba286d3ea98579",
+      "exit": 0,
+      "duration_seconds": 10.744202136993408,
+      "usage": [
+        {
+          "input_tokens": 13111,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 260,
+          "reasoning_output_tokens": 68
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-style-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027132.233563,
+      "prompt_sha256": "5b9111f52a87ff74356cb3f5265258a397d09f1e356d30dea2d6a46d78b3d8a7",
+      "exit": 0,
+      "duration_seconds": 10.120665073394775,
+      "usage": [
+        {
+          "input_tokens": 13288,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 277,
+          "reasoning_output_tokens": 41
+        }
+      ]
+    },
+    {
+      "label": "sensitive-semantic",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025128.688779,
+      "prompt_sha256": "212475ecf76171ee3d90b8dc14a7a4275f44d575787f4d1f8a75b46356dd1ea2",
+      "exit": 0,
+      "duration_seconds": 40.768701791763306,
+      "usage": [
+        {
+          "input_tokens": 14917,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 557,
+          "reasoning_output_tokens": 31
+        }
+      ]
+    },
+    {
+      "label": "merge-07",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024077.517333,
+      "prompt_sha256": "d508b6ca77903435d7056dceb2525a86091e85559cd62c48499d6ecd940ffb1f",
+      "exit": 0,
+      "duration_seconds": 30.04667901992798,
+      "usage": [
+        {
+          "input_tokens": 20088,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1212,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-schedule-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027104.9216561,
+      "prompt_sha256": "3bc7c5dca218c28b43c1b0db058eef5d0a5d866025614fc2c035a29af765eccf",
+      "exit": 0,
+      "duration_seconds": 13.901944875717163,
+      "usage": [
+        {
+          "input_tokens": 17173,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 451,
+          "reasoning_output_tokens": 56
+        }
+      ]
+    },
+    {
+      "label": "merge-09",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024107.534569,
+      "prompt_sha256": "52ec7750ab1adbc69e7c07f306e05869951ba6c32d64266959db68592ef23d63",
+      "exit": 0,
+      "duration_seconds": 44.84960103034973,
+      "usage": [
+        {
+          "input_tokens": 24104,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1323,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "policy-journey-99",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026701.788948,
+      "prompt_sha256": "1a09525e4ca884f8bd911f811cb36a6456d7e62a7430b5ed0be5d8fa9a24bec3",
+      "exit": 0,
+      "duration_seconds": 27.57415795326233,
+      "usage": [
+        {
+          "input_tokens": 47369,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1154,
+          "reasoning_output_tokens": 45
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-publish-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027087.387106,
+      "prompt_sha256": "85466f7b0f484e5042e43b7da8b211bab2f2df924b7a6dc4161e4f11ce1edba0",
+      "exit": 0,
+      "duration_seconds": 14.421635866165161,
+      "usage": [
+        {
+          "input_tokens": 14644,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 469,
+          "reasoning_output_tokens": 93
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-style-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027128.069205,
+      "prompt_sha256": "0a479d8e801a89f163846216c2efce9030047ebcccb24df594de159af7126031",
+      "exit": 0,
+      "duration_seconds": 14.61915898323059,
+      "usage": [
+        {
+          "input_tokens": 14525,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 501,
+          "reasoning_output_tokens": 58
+        }
+      ]
+    },
+    {
+      "label": "policy-journey-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026095.076986,
+      "prompt_sha256": "af07a29ba531ea2cf3117c783c97fbca0843f9ede68d090a53ce7bba67d4d1a5",
+      "exit": 0,
+      "duration_seconds": 88.86099195480347,
+      "usage": [
+        {
+          "input_tokens": 47609,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 3400,
+          "reasoning_output_tokens": 26
+        }
+      ]
+    },
+    {
+      "label": "merge-08",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024078.954268,
+      "prompt_sha256": "3b4a9252e9e7ae40f100685b1bbe259853c875fdeb365b7cfb4994dd9e26f5e9",
+      "exit": 0,
+      "duration_seconds": 28.57526206970215,
+      "usage": [
+        {
+          "input_tokens": 22650,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1176,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "merge-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794023976.971719,
+      "prompt_sha256": "63eb455dd6f7aafc571bc4bff1b3d2eba5e40fc77d04643a069b6691f8e0bdd4",
+      "exit": 0,
+      "duration_seconds": 32.72648215293884,
+      "usage": [
+        {
+          "input_tokens": 17169,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1116,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "merge-06",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024045.576236,
+      "prompt_sha256": "0cd0d8a7a5dc118523b3cf363028dd9f28f2c188154e9e6cc571478c24372404",
+      "exit": 0,
+      "duration_seconds": 31.935861110687256,
+      "usage": [
+        {
+          "input_tokens": 19357,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1158,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-memory-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025181.3322492,
+      "prompt_sha256": "230265f117a2a336994136117ef2fc0eaea8897e45baf0194d08331ee61fdd37",
+      "exit": 0,
+      "duration_seconds": 81.63927483558655,
+      "usage": [
+        {
+          "input_tokens": 16149,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 595,
+          "reasoning_output_tokens": 176
+        }
+      ]
+    },
+    {
+      "label": "review-policy-journey-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026316.3891299,
+      "prompt_sha256": "65e18bd07c6d6ebed76a87da027b605b616a8f529e0b99ca3ac0e60249174789",
+      "exit": 0,
+      "duration_seconds": 61.16876411437988,
+      "usage": [
+        {
+          "input_tokens": 15021,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 490,
+          "reasoning_output_tokens": 122
+        }
+      ]
+    },
+    {
+      "label": "policy-memory-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025111.222338,
+      "prompt_sha256": "df412effecc2cd6cc654c0181e848be575e97d2c6aec18b3f7c3ea1bcc9481da",
+      "exit": 0,
+      "duration_seconds": 70.10591006278992,
+      "usage": [
+        {
+          "input_tokens": 25996,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2733,
+          "reasoning_output_tokens": 32
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-install-01",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027040.252458,
+      "prompt_sha256": "bdb8289320644a0ad9ccfb752efc0630970b24d4fca0f157707f02cd4b519076",
+      "exit": 0,
+      "duration_seconds": 16.625388860702515,
+      "usage": [
+        {
+          "input_tokens": 14642,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 593,
+          "reasoning_output_tokens": 139
+        }
+      ]
+    },
+    {
+      "label": "review-policy-schedule-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026140.9509199,
+      "prompt_sha256": "d71a552b87e334581cde1503161a460a49d4dd9616048f91401ef46fe3aeacea",
+      "exit": 0,
+      "duration_seconds": 45.86022114753723,
+      "usage": [
+        {
+          "input_tokens": 15884,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 436,
+          "reasoning_output_tokens": 36
+        }
+      ]
+    },
+    {
+      "label": "review-policy-schedule-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026064.043164,
+      "prompt_sha256": "8eb39ec84f83cfc1023788d785fae0bb9bcc4f89fda70bbbc5b9f5dd42d715f1",
+      "exit": 0,
+      "duration_seconds": 31.002774000167847,
+      "usage": [
+        {
+          "input_tokens": 15542,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 434,
+          "reasoning_output_tokens": 47
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-fetch-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027025.3723469,
+      "prompt_sha256": "0b0b433d6e28886c8196f75311696f346d3c739b98f563bac570c39d21abf331",
+      "exit": 0,
+      "duration_seconds": 14.8751699924469,
+      "usage": [
+        {
+          "input_tokens": 14275,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 387,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024849.304736,
+      "prompt_sha256": "898ab1c6e5de46325862811ff039846afc3eb4d5b9e9436214ee155d0869d275",
+      "exit": 0,
+      "duration_seconds": 32.384753942489624,
+      "usage": [
+        {
+          "input_tokens": 17772,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 381,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024849.521324,
+      "prompt_sha256": "df6cf187d2efb303c828100630c374263a1be8128479ad918fc25b6a47701895",
+      "exit": 0,
+      "duration_seconds": 33.65754818916321,
+      "usage": [
+        {
+          "input_tokens": 17780,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 383,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-schedule-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025986.431571,
+      "prompt_sha256": "ae7817aafe7ab072af02ed67df9f3b1b41a50f3f69310d0df533329d5cf99b28",
+      "exit": 0,
+      "duration_seconds": 68.63536310195923,
+      "usage": [
+        {
+          "input_tokens": 16071,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 724,
+          "reasoning_output_tokens": 144
+        }
+      ]
+    },
+    {
+      "label": "product-review-policy-fetch-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794027025.3732932,
+      "prompt_sha256": "a7f771186303c906ead1e9255198addd7abab77a149f4522a38544d9aa390e58",
+      "exit": 0,
+      "duration_seconds": 14.244736909866333,
+      "usage": [
+        {
+          "input_tokens": 14379,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 454,
+          "reasoning_output_tokens": 50
+        }
+      ]
+    },
+    {
+      "label": "policy-memory-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025117.4774542,
+      "prompt_sha256": "5ad7de88476380bf1080b5a49c10dae677f676ad95e201f632e81e4c2926c4f5",
+      "exit": 0,
+      "duration_seconds": 63.87146282196045,
+      "usage": [
+        {
+          "input_tokens": 25996,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 2237,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-memory-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025309.4782,
+      "prompt_sha256": "2d0048c3faa5f65a6e42f91eb9d3ab05f5d1956e2e352916dedbbb3920d08537",
+      "exit": 0,
+      "duration_seconds": 14.656935930252075,
+      "usage": [
+        {
+          "input_tokens": 13298,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 359,
+          "reasoning_output_tokens": 91
+        }
+      ]
+    },
+    {
+      "label": "review-policy-journey-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794026274.555955,
+      "prompt_sha256": "6ef328a1d26d669cfeef20c9de1428cb8c54293138492ca17a9202c6aea83dfb",
+      "exit": 0,
+      "duration_seconds": 51.97724795341492,
+      "usage": [
+        {
+          "input_tokens": 16830,
+          "cached_input_tokens": 11008,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1121,
+          "reasoning_output_tokens": 174
+        }
+      ]
+    },
+    {
+      "label": "policy-memory-04",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025250.106365,
+      "prompt_sha256": "55f01a3dc0d98283241b9313aca435fc6d8864c5b90d48a681860f158c70212c",
+      "exit": 0,
+      "duration_seconds": 59.367993116378784,
+      "usage": [
+        {
+          "input_tokens": 25693,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 859,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "review-policy-memory-03",
+      "kind": "isolated_model_computation",
+      "started_at": 1794025181.351777,
+      "prompt_sha256": "c82e832a914744985461631d377cfd5d37d46194b544dde1f529332354e4720e",
+      "exit": 0,
+      "duration_seconds": 68.74226093292236,
+      "usage": [
+        {
+          "input_tokens": 15973,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 584,
+          "reasoning_output_tokens": 180
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-05",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024881.694656,
+      "prompt_sha256": "b2033b779cf87a9b8eb510dc515e6b5109cfd6b1dcbef07689400fbca2be2334",
+      "exit": 0,
+      "duration_seconds": 13.045584917068481,
+      "usage": [
+        {
+          "input_tokens": 17605,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 344,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    },
+    {
+      "label": "judge-ask-matrix-02",
+      "kind": "isolated_model_computation",
+      "started_at": 1794024813.3015292,
+      "prompt_sha256": "c4212eeef129045cb10f6bf5db4281cf92d18a2f047e9965a403930b684fea86",
+      "exit": 0,
+      "duration_seconds": 35.999255657196045,
+      "usage": [
+        {
+          "input_tokens": 17894,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 323,
+          "reasoning_output_tokens": 0
+        }
+      ]
+    }
+  ],
+  "cost_usd": null
+}

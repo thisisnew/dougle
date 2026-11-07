@@ -1,0 +1,3584 @@
+[
+  {
+    "name": "test_followup_receives_new_question_and_posted_manual_context",
+    "module": "tests.test_answer_scope",
+    "seconds": "0.106",
+    "result": "PASS"
+  },
+  {
+    "name": "test_retry_retains_original_scope_and_material_conditions",
+    "module": "tests.test_answer_scope",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_explicit_details_are_not_subject_to_new_character_truncation",
+    "module": "tests.test_answer_scope",
+    "seconds": "0.032",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_attribution_and_scope_coexist_in_prompt",
+    "module": "tests.test_answer_scope",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ub9de\\uc544.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc54c\\uaca0\\uc5b4]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc774\\uac70\\uc57c!]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc774\\uac83\\uc774\\uc57c.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ud655\\uc778\\ud574\\ubd10.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ud655\\uc778\\ud574 \\ubd10!]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ud558\\uba74 \\ub3fc.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uadf8\\uac74 \\uc544\\ub2c8\\uc57c.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc800\\uc7a5\\ud558\\uba74 \\ub3fc. \\uc624\\ub958\\uac00 \\ub098\\uba74 \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[**\\ud558\\uba74 \\ub3fc.**]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[# \\ud655\\uc778\\ud574\\ubd10]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[- \\uc788\\uc5b4!]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc870\\ud68c\\ud55c\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc870\\ud68c\\ub41c\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uacb0\\uacfc\\uac00 \\uc5c6\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uadf8\\ub300\\ub85c \\uc4f0\\uba74 \\ub41c\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ud655\\uc778\\ud574.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ub0b4\\uc6a9\\uc744 \\ubd10.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc815\\uc0c1\\uc785\\ub2c8\\ub2e4. \\ub2e4\\uc2dc \\ud574\\ubd10.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc751]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\uc751, \\ud655\\uc778\\ud558\\uaca0\\uc2b5\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ud574\\uc904\\uac8c.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_casual_draft_is_rejected[\\ud45c\\ub97c \\ubcf4\\uba74 \\ub3fc!]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\ub9de\\uc2b5\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\uc54c\\uaca0\\uc2b5\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\ud558\\uc2dc\\uba74 \\ub429\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\uc788\\uc2b5\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\uc5c6\\ub294 \\uac83\\uc73c\\ub85c \\ubcf4\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\ub2e4\\uc2dc \\ud655\\uc778\\ud574 \\ubcfc\\uae4c\\uc694?]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\uc2e4\\ud328\\ud588\\uc2b5\\ub2c8\\ub2e4. \\uc811\\uadfc \\uad8c\\ud55c\\uc744 \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[**\\uacb0\\ub860:** \\uc800\\uc7a5\\ub429\\ub2c8\\ub2e4. [1]\\n\\n**\\uc608\\uc678**\\n\\uc2b9\\uc778 \\uc804\\uc5d0\\ub294 \\uc800\\uc7a5\\ub418\\uc9c0 \\uc54a\\uc2b5\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[# \\uc785\\uace0 \\ucc98\\ub9ac\\n\\ud655\\uc815 \\ud6c4 \\uc800\\uc7a5\\ud569\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\ud544\\uc694\\ud55c \\uc790\\ub8cc]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[\\uc6d0\\ubb38\\uc740 \\u201c\\ud558\\uba74 \\ub3fc\\u201d\\uc785\\ub2c8\\ub2e4. \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[> \\ud558\\uba74 \\ub3fc\\n\\n\\uc704 \\ubb38\\uc7a5\\uc740 \\uc6d0\\ubb38 \\uc778\\uc6a9\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[```python\\nprint(\"\\uc54c\\uaca0\\uc5b4\")\\n```\\n\\ucf54\\ub4dc \\uc608\\uc2dc\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[~~~text\\n\\uc54c\\uaca0\\uc5b4\\n~~~\\n\\uc6d0\\ubb38\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[`\\ud558\\uba74 \\ub3fc`\\ub294 \\uc6d0\\ubb38\\uc758 \\ubb38\\uc790\\uc5f4\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_polite_answers_and_verbatim_quotes_are_preserved[The record is saved after confirmation. [1]]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events0]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events1]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events2]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events3]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events4]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events5]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events6]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events7]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events8]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events9]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events10]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events11]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events12]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_correlated_successful_skill_results_count[events13]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_actual_successful_trace_counts_all_required_calls",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_untrusted_question_text_cannot_inject_trace_events",
+    "module": "tests.test_answer_style",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_style_gets_one_retry_and_never_becomes_approvable[activation_missing]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.018",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_style_gets_one_retry_and_never_becomes_approvable[casual]",
+    "module": "tests.test_answer_style",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_corrected_style_becomes_approval_draft_without_auto_post",
+    "module": "tests.test_answer_style",
+    "seconds": "0.034",
+    "result": "PASS"
+  },
+  {
+    "name": "test_resume_still_requires_current_call_style_activation",
+    "module": "tests.test_answer_style",
+    "seconds": "0.016",
+    "result": "PASS"
+  },
+  {
+    "name": "test_default_and_old_config_without_setting_use_automatic_replies",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_normal_answer_posts_once_without_opening_a_dm",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.025",
+    "result": "PASS"
+  },
+  {
+    "name": "test_only_exception_opens_dm_and_result_posts_back_to_original_thread",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.031",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failure_fix_requires_research_then_posts_without_confirmation",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.028",
+    "result": "PASS"
+  },
+  {
+    "name": "test_delivery_failure_is_private_and_never_automatically_repeated[False]",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_delivery_failure_is_private_and_never_automatically_repeated[True]",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.025",
+    "result": "PASS"
+  },
+  {
+    "name": "test_history_change_does_not_publish_an_outdated_answer_or_loop",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_durable_ready_answer_survives_crash_without_second_model_call",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_parallel_auto_delivery_claim_posts_once",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_review_draft_does_not_auto_post_after_upgrade",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_crash_after_auto_claim_without_send_requires_developer",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_insufficient_developer_report_waits_again_not_an_infinite_loop",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_developer_report_is_never_shared_with_another_inquiry",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.054",
+    "result": "PASS"
+  },
+  {
+    "name": "test_review_mode_cannot_be_bypassed_by_automatic_entrypoint",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_stop_before_post_preserves_ready_answer_without_sending",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.033",
+    "result": "PASS"
+  },
+  {
+    "name": "test_recovery_notifies_only_issues_without_duplicate_unknown_dm",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_approval_mode_requires_a_real_boolean[false]",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.008",
+    "result": "PASS"
+  },
+  {
+    "name": "test_approval_mode_requires_a_real_boolean[0]",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.008",
+    "result": "PASS"
+  },
+  {
+    "name": "test_approval_mode_requires_a_real_boolean[None]",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_auto_queue_uses_indexes_with_large_existing_audit_log",
+    "module": "tests.test_automatic_reply",
+    "seconds": "0.062",
+    "result": "PASS"
+  },
+  {
+    "name": "test_actual_bolt_ack_follows_durable_intake",
+    "module": "tests.test_boundaries",
+    "seconds": "0.095",
+    "result": "PASS"
+  },
+  {
+    "name": "test_actual_bolt_does_not_ack_persistence_failure",
+    "module": "tests.test_boundaries",
+    "seconds": "0.016",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Bash-args0]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[mcp__Slack__slack_send_message-args1]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Skill-args2]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Write-args3]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Edit-args4]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Read-args5]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.003",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Read-args6]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Read-args7]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Grep-args8]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_blocks_unapproved_tools_and_sensitive_paths[Glob-args9]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hook_allows_only_memory_writes_and_rejects_symlink_escape",
+    "module": "tests.test_boundaries",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_real_subprocess_fake_cli_uses_stdin_and_stream_parser",
+    "module": "tests.test_boundaries",
+    "seconds": "0.975",
+    "result": "PASS"
+  },
+  {
+    "name": "test_subprocess_timeout_is_bounded_and_does_not_leak_stderr",
+    "module": "tests.test_boundaries",
+    "seconds": "0.227",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancelled_engine_does_not_return_draft",
+    "module": "tests.test_boundaries",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_resume_command_keeps_alias_and_prompt_out_of_shell_program",
+    "module": "tests.test_boundaries",
+    "seconds": "0.008",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_never_accepts_unsafe_or_unbounded_sql[DELETE FROM inbound]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_never_accepts_unsafe_or_unbounded_sql[SELECT * FROM inbound; DROP TABLE inbound]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_never_accepts_unsafe_or_unbounded_sql[SELECT * INTO OUTFILE FROM inbound LIMIT 5]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_never_accepts_unsafe_or_unbounded_sql[SELECT * FROM inbound]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_never_accepts_unsafe_or_unbounded_sql[SELECT * FROM inbound LIMIT 1 -- bypass]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_never_accepts_unsafe_or_unbounded_sql[CALL mutate()]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_needs_lookup_card_has_no_post_button",
+    "module": "tests.test_boundaries",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_time_requires_explicit_zone_and_not_future[yesterday]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_time_requires_explicit_zone_and_not_future[2026-11-06T15:00:00]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_time_requires_explicit_zone_and_not_future[2999-01-01T00:00:00Z]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_time_requires_explicit_zone_and_not_future[None]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_developer_evidence_requires_attribution",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_partial_multimessage_failure_cannot_repost_first_part",
+    "module": "tests.test_boundaries",
+    "seconds": "0.060",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_result_and_discovery_tools_do_not_unblock_writes",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_parallel_duplicate_events_have_exactly_one_job",
+    "module": "tests.test_boundaries",
+    "seconds": "0.031",
+    "result": "PASS"
+  },
+  {
+    "name": "test_late_engine_result_does_not_revive_rejected_inquiry",
+    "module": "tests.test_boundaries",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_followup_resumes_and_includes_published_manual_edit",
+    "module": "tests.test_boundaries",
+    "seconds": "0.030",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval[\\uc6b4\\uc601 DB-VDI\\uc5d0\\uc11c \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.032",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_result_returns_new_draft_with_timestamp_and_requires_approval[Kafka UI-\\ub300\\uc0c1 \\uadf8\\ub8f9\\uc758 \\uc9c0\\uc5f0 \\uac74\\uc218\\uc640 \\ud655\\uc778 \\uc2dc\\uac01\\uc744 \\uc77d\\uae30\\ub9cc \\ud574\\uc11c \\uc54c\\ub824 \\uc8fc\\uc138\\uc694.]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.032",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsafe_source_url_blocked[javascript://alert(1)]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsafe_source_url_blocked[https://user:password@example.test/doc]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsafe_source_url_blocked[https://example.test/?token%3Dsynthetic]",
+    "module": "tests.test_boundaries",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_sensitive_thread_never_reaches_engine_or_draft",
+    "module": "tests.test_boundaries",
+    "seconds": "0.016",
+    "result": "PASS"
+  },
+  {
+    "name": "test_database_rejects_cross_inquiry_draft_link",
+    "module": "tests.test_boundaries",
+    "seconds": "0.049",
+    "result": "PASS"
+  },
+  {
+    "name": "test_memory_root_symlink_cannot_authorize_business_writes",
+    "module": "tests.test_boundaries",
+    "seconds": "0.031",
+    "result": "PASS"
+  },
+  {
+    "name": "test_other_bot_cannot_supply_positive_delivery_evidence",
+    "module": "tests.test_boundaries",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_slack_secret_in_unexpected_environment_name_is_not_inherited",
+    "module": "tests.test_boundaries",
+    "seconds": "0.858",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_database_snapshot_cannot_hide_a_later_post",
+    "module": "tests.test_boundaries",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_definite_failure_retry_preserves_external_send_identity",
+    "module": "tests.test_boundaries",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unavailable_required_reads_route_to_private_developer_not_public_failure[live-current_state]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unavailable_required_reads_route_to_private_developer_not_public_failure[code-implementation]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_customer_clarification_and_missing_material_remain_reviewable_answers[clarification-required0]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_customer_clarification_and_missing_material_remain_reviewable_answers[domain-required1]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.014",
+    "result": "PASS"
+  },
+  {
+    "name": "test_developer_result_resumes_same_inquiry_and_requires_final_approval[live-current_state]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_developer_result_resumes_same_inquiry_and_requires_final_approval[code-implementation]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.049",
+    "result": "PASS"
+  },
+  {
+    "name": "test_developer_result_resumes_same_inquiry_and_requires_final_approval[knowledge-domain]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failures_have_one_private_action_and_never_post_or_rerun[engine_timeout]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.015",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failures_have_one_private_action_and_never_post_or_rerun[daily_budget_exceeded]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.015",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failures_have_one_private_action_and_never_post_or_rerun[processing_failed]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failures_have_one_private_action_and_never_post_or_rerun[image_access_denied]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failures_have_one_private_action_and_never_post_or_rerun[sensitive_content]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failures_have_one_private_action_and_never_post_or_rerun[required_skill_not_activated]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.044",
+    "result": "PASS"
+  },
+  {
+    "name": "test_internal_failures_have_one_private_action_and_never_post_or_rerun[required_read_not_verified]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_environment_repair_queues_once_and_requires_actual_reads",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_double_modal_submissions_create_one_job",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.015",
+    "result": "PASS"
+  },
+  {
+    "name": "test_assistance_rejects_wrong_identity_or_stale_binding[user]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_assistance_rejects_wrong_identity_or_stale_binding[channel]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.014",
+    "result": "PASS"
+  },
+  {
+    "name": "test_assistance_rejects_wrong_identity_or_stale_binding[ts]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_assistance_rejects_wrong_identity_or_stale_binding[inquiry_id]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_assistance_rejects_wrong_identity_or_stale_binding[job_id]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.015",
+    "result": "PASS"
+  },
+  {
+    "name": "test_assistance_rejects_wrong_identity_or_stale_binding[stopped]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_sensitive_results_do_not_change_state[-1970-01-01T00:16:00+00:00]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_sensitive_results_do_not_change_state[password=synthetic-1970-01-01T00:16:00+00:00]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.035",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_sensitive_results_do_not_change_state[test@example.test-1970-01-01T00:16:00+00:00]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_sensitive_results_do_not_change_state[\\ud655\\uc778\\ud588\\uc2b5\\ub2c8\\ub2e4.-no-time]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.016",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_sensitive_results_do_not_change_state[\\ud655\\uc778\\ud588\\uc2b5\\ub2c8\\ub2e4.-2099-01-01T00:00:00Z]",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_failure_card_cannot_resubmit_after_a_new_failure",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.024",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_submission_transaction_rolls_back",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.014",
+    "result": "PASS"
+  },
+  {
+    "name": "test_repair_report_is_not_code_or_live_evidence",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_code_requirement_survives_developer_repair",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_actual_bolt_assistance_button_and_modal_queue_durably_before_ack",
+    "module": "tests.test_developer_handoff",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Read-args0-expected0]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Read-args1-expected1]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Read-args2-expected2]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Read-args3-expected3]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Read-args4-expected4]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Grep-args5-expected5]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Grep-args6-expected6]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Glob-args7-expected7]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[WebFetch-args8-expected8]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[WebFetch-args9-expected9]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[mcp__example__execute_sql_readonly-args10-expected10]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[mcp__example__get_table_info-args11-expected11]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[mcp__example__list_dataset_ids-args12-expected12]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Skill-args13-expected13]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_receipt_capability_distinguishes_actual_content_from_navigation[Write-args14-expected14]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events0]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events1]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events2]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events3]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events4]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events5]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events6]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events7]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events8]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unperformed_failed_or_fabricated_reads_do_not_create_proof[events9]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_real_trace_proof_preserves_no_tool_contents",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_duplicate_tool_ids_fail_closed",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_caveat_does_not_turn_missing_verification_into_approvable_answer[reads0]",
+    "module": "tests.test_evidence",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_caveat_does_not_turn_missing_verification_into_approvable_answer[reads1]",
+    "module": "tests.test_evidence",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_caveat_does_not_turn_missing_verification_into_approvable_answer[reads2]",
+    "module": "tests.test_evidence",
+    "seconds": "0.016",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_read_retry_keeps_image_and_only_final_answer_is_short",
+    "module": "tests.test_evidence",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_retry_cannot_downgrade_code_requirement_to_visual_only",
+    "module": "tests.test_evidence",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_visual_label_question_does_not_force_code_or_db",
+    "module": "tests.test_evidence",
+    "seconds": "0.025",
+    "result": "PASS"
+  },
+  {
+    "name": "test_absent_image_cannot_support_visual_answer",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_live_answer_requires_query_not_code_metadata_or_screenshot[kinds0]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_live_answer_requires_query_not_code_metadata_or_screenshot[kinds1]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_live_answer_requires_query_not_code_metadata_or_screenshot[kinds2]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_combined_code_and_live_question_needs_both",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_missing_live_check_becomes_lookup_without_post_button",
+    "module": "tests.test_evidence",
+    "seconds": "0.024",
+    "result": "PASS"
+  },
+  {
+    "name": "test_manual_report_requires_actual_supplied_report",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_confirmed_code_but_missing_live_cannot_be_answered",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change0]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change1]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change2]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change3]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change4]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change5]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change6]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_malformed_or_incomplete_research_contract_fails[change7]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_resume_does_not_reuse_prior_call_read_receipts",
+    "module": "tests.test_evidence",
+    "seconds": "0.028",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_unposted_draft_is_researched_again_before_post",
+    "module": "tests.test_evidence",
+    "seconds": "0.030",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_store_migration_preserves_data_and_is_repeatable",
+    "module": "tests.test_evidence",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_stable_domain_knowledge_still_uses_topic_without_code_or_db",
+    "module": "tests.test_evidence",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures[if (!allowed) return \"Permission denied\";]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures[const message = {\"error\": \"example\"};]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures[{\"rows\": [], \"error\": null}]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_code_error_handlers_and_valid_zero_row_queries_are_not_tool_failures[content3]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_draft_cannot_be_manually_edited_to_bypass_research",
+    "module": "tests.test_evidence",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_obligations_survive_lookup_result_job",
+    "module": "tests.test_evidence",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_style_retry_cannot_drop_the_required_code_investigation",
+    "module": "tests.test_evidence",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_test_harness_blocks_gui_and_real_model_launch_before_execution[command0]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_test_harness_blocks_gui_and_real_model_launch_before_execution[command1]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_test_harness_blocks_gui_and_real_model_launch_before_execution[command2]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_test_harness_blocks_gui_and_real_model_launch_before_execution[command3]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_test_harness_blocks_gui_and_real_model_launch_before_execution[command4]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_test_harness_blocks_gui_and_real_model_launch_before_execution[command5]",
+    "module": "tests.test_evidence",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_status_and_stop_do_not_upgrade_a_still_running_old_database",
+    "module": "tests.test_evidence",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_uploaded_image_reaches_engine_and_requires_approval",
+    "module": "tests.test_images",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_image_only_mention_is_accepted_but_bare_mention_is_not",
+    "module": "tests.test_images",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_hidden_event_attachment_cannot_be_silently_lost",
+    "module": "tests.test_images",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_followup_resume_gets_prior_image_again_and_no_other_channel_images",
+    "module": "tests.test_images",
+    "seconds": "0.035",
+    "result": "PASS"
+  },
+  {
+    "name": "test_session_restore_and_validation_retry_keep_images",
+    "module": "tests.test_images",
+    "seconds": "0.033",
+    "result": "PASS"
+  },
+  {
+    "name": "test_image_failure_creates_actionable_dm_without_model_or_public_answer[image_access_denied]",
+    "module": "tests.test_images",
+    "seconds": "0.016",
+    "result": "PASS"
+  },
+  {
+    "name": "test_image_failure_creates_actionable_dm_without_model_or_public_answer[image_download_failed]",
+    "module": "tests.test_images",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_image_failure_creates_actionable_dm_without_model_or_public_answer[image_size_limit]",
+    "module": "tests.test_images",
+    "seconds": "0.018",
+    "result": "PASS"
+  },
+  {
+    "name": "test_image_failure_creates_actionable_dm_without_model_or_public_answer[image_data_invalid]",
+    "module": "tests.test_images",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_changed_image_invalidates_approval[replace]",
+    "module": "tests.test_images",
+    "seconds": "0.025",
+    "result": "PASS"
+  },
+  {
+    "name": "test_changed_image_invalidates_approval[remove]",
+    "module": "tests.test_images",
+    "seconds": "0.035",
+    "result": "PASS"
+  },
+  {
+    "name": "test_changed_image_invalidates_approval[edit]",
+    "module": "tests.test_images",
+    "seconds": "0.040",
+    "result": "PASS"
+  },
+  {
+    "name": "test_history_image_order_and_metadata_change_hash",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_more_than_four_images_fails_before_downloading",
+    "module": "tests.test_images",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_duplicates_download_once",
+    "module": "tests.test_images",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_total_size_limit_is_not_silent_truncation",
+    "module": "tests.test_images",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsupported_types_fail[image/gif]",
+    "module": "tests.test_images",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsupported_types_fail[image/webp]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsupported_types_fail[image/heic]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsupported_types_fail[image/svg+xml]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unsupported_types_fail[text/html]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_oversize_bytes_fail[]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_oversize_bytes_fail[<html>login</html>]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_oversize_bytes_fail[\\x89PNG\\r\\n\\x1a\\n]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_or_oversize_bytes_fail[raw3]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[http://files.slack.com/files-pri/a]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[https://evil.test/files-pri/a]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[https://files.slack.com.evil.test/files-pri/a]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[https://files.slack.com@evil.test/files-pri/a]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[https://files.slack.com:443/files-pri/a]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[https://127.0.0.1/files-pri/a]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[file:///etc/passwd]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[https://files.slack.com/other/a]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_token_cannot_be_sent_to_arbitrary_url[None]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_bounded_download_uses_authorization_only_in_header",
+    "module": "tests.test_images",
+    "seconds": "0.003",
+    "result": "PASS"
+  },
+  {
+    "name": "test_download_read_is_bounded[declared_oversize]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_download_read_is_bounded[invalid_length]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_download_read_is_bounded[stream_oversize]",
+    "module": "tests.test_images",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_redirect_is_never_followed_with_bearer",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_http_errors_do_not_leak_url_or_token[403-image_access_denied]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_http_errors_do_not_leak_url_or_token[404-image_access_denied]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_http_errors_do_not_leak_url_or_token[302-image_download_failed]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_http_errors_do_not_leak_url_or_token[429-image_download_failed]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_file_info_is_resolved_before_image_download",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_file_info_never_downloads[changes0]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_file_info_never_downloads[changes1]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_file_info_never_downloads[changes2]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_file_info_never_downloads[changes3]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_file_info_never_downloads[changes4]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_file_info_never_downloads[changes5]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_missing_scope_has_file_specific_guidance",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_html_login_page_and_size_mismatch_not_sent_to_model",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cli_receives_actual_base64_block_on_stdin_not_argv",
+    "module": "tests.test_images",
+    "seconds": "0.661",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cli_reported_image_conversion_failure_is_not_a_valid_answer",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_remote_image_block_is_not_silently_ignored",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_private_download_urls_are_not_put_in_model_prompt",
+    "module": "tests.test_images",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_blocks_are_a_clear_attachment_error[None]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_blocks_are_a_clear_attachment_error[invalid]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_blocks_are_a_clear_attachment_error[blocks2]",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_two_images_keep_order_and_original_timestamps",
+    "module": "tests.test_images",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancelled_download_never_fetches_private_file",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_known_image_error_result_is_actionable",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_slow_image_stream_has_total_deadline",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_attachment_bytes_never_enter_audit_or_sqlite",
+    "module": "tests.test_images",
+    "seconds": "0.030",
+    "result": "PASS"
+  },
+  {
+    "name": "test_image_cli_nonzero_failure_is_actionable_and_redacted",
+    "module": "tests.test_images",
+    "seconds": "0.657",
+    "result": "PASS"
+  },
+  {
+    "name": "test_text_only_old_approval_hash_stays_compatible",
+    "module": "tests.test_images",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_large_image_input_does_not_deadlock_stdin_pipe",
+    "module": "tests.test_images",
+    "seconds": "0.649",
+    "result": "PASS"
+  },
+  {
+    "name": "test_stage_accounting_separates_queue_and_processing",
+    "module": "tests.test_latency",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_metrics_are_not_returned[queue_ms--1]",
+    "module": "tests.test_latency",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_metrics_are_not_returned[attempts-True]",
+    "module": "tests.test_latency",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_metrics_are_not_returned[output_characters-private]",
+    "module": "tests.test_latency",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_metrics_are_not_returned[processing_ms-10000000000000]",
+    "module": "tests.test_latency",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unknown_text_never_enters_status_profile",
+    "module": "tests.test_latency",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_progress_classifies_paths_without_emitting_them",
+    "module": "tests.test_latency",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_same_inquiry_style_repair_reuses_proven_evidence",
+    "module": "tests.test_latency",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_verified_implementation_read_is_reused_only_for_wording",
+    "module": "tests.test_latency",
+    "seconds": "0.040",
+    "result": "PASS"
+  },
+  {
+    "name": "test_presentation_repair_cannot_replace_proven_metadata[sources]",
+    "module": "tests.test_latency",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_presentation_repair_cannot_replace_proven_metadata[verification]",
+    "module": "tests.test_latency",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_presentation_repair_cannot_replace_proven_metadata[status]",
+    "module": "tests.test_latency",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_presentation_repair_cannot_replace_proven_metadata[lookup]",
+    "module": "tests.test_latency",
+    "seconds": "0.040",
+    "result": "PASS"
+  },
+  {
+    "name": "test_repair_never_waives_missing_or_live_investigation[read]",
+    "module": "tests.test_latency",
+    "seconds": "0.056",
+    "result": "PASS"
+  },
+  {
+    "name": "test_repair_never_waives_missing_or_live_investigation[skill]",
+    "module": "tests.test_latency",
+    "seconds": "0.045",
+    "result": "PASS"
+  },
+  {
+    "name": "test_repair_never_waives_missing_or_live_investigation[live]",
+    "module": "tests.test_latency",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_repair_still_requires_current_style_skill_activation",
+    "module": "tests.test_latency",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lost_session_discards_presentation_receipts",
+    "module": "tests.test_latency",
+    "seconds": "0.036",
+    "result": "PASS"
+  },
+  {
+    "name": "test_another_question_cannot_reuse_prior_repair_evidence",
+    "module": "tests.test_latency",
+    "seconds": "0.034",
+    "result": "PASS"
+  },
+  {
+    "name": "test_metrics_failure_does_not_fail_an_answer",
+    "module": "tests.test_latency",
+    "seconds": "0.045",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_inquiry_has_timing_without_question_text",
+    "module": "tests.test_latency",
+    "seconds": "0.015",
+    "result": "PASS"
+  },
+  {
+    "name": "test_bundled_wheel_matches_tested_source_and_declared_hashes",
+    "module": "tests.test_package",
+    "seconds": "0.018",
+    "result": "PASS"
+  },
+  {
+    "name": "test_missing_plain_language_never_becomes_approvable[False]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.064",
+    "result": "PASS"
+  },
+  {
+    "name": "test_missing_plain_language_never_becomes_approvable[True]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.047",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_or_claimed_activation_is_not_a_successful_call[missing]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_or_claimed_activation_is_not_a_successful_call[failed]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_or_claimed_activation_is_not_a_successful_call[wrong_id]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_or_claimed_activation_is_not_a_successful_call[text_claim]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_or_claimed_activation_is_not_a_successful_call[read_only]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_successful_correction_can_be_approved_but_never_auto_posts",
+    "module": "tests.test_plain_language",
+    "seconds": "0.033",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_result_requires_activation_again",
+    "module": "tests.test_plain_language",
+    "seconds": "0.037",
+    "result": "PASS"
+  },
+  {
+    "name": "test_plain_language_cannot_be_disabled_or_alias_another_required_skill[]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.016",
+    "result": "PASS"
+  },
+  {
+    "name": "test_plain_language_cannot_be_disabled_or_alias_another_required_skill[../plain]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.015",
+    "result": "PASS"
+  },
+  {
+    "name": "test_plain_language_cannot_be_disabled_or_alias_another_required_skill[dougle:dougle-ask]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_plain_language_cannot_be_disabled_or_alias_another_required_skill[dougle:i-have-adhd]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_plain_language_cannot_be_disabled_or_alias_another_required_skill[None]",
+    "module": "tests.test_plain_language",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_existing_config_receives_hidden_companion_default",
+    "module": "tests.test_plain_language",
+    "seconds": "0.024",
+    "result": "PASS"
+  },
+  {
+    "name": "test_explicit_personal_skill_names_are_allowed_without_allowing_arbitrary_skills",
+    "module": "tests.test_plain_language",
+    "seconds": "0.045",
+    "result": "PASS"
+  },
+  {
+    "name": "test_companion_ships_hidden_model_callable_and_with_license",
+    "module": "tests.test_plain_language",
+    "seconds": "0.003",
+    "result": "PASS"
+  },
+  {
+    "name": "test_queued_cancel_is_durable_and_does_not_stop_other_inquiry",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.030",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_rejects_untrusted_or_stale_context[user]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.030",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_rejects_untrusted_or_stale_context[channel]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_rejects_untrusted_or_stale_context[ts]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_rejects_untrusted_or_stale_context[job]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_rejects_untrusted_or_stale_context[inquiry]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_rejects_untrusted_or_stale_context[bool]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_rejects_untrusted_or_stale_context[missing]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_bolt_checks_workspace_and_commits_before_ack",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.028",
+    "result": "PASS"
+  },
+  {
+    "name": "test_stale_cancel_cannot_cancel_ready_or_new_job",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_late_engine_result_cannot_resurrect_cancelled_inquiry_or_session",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.018",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_during_lookup_never_launches_engine",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.034",
+    "result": "PASS"
+  },
+  {
+    "name": "test_owned_cli_is_terminated_on_cancel_while_bot_remains_enabled",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.626",
+    "result": "PASS"
+  },
+  {
+    "name": "test_progress_stream_only_exposes_safe_stage_enums_with_split_utf8",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_progress_counts_responses_not_success_and_flags_silence",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_corrupt_progress_cannot_render_arbitrary_text[None]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_corrupt_progress_cannot_render_arbitrary_text[value1]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_corrupt_progress_cannot_render_arbitrary_text[value2]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_corrupt_progress_cannot_render_arbitrary_text[value3]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_corrupt_progress_cannot_render_arbitrary_text[value4]",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_periodic_progress_updates_same_dm_and_never_overwrites_final",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.030",
+    "result": "PASS"
+  },
+  {
+    "name": "test_retries_share_one_deadline",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_expired_total_budget_prevents_retry",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.018",
+    "result": "PASS"
+  },
+  {
+    "name": "test_card_order_labels_and_public_payload_are_distinct",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_dm_notification_question_cannot_trigger_mentions",
+    "module": "tests.test_progress_cancel",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes0]",
+    "module": "tests.test_runtime",
+    "seconds": "0.045",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes1]",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes2]",
+    "module": "tests.test_runtime",
+    "seconds": "0.042",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes3]",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes4]",
+    "module": "tests.test_runtime",
+    "seconds": "0.008",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes5]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes6]",
+    "module": "tests.test_runtime",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes7]",
+    "module": "tests.test_runtime",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes8]",
+    "module": "tests.test_runtime",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes9]",
+    "module": "tests.test_runtime",
+    "seconds": "0.040",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes10]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes11]",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_intake_ignores_invalid_or_unapproved_messages[changes12]",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_duplicate_intake_is_atomic_and_cross_channel_is_distinct",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_other_workspace_is_ignored",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_stopped_interval_is_never_replayed",
+    "module": "tests.test_runtime",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_stop_blocks_post_and_does_not_delete_state",
+    "module": "tests.test_runtime",
+    "seconds": "0.051",
+    "result": "PASS"
+  },
+  {
+    "name": "test_post_only_after_exact_approval_and_double_click_safe",
+    "module": "tests.test_runtime",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_exact_approval_binding[user]",
+    "module": "tests.test_runtime",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_exact_approval_binding[card_channel]",
+    "module": "tests.test_runtime",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_exact_approval_binding[card_ts]",
+    "module": "tests.test_runtime",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_exact_approval_binding[draft]",
+    "module": "tests.test_runtime",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_exact_approval_binding[inquiry]",
+    "module": "tests.test_runtime",
+    "seconds": "0.045",
+    "result": "PASS"
+  },
+  {
+    "name": "test_manual_edit_invalidates_old_button_and_preserves_published_text",
+    "module": "tests.test_runtime",
+    "seconds": "0.042",
+    "result": "PASS"
+  },
+  {
+    "name": "test_thread_change_requires_regeneration_and_new_approval",
+    "module": "tests.test_runtime",
+    "seconds": "0.057",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unknown_delivery_never_blindly_resends[False]",
+    "module": "tests.test_runtime",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_unknown_delivery_never_blindly_resends[True]",
+    "module": "tests.test_runtime",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_definite_unsent_failure_can_be_manually_retried",
+    "module": "tests.test_runtime",
+    "seconds": "0.079",
+    "result": "PASS"
+  },
+  {
+    "name": "test_crash_recovery_holds_post_and_requeues_draft",
+    "module": "tests.test_runtime",
+    "seconds": "0.051",
+    "result": "PASS"
+  },
+  {
+    "name": "test_budget_reservations_are_not_zero_on_unknown_cost",
+    "module": "tests.test_runtime",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_session_not_found_gets_only_one_fresh_retry",
+    "module": "tests.test_runtime",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[max_parallel-2]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[max_parallel-True]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[timeout_seconds-0]",
+    "module": "tests.test_runtime",
+    "seconds": "0.018",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[max_turns-201]",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[daily_budget_usd-nan]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[max_budget_usd_per_call--1]",
+    "module": "tests.test_runtime",
+    "seconds": "0.038",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[claude_bin-claude; echo secret]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[allowed_tools-value7]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[allowed_tools-value8]",
+    "module": "tests.test_runtime",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[allowed_tools-value9]",
+    "module": "tests.test_runtime",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_config_fails_before_any_external_call[style_skill-../wrong]",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_config_round_trip_permissions_and_no_secret_fields",
+    "module": "tests.test_runtime",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_channel_id_or_channel_url[CTEST]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_channel_id_or_channel_url[GTEST]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_channel_id_or_channel_url[https://example.slack.com/archives/CTEST]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_channel_links[https://evil.test/archives/CTEST]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_channel_links[https://example.slack.com/archives/CTEST/p123]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_invalid_channel_links[CTEST;whoami]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_keychain_stores_without_password_argument_or_capture",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_keychain_read[44-None]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_keychain_read[0-xoxb-synthetic]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_keychain_wrong_prefix_is_deleted_without_leak",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_nonmac_keychain_never_calls_security",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cli_first_setup_status_menu_and_channel_add",
+    "module": "tests.test_runtime",
+    "seconds": "0.033",
+    "result": "PASS"
+  },
+  {
+    "name": "test_process_lock_prevents_two_runtimes",
+    "module": "tests.test_runtime",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_transaction_rollback_keeps_database_usable",
+    "module": "tests.test_runtime",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_thread_pagination_no_silent_truncation",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_pagination_loop_is_failure",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_large_code_reply_preserves_fences_without_footer",
+    "module": "tests.test_runtime",
+    "seconds": "0.002",
+    "result": "PASS"
+  },
+  {
+    "name": "test_masking_never_returns_secret[xoxb-synthetic]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_masking_never_returns_secret[xapp-synthetic]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_masking_never_returns_secret[password=synthetic]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_masking_never_returns_secret[Bearer synthetic]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_masking_never_returns_secret[ghp_synthetic]",
+    "module": "tests.test_runtime",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-001]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.048",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-002]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-003]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-004]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.042",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-005]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-006]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-007]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-008]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-009]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-010]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-011]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-012]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.087",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-013]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-014]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-015]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-016]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-017]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-018]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.036",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-019]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-020]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-021]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-022]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.031",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-023]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.025",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_intake[DG-INTAKE-024]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.030",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-001]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-002]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-003]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-004]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-005]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.037",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-006]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-007]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-008]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-009]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-010]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-011]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.034",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-012]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-013]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-014]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-015]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-016]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.041",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-017]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-018]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.036",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-019]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-020]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-021]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-022]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-023]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-024]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.036",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-025]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-026]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-027]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-028]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.036",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-029]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-030]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-031]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-032]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-033]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.034",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-034]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.008",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-035]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-036]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-037]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-038]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-039]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-040]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-041]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.009",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-042]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.033",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-043]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-044]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-045]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-046]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.039",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-047]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_evidence[DG-EVIDENCE-048]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.024",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_auto_customer_answer[DG-AUTO-002]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.042",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_auto_customer_answer[DG-AUTO-003]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.050",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_auto_customer_answer[DG-AUTO-007]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_auto_customer_answer[DG-AUTO-008]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_auto_customer_answer[DG-AUTO-010]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.033",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_image_boundaries[DG-IMAGE-002]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_image_boundaries[DG-IMAGE-007]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.010",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_image_boundaries[DG-IMAGE-010]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_thread_lock",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.050",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_rejected_draft_not_public_history",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.039",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_unregistered_direct_messages[DG-HANDOFF-024]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_unregistered_direct_messages[DG-HANDOFF-025]",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.040",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_long_line_delivery",
+    "module": "tests.test_scenario_catalog",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_bootstrap_isolated[DG-INSTALL-017]",
+    "module": "tests.test_scenario_install",
+    "seconds": "1.133",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_bootstrap_isolated[DG-INSTALL-022]",
+    "module": "tests.test_scenario_install",
+    "seconds": "1.851",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_bootstrap_isolated[DG-INSTALL-018]",
+    "module": "tests.test_scenario_install",
+    "seconds": "2.305",
+    "result": "PASS"
+  },
+  {
+    "name": "test_catalog_bootstrap_isolated[DG-INSTALL-023]",
+    "module": "tests.test_scenario_install",
+    "seconds": "1.522",
+    "result": "PASS"
+  },
+  {
+    "name": "test_short_approval_card_has_only_post_edit_reject",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_lookup_card_has_no_post_edit_or_regenerate",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_reject_button_commits_before_ack_without_modal_reason_or_engine",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.040",
+    "result": "PASS"
+  },
+  {
+    "name": "test_wrong_identity_or_card_cannot_reject[changes0]",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.052",
+    "result": "PASS"
+  },
+  {
+    "name": "test_wrong_identity_or_card_cannot_reject[changes1]",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_wrong_identity_or_card_cannot_reject[changes2]",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.028",
+    "result": "PASS"
+  },
+  {
+    "name": "test_wrong_identity_or_card_cannot_reject[changes3]",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.056",
+    "result": "PASS"
+  },
+  {
+    "name": "test_double_reject_only_records_one_transition",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_regenerate_button_does_not_open_modal_or_schedule_engine",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.044",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_regenerate_modal_submission_is_rejected_without_work",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_removed_modals_cannot_be_constructed[reject]",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_removed_modals_cannot_be_constructed[regenerate]",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.034",
+    "result": "PASS"
+  },
+  {
+    "name": "test_already_open_old_reject_modal_can_finish_without_reason",
+    "module": "tests.test_simple_approval",
+    "seconds": "0.051",
+    "result": "PASS"
+  },
+  {
+    "name": "test_business_answer_public_preview_matches_post_without_evidence_or_signature",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[\\uc124\\uba85\\uc785\\ub2c8\\ub2e4. [1][2]-\\uc124\\uba85\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[\\uc124\\uba85\\uc785\\ub2c8\\ub2e4. [R1] [R2]-\\uc124\\uba85\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[# \\uc870\\uac74\\n**\\uc2b9\\uc778 \\ud6c4** \\ubc1c\\uc1a1\\ud569\\ub2c8\\ub2e4.\\n- \\uc608\\uc678\\uc785\\ub2c8\\ub2e4.-*\\uc870\\uac74*\\n*\\uc2b9\\uc778 \\ud6c4* \\ubc1c\\uc1a1\\ud569\\ub2c8\\ub2e4.\\n\\u2022 \\uc608\\uc678\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[`items[1]`\\uc785\\ub2c8\\ub2e4.-`items[1]`\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[items[1] \\uac12\\uc785\\ub2c8\\ub2e4.-items[1] \\uac12\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[```java\\nitems[1];\\n\\n\\n**literal**;\\n```-```java\\nitems[1];\\n\\n\\n**literal**;\\n```]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[\\u201c\\uc6d0\\ubb38 [1]\\u201d\\uc785\\ub2c8\\ub2e4.-\\u201c\\uc6d0\\ubb38 [1]\\u201d\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[> \\uc6d0\\ubb38 [1]\\n\\uc124\\uba85\\uc785\\ub2c8\\ub2e4.-&gt; \\uc6d0\\ubb38 [1]\\n\\uc124\\uba85\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[<@UABC> <!channel> & \\uc124\\uba85\\uc785\\ub2c8\\ub2e4.-&lt;@UABC&gt; &lt;!channel&gt; &amp; \\uc124\\uba85\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_renderer_preserves_meaning_and_protected_text[\\uc124\\uba85\\uc785\\ub2c8\\ub2e4.\\n\\n**\\u2726 dougle**-\\uc124\\uba85\\uc785\\ub2c8\\ub2e4.]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_public_bibliography_is_not_silently_deleted[\\ucd9c\\ucc98]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_public_bibliography_is_not_silently_deleted[**\\ucd9c\\ucc98**]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_public_bibliography_is_not_silently_deleted[## \\ucc38\\uace0 \\uc790\\ub8cc]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_public_bibliography_is_not_silently_deleted[Sources:]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_bibliography_causes_one_retry_then_no_approvable_draft",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.037",
+    "result": "PASS"
+  },
+  {
+    "name": "test_initial_dm_and_reaction_exist_before_engine_and_same_card_becomes_approval",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.026",
+    "result": "PASS"
+  },
+  {
+    "name": "test_post_changes_reaction_to_done_and_never_reacts_to_answer",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.036",
+    "result": "PASS"
+  },
+  {
+    "name": "test_progress_transport_failure_does_not_block_answer[reaction]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.025",
+    "result": "PASS"
+  },
+  {
+    "name": "test_progress_transport_failure_does_not_block_answer[remove_reaction]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.048",
+    "result": "PASS"
+  },
+  {
+    "name": "test_progress_transport_failure_does_not_block_answer[card_before]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.019",
+    "result": "PASS"
+  },
+  {
+    "name": "test_uncertain_first_progress_dm_is_not_sent_twice",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.031",
+    "result": "PASS"
+  },
+  {
+    "name": "test_reaction_cleanup_survives_worker_recreation_and_partial_failure",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.025",
+    "result": "PASS"
+  },
+  {
+    "name": "test_legacy_reaction_and_explicit_disable[eyes-dougle]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_legacy_reaction_and_explicit_disable[hourglass_flowing_sand-dougle]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_legacy_reaction_and_explicit_disable[-None]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_legacy_reaction_and_explicit_disable[custom_hourglass-custom_hourglass]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_disabled_reactions_still_allow_progress_dm",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.036",
+    "result": "PASS"
+  },
+  {
+    "name": "test_slack_idempotent_reaction_errors_are_safe[reaction-already_reacted]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_slack_idempotent_reaction_errors_are_safe[remove_reaction-no_reaction]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_slack_idempotent_reaction_errors_are_safe[remove_reaction-invalid_name]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.001",
+    "result": "PASS"
+  },
+  {
+    "name": "test_maximum_normal_sources_fit_card_and_stay_private",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.028",
+    "result": "PASS"
+  },
+  {
+    "name": "test_status_exposes_elapsed_and_state_without_question_or_source",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.037",
+    "result": "PASS"
+  },
+  {
+    "name": "test_new_top_level_message_never_inherits_channel_session",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.031",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_approval_card_requires_updated_preview_before_post",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.027",
+    "result": "PASS"
+  },
+  {
+    "name": "test_old_unsent_payload_cannot_republish_sources_after_upgrade",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.029",
+    "result": "PASS"
+  },
+  {
+    "name": "test_status_checks_daemon_version_not_cli_version[None-True]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.042",
+    "result": "PASS"
+  },
+  {
+    "name": "test_status_checks_daemon_version_not_cli_version[0.1.4-True]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_status_checks_daemon_version_not_cli_version[0.1.9-False]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_bootstrap_upgrade_preserves_existing_config_and_requires_prepare",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.022",
+    "result": "PASS"
+  },
+  {
+    "name": "test_absent_dougle_emoji_falls_back_and_restored_identity_keeps_loading",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.053",
+    "result": "PASS"
+  },
+  {
+    "name": "test_non_emoji_failure_does_not_try_a_second_emoji[missing_scope]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_non_emoji_failure_does_not_try_a_second_emoji[ratelimited]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_non_emoji_failure_does_not_try_a_second_emoji[slack_connection_failed]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_deleted_emoji_is_replaced_on_next_inquiry",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.040",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[queued-hourglass_flowing_sand]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.032",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[drafting-hourglass_flowing_sand]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[awaiting_approval-hourglass_flowing_sand]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.014",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[needs_lookup-hourglass_flowing_sand]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.012",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[posting-hourglass_flowing_sand]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[posted-white_check_mark]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.017",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[failed-warning]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.039",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[post_unknown-warning]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.014",
+    "result": "PASS"
+  },
+  {
+    "name": "test_identity_stays_while_only_state_changes[rejected-no_entry_sign]",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.014",
+    "result": "PASS"
+  },
+  {
+    "name": "test_second_reaction_failure_reconciles_after_restart",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.015",
+    "result": "PASS"
+  },
+  {
+    "name": "test_posted_loading_cleanup_failure_does_not_duplicate_reply",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.047",
+    "result": "PASS"
+  },
+  {
+    "name": "test_missing_identity_at_completion_still_removes_loading",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.045",
+    "result": "PASS"
+  },
+  {
+    "name": "test_legacy_single_reaction_record_migrates_without_removing_identity",
+    "module": "tests.test_slack_presentation",
+    "seconds": "0.013",
+    "result": "PASS"
+  },
+  {
+    "name": "test_missing_style_activation_cannot_drop_research_requirement[code-implementation]",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_missing_style_activation_cannot_drop_research_requirement[live-current_state]",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.035",
+    "result": "PASS"
+  },
+  {
+    "name": "test_crash_after_saved_answer_does_not_repeat_paid_engine_call",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.046",
+    "result": "PASS"
+  },
+  {
+    "name": "test_failed_draft_transaction_does_not_mark_job_done",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.011",
+    "result": "PASS"
+  },
+  {
+    "name": "test_concurrent_duplicate_events_never_enqueue_duplicate_model_work",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.087",
+    "result": "PASS"
+  },
+  {
+    "name": "test_validation_retry_and_lost_session_have_bounded_engine_calls[casual]",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.023",
+    "result": "PASS"
+  },
+  {
+    "name": "test_validation_retry_and_lost_session_have_bounded_engine_calls[activation]",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.021",
+    "result": "PASS"
+  },
+  {
+    "name": "test_validation_retry_and_lost_session_have_bounded_engine_calls[schema]",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.042",
+    "result": "PASS"
+  },
+  {
+    "name": "test_validation_retry_and_lost_session_have_bounded_engine_calls[read]",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.049",
+    "result": "PASS"
+  },
+  {
+    "name": "test_daily_limit_blocks_style_retry_without_extra_call",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.018",
+    "result": "PASS"
+  },
+  {
+    "name": "test_cancel_during_presentation_repair_prevents_late_save",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.020",
+    "result": "PASS"
+  },
+  {
+    "name": "test_repeated_missing_session_does_not_loop",
+    "module": "tests.test_stress_regressions",
+    "seconds": "0.029",
+    "result": "PASS"
+  }
+]

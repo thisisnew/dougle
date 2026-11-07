@@ -55,4 +55,4 @@ Slack 앱 설정 → OAuth & Permissions → Bot Token Scopes에 `files:read`를
 
 ## 자동 답변 기본값
 
-0.8.11부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 토큰·scope 변경은 없으며 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요.
+0.8.12부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 토큰·scope 변경은 없으며 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요.

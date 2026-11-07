@@ -347,7 +347,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-010 · publish / SAME_FIRST / 관측 근거</summary>
+<summary>DG-MERGE-010 · publish / SAME (첫 공유) / 관측 근거</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -385,7 +385,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-011 · publish / SAME_FIRST / 사용자 정정</summary>
+<summary>DG-MERGE-011 · publish / SAME (첫 공유) / 사용자 정정</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -423,7 +423,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-012 · publish / SAME_FIRST / 추론</summary>
+<summary>DG-MERGE-012 · publish / SAME (첫 공유) / 추론</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -461,7 +461,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-013 · publish / CONFLICT_FIRST / 관측 근거</summary>
+<summary>DG-MERGE-013 · publish / CONFLICT (첫 공유) / 관측 근거</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -499,7 +499,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-014 · publish / CONFLICT_FIRST / 사용자 정정</summary>
+<summary>DG-MERGE-014 · publish / CONFLICT (첫 공유) / 사용자 정정</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -537,7 +537,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-015 · publish / CONFLICT_FIRST / 추론</summary>
+<summary>DG-MERGE-015 · publish / CONFLICT (첫 공유) / 추론</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -689,7 +689,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-019 · publish / KEEP_REMOTE_OMISSION / 관측 근거</summary>
+<summary>DG-MERGE-019 · publish / KEEP_REMOTE (로컬 누락) / 관측 근거</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -727,7 +727,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-020 · publish / KEEP_REMOTE_OMISSION / 사용자 정정</summary>
+<summary>DG-MERGE-020 · publish / KEEP_REMOTE (로컬 누락) / 사용자 정정</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -765,7 +765,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-021 · publish / KEEP_REMOTE_OMISSION / 추론</summary>
+<summary>DG-MERGE-021 · publish / KEEP_REMOTE (로컬 누락) / 추론</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -1715,7 +1715,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-046 · fetch / SAME_FIRST / 관측 근거</summary>
+<summary>DG-MERGE-046 · fetch / SAME (첫 공유) / 관측 근거</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -1753,7 +1753,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-047 · fetch / SAME_FIRST / 사용자 정정</summary>
+<summary>DG-MERGE-047 · fetch / SAME (첫 공유) / 사용자 정정</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -1791,7 +1791,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-048 · fetch / SAME_FIRST / 추론</summary>
+<summary>DG-MERGE-048 · fetch / SAME (첫 공유) / 추론</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -1829,7 +1829,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-049 · fetch / CONFLICT_FIRST / 관측 근거</summary>
+<summary>DG-MERGE-049 · fetch / CONFLICT (첫 공유) / 관측 근거</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -1867,7 +1867,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-050 · fetch / CONFLICT_FIRST / 사용자 정정</summary>
+<summary>DG-MERGE-050 · fetch / CONFLICT (첫 공유) / 사용자 정정</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -1905,7 +1905,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-051 · fetch / CONFLICT_FIRST / 추론</summary>
+<summary>DG-MERGE-051 · fetch / CONFLICT (첫 공유) / 추론</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -2057,7 +2057,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-055 · fetch / KEEP_REMOTE_OMISSION / 관측 근거</summary>
+<summary>DG-MERGE-055 · fetch / KEEP_REMOTE (로컬 누락) / 관측 근거</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -2095,7 +2095,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-056 · fetch / KEEP_REMOTE_OMISSION / 사용자 정정</summary>
+<summary>DG-MERGE-056 · fetch / KEEP_REMOTE (로컬 누락) / 사용자 정정</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 
@@ -2133,7 +2133,7 @@
 </details>
 
 <details>
-<summary>DG-MERGE-057 · fetch / KEEP_REMOTE_OMISSION / 추론</summary>
+<summary>DG-MERGE-057 · fetch / KEEP_REMOTE (로컬 누락) / 추론</summary>
 
 **P0 · 현행 계약 검증 · 호스트 AI 평가 · NOT_RUN**
 

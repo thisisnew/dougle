@@ -1,0 +1,41 @@
+{
+  "synthetic": true,
+  "hostModelCalls": 0,
+  "scannerSha256": "655151e0b23e4d5b3862157f6e5f77588dca62d47ee2d55ff36020daadd3e02c",
+  "runs": [
+    {
+      "name": "mixed_sizes_full_scan",
+      "status": "PASS",
+      "files": 1000,
+      "seconds": 6.522,
+      "digest": "e0ce8375495de319bcb0f1a1aaf6ca9a5679470f0f39b61a995751d406ba1451"
+    },
+    {
+      "name": "one_modified_file_blocks_entire_rescan",
+      "status": "BLOCK",
+      "files": 1000,
+      "seconds": 5.894,
+      "digest": "c77966289c8e35fd385a787fa0b237ff974845071fc014f59a03d694644c7b73"
+    },
+    {
+      "name": "unchanged_repeat_is_stable",
+      "status": "PASS",
+      "files": 1000,
+      "seconds": 6.428,
+      "digest": "e0ce8375495de319bcb0f1a1aaf6ca9a5679470f0f39b61a995751d406ba1451"
+    },
+    {
+      "name": "interruption_never_emits_pass",
+      "status": "PASS",
+      "seconds": 0.007
+    },
+    {
+      "name": "fresh_scan_after_interruption",
+      "status": "PASS",
+      "files": 1,
+      "seconds": 0.161,
+      "digest": "575fcc5db4a3d266b6a931bff186630f14489a4d6d05ded05e5af4e8fd599b67"
+    }
+  ],
+  "packageBytes": 9625600
+}

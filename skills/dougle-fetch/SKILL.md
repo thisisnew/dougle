@@ -17,7 +17,7 @@ Perform the sharing protocol's claim-level three-way merge when a base exists. O
 
 Prepare merged notes and backups, reread active files, then apply only affected notes/indexes using conflict-aware host tools. Keep an interruption record. Advance the last-merged revision and base only after the whole planned merge/reference check finishes. A repeat fetch must not duplicate notes or overwrite changes made locally since the prior fetch.
 
-Report added, enriched, unchanged, conflicts, withdrawals, unverified and unprocessed items. Explain any missing recipient source access. Fetch never triggers publish and never replaces the whole memory directory. A later relevant question automatically checks the required original evidence through dougle-ask; importing alone does not make it current.
+Report added, enriched, unchanged, conflicts, withdrawals, unverified and unprocessed items. Explain any missing recipient source access: identify the affected original and the missing host reader, login or read permission supported by the observed error, and give the next connection/permission step. Do not merely say "unverified", invent a role name or require token issuance. Shared-repository access does not grant original-source access. Fetch never triggers publish and never replaces the whole memory directory. A later relevant question automatically checks the required original evidence through dougle-ask; importing alone does not make it current.
 
 ## Load task details before acting
 

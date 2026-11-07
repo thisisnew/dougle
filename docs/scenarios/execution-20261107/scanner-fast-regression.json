@@ -1,0 +1,342 @@
+{
+  "status": "PASS",
+  "cases": 84,
+  "tests": [
+    {
+      "name": "ordinary domain claim",
+      "status": "PASS"
+    },
+    {
+      "name": "Korean text and code names",
+      "status": "PASS"
+    },
+    {
+      "name": "literal backslash and leading dash path",
+      "status": "PASS"
+    },
+    {
+      "name": "batched files retain unique finding IDs",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL X-Amz-Signature",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL X-Goog-Signature",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL X-Amz-Credential",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL sig",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL signature",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL access_token",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL refresh_token",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL api_key",
+      "status": "PASS"
+    },
+    {
+      "name": "HTML escaped signed URL",
+      "status": "PASS"
+    },
+    {
+      "name": "redacted URL token",
+      "status": "PASS"
+    },
+    {
+      "name": "signed URL in filename",
+      "status": "PASS"
+    },
+    {
+      "name": "non-sensitive URL query",
+      "status": "PASS"
+    },
+    {
+      "name": "unterminated final line",
+      "status": "PASS"
+    },
+    {
+      "name": "CRLF secret line",
+      "status": "PASS"
+    },
+    {
+      "name": "late binary invalidates whole batch",
+      "status": "PASS"
+    },
+    {
+      "name": "unlabelled commit hashes",
+      "status": "PASS"
+    },
+    {
+      "name": "explicit redaction",
+      "status": "PASS"
+    },
+    {
+      "name": "quoted redacted JSON",
+      "status": "PASS"
+    },
+    {
+      "name": "password assignment",
+      "status": "PASS"
+    },
+    {
+      "name": "case mixed password",
+      "status": "PASS"
+    },
+    {
+      "name": "JSON client secret",
+      "status": "PASS"
+    },
+    {
+      "name": "Korean password",
+      "status": "PASS"
+    },
+    {
+      "name": "multiline credential key",
+      "status": "PASS"
+    },
+    {
+      "name": "generic token assignment",
+      "status": "PASS"
+    },
+    {
+      "name": "database credential URI",
+      "status": "PASS"
+    },
+    {
+      "name": "GitHub token",
+      "status": "PASS"
+    },
+    {
+      "name": "GitHub fine grained token",
+      "status": "PASS"
+    },
+    {
+      "name": "Slack token",
+      "status": "PASS"
+    },
+    {
+      "name": "Slack app token",
+      "status": "PASS"
+    },
+    {
+      "name": "GitLab token",
+      "status": "PASS"
+    },
+    {
+      "name": "Google key",
+      "status": "PASS"
+    },
+    {
+      "name": "Huggingface token",
+      "status": "PASS"
+    },
+    {
+      "name": "NPM token",
+      "status": "PASS"
+    },
+    {
+      "name": "Payment provider key",
+      "status": "PASS"
+    },
+    {
+      "name": "AWS secret assignment",
+      "status": "PASS"
+    },
+    {
+      "name": "AWS access key",
+      "status": "PASS"
+    },
+    {
+      "name": "API key",
+      "status": "PASS"
+    },
+    {
+      "name": "bearer value",
+      "status": "PASS"
+    },
+    {
+      "name": "JWT candidate",
+      "status": "PASS"
+    },
+    {
+      "name": "private key marker",
+      "status": "PASS"
+    },
+    {
+      "name": "email",
+      "status": "PASS"
+    },
+    {
+      "name": "Korean mobile",
+      "status": "PASS"
+    },
+    {
+      "name": "international mobile",
+      "status": "PASS"
+    },
+    {
+      "name": "resident identifier candidate",
+      "status": "PASS"
+    },
+    {
+      "name": "personal field",
+      "status": "PASS"
+    },
+    {
+      "name": "finding report contains no value",
+      "status": "PASS"
+    },
+    {
+      "name": "non-Markdown blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "binary Markdown blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid encoding blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "out of Unicode range blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "surrogate UTF8 blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "symlink blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "tab in filename blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "newline in filename blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "unreadable file blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "shasum fallback without GNU coreutils",
+      "status": "PASS"
+    },
+    {
+      "name": "missing tool blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "later JSON assignment is checked",
+      "status": "PASS"
+    },
+    {
+      "name": "later bearer is checked",
+      "status": "PASS"
+    },
+    {
+      "name": "email filename blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "phone directory blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid identifying TMPDIR no stderr",
+      "status": "PASS"
+    },
+    {
+      "name": "failed od is blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "failed sha256sum is blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "failed find is blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "failed sort is blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "failed awk is blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "failed iconv is blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "during-scan content change blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "during-scan rename change blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "during-scan addition change blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "batched awk failure blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "batched during-scan content blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "batched during-scan rename blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "batched during-scan addition blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "clean digest emitted",
+      "status": "PASS"
+    },
+    {
+      "name": "digest changes when staged content changes",
+      "status": "PASS"
+    },
+    {
+      "name": "nested file is scanned",
+      "status": "PASS"
+    },
+    {
+      "name": "empty package blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "missing package blocked",
+      "status": "PASS"
+    }
+  ]
+}

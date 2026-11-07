@@ -11,7 +11,7 @@ const market = await json('.claude-plugin/marketplace.json')
 check(market.plugins.length === 1 && market.plugins[0].source === './plugins/dougle', 'marketplace source')
 for (const host of ['claude','codex']) {
   const p = await json(`plugins/dougle/.${host}-plugin/plugin.json`)
-  check(p.name === 'dougle' && p.version === '0.8.11', `${host} manifest`)
+  check(p.name === 'dougle' && p.version === '0.8.12', `${host} manifest`)
 }
 async function files(dir) {
  const out=[]
@@ -25,9 +25,9 @@ async function files(dir) {
 for (const name of ['dougle-connect','dougle-ask','dougle-publish','dougle-fetch','dougle-schedule','dougle-bot','i-have-adhd','plain-language']) {
  const dir=resolve(root,'skills',name)
  const all=await files(dir)
- check(all.length===(name==='dougle-bot'?7:name==='dougle-schedule'?5:['i-have-adhd','plain-language'].includes(name)?2:name==='dougle-ask'?9:name==='dougle-publish'?11:name==='dougle-fetch'?9:7),'only declared Markdown skill resources')
+ check(all.length===(name==='dougle-bot'?7:name==='dougle-schedule'?5:['i-have-adhd','plain-language'].includes(name)?2:name==='dougle-ask'?9:name==='dougle-publish'?13:name==='dougle-fetch'?9:7),'only declared Markdown skill resources')
  for(const p of all) {
-  const isPublishScanner = name==='dougle-publish' && p===resolve(dir,'scripts/check-sensitive.sh')
+  const isPublishScanner = name==='dougle-publish' && ['scripts/check-sensitive.sh','scripts/check-sensitive-fast.pl','scripts/sensitive-rules.awk'].includes(p.slice(dir.length+1))
   const isBotResource = name==='dougle-bot' && ['scripts/bot.sh','assets/slack-manifest.yaml','assets/requirements.txt','assets/runtime.sha256','assets/dougle_bot-0.1.9-py3-none-any.whl'].includes(p.slice(dir.length+1))
   check(p.endsWith('.md') || isPublishScanner || isBotResource,'only declared skill resources and optional bot runtime')
   if(p.endsWith('.whl')) {

@@ -2853,7 +2853,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-010","MERGE","publish / SAME_FIRST / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
+"DG-MERGE-010","MERGE","publish / SAME (첫 공유) / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
 원본을 읽은 버전·위치가 있는 observed 주장입니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","한 주장으로 유지하며 근거·이력을 합칩니다.
@@ -2863,7 +2863,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-011","MERGE","publish / SAME_FIRST / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
+"DG-MERGE-011","MERGE","publish / SAME (첫 공유) / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
 reported 정정이 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","한 주장으로 유지하며 근거·이력을 합칩니다.
@@ -2873,7 +2873,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-012","MERGE","publish / SAME_FIRST / 추론","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
+"DG-MERGE-012","MERGE","publish / SAME (첫 공유) / 추론","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
 inferred 관계가 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","한 주장으로 유지하며 근거·이력을 합칩니다.
@@ -2883,7 +2883,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-013","MERGE","publish / CONFLICT_FIRST / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
+"DG-MERGE-013","MERGE","publish / CONFLICT (첫 공유) / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
 원본을 읽은 버전·위치가 있는 observed 주장입니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","양쪽 대안을 남기고 최신 시각이나 글솜씨로 승자를 고르지 않습니다.
@@ -2893,7 +2893,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-014","MERGE","publish / CONFLICT_FIRST / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
+"DG-MERGE-014","MERGE","publish / CONFLICT (첫 공유) / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
 reported 정정이 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","양쪽 대안을 남기고 최신 시각이나 글솜씨로 승자를 고르지 않습니다.
@@ -2903,7 +2903,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-015","MERGE","publish / CONFLICT_FIRST / 추론","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
+"DG-MERGE-015","MERGE","publish / CONFLICT (첫 공유) / 추론","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
 inferred 관계가 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","양쪽 대안을 남기고 최신 시각이나 글솜씨로 승자를 고르지 않습니다.
@@ -2943,7 +2943,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-019","MERGE","publish / KEEP_REMOTE_OMISSION / 관측 근거","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
+"DG-MERGE-019","MERGE","publish / KEEP_REMOTE (로컬 누락) / 관측 근거","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
 원본을 읽은 버전·위치가 있는 observed 주장입니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","R을 보존하며 L의 누락만으로 지우지 않습니다.
@@ -2953,7 +2953,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-020","MERGE","publish / KEEP_REMOTE_OMISSION / 사용자 정정","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
+"DG-MERGE-020","MERGE","publish / KEEP_REMOTE (로컬 누락) / 사용자 정정","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
 reported 정정이 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","R을 보존하며 L의 누락만으로 지우지 않습니다.
@@ -2963,7 +2963,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-021","MERGE","publish / KEEP_REMOTE_OMISSION / 추론","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
+"DG-MERGE-021","MERGE","publish / KEEP_REMOTE (로컬 누락) / 추론","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
 inferred 관계가 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","publish으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","R을 보존하며 L의 누락만으로 지우지 않습니다.
@@ -3213,7 +3213,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-046","MERGE","fetch / SAME_FIRST / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
+"DG-MERGE-046","MERGE","fetch / SAME (첫 공유) / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
 원본을 읽은 버전·위치가 있는 observed 주장입니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","한 주장으로 유지하며 근거·이력을 합칩니다.
@@ -3223,7 +3223,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-047","MERGE","fetch / SAME_FIRST / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
+"DG-MERGE-047","MERGE","fetch / SAME (첫 공유) / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
 reported 정정이 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","한 주장으로 유지하며 근거·이력을 합칩니다.
@@ -3233,7 +3233,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-048","MERGE","fetch / SAME_FIRST / 추론","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
+"DG-MERGE-048","MERGE","fetch / SAME (첫 공유) / 추론","P0","current_contract","host_evaluation","첫 공유이며 L과 R의 핵심 필드가 정확히 같습니다.
 inferred 관계가 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","한 주장으로 유지하며 근거·이력을 합칩니다.
@@ -3243,7 +3243,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-049","MERGE","fetch / CONFLICT_FIRST / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
+"DG-MERGE-049","MERGE","fetch / CONFLICT (첫 공유) / 관측 근거","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
 원본을 읽은 버전·위치가 있는 observed 주장입니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","양쪽 대안을 남기고 최신 시각이나 글솜씨로 승자를 고르지 않습니다.
@@ -3253,7 +3253,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-050","MERGE","fetch / CONFLICT_FIRST / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
+"DG-MERGE-050","MERGE","fetch / CONFLICT (첫 공유) / 사용자 정정","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
 reported 정정이 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","양쪽 대안을 남기고 최신 시각이나 글솜씨로 승자를 고르지 않습니다.
@@ -3263,7 +3263,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-051","MERGE","fetch / CONFLICT_FIRST / 추론","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
+"DG-MERGE-051","MERGE","fetch / CONFLICT (첫 공유) / 추론","P0","current_contract","host_evaluation","첫 공유이며 같은 ID의 L과 R 핵심 필드가 다릅니다.
 inferred 관계가 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","양쪽 대안을 남기고 최신 시각이나 글솜씨로 승자를 고르지 않습니다.
@@ -3303,7 +3303,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-055","MERGE","fetch / KEEP_REMOTE_OMISSION / 관측 근거","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
+"DG-MERGE-055","MERGE","fetch / KEEP_REMOTE (로컬 누락) / 관측 근거","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
 원본을 읽은 버전·위치가 있는 observed 주장입니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","R을 보존하며 L의 누락만으로 지우지 않습니다.
@@ -3313,7 +3313,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-056","MERGE","fetch / KEEP_REMOTE_OMISSION / 사용자 정정","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
+"DG-MERGE-056","MERGE","fetch / KEEP_REMOTE (로컬 누락) / 사용자 정정","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
 reported 정정이 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","R을 보존하며 L의 누락만으로 지우지 않습니다.
@@ -3323,7 +3323,7 @@ ID·대안 순서·계보는 입력 역할에 의존해 바뀌지 않습니다.
 관측하지 않은 동작을 성공으로 기록하지 않습니다.","세 입력과 각 주장별 결정 코드·전후 내용·근거 계보
 호스트 의미 해석과 결정표 결과를 별도로 검토
 원격/로컬 변경 기록; 다른 PC의 같은 결론인지 대조","","NOT_RUN"
-"DG-MERGE-057","MERGE","fetch / KEEP_REMOTE_OMISSION / 추론","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
+"DG-MERGE-057","MERGE","fetch / KEEP_REMOTE (로컬 누락) / 추론","P0","current_contract","host_evaluation","B와 R에 있고 L에서만 누락되었습니다.
 inferred 관계가 포함되어 있습니다.
 정체성이 검증된 고정 B/L/R 입력을 사용합니다.","fetch으로 해당 지식을 병합합니다.
 같은 입력으로 한 번 더 실행하고 동료 PC에서 L/R 역할을 바꿔 비교합니다.","R을 보존하며 L의 누락만으로 지우지 않습니다.
