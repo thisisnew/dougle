@@ -6,7 +6,7 @@
 
 실제 init에 보고된 등록 연결 중 allowed_tools에 해당하는 MCP만 확인. failed/needs-auth/pending/disabled/unknown은 선택 복구·이번만 계속. 사용자가 명시적으로 선택해야 --allow-unverified-readers를 전달하며 영구 설정으로 남기지 않습니다. 정보 미제공은 미확인, 연결 성공은 실제 조회 권한 보장 아님. 질문별 조사·근거검사 유지. 시작 중 중지 및 취소와 경합하는 begin_run을 트랜잭션으로 차단. 같은 메뉴/현재 대화에서 진행 안내. 사용자 키체인·설치본·실행 중 봇은 수정하지 않았습니다.
 
-신규57/전체802 fake·임시SQLite·가짜 CLI 자식 프로세스 검사 통과. Ruff·필수 저장소 검사·플러그인 검증·격리 wheel 설치 및 소스 일치 확인. 실제 모델 추가 호출0, 회사 연결 미검증. GitHub CI/Preview 공개 확인 진행 중입니다. docs/dougle-bot/startup-checks.md 및 startup-verification.json 참고.
+신규57/전체802 fake·임시SQLite·가짜 CLI 자식 프로세스 검사 통과. Ruff·필수 저장소 검사·플러그인 검증·격리 wheel 설치 및 소스 일치 확인. 실제 모델 추가 호출0, 회사 연결 미검증. GitHub 소스1fbd2e4, CI42439346302 Python3.12/3.13 성공. v0.8.18-skills-preview.1 공개 및 익명 ZIP·체크섬 바이트 일치 확인 완료. docs/dougle-bot/startup-checks.md 및 startup-verification.json 참고.
 
 
 ## 서버 구축·배포·지속 개발 전략 (2026-11-08)
