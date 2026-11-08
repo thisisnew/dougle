@@ -43,9 +43,9 @@ doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slac
 
 1. `scripts/bot.sh status`에서 새 실행 환경 준비가 필요하면 `scripts/bot.sh prepare`를 실행합니다. 기존 설정·키체인·지식은 재등록하지 않습니다.
 2. 실행 중이면 업데이트 적용을 위해 중지하고 다시 시작할 것을 안내합니다. 사용자가 업데이트 적용을 요청했다면 `scripts/bot.sh stop` 후 실제 중지를 확인합니다.
-3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.20`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
+3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.21`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
 
-0.1.20의 기본 문의 동시 처리 수는 2입니다. `[engine]`에 `parallelism_version`이 없고 정수 `max_parallel = 1`인 이전 설정은 읽을 때 **메모리에서만 2로 적용**합니다. 이 읽기만으로 기존 config.toml을 다시 쓰지 않습니다. 한 문의씩 처리하려면 다음 두 값을 함께 명시합니다. 표식이 있는 새 설정의 1은 그대로 존중하며, 정상 설정 저장 시 표식도 저장합니다.
+0.1.21의 기본 문의 동시 처리 수는 2입니다. `[engine]`에 `parallelism_version`이 없고 정수 `max_parallel = 1`인 이전 설정은 읽을 때 **메모리에서만 2로 적용**합니다. 이 읽기만으로 기존 config.toml을 다시 쓰지 않습니다. 한 문의씩 처리하려면 다음 두 값을 함께 명시합니다. 표식이 있는 새 설정의 1은 그대로 존중하며, 정상 설정 저장 시 표식도 저장합니다.
 
 ```toml
 [engine]
@@ -72,7 +72,7 @@ Slack 앱 설정 → OAuth & Permissions → Bot Token Scopes에 `files:read`를
 
 `start`와 직접 실행하는 `run` 모두 Slack 인증·채널 읽기, Claude 실행·필수 스킬을 확인한 뒤 문의를 받습니다. 앱 토큰은 실제 Socket Mode 연결로 확인합니다. `doctor --online`은 종전처럼 AI를 호출하지 않는 준비 점검입니다.
 
-Claude 점검은 설정한 `claude_bin`과 `workdir`에서 새 세션으로 한 번 실행합니다. 최대90초·8턴·USD0.50이며, 설정한 호출 한도와 남은 일일 예산이 더 작으면 그 한도를 따릅니다. 추가 자동 재시도는 없습니다. 업무 조회·원본 변경·테스트 댓글은 하지 않습니다. 실제 조회 가능 여부는 질문마다 다시 검증합니다.
+Claude 점검은 설정한 `claude_bin`과 `workdir`에서 새 세션으로 한 번 실행합니다. 최대90초·8턴이며 시작 점검만의 고정 비용 상한은 없습니다. 설정한 호출 한도와 남은 일일 예산을 따릅니다. 추가 자동 재시도는 없습니다. 업무 조회·원본 변경·테스트 댓글은 하지 않습니다. 실제 조회 가능 여부는 질문마다 다시 검증합니다.
 
 | 표시 | 안내할 조치 |
 |---|---|

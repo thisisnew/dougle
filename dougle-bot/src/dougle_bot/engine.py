@@ -140,6 +140,10 @@ def parse_trace(raw: bytes):
         raise BotError("invalid_engine_output")
     if result.get("is_error") or result.get("subtype", "success") != "success":
         errors = str(result.get("result", "")) + " " + str(result.get("errors", ""))
+        if result.get("subtype") == "error_max_budget_usd" or re.search(
+            r"max.?budget|budget.{0,40}(?:exceed|limit|초과)", errors, re.I
+        ):
+            raise BotError("engine_budget_exceeded")
         if re.search(
             r"image.{0,80}(?:invalid|decode|process|too large|exceed)|(?:invalid|decode).{0,40}image",
             errors,
@@ -504,6 +508,12 @@ class ClaudeCliEngine:
             proc.wait(timeout=2)
             if proc.returncode:
                 # Only classify a known error; never store raw output.
+                if re.search(
+                    rb"max.?budget|budget.{0,40}(?:exceed|limit)",
+                    bytes(out) + bytes(err),
+                    re.I,
+                ):
+                    raise BotError("engine_budget_exceeded")
                 if re.search(
                     rb"No conversation found|session[^\n]{0,40}not found",
                     bytes(out) + bytes(err),

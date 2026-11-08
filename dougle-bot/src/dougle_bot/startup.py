@@ -14,6 +14,7 @@ MESSAGES = {
     "optional_connections": "자료 연결 중 확인이 필요한 항목이 있습니다. 연결을 복구하거나, 이번에 한해 미확인 연결을 둔 채 시작할 수 있습니다.",
     "required_skills": "필수 스킬 실행을 확인하지 못했습니다. Dougle 플러그인을 업데이트하고 설정한 스킬 이름을 확인한 뒤 다시 시작해 주세요.",
     "engine_check": "Claude 실행 점검을 마치지 못했습니다. 설정한 Claude를 같은 작업 폴더에서 열어 로그인·네트워크·사용 한도를 확인한 뒤 다시 시작해 주세요.",
+    "engine_budget_exceeded": "Claude 시작 점검이 설정된 호출 비용 한도에 도달했습니다. 호출 한도와 남은 일일 예산을 확인해 주세요.",
     "daily_budget_exceeded": "오늘 AI 예산이 소진되어 시작 점검을 할 수 없습니다. 예산 설정을 확인해 주세요.",
     "bot_stopped": "시작 점검을 중지했습니다.",
     "slack_check": "Slack 연결을 확인하지 못했습니다. 키체인의 봇·앱 토큰, 채널 초대와 앱 권한을 확인한 뒤 다시 시작해 주세요.",
@@ -86,7 +87,7 @@ def check_engine(config, store, engine, *, allow_unverified_readers=False):
     started = time.monotonic()
     try:
         run_id, budget = store.reserve(
-            None, min(0.5, config.max_budget_usd_per_call), config.daily_budget_usd, False
+            None, config.max_budget_usd_per_call, config.daily_budget_usd, False
         )
         prompt = (
             "Dougle 시작 점검입니다. 업무 질문이 아닙니다. 아래 스킬을 Skill 도구로 각각 "
@@ -106,7 +107,7 @@ def check_engine(config, store, engine, *, allow_unverified_readers=False):
             raise BotError("engine_check")
     except Exception as exc:
         phase = exc.code if isinstance(exc, BotError) else "engine_check"
-        if phase not in ("required_skills", "daily_budget_exceeded", "bot_stopped"):
+        if phase not in ("required_skills", "daily_budget_exceeded", "engine_budget_exceeded", "bot_stopped"):
             phase = "engine_check"
         report(store, phase)
         if run_id is not None:

@@ -1,32 +1,24 @@
 {
-  "version": "0.8.23",
-  "optionalBotRuntime": "0.1.20",
-  "embeddedRuntimeVersion": "0.1.20",
+  "version": "0.8.24",
+  "optionalBotRuntime": "0.1.21",
+  "embeddedRuntimeVersion": "0.1.21",
   "status": "PASS_LOCAL",
-  "publication": "PUBLISHED",
-  "archive": ".tools/releases/0.8.23/Dougle_Skills_0.8.23.zip",
+  "publication": "PENDING",
+  "archive": ".tools/releases/0.8.24/Dougle_Skills_0.8.24.zip",
   "files": 57,
-  "archiveBytes": 288081,
-  "sha256": "38a57c2461fa135613370bf32116db87d21f5a6d77a1ab89cc4d2d0f0a17cdcb",
-  "wheelSha256": "77712e5ba9aef2ee5be4fb10b3db4bece9fa72e743089cd0212d480dfb0b0740",
+  "archiveBytes": 288116,
+  "sha256": "67dc9e1f9da0eddba2de89e7b6e5859e09256d9a28fd14ce49246a7dd178776c",
+  "wheelSha256": "b1241bc852faedb900dda4e0ca253396819e75a29831d86c8bba71fad5f7406f",
   "checks": {
     "wheelCurrentSourceBytes": "PASS",
     "skillMirrors": "PASS",
     "runtimeChecksums": "PASS",
     "archiveBytesAndCRC": "PASS",
     "manifestVersions": "PASS",
-    "embeddedRuntimeAndMetadataVersion": "PASS 0.1.20",
-    "finalPackageTest": "PASS 1 test after version-only bump",
-    "authenticatedDownload": "PASS byte-for-byte",
-    "ci": "PASS Python3.12 and Python3.13 after test expectation fix"
+    "isolatedWheelInstall": "PASS",
+    "botTests": "PASS 1555",
+    "ruff": "PASS",
+    "prescribedChecks": "PASS"
   },
-  "botTests": {
-    "passed": 1551,
-    "seconds": 58.43,
-    "scope": "Final source and version after test correction"
-  },
-  "isolatedWheelInstall": "PASS installed 0.1.20 and find_files dispatch declaration",
-  "remaining": [],
-  "independentReview": "PASS, reported by main; not rerun by packaging agent",
-  "prescribedChecks": "PASS, main-reported"
+  "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime"
 }

@@ -56,11 +56,36 @@ def test_bounded_probe_does_not_resume_a_customer_session(app):
     engine = FakeEngine([result(app)])
     value = check_engine(app.cfg.engine, app.store, engine)
     assert value["phase"] == "ready" and value["connections"] is None
-    assert engine.calls[0][1:] == (None, 0.5)
+    assert engine.calls[0][1:] == (None, app.cfg.engine.max_budget_usd_per_call)
     assert engine.timeouts == [90]
     assert all(skill in engine.calls[0][0] for skill in app.cfg.engine.required_skills)
     assert not app.store.all("SELECT * FROM threads")
     assert not app.store.all("SELECT * FROM inquiries")
+
+
+def test_startup_probe_can_exceed_old_fixed_half_dollar_cap(app):
+    engine = FakeEngine([result(app)])
+    check_engine(app.cfg.engine, app.store, engine)
+    assert engine.calls[0][2] == 3.0
+
+
+def test_startup_probe_uses_configured_call_cap(app):
+    cfg = replace(app.cfg.engine, max_budget_usd_per_call=1.75)
+    engine = FakeEngine([result(app)])
+    check_engine(cfg, app.store, engine)
+    assert engine.calls[0][2] == 1.75
+
+
+def test_startup_reports_configured_budget_failure(app):
+    with pytest.raises(BotError, match="engine_budget_exceeded"):
+        check_engine(app.cfg.engine, app.store, FakeEngine([BotError("engine_budget_exceeded")]))
+    assert latest_report(app.store)["phase"] == "engine_budget_exceeded"
+
+
+def test_claude_budget_result_has_safe_specific_error():
+    raw = json.dumps({"type": "result", "subtype": "error_max_budget_usd", "is_error": True})
+    with pytest.raises(BotError, match="engine_budget_exceeded"):
+        parse_trace(raw.encode())
 
 
 @pytest.mark.parametrize(
@@ -77,7 +102,8 @@ def test_failed_probe_safe_report_and_no_unknown_cost_as_zero(app, failure):
     with pytest.raises(BotError):
         check_engine(app.cfg.engine, app.store, FakeEngine([BotError(failure)]))
     row = app.store.one("SELECT * FROM engine_runs")
-    assert row["finished"] == 1 and row["cost_usd"] is None and row["reserved"] == 0.5
+    assert row["finished"] == 1 and row["cost_usd"] is None
+    assert row["reserved"] == app.cfg.engine.max_budget_usd_per_call
     assert latest_report(app.store)["phase"] == (
         "bot_stopped" if failure == "bot_stopped" else "engine_check"
     )
