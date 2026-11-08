@@ -3,7 +3,7 @@
   "optionalBotRuntime": "0.1.20",
   "embeddedRuntimeVersion": "0.1.20",
   "status": "PASS_LOCAL",
-  "publication": "NOT_PUBLISHED",
+  "publication": "PUBLISHED",
   "archive": ".tools/releases/0.8.23/Dougle_Skills_0.8.23.zip",
   "files": 57,
   "archiveBytes": 288081,
@@ -16,18 +16,17 @@
     "archiveBytesAndCRC": "PASS",
     "manifestVersions": "PASS",
     "embeddedRuntimeAndMetadataVersion": "PASS 0.1.20",
-    "finalPackageTest": "PASS 1 test after version-only bump"
+    "finalPackageTest": "PASS 1 test after version-only bump",
+    "authenticatedDownload": "PASS byte-for-byte",
+    "ci": "PASS Python3.12 and Python3.13 after test expectation fix"
   },
   "botTests": {
-    "passed": 1550,
-    "seconds": 89.57,
-    "source": "Main-reported",
-    "scope": "Full suite before final version-only bump"
+    "passed": 1551,
+    "seconds": 58.43,
+    "scope": "Final source and version after test correction"
   },
-  "isolatedWheelInstall": "NOT_RUN",
-  "remaining": [
-    "GitHub publication"
-  ],
+  "isolatedWheelInstall": "PASS installed 0.1.20 and find_files dispatch declaration",
+  "remaining": [],
   "independentReview": "PASS, reported by main; not rerun by packaging agent",
   "prescribedChecks": "PASS, main-reported"
 }
