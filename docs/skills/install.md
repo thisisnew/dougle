@@ -39,11 +39,11 @@
    $dougle-connect 연결할_URL을 읽고 업무 지식으로 정리해 줘.
    ```
 
-현재 배포 **스킬 0.8.24 / 봇 0.1.21**은 전체 경로를 모를 때 등록된 GitHub ref에서 파일명을 찾고 같은 commit의 내용을 읽도록 보완합니다. 탐색 결과만으로 코드 확인을 완료하지 않습니다. 선택적 GitHub 조회에는 설치된 `gh`와 기존 로그인이 필요하며 자동 설치·로그인은 하지 않습니다. 일반 봇 시작에는 `gh`가 필요하지 않습니다. 시작 점검의 고정 USD 0.50 상한을 제거했습니다.
+현재 배포 **스킬 0.8.25 / 봇 0.1.22**은 전체 경로를 모를 때 등록된 GitHub ref에서 파일명을 찾고 같은 commit의 내용을 읽도록 보완합니다. 탐색 결과만으로 코드 확인을 완료하지 않습니다. 선택적 GitHub 조회에는 설치된 `gh`와 기존 로그인이 필요하며 자동 설치·로그인은 하지 않습니다. 일반 봇 시작에는 `gh`가 필요하지 않습니다. 시작 점검의 고정 USD 0.50 상한을 제거했습니다.
 
 봇 업데이트 시 표식 없는 이전 `max_parallel = 1`은 메모리에서만 2로 적용됩니다. 명시적으로 1을 유지하려면 `[engine]`의 `max_parallel = 1`과 `parallelism_version = 1`을 함께 설정하세요. 기존 설정 파일을 읽는 것만으로 파일을 변경하지 않습니다. [설정 안내](../../dougle-bot/README.md)를 참고하세요.
 
-공개 후 직접 설치하려면 [0.8.24 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.24-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
+공개 후 직접 설치하려면 [0.8.25 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.25-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 내부 답변 스킬인 `i-have-adhd/`, `plain-language/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 

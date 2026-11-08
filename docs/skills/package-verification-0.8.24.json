@@ -1,0 +1,26 @@
+{
+  "version": "0.8.24",
+  "optionalBotRuntime": "0.1.21",
+  "embeddedRuntimeVersion": "0.1.21",
+  "status": "PASS_LOCAL",
+  "publication": "PUBLISHED",
+  "archive": ".tools/releases/0.8.24/Dougle_Skills_0.8.24.zip",
+  "files": 57,
+  "archiveBytes": 288116,
+  "sha256": "67dc9e1f9da0eddba2de89e7b6e5859e09256d9a28fd14ce49246a7dd178776c",
+  "wheelSha256": "b1241bc852faedb900dda4e0ca253396819e75a29831d86c8bba71fad5f7406f",
+  "checks": {
+    "wheelCurrentSourceBytes": "PASS",
+    "skillMirrors": "PASS",
+    "runtimeChecksums": "PASS",
+    "archiveBytesAndCRC": "PASS",
+    "manifestVersions": "PASS",
+    "isolatedWheelInstall": "PASS",
+    "botTests": "PASS 1555",
+    "ruff": "PASS",
+    "prescribedChecks": "PASS",
+    "authenticatedDownload": "PASS byte-for-byte",
+    "ci": "PASS both runs"
+  },
+  "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime"
+}

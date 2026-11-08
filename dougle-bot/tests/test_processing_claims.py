@@ -1,6 +1,6 @@
 """Bounded inquiry workers and concurrent approval actions, with fake services only.
 
-Exercise both explicit single processing and the default two-worker capacity.
+Exercise explicit single processing and the default four-worker capacity.
 Contending database connections verify claims, thread exclusion and lease recovery.
 """
 
@@ -30,19 +30,37 @@ def enqueue(app, number, *, root=None):
     return ident
 
 
-def test_default_two_and_explicit_single_roundtrip_reject_unsupported_capacity(app):
-    assert app.cfg.engine.max_parallel == 2
+def test_default_four_and_explicit_single_roundtrip_allow_configured_capacity(app):
+    assert app.cfg.engine.max_parallel == 4
     path = app.cfg.home / "config.toml"
     save(app.cfg, path)
-    assert load(path).engine.max_parallel == 2
+    assert load(path).engine.max_parallel == 4
     serial = replace(app.cfg, engine=replace(app.cfg.engine, max_parallel=1))
     save(serial, path)
     assert load(path).engine.max_parallel == 1
     assert load(path).engine.parallelism_version == 1
     assert "parallelism_version = 1" in path.read_text()
     cfg = replace(app.cfg, engine=replace(app.cfg.engine, max_parallel=5))
-    with pytest.raises(BotError, match="invalid_integer_setting"):
-        runtime.serve(cfg, FakeSecretStore({}))
+    assert cfg.validate() == cfg
+    app.store.configure_processing(5)
+    assert app.store.processing_status()["max_parallel"] == 5
+
+
+def test_old_coordination_ceiling_is_removed_before_starting_six_workers(app):
+    with app.store.tx() as db:
+        db.execute("DROP TABLE processing_settings")
+        db.execute(
+            "CREATE TABLE processing_settings("
+            "id INTEGER PRIMARY KEY CHECK(id=1),max_parallel INTEGER NOT NULL "
+            "CHECK(max_parallel BETWEEN 1 AND 4))"
+        )
+        db.execute("INSERT INTO processing_settings VALUES(1,2)")
+    app.store.configure_processing(6)
+    assert app.store.processing_status()["max_parallel"] == 6
+    definition = app.store.one(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='processing_settings'"
+    )["sql"]
+    assert "BETWEEN 1 AND 4" not in definition
 
 
 @pytest.mark.parametrize("limit", [1, 2])
@@ -259,7 +277,7 @@ def test_abandoned_lease_survives_open_and_is_cleared_only_by_locked_recovery(ap
 
 def test_coordination_schema_is_additive_and_open_preserves_applied_limit(app):
     assert app.store.one("SELECT name FROM sqlite_master WHERE name='processing_claims'")
-    assert app.store.processing_status() == {"max_parallel": 2, "active": 0, "queued": 0}
+    assert app.store.processing_status() == {"max_parallel": 4, "active": 0, "queued": 0}
     assert app.store.one("PRAGMA user_version")["user_version"] == 2
     app.store.configure_processing(1)
     reopened = Store(app.store.path)

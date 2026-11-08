@@ -76,8 +76,8 @@ class Store:
                 "job_id INTEGER NOT NULL UNIQUE REFERENCES jobs(id),owner TEXT NOT NULL);"
                 "CREATE TABLE IF NOT EXISTS processing_settings("
                 "id INTEGER PRIMARY KEY CHECK(id=1),max_parallel INTEGER NOT NULL "
-                "CHECK(max_parallel BETWEEN 1 AND 4));"
-                "INSERT OR IGNORE INTO processing_settings VALUES(1,2);"
+                "CHECK(max_parallel >= 1));"
+                "INSERT OR IGNORE INTO processing_settings VALUES(1,4);"
             )
         try:
             self.check_post_intents()
@@ -246,7 +246,7 @@ class Store:
         Store it centrally so independent connections enforce the same capacity.
         This never rewrites the user's configuration file.
         """
-        if type(max_parallel) is not int or not 1 <= max_parallel <= 4:
+        if type(max_parallel) is not int or max_parallel < 1 or max_parallel > 2**63 - 1:
             raise BotError("invalid_integer_setting")
         with self.tx() as db:
             if (
@@ -254,7 +254,21 @@ class Store:
                 or db.execute("SELECT 1 FROM jobs WHERE status='running' LIMIT 1").fetchone()
             ):
                 raise BotError("already_processing")
-            db.execute("UPDATE processing_settings SET max_parallel=? WHERE id=1", (max_parallel,))
+            # This table is disposable coordination state. Replace the former
+            # 1..4 check only when no work owns a processing claim.
+            definition = db.execute(
+                "SELECT sql FROM sqlite_master WHERE type='table' AND name='processing_settings'"
+            ).fetchone()[0]
+            if "BETWEEN 1 AND 4" in definition.upper():
+                db.execute("DROP TABLE processing_settings")
+                db.execute(
+                    "CREATE TABLE processing_settings("
+                    "id INTEGER PRIMARY KEY CHECK(id=1),max_parallel INTEGER NOT NULL "
+                    "CHECK(max_parallel >= 1))"
+                )
+                db.execute("INSERT INTO processing_settings VALUES(1,?)", (max_parallel,))
+            else:
+                db.execute("UPDATE processing_settings SET max_parallel=? WHERE id=1", (max_parallel,))
             db.execute(
                 "INSERT INTO audit(actor,action,detail,at) VALUES('system','processing_configured',?,?)",
                 (str(max_parallel), self.clock()),

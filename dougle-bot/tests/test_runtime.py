@@ -230,7 +230,7 @@ def test_session_not_found_gets_only_one_fresh_retry(app):
     "field,value",
     [
         ("max_parallel", 0),
-        ("max_parallel", 5),
+        ("max_parallel", -1),
         ("max_parallel", True),
         ("timeout_seconds", 0),
         ("max_turns", 201),

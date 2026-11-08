@@ -1,14 +1,14 @@
 {
-  "version": "0.8.24",
-  "optionalBotRuntime": "0.1.21",
-  "embeddedRuntimeVersion": "0.1.21",
+  "version": "0.8.25",
+  "optionalBotRuntime": "0.1.22",
+  "embeddedRuntimeVersion": "0.1.22",
   "status": "PASS_LOCAL",
-  "publication": "PUBLISHED",
-  "archive": ".tools/releases/0.8.24/Dougle_Skills_0.8.24.zip",
+  "publication": "PENDING",
+  "archive": ".tools/releases/0.8.25/Dougle_Skills_0.8.25.zip",
   "files": 57,
-  "archiveBytes": 288116,
-  "sha256": "67dc9e1f9da0eddba2de89e7b6e5859e09256d9a28fd14ce49246a7dd178776c",
-  "wheelSha256": "b1241bc852faedb900dda4e0ca253396819e75a29831d86c8bba71fad5f7406f",
+  "archiveBytes": 288299,
+  "sha256": "133c93f0230286c27219e7d7159e57a5858eae7d8a98a61fdb4294bcd3f9f639",
+  "wheelSha256": "89430a30963de31d97a0ce43c2b414f5eeea27ca1dc495a00936815b00e869f2",
   "checks": {
     "wheelCurrentSourceBytes": "PASS",
     "skillMirrors": "PASS",
@@ -16,11 +16,10 @@
     "archiveBytesAndCRC": "PASS",
     "manifestVersions": "PASS",
     "isolatedWheelInstall": "PASS",
-    "botTests": "PASS 1555",
+    "botTests": "PASS 1560",
     "ruff": "PASS",
-    "prescribedChecks": "PASS",
-    "authenticatedDownload": "PASS byte-for-byte",
-    "ci": "PASS both runs"
+    "prescribedChecks": "PASS"
   },
-  "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime"
+  "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime",
+  "categorySourceRestriction": "NOT_INCLUDED; requires category scope contract"
 }

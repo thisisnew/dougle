@@ -88,7 +88,7 @@ def lanes(app, limit=2):
                 future.result(timeout=10)
 
 
-@pytest.mark.parametrize("limit", [1, 2, 4])
+@pytest.mark.parametrize("limit", [1, 2, 4, 6])
 def test_r07_limit_is_shared_by_connections_and_explicit_config_is_not_migrated(app, limit):
     cfg = replace(app.cfg, engine=replace(app.cfg.engine, max_parallel=limit))
     path = app.cfg.home / "config.toml"
@@ -104,7 +104,7 @@ def test_r07_limit_is_shared_by_connections_and_explicit_config_is_not_migrated(
         observer.close()
     assert path.read_bytes() == before
     path.write_text(path.read_text().replace(f"max_parallel = {limit}\n", ""))
-    assert load(path).engine.max_parallel == 2
+    assert load(path).engine.max_parallel == 4
 
 
 def test_r07_legacy_saved_one_upgrades_in_memory_without_changing_file(app):
@@ -115,7 +115,7 @@ def test_r07_legacy_saved_one_upgrades_in_memory_without_changing_file(app):
     before, info = path.read_bytes(), path.stat()
     for _ in range(2):
         upgraded = load(path)
-        assert upgraded.engine.max_parallel == 2
+        assert upgraded.engine.max_parallel == 4
         assert upgraded.engine.parallelism_version == 1
         assert replace(upgraded.engine, max_parallel=1) == legacy.engine
         assert upgraded.slack == legacy.slack and upgraded.home == legacy.home
@@ -127,7 +127,7 @@ def test_r07_legacy_saved_one_upgrades_in_memory_without_changing_file(app):
         info.st_mode,
     )
     app.store.configure_processing(upgraded.engine.max_parallel)
-    assert app.store.processing_status()["max_parallel"] == 2
+    assert app.store.processing_status()["max_parallel"] == 4
     # A later explicit user save may select serial mode; it must survive all reloads.
     serial = replace(upgraded, engine=replace(upgraded.engine, max_parallel=1))
     save(serial, path)
@@ -143,10 +143,10 @@ def test_r07_unmarked_configuration_uses_default_or_keeps_valid_nonlegacy_limit(
     save(app.cfg, path)
     content = path.read_text().replace("parallelism_version = 1\n", "")
     content = content.replace(
-        "max_parallel = 2\n", "" if setting == "absent" else f"max_parallel = {setting}\n"
+        "max_parallel = 4\n", "" if setting == "absent" else f"max_parallel = {setting}\n"
     )
     path.write_text(content)
-    assert load(path).engine.max_parallel == (2 if setting == "absent" else int(setting))
+    assert load(path).engine.max_parallel == (4 if setting == "absent" else int(setting))
     assert path.read_text() == content
 
 
@@ -157,7 +157,7 @@ def test_r07_unmarked_configuration_uses_default_or_keeps_valid_nonlegacy_limit(
         ("max_parallel", "1.0"),
         ("max_parallel", '"1"'),
         ("max_parallel", "0"),
-        ("max_parallel", "5"),
+        ("max_parallel", "-1"),
         ("parallelism_version", "true"),
         ("parallelism_version", "1.0"),
         ("parallelism_version", '"1"'),
@@ -177,16 +177,17 @@ def test_r07_migration_rejects_invalid_types_and_unknown_marker_without_rewrite(
     assert path.read_text() == content
 
 
-@pytest.mark.parametrize("limit", [0, 5, True, 1.5, "2"])
+@pytest.mark.parametrize("limit", [0, -1, True, 1.5, "2", 2**63])
 def test_r07_invalid_parallelism_rejected_without_services(app, limit):
     cfg = replace(app.cfg, engine=replace(app.cfg.engine, max_parallel=limit))
-    with pytest.raises(BotError, match="invalid_integer_setting"):
-        cfg.validate()
+    if limit != 2**63:
+        with pytest.raises(BotError, match="invalid_integer_setting"):
+            cfg.validate()
     with pytest.raises(BotError, match="invalid_integer_setting"):
         app.store.configure_processing(limit)
 
 
-@pytest.mark.parametrize("limit", [1, 2, 4])
+@pytest.mark.parametrize("limit", [1, 2, 4, 6])
 def test_p03_p11_atomic_global_claim_limit_across_connections(app, limit):
     app.store.configure_processing(limit)
     for number in range(1, 9):
@@ -551,7 +552,7 @@ def test_memory_ready_rejects_paths_or_invalid_identity_without_partial_save(app
     assert not app.store.all("SELECT * FROM drafts")
 
 
-@pytest.mark.parametrize("limit", [1, 2, 4])
+@pytest.mark.parametrize("limit", [1, 2, 4, 6])
 def test_runtime_starts_exact_lanes_shares_worker_and_joins_memory_and_inquiries(
     app, monkeypatch, limit
 ):

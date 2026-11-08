@@ -256,7 +256,7 @@ def test_catalog_thread_lock(app, monkeypatch):
     with app.store.processing():
         assert app.worker.run_once()
     assert len(app.engine.calls) == 2 and app.engine.calls[-1][1] == SESSION
-    assert app.cfg.engine.max_parallel == 2
+    assert app.cfg.engine.max_parallel == 4
 
 
 def test_catalog_rejected_draft_not_public_history(app):

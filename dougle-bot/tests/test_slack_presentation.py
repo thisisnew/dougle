@@ -288,7 +288,7 @@ def test_old_unsent_payload_cannot_republish_sources_after_upgrade(app):
 
 @pytest.mark.parametrize(
     "version,expected",
-    [(None, True), ("0.1.4", True), ("0.1.16", True), ("0.1.17", True), ("0.1.18", True), ("0.1.19", True), ("0.1.21", False)],
+    [(None, True), ("0.1.4", True), ("0.1.16", True), ("0.1.17", True), ("0.1.18", True), ("0.1.19", True), ("0.1.22", False)],
 )
 def test_status_checks_daemon_version_not_cli_version(app, monkeypatch, version, expected):
     import dougle_bot.main as main

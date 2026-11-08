@@ -69,7 +69,7 @@ class EngineConfig:
     max_turns: int = 60
     max_budget_usd_per_call: float = 3.0
     daily_budget_usd: float = 30.0
-    max_parallel: int = 2
+    max_parallel: int = 4
     allowed_tools: list[str] = field(default_factory=lambda: sorted(BUILTINS) + DEFAULT_READERS)
     disallowed_tools: list[str] = field(default_factory=lambda: ["Bash", "Agent", "Task"])
     ask_skill: str = "dougle:dougle-ask"
@@ -107,10 +107,14 @@ class Config:
             (self.slack.thread_history_limit, 1, 500),
             (self.engine.timeout_seconds, 10, 3600),
             (self.engine.max_turns, 1, 200),
-            (self.engine.max_parallel, 1, 4),
             (self.engine.parallelism_version, 1, 1),
         ]
         if any(type(v) is not int or not lo <= v <= hi for v, lo, hi in ranges):
+            raise BotError("invalid_integer_setting")
+        if (
+            type(self.engine.max_parallel) is not int
+            or not 1 <= self.engine.max_parallel <= 2**63 - 1
+        ):
             raise BotError("invalid_integer_setting")
         for v in (self.engine.max_budget_usd_per_call, self.engine.daily_budget_usd):
             if type(v) not in (int, float) or not math.isfinite(v) or not 0 < v <= 1000:
@@ -174,7 +178,7 @@ def load(path: Path) -> Config:
         ):
             # In-memory upgrade only. New saves persist the marker, preserving any
             # subsequent explicit max_parallel=1. Do not coerce booleans/floats.
-            engine["max_parallel"] = 2
+            engine["max_parallel"] = 4
         return Config(SlackConfig(**data.get("slack", {})), EngineConfig(**engine), home).validate()
     except FileNotFoundError:
         raise BotError("setup_required") from None
