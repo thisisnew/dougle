@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dougle-bot"
-version = "0.1.18"
+version = "0.1.19"
 description = "Local Slack reply and developer handoff runtime for Dougle skills"
 requires-python = ">=3.12"
 dependencies = ["slack-bolt==1.30.0"]

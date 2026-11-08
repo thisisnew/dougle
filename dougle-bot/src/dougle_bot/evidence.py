@@ -370,6 +370,67 @@ def _locator(value):
     return {"type": "file", "target": posixpath.normpath(value), "lines": lines}
 
 
+def _github_result(body):
+    """Decode only the owned reader's JSON content envelope; never arbitrary provider prose."""
+    if isinstance(body, str):
+        try:
+            body = json.loads(body)
+        except (ValueError, RecursionError):
+            return None
+    if isinstance(body, list):
+        values = [_github_result(part) for part in body if isinstance(part, (dict, str))]
+        values = [value for value in values if value is not None]
+        return values[0] if len(values) == 1 else None
+    if isinstance(body, dict):
+        if body.get("error") or body.get("isError") or body.get("is_error"):
+            return None
+        if body.get("type") == "text":
+            return _github_result(body.get("text"))
+        if isinstance(body.get("content"), list):
+            return _github_result(body["content"])
+        if body.get("kind") == "file":
+            return body
+    return None
+
+
+def github_read_metadata(args, body):
+    value = _github_result(body)
+    if not value or not isinstance(args, dict):
+        return None
+    from .github_reader import SHA, valid_source
+
+    repository, ref, path = (args.get(key) for key in ("repository", "ref", "path"))
+    commit = value.get("commit")
+    if (
+        not valid_source(repository, ref)
+        or not isinstance(path, str)
+        or not isinstance(commit, str)
+        or not SHA.fullmatch(commit)
+        or value.get("repository") != repository
+        or value.get("requested_ref") != ref
+        or value.get("path") != path
+        or not isinstance(value.get("content"), str)
+    ):
+        return None
+    from urllib.parse import quote
+
+    canonical = f"https://github.com/{repository}/blob/{commit}/{quote(path, safe='/')}"
+    if value.get("canonical_url") != canonical:
+        return None
+    if args.get("expected_commit") not in (None, commit):
+        return None
+    return {
+        "tool": "mcp__dougle_source__read_file",
+        "content_type": "content",
+        "locator": _locator(canonical),
+        "repository": repository,
+        "commit": commit,
+        "requested_ref": ref,
+        "line_range": [1, len(value["content"].splitlines())],
+        "indirect": False,
+    }
+
+
 def read_metadata(name, args, body=None):
     """Metadata for an observed read. Callers must separately require actual success.
 
@@ -378,6 +439,11 @@ def read_metadata(name, args, body=None):
     """
     args = args if isinstance(args, dict) else {}
     metadata = {"tool": name, "content_type": "content"}
+    if name == "mcp__dougle_source__read_file":
+        return github_read_metadata(args, body) or {
+            "tool": name,
+            "content_type": "invalid_github_read",
+        }
     if name in {"Read", "Grep", "WebFetch"}:
         key = "file_path" if name == "Read" else "path" if name == "Grep" else "url"
         target = args.get(key)
@@ -429,30 +495,62 @@ def read_metadata(name, args, body=None):
     return metadata
 
 
-def _source_matches(receipt, source, kind):
+def _within_registered_local(target, root):
+    from .guard import registered_local_target
+
+    return registered_local_target(target, [root]) is not None
+
+
+def _source_mismatch(receipt, source, kind):
     metadata = getattr(receipt, "metadata", {})
     # A listing is valid knowledge for questions about the listed identifiers. Its
     # capabilities still exclude code/live; metadata must not reject all listing answers.
     actual = metadata.get("locator")
+    policy = metadata.get("source_policy")
+    if (
+        kind == "code"
+        and isinstance(policy, dict)
+        and (policy.get("github") or not policy.get("complete"))
+    ):
+        is_remote = metadata.get("tool") == "mcp__dougle_source__read_file" and [
+            metadata.get("repository"),
+            metadata.get("requested_ref"),
+        ] in [list(pair) for pair in policy.get("github", [])]
+        is_local = (
+            actual
+            and actual["type"] == "file"
+            and any(
+                _within_registered_local(actual["target"], root) for root in policy.get("local", [])
+            )
+        )
+        if not is_remote and not is_local:
+            return "registered_source_not_read"
     cited = _locator(source.get("location")) if isinstance(source, dict) else None
+    if kind == "code" and metadata.get("tool") == "mcp__dougle_source__read_file" and not cited:
+        return "source_identity_unverified"
     if not actual or not cited or (kind == "knowledge" and metadata.get("indirect")):
-        return True  # Legacy notes cite originals, not necessarily the note file itself.
+        return None  # Knowledge notes may cite recorded originals.
     if actual["type"] != cited["type"]:
-        return True  # Local checkout <-> remote URL requires a repository mapping we do not have.
+        return "source_identity_unverified" if kind == "code" else None
     a, b = actual["target"], cited["target"]
     if actual["type"] == "file":
         if a != b and not (
             (not a.startswith("/") and b.endswith("/" + a))
             or (not b.startswith("/") and a.endswith("/" + b))
         ):
-            return False
+            return "source_mismatch"
     elif a != b:
-        return False
+        return "source_mismatch"
     actual_lines = metadata.get("line_range")
     cited_lines = cited.get("lines")
     if actual_lines and cited_lines:
-        return actual_lines[0] <= cited_lines[0] <= cited_lines[1] <= actual_lines[1]
-    return True
+        if not actual_lines[0] <= cited_lines[0] <= cited_lines[1] <= actual_lines[1]:
+            return "line_range_mismatch"
+    return None
+
+
+def _source_matches(receipt, source, kind):
+    return _source_mismatch(receipt, source, kind) is None
 
 
 def read_kinds(name, args):
@@ -465,6 +563,8 @@ def read_kinds(name, args):
         target = args.get("path", "")
     elif name == "WebFetch":
         target = args.get("url", "")
+    elif name == "mcp__dougle_source__read_file":
+        target = args.get("path", "")
     elif name.startswith("mcp__"):
         # Only tools actually allowed by the runtime are usable. Metadata is knowledge, not live data.
         if name.endswith("__execute_sql_readonly"):
@@ -517,7 +617,13 @@ def read_receipts(raw):
                 body = block.get("content")
                 # Provider/connector errors may appear as structured content without is_error.
                 if kinds and body and not block.get("is_error") and not failed_read(body):
-                    completed[ident] = ReadReceipt(kinds, metadata=read_metadata(name, args, body))
+                    metadata = read_metadata(name, args, body)
+                    if (
+                        name == "mcp__dougle_source__read_file"
+                        and metadata.get("content_type") != "content"
+                    ):
+                        continue
+                    completed[ident] = ReadReceipt(kinds, metadata=metadata)
     return completed
 
 
@@ -659,6 +765,18 @@ def safe_verification_diagnostics(value):
         "not_required",
         "invalid_length",
         "out_of_range",
+        "unknown_receipt",
+        "unsupported_kind",
+        "source_mismatch",
+        "source_identity_unverified",
+        "registered_source_not_read",
+        "line_range_mismatch",
+        "missing_check",
+        "missing_conflicts_with_verified",
+        "unresolved_answer",
+        "image_not_attached",
+        "developer_evidence_missing",
+        "live_freshness_unverified",
     }
     field_pattern = (
         r"verification(?:\.question_kind|\.(?:required|missing)(?:\[[0-3]\])?|"
@@ -678,6 +796,12 @@ def safe_verification_diagnostics(value):
         ):
             safe.append({"field": field, "reason": reason})
     return safe
+
+
+def _read_failure(field, reason):
+    error = BotError("required_read_not_verified")
+    error.issues = [{"field": field, "reason": reason}]
+    raise error
 
 
 def validate_verification(
@@ -711,7 +835,7 @@ def validate_verification(
     if not isinstance(checks, list) or len(checks) > 30:
         raise BotError("invalid_verification")
     verified = set()
-    for check in checks:
+    for index, check in enumerate(checks):
         if not isinstance(check, dict) or set(check) != {"kind", "receipt", "source_index"}:
             raise BotError("invalid_verification")
         kind, receipt, source = check["kind"], check["receipt"], check["source_index"]
@@ -725,28 +849,35 @@ def validate_verification(
         ):
             raise BotError("invalid_verification")
         observed = reads.get(receipt, set())
+        reason = "unknown_receipt" if receipt not in reads else "unsupported_kind"
         valid = kind in observed
         if valid:
-            valid = _source_matches(observed, output["sources"][source], kind)
+            mismatch = _source_mismatch(observed, output["sources"][source], kind)
+            valid = mismatch is None
+            reason = mismatch or reason
         if receipt.startswith("image:"):
             valid = kind == "image" and receipt[6:] in image_ids
+            reason = "image_not_attached"
         if receipt == "developer_report":
+            reason = "developer_evidence_missing"
             valid = (
                 kind in report.get("evidence_kinds", ["live"])
                 if isinstance(report, dict)
                 else kind == "live" and report
             )
         if not valid:
-            raise BotError("required_read_not_verified")
+            _read_failure(f"verification.checks[{index}]", reason)
         verified.add(kind)
-    if required - verified != missing or missing & verified:
-        raise BotError("required_read_not_verified")
+    if missing & verified:
+        _read_failure("verification.missing", "missing_conflicts_with_verified")
+    if required - verified != missing:
+        _read_failure("verification.checks", "missing_check")
     if output["status"] == "answered" and (missing or not required or category == "clarification"):
-        raise BotError("required_read_not_verified")
+        _read_failure("verification.missing", "unresolved_answer")
     return required
 
 
-def failure_summary(output, reads):
+def failure_summary(output, reads, *, issues=None, attempt=None, run_id=None):
     """Bounded diagnostics without tool IDs, file paths, query rows or answer text."""
     value = output.get("verification", {}) if isinstance(output, dict) else {}
     checks = value.get("checks", []) if isinstance(value, dict) else []
@@ -766,12 +897,19 @@ def failure_summary(output, reads):
             unknown += 1
         elif check.get("kind") not in reads[receipt]:
             unsupported += 1
-    return {
+    summary = {
         "successful_reads": len(reads),
         "available_kinds": sorted({k for kinds in reads.values() for k in kinds if k in KINDS}),
         "unknown_receipts": unknown,
         "unsupported_kinds": unsupported,
     }
+
+    if issues is not None:
+        summary["issues"] = safe_verification_diagnostics(issues)
+    for key, value in (("attempt", attempt), ("run_id", run_id)):
+        if type(value) is int and value > 0:
+            summary[key] = value
+    return summary
 
 
 def safe_failure_summary(raw):
@@ -780,11 +918,22 @@ def safe_failure_summary(raw):
     except (ValueError, TypeError):
         return None
     keys = {"successful_reads", "available_kinds", "unknown_receipts", "unsupported_kinds"}
-    if not isinstance(value, dict) or set(value) != keys:
+    if (
+        not isinstance(value, dict)
+        or not keys <= set(value)
+        or set(value) - keys - {"issues", "attempt", "run_id"}
+    ):
         return None
     if any(type(value[k]) is not int or value[k] < 0 for k in keys - {"available_kinds"}):
         return None
     kinds = value["available_kinds"]
     if not isinstance(kinds, list) or any(not isinstance(k, str) or k not in KINDS for k in kinds):
+        return None
+    if "issues" in value and (
+        not isinstance(value["issues"], list)
+        or safe_verification_diagnostics(value["issues"]) != value["issues"]
+    ):
+        return None
+    if any(type(value[k]) is not int or value[k] <= 0 for k in ("attempt", "run_id") if k in value):
         return None
     return value

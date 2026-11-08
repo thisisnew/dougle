@@ -1,15 +1,15 @@
 {
-  "version": "0.8.21",
-  "optionalBotRuntime": "0.1.18",
-  "publication": "v0.8.21-skills-preview.1",
+  "version": "0.8.22",
+  "optionalBotRuntime": "0.1.19",
+  "publication": "NOT_PUBLISHED",
   "files": 57,
-  "archiveBytes": 273137,
-  "sha256": "10bd06bc44cee1590868c0269480fc7e89054db37b02c5d6a86b70025469db7b",
-  "wheelSha256": "bae5615d87699b8a7b7e3521caf7578dd6ac8c823339f0bca81f7c1d787197ac",
+  "archiveBytes": 287440,
+  "sha256": "3fba505619d4202fd28d3c3facdc76070717213fc10d1a826267ea02cec4b0b4",
+  "wheelSha256": "a08208c253a2d05ca049c4a079ffed0cc7c9bbaeb0a7bc260a1716735d54a292",
   "structuralChecks": 284,
-  "botTests": 1228,
+  "botTests": 1521,
   "packageBytes": "PASS archive/mirrors/wheel source/checksums",
-  "isolatedWheelInstall": "PASS Python3.13",
+  "isolatedWheelInstall": "PASS Python3.13, MCP registry dispatch and default concurrency 2",
   "realModelCalls": 0,
   "actualCompanyIntegration": "NOT_RUN"
 }

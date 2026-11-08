@@ -13,6 +13,7 @@ from .evidence import (
     validate_verification,
     verification_diagnostics,
 )
+from .freshness import convert_unverified_live
 from .handoff import reported_evidence, route_unresolved
 from .handoff_notice import after_developer_dm
 from .images import collect_images, prompt_messages
@@ -479,8 +480,28 @@ class Worker:
                         required_floor=required_evidence,
                         question=inquiry["question_text"],
                     )
+                    evidence_reads = (
+                        repair_reads
+                        if presentation_repair is not None or verification_repair is not None
+                        else result.reads
+                    )
+                    scoped = convert_unverified_live(output, evidence_reads, report=lookup or False)
+                    if scoped is not output:
+                        output = validate_output(scoped)
+                        validate_verification(
+                            output,
+                            evidence_reads,
+                            image_ids={img.file_id for img in images},
+                            report=lookup or False,
+                            required_floor=required_evidence,
+                            question=inquiry["question_text"],
+                        )
+                        self.store.audit(ident, "system", "live_freshness_unverified", str(run_id))
                     self.store.audit(
-                        ident, "system", "evidence_checks_verified", json.dumps(verification)
+                        ident,
+                        "system",
+                        "evidence_checks_verified",
+                        json.dumps(output["verification"]),
                     )
                     if presentation_repair is not None:
                         self.store.audit(
@@ -513,11 +534,23 @@ class Worker:
                             json.dumps(correction_detail),
                         )
                     if exc.code == "required_read_not_verified":
+                        correction_detail = getattr(exc, "issues", [])
                         self.store.audit(
                             ident,
                             "system",
                             "read_verification_failed",
-                            json.dumps(failure_summary(result.output, result.reads)),
+                            json.dumps(
+                                failure_summary(
+                                    result.output,
+                                    repair_reads
+                                    if presentation_repair is not None
+                                    or verification_repair is not None
+                                    else result.reads,
+                                    issues=correction_detail,
+                                    attempt=attempt,
+                                    run_id=run_id,
+                                )
+                            ),
                         )
                     if schema_retried:
                         raise

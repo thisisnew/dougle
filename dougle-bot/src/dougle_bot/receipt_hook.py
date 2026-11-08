@@ -4,7 +4,7 @@ import json
 import re
 import sys
 
-from .evidence import failed_read, read_kinds
+from .evidence import failed_read, github_read_metadata, read_kinds
 
 
 def context(event):
@@ -17,6 +17,10 @@ def context(event):
     if not body or failed_read(body):
         return {}
     kinds = read_kinds(str(event.get("tool_name", "")), event.get("tool_input"))
+    if event.get("tool_name") == "mcp__dougle_source__read_file" and not github_read_metadata(
+        event.get("tool_input"), body
+    ):
+        return {}
     if not kinds:
         return {}
     # No source content, paths, query rows or secrets are copied into the reminder.

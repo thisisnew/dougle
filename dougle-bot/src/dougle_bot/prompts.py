@@ -221,6 +221,14 @@ Use ask for evidence-based research, i-have-adhd for readable structure, and pla
 explaining the customer's actual concern. Apply presentation after required investigation, never instead of it.
 Do not send or schedule Slack messages, react, edit business code/data, install tools, or publish knowledge.
 Use Dougle's existing source/topic memory; do not build another search engine. Source systems are read-only.
+For a registered GitHub source, use the runtime mcp__dougle_source__list_sources / resolve_ref / read_file
+reader with its registered repository/ref. It reads remote code through existing gh authentication,
+without enabling Bash. Cite the exact canonical_url returned by read_file (commit-pinned).
+Do not replace a registered remote source with a local checkout or historical topic excerpt.
+Resolve once and pass expected_commit for related file reads; a moved ref requires consistent rereading.
+Local code is evidence only for an explicitly local source/question. A working branch is not proof of
+remote develop or deployed production. Missing reader/authentication must be reported specifically;
+do not claim permission denial unless observed. Source registration missing is not access denial.
 In this bot, each inquiry runs in its own agent call. Knowledge Write/Edit operations are staged
 privately by the runtime and committed separately after answer verification. Use ordinary absolute
 paths under ~/.dougle; read an existing file with Read before proposing an edit. Do not bypass the
@@ -271,6 +279,8 @@ For legacy reports with observed_at, preserve that exact timestamp. New reports 
 and observed_at=null: submitted_at is receipt time, NEVER the query time or proof of freshness.
 Do not ask for a separate timestamp field. If the report explicitly describes old data or its scope
 cannot answer the current question, request the missing current result rather than inventing freshness.
+When the developer report establishes a current result, cite developer_report as its live evidence;
+a prior unverified replica query remains knowledge only. The report does not establish unrelated queries.
 A posted manual correction is the actual published answer; rejected/unposted drafts are not verified truth.
 Do not persist raw developer results. You may update only durable non-sensitive Dougle knowledge.
 DATA_JSON_START\n{json.dumps(payload, ensure_ascii=False)}\nDATA_JSON_END"""

@@ -136,7 +136,9 @@ def test_real_trace_proof_preserves_no_tool_contents():
         trace([read_event(), outcome(ident="read1", content="synthetic original code")])
     )
     assert parsed.reads == {"read1": {"knowledge", "code"}}
-    validate_verification(output(), parsed.reads)
+    value = output()
+    value["sources"][0]["location"] = "/synthetic/project/Rule.java"
+    validate_verification(value, parsed.reads)
     assert "synthetic original code" not in repr(parsed.reads)
 
 

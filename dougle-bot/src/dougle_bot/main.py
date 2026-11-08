@@ -10,8 +10,10 @@ from dataclasses import replace
 from pathlib import Path
 
 from . import __version__
+from .cards import RESEARCH_ERRORS
 from .config import Config, EngineConfig, SlackConfig, channel_id, load, private_dir, save
 from .evidence import safe_failure_summary, safe_verification_diagnostics
+from .images import IMAGE_ERRORS
 from .monitor import recent_activity
 from .progress import safe_profile
 from .recovery import reconcile
@@ -21,6 +23,98 @@ from .secrets import SERVICES, KeychainSecretStore
 from .slack_gateway import BoltSlackGateway
 from .startup import latest_report
 from .store import Store
+
+INQUIRY_FAILURE_CODES = (
+    frozenset(RESEARCH_ERRORS)
+    | frozenset(IMAGE_ERRORS)
+    | frozenset(
+        {
+            "operation_failed",
+            "processing_failed",
+            "engine_failed",
+            "engine_launch_failed",
+            "engine_output_too_large",
+            "invalid_engine_output",
+            "invalid_engine_path",
+            "invalid_session",
+            "session_not_found",
+            "invalid_skill_trace",
+            "required_skill_not_activated",
+            "daily_budget_exceeded",
+            "bot_stopped",
+            "inquiry_cancelled",
+            "channel_not_allowed",
+            "invalid_sources",
+            "sources_required",
+            "unsafe_source_url",
+            "sources_belong_in_review_field",
+            "polite_language_required",
+            "invalid_text",
+            "sensitive_content",
+            "invalid_lookup",
+            "invalid_lookup_result",
+            "invalid_lookup_time",
+            "lookup_attribution_required",
+            "lookup_time_required",
+            "invalid_verification_repair",
+            "invalid_memory_batch",
+            "unsafe_policy_path",
+            "unsafe_memory_path",
+            "unsafe_storage_path",
+            "unsafe_storage_owner",
+            "stale_job",
+            "stale_draft",
+            "inquiry_closed",
+            "already_processing",
+            "automatic_reply_failed",
+            "automatic_reply_interrupted",
+            "delivery_uncertain",
+            "stopped_during_post",
+            "card_delivery_failed",
+            "empty_public_answer",
+            "answer_line_too_long",
+            "slack_failed",
+            "slack_connection_failed",
+            "incomplete_history",
+            "repeated_cursor",
+            "thread_history_limit",
+            "file_not_found",
+            "access_denied",
+            "channel_not_found",
+            "not_in_channel",
+            "missing_scope",
+            "invalid_auth",
+            "token_revoked",
+            "is_archived",
+            "message_not_found",
+            "thread_not_found",
+            "invalid_blocks",
+            "invalid_arguments",
+            "ratelimited",
+            "user_not_found",
+            "cannot_dm_bot",
+            "expired_trigger_id",
+            "trigger_exchanged",
+            "already_reacted",
+            "no_reaction",
+            "invalid_name",
+        }
+    )
+)
+
+
+def _inquiry_error(value):
+    # BotError's syntax check is not an allowlist: arbitrary snake_case can still
+    # contain private data. Persisted/provider text must never reach status verbatim.
+    if value is None:
+        return None
+    return (
+        value if isinstance(value, str) and value in INQUIRY_FAILURE_CODES else "operation_failed"
+    )
+
+
+def _inquiry_id(value):
+    return value if type(value) is int and 0 < value < 2**63 else None
 
 
 def default_home():
@@ -90,11 +184,27 @@ def status(home, config_path):
                 )
                 if (profile := safe_profile(row["detail"])) is not None
             ]
-            result["recent_read_failures"] = [
-                {"inquiry_id": row["inquiry_id"], **summary}
+            result["recent_inquiry_failures"] = [
+                {
+                    "inquiry_id": row["id"],
+                    "status": row["status"],
+                    "error": _inquiry_error(row["error"]),
+                }
                 for row in store.all(
-                    "SELECT inquiry_id,detail FROM audit WHERE action='read_verification_failed' ORDER BY id DESC LIMIT 5"
+                    "SELECT id,status,substr(error,1,81) AS error FROM inquiries "
+                    "WHERE status IN ('failed','post_unknown') OR "
+                    "(status IN ('needs_lookup','awaiting_approval') AND error IS NOT NULL) "
+                    "ORDER BY id DESC LIMIT 10"
                 )
+            ]
+            result["recent_read_failures"] = [
+                {"inquiry_id": _inquiry_id(row["inquiry_id"]), **summary}
+                for row in store.all(
+                    "SELECT inquiry_id,substr(detail,1,16384) AS detail FROM audit "
+                    "WHERE action='read_verification_failed' ORDER BY id DESC LIMIT 5"
+                )
+                # The shared sanitizer accepts both old count-only rows and optional
+                # field/reason issues, run_id and attempt. Never merge unparsed JSON.
                 if (summary := safe_failure_summary(row["detail"])) is not None
             ]
             result["recent_verification_failures"] = []

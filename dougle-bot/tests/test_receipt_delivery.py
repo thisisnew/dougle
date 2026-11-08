@@ -36,6 +36,7 @@ def test_actual_hook_subprocess_supplies_unpredictable_id_and_worker_posts(
         question_kind="domain" if kind == "knowledge" else "implementation", required=[kind]
     )
     value["verification"]["checks"] = []
+    value["sources"][0]["location"] = path
     # A fresh random ID is generated inside the subprocess. Model output starts without any ID.
     code = f"""
 import sys,json,subprocess,shlex,uuid

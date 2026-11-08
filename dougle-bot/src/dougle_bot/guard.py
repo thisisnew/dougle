@@ -7,6 +7,62 @@ from pathlib import Path
 from .memory import STAGED_FILES, read_input, redirect, safe_path, session_area
 
 
+def registered_local_target(target, roots):
+    """Return the canonical target within a canonical registered root, or None.
+
+    Filesystem aliases such as macOS /tmp are valid. This is a point-in-time
+    containment check, not protection against a symlink swap after the check.
+    Callers recording evidence should retain this runtime-computed identity.
+    """
+    try:
+        if not isinstance(target, (str, Path)) or not isinstance(roots, (list, tuple, set)):
+            return None
+        path = Path(target).expanduser()
+        if not path.is_absolute() or ".." in path.parts:
+            return None
+        canonical = path.resolve()
+        # Python 3.13 non-strict resolve may leave a symlink loop unresolved.
+        if any(part.is_symlink() for part in (canonical, *canonical.parents)):
+            return None
+        for root in roots:
+            if not isinstance(root, (str, Path)):
+                continue
+            registered = Path(root).expanduser()
+            if not registered.is_absolute() or ".." in registered.parts:
+                continue
+            canonical_root = registered.resolve()
+            if any(part.is_symlink() for part in (canonical_root, *canonical_root.parents)):
+                continue
+            if canonical.is_relative_to(canonical_root):
+                return str(canonical)
+    except (OSError, ValueError, RuntimeError):
+        return None
+    return None
+
+
+def _original_code_allowed(policy, name, raw_path, resolved):
+    source_policy = policy.get("source_policy")
+    if name not in {"Read", "Grep"} or not isinstance(source_policy, dict):
+        return True
+    if not (
+        source_policy.get("github")
+        or source_policy.get("local")
+        or not source_policy.get("complete")
+    ):
+        return True
+    from .evidence import CODE_SUFFIXES
+
+    if (
+        raw_path.suffix.lower() not in CODE_SUFFIXES
+        and resolved.suffix.lower() not in CODE_SUFFIXES
+    ):
+        return True
+    memory = Path(policy["memory"]).expanduser().resolve()
+    if resolved.is_relative_to(memory):
+        return True  # Memory notes are not original-code proof; preserve authorized reads.
+    return registered_local_target(raw_path, source_policy.get("local", [])) is not None
+
+
 def _owned_files(policy, path):
     if not policy.get("memory_session"):
         return False
@@ -104,7 +160,7 @@ def _permitted(policy, name, args):
                 return False
             if raw_path != memory:
                 safe_path(memory, raw_path.relative_to(memory))
-        return True
+        return _original_code_allowed(policy, name, raw_path, p)
     return True
 
 

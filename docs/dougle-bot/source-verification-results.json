@@ -1,0 +1,61 @@
+{
+  "status": "PASS_LOCAL",
+  "version": "0.8.22",
+  "runtime": "0.1.19",
+  "tests": 1521,
+  "seconds": 67.02,
+  "junitSha256": "268fe492083f8c06caa5115db8b310aecc285e2b93764831718f3b549b8eaee8",
+  "cases": "source-verification-cases.md",
+  "sourceSha256": {
+    "dougle-bot/src/dougle_bot/__init__.py": "edd6eec5c576067b960007780c9dbc599ed5054045ba595b5efabd4dea62265e",
+    "dougle-bot/src/dougle_bot/actions.py": "0b3a3d7524f5454ff276090367afea6c28a5908818bb559ac30182d383c1a036",
+    "dougle-bot/src/dougle_bot/answer_policy.py": "86a1f813b5d3f8a8142814984159a847ca7e98e0de0a6313d9a4c3a5728e671b",
+    "dougle-bot/src/dougle_bot/cards.py": "88838a8fd3ded9042b49b52b40b8de3a9f1c80c0e40f427539a9a2466ab7514c",
+    "dougle-bot/src/dougle_bot/config.py": "b7869654ac13e3a2e1adf69a1fff780809563b122c87683bb11319c95b2b5f31",
+    "dougle-bot/src/dougle_bot/developer_notice.py": "b458941874c75a0cf6a2da0edc1d9992b23b664deb1c413e0a82782c36b03659",
+    "dougle-bot/src/dougle_bot/engine.py": "e1b9f6c31f617d26c8845cbc058c4ab25a7c59c9ddb921c27da0ddbc4f6ecdba",
+    "dougle-bot/src/dougle_bot/evidence.py": "6e4e7110dab20c766ee6d720f5dfe8a202959fbc2010d7e0104f57ab95516e4a",
+    "dougle-bot/src/dougle_bot/freshness.py": "b907a0b7bf69e0291525df55d1c5e662cef3ef9897ef6147aa1c33c8472208ea",
+    "dougle-bot/src/dougle_bot/github_reader.py": "09b3b602376632ff33337dd2ac667e28390c19569bfa3ecd5161b325a91d80d9",
+    "dougle-bot/src/dougle_bot/guard.py": "7c86b3cafbd29ad11e1de1cfdfa4253a3ff63941ea8a6ebda34a62872072141a",
+    "dougle-bot/src/dougle_bot/handoff.py": "a8bec4b795fa5beeb31347ac93a771a6d0666d2c41a981c6924774fade6c2887",
+    "dougle-bot/src/dougle_bot/handoff_notice.py": "54d152eb76d6d702efe688aa2eadb0539e5c03b7bf26d69cb30ff0db13531765",
+    "dougle-bot/src/dougle_bot/images.py": "f22da350c5a33f57eaf43ac8639b37813708202040b0cbb10ee998ae08f5daf9",
+    "dougle-bot/src/dougle_bot/intake.py": "7d37751cb1e54111b96471e2b471bcd58288941995c70247b445a3a03f83130a",
+    "dougle-bot/src/dougle_bot/main.py": "1fa45d4859eda488a45d26e8f99881f14a82abc95acde5a160e2e052f9b529fc",
+    "dougle-bot/src/dougle_bot/memory.py": "cd926ad4dd7613479dd9053ac124baffd430551e486773056fb71690a95ce4c1",
+    "dougle-bot/src/dougle_bot/memory_worker.py": "862e017fbac21be7600e2b0109189880b43dd0044f86184f3b1deaaf0841e09d",
+    "dougle-bot/src/dougle_bot/monitor.py": "033daca08bf12e8457a4b70ad3785a800148eb9ffe5cd0fe7d11c668ec406b5b",
+    "dougle-bot/src/dougle_bot/presentation.py": "22d6903aa2b7644f74b63fc99530bf17eca0edee57e4f1b17b276527b746b497",
+    "dougle-bot/src/dougle_bot/progress.py": "f286f6d0014b36711111d310ade6c8da2d4607833e5134f039ce11641bf849df",
+    "dougle-bot/src/dougle_bot/prompts.py": "e39b227232cf8789855a2c18371bbcc1304c9ce8e27cd43a70c70e5662135bf9",
+    "dougle-bot/src/dougle_bot/receipt_hook.py": "1d501ad39da0b8f79fe441307aa6eba5282dfa6223fcac75534ef017949efec7",
+    "dougle-bot/src/dougle_bot/recovery.py": "b1e65c1c075bb084fb6fa0cd982267f146533452c0a9a8007ace802a0b513d1a",
+    "dougle-bot/src/dougle_bot/runtime.py": "b11d78f0f24a7833bb391757bda7518894f4099d4c7c00f7860bcdbfe51c1e3c",
+    "dougle-bot/src/dougle_bot/safety.py": "e062f24cd290f930cb88715d5004e30df7971bbf63e3f534d604ce4d426ba94f",
+    "dougle-bot/src/dougle_bot/secrets.py": "bc9177e1ff367df479f3e1a032bc8f97ff4b863e511e42927f75859963fb92e8",
+    "dougle-bot/src/dougle_bot/slack_gateway.py": "f51223cc4aee97f66a6500b310859b14591ba9eca9c0a4e40c405fa66c277af9",
+    "dougle-bot/src/dougle_bot/source_registry.py": "b7b4e2305cf16ef5a9bb6fce3e78add74a36ea7bcecc914d50caec4ddc5a0e75",
+    "dougle-bot/src/dougle_bot/startup.py": "d483745a82d1bd1a47087dd75bbb12db63e3815238847f9667b50790a5a1e2e0",
+    "dougle-bot/src/dougle_bot/store.py": "5cc8bcfb733fab892f0fccadb4c93abcc5401a158e5e069835369cdc16c293a1",
+    "dougle-bot/src/dougle_bot/worker.py": "fc7f161c1200438e3c0c268f90e05fcbacd528a14d9a166b9836c7e3bc4ff22f"
+  },
+  "independentReview": {
+    "registryInactiveFallback": "FIXED_AND_RECHECKED",
+    "canonicalCitationAndLineRange": "FIXED_AND_RECHECKED",
+    "manualReportMustNotAuthorizeOtherQueries": "FIXED_AND_RECHECKED",
+    "registeredLocalSymlinkEscape": "FIXED_AND_RECHECKED",
+    "existingConcurrencyAndResume": "PASS"
+  },
+  "limits": [
+    "Actual company inquiry #36 failure subtype absent from old logs; not reconstructed",
+    "Actual Claude MCP/gh/company integration NOT_RUN; synthetic CLI/MCP protocol, fake HTTP and fake Slack only",
+    "Generic SQL does not attest production freshness; current-state automatic query answers hand off unless supported by developer report",
+    "Registered source Markdown discovery supports documented fields with bounded reads; no whole-store semantic parser",
+    "GitHub original reads need installed gh and existing authorization; no automatic login",
+    "Filesystem containment is a point-in-time check, not atomic against external symlink swaps"
+  ],
+  "remaining": [
+    "GitHub CI and release download verification"
+  ]
+}
