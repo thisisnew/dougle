@@ -294,6 +294,7 @@ def test_stdio_handshake_tools_and_read():
         "read_file",
         "resolve_ref",
         "list_sources",
+        "find_files",
     }
     assert json.loads(replies[2]["result"]["content"][0]["text"])["commit"] == COMMIT
     assert len(runner.calls) == 4
@@ -305,7 +306,7 @@ def test_empty_config_startup_and_listing_require_no_github(tmp_path):
     runner = FakeRunner([])
     reader = GitHubReader(load_sources(path), runner)
     assert dispatch(reader, "initialize", {})["capabilities"] == {"tools": {}}
-    assert len(dispatch(reader, "tools/list", {})["tools"]) == 3
+    assert len(dispatch(reader, "tools/list", {})["tools"]) == 4
     with pytest.raises(ReaderError, match="source_not_allowed"):
         reader.resolve_ref(REPO, REF)
     assert not runner.calls

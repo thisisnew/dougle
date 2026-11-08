@@ -28,7 +28,7 @@ COMMIT = "a" * 40
 TREE = "b" * 40
 CONTENT = "class Order {\n    boolean allowed = true;\n}\n"
 CANONICAL = f"https://github.com/{REPOSITORY}/blob/{COMMIT}/Order.java"
-TOOLS = {f"mcp__dougle_source__{name}" for name in ("read_file", "resolve_ref", "list_sources")}
+TOOLS = {f"mcp__dougle_source__{name}" for name in ("read_file", "resolve_ref", "list_sources", "find_files")}
 
 
 class RecordingEngine(ClaudeCliEngine):
@@ -174,7 +174,7 @@ else:
     completed=subprocess.run(command,input=''.join(json.dumps(r)+'\\n' for r in requests),text=True,capture_output=True,check=True,timeout=15)
     replies=[json.loads(line) for line in completed.stdout.splitlines()]
     assert replies[0]['result']['serverInfo']['name']=='dougle_source'
-    assert {{t['name'] for t in replies[1]['result']['tools']}}=={{'list_sources','resolve_ref','read_file'}}
+    assert {{t['name'] for t in replies[1]['result']['tools']}}=={{'list_sources','resolve_ref','read_file','find_files'}}
     body=replies[2]['result']
 hook=settings['hooks']['PostToolUse'][0]['hooks'][0]['command']
 hook_event={{'hook_event_name':'PostToolUse','tool_name':name,'tool_input':args,'tool_response':body,'tool_use_id':ident}}

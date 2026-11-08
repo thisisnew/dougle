@@ -191,6 +191,47 @@ class GitHubReader:
             ],
         }
 
+    def find_files(self, repository, ref, filename, expected_commit=None):
+        """Find exact basenames remotely; paths are discovery, never file evidence."""
+        if (
+            not isinstance(filename, str)
+            or not 0 < len(filename) <= 255
+            or filename in (".", "..")
+            or any(ord(c) < 32 or c in "/\\" for c in filename)
+        ):
+            raise ReaderError("invalid_filename")
+        if expected_commit is not None and (
+            not isinstance(expected_commit, str) or not SHA.fullmatch(expected_commit)
+        ):
+            raise ReaderError("invalid_expected_commit")
+        commit, tree = self._resolve(repository, ref)
+        if expected_commit is not None and expected_commit != commit:
+            raise ReaderError("github_ref_changed")
+        endpoint = f"repos/{repository}/git/trees/{tree}?recursive=1"
+        data = self._immutable_get(endpoint)
+        entries = data.get("tree")
+        if data.get("truncated") is not False or not isinstance(entries, list):
+            raise ReaderError("incomplete_github_tree")
+        paths = set()
+        for entry in entries:
+            if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
+                raise ReaderError("invalid_github_response")
+            path = entry["path"]
+            if entry.get("type") == "blob" and entry.get("mode") in ("100644", "100755"):
+                if path.rsplit("/", 1)[-1] == filename:
+                    if any(p in ("", ".", "..") for p in path.split("/")):
+                        raise ReaderError("invalid_github_response")
+                    paths.add(path)
+        if len(paths) > 100:
+            raise ReaderError("too_many_file_matches")
+        self._remember(endpoint, data)
+        return {
+            **self._metadata(repository, ref, commit, "file_paths"),
+            "filename": filename,
+            "paths": sorted(paths),
+            "complete": True,
+        }
+
     def read_file(self, repository, ref, path, expected_commit=None):
         if (
             not isinstance(path, str)
@@ -288,6 +329,13 @@ def tool_definitions():
                 "Resolve an allowlisted GitHub ref remotely; not file evidence.",
                 properties,
                 ["repository", "ref"],
+            ),
+            (
+                "find_files",
+                "Find exact filenames in the registered remote ref. Returns all matching paths "
+                "and commit, not file contents or code evidence. Read candidates with read_file.",
+                {**properties, "filename": {"type": "string"}, "expected_commit": {"type": "string"}},
+                ["repository", "ref", "filename"],
             ),
             (
                 "read_file",

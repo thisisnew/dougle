@@ -204,6 +204,7 @@ class ClaudeCliEngine:
                         *cfg.allowed_tools,
                         "StructuredOutput",
                         "ToolSearch",
+                        "mcp__dougle_source__find_files",
                         "mcp__dougle_source__read_file",
                         "mcp__dougle_source__resolve_ref",
                         "mcp__dougle_source__list_sources",
@@ -358,6 +359,7 @@ class ClaudeCliEngine:
             )
             mcp_file.chmod(0o600)
             github_tools = [
+                "mcp__dougle_source__find_files",
                 "mcp__dougle_source__read_file",
                 "mcp__dougle_source__resolve_ref",
                 "mcp__dougle_source__list_sources",
