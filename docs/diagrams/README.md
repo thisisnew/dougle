@@ -8,6 +8,7 @@ GitHub 문서에는 한글 글꼴과 배치를 고정한 PNG를 사용합니다.
 | 작은 화면의 개요 | [PNG](archify/overview-mobile.png) · [SVG](archify/overview-mobile.svg) | [JSON](archify/overview-mobile.json) | [HTML](archify/overview-mobile.html) |
 | 목차·토픽·소스·원본 | [PNG](archify/memory.png) · [SVG](archify/memory.svg) | [JSON](archify/memory.json) | [HTML](archify/memory.html) |
 | Slack 질문과 개발자 확인 | [PNG](archify/bot.png) · [SVG](archify/bot.svg) | [JSON](archify/bot.json) | [HTML](archify/bot.html) |
+| 현재 도메인 모델 | [PNG](archify/domain.png) · [SVG](archify/domain.svg) | [JSON](archify/domain.json) | [HTML](archify/domain.html) |
 
 HTML은 내려받아 브라우저에서 열면 확대·구성 요소 탐색이 가능합니다. GitHub 파일 화면에서는 실행되지 않습니다. [전체 구조 설명](../design.md)
 

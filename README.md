@@ -60,4 +60,18 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 
 처음에는 설치와 채널 설정을 안내합니다. 이후 `@dougle 질문`에 답하고, 개발자 확인이 필요한 문의는 내부 DM으로 이어갑니다. 봇은 **실행 중인 PC의 지식**을 사용합니다. [봇 시작하기](dougle-bot/README.md)
 
+## 현재 도메인 모델
+
+아래 그림은 현재 로컬 더글이 다루는 개념의 관계입니다.
+
+![목차는 토픽을 찾고, 토픽의 주장은 소스 기록을 근거로 삼습니다. 선택한 지식은 공유 패키지로 나가며, Slack 문의는 검증된 답변 초안과 전송 기록으로 이어집니다.](docs/diagrams/archify/domain.png)
+
+| 영역 | 개념과 관계 |
+| --- | --- |
+| 업무 지식 | **목차**가 토픽과 소스를 찾도록 안내합니다. **토픽**은 업무 개념별 **주장**을 담습니다. 주장에는 확인한 근거와 해당하는 조건·예외를 기록하고, **소스 기록**에는 원본 위치와 실제 확인 범위를 남깁니다. 목차 자체는 답변 근거가 아닙니다. |
+| 팀 공유 | **공유 패키지**는 사용자가 고른 토픽·소스 기록을 담습니다. `publish`로 팀 저장소에 올리고, `fetch`로 가져와 내 지식과 합칩니다. 원본 코드 전체나 봇 문의 기록은 옮기지 않습니다. |
+| Slack 문의 | 한 **스레드**에 여러 **문의**가 생길 수 있습니다. 문의마다 작업과 답변 초안이 기록되고, 검증된 초안의 게시 시도는 **전송 기록**으로 남습니다. 개발자 확인 결과도 해당 문의에 연결합니다. |
+
+업무 지식은 `~/.dougle/`의 Markdown에, 봇 문의와 전송 상태는 `~/.dougle-bot/`의 SQLite에 저장합니다. 그림은 개념 관계를 설명하며 실제 테이블의 모든 열을 나열하지 않습니다. [그림 원본](docs/diagrams/archify/domain.json) · [확대해서 보기](docs/diagrams/archify/domain.html) · [구현 근거](docs/design-reference.md)
+
 [업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [0.8.25 배포](https://github.com/thisisnew/dougle/releases/tag/v0.8.25-skills-preview.1) · [원격 파일명 탐색](docs/dougle-bot/remote-file-discovery-cases.md) · [개발·검증](docs/skills/development.md)

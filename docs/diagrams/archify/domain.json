@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "더글의 현재 도메인 모델",
+    "locale": "ko",
+    "output": "docs/diagrams/archify/domain.html",
+    "quality_profile": "showcase",
+    "visual_preset": "editorial",
+    "legend": { "mode": "hidden" },
+    "repository": {
+      "url": "https://github.com/thisisnew/dougle.git",
+      "revision": "19652013feb967fc78e5804d219c0fbe858626cb"
+    }
+  },
+  "components": [
+    {
+      "id": "index", "type": "frontend", "label": "목차", "sublabel": "주제와 출처의 길잡이",
+      "pos": [40, 70], "size": [205, 72],
+      "sources": [{"path": "skills/dougle-ask/references/organization.md", "line": 20, "end_line": 23}]
+    },
+    {
+      "id": "topic", "type": "database", "label": "토픽", "sublabel": "한 업무 개념과 범위",
+      "pos": [350, 70], "size": [205, 72],
+      "sources": [{"path": "skills/dougle-ask/references/records.md", "line": 54, "end_line": 60}]
+    },
+    {
+      "id": "claim", "type": "database", "label": "주장", "sublabel": "설명 · 조건 · 예외",
+      "pos": [660, 70], "size": [205, 72],
+      "sources": [{"path": "skills/dougle-ask/references/records.md", "line": 60, "end_line": 64}]
+    },
+    {
+      "id": "source", "type": "database", "label": "소스 기록", "sublabel": "원본 위치와 확인 범위",
+      "pos": [660, 250], "size": [205, 72],
+      "sources": [{"path": "skills/dougle-ask/references/records.md", "line": 28, "end_line": 36}]
+    },
+    {
+      "id": "package", "type": "cloud", "label": "공유 패키지", "sublabel": "선택한 지식과 출처",
+      "pos": [350, 250], "size": [205, 72],
+      "sources": [{"path": "skills/dougle-publish/references/sharing.md", "line": 13, "end_line": 24}]
+    },
+    {
+      "id": "inquiry", "type": "frontend", "label": "Slack 문의", "sublabel": "스레드 안의 질문",
+      "pos": [40, 250], "size": [205, 72],
+      "sources": [{"path": "dougle-bot/src/dougle_bot/store.py", "line": 22, "end_line": 27}]
+    },
+    {
+      "id": "draft", "type": "backend", "label": "답변 초안", "sublabel": "본문 · 출처 · 검증",
+      "pos": [40, 430], "size": [205, 72],
+      "sources": [{"path": "dougle-bot/src/dougle_bot/store.py", "line": 24, "end_line": 28}]
+    },
+    {
+      "id": "delivery", "type": "external", "label": "전송 기록", "sublabel": "게시 시도와 결과",
+      "pos": [350, 430], "size": [205, 72],
+      "sources": [{"path": "dougle-bot/src/dougle_bot/store.py", "line": 28, "end_line": 30}]
+    }
+  ],
+  "connections": [
+    {"id": "inquiry-index", "from": "inquiry", "to": "index", "label": "관련 지식 탐색"},
+    {"id": "index-topic", "from": "index", "to": "topic", "label": "위치 안내"},
+    {"id": "topic-claim", "from": "topic", "to": "claim", "label": "설명 보유"},
+    {"id": "claim-source", "from": "claim", "to": "source", "label": "근거 참조"},
+    {"id": "package-topic", "from": "package", "to": "topic", "label": "선택해 공유"},
+    {"id": "package-source", "from": "package", "to": "source", "label": "출처 포함"},
+    {"id": "inquiry-draft", "from": "inquiry", "to": "draft", "label": "답변 준비"},
+    {"id": "draft-delivery", "from": "draft", "to": "delivery", "label": "검증 후 게시"}
+  ],
+  "cards": [
+    {"dot": "slate", "title": "개념 모델", "items": ["화살표는 개념 사이의 관계입니다. SQL 외래 키나 자동 게시 허가를 뜻하지 않습니다."]}
+  ]
+}

@@ -41,6 +41,7 @@ for e in list(root):
   root.remove(e)
   if e.tag==tag('rect') and e.get('x')=='0' and e.get('y')=='0': continue
   g.append(e)
+root.append(ET.Element(tag('rect'),{'x':'0','y':'0','width':str(int(w)),'height':str(int(h+80)),'fill':'#fff'}))
 root.append(g)
 for parent in root.iter():
  for e in list(parent):
@@ -83,6 +84,7 @@ notes={
  'overview':'각자 publish·fetch할 수 있습니다. Slack 봇은 실행 PC의 지식을 사용합니다.',
  'memory':'코드 동작은 구현을, 현재 상태는 해당 시스템을 직접 확인합니다.',
  'bot':'개발자에게 요청하면 대기 안내를 남기고, 같은 스레드에 답변을 이어갑니다.'}
+notes['domain']='업무 지식과 Slack 문의는 저장 위치가 다르며, 공유 패키지는 선택한 지식만 담습니다.'
 footer=ET.SubElement(root,tag('text'),{'x':'24','y':str(h+62),'font-size':'14','class':'t-muted'})
 footer.text=(
  '구현 전 목표 구조입니다. 권한·실패·복구 조건은 함께 제공한 서버 명세를 따릅니다.'
