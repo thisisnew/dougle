@@ -256,6 +256,8 @@ class Worker:
     def process_job(self, job, progress):
         ident = job["inquiry_id"]
         inquiry = self.store.inquiry(ident)
+        memory_batches = {}
+        accepted_batches = set()
         self.report_progress(ident, progress)
         try:
             if inquiry["channel_id"] not in self.config.slack.allowed_channel_ids:
@@ -353,6 +355,15 @@ class Worker:
                         cancel_requested=lambda: self.store.inquiry(ident)["status"] == "cancelled",
                         timeout_seconds=progress.remaining(self.config.engine.timeout_seconds),
                     )
+                    if getattr(result, "memory_batch", None):
+                        memory_batches[run_id] = result.memory_batch
+                    if getattr(result, "memory_error", None) in {
+                        "memory_finalize_failed",
+                        "memory_staging_unavailable",
+                    }:
+                        self.store.audit(
+                            ident, "system", "memory_batch_failed", result.memory_error
+                        )
                     progress.usage(result.usage)
                     if progress.remaining(self.config.engine.timeout_seconds) <= 0:
                         raise BotError("engine_timeout")
@@ -619,6 +630,11 @@ class Worker:
             output = route_unresolved(output)
             last_seen = max((m["ts"] for m in messages), key=Decimal, default=inquiry["trigger_ts"])
             progress.phase("persist")
+            verified_batches = {
+                memory_batches[run]
+                for run in (run_id, repair_run_id)
+                if run in memory_batches and output["status"] == "answered"
+            }
             self.store.save_draft(
                 ident,
                 output,
@@ -629,7 +645,9 @@ class Worker:
                 payload.get("instruction"),
                 job_id=job["id"],
                 auto_reply=not self.config.slack.require_approval,
+                memory_batches=sorted(verified_batches),
             )
+            accepted_batches = verified_batches
             if restored:
                 with self.store.tx() as db:
                     db.execute(
@@ -640,6 +658,13 @@ class Worker:
             self.store.fail_job(job, exc.code)
         except Exception:
             self.store.fail_job(job, "processing_failed")
+        finally:
+            # Only enqueue metadata here. Filesystem validation/commits never hold up delivery.
+            for batch in set(memory_batches.values()) - accepted_batches:
+                try:
+                    self.store.audit(ident, "system", "memory_batch_discard", batch)
+                except Exception:
+                    pass  # An unaccepted batch stays held; it cannot be committed implicitly.
         progress.phase("delivery")
         self.publish_ready()
         try:

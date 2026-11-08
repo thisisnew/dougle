@@ -1,8 +1,10 @@
 """Startup gating with fake services; no company credentials, network or real Claude."""
 
 import json
+import subprocess
 import time
 from dataclasses import replace
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -463,10 +465,22 @@ def test_probe_through_owned_fake_process_policy_and_stream(app, tmp_path):
         + ")\n",
     )
     cfg = replace(reader_cfg(app), claude_bin=script)
-    engine = ClaudeCliEngine(cfg, app.cfg.home, startup_probe=True)
+    captured = []
+
+    def launch(args, **kwargs):
+        settings = Path(args[args.index("--settings") + 1])
+        policy = settings.parent / "tools.json"
+        assert settings.stat().st_mode & 0o777 == 0o600
+        assert policy.stat().st_mode & 0o777 == 0o600
+        captured.append((settings, json.loads(policy.read_text())))
+        return subprocess.Popen(args, **kwargs)
+
+    engine = ClaudeCliEngine(cfg, app.cfg.home, startup_probe=True, popen=launch)
     checked = check_engine(cfg, app.store, engine)
     assert checked["phase"] == "ready"
-    policy = json.loads((app.cfg.home / "policy/tools.json").read_text())
+    assert len(captured) == 1
+    settings, policy = captured[0]
+    assert not settings.exists()
     assert policy["startup_probe"] is True
     assert not permitted(policy, "Read", {"file_path": "/business/private"})
     assert app.store.one("SELECT * FROM engine_runs")["cost_usd"] == 0.03

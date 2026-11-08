@@ -19,6 +19,25 @@ from .store import Store
 from .worker import Worker
 
 
+def process_inquiries(worker, store, stop):
+    """Run one inquiry lane; shared Worker retains its card and Monitor locks."""
+    try:
+        while not stop.is_set() and store.control()["desired"] == "running":
+            with store.processing():
+                try:
+                    worked = worker.run_once()
+                except Exception:
+                    # Stop peers before releasing an unexpectedly interrupted job.
+                    stop.set()
+                    store.stop("worker_failed")
+                    return
+            if not worked:
+                stop.wait(0.25)
+    except Exception:
+        stop.set()
+        store.stop("worker_failed")
+
+
 def apple_silicon():
     if platform.system() != "Darwin":
         return False
@@ -256,7 +275,8 @@ def serve(config, secrets, *, allow_unverified_readers=False):
     with InstanceLock(config.home / "runtime.lock"):
         store = Store(config.home / "bot.db")
         stop = threading.Event()
-        handler = executor = thread = None
+        handler = executor = None
+        threads = []
         stage = "slack_check"
 
         def halt(*args):
@@ -304,12 +324,15 @@ def serve(config, secrets, *, allow_unverified_readers=False):
                 raise BotError("bot_stopped")
             stage = "slack_check"
             engine = ClaudeCliEngine(config.engine, config.home, cancelled=cancelled)
+            # Engine.run owns invocation-local state. Do not serialize engine calls.
+            # Sharing Worker also shares cards_lock and Monitor's rotation lock.
             worker = Worker(store, config, engine, gateway)
             actions = Actions(store, config, gateway, worker)
             executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="dougle-interactions")
             app = build_app(gateway, bot, identity, store, config, worker, actions, executor)
             handler = SocketModeHandler(app, app_token=app_token)
             store.recover()
+            store.configure_processing(config.engine.max_parallel)
             # Questions sent while startup checks were running count as stopped time.
             store.begin_run(
                 os.getpid(), identity["team_id"], identity["user_id"], require_starting=True
@@ -335,17 +358,28 @@ def serve(config, secrets, *, allow_unverified_readers=False):
             stage = "runtime_connection_failed"
             worker.notify_recovered()
 
-            def work():
+            def memory_work():
+                # Proposals drain independently of inquiry delivery. The consumer
+                # must honor stop without waiting for the pending queue to empty.
                 try:
-                    while not cancelled():
-                        if not worker.run_once():
-                            stop.wait(0.25)
-                except Exception:
-                    stop.set()
-                    store.stop("worker_failed")
+                    from .memory_worker import run_memory_worker
 
-            thread = threading.Thread(target=work, daemon=True)
-            thread.start()
+                    run_memory_worker(store, config.home, stop)
+                except Exception:
+                    store.audit(None, "system", "memory_worker_failed")
+
+            memory_thread = threading.Thread(target=memory_work, name="dougle-memory", daemon=True)
+            memory_thread.start()
+            threads.append(memory_thread)
+            for index in range(config.engine.max_parallel):
+                thread = threading.Thread(
+                    target=process_inquiries,
+                    args=(worker, store, stop),
+                    name=f"dougle-inquiry-{index + 1}",
+                    daemon=True,
+                )
+                thread.start()
+                threads.append(thread)
             while not stop.wait(0.5):
                 if store.control()["desired"] != "running":
                     break
@@ -371,7 +405,7 @@ def serve(config, secrets, *, allow_unverified_readers=False):
                 if handler:
                     handler.close()
             finally:
-                if thread:
+                for thread in threads:
                     thread.join()
                 if executor:
                     executor.shutdown(wait=True, cancel_futures=True)

@@ -69,12 +69,15 @@ class EngineConfig:
     max_turns: int = 60
     max_budget_usd_per_call: float = 3.0
     daily_budget_usd: float = 30.0
-    max_parallel: int = 1
+    max_parallel: int = 2
     allowed_tools: list[str] = field(default_factory=lambda: sorted(BUILTINS) + DEFAULT_READERS)
     disallowed_tools: list[str] = field(default_factory=lambda: ["Bash", "Agent", "Task"])
     ask_skill: str = "dougle:dougle-ask"
     style_skill: str = "dougle:i-have-adhd"
     plain_language_skill: str = "dougle:plain-language"
+    # Old releases serialized max_parallel=1 because no other value was allowed.
+    # This marker distinguishes that legacy default from a new explicit serial choice.
+    parallelism_version: int = 1
 
     @property
     def required_skills(self) -> tuple[str, str, str]:
@@ -104,7 +107,8 @@ class Config:
             (self.slack.thread_history_limit, 1, 500),
             (self.engine.timeout_seconds, 10, 3600),
             (self.engine.max_turns, 1, 200),
-            (self.engine.max_parallel, 1, 1),
+            (self.engine.max_parallel, 1, 4),
+            (self.engine.parallelism_version, 1, 1),
         ]
         if any(type(v) is not int or not lo <= v <= hi for v, lo, hi in ranges):
             raise BotError("invalid_integer_setting")
@@ -159,9 +163,19 @@ def load(path: Path) -> Config:
         home = Path(storage.get("home", "~/.dougle-bot")).expanduser()
         if not home.is_absolute():
             home = path.parent / home
-        return Config(
-            SlackConfig(**data.get("slack", {})), EngineConfig(**data.get("engine", {})), home
-        ).validate()
+        engine = data.get("engine", {})
+        if not isinstance(engine, dict):
+            raise BotError("invalid_config")
+        engine = dict(engine)
+        if (
+            "parallelism_version" not in engine
+            and type(engine.get("max_parallel")) is int
+            and engine["max_parallel"] == 1
+        ):
+            # In-memory upgrade only. New saves persist the marker, preserving any
+            # subsequent explicit max_parallel=1. Do not coerce booleans/floats.
+            engine["max_parallel"] = 2
+        return Config(SlackConfig(**data.get("slack", {})), EngineConfig(**engine), home).validate()
     except FileNotFoundError:
         raise BotError("setup_required") from None
     except (TypeError, ValueError, AttributeError, OSError):

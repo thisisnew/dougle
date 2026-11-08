@@ -1,4 +1,5 @@
 import json
+import subprocess
 import sys
 from dataclasses import replace
 from pathlib import Path
@@ -122,7 +123,8 @@ def fake_cli(tmp_path, code):
     return str(script)
 
 
-def test_real_subprocess_fake_cli_uses_stdin_and_stream_parser(app, tmp_path):
+def test_real_subprocess_fake_cli_uses_stdin_and_stream_parser(app, tmp_path, monkeypatch):
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path.parent / "synthetic-user"))
     events = [call(name, f"t{i}") for i, name in enumerate(sorted(SKILLS))] + [
         outcome(f"t{i}", content=f"Launching skill: {name}")
         for i, name in enumerate(sorted(SKILLS))
@@ -135,10 +137,19 @@ def test_real_subprocess_fake_cli_uses_stdin_and_stream_parser(app, tmp_path):
         + ")\n",
     )
     cfg = replace(app.cfg.engine, claude_bin=script)
-    result = ClaudeCliEngine(cfg, app.cfg.home).run("synthetic prompt", None, 1.0)
+    settings_paths = []
+
+    def launch(args, **kwargs):
+        settings = Path(args[args.index("--settings") + 1])
+        assert settings.stat().st_mode & 0o777 == 0o600
+        assert (settings.parent / "tools.json").stat().st_mode & 0o777 == 0o600
+        settings_paths.append(settings)
+        return subprocess.Popen(args, **kwargs)
+
+    result = ClaudeCliEngine(cfg, app.cfg.home, popen=launch).run("synthetic prompt", None, 1.0)
     assert result.activated == SKILLS
     assert result.session_id == SESSION
-    assert (app.cfg.home / "policy" / "settings.json").stat().st_mode & 0o777 == 0o600
+    assert len(settings_paths) == 1 and not settings_paths[0].exists()
 
 
 def test_subprocess_timeout_is_bounded_and_does_not_leak_stderr(app, tmp_path):
@@ -240,9 +251,7 @@ def test_needs_lookup_card_has_no_post_button(app):
     assert "lookup" in ids and "post" not in ids and "edit" not in ids
 
 
-@pytest.mark.parametrize(
-    "observed", ["yesterday", "2026-11-06T15:00:00", "2999-01-01T00:00:00Z"]
-)
+@pytest.mark.parametrize("observed", ["yesterday", "2026-11-06T15:00:00", "2999-01-01T00:00:00Z"])
 def test_lookup_time_requires_explicit_zone_and_not_future(observed):
     with pytest.raises(BotError):
         validate_report("미처리 2건입니다.", observed, 2000)

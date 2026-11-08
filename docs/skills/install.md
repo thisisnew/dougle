@@ -39,9 +39,11 @@
    $dougle-connect 연결할_URL을 읽고 업무 지식으로 정리해 줘.
    ```
 
-현재 Preview는 스킬 **0.8.20 / 봇 0.1.17**입니다. [검증 범위와 변경 사항](../dougle-bot/verification-repair.md)을 확인하세요.
+다음 배포 대상은 스킬 **0.8.21 / 봇 0.1.18**입니다. 문의별 독립 에이전트 최대2개와 지식 변경의 임시 저장·백그라운드 순차 반영을 준비 중이며, 세부 동작과 검증 결과는 아직 확정되지 않았습니다. [구현·검증 차트](../dougle-bot/parallel-acceptance.md)를 참고하세요.
 
-직접 설치하려면 [0.8.20 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.20-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
+봇 업데이트 시 표식 없는 이전 `max_parallel = 1`은 메모리에서만 2로 적용됩니다. 명시적으로 1을 유지하려면 `[engine]`의 `max_parallel = 1`과 `parallelism_version = 1`을 함께 설정하세요. 기존 설정 파일을 읽는 것만으로 파일을 변경하지 않습니다. [설정 안내](../../dougle-bot/README.md)를 참고하세요.
+
+공개 후 직접 설치하려면 [0.8.21 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.21-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 내부 답변 스킬인 `i-have-adhd/`, `plain-language/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 

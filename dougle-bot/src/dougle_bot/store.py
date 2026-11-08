@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import sqlite3
 import threading
 import time
@@ -41,6 +42,7 @@ class Store:
         if self.path.is_symlink():
             raise BotError("unsafe_database_path")
         self.lock = threading.RLock()
+        self.processing_owner = threading.local()
         self.db = sqlite3.connect(path, timeout=2, isolation_level=None, check_same_thread=False)
         self.path.chmod(0o600)
         self.db.row_factory = sqlite3.Row
@@ -68,6 +70,14 @@ class Store:
                 "CREATE INDEX IF NOT EXISTS audit_inquiry_action_detail ON audit(inquiry_id,action,detail);"
                 "CREATE INDEX IF NOT EXISTS inquiry_thread ON inquiries(thread_key,id);"
                 "CREATE INDEX IF NOT EXISTS job_status ON jobs(status,id);"
+                # Disposable coordination, recovered only under the runtime InstanceLock.
+                "CREATE TABLE IF NOT EXISTS processing_claims("
+                "thread_key TEXT PRIMARY KEY REFERENCES threads(thread_key),"
+                "job_id INTEGER NOT NULL UNIQUE REFERENCES jobs(id),owner TEXT NOT NULL);"
+                "CREATE TABLE IF NOT EXISTS processing_settings("
+                "id INTEGER PRIMARY KEY CHECK(id=1),max_parallel INTEGER NOT NULL "
+                "CHECK(max_parallel BETWEEN 1 AND 4));"
+                "INSERT OR IGNORE INTO processing_settings VALUES(1,2);"
             )
         try:
             self.check_post_intents()
@@ -230,13 +240,96 @@ class Store:
             (inquiry["current_draft_id"], inquiry["id"]),
         )
 
+    def configure_processing(self, max_parallel):
+        """Apply the loaded setting at startup, after recovery and before workers.
+
+        Store it centrally so independent connections enforce the same capacity.
+        This never rewrites the user's configuration file.
+        """
+        if type(max_parallel) is not int or not 1 <= max_parallel <= 4:
+            raise BotError("invalid_integer_setting")
+        with self.tx() as db:
+            if (
+                db.execute("SELECT 1 FROM processing_claims LIMIT 1").fetchone()
+                or db.execute("SELECT 1 FROM jobs WHERE status='running' LIMIT 1").fetchone()
+            ):
+                raise BotError("already_processing")
+            db.execute("UPDATE processing_settings SET max_parallel=? WHERE id=1", (max_parallel,))
+            db.execute(
+                "INSERT INTO audit(actor,action,detail,at) VALUES('system','processing_configured',?,?)",
+                (str(max_parallel), self.clock()),
+            )
+
+    def processing_status(self):
+        """Content-free applied capacity and occupancy; safe with migrate=False.
+
+        max_parallel=None means an older database has no recorded runtime limit.
+        active includes cancelled/done jobs whose workers are still cleaning up.
+        """
+        with self.lock:
+            tables = {
+                row[0]
+                for row in self.db.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' "
+                    "AND name IN ('processing_claims','processing_settings')"
+                )
+            }
+            limit = None
+            if "processing_settings" in tables:
+                row = self.db.execute(
+                    "SELECT max_parallel FROM processing_settings WHERE id=1"
+                ).fetchone()
+                limit = row[0] if row else None
+            active_sql = "SELECT COUNT(*) FROM jobs WHERE status='running'"
+            if "processing_claims" in tables:
+                active_sql += " OR id IN (SELECT job_id FROM processing_claims)"
+            return {
+                "max_parallel": limit,
+                "active": self.db.execute(active_sql).fetchone()[0],
+                "queued": self.db.execute(
+                    "SELECT COUNT(*) FROM jobs WHERE status='queued'"
+                ).fetchone()[0],
+            }
+
+    @contextmanager
+    def processing(self):
+        """Scope one worker iteration through delivery, cancellation and cleanup.
+
+        claim_job attaches its durable thread lease to this scope. Never release
+        on save_draft/cancel alone: the engine or delivery may still be in flight.
+        Concurrent callers must wrap the entire Worker.run_once in this scope.
+        """
+        if getattr(self.processing_owner, "token", None) is not None:
+            raise BotError("already_processing")
+        token = str(uuid.uuid4())
+        self.processing_owner.token = token
+        try:
+            yield
+        finally:
+            try:
+                with self.tx() as db:
+                    db.execute("DELETE FROM processing_claims WHERE owner=?", (token,))
+            finally:
+                self.processing_owner.token = None
+
     def claim_job(self):
         with self.tx() as db:
             if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
                 return None
-            # The daemon has one inquiry worker. Defend against a second claimant
-            # without introducing a lease table or enabling concurrent engine calls.
-            if db.execute("SELECT 1 FROM jobs WHERE status='running' LIMIT 1").fetchone():
+            active = db.execute(
+                "SELECT COUNT(*) FROM jobs WHERE status='running' "
+                "OR id IN (SELECT job_id FROM processing_claims)"
+            ).fetchone()[0]
+            limit = db.execute(
+                "SELECT max_parallel FROM processing_settings WHERE id=1"
+            ).fetchone()[0]
+            if active >= limit:
+                return None
+            owner = getattr(self.processing_owner, "token", None)
+            if (
+                owner
+                and db.execute("SELECT 1 FROM processing_claims WHERE owner=?", (owner,)).fetchone()
+            ):
                 return None
             db.execute(
                 "UPDATE jobs SET status='cancelled' WHERE status='queued' AND inquiry_id IN "
@@ -246,7 +339,10 @@ class Store:
             row = db.execute(
                 "SELECT j.*,i.thread_key FROM jobs j JOIN inquiries i ON i.id=j.inquiry_id "
                 "WHERE j.status='queued' "
-                # Approval actions can publish while the single inquiry worker polls.
+                "AND NOT EXISTS(SELECT 1 FROM processing_claims c WHERE c.thread_key=i.thread_key) "
+                "AND NOT EXISTS(SELECT 1 FROM jobs busy JOIN inquiries peer ON peer.id=busy.inquiry_id "
+                "WHERE busy.status='running' AND peer.thread_key=i.thread_key) "
+                # A different lane or approval action may be delivering this thread.
                 "AND NOT EXISTS(SELECT 1 FROM inquiries peer WHERE peer.thread_key=i.thread_key "
                 "AND (peer.status IN ('posting','post_unknown') OR "
                 "(peer.status='awaiting_approval' AND EXISTS(SELECT 1 FROM audit a "
@@ -256,6 +352,11 @@ class Store:
             ).fetchone()
             if not row:
                 return None
+            if owner:
+                db.execute(
+                    "INSERT INTO processing_claims(thread_key,job_id,owner) VALUES(?,?,?)",
+                    (row["thread_key"], row["id"], owner),
+                )
             db.execute("UPDATE jobs SET status='running' WHERE id=?", (row["id"],))
             db.execute(
                 "UPDATE inquiries SET status='drafting',error=NULL WHERE id=?", (row["inquiry_id"],)
@@ -358,7 +459,14 @@ class Store:
         expected_draft=None,
         job_id=None,
         auto_reply=False,
+        memory_batches=(),
     ):
+        # Batch identities only: never persist proposal paths or unvalidated bytes.
+        if not isinstance(memory_batches, (tuple, list)) or any(
+            not isinstance(batch, str) or not re.fullmatch(r"[0-9a-f]{32}", batch)
+            for batch in memory_batches
+        ):
+            raise BotError("invalid_memory_batch")
         with self.tx() as db:
             row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
             if not row or row["status"] in (
@@ -406,6 +514,13 @@ class Store:
                 "UPDATE threads SET engine_session_id=COALESCE(?,engine_session_id),last_seen_ts=?,updated_at=? WHERE thread_key=?",
                 (session, last_seen, self.clock(), row["thread_key"]),
             )
+            for batch in dict.fromkeys(memory_batches):
+                db.execute(
+                    "INSERT INTO audit(inquiry_id,actor,action,detail,at) "
+                    "SELECT ?,'system','memory_batch_ready',?,? WHERE NOT EXISTS("
+                    "SELECT 1 FROM audit WHERE inquiry_id=? AND action='memory_batch_ready' AND detail=?)",
+                    (ident, batch, self.clock(), ident, batch),
+                )
             if auto_reply and status == "awaiting_approval":
                 db.execute(
                     "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,'system','auto_reply_ready',?,?)",
@@ -487,6 +602,9 @@ class Store:
 
     def recover(self):
         with self.tx() as db:
+            # Only while holding InstanceLock, before any worker starts. Dead leases
+            # never expire by time: a slow live engine must retain its thread.
+            db.execute("DELETE FROM processing_claims")
             db.execute(
                 "UPDATE inquiries SET status='post_unknown',error='delivery_uncertain' WHERE status='posting'"
             )
@@ -563,7 +681,9 @@ class Store:
             if db.execute(
                 "SELECT 1 FROM inquiries peer WHERE peer.thread_key="
                 "(SELECT thread_key FROM inquiries WHERE id=?) AND peer.id!=? AND "
-                "peer.status IN ('drafting','posting','post_unknown') LIMIT 1",
+                "(peer.status IN ('drafting','posting','post_unknown') OR EXISTS("
+                "SELECT 1 FROM processing_claims c JOIN jobs j ON j.id=c.job_id "
+                "WHERE j.inquiry_id=peer.id)) LIMIT 1",
                 (ident, ident),
             ).fetchone():
                 raise BotError("already_processing")

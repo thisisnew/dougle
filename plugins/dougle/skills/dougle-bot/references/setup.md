@@ -43,7 +43,17 @@ doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slac
 
 1. `scripts/bot.sh status`에서 새 실행 환경 준비가 필요하면 `scripts/bot.sh prepare`를 실행합니다. 기존 설정·키체인·지식은 재등록하지 않습니다.
 2. 실행 중이면 업데이트 적용을 위해 중지하고 다시 시작할 것을 안내합니다. 사용자가 업데이트 적용을 요청했다면 `scripts/bot.sh stop` 후 실제 중지를 확인합니다.
-3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.17`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
+3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.18`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
+
+0.1.18의 기본 문의 동시 처리 수는 2입니다. `[engine]`에 `parallelism_version`이 없고 정수 `max_parallel = 1`인 이전 설정은 읽을 때 **메모리에서만 2로 적용**합니다. 이 읽기만으로 기존 config.toml을 다시 쓰지 않습니다. 한 문의씩 처리하려면 다음 두 값을 함께 명시합니다. 표식이 있는 새 설정의 1은 그대로 존중하며, 정상 설정 저장 시 표식도 저장합니다.
+
+```toml
+[engine]
+max_parallel = 1
+parallelism_version = 1
+```
+
+기존 `[engine]` 항목 안에서 두 값을 설정하며 같은 표를 중복 추가하지 않습니다. 문의별 지식 변경은 임시 영역을 거쳐 백그라운드에서 순차 반영하므로 답변 게시와 지식 저장 성공을 같은 상태로 안내하지 않습니다. 이번 버전의 최종 검증 결과는 main의 결과 기록 후 확정합니다.
 
 명시적 검토 모드의 `preview_updated_review_again`은 업데이트된 게시 미리보기를 다시 확인하라는 뜻입니다. 기존 카드를 누르자마자 예전 형식의 답변을 보내지 않습니다. `publication_changed_regenerating`이면 새 초안을 준비하므로 새 카드에서 다시 승인합니다.
 

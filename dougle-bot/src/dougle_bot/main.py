@@ -44,6 +44,7 @@ def status(home, config_path):
         channels=cfg.slack.allowed_channel_ids,
         approver=cfg.slack.approver_user_id,
         reply_mode="review" if cfg.slack.require_approval else "automatic",
+        max_parallel=cfg.engine.max_parallel,
         monitor_command=shlex.join(["tail", "-n", "30", "-F", str(home / "progress.log")]),
         recent_activity=recent_activity(home),
     )
@@ -52,6 +53,7 @@ def status(home, config_path):
         store = Store(home / "bot.db", migrate=False)
         try:
             control = store.control()
+            result["processing"] = store.processing_status()
             version = store.one(
                 "SELECT detail FROM audit WHERE action='runtime_started' AND at>=? ORDER BY id DESC LIMIT 1",
                 (control["started"],),

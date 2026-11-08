@@ -8,8 +8,10 @@ import subprocess
 import sys
 import time
 import uuid
+from contextlib import suppress
 from dataclasses import dataclass, field
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Protocol
 
 from .config import BUILTINS, private_dir
@@ -28,6 +30,8 @@ class EngineResult:
     reads: dict[str, set[str]] = field(default_factory=dict)
     connections: list[dict[str, str]] | None = None
     usage: dict[str, int | None] | None = None
+    memory_batch: str | None = None
+    memory_error: str | None = None
 
 
 def token_usage(value):
@@ -229,26 +233,87 @@ class ClaudeCliEngine:
         timeout_seconds=None,
         cancel_requested=None,
     ):
+        # Keep the CLI cwd stable for session resume. Only hook policy/settings and
+        # staged memory are isolated; no lock serializes independent inquiries.
+        policy_root = private_dir(self.home / "policy")
+        with TemporaryDirectory(prefix="call-", dir=policy_root) as call_dir:
+            memory = None
+            try:
+                if not self.startup_probe:
+                    from .memory import MemorySession
+
+                    try:
+                        memory = MemorySession(self.home, Path.home() / ".dougle")
+                    except (OSError, BotError):
+                        # Reading remains useful without optional memory staging.
+                        # _run_call must still create a policy that denies all writes.
+                        memory = None
+                result = self._run_call(
+                    text,
+                    session,
+                    budget,
+                    policy_dir=Path(call_dir),
+                    memory=memory,
+                    images=images,
+                    on_progress=on_progress,
+                    timeout_seconds=timeout_seconds,
+                    cancel_requested=cancel_requested,
+                )
+                # _run_call has completed process-group and pipe cleanup. A parsed
+                # result is only staged here; the worker alone may mark it ready.
+                if memory is not None:
+                    try:
+                        result.memory_batch = memory.finish()
+                    except Exception:
+                        # Memory persistence is optional after a successful engine
+                        # result. Keep the answer/proof for normal worker validation;
+                        # report only a constant, never filesystem or content errors.
+                        result.memory_batch = None
+                        result.memory_error = "memory_finalize_failed"
+                        with suppress(Exception):
+                            memory.discard()
+                elif not self.startup_probe:
+                    result.memory_error = "memory_staging_unavailable"
+                return result
+            except BaseException:
+                if memory is not None:
+                    # Cleanup failure must not replace the original engine error.
+                    with suppress(Exception):
+                        memory.discard()
+                raise
+
+    def _run_call(
+        self,
+        text,
+        session,
+        budget,
+        *,
+        policy_dir,
+        memory,
+        images=(),
+        on_progress=None,
+        timeout_seconds=None,
+        cancel_requested=None,
+    ):
         cwd = private_dir(Path(self.config.workdir).expanduser())
-        policy_dir = private_dir(self.home / "policy")
         policy = policy_dir / "tools.json"
-        if policy.is_symlink() or (policy_dir / "settings.json").is_symlink():
-            raise BotError("unsafe_policy_path")
-        policy.write_text(
-            json.dumps(
-                {
-                    "allowed": self.config.allowed_tools,
-                    "startup_probe": self.startup_probe,
-                    "skills": list(self.config.required_skills),
-                    "memory": str(Path.home() / ".dougle"),
-                    "runtime_home": str(self.home.resolve()),
-                }
-            )
-        )
+        policy_value = {
+            "allowed": self.config.allowed_tools,
+            "startup_probe": self.startup_probe,
+            "skills": list(self.config.required_skills),
+            "memory": str(Path.home() / ".dougle"),
+            "runtime_home": str(self.home.resolve()),
+        }
+        if memory is not None:
+            policy_value.update(memory.policy_fields())
+        elif not self.startup_probe:
+            policy_value["memory_writes_denied"] = True
+        with policy.open("x") as stream:
+            json.dump(policy_value, stream)
         policy.chmod(0o600)
         settings = policy_dir / "settings.json"
-        settings.write_text(
-            json.dumps(
+        with settings.open("x") as stream:
+            json.dump(
                 {
                     "hooks": {
                         "PostToolUse": [
@@ -278,9 +343,9 @@ class ClaudeCliEngine:
                             }
                         ],
                     }
-                }
+                },
+                stream,
             )
-        )
         settings.chmod(0o600)
         env = {
             k: v

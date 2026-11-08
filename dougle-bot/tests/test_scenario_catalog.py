@@ -18,6 +18,7 @@ from dougle_bot.evidence import validate_verification
 from dougle_bot.intake import receive
 from dougle_bot.safety import BotError
 from dougle_bot.slack_gateway import SlackFailure
+from dougle_bot.store import Store
 
 
 def automatic(app):
@@ -226,7 +227,7 @@ def test_catalog_image_boundaries(app, number):
 
 
 def test_catalog_thread_lock(app, monkeypatch):
-    # Production has exactly one engine worker; max_parallel > 1 is rejected.
+    # Default capacity is two; the same thread must still wait and resume its session.
     original = app.engine.run
     queued = []
 
@@ -239,15 +240,23 @@ def test_catalog_thread_lock(app, monkeypatch):
             )
             assert app.store.inquiry(queued[0])["status"] == "queued"
             assert len(app.store.all("SELECT * FROM jobs WHERE status='running'")) == 1
+            peer = Store(app.store.path, clock=app.store.clock)
+            try:
+                with peer.processing():
+                    assert peer.claim_job() is None
+            finally:
+                peer.close()
         return original(*args, **kwargs)
 
     monkeypatch.setattr(app.engine, "run", during_first)
     receive(app.store, app.cfg, event(), "UBOT")
-    assert app.worker.run_once()
+    with app.store.processing():
+        assert app.worker.run_once()
     assert len(app.engine.calls) == 1
-    assert app.worker.run_once()
+    with app.store.processing():
+        assert app.worker.run_once()
     assert len(app.engine.calls) == 2 and app.engine.calls[-1][1] == SESSION
-    assert app.cfg.engine.max_parallel == 1
+    assert app.cfg.engine.max_parallel == 2
 
 
 def test_catalog_rejected_draft_not_public_history(app):
