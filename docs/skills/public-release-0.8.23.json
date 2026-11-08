@@ -1,0 +1,25 @@
+{
+  "tag": "v0.8.23-skills-preview.1",
+  "source": "b24ac76893c1a760ac3748c1163a727bd32cd0c1",
+  "testCorrection": "56b516fe99fde55b27e2ab5ef67602613b5bf013",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42492389760",
+  "ciStatus": "PASS",
+  "authenticatedDownload": "PASS byte-for-byte",
+  "anonymousDownload": "NOT_RUN",
+  "assets": [
+    {
+      "name": "Dougle_Skills_0.8.23.zip",
+      "bytes": 288081,
+      "sha256": "38a57c2461fa135613370bf32116db87d21f5a6d77a1ab89cc4d2d0f0a17cdcb",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.23-skills-preview.1/Dougle_Skills_0.8.23.zip"
+    },
+    {
+      "name": "Dougle_Skills_0.8.23_SHA256SUMS",
+      "bytes": 91,
+      "sha256": "cb1f0278ecedc98261fd98e2fefaba2e3169a45d4117b93cf63716f50d6b9b6d",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.23-skills-preview.1/Dougle_Skills_0.8.23_SHA256SUMS"
+    }
+  ],
+  "ciPython312": "PASS",
+  "ciPython313": "PASS"
+}

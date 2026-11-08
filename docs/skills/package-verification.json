@@ -3,7 +3,7 @@
   "optionalBotRuntime": "0.1.21",
   "embeddedRuntimeVersion": "0.1.21",
   "status": "PASS_LOCAL",
-  "publication": "PENDING",
+  "publication": "PUBLISHED",
   "archive": ".tools/releases/0.8.24/Dougle_Skills_0.8.24.zip",
   "files": 57,
   "archiveBytes": 288116,
@@ -18,7 +18,9 @@
     "isolatedWheelInstall": "PASS",
     "botTests": "PASS 1555",
     "ruff": "PASS",
-    "prescribedChecks": "PASS"
+    "prescribedChecks": "PASS",
+    "authenticatedDownload": "PASS byte-for-byte",
+    "ci": "PASS both runs"
   },
   "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime"
 }
