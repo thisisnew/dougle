@@ -1,5 +1,5 @@
 {
-  "status": "PASS_LOCAL",
+  "status": "PASS",
   "version": "0.8.22",
   "runtime": "0.1.19",
   "tests": 1521,
@@ -55,7 +55,28 @@
     "GitHub original reads need installed gh and existing authorization; no automatic login",
     "Filesystem containment is a point-in-time check, not atomic against external symlink swaps"
   ],
-  "remaining": [
-    "GitHub CI and release download verification"
-  ]
+  "remaining": [],
+  "release": {
+    "tag": "v0.8.22-skills-preview.1",
+    "source": "e2d971327b93d469906200336e2b651ba2d9b7f1",
+    "ci": "https://github.com/thisisnew/dougle/actions/runs/42484875998",
+    "ciPython312": "PASS",
+    "ciPython313": "PASS",
+    "authenticatedDownload": "PASS byte-for-byte",
+    "anonymousDownload": "NOT_RUN",
+    "assets": [
+      {
+        "name": "Dougle_Skills_0.8.22.zip",
+        "bytes": 287440,
+        "sha256": "3fba505619d4202fd28d3c3facdc76070717213fc10d1a826267ea02cec4b0b4",
+        "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.22-skills-preview.1/Dougle_Skills_0.8.22.zip"
+      },
+      {
+        "name": "Dougle_Skills_0.8.22_SHA256SUMS",
+        "bytes": 91,
+        "sha256": "1ce4fa16f0c7db71828797c7865db7dc32c3e2c2b3644d60f12f3e5bfac84589",
+        "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.22-skills-preview.1/Dougle_Skills_0.8.22_SHA256SUMS"
+      }
+    ]
+  }
 }
