@@ -27,7 +27,12 @@ VERIFICATION_SCHEMA = {
     "required": ["question_kind", "required", "checks", "missing"],
     "properties": {
         "question_kind": {"enum": list(QUESTION_KINDS)},
-        "required": {"type": "array", "maxItems": 4, "items": {"enum": sorted(KINDS)}},
+        "required": {
+            "type": "array",
+            "maxItems": 4,
+            "uniqueItems": True,
+            "items": {"enum": sorted(KINDS)},
+        },
         "checks": {
             "type": "array",
             "maxItems": 30,
@@ -42,7 +47,12 @@ VERIFICATION_SCHEMA = {
                 },
             },
         },
-        "missing": {"type": "array", "maxItems": 4, "items": {"enum": sorted(KINDS)}},
+        "missing": {
+            "type": "array",
+            "maxItems": 4,
+            "uniqueItems": True,
+            "items": {"enum": sorted(KINDS)},
+        },
     },
 }
 
@@ -535,6 +545,139 @@ def failed_read(body):
             )
         )
     return False
+
+
+def verification_diagnostics(output):
+    """Bounded format diagnostics for worker audit/retry; never evidence validation.
+
+    Returns at most 12 {field, reason} objects with fixed field names, bounded array
+    indices and fixed reason codes. Never copies values, unknown keys, receipts or
+    source locators. Empty diagnostics do NOT prove reads or semantic correctness.
+    The worker must still call validate_output and validate_verification; this helper
+    neither repairs the model output nor removes research obligations.
+    """
+    issues = []
+
+    def add(field, reason):
+        if len(issues) < 12:
+            issues.append({"field": field, "reason": reason})
+
+    def fields(value, expected, path):
+        if not isinstance(value, dict):
+            add(path, "invalid_type")
+            return False
+        for key in expected:
+            if key not in value:
+                add(f"{path}.{key}", "missing_field")
+        if any(key not in expected for key in value):
+            add(path, "unexpected_fields")
+        return True
+
+    if not isinstance(output, dict):
+        add("verification", "invalid_type")
+        return issues
+    if "verification" not in output:
+        add("verification", "missing_field")
+        return issues
+    value = output["verification"]
+    if not fields(value, VERIFICATION_SCHEMA["required"], "verification"):
+        return issues
+    if "question_kind" in value:
+        category = value["question_kind"]
+        if not isinstance(category, str) or category not in QUESTION_KINDS:
+            add("verification.question_kind", "invalid_enum")
+    required = set()
+    for key in ("required", "missing"):
+        if key not in value:
+            continue
+        items, path = value[key], f"verification.{key}"
+        if not isinstance(items, list):
+            add(path, "invalid_type")
+            continue
+        if len(items) > 4:
+            add(path, "too_many_items")
+        seen = set()
+        for index, item in enumerate(items[:4]):
+            if not isinstance(item, str) or item not in KINDS:
+                add(f"{path}[{index}]", "invalid_enum")
+            elif item in seen:
+                add(path, "duplicate_items")
+            else:
+                seen.add(item)
+        if key == "required":
+            required = seen
+    if "checks" not in value:
+        return issues
+    checks = value["checks"]
+    if not isinstance(checks, list):
+        add("verification.checks", "invalid_type")
+        return issues
+    if len(checks) > 30:
+        add("verification.checks", "too_many_items")
+    sources = output.get("sources")
+    source_count = len(sources) if isinstance(sources, list) else 0
+    for index, check in enumerate(checks[:30]):
+        path = f"verification.checks[{index}]"
+        if not fields(check, ("kind", "receipt", "source_index"), path):
+            continue
+        if "kind" in check:
+            kind = check["kind"]
+            if not isinstance(kind, str) or kind not in KINDS:
+                add(f"{path}.kind", "invalid_enum")
+            elif kind not in required:
+                add(f"{path}.kind", "not_required")
+        if "receipt" in check:
+            receipt = check["receipt"]
+            if not isinstance(receipt, str):
+                add(f"{path}.receipt", "invalid_type")
+            elif not 1 <= len(receipt) <= 200:
+                add(f"{path}.receipt", "invalid_length")
+        if "source_index" in check:
+            source = check["source_index"]
+            if type(source) is not int:
+                add(f"{path}.source_index", "invalid_type")
+            elif not 0 <= source < min(30, source_count):
+                add(f"{path}.source_index", "out_of_range")
+    return issues
+
+
+def safe_verification_diagnostics(value):
+    """Allowlist field/code diagnostics for prompts; never echo arbitrary error details.
+
+    Accepts the list returned by verification_diagnostics, not serialized model text.
+    Invalid entries are discarded and at most 12 entries are returned as fresh dicts.
+    """
+    if not isinstance(value, (list, tuple)):
+        return []
+    reasons = {
+        "invalid_type",
+        "missing_field",
+        "unexpected_fields",
+        "invalid_enum",
+        "too_many_items",
+        "duplicate_items",
+        "not_required",
+        "invalid_length",
+        "out_of_range",
+    }
+    field_pattern = (
+        r"verification(?:\.question_kind|\.(?:required|missing)(?:\[[0-3]\])?|"
+        r"\.checks(?:\[(?:[0-9]|[12][0-9])\](?:\.(?:kind|receipt|source_index))?)?)?"
+    )
+    safe = []
+    for item in value[:12]:
+        if not isinstance(item, dict) or set(item) != {"field", "reason"}:
+            continue
+        field, reason = item["field"], item["reason"]
+        if (
+            isinstance(field, str)
+            and len(field) <= 80
+            and re.fullmatch(field_pattern, field)
+            and isinstance(reason, str)
+            and reason in reasons
+        ):
+            safe.append({"field": field, "reason": reason})
+    return safe
 
 
 def validate_verification(

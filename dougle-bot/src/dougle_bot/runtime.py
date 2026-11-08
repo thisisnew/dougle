@@ -248,6 +248,7 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
 
 
 def serve(config, secrets, *, allow_unverified_readers=False):
+    config.validate()
     if not apple_silicon():
         raise BotError("apple_silicon_required")
     from slack_bolt.adapter.socket_mode.builtin import SocketModeHandler

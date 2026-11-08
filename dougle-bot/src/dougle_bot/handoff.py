@@ -82,6 +82,8 @@ def failure_request(error):
         return "답변 준비 규칙을 완료하지 못했습니다. 설치된 스킬과 실행 환경을 확인한 뒤 처리 결과를 입력해 주세요."
     if error == "required_read_not_verified":
         return "봇이 자료 조회 기록과 답변 근거를 대조하지 못했습니다. 조회 권한 부족으로 확인된 것은 아닙니다. 문의 번호와 봇 버전을 개발 담당자에게 전달해 주세요."
+    if error == "invalid_verification":
+        return "봇이 반환한 근거 기록의 형식이나 출처 연결 번호를 처리하지 못했습니다. 문의 번호와 상태 확인의 recent_verification_failures를 개발 담당자에게 전달해 주세요. DB나 코드 조회 권한 문제로 확인된 것은 아닙니다."
     if error in {
         "invalid_verification",
         "verification_requirements_missing",

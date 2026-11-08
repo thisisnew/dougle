@@ -66,6 +66,8 @@ class Store:
             self.db.executescript(
                 "CREATE INDEX IF NOT EXISTS inquiry_status ON inquiries(status,id);"
                 "CREATE INDEX IF NOT EXISTS audit_inquiry_action_detail ON audit(inquiry_id,action,detail);"
+                "CREATE INDEX IF NOT EXISTS inquiry_thread ON inquiries(thread_key,id);"
+                "CREATE INDEX IF NOT EXISTS job_status ON jobs(status,id);"
             )
         try:
             self.check_post_intents()
@@ -232,16 +234,27 @@ class Store:
         with self.tx() as db:
             if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
                 return None
+            # The daemon has one inquiry worker. Defend against a second claimant
+            # without introducing a lease table or enabling concurrent engine calls.
+            if db.execute("SELECT 1 FROM jobs WHERE status='running' LIMIT 1").fetchone():
+                return None
+            db.execute(
+                "UPDATE jobs SET status='cancelled' WHERE status='queued' AND inquiry_id IN "
+                "(SELECT id FROM inquiries WHERE status IN "
+                "('posted','rejected','posting','post_unknown','cancelled'))"
+            )
             row = db.execute(
-                "SELECT * FROM jobs WHERE status='queued' ORDER BY id LIMIT 1"
+                "SELECT j.*,i.thread_key FROM jobs j JOIN inquiries i ON i.id=j.inquiry_id "
+                "WHERE j.status='queued' "
+                # Approval actions can publish while the single inquiry worker polls.
+                "AND NOT EXISTS(SELECT 1 FROM inquiries peer WHERE peer.thread_key=i.thread_key "
+                "AND (peer.status IN ('posting','post_unknown') OR "
+                "(peer.status='awaiting_approval' AND EXISTS(SELECT 1 FROM audit a "
+                "WHERE a.inquiry_id=peer.id AND a.action='auto_reply_ready' "
+                "AND a.detail=CAST(peer.current_draft_id AS TEXT))))) "
+                "ORDER BY j.id LIMIT 1"
             ).fetchone()
             if not row:
-                return None
-            state = db.execute(
-                "SELECT status FROM inquiries WHERE id=?", (row["inquiry_id"],)
-            ).fetchone()[0]
-            if state in ("posted", "rejected", "posting", "post_unknown", "cancelled"):
-                db.execute("UPDATE jobs SET status='cancelled' WHERE id=?", (row["id"],))
                 return None
             db.execute("UPDATE jobs SET status='running' WHERE id=?", (row["id"],))
             db.execute(
@@ -547,6 +560,13 @@ class Store:
         with self.tx() as db:
             if db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running":
                 raise BotError("bot_stopped")
+            if db.execute(
+                "SELECT 1 FROM inquiries peer WHERE peer.thread_key="
+                "(SELECT thread_key FROM inquiries WHERE id=?) AND peer.id!=? AND "
+                "peer.status IN ('drafting','posting','post_unknown') LIMIT 1",
+                (ident, ident),
+            ).fetchone():
+                raise BotError("already_processing")
             if not db.execute(
                 "UPDATE inquiries SET status='posting' WHERE id=? AND current_draft_id=? AND status='awaiting_approval'",
                 (ident, draft),

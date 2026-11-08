@@ -1,15 +1,14 @@
 {
-  "version": "0.8.19",
-  "optionalBotRuntime": "0.1.16",
+  "version": "0.8.20",
+  "optionalBotRuntime": "0.1.17",
   "publication": "NOT_PUBLISHED",
-  "files": 57,
-  "archiveBytes": 256832,
-  "sha256": "d9858fa640957d805e2caccbe2b67c09aecbe16e4082cd458e3f4161299e7a12",
-  "wheelSha256": "b79aa84b71d2b356b498cd8ba27a90ab3d04127fd9a7f159d6fd809e8b0a4539",
+  "botTests": 1092,
   "structuralChecks": 284,
-  "botTests": 975,
+  "archiveBytes": 261054,
+  "sha256": "cabebb42b45e61654787a90b6859dc1b651001d41fd6dfeb9f10a50895ab7728",
   "packageBytes": "PASS archive/mirrors/wheel source/checksums",
-  "isolatedWheelInstall": "PASS Python3.13 with hashed dependencies",
-  "realModelCalls": 0,
-  "actualCompanyIntegration": "NOT_RUN"
+  "realModelCalls": 1,
+  "realModelResult": "TIMEOUT 90 seconds; record-only behavior not verified; cost unknown",
+  "actualCompanyIntegration": "NOT_RUN",
+  "parallelism": 1
 }

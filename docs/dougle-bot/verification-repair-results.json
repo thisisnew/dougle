@@ -1,0 +1,62 @@
+{
+  "version": "0.8.20",
+  "optionalBotRuntime": "0.1.17",
+  "publication": "NOT_PUBLISHED",
+  "botTests": 1092,
+  "structuralChecks": 284,
+  "archiveBytes": 261054,
+  "sha256": "cabebb42b45e61654787a90b6859dc1b651001d41fd6dfeb9f10a50895ab7728",
+  "packageBytes": "PASS archive/mirrors/wheel source/checksums",
+  "realModelCalls": 1,
+  "realModelResult": "TIMEOUT 90 seconds; record-only behavior not verified; cost unknown",
+  "actualCompanyIntegration": "NOT_RUN",
+  "parallelism": 1,
+  "originalBaseline": {
+    "scope": "synthetic malformed source index regression; not actual #33 response",
+    "original_revision": "778cf980b6469cc0e8d0c037fa02fba41b509ee7",
+    "original_failure_reproduced": true
+  },
+  "modelEvaluation": {
+    "actual_cli_calls": 1,
+    "scope": "synthetic record-format only; no skills/tools, Slack or company verification",
+    "status": "failed",
+    "error_type": "TimeoutExpired",
+    "duration_ms": 90031
+  },
+  "source_sha256": {
+    "dougle-bot/src/dougle_bot/__init__.py": "569ccbbe2c8ae4814d673a5d375dc7a37dbb578f2fa221c0e92c9dd7f84f6820",
+    "dougle-bot/src/dougle_bot/actions.py": "0b3a3d7524f5454ff276090367afea6c28a5908818bb559ac30182d383c1a036",
+    "dougle-bot/src/dougle_bot/answer_policy.py": "86a1f813b5d3f8a8142814984159a847ca7e98e0de0a6313d9a4c3a5728e671b",
+    "dougle-bot/src/dougle_bot/cards.py": "88838a8fd3ded9042b49b52b40b8de3a9f1c80c0e40f427539a9a2466ab7514c",
+    "dougle-bot/src/dougle_bot/config.py": "c4e5d198c4f4316324177c31d0ac540d5daebaae195dd15c20343a7d35cd7189",
+    "dougle-bot/src/dougle_bot/developer_notice.py": "b458941874c75a0cf6a2da0edc1d9992b23b664deb1c413e0a82782c36b03659",
+    "dougle-bot/src/dougle_bot/engine.py": "016594ba8908eb440c579e74eb4fc94b8a35188fa5e138d4ff9f90a11e3442b1",
+    "dougle-bot/src/dougle_bot/evidence.py": "dd1c423a9aa5b32eff6c8f1c3d68ae94073fd817fead7d38866dea77220dbc1b",
+    "dougle-bot/src/dougle_bot/guard.py": "e8c5cdf647a4567229d3324ebb62970fd1e7d11d1c6dbaaad7079c9a0117925c",
+    "dougle-bot/src/dougle_bot/handoff.py": "a8bec4b795fa5beeb31347ac93a771a6d0666d2c41a981c6924774fade6c2887",
+    "dougle-bot/src/dougle_bot/handoff_notice.py": "54d152eb76d6d702efe688aa2eadb0539e5c03b7bf26d69cb30ff0db13531765",
+    "dougle-bot/src/dougle_bot/images.py": "f22da350c5a33f57eaf43ac8639b37813708202040b0cbb10ee998ae08f5daf9",
+    "dougle-bot/src/dougle_bot/intake.py": "7d37751cb1e54111b96471e2b471bcd58288941995c70247b445a3a03f83130a",
+    "dougle-bot/src/dougle_bot/main.py": "1f914ea187e15b8417738a77c50bcde2b99c00af6163c8d9dc81521afc77b2b1",
+    "dougle-bot/src/dougle_bot/monitor.py": "033daca08bf12e8457a4b70ad3785a800148eb9ffe5cd0fe7d11c668ec406b5b",
+    "dougle-bot/src/dougle_bot/presentation.py": "22d6903aa2b7644f74b63fc99530bf17eca0edee57e4f1b17b276527b746b497",
+    "dougle-bot/src/dougle_bot/progress.py": "f286f6d0014b36711111d310ade6c8da2d4607833e5134f039ce11641bf849df",
+    "dougle-bot/src/dougle_bot/prompts.py": "4e5fbacba5be27deb4c10cf56f0bb3bc372c4c2675aedab761ee3f117adfda2f",
+    "dougle-bot/src/dougle_bot/receipt_hook.py": "fa224995be6c26f4331fcc04ec70abfc046bc059a8f407662ca5f0ec9d7b5299",
+    "dougle-bot/src/dougle_bot/recovery.py": "b1e65c1c075bb084fb6fa0cd982267f146533452c0a9a8007ace802a0b513d1a",
+    "dougle-bot/src/dougle_bot/runtime.py": "cf76d4c81a57b1914570fcbc43fe8d2a96a1b4e12f38ead6354c1ab744ade680",
+    "dougle-bot/src/dougle_bot/safety.py": "e062f24cd290f930cb88715d5004e30df7971bbf63e3f534d604ce4d426ba94f",
+    "dougle-bot/src/dougle_bot/secrets.py": "bc9177e1ff367df479f3e1a032bc8f97ff4b863e511e42927f75859963fb92e8",
+    "dougle-bot/src/dougle_bot/slack_gateway.py": "f51223cc4aee97f66a6500b310859b14591ba9eca9c0a4e40c405fa66c277af9",
+    "dougle-bot/src/dougle_bot/startup.py": "d483745a82d1bd1a47087dd75bbb12db63e3815238847f9667b50790a5a1e2e0",
+    "dougle-bot/src/dougle_bot/store.py": "9a68fc56220b36319c0248e2649935e198816bc0e8e843ccbc0d08ad6752d421",
+    "dougle-bot/src/dougle_bot/worker.py": "21dec35a008e0e64a1a2c13876a27c6a17b84f1265ae2840ac6bda57bf659594"
+  },
+  "limitations": [
+    "Actual inquiry #33 original output unavailable; exact cause not identified",
+    "No measured latency improvement; true parallel execution deferred to protect shared knowledge writes",
+    "Existing one correction budget retained; a second-attempt malformed record still fails safely",
+    "Synthetic tests do not establish actual source freshness or semantic correctness"
+  ],
+  "independentReview": "format-repair adversarial and final runtime/store reviews completed; identified boundary defects fixed"
+}

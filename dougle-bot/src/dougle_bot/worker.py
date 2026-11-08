@@ -11,6 +11,7 @@ from .evidence import (
     explicit_query_requirements,
     failure_summary,
     validate_verification,
+    verification_diagnostics,
 )
 from .handoff import reported_evidence, route_unresolved
 from .handoff_notice import after_developer_dm
@@ -284,6 +285,9 @@ class Worker:
             correction = ""
             schema_retried = False
             presentation_repair = None
+            verification_repair = None
+            correction_detail = None
+            repair_receipts = []
             repair_reads = None
             repair_run_id = None
             required_evidence = explicit_query_requirements(inquiry["question_text"])
@@ -328,6 +332,9 @@ class Worker:
                     correction=correction,
                     required_evidence=required_evidence,
                     presentation_repair=presentation_repair,
+                    verification_repair=verification_repair,
+                    repair_receipts=repair_receipts,
+                    correction_detail=correction_detail,
                     image_context=[
                         {"file_id": img.file_id, "message_ts": img.message_ts} for img in images
                     ],
@@ -357,6 +364,8 @@ class Worker:
                         progress.retry("session")
                         session = None
                         presentation_repair = repair_reads = None
+                        verification_repair = None
+                        repair_receipts = []
                         repair_run_id = None
                         restored = True
                         continue
@@ -388,6 +397,17 @@ class Worker:
                     if isinstance(declared, list):
                         required_evidence.update(
                             x for x in declared if isinstance(x, str) and x in KINDS
+                        )
+                    declared_checks = (
+                        verification.get("checks", []) if isinstance(verification, dict) else []
+                    )
+                    if isinstance(declared_checks, list):
+                        required_evidence.update(
+                            check["kind"]
+                            for check in declared_checks
+                            if isinstance(check, dict)
+                            and isinstance(check.get("kind"), str)
+                            and check["kind"] in KINDS
                         )
                     category = (
                         verification.get("question_kind")
@@ -427,9 +447,22 @@ class Worker:
                         for key in ("status", "sources", "lookup", "verification")
                     ):
                         raise BotError("repair_changed_evidence")
+                    if verification_repair is not None:
+                        if any(
+                            output[key] != verification_repair[key]
+                            for key in ("status", "body", "sources", "lookup")
+                        ) or (
+                            not isinstance(output["verification"], dict)
+                            or output["verification"].get("question_kind")
+                            != verification_repair["verification"]["question_kind"]
+                            or "live" in required_evidence
+                        ):
+                            raise BotError("repair_changed_evidence")
                     validate_verification(
                         output,
-                        repair_reads if presentation_repair is not None else result.reads,
+                        repair_reads
+                        if presentation_repair is not None or verification_repair is not None
+                        else result.reads,
                         image_ids={img.file_id for img in images},
                         report=lookup or False,
                         required_floor=required_evidence,
@@ -445,6 +478,13 @@ class Worker:
                             "presentation_evidence_reused",
                             json.dumps({"evidence_run_id": repair_run_id, "repair_run_id": run_id}),
                         )
+                    if verification_repair is not None:
+                        self.store.audit(
+                            ident,
+                            "system",
+                            "verification_record_repaired",
+                            json.dumps({"evidence_run_id": repair_run_id, "repair_run_id": run_id}),
+                        )
                     self.store.audit(
                         ident,
                         "system",
@@ -453,6 +493,14 @@ class Worker:
                     )
                     break
                 except BotError as exc:
+                    if exc.code == "invalid_verification":
+                        correction_detail = verification_diagnostics(result.output)
+                        self.store.audit(
+                            ident,
+                            "system",
+                            "verification_record_invalid",
+                            json.dumps(correction_detail),
+                        )
                     if exc.code == "required_read_not_verified":
                         self.store.audit(
                             ident,
@@ -477,6 +525,65 @@ class Worker:
                         if exc.code == "required_skill_not_activated"
                         else "schema"
                     )
+                    if exc.code == "invalid_verification" and not restored:
+                        # A malformed record is not proof. Reuse only the immediately preceding
+                        # successful non-live reads; the repaired record must pass every gate.
+                        try:
+                            candidate = validate_output(
+                                result.output,
+                                lookup_basis=reported_evidence(lookup),
+                                lookup_time=lookup["observed_at"]
+                                if reported_evidence(lookup)
+                                else None,
+                            )
+                            record = candidate["verification"]
+                            available = set().union(
+                                *(set(kinds) for kinds in result.reads.values())
+                            )
+                            if (
+                                candidate["status"] == "answered"
+                                and isinstance(record, dict)
+                                and isinstance(record.get("question_kind"), str)
+                                and record["question_kind"] in QUESTION_KINDS
+                                and record["question_kind"]
+                                not in {"current_state", "clarification"}
+                                and isinstance(record.get("required"), list)
+                                and 0 < len(record["required"]) <= 4
+                                and all(
+                                    isinstance(kind, str) and kind in KINDS
+                                    for kind in record["required"]
+                                )
+                                and isinstance(record.get("checks"), list)
+                                and 0 < len(record["checks"]) <= 30
+                                and all(
+                                    isinstance(check, dict)
+                                    and isinstance(check.get("kind"), str)
+                                    and check["kind"] in KINDS
+                                    for check in record["checks"]
+                                )
+                                and record.get("missing") == []
+                                and required_evidence
+                                and "live" not in required_evidence
+                                and required_evidence <= available
+                                and 0 < len(result.reads) <= 100
+                                and set(self.config.engine.required_skills) <= result.activated
+                            ):
+                                verification_repair = copy.deepcopy(candidate)
+                                repair_reads = copy.deepcopy(result.reads)
+                                repair_run_id = run_id
+                                repair_receipts = [
+                                    {
+                                        "receipt": receipt,
+                                        "kinds": sorted(set(kinds) & (KINDS - {"live"})),
+                                    }
+                                    for receipt, kinds in repair_reads.items()
+                                    if isinstance(receipt, str)
+                                    and 1 <= len(receipt) <= 200
+                                    and set(kinds) & (KINDS - {"live"})
+                                ]
+                                reason = "schema"
+                        except (BotError, TypeError, KeyError):
+                            pass
                     if exc.code in {"polite_language_required", "sources_belong_in_review_field"}:
                         # Reuse proof only after independent validation; never reuse live reads,
                         # partial investigation, an earlier inquiry or a lost engine session.

@@ -11,7 +11,7 @@ from pathlib import Path
 
 from . import __version__
 from .config import Config, EngineConfig, SlackConfig, channel_id, load, private_dir, save
-from .evidence import safe_failure_summary
+from .evidence import safe_failure_summary, safe_verification_diagnostics
 from .monitor import recent_activity
 from .progress import safe_profile
 from .recovery import reconcile
@@ -95,6 +95,18 @@ def status(home, config_path):
                 )
                 if (summary := safe_failure_summary(row["detail"])) is not None
             ]
+            result["recent_verification_failures"] = []
+            for row in store.all(
+                "SELECT inquiry_id,detail FROM audit WHERE action='verification_record_invalid' ORDER BY id DESC LIMIT 5"
+            ):
+                try:
+                    details = safe_verification_diagnostics(json.loads(row["detail"]))
+                except (TypeError, ValueError):
+                    continue
+                if details:
+                    result["recent_verification_failures"].append(
+                        {"inquiry_id": row["inquiry_id"], "issues": details}
+                    )
             result["healthy"] = (
                 result["running"]
                 and control["desired"] == "running"
@@ -104,7 +116,11 @@ def status(home, config_path):
             startup = latest_report(store)
             if startup:
                 result["startup"] = startup
-                if result["running"] and startup["phase"] in ("slack_checking", "checking", "ready"):
+                if result["running"] and startup["phase"] in (
+                    "slack_checking",
+                    "checking",
+                    "ready",
+                ):
                     result.update(state="checking", healthy=False)
                 elif not result["running"] and startup["phase"] not in ("connected", "bot_stopped"):
                     result.update(state="blocked", healthy=False)

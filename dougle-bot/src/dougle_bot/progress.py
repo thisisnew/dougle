@@ -135,23 +135,57 @@ class Progress:
         """Close observed intervals on failure/cancel too; never invent tool results."""
         with self.lock:
             now = self.clock()
+            if self._active_tools:
+                self._record_tool_duration(
+                    active_ms=max(0, now - self._active_since) * 1000,
+                    total_ms=sum(
+                        max(0, now - start) * 1000 for _, start in self._active_tools.values()
+                    ),
+                )
+                self._record_tool_count("incomplete", len(self._active_tools))
+                self._active_tools.clear()
+                self._active_since = None
             if self._current_attempt:
                 self._current_attempt["end"] = now
                 self._current_attempt = None
-            if self._active_tools:
-                self._tool_active_ms = min(
-                    MAX_METRIC, self._tool_active_ms + max(0, now - self._active_since) * 1000
-                )
-                self._tool_total_ms = min(
-                    MAX_METRIC,
-                    self._tool_total_ms
-                    + sum(max(0, now - start) * 1000 for _, start in self._active_tools.values()),
-                )
-                self._tool_counts["incomplete"] = bounded(
-                    self._tool_counts["incomplete"] + len(self._active_tools)
-                )
-                self._active_tools.clear()
-                self._active_since = None
+
+    def _record_tool_count(self, key, amount=1):
+        self._tool_counts[key] = bounded(self._tool_counts[key] + amount)
+        if self._current_attempt is not None:
+            counts = self._current_attempt["tool_timing"]
+            counts[key] = bounded(counts[key] + amount)
+
+    def _record_tool_duration(self, *, active_ms=0, total_ms=0):
+        # Keep fractional milliseconds until serialization, including overlapping calls.
+        self._tool_active_ms = min(MAX_METRIC, self._tool_active_ms + active_ms)
+        self._tool_total_ms = min(MAX_METRIC, self._tool_total_ms + total_ms)
+        if self._current_attempt is not None:
+            timing = self._current_attempt["tool_timing"]
+            timing["active_ms"] = min(MAX_METRIC, timing["active_ms"] + active_ms)
+            timing["total_ms"] = min(MAX_METRIC, timing["total_ms"] + total_ms)
+
+    def _attempt_tool_profile(self, row, now):
+        """Observed tool intervals only; tool-free time is not measured reasoning.
+
+        Tool-free time may include provider/network waits, output, and unobserved tools.
+        Counts of unmatched/dropped events expose some, not all, observation gaps.
+        """
+        timing = dict(row["tool_timing"])
+        if row is self._current_attempt:
+            timing["active"] = len(self._active_tools)
+            if self._active_since is not None:
+                timing["active_ms"] += max(0, now - self._active_since) * 1000
+            timing["total_ms"] += sum(
+                max(0, now - start) * 1000 for _, start in self._active_tools.values()
+            )
+        timing = {key: bounded(value) for key, value in timing.items()}
+        elapsed = bounded(((row["end"] if row["end"] is not None else now) - row["start"]) * 1000)
+        return dict(
+            attempt=row["attempt"],
+            elapsed_ms=elapsed,
+            tool_free_ms=max(0, elapsed - timing["active_ms"]),
+            **timing,
+        )
 
     def _tool(self, event, now):
         kind, ident = event.get("type"), event.get("id")
@@ -166,33 +200,32 @@ class Progress:
             return False
         if ident not in self._seen_tools:
             if len(self._seen_tools) >= MAX_TOOL_IDS:
-                self._tool_counts["dropped_events"] = bounded(
-                    self._tool_counts["dropped_events"] + 1
-                )
+                self._record_tool_count("dropped_events")
                 return False
             self._seen_tools.add(ident)
             if kind == "tool_end":
                 # A late start cannot establish a duration after its result was observed.
-                self._tool_counts["unmatched_results"] += 1
+                self._record_tool_count("unmatched_results")
                 self.completed_tools = bounded(self.completed_tools + 1)
                 return True
             self._first("tool", now)
             if not self._active_tools:
                 self._active_since = now
             self._active_tools[ident] = (stage, now)
-            self._tool_counts["started"] += 1
+            self._record_tool_count("started")
             self._tool_counts["peak_active"] = max(
                 self._tool_counts["peak_active"], len(self._active_tools)
             )
+            if self._current_attempt is not None:
+                counts = self._current_attempt["tool_timing"]
+                counts["peak_active"] = max(counts["peak_active"], len(self._active_tools))
         elif kind == "tool_end" and ident in self._active_tools:
             _, start = self._active_tools.pop(ident)
-            self._tool_total_ms = min(MAX_METRIC, self._tool_total_ms + max(0, now - start) * 1000)
-            self._tool_counts["finished"] += 1
+            self._record_tool_duration(total_ms=max(0, now - start) * 1000)
+            self._record_tool_count("finished")
             self.completed_tools = bounded(self.completed_tools + 1)
             if not self._active_tools:
-                self._tool_active_ms = min(
-                    MAX_METRIC, self._tool_active_ms + max(0, now - self._active_since) * 1000
-                )
+                self._record_tool_duration(active_ms=max(0, now - self._active_since) * 1000)
                 self._active_since = None
         else:
             return False  # Duplicate start/end, or a start following an unmatched end.
@@ -244,6 +277,9 @@ class Progress:
                     )
                     for row in self._attempt_timings
                 ],
+                attempt_tool_timings=[
+                    self._attempt_tool_profile(row, now) for row in self._attempt_timings
+                ],
             )
 
     def _notify(self):
@@ -265,6 +301,7 @@ class Progress:
                         end=None,
                         first_output_ms=None,
                         first_tool_ms=None,
+                        tool_timing=dict.fromkeys(TOOL_METRICS, 0),
                     )
                     self._attempt_timings.append(self._current_attempt)
             elif stage not in ("engine", "retry"):
@@ -539,6 +576,34 @@ def safe_profile(raw):
                 previous = item["attempt"]
                 attempts.append(item)
             result["attempt_timings"] = attempts
+        if "attempt_tool_timings" in value:
+            rows = value["attempt_tool_timings"]
+            if not isinstance(rows, list) or len(rows) > MAX_ATTEMPTS:
+                return None
+            attempts = []
+            previous = 0
+            for row in rows:
+                item = {
+                    key: row[key]
+                    for key in ("attempt", "elapsed_ms", "tool_free_ms", *TOOL_METRICS)
+                }
+                if any(not valid_number(n) for n in item.values()):
+                    return None
+                if (
+                    not previous < item["attempt"] <= result["attempts"]
+                    or item["started"] != item["finished"] + item["incomplete"] + item["active"]
+                    or not item["active"] <= item["peak_active"] <= item["started"]
+                    or item["active_ms"] > item["total_ms"]
+                    or item["active_ms"] + item["tool_free_ms"] != item["elapsed_ms"]
+                ):
+                    return None
+                previous = item["attempt"]
+                attempts.append(item)
+            if "attempt_timings" in result and [
+                (row["attempt"], row["elapsed_ms"]) for row in attempts
+            ] != [(row["attempt"], row["elapsed_ms"]) for row in result["attempt_timings"]]:
+                return None
+            result["attempt_tool_timings"] = attempts
         return result
     except (ValueError, TypeError, KeyError):
         return None
