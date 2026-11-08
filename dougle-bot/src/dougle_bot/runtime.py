@@ -14,6 +14,7 @@ from .engine import ClaudeCliEngine
 from .intake import receive
 from .safety import BotError
 from .slack_gateway import BoltSlackGateway
+from .startup import check_engine, report
 from .store import Store
 from .worker import Worker
 
@@ -198,7 +199,16 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
                 item["action_id"],
             )
 
-    for action in ("post", "edit", "regenerate", "lookup", "reject", "cancel", "assist", "take_over"):
+    for action in (
+        "post",
+        "edit",
+        "regenerate",
+        "lookup",
+        "reject",
+        "cancel",
+        "assist",
+        "take_over",
+    ):
         app.action(action)(button)
 
     def submitted(ack, body):
@@ -237,22 +247,16 @@ def build_app(gateway, token, identity, store, config, worker, actions, executor
     return app
 
 
-def serve(config, secrets):
+def serve(config, secrets, *, allow_unverified_readers=False):
     if not apple_silicon():
         raise BotError("apple_silicon_required")
     from slack_bolt.adapter.socket_mode.builtin import SocketModeHandler
 
     with InstanceLock(config.home / "runtime.lock"):
-        bot, app_token = secrets.get("bot"), secrets.get("app")
-        if not bot or not app_token:
-            raise BotError("slack_tokens_required")
-        gateway = BoltSlackGateway(bot)
-        identity = gateway.identity()
-        if config.slack.workspace_id and config.slack.workspace_id != identity["team_id"]:
-            raise BotError("wrong_workspace")
         store = Store(config.home / "bot.db")
         stop = threading.Event()
-        gateway.cancelled = lambda: stop.is_set()
+        handler = executor = thread = None
+        stage = "slack_check"
 
         def halt(*args):
             stop.set()
@@ -260,49 +264,114 @@ def serve(config, secrets):
 
         signal.signal(signal.SIGTERM, halt)
         signal.signal(signal.SIGINT, halt)
-        engine = ClaudeCliEngine(
-            config.engine,
-            config.home,
-            cancelled=lambda: stop.is_set() or store.control()["desired"] != "running",
-        )
-        worker = Worker(store, config, engine, gateway)
-        actions = Actions(store, config, gateway, worker)
-        executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="dougle-interactions")
-        app = build_app(gateway, bot, identity, store, config, worker, actions, executor)
-        handler = SocketModeHandler(app, app_token=app_token)
-
-        def work():
-            try:
-                while not stop.is_set() and store.control()["desired"] == "running":
-                    if not worker.run_once():
-                        stop.wait(0.25)
-            except Exception:
-                stop.set()
-                store.stop("worker_failed")
-
-        thread = None
         try:
-            store.recover()
-            store.begin_run(os.getpid(), identity["team_id"], identity["user_id"])
+            store.begin_startup(os.getpid())
+            report(store, "slack_checking")
+
+            def cancelled():
+                return stop.is_set() or store.control()["desired"] != "running"
+
+            bot, app_token = secrets.get("bot"), secrets.get("app")
+            if not bot or not app_token or not config.slack.allowed_channel_ids:
+                raise BotError("slack_check")
+            gateway = BoltSlackGateway(bot)
+            gateway.cancelled = cancelled
+            identity = gateway.identity()
+            if config.slack.workspace_id and config.slack.workspace_id != identity["team_id"]:
+                raise BotError("wrong_workspace")
+            for channel in config.slack.allowed_channel_ids:
+                gateway.call("conversations_history", channel=channel, limit=1)
+            if cancelled():
+                raise BotError("bot_stopped")
+            store.begin_run(
+                os.getpid(), identity["team_id"], identity["user_id"], require_starting=True
+            )
             from . import __version__
 
             store.audit(None, "system", "runtime_started", __version__)
+
+            stage = "engine_check"
+            checked = check_engine(
+                config.engine,
+                store,
+                ClaudeCliEngine(
+                    config.engine, config.home, cancelled=cancelled, startup_probe=True
+                ),
+                allow_unverified_readers=allow_unverified_readers,
+            )
+            if cancelled():
+                raise BotError("bot_stopped")
+            stage = "slack_check"
+            engine = ClaudeCliEngine(config.engine, config.home, cancelled=cancelled)
+            worker = Worker(store, config, engine, gateway)
+            actions = Actions(store, config, gateway, worker)
+            executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="dougle-interactions")
+            app = build_app(gateway, bot, identity, store, config, worker, actions, executor)
+            handler = SocketModeHandler(app, app_token=app_token)
+            store.recover()
+            # Questions sent while startup checks were running count as stopped time.
+            store.begin_run(
+                os.getpid(), identity["team_id"], identity["user_id"], require_starting=True
+            )
+            store.audit(None, "system", "runtime_started", __version__)
             handler.connect()
+            # Socket Mode can connect asynchronously. Never report ready merely on connect().
+            for _ in range(100):
+                if cancelled():
+                    raise BotError("bot_stopped")
+                if handler.client.is_connected():
+                    break
+                stop.wait(0.1)
+            else:
+                raise BotError("slack_check")
+            report(
+                store,
+                "connected",
+                connections=checked["connections"],
+                continued=checked["continued_without_verification"],
+            )
+            store.heartbeat(True)
+            stage = "runtime_connection_failed"
             worker.notify_recovered()
+
+            def work():
+                try:
+                    while not cancelled():
+                        if not worker.run_once():
+                            stop.wait(0.25)
+                except Exception:
+                    stop.set()
+                    store.stop("worker_failed")
+
             thread = threading.Thread(target=work, daemon=True)
             thread.start()
             while not stop.wait(0.5):
                 if store.control()["desired"] != "running":
                     break
                 store.heartbeat(handler.client.is_connected())
-        except Exception:
-            store.stop("runtime_connection_failed")
-            raise BotError("runtime_connection_failed") from None
+        except Exception as exc:
+            code = exc.code if isinstance(exc, BotError) else stage
+            if code not in (
+                "required_skills",
+                "optional_connections",
+                "daily_budget_exceeded",
+                "engine_check",
+                "bot_stopped",
+            ):
+                code = stage
+            if code in ("slack_check", "bot_stopped"):
+                report(store, code)
+            store.stop(code)
+            raise BotError(code) from None
         finally:
             stop.set()
             store.stop()
-            handler.close()
-            if thread:
-                thread.join()
-            executor.shutdown(wait=True, cancel_futures=True)
-            store.close()
+            try:
+                if handler:
+                    handler.close()
+            finally:
+                if thread:
+                    thread.join()
+                if executor:
+                    executor.shutdown(wait=True, cancel_futures=True)
+                store.close()

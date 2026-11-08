@@ -26,6 +26,7 @@ class EngineResult:
     cost_usd: float | None
     activated: set[str]
     reads: dict[str, set[str]] = field(default_factory=dict)
+    connections: list[dict[str, str]] | None = None
 
 
 class Engine(Protocol):
@@ -46,6 +47,7 @@ def parse_trace(raw: bytes):
     calls = {}
     successful = set()
     result = None
+    connections = None
     for line in raw.splitlines():
         try:
             item = json.loads(line)
@@ -53,6 +55,10 @@ def parse_trace(raw: bytes):
             continue  # Shell startup banners are never logged or treated as results.
         if not isinstance(item, dict):
             continue
+        if item.get("type") == "system" and item.get("subtype") == "init":
+            from .startup import connection_snapshot
+
+            connections = connection_snapshot(item.get("mcp_servers"))
         if item.get("type") == "result":
             result = item
         message = item.get("message", {})
@@ -130,34 +136,50 @@ def parse_trace(raw: bytes):
         valid_cost(result.get("total_cost_usd")),
         successful,
         read_receipts(raw),
+        connections,
     )
 
 
 class ClaudeCliEngine:
-    def __init__(self, config, home, *, cancelled=lambda: False, popen=subprocess.Popen):
+    def __init__(
+        self, config, home, *, cancelled=lambda: False, popen=subprocess.Popen, startup_probe=False
+    ):
         self.config, self.home, self.cancelled, self.popen = config, Path(home), cancelled, popen
+        self.startup_probe = startup_probe
 
     def command(self, session, budget, settings, *, images=False):
         cfg = self.config
+        schema = OUTPUT_SCHEMA
+        if self.startup_probe:
+            schema = {
+                "type": "object",
+                "properties": {"ready": {"type": "boolean"}},
+                "required": ["ready"],
+                "additionalProperties": False,
+            }
         args = [
             "-p",
             "--output-format",
             "stream-json",
             "--verbose",
             "--json-schema",
-            json.dumps(OUTPUT_SCHEMA),
+            json.dumps(schema),
             "--permission-mode",
             "dontAsk",
             "--settings",
             str(settings),
             "--tools",
-            ",".join(sorted(BUILTINS | {"ToolSearch"})),
+            "Skill" if self.startup_probe else ",".join(sorted(BUILTINS | {"ToolSearch"})),
             "--allowedTools",
-            ",".join([*cfg.allowed_tools, "StructuredOutput", "ToolSearch"]),
+            (
+                "Skill,StructuredOutput"
+                if self.startup_probe
+                else ",".join([*cfg.allowed_tools, "StructuredOutput", "ToolSearch"])
+            ),
             "--disallowedTools",
             ",".join(sorted(set(cfg.disallowed_tools) | {"Bash", "Agent", "Task"})),
             "--max-turns",
-            str(cfg.max_turns),
+            str(min(cfg.max_turns, 8) if self.startup_probe else cfg.max_turns),
             "--max-budget-usd",
             str(budget),
         ]
@@ -195,6 +217,7 @@ class ClaudeCliEngine:
             json.dumps(
                 {
                     "allowed": self.config.allowed_tools,
+                    "startup_probe": self.startup_probe,
                     "skills": list(self.config.required_skills),
                     "memory": str(Path.home() / ".dougle"),
                     "runtime_home": str(self.home.resolve()),
@@ -232,7 +255,7 @@ class ClaudeCliEngine:
                                     }
                                 ],
                             }
-                        ]
+                        ],
                     }
                 }
             )

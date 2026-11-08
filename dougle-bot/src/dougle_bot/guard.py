@@ -6,6 +6,10 @@ from pathlib import Path
 
 
 def permitted(policy, name, args):
+    if policy.get("startup_probe"):
+        return name == "StructuredOutput" or (
+            name == "Skill" and args.get("skill") in policy["skills"]
+        )
     # Claude-internal result formatting and tool discovery have no business write effect.
     if name in ("StructuredOutput", "ToolSearch"):
         return True

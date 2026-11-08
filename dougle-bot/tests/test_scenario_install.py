@@ -22,14 +22,14 @@ def test_catalog_bootstrap_isolated(tmp_path, variant):
     home.mkdir()
     (home / "config.toml").write_text("existing config must survive\n")
     (home / "bot.db").write_bytes(b"existing history")
-    runtime = home / "runtime/0.1.14"
+    runtime = home / "runtime/0.1.15"
     if variant == "partial":
         runtime.mkdir(parents=True)
         (runtime / "partial-file").write_text("unfinished")
     if variant == "repeat":
         (runtime / "bin").mkdir(parents=True)
         exe = runtime / "bin/dougle-bot"
-        exe.write_text("#!/bin/sh\nprintf '0.1.14\\n'\n")
+        exe.write_text("#!/bin/sh\nprintf '0.1.15\\n'\n")
         exe.chmod(0o755)
     if variant == "corrupt":
         wheel = next((skill / "assets").glob("*.whl"))
@@ -47,7 +47,7 @@ printf 'called\\n' >> "$DOUGLE_FIXTURE_CALLS"
 if [ "$1" = venv ]; then
  for arg do destination=$arg; done
  mkdir -p "$destination/bin"
- printf '#!/bin/sh\\nprintf "0.1.14\\\\n"\\n' > "$destination/bin/dougle-bot"
+ printf '#!/bin/sh\\nprintf "0.1.15\\\\n"\\n' > "$destination/bin/dougle-bot"
  chmod +x "$destination/bin/dougle-bot"
 fi
 exit 0
@@ -72,7 +72,7 @@ exit 0
     assert before == {p.name: p.read_bytes() for p in [home / "config.toml", home / "bot.db"]}
     assert not list((home / "runtime").glob(".install.*"))
     if variant == "repeat":
-        assert result.returncode == 0 and "0.1.14" in result.stdout
+        assert result.returncode == 0 and "0.1.15" in result.stdout
         assert not marker.exists()
     else:
         assert result.returncode != 0

@@ -43,7 +43,7 @@ doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slac
 
 1. `scripts/bot.sh status`에서 새 실행 환경 준비가 필요하면 `scripts/bot.sh prepare`를 실행합니다. 기존 설정·키체인·지식은 재등록하지 않습니다.
 2. 실행 중이면 업데이트 적용을 위해 중지하고 다시 시작할 것을 안내합니다. 사용자가 업데이트 적용을 요청했다면 `scripts/bot.sh stop` 후 실제 중지를 확인합니다.
-3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.12`을 확인합니다. 멈추는 중이면 시작하지 않습니다.
+3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.15`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
 
 명시적 검토 모드의 `preview_updated_review_again`은 업데이트된 게시 미리보기를 다시 확인하라는 뜻입니다. 기존 카드를 누르자마자 예전 형식의 답변을 보내지 않습니다. `publication_changed_regenerating`이면 새 초안을 준비하므로 새 카드에서 다시 승인합니다.
 
@@ -56,3 +56,22 @@ Slack 앱 설정 → OAuth & Permissions → Bot Token Scopes에 `files:read`를
 ## 자동 답변 기본값
 
 0.8.11부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 토큰·scope 변경은 없으며 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요.
+
+
+## 시작할 때 자동 점검
+
+`start`와 직접 실행하는 `run` 모두 Slack 인증·채널 읽기, Claude 실행·필수 스킬을 확인한 뒤 문의를 받습니다. 앱 토큰은 실제 Socket Mode 연결로 확인합니다. `doctor --online`은 종전처럼 AI를 호출하지 않는 준비 점검입니다.
+
+Claude 점검은 설정한 `claude_bin`과 `workdir`에서 새 세션으로 한 번 실행합니다. 최대90초·8턴·USD0.50이며, 설정한 호출 한도와 남은 일일 예산이 더 작으면 그 한도를 따릅니다. 추가 자동 재시도는 없습니다. 업무 조회·원본 변경·테스트 댓글은 하지 않습니다. 실제 조회 가능 여부는 질문마다 다시 검증합니다.
+
+| 표시 | 안내할 조치 |
+|---|---|
+| Slack 확인 실패 | 기존 키체인 등록, 앱 토큰의 connections:write, 채널 초대·앱 권한을 확인합니다. 토큰을 대화로 받지 않습니다. |
+| Claude 실행 점검 실패 | 설정한 Claude를 같은 workdir에서 열어 로그인·네트워크·사용 한도를 확인합니다. 실패만으로 인증 만료라고 단정하지 않습니다. |
+| 필수 스킬 실행 실패 | Dougle 플러그인을 업데이트하고 ask/style/plain_language 스킬 이름을 확인합니다. |
+| 자료 연결 확인 필요 | 실제 표시된 연결을 Claude의 `/mcp`나 기존 제공자 로그인 화면에서 복구합니다. pending은 연결 대기·미확인입니다. |
+| 오늘 예산 소진 | 일일 예산 설정을 확인합니다. 시작 점검도 예산에 포함합니다. |
+
+사용자가 미확인 자료 연결을 둔 채 시작하겠다고 선택한 경우에만 `start --allow-unverified-readers`를 실행합니다. 필수 항목은 우회할 수 없으며 이 선택은 다음 시작에 남지 않습니다. 연결 상태가 보고되지 않은 경우는 미확인으로 설명합니다. DB 조회 권한을 확인했다고 표현하지 않습니다.
+
+진행 중에는 status의 `startup.message`를 현재 대화에 보여 줍니다. `healthy=true`가 되기 전에는 시작 완료라고 하지 않습니다. 복구 후 시작을 다시 선택하면 새로 점검하며 사용자 설정·키체인·지식은 보존합니다.

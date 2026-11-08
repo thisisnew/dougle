@@ -139,8 +139,21 @@ class Store:
     def control(self):
         return self.one("SELECT * FROM control WHERE id=1")
 
-    def begin_run(self, pid, workspace, bot_user=None):
+    def begin_startup(self, pid):
+        # Called only while holding the process lock; stop works during Slack/AI checks too.
         with self.tx() as db:
+            db.execute(
+                "UPDATE control SET desired='running',started=?,heartbeat=?,pid=?,error='startup_checking' WHERE id=1",
+                (self.clock(), self.clock(), pid),
+            )
+
+    def begin_run(self, pid, workspace, bot_user=None, *, require_starting=False):
+        with self.tx() as db:
+            if (
+                require_starting
+                and db.execute("SELECT desired FROM control WHERE id=1").fetchone()[0] != "running"
+            ):
+                raise BotError("bot_stopped")
             old = db.execute("SELECT workspace FROM control WHERE id=1").fetchone()[0]
             old_bot = db.execute("SELECT bot_user FROM control WHERE id=1").fetchone()[0]
             if old_bot and bot_user and old_bot != bot_user:

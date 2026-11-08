@@ -60,4 +60,4 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 
 처음에는 설치와 채널 설정을 안내합니다. 이후 `@dougle 질문`에 답하고, 개발자 확인이 필요한 문의는 내부 DM으로 이어갑니다. 봇은 **실행 중인 PC의 지식**을 사용합니다. [봇 시작하기](dougle-bot/README.md)
 
-[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.17-skills-preview.1) · [개발·검증](docs/skills/development.md)
+[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [다운로드](https://github.com/thisisnew/dougle/releases/tag/v0.8.18-skills-preview.1) · [개발·검증](docs/skills/development.md)

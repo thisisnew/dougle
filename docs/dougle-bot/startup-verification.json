@@ -1,0 +1,296 @@
+{
+  "version": "0.8.18",
+  "optionalBotRuntime": "0.1.15",
+  "publication": "NOT_PUBLISHED",
+  "files": 57,
+  "archiveBytes": 242534,
+  "sha256": "0b2f6dc4e5404f077820ca02ff68c455507c02a5ff7f48f9c8c5a2ed997a7736",
+  "wheelSha256": "b35aa3c17d90ba0f3e766dbca704990f6f1b48dd47095000dd2bad695c325fc1",
+  "structuralChecks": 280,
+  "botTests": 802,
+  "newTests": 57,
+  "packageBytes": "PASS archive/mirrors/wheel source/checksums",
+  "isolatedWheelInstall": "PASS Python3.13 with hashed runtime dependencies",
+  "realModelCalls": 0,
+  "actualCompanyIntegration": "NOT_RUN",
+  "date": "2026-11-08",
+  "test_command": ".tools/bot-dev/bin/pytest -q dougle-bot/tests --junitxml=.tools/startup-build/tests.xml",
+  "junit_sha256": "6055467f2a192f9746ce26202ee8dca2e1743c078a30c78adb930b83aecea513",
+  "source_sha256": {
+    "dougle-bot/src/dougle_bot/__init__.py": "cbf81eddb130d32b155408f6c450eb491474c9632b33ed9ea50a4ed62f2b0591",
+    "dougle-bot/src/dougle_bot/actions.py": "0b3a3d7524f5454ff276090367afea6c28a5908818bb559ac30182d383c1a036",
+    "dougle-bot/src/dougle_bot/answer_policy.py": "86a1f813b5d3f8a8142814984159a847ca7e98e0de0a6313d9a4c3a5728e671b",
+    "dougle-bot/src/dougle_bot/cards.py": "88838a8fd3ded9042b49b52b40b8de3a9f1c80c0e40f427539a9a2466ab7514c",
+    "dougle-bot/src/dougle_bot/config.py": "c4e5d198c4f4316324177c31d0ac540d5daebaae195dd15c20343a7d35cd7189",
+    "dougle-bot/src/dougle_bot/developer_notice.py": "b458941874c75a0cf6a2da0edc1d9992b23b664deb1c413e0a82782c36b03659",
+    "dougle-bot/src/dougle_bot/engine.py": "f789dc3cd5b78cd963ae3dcaf7c0451679de9e383d3af8f40770e80873744989",
+    "dougle-bot/src/dougle_bot/evidence.py": "475302d32921905c59f601aa8858a16335d197884ee5c20df3db9e03a60fb58f",
+    "dougle-bot/src/dougle_bot/guard.py": "e8c5cdf647a4567229d3324ebb62970fd1e7d11d1c6dbaaad7079c9a0117925c",
+    "dougle-bot/src/dougle_bot/handoff.py": "88f6fb34211e65352e3545dc528e3ac35c0a5083b80b3157776bb542320d032a",
+    "dougle-bot/src/dougle_bot/handoff_notice.py": "54d152eb76d6d702efe688aa2eadb0539e5c03b7bf26d69cb30ff0db13531765",
+    "dougle-bot/src/dougle_bot/images.py": "f22da350c5a33f57eaf43ac8639b37813708202040b0cbb10ee998ae08f5daf9",
+    "dougle-bot/src/dougle_bot/intake.py": "7d37751cb1e54111b96471e2b471bcd58288941995c70247b445a3a03f83130a",
+    "dougle-bot/src/dougle_bot/main.py": "5592c1e1ba7650ffa091570a37d0fc51259a2e7d0da5a0adc763acf8a323388f",
+    "dougle-bot/src/dougle_bot/monitor.py": "033daca08bf12e8457a4b70ad3785a800148eb9ffe5cd0fe7d11c668ec406b5b",
+    "dougle-bot/src/dougle_bot/presentation.py": "22d6903aa2b7644f74b63fc99530bf17eca0edee57e4f1b17b276527b746b497",
+    "dougle-bot/src/dougle_bot/progress.py": "ff7f65f28db1a91f994a10da04e7b40f701b1a3e4f244b4ba931f915631ba134",
+    "dougle-bot/src/dougle_bot/prompts.py": "8f8143ea7d49031e178ddc9b88707e3915a4cd3ec4d1fe4caec53151c1732942",
+    "dougle-bot/src/dougle_bot/receipt_hook.py": "fa224995be6c26f4331fcc04ec70abfc046bc059a8f407662ca5f0ec9d7b5299",
+    "dougle-bot/src/dougle_bot/recovery.py": "b1e65c1c075bb084fb6fa0cd982267f146533452c0a9a8007ace802a0b513d1a",
+    "dougle-bot/src/dougle_bot/runtime.py": "0f299d07b4b6b2bb4f36b104cfaf9d5775f8e3d544c759e6c2e5856d0858773c",
+    "dougle-bot/src/dougle_bot/safety.py": "e062f24cd290f930cb88715d5004e30df7971bbf63e3f534d604ce4d426ba94f",
+    "dougle-bot/src/dougle_bot/secrets.py": "bc9177e1ff367df479f3e1a032bc8f97ff4b863e511e42927f75859963fb92e8",
+    "dougle-bot/src/dougle_bot/slack_gateway.py": "f51223cc4aee97f66a6500b310859b14591ba9eca9c0a4e40c405fa66c277af9",
+    "dougle-bot/src/dougle_bot/startup.py": "d483745a82d1bd1a47087dd75bbb12db63e3815238847f9667b50790a5a1e2e0",
+    "dougle-bot/src/dougle_bot/store.py": "643a70e14e3287c2172987339ca1d5599d9cd4b38843056529b269b40b0a2988",
+    "dougle-bot/src/dougle_bot/worker.py": "80b01d895451ea430e024cccc97f4040643147aff5374c1654a5802debdd2ef8"
+  },
+  "covered": [
+    "Actual successful Skill receipts required; model readiness claim alone insufficient",
+    "Same configured CLI alias/workdir, fresh session, bounded timeout/turns/budget and shared daily accounting",
+    "Startup hook denies business reads/writes, MCP calls, shell, agents and tool discovery",
+    "Only registered allowed MCP connections considered; cloud connector name normalization; unknown/pending never reported connected",
+    "Optional continue explicit and nonpersistent; essential checks never bypassed",
+    "Direct run and start both gated; no intake/worker after failure; Socket Mode ready required",
+    "Stop during Slack/AI checks, atomic start transition, lock/handler cleanup",
+    "Read-only status exposes sanitized stage; no AI calls or credential details",
+    "Owned fake CLI process verifies stream/policy/budget integration"
+  ],
+  "limits": [
+    "Fake Slack/engine and synthetic CLI; no real Claude model call or company credentials",
+    "MCP init snapshot only; connected transport is not business-query authorization",
+    "Missing connector metadata stays unverified; no invented registration from default tools",
+    "Model may fail to load skills within bounded probe; actual company acceptance still required",
+    "Existing research/evidence checks remain in every question"
+  ],
+  "tests": [
+    {
+      "test": "tests.test_startup::test_startup_uses_real_skill_receipts_not_model_claim",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_every_required_skill_is_mandatory_even_with_optional_override[0]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_every_required_skill_is_mandatory_even_with_optional_override[1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_every_required_skill_is_mandatory_even_with_optional_override[2]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_bounded_probe_does_not_resume_a_customer_session",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_failed_probe_safe_report_and_no_unknown_cost_as_zero[engine_timeout]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_failed_probe_safe_report_and_no_unknown_cost_as_zero[engine_launch_failed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_failed_probe_safe_report_and_no_unknown_cost_as_zero[engine_failed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_failed_probe_safe_report_and_no_unknown_cost_as_zero[invalid_engine_output]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_failed_probe_safe_report_and_no_unknown_cost_as_zero[bot_stopped]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_unexpected_failure_never_records_raw_exception",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_daily_budget_blocks_probe_and_is_shared_with_questions",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_model_result_must_be_exact[output0]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_model_result_must_be_exact[output1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_model_result_must_be_exact[output2]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_model_result_must_be_exact[output3]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_model_result_must_be_exact[None]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_model_result_must_be_exact[ready]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_actual_configured_optional_connector_requires_explicit_choice[failed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_actual_configured_optional_connector_requires_explicit_choice[needs-auth]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_actual_configured_optional_connector_requires_explicit_choice[pending]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_actual_configured_optional_connector_requires_explicit_choice[disabled]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_actual_configured_optional_connector_requires_explicit_choice[unknown]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_absent_default_or_unrelated_connections_do_not_block[None]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_absent_default_or_unrelated_connections_do_not_block[connections1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_absent_default_or_unrelated_connections_do_not_block[connections2]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_absent_default_or_unrelated_connections_do_not_block[connections3]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_init_metadata_not_model_output_defines_connection_status",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_connection_snapshot_sanitizes_names_statuses_and_duplicate_health",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Read-args0]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Grep-args1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Glob-args2]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Edit-args3]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Write-args4]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Bash-args5]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Agent-args6]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[ToolSearch-args7]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[WebFetch-args8]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[mcp__bigquery__execute_sql_readonly-args9]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[mcp__slack__send_message-args10]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_startup_policy_cannot_query_or_modify_business_sources[Skill-args11]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_probe_command_and_guard_preserve_alias_cwd_and_normal_policy",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_status_is_read_only_and_exposes_blocker_without_another_probe",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_live_checking_is_not_healthy_even_with_recent_heartbeat",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_direct_run_cannot_bypass_preflight_or_start_intake_on_failure[engine_failed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_direct_run_cannot_bypass_preflight_or_start_intake_on_failure[engine_timeout]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_direct_run_cannot_bypass_preflight_or_start_intake_on_failure[bot_stopped]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_slack_auth_failure_never_calls_ai",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_socket_failure_after_probe_does_not_process_questions",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_success_checks_before_listening_and_work_and_cleans_up",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_start_flag_is_explicit_transient_and_forwarded",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_stop_during_slack_check_is_not_undone_by_begin_run",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_stop_and_start_transition_compare_atomically",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_probe_through_owned_fake_process_policy_and_stream",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_optional_blocker_prevents_socket_and_next_start_has_no_saved_bypass",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_cloud_connector_name_maps_to_allowed_tool_prefix[claude_ai_Google_Cloud_BigQuery]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_startup::test_cloud_connector_name_maps_to_allowed_tool_prefix[claude.ai Google Cloud BigQuery]",
+      "status": "PASS"
+    }
+  ]
+}

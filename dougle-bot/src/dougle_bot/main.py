@@ -19,6 +19,7 @@ from .runtime import apple_silicon, running, serve
 from .safety import BotError
 from .secrets import SERVICES, KeychainSecretStore
 from .slack_gateway import BoltSlackGateway
+from .startup import latest_report
 from .store import Store
 
 
@@ -100,6 +101,13 @@ def status(home, config_path):
                 and not control["error"]
                 and time.time() - control["heartbeat"] < 15
             )
+            startup = latest_report(store)
+            if startup:
+                result["startup"] = startup
+                if result["running"] and startup["phase"] in ("slack_checking", "checking", "ready"):
+                    result.update(state="checking", healthy=False)
+                elif not result["running"] and startup["phase"] not in ("connected", "bot_stopped"):
+                    result.update(state="blocked", healthy=False)
         finally:
             store.close()
     return result
@@ -115,7 +123,7 @@ def doctor(config, secrets, online=False):
         "bot_token": "missing",
         "app_token": "missing",
         "slack_connection": "not_checked",
-        "skill_execution": "not_checked_until_question",
+        "skill_execution": "checked_on_start",
     }
     name = config.engine.claude_bin
     if "/" in name:
@@ -152,7 +160,9 @@ def parser():
     p.add_argument("--config", type=Path)
     sub = p.add_subparsers(dest="command", required=True)
     for name in ("status", "start", "stop", "run", "version"):
-        sub.add_parser(name)
+        command = sub.add_parser(name)
+        if name in ("start", "run"):
+            command.add_argument("--allow-unverified-readers", action="store_true")
     d = sub.add_parser("doctor")
     d.add_argument("--online", action="store_true")
     setup = sub.add_parser("setup")
@@ -247,7 +257,7 @@ def execute(args, secrets=None):
             "message": "진행 중 작업 종료를 기다리고 있습니다. 상태를 다시 확인해 주세요.",
         }
     if args.command == "run":
-        serve(cfg, secrets)
+        serve(cfg, secrets, allow_unverified_readers=args.allow_unverified_readers)
         return {"state": "stopped"}
     if args.command == "start":
         if running(cfg.home):
@@ -270,7 +280,15 @@ def execute(args, secrets=None):
         with log.open("ab") as f:
             log.chmod(0o600)
             proc = subprocess.Popen(
-                [sys.executable, "-m", "dougle_bot.main", "--config", str(path), "run"],
+                [
+                    sys.executable,
+                    "-m",
+                    "dougle_bot.main",
+                    "--config",
+                    str(path),
+                    "run",
+                    *(["--allow-unverified-readers"] if args.allow_unverified_readers else []),
+                ],
                 stdin=subprocess.DEVNULL,
                 stdout=f,
                 stderr=f,
@@ -278,14 +296,17 @@ def execute(args, secrets=None):
             )
         for _ in range(40):
             if proc.poll() is not None:
-                raise BotError("start_failed_check_status")
+                current = status(cfg.home, path)
+                current["started"] = False
+                return current
             current = status(cfg.home, path)
             if current.get("healthy"):
                 return current
             time.sleep(0.25)
         return {
+            **status(cfg.home, path),
             "state": "starting",
-            "message": "연결 중입니다. 상태 확인에서 Slack 연결을 확인해 주세요.",
+            "message": "시작 점검 중입니다. 상태 확인에서 진행 상황을 확인해 주세요.",
         }
     if args.command == "reconcile":
         token = secrets.get("bot")
