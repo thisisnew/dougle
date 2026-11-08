@@ -1,7 +1,7 @@
 {
   "version": "0.8.20",
   "optionalBotRuntime": "0.1.17",
-  "publication": "NOT_PUBLISHED",
+  "publication": "PUBLISHED_PREVIEW",
   "botTests": 1092,
   "structuralChecks": 284,
   "archiveBytes": 261054,
@@ -58,5 +58,9 @@
     "Existing one correction budget retained; a second-attempt malformed record still fails safely",
     "Synthetic tests do not establish actual source freshness or semantic correctness"
   ],
-  "independentReview": "format-repair adversarial and final runtime/store reviews completed; identified boundary defects fixed"
+  "independentReview": "format-repair adversarial and final runtime/store reviews completed; identified boundary defects fixed",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42469663019",
+  "ciPython312": "PASS",
+  "ciPython313": "PASS",
+  "isolatedWheelInstall": "PASS 0.1.17 installed with no dependency changes; CLI help/version"
 }

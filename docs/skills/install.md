@@ -39,9 +39,9 @@
    $dougle-connect 연결할_URL을 읽고 업무 지식으로 정리해 줘.
    ```
 
-다음 배포 대상은 스킬 **0.8.20 / 봇 0.1.17**이며 현재 소스 동결과 wheel 생성을 기다리고 있습니다. 공개 전에는 새 버전 설치 완료로 안내하지 않습니다. [준비 상태와 변경 사항](../dougle-bot/verification-repair.md)을 확인하세요.
+현재 Preview는 스킬 **0.8.20 / 봇 0.1.17**입니다. [검증 범위와 변경 사항](../dougle-bot/verification-repair.md)을 확인하세요.
 
-공개 후 직접 설치하려면 [0.8.20 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.20-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
+직접 설치하려면 [0.8.20 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.20-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 내부 답변 스킬인 `i-have-adhd/`, `plain-language/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 
