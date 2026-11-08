@@ -1,17 +1,15 @@
 {
-  "version": "0.8.18",
-  "optionalBotRuntime": "0.1.15",
-  "publication": "v0.8.18-skills-preview.1",
+  "version": "0.8.19",
+  "optionalBotRuntime": "0.1.16",
+  "publication": "NOT_PUBLISHED",
   "files": 57,
-  "archiveBytes": 242534,
-  "sha256": "0b2f6dc4e5404f077820ca02ff68c455507c02a5ff7f48f9c8c5a2ed997a7736",
-  "wheelSha256": "b35aa3c17d90ba0f3e766dbca704990f6f1b48dd47095000dd2bad695c325fc1",
-  "structuralChecks": 280,
-  "botTests": 802,
-  "newTests": 57,
+  "archiveBytes": 256832,
+  "sha256": "d9858fa640957d805e2caccbe2b67c09aecbe16e4082cd458e3f4161299e7a12",
+  "wheelSha256": "b79aa84b71d2b356b498cd8ba27a90ab3d04127fd9a7f159d6fd809e8b0a4539",
+  "structuralChecks": 284,
+  "botTests": 975,
   "packageBytes": "PASS archive/mirrors/wheel source/checksums",
-  "isolatedWheelInstall": "PASS Python3.13 with hashed runtime dependencies",
+  "isolatedWheelInstall": "PASS Python3.13 with hashed dependencies",
   "realModelCalls": 0,
-  "actualCompanyIntegration": "NOT_RUN",
-  "publicVerification": "docs/skills/public-release.json"
+  "actualCompanyIntegration": "NOT_RUN"
 }

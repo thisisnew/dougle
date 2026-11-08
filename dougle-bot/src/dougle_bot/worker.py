@@ -5,7 +5,13 @@ import time
 from decimal import Decimal
 
 from . import cards, developer_notice
-from .evidence import KINDS, QUESTION_KINDS, failure_summary, validate_verification
+from .evidence import (
+    KINDS,
+    QUESTION_KINDS,
+    explicit_query_requirements,
+    failure_summary,
+    validate_verification,
+)
 from .handoff import reported_evidence, route_unresolved
 from .handoff_notice import after_developer_dm
 from .images import collect_images, prompt_messages
@@ -280,7 +286,7 @@ class Worker:
             presentation_repair = None
             repair_reads = None
             repair_run_id = None
-            required_evidence = set()
+            required_evidence = explicit_query_requirements(inquiry["question_text"])
             attempt = 0
             saved_requirements = self.store.one(
                 "SELECT detail FROM audit WHERE inquiry_id=? AND action='research_requirements' ORDER BY id DESC LIMIT 1",
@@ -326,7 +332,7 @@ class Worker:
                         {"file_id": img.file_id, "message_ts": img.message_ts} for img in images
                     ],
                 )
-                progress.sizes(prompt=len(text))
+                progress.sizes(prompt=len(text), prompt_bytes=len(text.encode("utf-8")))
                 start = time.monotonic()
                 try:
                     attempt += 1
@@ -340,6 +346,7 @@ class Worker:
                         cancel_requested=lambda: self.store.inquiry(ident)["status"] == "cancelled",
                         timeout_seconds=progress.remaining(self.config.engine.timeout_seconds),
                     )
+                    progress.usage(result.usage)
                     if progress.remaining(self.config.engine.timeout_seconds) <= 0:
                         raise BotError("engine_timeout")
                 except BotError as exc:
@@ -354,6 +361,8 @@ class Worker:
                         restored = True
                         continue
                     raise
+                finally:
+                    progress.finish_attempt()
                 self.store.finish_run(
                     run_id,
                     cost=result.cost_usd,
@@ -424,6 +433,7 @@ class Worker:
                         image_ids={img.file_id for img in images},
                         report=lookup or False,
                         required_floor=required_evidence,
+                        question=inquiry["question_text"],
                     )
                     self.store.audit(
                         ident, "system", "evidence_checks_verified", json.dumps(verification)

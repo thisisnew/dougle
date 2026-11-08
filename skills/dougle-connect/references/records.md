@@ -2,7 +2,7 @@
 
 ## Register without duplicates
 
-The user need not know whether material is already connected. Before creating a record, read the existing source index and relevant records, identify the source, and reconcile it. Registration in the common store is sequential; do not spawn parallel registration agents. Reread before saving. This procedure is not an atomic uniqueness constraint against unrelated concurrent hosts.
+The user need not know whether material is already connected. Before creating a record, search the existing source index and read relevant records, identify the source, and reconcile it. Registration in the common store is sequential; do not spawn parallel registration agents. Apply the overlapping-write requirements in [store rules](store.md) to records and shared indexes. Rereading alone is not an atomic uniqueness constraint against unrelated concurrent hosts.
 
 Identity rules:
 
@@ -57,6 +57,8 @@ Use one coherent business concept/process per established system scope, not one 
 
 For NEW notes and the parts being genuinely refreshed, put a compact navigation card at the top: topic ID/title, project/service scope, established Korean/English aliases and code/API/table identifiers, one-line subject description, and a section map from likely subquestions to exact existing heading/claim IDs. Include a visible pointer to exceptions/conflicts/unknowns and their claim links even when details live elsewhere. Keep a Navigation state (complete or needs_rebuild) with the covered claim/section IDs; this is an advisory completeness marker, not source verification. This card is navigation, not authoritative answer text or a second copy of all facts. Do not invent aliases or a supported relationship just to improve matching.
 
+A card may exclude unread sections only when a trusted validation receipt binds that exact map to the current note body: an existing host-computed digest of all content outside the card paired with the exact validated map, or a host-provided immutable snapshot receipt for the map and body actually validated together. Do not hash the card into its own digest. A declared revision, timestamp, mtime, matching headings or `complete` alone is insufficient; an older writer can add an exception under an unchanged heading. Missing/mismatched binding uses retrieval.md's full-candidate fallback. Check only relevant notes with available host tools; never require whole-corpus hashing, migration, Python or a new runtime. A valid body binding does not validate linked targets or original-source freshness.
+
 Keep each useful answer-sized unit under a stable descriptive heading with its claim ID. Store statement, provenance, source/precise location/revision/actual observation time/freshness, applicable scope and preconditions, exceptions, linked dependent claims and unresolved conflicts together or through explicit links. Each relationship edge needs its own evidence. Preserve exact identifiers; a function and table co-occurring is not proof of a write.
 
 Classes: observed = directly supported by an actually read source; reported = user statement/correction; inferred = interpretation with supporting clues. Freshness: current_at_observation, needs_recheck, unavailable, superseded. Observation is not live certainty.
@@ -65,7 +67,7 @@ Synthetic layout (names and evidence illustrative only):
 
 ```markdown
 # T01 — 입하 확정
-Navigation: complete
+Navigation: needs_rebuild
 Covered sections: C01; C02; 확인할 점
 Scope: receiving
 Aliases: 입고 확정; confirmReceipt
@@ -106,4 +108,8 @@ Keep facts, reported corrections and inference distinct. Do not save hidden reas
 
 ## Patch affected knowledge, not the entire note
 
-When connecting, refreshing or merging, identify affected claim IDs and their dependencies, read their complete existing content plus new evidence, and patch those sections. Preserve untouched statements, exact identifiers, corrections, provenance, prior observation times and unresolved conflicts. Invalidate claims dependent on changed evidence rather than replacing them with an optimistic summary. A deletion is not the same as access failure. Re-read the affected note before writing; reconcile concurrent edits instead of replacing from an old snapshot. Before a claim/dependency/split update mark the affected navigation needs_rebuild durably, then patch content, rebuild section/caveat pointers and validate them against actual headings before marking complete and updating the index. A failed marker write prevents the update; an interrupted update leaves needs_rebuild and usable prior content for full-note/original fallback. Save note edits successfully before updating section/index pointers; validate links and report partial work on failure. A formatting-only card addition is not a fresh source check. Do not replace a whole topic with a new summary that erases caveats.
+When connecting, refreshing or merging, read affected claims and their dependencies completely, then patch only those sections. Preserve untouched statements, exact identifiers, corrections, provenance, prior observation times and unresolved conflicts. Invalidate claims dependent on changed evidence; deletion and access failure are different observations.
+
+Use store.md's real conditional-write/lock/single-writer protection for overlapping edits. Under that protection, mark affected navigation `needs_rebuild` durably before changing a claim, dependency or split. Patch content, rebuild section/caveat pointers, and validate the map against the complete affected note body before marking it complete. Record a body binding only if the host can establish it reliably; otherwise keep the card advisory and use full-candidate reads. A failed marker write prevents the update. Conflicts or lost ownership stop dependent writes and require reconciliation; an interruption leaves readable content and pending navigation, not a completed checkpoint.
+
+Save note edits before section/index pointers, validate affected incoming and outgoing links under freshness.md, and report partial work. Per-file CAS does not make this sequence an atomic multi-file transaction. Do not replace a whole topic with a new summary that erases caveats. Formatting/navigation changes alone never advance source observation or verification times.

@@ -186,8 +186,88 @@ def test_progress_stream_only_exposes_safe_stage_enums_with_split_utf8():
     parser.feed(
         b'{"type":"user","message":{"content":[{"type":"tool_result","is_error":true,"content":"secret"}]}}\n'
     )
-    assert events == ["activity", "lookup", "activity", "activity", "tool_result"]
+    assert events == ["activity", "first_output", "lookup", "activity", "activity", "tool_result"]
     assert "secret" not in repr(events)
+
+
+def stream_message(parser, role, blocks):
+    data = json.dumps({"type": role, "message": {"content": blocks}}, ensure_ascii=False)
+    parser.feed((data + "\n").encode())
+
+
+def test_stream_ids_are_opaque_deduplicated_and_not_present_in_observer_or_profiles():
+    now = [0.0]
+    events, snapshots = [], []
+    progress = Progress(clock=lambda: now[0], observer=snapshots.append)
+
+    def receive_event(value):
+        events.append(value)
+        progress.activity(value)
+
+    stream = StreamProgress(receive_event)
+    secret = "private-id /synthetic/project token=private-value"
+    start = dict(type="tool_use", id=secret, name="Read", input={"file_path": "/private/source.py"})
+    end = dict(type="tool_result", tool_use_id=secret, is_error=True, content="private result")
+    stream_message(stream, "assistant", [start, start])
+    now[0] = 3
+    stream_message(stream, "user", [end, end])
+    structured = [item for item in events if isinstance(item, dict)]
+    assert [item["type"] for item in structured] == [
+        "tool_start",
+        "tool_start",
+        "tool_end",
+        "tool_end",
+    ]
+    assert len({item["id"] for item in structured}) == 1
+    assert all(len(item["id"]) == 64 for item in structured)
+    assert "private" not in json.dumps(events + snapshots + [progress.profile()])
+    assert structured[0]["id"] not in json.dumps(snapshots + [progress.profile()])
+    assert progress.profile()["tool_timing"]["active_ms"] == 3000
+    assert progress.profile()["tool_responses"] == 1  # Errors are responses, not success claims.
+    assert events.count("first_output") == 1
+
+
+def test_same_provider_id_in_two_engine_streams_is_not_a_duplicate():
+    progress = Progress()
+    for attempt in (1, 2):
+        progress.phase("engine", attempt=attempt)
+        stream = StreamProgress(progress.activity)
+        stream_message(stream, "assistant", [dict(type="tool_use", id="read1", name="Read")])
+        stream_message(stream, "user", [dict(type="tool_result", tool_use_id="read1")])
+        progress.phase("validation")
+    assert progress.profile()["tool_responses"] == 2
+    assert progress.profile()["tool_timing"]["started"] == 2
+
+
+@pytest.mark.parametrize("ident", [None, True, [], {}, "", "x" * 513])
+def test_malformed_present_identity_does_not_fall_back_to_anonymous_count(ident):
+    progress = Progress()
+    stream = StreamProgress(progress.activity)
+    stream_message(stream, "assistant", [dict(type="tool_use", id=ident, name="Read")])
+    stream_message(stream, "user", [dict(type="tool_result", tool_use_id=ident)])
+    assert progress.profile()["tool_responses"] == 0
+    assert progress.profile()["tool_timing"]["started"] == 0
+
+
+def test_first_output_excludes_startup_empty_and_invalid_blocks_and_is_not_observer_noise():
+    now = [0.0]
+    snapshots = []
+    progress = Progress(clock=lambda: now[0], observer=snapshots.append)
+    progress.phase("engine", attempt=1)
+    snapshots.clear()
+    stream = StreamProgress(progress.activity)
+    stream_message(stream, "system", [])
+    stream_message(
+        stream, "assistant", [dict(type="text", text=""), dict(type="tool_use", name=[])]
+    )
+    assert progress.profile()["first_output_ms"] is None
+    now[0] = 2
+    stream_message(stream, "assistant", [dict(type="text", text="private output")])
+    now[0] = 4
+    stream_message(stream, "assistant", [dict(type="text", text="more private output")])
+    assert progress.profile()["first_output_ms"] == 2000
+    assert progress.profile()["attempt_timings"][0]["first_output_ms"] == 2000
+    assert snapshots == []
 
 
 def test_progress_counts_responses_not_success_and_flags_silence():

@@ -1,0 +1,810 @@
+{
+  "version": "0.8.19",
+  "optionalBotRuntime": "0.1.16",
+  "publication": "NOT_PUBLISHED",
+  "files": 57,
+  "archiveBytes": 256832,
+  "sha256": "d9858fa640957d805e2caccbe2b67c09aecbe16e4082cd458e3f4161299e7a12",
+  "wheelSha256": "b79aa84b71d2b356b498cd8ba27a90ab3d04127fd9a7f159d6fd809e8b0a4539",
+  "structuralChecks": 284,
+  "botTests": 975,
+  "packageBytes": "PASS archive/mirrors/wheel source/checksums",
+  "isolatedWheelInstall": "PASS Python3.13 with hashed dependencies",
+  "realModelCalls": 0,
+  "actualCompanyIntegration": "NOT_RUN",
+  "date": "2026-11-08",
+  "test_command": ".tools/bot-dev/bin/pytest -q dougle-bot/tests --junitxml=.tools/search-hardening-final.xml",
+  "junit_sha256": "ed0d0873865a32adf770ece8f93e9d01f4475673b8b86122fc6e2a1146820fbe",
+  "source_sha256": {
+    "dougle-bot/src/dougle_bot/__init__.py": "0d0ec4b9a3ed0ef86a5b0890a9141e0b9f2fc11fe931e9636d7fc67d5d6a8a91",
+    "dougle-bot/src/dougle_bot/actions.py": "0b3a3d7524f5454ff276090367afea6c28a5908818bb559ac30182d383c1a036",
+    "dougle-bot/src/dougle_bot/answer_policy.py": "86a1f813b5d3f8a8142814984159a847ca7e98e0de0a6313d9a4c3a5728e671b",
+    "dougle-bot/src/dougle_bot/cards.py": "88838a8fd3ded9042b49b52b40b8de3a9f1c80c0e40f427539a9a2466ab7514c",
+    "dougle-bot/src/dougle_bot/config.py": "c4e5d198c4f4316324177c31d0ac540d5daebaae195dd15c20343a7d35cd7189",
+    "dougle-bot/src/dougle_bot/developer_notice.py": "b458941874c75a0cf6a2da0edc1d9992b23b664deb1c413e0a82782c36b03659",
+    "dougle-bot/src/dougle_bot/engine.py": "016594ba8908eb440c579e74eb4fc94b8a35188fa5e138d4ff9f90a11e3442b1",
+    "dougle-bot/src/dougle_bot/evidence.py": "e467236ed90da89d6a3f3750dbbcc817cf799a30326af5977711979901c67e5e",
+    "dougle-bot/src/dougle_bot/guard.py": "e8c5cdf647a4567229d3324ebb62970fd1e7d11d1c6dbaaad7079c9a0117925c",
+    "dougle-bot/src/dougle_bot/handoff.py": "97e4dbaebb4fb38eff97ac09e8c573a46f5d81eeb9587a25aae80c729a42de5a",
+    "dougle-bot/src/dougle_bot/handoff_notice.py": "54d152eb76d6d702efe688aa2eadb0539e5c03b7bf26d69cb30ff0db13531765",
+    "dougle-bot/src/dougle_bot/images.py": "f22da350c5a33f57eaf43ac8639b37813708202040b0cbb10ee998ae08f5daf9",
+    "dougle-bot/src/dougle_bot/intake.py": "7d37751cb1e54111b96471e2b471bcd58288941995c70247b445a3a03f83130a",
+    "dougle-bot/src/dougle_bot/main.py": "5592c1e1ba7650ffa091570a37d0fc51259a2e7d0da5a0adc763acf8a323388f",
+    "dougle-bot/src/dougle_bot/monitor.py": "033daca08bf12e8457a4b70ad3785a800148eb9ffe5cd0fe7d11c668ec406b5b",
+    "dougle-bot/src/dougle_bot/presentation.py": "22d6903aa2b7644f74b63fc99530bf17eca0edee57e4f1b17b276527b746b497",
+    "dougle-bot/src/dougle_bot/progress.py": "4136f190c7097fbc4cc89245d218721cd48a2c9b6eb82ab0ea211b6543bb83da",
+    "dougle-bot/src/dougle_bot/prompts.py": "681eaf9f4b40826a449bfc72cc12c1d6231e66348b3e8e3ee9e1165776054175",
+    "dougle-bot/src/dougle_bot/receipt_hook.py": "fa224995be6c26f4331fcc04ec70abfc046bc059a8f407662ca5f0ec9d7b5299",
+    "dougle-bot/src/dougle_bot/recovery.py": "b1e65c1c075bb084fb6fa0cd982267f146533452c0a9a8007ace802a0b513d1a",
+    "dougle-bot/src/dougle_bot/runtime.py": "0f299d07b4b6b2bb4f36b104cfaf9d5775f8e3d544c759e6c2e5856d0858773c",
+    "dougle-bot/src/dougle_bot/safety.py": "e062f24cd290f930cb88715d5004e30df7971bbf63e3f534d604ce4d426ba94f",
+    "dougle-bot/src/dougle_bot/secrets.py": "bc9177e1ff367df479f3e1a032bc8f97ff4b863e511e42927f75859963fb92e8",
+    "dougle-bot/src/dougle_bot/slack_gateway.py": "f51223cc4aee97f66a6500b310859b14591ba9eca9c0a4e40c405fa66c277af9",
+    "dougle-bot/src/dougle_bot/startup.py": "d483745a82d1bd1a47087dd75bbb12db63e3815238847f9667b50790a5a1e2e0",
+    "dougle-bot/src/dougle_bot/store.py": "643a70e14e3287c2172987339ca1d5599d9cd4b38843056529b269b40b0a2988",
+    "dougle-bot/src/dougle_bot/worker.py": "ab55581306d4ef159b33516daa3221062989e70d9025fe3b67f239924117b02c"
+  },
+  "covered": [
+    "Overlapping tool intervals, unknown/duplicate/out-of-order IDs, failed/cancelled attempt closure",
+    "Provider token totals with per-field sample coverage, missing distinct from zero, no duplicate modelUsage",
+    "Stream receipts bound to comparable actual files/URLs/observed line coverage",
+    "Explicit current-data and code requests retain requirements before first answer; domain and negated requests still pass",
+    "SQL connectivity/metadata-only checks do not establish business-data reads; quoted identifiers and data/metadata joins supported",
+    "Wrong source rejected through worker; correct reread can recover",
+    "Original evidence/skills/hand-off/image/approval boundaries retained"
+  ],
+  "review": [
+    "Three independent post-implementation reviewers; findings fixed and re-reviewed"
+  ],
+  "limits": [
+    "Fake services and synthetic streams; actual model/company acceptance NOT_RUN",
+    "Read/citation consistency is not semantic truth, deployment version, or replica freshness proof",
+    "Natural-language floor is deliberately narrow and not a complete classifier",
+    "Local-vs-remote source identity without a mapping remains incomparable",
+    "Generic MCP does not expose verified production watermark/environment; no unused adapter API shipped",
+    "Host skill concurrency protocol is not an implemented global lock",
+    "No claimed latency, token saving, or throughput gain"
+  ],
+  "tests": [
+    {
+      "test": "tests.test_evidence_binding::test_successful_read_cannot_be_attached_to_demonstrably_different_file[/synthetic/feature/Other.java-/synthetic/main/Order.java]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_successful_read_cannot_be_attached_to_demonstrably_different_file[/synthetic/feature/Order.java-/synthetic/main/Order.java]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_successful_read_cannot_be_attached_to_demonstrably_different_file[/synthetic/main/Order.java-Different.java:12]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_successful_read_cannot_be_attached_to_demonstrably_different_file[/synthetic/main/Order.java-../other/Order.java]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[/synthetic/main/Order.java]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[/synthetic/main/./Order.java:12]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[/synthetic/main/temp/../Order.java#L12-L15]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[main/Order.java:12-15]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[Order.java]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[`/synthetic/main/Order.java:12`]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[`/synthetic/main/Order.java`:12]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[/synthetic/main/Order.java:12 (confirmOrder)]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_normalized_paths_and_optional_line_suffixes_are_compatible[file:///synthetic/main/Order.java#L12]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_actual_numbered_output_bounds_citation_but_requested_limit_is_not_coverage",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_unrelated_hits_do_not_invent_contiguous_coverage",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_url_identity_preserves_revision_and_known_raw_aliases[https://raw.githubusercontent.com/org/repo/main/Order.java-https://github.com/org/repo/blob/main/Order.java#L12-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_url_identity_preserves_revision_and_known_raw_aliases[https://github.com/org/repo/blob/main/Order.java?raw=1-https://raw.githubusercontent.com/org/repo/main/Order.java-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_url_identity_preserves_revision_and_known_raw_aliases[https://github.com/org/repo/raw/main/Order.java-https://github.com/org/repo/blob/main/Order.java-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_url_identity_preserves_revision_and_known_raw_aliases[https://github.com/org/repo/blob/feature/Order.java-https://github.com/org/repo/blob/main/Order.java-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_url_identity_preserves_revision_and_known_raw_aliases[https://github.com/org/repo/blob/main/Order.java-https://github.com/other/repo/blob/main/Order.java-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_url_identity_preserves_revision_and_known_raw_aliases[https://example.test/a/Order.java?ref=main-https://example.test/a/Order.java?ref=old-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_receipt_metadata_does_not_retain_signed_url_credentials[access_token=SECRET]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_receipt_metadata_does_not_retain_signed_url_credentials[sv=1&sig=SECRET]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_receipt_metadata_does_not_retain_signed_url_credentials[X-Amz-Credential=SECRET&X-Amz-Signature=SECRET]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_receipt_metadata_does_not_retain_signed_url_credentials[credential=SECRET&api_key=SECRET&unknown_auth=SECRET]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_knowledge_notes_may_cite_the_recorded_original[/synthetic/.dougle/knowledge/orders.md]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_knowledge_notes_may_cite_the_recorded_original[/synthetic/.dougle/workspaces/old/knowledge/orders.md]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_knowledge_notes_may_cite_the_recorded_original[/synthetic/legacy/orders.md]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_legacy_sets_remain_supported_and_repair_deepcopy_retains_binding",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_metadata_is_never_issued_for_failed_reads[-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_metadata_is_never_issued_for_failed_reads[Permission denied-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_metadata_is_never_issued_for_failed_reads[ok-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_listing_is_knowledge_but_cannot_substitute_for_code_or_live",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uc6b4\\uc601\\uc5d0\\uc11c \\ucc98\\ub9ac\\ub418\\uc9c0 \\uc54a\\uc740 \\uc8fc\\ubb38\\uc740 \\uba87 \\uac74\\uc778\\uac00\\uc694?-expected0]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 \\uc13c\\ud130 \\uba87\\uac1c\\ub0d0??\\ub514\\ube44\\uc880\\ubd10\\ubd10-expected1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 \\uc13c\\ud130 \\uba87\\uac1c\\ub0d0??DB\\uc880\\ubd10\\ubd10-expected2]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\ud30c\\ud2b8\\ub108 \\uba87\\uac1c\\uc57c?\\ub514\\ube44\\ub97c \\uc870\\ud68c\\ud574\\uc918-expected3]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 \\uc2dc\\ud5d8\\ub300\\uc0c1 \\uba87\\uac1c\\ub0d0? DB\\uc5d0\\uc11c \\ubd10\\uc918-expected4]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 DB \\ud14c\\uc774\\ube14\\uc5d0\\uc11c \\uba87 \\uac1c \\uc870\\ud68c\\ub418\\ub098\\uc694?-expected5]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 DB \\uc13c\\ud130 \\uac1c\\uc218\\uac00 \\uc5b4\\ub5bb\\uac8c \\ub3fc?-expected6]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 DB \\ud14c\\uc774\\ube14\\uc758 \\ub808\\ucf54\\ub4dc \\uac74\\uc218\\ub97c \\uc870\\ud68c\\ud574 \\uc8fc\\uc138\\uc694.-expected7]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[How many records are in the production database now?-expected8]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uc8fc\\ubb38 \\uc0c1\\ud0dc\\ub97c \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.-expected9]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\ucf54\\ub4dc\\ub97c \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.-expected10]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc18c\\uc2a4 \\ucf54\\ub4dc\\ub97c \\uc77d\\uc5b4 \\uc8fc\\uc138\\uc694.-expected11]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ub808\\ucf54\\ub4dc \\uc870\\ud68c \\uc870\\uac74\\uc744 \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694-expected12]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uc8fc\\ubb38\\uc740 \\ud55c \\ubc88\\uc5d0 \\uba87 \\uac1c\\uae4c\\uc9c0 \\ucde8\\uc18c\\ud560 \\uc218 \\uc788\\ub098\\uc694?-expected13]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uc6b4\\uc601 DB \\uc8fc\\ubb38 \\uac74\\uc218\\ub97c \\uc870\\ud68c\\ud558\\uace0 \\uc0c1\\ud0dc \\ucf54\\ub4dc\\uc758 \\uc758\\ubbf8\\ub3c4 \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694-expected14]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ucf54\\ub4dc\\ub294 \\uc77d\\uc9c0 \\ub9d0\\uace0 \\uc804\\ub7b5 \\ud328\\ud134 \\uac1c\\ub150\\uc744 \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694-expected15]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc5f0\\uacb0\\ud55c \\uc18c\\uc2a4 \\ubaa9\\ub85d\\uc744 \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694-expected16]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc5f0\\uacb0\\ud55c \\uc18c\\uc2a4\\ub97c \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694-expected17]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc790\\ub8cc \\ucd9c\\ucc98\\ub97c \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694-expected18]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc8fc\\ubb38 \\ucde8\\uc18c \\ud568\\uc218\\uc758 \\uc870\\uac74\\uc744 \\ucf54\\ub4dc\\ub85c \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.-expected19]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[Inspect the current code for the mail schedule.-expected20]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\ucf54\\ub4dc\\uc5d0\\uc11c \\uc8fc\\ubb38 \\uac74\\uc218\\ub97c \\uc5b4\\ub5bb\\uac8c \\uacc4\\uc0b0\\ud558\\ub098\\uc694?-expected21]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\ucf54\\ub4dc\\uc758 \\uba54\\uc77c \\ubc1c\\uc1a1 \\uc77c\\uc815\\uc740 \\ubb34\\uc5c7\\uc778\\uac00\\uc694?-expected22]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uc6b4\\uc601 DB \\uc8fc\\ubb38 \\uac74\\uc218\\ub97c \\uc2e4\\uc81c \\uc870\\ud68c\\ud558\\uace0 \\ucf54\\ub4dc\\ub3c4 \\ud655\\uc778\\ud574 \\uc8fc\\uc138\\uc694.-expected23]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uba54\\uc77c\\uc740 \\ub9e4\\uc77c \\uba87 \\uc2dc\\uc5d0 \\ubc1c\\uc1a1\\ub418\\ub098\\uc694?-expected24]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uba54\\uc77c \\ubc1c\\uc1a1 \\uc77c\\uc815\\uc740 \\uc5b4\\ub5bb\\uac8c \\ub418\\ub098\\uc694?-expected25]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac DB \\uc8fc\\ubb38 \\uac74\\uc218\\ub97c \\uc870\\ud68c\\ud558\\ub294 \\ucffc\\ub9ac \\uc608\\uc2dc\\ub97c \\uc791\\uc131\\ud574 \\uc8fc\\uc138\\uc694.-expected26]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc13c\\ud130 \\uac1c\\uc218\\ub97c \\uc870\\ud68c\\ud558\\ub294 \\ub514\\ube44 \\ucffc\\ub9ac \\uc608\\uc2dc\\ub97c \\uc54c\\ub824\\uc918-expected27]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 \\uc13c\\ud130 \\uba87 \\uac1c\\ub85c \\uacc4\\uc0b0\\ud558\\ub294\\uc9c0 \\ub514\\ube44 \\uc9d1\\uacc4 \\uae30\\uc900\\uc758 \\uc758\\ubbf8\\ub97c \\uc124\\uba85\\ud574\\uc918-expected28]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ub370\\uc774\\ud130\\uc14b\\ubaa9\\ub85d-expected29]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 DB\\uc758 \\ud14c\\uc774\\ube14 \\uba87 \\uac1c\\uc57c?-expected30]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc9c0\\uae08 \\ub514\\ube44 \\ub370\\uc774\\ud130\\uc14b \\uac1c\\uc218 \\uc54c\\ub824\\uc918-expected31]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc8fc\\ubb38 \\uc0c1\\ud0dc\\ub77c\\ub294 \\uc6a9\\uc5b4\\ub294 \\ubb34\\uc5c7\\uc778\\uac00\\uc694?-expected32]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\uc624\\ub958 \\ucf54\\ub4dc\\uc758 \\ub73b\\uc744 \\uc54c\\ub824 \\uc8fc\\uc138\\uc694.-expected33]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uc624\\ub958 \\ucf54\\ub4dc\\uc758 \\uc758\\ubbf8\\ub97c \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694.-expected34]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[Explain the current error code.-expected35]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[\\ud604\\uc7ac \\uc6b4\\uc601 DB \\uac74\\uc218 \\uc870\\ud68c\\ub294 \\ud558\\uc9c0 \\ub9d0\\uace0 \\uc6a9\\uc5b4\\uc758 \\uc758\\ubbf8\\ub97c \\uc54c\\ub824\\uc8fc\\uc138\\uc694.-expected36]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_explicit_floor_does_not_turn_concepts_or_schedule_into_live_queries[None-expected37]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_domain_classification_cannot_hide_explicit_current_count_request[\\ud604\\uc7ac \\uc6b4\\uc601\\uc5d0\\uc11c \\ucc98\\ub9ac\\ub418\\uc9c0 \\uc54a\\uc740 \\uc8fc\\ubb38\\uc740 \\uba87 \\uac74\\uc778\\uac00\\uc694?]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_domain_classification_cannot_hide_explicit_current_count_request[\\uc9c0\\uae08 \\uc13c\\ud130 \\uba87\\uac1c\\ub0d0??\\ub514\\ube44\\uc880\\ubd10\\ubd10]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT 1-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT CURRENT_TIMESTAMP()-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT 'FROM orders'-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT 1 -- FROM orders-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT 1 /* FROM orders */-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM UNNEST([1,2])-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[WITH x AS (SELECT 1) SELECT * FROM x-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[WITH x(n) AS (SELECT 1) SELECT * FROM x-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[WITH `x` AS (SELECT 1) SELECT * FROM `x`-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM `proj.ds.INFORMATION_SCHEMA.TABLES`-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM information_schema.columns-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM pg_catalog.pg_tables-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM sqlite_master-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM `proj.ds.__TABLES__`-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM `proj.ds.__TABLES_SUMMARY__`-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM orders-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM \"orders\"-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM \"public\".\"orders\"-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM `order-export.analytics.orders`-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNTIF(`delete`) FROM `project.ds.orders`-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM \"delete\"-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[WITH \"x\" AS (SELECT 1) SELECT * FROM \"x\"-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[WITH \"x\" AS (SELECT * FROM \"orders\") SELECT * FROM \"x\"-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT \"FROM orders\"-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM \"information_schema\".\"tables\"-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM orders JOIN information_schema.tables ON TRUE-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM information_schema.tables JOIN orders ON TRUE-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM information_schema.tables JOIN information_schema.columns ON TRUE-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM `project.ds.orders` JOIN `project.ds.INFORMATION_SCHEMA.TABLES` ON TRUE-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[WITH x AS (DELETE FROM orders RETURNING *) SELECT * FROM x-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM `proj.ds.orders` WHERE status = 'pending'-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[WITH x AS (SELECT * FROM orders) SELECT COUNT(*) FROM x-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM (SELECT * FROM orders) x-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT 'INFORMATION_SCHEMA' FROM orders-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT * FROM orders; SELECT 1-False]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_sql_receipts_require_data_not_connectivity_or_schema_queries[SELECT COUNT(*) FROM orders;-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_actual_query_does_not_promote_result_row_fields_to_freshness_metadata",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_evidence_binding::test_metadata_helper_does_not_weaken_existing_unperformed_read_checks",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_stage_accounting_separates_queue_and_processing",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned[queue_ms--1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned[attempts-True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned[output_characters-private]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_invalid_metrics_are_not_returned[processing_ms-10000000000000]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_unknown_text_never_enters_status_profile",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_progress_classifies_paths_without_emitting_them",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_overlapping_reads_measure_union_not_sum_and_keep_waiting_stage",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_duplicate_and_out_of_order_results_never_create_phantom_active_calls",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_attempt_boundaries_close_incomplete_intervals_and_record_first_observations",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_submillisecond_overlap_does_not_round_every_completion",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_identity_and_attempt_storage_are_bounded_without_replaying_evicted_ids",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[None]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[value1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[value2]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[value3]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[value4]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[value5]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[value6]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_missing_or_invalid_usage_is_not_a_zero_sample[value7]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_usage_partial_attempts_zero_values_and_utf8_wrapper_bytes",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_worker_persists_usage_sums_and_sample_coverage_across_retries[reported]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_worker_persists_usage_sums_and_sample_coverage_across_retries[unreported]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_worker_persists_usage_sums_and_sample_coverage_across_retries[failed]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_worker_failure_closes_tool_intervals_before_failure_handling",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_old_profile_remains_readable_without_new_metrics",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_strips_arbitrary_nested_content_and_bounds_numbers",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_rejects_invalid_metrics[usage_total]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_rejects_invalid_metrics[usage_samples]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_rejects_invalid_metrics[usage_reports]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_rejects_invalid_metrics[tool_active]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_rejects_invalid_metrics[first_output_ms]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_rejects_invalid_metrics[prompt_bytes]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_new_profile_rejects_invalid_metrics[attempt_timings]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_same_inquiry_style_repair_reuses_proven_evidence",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_verified_implementation_read_is_reused_only_for_wording",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata[sources]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata[verification]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata[status]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_presentation_repair_cannot_replace_proven_metadata[lookup]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_repair_never_waives_missing_or_live_investigation[read]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_repair_never_waives_missing_or_live_investigation[skill]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_repair_never_waives_missing_or_live_investigation[live]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_repair_still_requires_current_style_skill_activation",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_lost_session_discards_presentation_receipts",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_another_question_cannot_reuse_prior_repair_evidence",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_metrics_failure_does_not_fail_an_answer",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_latency::test_failed_inquiry_has_timing_without_question_text",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_mismatched_code_source_cannot_be_saved_as_verified_answer",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_source_mismatch_can_recover_after_reading_the_correct_file",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_explicit_live_question_cannot_downgrade_to_schema_only_on_first_attempt",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_successful_connectivity_sql_does_not_complete_live_investigation",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_supported_domain_answers_do_not_gain_unrequested_research_requirements[\\ub808\\ucf54\\ub4dc \\uc870\\ud68c \\uc870\\uac74\\uc744 \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694.]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_supported_domain_answers_do_not_gain_unrequested_research_requirements[\\ud604\\uc7ac \\uc8fc\\ubb38\\uc740 \\ud55c \\ubc88\\uc5d0 \\uba87 \\uac1c\\uae4c\\uc9c0 \\ucde8\\uc18c\\ud560 \\uc218 \\uc788\\ub098\\uc694?]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_supported_domain_answers_do_not_gain_unrequested_research_requirements[\\ud604\\uc7ac \\uc8fc\\ubb38\\uc740 \\ucd5c\\ub300 \\uba87 \\uac1c \\ucde8\\uc18c\\ud560 \\uc218 \\uc788\\ub098\\uc694?]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_supported_domain_answers_do_not_gain_unrequested_research_requirements[\\ucf54\\ub4dc\\ub294 \\uc77d\\uc9c0 \\ub9d0\\uace0 \\uc804\\ub7b5 \\ud328\\ud134 \\uac1c\\ub150\\uc744 \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694.]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_supported_domain_answers_do_not_gain_unrequested_research_requirements[\\ud68c\\uc1a1\\ud3d0\\uae30 \\uc774\\uba54\\uc77c\\uc740 \\uc5b8\\uc81c \\ubcf4\\ub0b4\\ub098\\uc694?]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_explicit_data_request_survives_mixed_explanatory_clause[\\ud604\\uc7ac \\uc6b4\\uc601 DB \\uc8fc\\ubb38 \\uac74\\uc218\\ub97c \\uc870\\ud68c\\ud558\\uace0 \\uc0c1\\ud0dc \\ucf54\\ub4dc\\uc758 \\uc758\\ubbf8\\ub3c4 \\uc124\\uba85\\ud574 \\uc8fc\\uc138\\uc694.]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_explicit_data_request_survives_mixed_explanatory_clause[\\uc9c0\\uae08 \\uc13c\\ud130 \\uba87\\uac1c\\ub0d0??\\ub514\\ube44\\uc880\\ubd10\\ubd10]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_explicit_data_request_survives_mixed_explanatory_clause[\\ud604\\uc7ac \\uc6b4\\uc601 DB\\uc5d0\\uc11c \\ucde8\\uc18c\\ud560 \\uc218 \\uc788\\ub294 \\uc8fc\\ubb38\\uc740 \\uba87 \\uac74\\uc778\\uac00\\uc694? \\uc2e4\\uc81c \\uc870\\ud68c\\ud574 \\uc8fc\\uc138\\uc694.]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_successful_business_queries_keep_data_read_capability[SELECT COUNT(*) FROM \"public\".\"orders\"]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_successful_business_queries_keep_data_read_capability[SELECT COUNT(*) FROM `order-export.analytics.orders`]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_successful_business_queries_keep_data_read_capability[SELECT COUNTIF(`delete`) FROM `project.ds.orders`]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_successful_business_queries_keep_data_read_capability[SELECT COUNT(*) FROM `project.ds.orders` JOIN `project.ds.INFORMATION_SCHEMA.TABLES` ON TRUE]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_url_document_and_revision_selectors_cannot_be_swapped[https://example.test/viewpage.action?pageId=111-https://example.test/viewpage.action?pageId=222]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_research_regressions::test_url_document_and_revision_selectors_cannot_be_swapped[https://example.test/raw/Order.java?at=refs%2Fheads%2Fmain-https://example.test/raw/Order.java?at=refs%2Fheads%2Frelease]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_result_usage_ignores_duplicate_per_model_totals_and_arbitrary_text",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_bad_or_absent_token_count_is_unknown[-1]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_bad_or_absent_token_count_is_unknown[True]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_bad_or_absent_token_count_is_unknown[1.5]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_bad_or_absent_token_count_is_unknown[100]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_bad_or_absent_token_count_is_unknown[10000000000000]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_bad_or_absent_token_count_is_unknown[None]",
+      "status": "PASS"
+    },
+    {
+      "test": "tests.test_usage_metrics::test_worker_records_usage_without_replacing_unknown_with_zero",
+      "status": "PASS"
+    }
+  ]
+}

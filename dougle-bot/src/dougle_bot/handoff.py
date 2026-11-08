@@ -17,6 +17,10 @@ Use the source registry to narrow the project/dataset; inspect matching tables a
 then execute a bounded read-only query if the dataset and freshness fit the question. Do not invent
 projects, column names, permissions or a completed attempt. Avoid scanning unrelated datasets.
 Check whether BigQuery is a delayed replica: a row/count there is not automatically current production.
+Separate query execution time from the dataset's observed update watermark and environment.
+Use a known source mapping and verified dataset update information when claiming current production;
+an unknown watermark is unknown, not zero lag. A schema lookup or SELECT 1 is a connectivity check,
+not a business-data result. Match the requested record/filter and time range before drawing a conclusion.
 If unavailable, denied, missing tables or too stale, state the specific observed blocker and request
 only the missing production check. Empty results do not prove absence in production.
 No authorized reader listed means configuration lacks that path, not proof the service denied access.

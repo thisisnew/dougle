@@ -27,6 +27,26 @@ class EngineResult:
     activated: set[str]
     reads: dict[str, set[str]] = field(default_factory=dict)
     connections: list[dict[str, str]] | None = None
+    usage: dict[str, int | None] | None = None
+
+
+def token_usage(value):
+    """Keep provider counters only; absent/invalid values are unknown, not zero.
+
+    Do not add per-model usage to aggregate usage: providers may report both for
+    the same work. These are reported counts, not billable-token estimates.
+    """
+    if not isinstance(value, dict):
+        return None
+    return {
+        key: value[key] if type(value.get(key)) is int and 0 <= value[key] <= 10**12 else None
+        for key in (
+            "input_tokens",
+            "output_tokens",
+            "cache_read_input_tokens",
+            "cache_creation_input_tokens",
+        )
+    }
 
 
 class Engine(Protocol):
@@ -137,6 +157,7 @@ def parse_trace(raw: bytes):
         successful,
         read_receipts(raw),
         connections,
+        token_usage(result.get("usage")),
     )
 
 

@@ -5,9 +5,10 @@ interpreted the returned code/data correctly. No raw tool results are retained.
 """
 
 import json
+import posixpath
 import re
 from pathlib import PurePosixPath
-from urllib.parse import urlsplit
+from urllib.parse import parse_qsl, unquote, urlencode, urlsplit
 
 from .safety import BotError
 
@@ -77,7 +78,9 @@ rather than guessing. For code, Read the exact original file; directory searches
 not replace reading the relevant code. A receipt only proves the corresponding read, not its meaning.
 Read/Grep content outside .dougle on source code files, or WebFetch on original source code URLs,
 can support code. Glob, filename-only Grep, skill instructions, topic summaries and schema metadata
-cannot establish original code/live behavior. execute_sql_readonly can support live; table metadata cannot.
+cannot establish original code/live behavior. A successful data query can support live; SELECT 1,
+schema and INFORMATION_SCHEMA queries cannot. Query execution time is not a data watermark, and
+a read receipt does not establish that a replica is current or is the requested production environment.
 Bind checks to the relevant source and actual inspected environment/version/record scope.
 No raw query rows, tool result bodies, hidden reasoning or secrets belong in verification.
 answered requires all required kinds verified and missing empty. If a required read cannot be completed,
@@ -110,6 +113,338 @@ CODE_SUFFIXES = {
 }
 
 
+class ReadReceipt(set):
+    """Set-compatible capabilities plus runtime-owned metadata, never model assertions.
+
+    Old fake engines and callers may still supply plain sets. Copy/deepcopy preserves metadata.
+    Metadata stays with this call's successful tool result; it contains no result body or SQL.
+    """
+
+    def __init__(self, kinds=(), *, metadata=None):
+        super().__init__(kinds)
+        self.metadata = dict(metadata or {})
+
+
+def sql_reads_data(args):
+    """Conservative query-shape check, NOT a SQL sandbox or freshness verification.
+
+    Require a physical relation, ignoring literals, comments, CTE names and table functions.
+    Unrecognized/metadata-only queries retain knowledge capability but cannot satisfy live.
+    """
+    if not isinstance(args, dict):
+        return False
+    sql = next((args[k] for k in ("query", "sql", "sql_query") if isinstance(args.get(k), str)), "")
+    if not sql or len(sql) > 100_000:
+        return False
+    tokens = re.findall(
+        r"--[^\n]*|/\*[\s\S]*?\*/|'(?:''|\\.|[^'\\])*'|"
+        r'"(?:""|\\.|[^"\\])*"|`[^`]*`|[A-Za-z_][\w$-]*|[^\s]',
+        sql,
+    )
+    # Mask quoted identifiers while parsing SQL syntax. This preserves PostgreSQL's
+    # double-quoted relations and BigQuery backticks without treating identifier text
+    # such as `delete` or `order-export` as a modifying statement.
+    prefix = "__dougle_identifier_"
+    while prefix in sql:
+        prefix += "_"
+    quoted, identifiers, parts = {}, {}, []
+    for token in tokens:
+        if token.startswith(("--", "/*", "'")):
+            continue
+        if token.startswith(('"', "`")):
+            name = token[1:-1].replace(token[0] * 2, token[0])
+            placeholder = quoted.setdefault(name, f"{prefix}{len(quoted)}")
+            identifiers[placeholder] = name
+            parts.append(placeholder)
+        else:
+            parts.append(token)
+    text = " ".join(parts).rstrip(" ;")
+    if not re.match(r"^(?:SELECT|WITH)\b", text, re.I) or ";" in text:
+        return False
+    if any(
+        token.upper()
+        in {"INSERT", "UPDATE", "DELETE", "MERGE", "CREATE", "DROP", "ALTER", "CALL", "EXPORT"}
+        for token in parts
+    ):
+        return False
+    identifier = r"[A-Za-z_][\w$-]*(?:\s*\.\s*[A-Za-z_][\w$-]*)*"
+
+    def relation_name(value):
+        return ".".join(
+            identifiers.get(part.strip(), part.strip()) for part in value.split(".")
+        ).lower()
+
+    ctes = {
+        relation_name(name)
+        for name in re.findall(
+            r"(?:\b|(?=`))([A-Za-z_][\w$-]*|`[^`]+`)(?:\s*\([^()]*\))?\s+AS\s*\(",
+            text,
+            re.I,
+        )
+    }
+    relations = []
+    for match in re.finditer(r"\b(?:FROM|JOIN)\s+(" + identifier + r")", text, re.I):
+        relation = relation_name(match[1])
+        if re.match(r"\s*\(", text[match.end() :]) or relation in ctes:
+            continue
+        if any(
+            part in {"information_schema", "pg_catalog", "sys", "sqlite_master", "sqlite_schema"}
+            or part.startswith(("__tables", "__partitions", "pg_"))
+            for part in relation.split(".")
+        ):
+            continue  # A mixed data + metadata query still read the business relation.
+        relations.append(relation)
+    return bool(relations)
+
+
+def explicit_query_requirements(question):
+    """A small floor for explicit requests, not a semantic question classifier.
+
+    Call with trusted inquiry text, never with retrieved instructions or the model's answer.
+    Ambiguous cases retain model-declared obligations; schedules and code-derived counts do
+    not become live questions merely because they contain 'current', 'mail', or 'count'.
+    """
+    if not isinstance(question, str):
+        return set()
+    text = re.sub(r"```[\s\S]*?```|<@[A-Z0-9]+>", " ", question).lower()
+    clauses = re.split(r"(?<=하고)\s+|(?<=말고)\s+|[,;\n]|\band\b", text)
+    return set().union(*(_explicit_clause_requirements(clause) for clause in clauses))
+
+
+def _explicit_clause_requirements(text):
+    code_text = re.sub(
+        r"(?:오류|에러|상태|상품|인증)\s*코드|\b(?:error|status|product|verification)\s+code\b",
+        "identifier",
+        text,
+    )
+    code = bool(
+        re.search(
+            r"(?<![가-힣a-z0-9_])(?:소스\s*코드|코드|구현|함수|메서드).{0,40}(?:확인|읽|분석|동작|조건|기준|설명)",
+            code_text,
+        )
+        or re.search(r"(?:현재|실제)\s+(?:코드|구현)", code_text)
+        or re.search(
+            r"\b(?:read|inspect|check|explain)\b.{0,40}\b(?:code|implementation|function)\b",
+            code_text,
+        )
+        or re.search(r"\bcurrent\s+(?:code|implementation)\b", code_text)
+    )
+    if re.search(
+        r"(?:코드|소스|구현|함수|메서드).{0,15}(?:읽|확인|분석|조사).{0,3}지\s*(?:말|않)|"
+        r"\b(?:do not|don't)\s+(?:read|inspect|check|analy[sz]e)\b",
+        code_text,
+    ):
+        code = False
+    temporal = bool(re.search(r"현재|지금|오늘|\b(?:now|currently|current|today)\b", text))
+    database = bool(
+        re.search(
+            r"운영|데이터베이스|테이블|주문|레코드|"
+            r"(?<![a-z0-9_])db(?![a-z0-9_])|"
+            r"디비(?=$|\W|좀|봐|보|조회|확인|에서|의|를|에|로|는|가|도)|"
+            r"\b(?:database|production|rows?|records?)\b",
+            text,
+        )
+    )
+    quantity = bool(
+        re.search(r"몇\s*(?:건|개|명)|건수|개수|\b(?:how many|count|number of)\b", text)
+    )
+    state = bool(re.search(r"(?:주문|레코드|건의|record|row).{0,25}(?:상태|status)", text))
+    procedure = bool(
+        re.search(
+            r"어떻게.{0,20}(?:계산|구현|조회|작성)|개념|의미|뜻|용어|조회하지|조회는\s*하지|계산\s*(?:방식|로직|방법)|조회\s*(?:방법|쿼리)|쿼리.*(?:작성|예시)|\b(?:how to|calculate|formula|write.*query)\b",
+            text,
+        )
+    )
+    explicit_live = bool(
+        re.search(
+            r"(?:실제|직접).{0,20}(?:조회|건수)|(?:운영\s*(?:db|데이터베이스)).{0,30}조회해", text
+        )
+    )
+    live = database and (quantity or state) and (temporal or explicit_live)
+    metadata_listing = bool(
+        re.search(
+            r"(?:데이터셋|테이블|컬럼|스키마)\s*(?:은|는|이|가|의)?\s*(?:목록|몇\s*개|개수)", text
+        )
+        and not re.search(r"레코드|행\s*(?:수|개수)|\b(?:rows?|records?)\b", text)
+    )
+    policy_limit = bool(
+        re.search(
+            r"(?:한\s*번에|몇\s*(?:건|개|명)까지|최대|최소|한도|상한|제한).{0,35}(?:할\s*수|가능|허용)",
+            text,
+        )
+        or (quantity and re.search(r"(?:할|될|받을|보낼|취소할|등록할)\s*수\s*(?:있|없)", text))
+    )
+    if (
+        procedure
+        or (policy_limit and not explicit_live)
+        or metadata_listing
+        or (
+            code
+            and not explicit_live
+            and not re.search(r"운영\s*(?:db|데이터베이스)|\bproduction\b", text)
+        )
+    ):
+        live = False
+    return ({"code"} if code else set()) | ({"live"} if live else set())
+
+
+def _locator(value):
+    """Lexical normalization only: no filesystem, user-home access or guessed revisions."""
+    if not isinstance(value, str) or not value.strip() or len(value) > 4096:
+        return None
+    value = value.strip().split(" · ", 1)[0]
+    if quoted := re.fullmatch(r"`([^`]+)`(.*)", value):
+        value = quoted[1] + quoted[2]
+    if value.startswith("file://"):
+        file_url = urlsplit(value)
+        if file_url.netloc not in {"", "localhost"}:
+            return None
+        value = unquote(file_url.path) + ("#" + file_url.fragment if file_url.fragment else "")
+    # Common annotations are not part of a file's identity. Unknown formats remain
+    # incomparable instead of becoming a fabricated path mismatch.
+    value = re.sub(r"\s+\([^()]*\)$", "", value)
+    lines = None
+    match = re.search(r"(?::|#L)(\d+)(?:[-:]L?(\d+))?$", value)
+    if match:
+        lines = (int(match[1]), int(match[2] or match[1]))
+        value = value[: match.start()]
+    if re.match(r"https?://", value, re.I):
+        try:
+            url = urlsplit(value)
+            host = (url.hostname or "").lower()
+            port = url.port
+            if port and port != (443 if url.scheme.lower() == "https" else 80):
+                host += f":{port}"
+            path = posixpath.normpath(unquote(url.path))
+            query = [
+                (k, v)
+                for k, v in parse_qsl(url.query, keep_blank_values=True)
+                if k.lower()
+                in {
+                    "ref",
+                    "revision",
+                    "version",
+                    "commit",
+                    "sha",
+                    "at",
+                    "id",
+                    "pageid",
+                    "contentid",
+                    "documentid",
+                    "path",
+                    "file",
+                    "filepath",
+                }
+            ]
+            if host == "raw.githubusercontent.com":
+                path = (
+                    "/"
+                    + "/".join(path.strip("/").split("/")[:2])
+                    + "/blob/"
+                    + "/".join(path.strip("/").split("/")[2:])
+                )
+                host = "github.com"
+            if host == "github.com":
+                path = path.replace("/raw/", "/blob/", 1)
+                query = [(k, v) for k, v in query if k != "raw"]
+            return {
+                "type": "url",
+                "target": host + path + ("?" + urlencode(sorted(query)) if query else ""),
+                "lines": lines,
+            }
+        except ValueError:
+            return None
+    value = value.replace("\\", "/")
+    if not re.fullmatch(r"\.[A-Za-z0-9_-]+", PurePosixPath(value).suffix):
+        return None  # A title/symbol alone is not a comparable file identity.
+    return {"type": "file", "target": posixpath.normpath(value), "lines": lines}
+
+
+def read_metadata(name, args, body=None):
+    """Metadata for an observed read. Callers must separately require actual success.
+
+    SQL metadata deliberately does not invent query_time, data_watermark or environment.
+    Generic MCP results do not establish a production watermark or environment.
+    """
+    args = args if isinstance(args, dict) else {}
+    metadata = {"tool": name, "content_type": "content"}
+    if name in {"Read", "Grep", "WebFetch"}:
+        key = "file_path" if name == "Read" else "path" if name == "Grep" else "url"
+        target = args.get(key)
+        locator = _locator(target)
+        if locator:
+            metadata["locator"] = locator
+        metadata["indirect"] = isinstance(target, str) and (
+            ".dougle" in PurePosixPath(target).parts
+            or PurePosixPath(target).suffix.lower() in {".md", ".txt"}
+        )
+        if name == "Read":
+            offset, limit = args.get("offset", 1), args.get("limit")
+            if type(offset) is int and offset > 0 and type(limit) is int and limit > 0:
+                metadata["requested_range"] = [offset, offset + limit - 1]
+            # Only numbered reader output supplies actual line coverage. A requested limit
+            # alone does not prove the provider returned all those lines.
+            texts = (
+                [body]
+                if isinstance(body, str)
+                else [
+                    part.get("text", "")
+                    for part in body or []
+                    if isinstance(part, dict) and part.get("type") == "text"
+                ]
+                if isinstance(body, list)
+                else []
+            )
+            numbers = [
+                int(n)
+                for text in texts
+                if isinstance(text, str)
+                for n in re.findall(r"(?m)^\s*(\d{1,9})(?:→|\t)", text)
+            ]
+            if numbers and all(b == a + 1 for a, b in zip(numbers, numbers[1:])):
+                metadata["line_range"] = [numbers[0], numbers[-1]]
+    elif name.endswith("__execute_sql_readonly"):
+        metadata.update(
+            content_type="data_query" if sql_reads_data(args) else "non_data_query",
+            query_time=None,
+            data_watermark=None,
+            environment=None,
+        )
+    elif re.search(r"__(?:get_table_info|get_dataset_info|get_schema)$", name, re.I):
+        metadata["content_type"] = "schema"
+    elif re.search(r"__list", name, re.I):
+        metadata["content_type"] = "locator"
+    elif re.search(r"__(?:search|slack_search)", name, re.I):
+        metadata["content_type"] = "search"
+    return metadata
+
+
+def _source_matches(receipt, source, kind):
+    metadata = getattr(receipt, "metadata", {})
+    # A listing is valid knowledge for questions about the listed identifiers. Its
+    # capabilities still exclude code/live; metadata must not reject all listing answers.
+    actual = metadata.get("locator")
+    cited = _locator(source.get("location")) if isinstance(source, dict) else None
+    if not actual or not cited or (kind == "knowledge" and metadata.get("indirect")):
+        return True  # Legacy notes cite originals, not necessarily the note file itself.
+    if actual["type"] != cited["type"]:
+        return True  # Local checkout <-> remote URL requires a repository mapping we do not have.
+    a, b = actual["target"], cited["target"]
+    if actual["type"] == "file":
+        if a != b and not (
+            (not a.startswith("/") and b.endswith("/" + a))
+            or (not b.startswith("/") and a.endswith("/" + b))
+        ):
+            return False
+    elif a != b:
+        return False
+    actual_lines = metadata.get("line_range")
+    cited_lines = cited.get("lines")
+    if actual_lines and cited_lines:
+        return actual_lines[0] <= cited_lines[0] <= cited_lines[1] <= actual_lines[1]
+    return True
+
+
 def read_kinds(name, args):
     """Conservative receipt capabilities; semantic relevance remains the model's job."""
     if not isinstance(args, dict):
@@ -123,7 +458,7 @@ def read_kinds(name, args):
     elif name.startswith("mcp__"):
         # Only tools actually allowed by the runtime are usable. Metadata is knowledge, not live data.
         if name.endswith("__execute_sql_readonly"):
-            return {"knowledge", "live"}
+            return {"knowledge", "live"} if sql_reads_data(args) else {"knowledge"}
         if re.search(r"__(?:get|search|list|slack_read|slack_search)", name, re.I):
             return {"knowledge"}
         return set()
@@ -162,16 +497,17 @@ def read_receipts(raw):
                 if ident in seen:
                     raise BotError("invalid_read_trace")
                 seen.add(ident)
-                pending[ident] = read_kinds(str(block.get("name", "")), block.get("input"))
+                name, args = str(block.get("name", "")), block.get("input")
+                pending[ident] = (name, args, read_kinds(name, args))
             ident = block.get("tool_use_id")
             if item.get("type") == "user" and block.get("type") == "tool_result":
                 if not isinstance(ident, str) or ident not in pending:
                     continue
-                kinds = pending.pop(ident)
+                name, args, kinds = pending.pop(ident)
                 body = block.get("content")
                 # Provider/connector errors may appear as structured content without is_error.
                 if kinds and body and not block.get("is_error") and not failed_read(body):
-                    completed[ident] = kinds
+                    completed[ident] = ReadReceipt(kinds, metadata=read_metadata(name, args, body))
     return completed
 
 
@@ -201,7 +537,14 @@ def failed_read(body):
     return False
 
 
-def validate_verification(output, reads, *, image_ids=(), report=False, required_floor=()):
+def validate_verification(
+    output, reads, *, image_ids=(), report=False, required_floor=(), question=None
+):
+    """Validate actual reads and comparable citations, not semantic entailment.
+
+    Generic MCP data freshness/environment remain unverified even when this succeeds.
+    Query execution is not a production-watermark check.
+    """
     value = output.get("verification")
     if not isinstance(value, dict) or set(value) != set(VERIFICATION_SCHEMA["required"]):
         raise BotError("invalid_verification")
@@ -218,7 +561,8 @@ def validate_verification(output, reads, *, image_ids=(), report=False, required
         ):
             raise BotError("invalid_verification")
     required, missing = set(value["required"]), set(value["missing"])
-    if not (QUESTION_KINDS[category] | set(required_floor)) <= required or not missing <= required:
+    floor = set(required_floor) | explicit_query_requirements(question)
+    if not (QUESTION_KINDS[category] | floor) <= required or not missing <= required:
         raise BotError("verification_requirements_missing")
     checks = value["checks"]
     if not isinstance(checks, list) or len(checks) > 30:
@@ -237,7 +581,10 @@ def validate_verification(output, reads, *, image_ids=(), report=False, required
             or not 0 <= source < len(output["sources"])
         ):
             raise BotError("invalid_verification")
-        valid = kind in reads.get(receipt, set())
+        observed = reads.get(receipt, set())
+        valid = kind in observed
+        if valid:
+            valid = _source_matches(observed, output["sources"][source], kind)
         if receipt.startswith("image:"):
             valid = kind == "image" and receipt[6:] in image_ids
         if receipt == "developer_report":
