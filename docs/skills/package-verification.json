@@ -5,9 +5,9 @@
   "publication": "PENDING",
   "archive": ".tools/releases/0.8.29/Dougle_Skills_0.8.29.zip",
   "files": 59,
-  "archiveBytes": 333891,
-  "sha256": "7b4ecb678ef4306c88d8064e0d81025f29dc997dfbe783cf6ff735faa9726e93",
-  "wheelSha256": "3af10842449c2bba9de3d6989d4ff16131f4ebf8bb22c2bc97f646a92f9c72a6",
+  "archiveBytes": 333913,
+  "sha256": "552e59b88b3b3b7e54019a11c1693a25af5014a4e9257cb2c40fcae2d8afde2e",
+  "wheelSha256": "38424e818f9c29082b034cc92b8056698ff5f24cb7339a2598226bcdad879ce9",
   "checks": {
     "wheelCurrentSourceBytes": "PASS",
     "skillMirrors": "PASS",

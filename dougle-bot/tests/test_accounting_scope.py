@@ -54,3 +54,17 @@ def test_nonzero_process_preserves_reported_cost_and_usage(tmp_path):
         ClaudeCliEngine(config, tmp_path)._run_call('probe', None, None, policy_dir=policy, memory=None)
     assert error.value.accounting['cost'] == 0.8
     assert error.value.accounting['usage']['input_tokens'] == 12
+
+
+def test_attempt_report_before_first_start_is_read_only(app, tmp_path):
+    from dataclasses import replace
+
+    from dougle_bot.config import save
+    from dougle_bot.main import execute, parser
+    home = tmp_path / 'new-bot'
+    cfg = replace(app.cfg, home=home)
+    save(cfg, home / 'config.toml')
+    args = parser().parse_args(['--home', str(home), 'usage', '--attempts'])
+    result = execute(args, secrets=object())
+    assert result['runs'] == []
+    assert not (home / 'bot.db').exists()

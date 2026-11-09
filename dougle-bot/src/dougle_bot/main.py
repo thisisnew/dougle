@@ -440,16 +440,17 @@ def execute(args, secrets=None):
         if args.attempts or args.legacy_session_totals:
             from .accounting import report_runs
             cfg = load(path)
-            store = Store(cfg.home / "bot.db", migrate=False)
+            store = Store(cfg.home / "bot.db", migrate=False) if (cfg.home / "bot.db").exists() else None
             try:
-                value["runs"] = report_runs(store, args.day, legacy_session_totals=args.legacy_session_totals)
+                value["runs"] = report_runs(store, args.day, legacy_session_totals=args.legacy_session_totals) if store else []
                 value["corrected_estimated_total_usd"] = (
                     round(sum(r["estimated_increment_usd"] for r in value["runs"]), 12)
                     if all(r["estimated_increment_usd"] is not None for r in value["runs"]) else None
                 )
                 value["estimate_notice"] = "제공자 추정 비용이며 실제 청구액이 아닙니다. 과거 행은 변경하지 않습니다."
             finally:
-                store.close()
+                if store is not None:
+                    store.close()
         return value
     if args.command == "secrets":
         if args.action == "guide":
