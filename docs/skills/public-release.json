@@ -1,24 +1,24 @@
 {
-  "tag": "v0.8.27-skills-preview.1",
-  "source": "f7eb188199072f09dc1edadde405cdda9d4b6295",
-  "ci": "https://github.com/thisisnew/dougle/actions/runs/42617999682",
+  "tag": "v0.8.28-skills-preview.1",
+  "source": "a47a63dd3326ee1a9d1537e5a4ff231c9e5776d8",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42622083218",
   "ciStatus": "PASS",
   "authenticatedDownload": "PASS byte-for-byte",
   "anonymousDownload": "PASS byte-for-byte",
   "assets": [
     {
-      "name": "Dougle_Skills_0.8.27.zip",
-      "bytes": 320985,
-      "sha256": "c866c0d6bb0eb4326af4f24c57286458e67f80d474464087b9f624b050cabb4a",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.27-skills-preview.1/Dougle_Skills_0.8.27.zip"
+      "name": "Dougle_Skills_0.8.28.zip",
+      "bytes": 319918,
+      "sha256": "cd6b2e92be1f6b05be1f3b1b07b0b39acf97b66e4cf3e6f056ba607b4ed0b918",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.28-skills-preview.1/Dougle_Skills_0.8.28.zip"
     },
     {
-      "name": "Dougle_Skills_0.8.27_SHA256SUMS",
+      "name": "Dougle_Skills_0.8.28_SHA256SUMS",
       "bytes": 91,
-      "sha256": "b04c23b487ab2591d8bd1d1a9bb30eeeaf6170b68325aad85d6dcb1be9abfe49",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.27-skills-preview.1/Dougle_Skills_0.8.27_SHA256SUMS"
+      "sha256": "96049432be4d5f77521464e0e1b0bd6a8ae4edbb37f7425e770b58082b0e0e22",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.28-skills-preview.1/Dougle_Skills_0.8.28_SHA256SUMS"
     }
   ],
-  "companyAcceptance": "0.8.26 report reviewed; 0.8.27 requires company-PC migration and retest",
+  "companyAcceptance": "Graphify installation/build and Slack behavior not yet tested on company PC; compact-policy retest requires retry diagnostics",
   "sourceRegistry": "registered GitHub source mismatch remains to diagnose on company PC"
 }
