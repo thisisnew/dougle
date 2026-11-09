@@ -75,6 +75,13 @@ class EngineConfig:
     ask_skill: str = "dougle:dougle-ask"
     style_skill: str = "dougle:i-have-adhd"
     plain_language_skill: str = "dougle:plain-language"
+    # Opt in only after confirming that account connectors still work without
+    # user/project/local Claude settings on the installation that runs the bot.
+    isolated_cli: bool = False
+    isolated_plugin_dir: str = ""
+    # Experimental: use one reviewed policy instead of loading three skills.
+    # Keep off until its connector and answer-quality checks pass on the bot Mac.
+    compact_policy: bool = False
     # Old releases serialized max_parallel=1 because no other value was allowed.
     # This marker distinguishes that legacy default from a new explicit serial choice.
     parallelism_version: int = 1
@@ -82,6 +89,10 @@ class EngineConfig:
     @property
     def required_skills(self) -> tuple[str, str, str]:
         return self.ask_skill, self.style_skill, self.plain_language_skill
+
+    @property
+    def execution_skills(self) -> tuple[str, ...]:
+        return () if self.compact_policy else self.required_skills
 
 
 @dataclass(frozen=True)
@@ -153,6 +164,37 @@ class Config:
                 raise BotError("invalid_skill_name")
         if len(set(self.engine.required_skills)) != 3:
             raise BotError("invalid_skill_name")
+        if type(self.engine.isolated_cli) is not bool or type(self.engine.compact_policy) is not bool:
+            raise BotError("invalid_config")
+        if not isinstance(self.engine.isolated_plugin_dir, str) or any(
+            ord(char) < 32 for char in self.engine.isolated_plugin_dir
+        ):
+            raise BotError("invalid_config")
+        if self.engine.isolated_cli and not self.engine.compact_policy:
+            plugin = Path(self.engine.isolated_plugin_dir).expanduser()
+            if not plugin.is_absolute() or not plugin.is_dir():
+                raise BotError("invalid_config")
+            try:
+                manifest = json.loads((plugin / ".claude-plugin" / "plugin.json").read_text())
+            except (OSError, ValueError, UnicodeError):
+                raise BotError("invalid_config") from None
+            if (
+                not isinstance(manifest, dict)
+                or not isinstance(manifest.get("name"), str)
+                or not re.fullmatch(r"[a-z][a-z0-9_-]*", manifest["name"])
+            ):
+                raise BotError("invalid_config")
+            namespace = manifest["name"]
+            if any(
+                not name.startswith(namespace + ":")
+                or not (plugin / "skills" / name.split(":", 1)[1] / "SKILL.md").is_file()
+                for name in self.engine.required_skills
+            ):
+                raise BotError("invalid_config")
+        elif self.engine.isolated_plugin_dir and not (
+            self.engine.isolated_cli and self.engine.compact_policy
+        ):
+            raise BotError("invalid_config")
         return self
 
 

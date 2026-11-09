@@ -214,9 +214,12 @@ def test_budget_reservations_are_not_zero_on_unknown_cost(app):
 
 
 def test_session_not_found_gets_only_one_fresh_retry(app):
-    receive(app.store, app.cfg, event(), "UBOT")
+    ident = receive(app.store, app.cfg, event(), "UBOT")
     with app.store.tx() as db:
         db.execute("UPDATE threads SET engine_session_id=?", (SESSION,))
+    fingerprint = app.worker._session_fingerprint(app.store.inquiry(ident))
+    action, detail = app.worker._session_policy_audit(fingerprint)
+    app.store.audit(ident, "system", action, detail)
     app.engine.results = [
         BotError("session_not_found"),
         EngineResult(SESSION, answer(), 0.03, SKILLS, READS),

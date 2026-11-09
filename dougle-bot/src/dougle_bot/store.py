@@ -474,6 +474,7 @@ class Store:
         job_id=None,
         auto_reply=False,
         memory_batches=(),
+        execution_policy_audit=None,
     ):
         # Batch identities only: never persist proposal paths or unvalidated bytes.
         if not isinstance(memory_batches, (tuple, list)) or any(
@@ -481,6 +482,15 @@ class Store:
             for batch in memory_batches
         ):
             raise BotError("invalid_memory_batch")
+        if execution_policy_audit is not None and (
+            not isinstance(execution_policy_audit, tuple)
+            or len(execution_policy_audit) != 2
+            or execution_policy_audit[0]
+            not in {"compact_policy_supplied", "required_skills_verified"}
+            or not isinstance(execution_policy_audit[1], str)
+            or not 0 < len(execution_policy_audit[1]) <= 500
+        ):
+            raise BotError("invalid_execution_policy_audit")
         with self.tx() as db:
             row = db.execute("SELECT * FROM inquiries WHERE id=?", (ident,)).fetchone()
             if not row or row["status"] in (
@@ -528,6 +538,11 @@ class Store:
                 "UPDATE threads SET engine_session_id=COALESCE(?,engine_session_id),last_seen_ts=?,updated_at=? WHERE thread_key=?",
                 (session, last_seen, self.clock(), row["thread_key"]),
             )
+            if execution_policy_audit is not None:
+                db.execute(
+                    "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,'system',?,?,?)",
+                    (ident, *execution_policy_audit, self.clock()),
+                )
             for batch in dict.fromkeys(memory_batches):
                 db.execute(
                     "INSERT INTO audit(inquiry_id,actor,action,detail,at) "

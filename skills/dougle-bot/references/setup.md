@@ -43,9 +43,9 @@ doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slac
 
 1. `scripts/bot.sh status`에서 새 실행 환경 준비가 필요하면 `scripts/bot.sh prepare`를 실행합니다. 기존 설정·키체인·지식은 재등록하지 않습니다.
 2. 실행 중이면 업데이트 적용을 위해 중지하고 다시 시작할 것을 안내합니다. 사용자가 업데이트 적용을 요청했다면 `scripts/bot.sh stop` 후 실제 중지를 확인합니다.
-3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.22`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
+3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.23`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
 
-0.1.22의 기본 문의 동시 처리 수는 4입니다. `[engine]`에 `parallelism_version`이 없고 정수 `max_parallel = 1`인 이전 설정은 읽을 때 **메모리에서만 4로 적용**합니다. 이 읽기만으로 기존 config.toml을 다시 쓰지 않습니다. 한 문의씩 처리하려면 다음 두 값을 함께 명시합니다. 표식이 있는 새 설정의 1은 그대로 존중하며, 정상 설정 저장 시 표식도 저장합니다.
+0.1.23의 기본 문의 동시 처리 수는 4입니다. `[engine]`에 `parallelism_version`이 없고 정수 `max_parallel = 1`인 이전 설정은 읽을 때 **메모리에서만 4로 적용**합니다. 이 읽기만으로 기존 config.toml을 다시 쓰지 않습니다. 한 문의씩 처리하려면 다음 두 값을 함께 명시합니다. 표식이 있는 새 설정의 1은 그대로 존중하며, 정상 설정 저장 시 표식도 저장합니다.
 
 ```toml
 [engine]
@@ -65,7 +65,7 @@ Slack 앱 설정 → OAuth & Permissions → Bot Token Scopes에 `files:read`를
 
 ## 자동 답변 기본값
 
-0.8.11부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 토큰·scope 변경은 없으며 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요.
+0.8.11부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요. 0.1.23의 압축 정책은 기존 설정을 자동 변경하지 않으며, 기존 `[engine]`에 `compact_policy = true`를 명시한 뒤 봇을 재시작하면 자동 답변 모드에서도 사용합니다. 이 설정을 켰으면 실제 계정의 MCP 읽기 접근을 개인 시험 채널에서 확인하고, 시작 점검 성공만으로 커넥터 접근까지 검증됐다고 안내하지 않습니다.
 
 
 ## 시작할 때 자동 점검

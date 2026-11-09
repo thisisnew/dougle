@@ -56,7 +56,7 @@ def app(tmp_path):
     store.begin_run(1, "TTEST", "UBOT")
     slack = FakeSlack()
     engine = FakeEngine([EngineResult(SESSION, answer(), 0.02, SKILLS, READS)] * 10)
-    worker = Worker(store, config, engine, slack)
+    worker = Worker(store, config, engine, slack, memory_root=tmp_path / ".dougle")
     actions = Actions(store, config, slack, worker)
     obj = SimpleNamespace(
         store=store, cfg=config, slack=slack, engine=engine, worker=worker, actions=actions, now=now

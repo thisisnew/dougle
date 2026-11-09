@@ -1,10 +1,14 @@
 import copy
+import hashlib
 import json
 import threading
 import time
+from dataclasses import asdict
 from decimal import Decimal
+from pathlib import Path
 
 from . import cards, developer_notice
+from .compact_policy import COMPACT_POLICY
 from .evidence import (
     KINDS,
     QUESTION_KINDS,
@@ -18,20 +22,106 @@ from .handoff import reported_evidence, route_unresolved
 from .handoff_notice import after_developer_dm
 from .images import collect_images, prompt_messages
 from .monitor import Monitor
+from .navigation import read_navigation_index
 from .presentation import REACTION_FALLBACKS, reaction_names
 from .progress import Progress
 from .prompts import prompt, validate_output
 from .safety import BotError, check_content
 from .slack_gateway import SlackFailure, history_hash
+from .source_registry import SourceRegistryError, discover_github_sources, discover_local_sources
+from .static_claims import scope_static_timing
 
 
 class Worker:
     progress_interval = 30
 
-    def __init__(self, store, config, engine, slack):
+    def __init__(self, store, config, engine, slack, *, memory_root=None):
         self.store, self.config, self.engine, self.slack = store, config, engine, slack
+        self.memory_root = Path(memory_root) if memory_root is not None else Path.home() / ".dougle"
         self.cards_lock = threading.RLock()
         self.monitor = Monitor(config.home)
+
+    def _execution_setup_confirmed(self, result):
+        if self.config.engine.compact_policy:
+            expected = hashlib.sha256(COMPACT_POLICY.encode("utf-8")).hexdigest()
+            return getattr(result, "policy_digest", None) == expected
+        return set(self.config.engine.required_skills) <= result.activated
+
+    def _session_fingerprint(self, inquiry):
+        """Bind a resumed session to its execution settings and registered source scope.
+
+        An unreadable registry or index cannot certify that an old session still has
+        the same source access. The current call may proceed, but its session is not
+        reusable until a complete fingerprint can be computed.
+        """
+        try:
+            github = sorted(discover_github_sources(self.memory_root))
+            local = sorted(discover_local_sources(self.memory_root))
+        except SourceRegistryError:
+            return None
+        index = read_navigation_index(self.memory_root)
+        if index is None and (self.memory_root / "index.md").exists():
+            return None
+        scope = {
+            "version": 1,
+            "engine": asdict(self.config.engine),
+            "slack": asdict(self.config.slack),
+            "asker": inquiry["asker_user_id"],
+            "channel": inquiry["channel_id"],
+            "thread": inquiry["thread_key"],
+            "registered_github": github,
+            "registered_local": local,
+            "index_sha256": hashlib.sha256(index.encode("utf-8")).hexdigest() if index else None,
+            "compact_policy_sha256": (
+                hashlib.sha256(COMPACT_POLICY.encode("utf-8")).hexdigest()
+                if self.config.engine.compact_policy else None
+            ),
+        }
+        return hashlib.sha256(
+            json.dumps(scope, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+
+    def _session_policy_audit(self, fingerprint):
+        action = (
+            "compact_policy_supplied"
+            if self.config.engine.compact_policy else "required_skills_verified"
+        )
+        detail = json.dumps(
+            {"version": 1, "session_fingerprint": fingerprint,
+             "policy_digest": (
+                 hashlib.sha256(COMPACT_POLICY.encode("utf-8")).hexdigest()
+                 if self.config.engine.compact_policy else None
+             )},
+            separators=(",", ":"),
+        )
+        return action, detail
+
+    def _session_policy_compatible(self, thread_key, fingerprint):
+        """Do not resume a session with changed policy, settings, or source scope."""
+        if fingerprint is None:
+            return False
+        row = self.store.one(
+            "SELECT a.action,a.detail FROM audit a JOIN inquiries i ON i.id=a.inquiry_id "
+            "WHERE i.thread_key=? AND a.action IN "
+            "('compact_policy_supplied','required_skills_verified') "
+            "ORDER BY a.id DESC LIMIT 1",
+            (thread_key,),
+        )
+        if not row or row["action"] != self._session_policy_audit(fingerprint)[0]:
+            return False
+        try:
+            detail = json.loads(row["detail"])
+        except (TypeError, ValueError):
+            return False
+        return (
+            isinstance(detail, dict)
+            and detail.get("version") == 1
+            and detail.get("session_fingerprint") == fingerprint
+            and detail.get("policy_digest") == (
+                hashlib.sha256(COMPACT_POLICY.encode("utf-8")).hexdigest()
+                if self.config.engine.compact_policy else None
+            )
+        )
 
     def update_reaction(self, inquiry):
         status = "needs_lookup" if inquiry.get("human_takeover") else inquiry["status"]
@@ -283,7 +373,13 @@ class Worker:
                         "UPDATE inquiries SET lookup_basis=? WHERE id=?",
                         (json.dumps(lookup, ensure_ascii=False), ident),
                     )
+            session_fingerprint = self._session_fingerprint(inquiry)
             session = inquiry["engine_session_id"]
+            if session and not self._session_policy_compatible(
+                inquiry["thread_key"], session_fingerprint
+            ):
+                session = None
+                self.store.audit(ident, "system", "engine_session_reset", "policy_changed")
             restored = False
             correction = ""
             schema_retried = False
@@ -294,6 +390,7 @@ class Worker:
             repair_reads = None
             repair_run_id = None
             required_evidence = explicit_query_requirements(inquiry["question_text"])
+            execution_policy_audit = None
             attempt = 0
             saved_requirements = self.store.one(
                 "SELECT detail FROM audit WHERE inquiry_id=? AND action='research_requirements' ORDER BY id DESC LIMIT 1",
@@ -434,8 +531,12 @@ class Worker:
                         "research_requirements",
                         json.dumps(sorted(required_evidence)),
                     )
-                    if not set(self.config.engine.required_skills) <= result.activated:
-                        raise BotError("required_skill_not_activated")
+                    if not self._execution_setup_confirmed(result):
+                        raise BotError(
+                            "compact_policy_not_supplied"
+                            if self.config.engine.compact_policy
+                            else "required_skill_not_activated"
+                        )
                     try:
                         output = validate_output(
                             result.output,
@@ -485,9 +586,39 @@ class Worker:
                         if presentation_repair is not None or verification_repair is not None
                         else result.reads
                     )
-                    scoped = convert_unverified_live(output, evidence_reads, report=lookup or False)
+                    static_scoped = scope_static_timing(
+                        output, evidence_reads, question=inquiry["question_text"],
+                        report=lookup or False,
+                        context_clear=len(context_messages) <= 1,
+                    )
+                    if static_scoped is not output:
+                        output = validate_output(
+                            static_scoped,
+                            lookup_basis=reported_evidence(lookup),
+                            lookup_time=lookup["observed_at"]
+                            if reported_evidence(lookup)
+                            else None,
+                        )
+                        validate_verification(
+                            output, evidence_reads,
+                            image_ids={img.file_id for img in images},
+                            report=lookup or False,
+                            required_floor=required_evidence,
+                            question=inquiry["question_text"],
+                        )
+                        self.store.audit(ident, "system", "static_claim_scoped", str(run_id))
+                    scoped = convert_unverified_live(
+                        output, evidence_reads, report=lookup or False,
+                        question=inquiry["question_text"],
+                    )
                     if scoped is not output:
-                        output = validate_output(scoped)
+                        output = validate_output(
+                            scoped,
+                            lookup_basis=reported_evidence(lookup),
+                            lookup_time=lookup["observed_at"]
+                            if reported_evidence(lookup)
+                            else None,
+                        )
                         validate_verification(
                             output,
                             evidence_reads,
@@ -496,7 +627,7 @@ class Worker:
                             required_floor=required_evidence,
                             question=inquiry["question_text"],
                         )
-                        self.store.audit(ident, "system", "live_freshness_unverified", str(run_id))
+                        self.store.audit(ident, "system", "live_query_scoped", str(run_id))
                     self.store.audit(
                         ident,
                         "system",
@@ -517,12 +648,7 @@ class Worker:
                             "verification_record_repaired",
                             json.dumps({"evidence_run_id": repair_run_id, "repair_run_id": run_id}),
                         )
-                    self.store.audit(
-                        ident,
-                        "system",
-                        "required_skills_verified",
-                        json.dumps(sorted(result.activated)),
-                    )
+                    execution_policy_audit = self._session_policy_audit(session_fingerprint)
                     break
                 except BotError as exc:
                     if exc.code == "invalid_verification":
@@ -610,7 +736,7 @@ class Worker:
                                 and "live" not in required_evidence
                                 and required_evidence <= available
                                 and 0 < len(result.reads) <= 100
-                                and set(self.config.engine.required_skills) <= result.activated
+                                and self._execution_setup_confirmed(result)
                             ):
                                 verification_repair = copy.deepcopy(candidate)
                                 repair_reads = copy.deepcopy(result.reads)
@@ -651,7 +777,7 @@ class Worker:
                                 "live" not in candidate["verification"]["required"]
                                 and not candidate["verification"]["missing"]
                                 and candidate["status"] == "answered"
-                                and set(self.config.engine.required_skills) <= result.activated
+                                and self._execution_setup_confirmed(result)
                             ):
                                 presentation_repair = copy.deepcopy(candidate)
                                 repair_reads = copy.deepcopy(result.reads)
@@ -661,12 +787,16 @@ class Worker:
                             pass
                     progress.retry(reason)
             output = route_unresolved(output)
+            if self._session_fingerprint(inquiry) != session_fingerprint:
+                raise BotError("source_scope_changed")
             last_seen = max((m["ts"] for m in messages), key=Decimal, default=inquiry["trigger_ts"])
             progress.phase("persist")
             verified_batches = {
                 memory_batches[run]
                 for run in (run_id, repair_run_id)
-                if run in memory_batches and output["status"] == "answered"
+                if run in memory_batches
+                and output["status"] == "answered"
+                and "live" not in output["verification"]["required"]
             }
             self.store.save_draft(
                 ident,
@@ -679,6 +809,7 @@ class Worker:
                 job_id=job["id"],
                 auto_reply=not self.config.slack.require_approval,
                 memory_batches=sorted(verified_batches),
+                execution_policy_audit=execution_policy_audit,
             )
             accepted_batches = verified_batches
             if restored:

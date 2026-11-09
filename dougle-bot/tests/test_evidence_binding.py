@@ -12,6 +12,7 @@ from dougle_bot.evidence import (
     read_kinds,
     read_metadata,
     read_receipts,
+    sql_data_relations,
     validate_verification,
 )
 from dougle_bot.safety import BotError
@@ -352,7 +353,7 @@ def test_sql_receipts_require_data_not_connectivity_or_schema_queries(sql, live)
     assert reads["read1"].metadata["environment"] is None
     assert sql not in repr(reads["read1"].metadata)
     if live:
-        validate_verification(output("live", "orders"), reads)
+        validate_verification(output("live", sql_data_relations({"query": sql})[0]), reads)
     else:
         with pytest.raises(BotError, match="required_read_not_verified"):
             validate_verification(output("live", "orders"), reads)

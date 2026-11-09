@@ -11,6 +11,7 @@ from pathlib import PurePosixPath
 from urllib.parse import parse_qsl, unquote, urlencode, urlsplit
 
 from .safety import BotError
+from .trusted_query import parse_complete_count_result, parse_count_all_sql
 
 KINDS = {"knowledge", "image", "code", "live"}
 QUESTION_KINDS = {
@@ -127,25 +128,27 @@ class ReadReceipt(set):
     """Set-compatible capabilities plus runtime-owned metadata, never model assertions.
 
     Old fake engines and callers may still supply plain sets. Copy/deepcopy preserves metadata.
-    Metadata stays with this call's successful tool result; it contains no result body or SQL.
+    A bounded source snapshot may accompany a successful content read in memory only.
+    Metadata contains no result body or SQL and remains safe for bounded diagnostics.
     """
 
-    def __init__(self, kinds=(), *, metadata=None):
+    def __init__(self, kinds=(), *, metadata=None, snapshot=None):
         super().__init__(kinds)
         self.metadata = dict(metadata or {})
+        self.snapshot = snapshot
 
 
-def sql_reads_data(args):
+def sql_data_relations(args):
     """Conservative query-shape check, NOT a SQL sandbox or freshness verification.
 
     Require a physical relation, ignoring literals, comments, CTE names and table functions.
     Unrecognized/metadata-only queries retain knowledge capability but cannot satisfy live.
     """
     if not isinstance(args, dict):
-        return False
+        return ()
     sql = next((args[k] for k in ("query", "sql", "sql_query") if isinstance(args.get(k), str)), "")
     if not sql or len(sql) > 100_000:
-        return False
+        return ()
     tokens = re.findall(
         r"--[^\n]*|/\*[\s\S]*?\*/|'(?:''|\\.|[^'\\])*'|"
         r'"(?:""|\\.|[^"\\])*"|`[^`]*`|[A-Za-z_][\w$-]*|[^\s]',
@@ -170,13 +173,13 @@ def sql_reads_data(args):
             parts.append(token)
     text = " ".join(parts).rstrip(" ;")
     if not re.match(r"^(?:SELECT|WITH)\b", text, re.I) or ";" in text:
-        return False
+        return ()
     if any(
         token.upper()
         in {"INSERT", "UPDATE", "DELETE", "MERGE", "CREATE", "DROP", "ALTER", "CALL", "EXPORT"}
         for token in parts
     ):
-        return False
+        return ()
     identifier = r"[A-Za-z_][\w$-]*(?:\s*\.\s*[A-Za-z_][\w$-]*)*"
 
     def relation_name(value):
@@ -204,7 +207,11 @@ def sql_reads_data(args):
         ):
             continue  # A mixed data + metadata query still read the business relation.
         relations.append(relation)
-    return bool(relations)
+    return tuple(dict.fromkeys(relations))
+
+
+def sql_reads_data(args):
+    return bool(sql_data_relations(args))
 
 
 def explicit_query_requirements(question):
@@ -431,6 +438,118 @@ def github_read_metadata(args, body):
     }
 
 
+def _query_incomplete(body):
+    if isinstance(body, str):
+        if len(body) > 131_072:
+            return False
+        try:
+            return _query_incomplete(json.loads(body))
+        except (ValueError, UnicodeError):
+            return False
+    if isinstance(body, dict):
+        if (
+            body.get("jobComplete") is False
+            or body.get("job_complete") is False
+            or body.get("errors")
+            or body.get("error")
+            or any(body.get(key) for key in ("nextPageToken", "next_page_token", "pageToken"))
+        ):
+            return True
+        return any(_query_incomplete(body[key]) for key in ("result", "data") if key in body)
+    if isinstance(body, list):
+        return any(_query_incomplete(item) for item in body)
+    return False
+
+
+def _query_row_count(body):
+    """Recognize a provider's explicit row list without retaining row contents.
+
+    Unknown or oversized result shapes stay unknown. An empty tool text is not an
+    empty data result, and aggregate COUNT(*)=0 is a one-row result.
+    """
+    if isinstance(body, str):
+        if len(body) > 131_072:
+            return None
+        try:
+            parsed = json.loads(body)
+            return 0 if parsed == [] else _query_row_count(parsed)
+        except (ValueError, UnicodeError):
+            return None
+    if isinstance(body, dict):
+        if (
+            body.get("jobComplete") is False
+            or body.get("job_complete") is False
+            or body.get("errors")
+            or body.get("error")
+            or any(body.get(key) for key in ("nextPageToken", "next_page_token", "pageToken"))
+        ):
+            return None
+        if isinstance(body.get("rows"), list):
+            total = body.get("totalRows", body.get("total_rows"))
+            if not body["rows"] and total not in (None, 0, "0"):
+                return None
+            return len(body["rows"])
+        for key in ("result", "data"):
+            if key in body:
+                return _query_row_count(body[key])
+        if body.get("type") == "text":
+            return _query_row_count(body.get("text"))
+    if isinstance(body, list) and body:
+        if all(isinstance(item, dict) and item.get("type") == "text" for item in body):
+            counts = [_query_row_count(item.get("text")) for item in body]
+            return counts[0] if len(counts) == 1 else None
+        if all(isinstance(item, dict) and "type" not in item for item in body):
+            return len(body)
+    return None
+
+
+def _query_zero_count(body):
+    """Recognize only an explicit one-row, one-column zero aggregate."""
+    if isinstance(body, str):
+        if len(body) > 131_072:
+            return False
+        try:
+            return _query_zero_count(json.loads(body))
+        except (ValueError, UnicodeError):
+            return False
+    if isinstance(body, dict):
+        if "rows" in body:
+            return _query_zero_count(body["rows"])
+        for key in ("result", "data"):
+            if key in body:
+                return _query_zero_count(body[key])
+        if body.get("type") == "text":
+            return _query_zero_count(body.get("text"))
+    if isinstance(body, list) and len(body) == 1:
+        row = body[0]
+        if isinstance(row, dict) and row.get("type") == "text":
+            return _query_zero_count(row.get("text"))
+        if isinstance(row, dict) and len(row) == 1:
+            key, value = next(iter(row.items()))
+            return bool(
+                re.fullmatch(r"(?:count|cnt|total|count_\w*|\w*_count)", key, re.I)
+                and type(value) is int
+                and value == 0
+            )
+    return False
+
+
+def _simple_count_aggregate(args):
+    """Only a standalone COUNT(*) projection can turn one returned zero into no matches."""
+    if not isinstance(args, dict):
+        return False
+    sql = next((args[k] for k in ("query", "sql", "sql_query") if isinstance(args.get(k), str)), "")
+    if not sql or len(sql) > 100_000 or "--" in sql or "/*" in sql:
+        return False
+    if not re.match(r"\A\s*SELECT\s+COUNT\s*\(\s*\*\s*\)"
+                    r"(?:\s+(?:AS\s+)?(?:count|cnt|total|count_\w*|\w*_count))?"
+                    r"\s+FROM\s+", sql, re.I):
+        return False
+    if re.search(r"\b(?:GROUP\s+BY|HAVING|UNION|EXCEPT|INTERSECT)\b", sql, re.I):
+        return False
+    return bool(sql_data_relations(args))
+
+
 def read_metadata(name, args, body=None):
     """Metadata for an observed read. Callers must separately require actual success.
 
@@ -480,11 +599,25 @@ def read_metadata(name, args, body=None):
             if numbers and all(b == a + 1 for a, b in zip(numbers, numbers[1:])):
                 metadata["line_range"] = [numbers[0], numbers[-1]]
     elif name.endswith("__execute_sql_readonly"):
+        sql = next(
+            (args[key] for key in ("query", "sql", "sql_query") if isinstance(args.get(key), str)),
+            "",
+        )
+        strict_relation = (
+            parse_count_all_sql(sql) if "bigquery" in name.lower() else None
+        )
         metadata.update(
             content_type="data_query" if sql_reads_data(args) else "non_data_query",
+            relations=sql_data_relations(args),
             query_time=None,
             data_watermark=None,
             environment=None,
+            result_rows=_query_row_count(body),
+            zero_count=_simple_count_aggregate(args) and _query_zero_count(body),
+            strict_count_all_relation=strict_relation,
+            complete_count=(
+                parse_complete_count_result(body) if strict_relation is not None else None
+            ),
         )
     elif re.search(r"__(?:get_table_info|get_dataset_info|get_schema)$", name, re.I):
         metadata["content_type"] = "schema"
@@ -503,6 +636,17 @@ def _within_registered_local(target, root):
 
 def _source_mismatch(receipt, source, kind):
     metadata = getattr(receipt, "metadata", {})
+    if kind == "live" and metadata.get("content_type") == "data_query":
+        location = source.get("location") if isinstance(source, dict) else None
+        relations = metadata.get("relations", ())
+        if not isinstance(location, str) or not isinstance(relations, (list, tuple)):
+            return "source_identity_unverified"
+        name = location.strip("` ").lower()
+        if not any(
+            name == relation or (name.count(".") >= 1 and relation.startswith(name + "."))
+            for relation in relations
+        ):
+            return "source_mismatch"
     # A listing is valid knowledge for questions about the listed identifiers. Its
     # capabilities still exclude code/live; metadata must not reject all listing answers.
     actual = metadata.get("locator")
@@ -616,14 +760,37 @@ def read_receipts(raw):
                 name, args, kinds = pending.pop(ident)
                 body = block.get("content")
                 # Provider/connector errors may appear as structured content without is_error.
-                if kinds and body and not block.get("is_error") and not failed_read(body):
+                if (
+                    kinds
+                    and body
+                    and not block.get("is_error")
+                    and not failed_read(body)
+                    and not (name.endswith("__execute_sql_readonly") and _query_incomplete(body))
+                ):
                     metadata = read_metadata(name, args, body)
                     if (
                         name == "mcp__dougle_source__read_file"
                         and metadata.get("content_type") != "content"
                     ):
                         continue
-                    completed[ident] = ReadReceipt(kinds, metadata=metadata)
+                    snapshot = None
+                    if name == "Read" and isinstance(body, str) and len(body) <= 131_072:
+                        try:
+                            if len(body.encode("utf-8")) <= 131_072:
+                                snapshot = body
+                        except UnicodeError:
+                            pass
+                    elif name == "mcp__dougle_source__read_file":
+                        source = _github_result(body)
+                        if source and isinstance(source.get("content"), str):
+                            content = source["content"]
+                            if len(content) <= 131_072:
+                                try:
+                                    if len(content.encode("utf-8")) <= 131_072:
+                                        snapshot = content
+                                except UnicodeError:
+                                    pass
+                    completed[ident] = ReadReceipt(kinds, metadata=metadata, snapshot=snapshot)
     return completed
 
 

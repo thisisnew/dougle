@@ -1,14 +1,14 @@
 {
-  "version": "0.8.25",
-  "optionalBotRuntime": "0.1.22",
-  "embeddedRuntimeVersion": "0.1.22",
+  "version": "0.8.26",
+  "optionalBotRuntime": "0.1.23",
+  "embeddedRuntimeVersion": "0.1.23",
   "status": "PASS_LOCAL",
-  "publication": "PUBLISHED",
-  "archive": ".tools/releases/0.8.25/Dougle_Skills_0.8.25.zip",
+  "publication": "PENDING",
+  "archive": ".tools/releases/0.8.26/Dougle_Skills_0.8.26.zip",
   "files": 57,
-  "archiveBytes": 288299,
-  "sha256": "133c93f0230286c27219e7d7159e57a5858eae7d8a98a61fdb4294bcd3f9f639",
-  "wheelSha256": "89430a30963de31d97a0ce43c2b414f5eeea27ca1dc495a00936815b00e869f2",
+  "archiveBytes": 304517,
+  "sha256": "dfd110c8ff790dc9c201f8058dbb029daa81fae8ca0ceb0d8d8e7c131d151729",
+  "wheelSha256": "4cd00882384eab74ee4724ef00ae1a9d7908f619852d31f908078796aa9dd647",
   "checks": {
     "wheelCurrentSourceBytes": "PASS",
     "skillMirrors": "PASS",
@@ -16,12 +16,14 @@
     "archiveBytesAndCRC": "PASS",
     "manifestVersions": "PASS",
     "isolatedWheelInstall": "PASS",
-    "botTests": "PASS 1560",
+    "botTests": "PASS 1673, 2 expected failures",
     "ruff": "PASS",
     "prescribedChecks": "PASS",
-    "authenticatedDownload": "PASS byte-for-byte",
-    "ci": "PASS both runs"
+    "authenticatedDownload": "PENDING",
+    "ci": "PENDING"
   },
   "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime",
-  "categorySourceRestriction": "NOT_INCLUDED; requires category scope contract"
+  "tokenGoal": "PASS synthetic Codex 10 paired cases; 60.28% reduction, 0 observed factual errors/required omissions",
+  "repeatAnswer": "Q121 three repeats preserved required facts but produced different wording",
+  "categorySourceRestriction": "DEFERRED by user; requires category scope contract"
 }

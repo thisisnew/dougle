@@ -154,14 +154,16 @@ def test_concise_answers_still_require_matching_actual_reads(app, kind, category
     "kind,category",
     [("knowledge", "domain"), ("code", "implementation"), ("live", "current_state")],
 )
-def test_short_verified_answers_are_not_blocked(app, kind, category):
+def test_short_answers_keep_live_proof_boundary(app, kind, category):
     automatic(app)
     value = output(category, (kind,))
     value["body"] = "활성 항목은 3개입니다."
     app.engine.results = [result(value, {"read1": {kind}})]
     ident = receive(app.store, app.cfg, event(), "UBOT")
     app.worker.run_once()
-    assert app.store.inquiry(ident)["status"] == "posted"
+    assert app.store.inquiry(ident)["status"] == (
+        "needs_lookup" if kind == "live" else "posted"
+    )
 
 
 def test_lookup_policy_uses_actual_config_and_does_not_enable_shell(app):

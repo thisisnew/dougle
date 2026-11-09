@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import json
 import os
 import platform
@@ -119,6 +120,73 @@ def _inquiry_id(value):
 
 def default_home():
     return Path.home() / ".dougle-bot"
+
+
+def usage_report(home, config_path, day):
+    """Read-only per-inquiry provider usage; no question text or raw tool data."""
+    try:
+        parsed_day = datetime.date.fromisoformat(day)
+        if parsed_day.isoformat() != day:
+            raise ValueError
+    except ValueError:
+        raise BotError("invalid_usage_day") from None
+    cfg = load(config_path)
+    if not (cfg.home / "bot.db").exists():
+        return {"day_utc": day, "inquiries": [], "known_cost_usd": 0.0,
+                "total_cost_usd": 0.0, "cost_complete": True}
+    store = Store(cfg.home / "bot.db", migrate=False)
+    try:
+        rows = store.all(
+            "SELECT inquiry_id,COUNT(*) AS attempts,SUM(CASE WHEN cost_usd IS NOT NULL THEN 1 ELSE 0 END) AS cost_samples,"
+            "SUM(cost_usd) AS cost_usd FROM engine_runs WHERE day=? GROUP BY inquiry_id ORDER BY inquiry_id",
+            (day,),
+        )
+        result = []
+        for row in rows:
+            inquiry_id = row["inquiry_id"]
+            all_run_days = store.all(
+                "SELECT DISTINCT day FROM engine_runs WHERE inquiry_id IS ?", (inquiry_id,)
+            )
+            profiles = store.all(
+                "SELECT detail FROM audit WHERE inquiry_id IS ? AND action='answer_timing' ORDER BY id",
+                (inquiry_id,),
+            )
+            usage = {key: 0 for key in (
+                "input_tokens", "output_tokens", "cache_read_input_tokens",
+                "cache_creation_input_tokens",
+            )}
+            # Timing is recorded when an inquiry finishes, possibly after UTC midnight.
+            # Its profile aggregates attempts, so multi-day inquiries cannot be split.
+            complete = bool(profiles) and len(all_run_days) == 1
+            reported_attempts = 0
+            for item in profiles:
+                profile = safe_profile(item["detail"])
+                if profile is None or "usage" not in profile:
+                    complete = False
+                    continue
+                reported_attempts += profile["attempts"]
+                for key, metric in profile["usage"].items():
+                    if metric["samples"] != profile["attempts"]:
+                        complete = False
+                    usage[key] += metric["total"] or 0
+            complete = complete and reported_attempts == row["attempts"]
+            result.append({
+                "inquiry_id": inquiry_id,
+                "attempts": row["attempts"],
+                "cost_usd": row["cost_usd"] if row["cost_samples"] == row["attempts"] else None,
+                "usage": usage if complete else None,
+            })
+        known_cost = round(sum(row["cost_usd"] or 0 for row in result), 6)
+        cost_complete = all(row["cost_usd"] is not None for row in result)
+        return {
+            "day_utc": day,
+            "inquiries": result,
+            "known_cost_usd": known_cost,
+            "total_cost_usd": known_cost if cost_complete else None,
+            "cost_complete": cost_complete,
+        }
+    finally:
+        store.close()
 
 
 def status(home, config_path):
@@ -291,6 +359,8 @@ def parser():
         command = sub.add_parser(name)
         if name in ("start", "run"):
             command.add_argument("--allow-unverified-readers", action="store_true")
+    usage = sub.add_parser("usage")
+    usage.add_argument("--day", default=datetime.datetime.now(datetime.UTC).date().isoformat())
     d = sub.add_parser("doctor")
     d.add_argument("--online", action="store_true")
     setup = sub.add_parser("setup")
@@ -317,6 +387,8 @@ def execute(args, secrets=None):
         return {"version": __version__}
     if args.command == "status":
         return status(home, path)
+    if args.command == "usage":
+        return usage_report(home, path, args.day)
     if args.command == "secrets":
         if args.action == "guide":
             return {

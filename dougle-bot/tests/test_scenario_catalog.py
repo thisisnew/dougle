@@ -169,7 +169,9 @@ def test_catalog_evidence(app, number):
         ]
         ident = receive(app.store, app.cfg, event(files=[file()] if images else []), "UBOT")
         assert app.worker.run_once()
-        assert app.store.inquiry(ident)["status"] == "posted"
+        assert app.store.inquiry(ident)["status"] == (
+            "needs_lookup" if "live" in required else "posted"
+        )
         reused = app.store.all("SELECT * FROM audit WHERE action='presentation_evidence_reused'")
         assert bool(reused) is ("live" not in required)
         assert len(app.engine.calls) == 2

@@ -111,6 +111,8 @@ def dispatch(name, a):
             "storage_writable": True,
         }
     if name == "check_source":
+        if state.get("source_check_disabled"):
+            return {"error": "reader_unavailable"}
         state["revision_checks"] = state.get("revision_checks", 0) + 1
         variant = state.get("variant")
         if variant in ("확인 실패", "권한 없는 원본"):

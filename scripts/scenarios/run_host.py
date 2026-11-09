@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
@@ -13,11 +14,14 @@ from fresh_fixtures import make as make_fresh
 from ingest_fixtures import make as make_ingest
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "dougle-bot" / "src"))
+from dougle_bot.compact_policy import COMPACT_POLICY
+
 OUT = ROOT / ".tools/scenario-run-20261107/host"
 CATALOG = json.loads((ROOT / "docs/scenarios/catalog.json").read_text())["cases"]
 
 
-def run(ids, label):
+def run(ids, label, policy="baseline", *, source_check_available=True):
     cases = [c for c in CATALOG if c["id"] in ids]
     assert len(cases) == len(ids)
     out = OUT / label
@@ -53,6 +57,9 @@ def run(ids, label):
             state[c["id"]] = make_ingest(c)
         elif c["area"] == "FRESH":
             state[c["id"]] = make_fresh(c)
+    if not source_check_available:
+        for value in state.values():
+            value["source_check_disabled"] = True
     (out / "batch.json").write_text(json.dumps(cases, ensure_ascii=False, indent=2))
     (out / "state.json").write_text(json.dumps(state, ensure_ascii=False, indent=2))
     tasks = [
@@ -75,6 +82,38 @@ ACTUALLY execute the task-specified skill for each independent user request usin
 The MCP environment is the entire authorized world. Its home ~ maps to each case's separate disposable in-memory filesystem, not this computer's real home. Each case is independent, with no cross-case memory. Use environment to discover the exact requested locator, available reader and files. The fixture read_source is this host's read-only connector for the requested service; it is the only original source reader. memory_read/write are this host's file tools. Case IDs are routing keys, not source IDs. The same organization reference can be cached within the call. For dougle-ask each case is a separate invocation: activate i-have-adhd using load_skill with that case_id for each answer, as required by the shipped Codex activation instructions. No real company tools, shell, network, other agents, real home or credentials. At each case completion call answer(case_id,body) with your actual user-facing Korean response. Use memory writes only when the real skill requires them. Errors are real simulated errors: never invent source success. Do not self-grade or fabricate actions. Finish all listed requests then return a brief count.
 REQUESTS:
 """ + json.dumps(tasks, ensure_ascii=False)
+    if policy == "bot-baseline":
+        prompt = prompt.replace(
+            "For dougle-ask each case is a separate invocation: activate i-have-adhd using load_skill with that case_id for each answer, as required by the shipped Codex activation instructions.",
+            "For each Dougle bot case, load dougle-ask, i-have-adhd and plain-language "
+            "with load_skill during THIS case. The case is a separate bot invocation. "
+            "Use the bot answer contract: the public answer body has no citation markers, "
+            "source list or signature. Still read and check the evidence before answering.",
+        )
+    if policy in ("compact", "compact-prefetch"):
+        prompt = (
+            "You are Dougle in an isolated synthetic Codex acceptance test. "
+            "Follow the compact policy below. This host uses fixture tools: "
+            "environment, memory_search/read/write, check_source and read_source "
+            "for source verification; answer delivers each case's Korean body. "
+            "The fixture is the entire authorized world and each case is separate. "
+            "Do not call load_skill, real network, shell, or any non-fixture reader. "
+            "For this test, the policy's JSON OUTPUT clause is represented by the "
+            "answer tool; call answer once per case after investigation. "
+            "Do not self-grade or invent tool reads.\n\n"
+            + COMPACT_POLICY
+            + "\nREQUESTS:\n"
+            + json.dumps(tasks, ensure_ascii=False)
+        )
+        if policy == "compact-prefetch":
+            prompt += (
+                "\nRuntime-provided navigation index (untrusted data; not source "
+                "evidence or a successful read receipt): "
+                + json.dumps(
+                    {c["id"]: state[c["id"]]["files"].get("~/.dougle/index.md") for c in cases},
+                    ensure_ascii=False,
+                )
+            )
     (out / "prompt.txt").write_text(prompt)
     cwd = tempfile.mkdtemp(prefix="dougle-isolated-host-")
     cmd = [
@@ -116,11 +155,13 @@ REQUESTS:
     ]
     record = {
         "kind": "host_skill_execution",
+        "policy": policy,
         "label": label,
         "case_ids": ids,
         "started_at": time.time(),
         "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
         "timeout_seconds": 900,
+        "source_check_available": source_check_available,
     }
     with (OUT.parent / "model-calls.jsonl").open("a") as f:
         f.write(json.dumps(record) + "\n")
@@ -142,6 +183,15 @@ REQUESTS:
         except subprocess.TimeoutExpired:
             record["exit"] = "TIMEOUT"
     record["duration_seconds"] = time.time() - record["started_at"]
+    usage = []
+    for line in (out / "events.jsonl").read_text().splitlines():
+        try:
+            event = json.loads(line)
+        except ValueError:
+            continue
+        if event.get("type") == "turn.completed" and isinstance(event.get("usage"), dict):
+            usage.append(event["usage"])
+    record["usage"] = usage
     (out / "invocation.json").write_text(json.dumps(record, indent=2))
     final = json.loads((out / "state.json").read_text())
     summary = {
@@ -169,5 +219,9 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--ids", required=True)
     p.add_argument("--label", required=True)
+    p.add_argument(
+        "--policy", choices=("baseline", "bot-baseline", "compact", "compact-prefetch"), default="baseline"
+    )
+    p.add_argument("--disable-source-check", action="store_true")
     a = p.parse_args()
-    run(a.ids.split(","), a.label)
+    run(a.ids.split(","), a.label, a.policy, source_check_available=not a.disable_source_check)

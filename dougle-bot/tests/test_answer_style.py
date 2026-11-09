@@ -212,7 +212,7 @@ def test_invalid_style_gets_one_retry_and_never_becomes_approvable(setup, invali
         READS,
     )
     engine = FakeEngine([bad, bad])
-    worker = Worker(store, cfg, engine, slack)
+    worker = Worker(store, cfg, engine, slack, memory_root=cfg.home / ".dougle")
     assert worker.run_once()
     assert len(engine.calls) == 2
     assert store.inquiry(ident)["status"] == "failed"
@@ -230,7 +230,7 @@ def test_corrected_style_becomes_approval_draft_without_auto_post(setup):
             EngineResult(SESSION, answer(), 0.02, SKILLS, READS),
         ]
     )
-    assert Worker(store, cfg, engine, slack).run_once()
+    assert Worker(store, cfg, engine, slack, memory_root=cfg.home / ".dougle").run_once()
     assert store.inquiry(ident)["status"] == "awaiting_approval"
     assert store.current(store.inquiry(ident))["body"] == answer()["body"]
     assert engine.calls[1][1] == SESSION
@@ -243,6 +243,7 @@ def test_resume_still_requires_current_call_style_activation(setup):
     with store.tx() as db:
         db.execute("UPDATE threads SET engine_session_id=?", (SESSION,))
     engine = FakeEngine([EngineResult(SESSION, answer(), 0.02, {cfg.engine.ask_skill}, READS)] * 2)
-    assert Worker(store, cfg, engine, slack).run_once()
-    assert all(c[1] == SESSION for c in engine.calls)
+    assert Worker(store, cfg, engine, slack, memory_root=cfg.home / ".dougle").run_once()
+    # A session with no matching execution-policy audit is discarded before use.
+    assert [call[1] for call in engine.calls] == [None, SESSION]
     assert store.inquiry(ident)["error"] == "required_skill_not_activated"

@@ -9,6 +9,7 @@ from .safety import BotError, redact
 MESSAGES = {
     "slack_checking": "Slack 인증과 채널 연결을 확인하고 있습니다.",
     "checking": "Claude 실행과 필수 스킬을 확인하고 있습니다. 최대 90초가 걸릴 수 있습니다.",
+    "checking_compact": "Claude 구조화 응답을 확인하고 있습니다. 최대 90초가 걸릴 수 있습니다.",
     "ready": "시작 점검을 마쳤습니다. Slack 연결을 확인하고 있습니다.",
     "connected": "시작 점검을 마쳤고 Slack에 연결되었습니다.",
     "optional_connections": "자료 연결 중 확인이 필요한 항목이 있습니다. 연결을 복구하거나, 이번에 한해 미확인 연결을 둔 채 시작할 수 있습니다.",
@@ -81,7 +82,7 @@ def latest_report(store):
 
 
 def check_engine(config, store, engine, *, allow_unverified_readers=False):
-    report(store, "checking")
+    report(store, "checking_compact" if config.compact_policy else "checking")
     run_id = None
     result = None
     started = time.monotonic()
@@ -89,15 +90,21 @@ def check_engine(config, store, engine, *, allow_unverified_readers=False):
         run_id, budget = store.reserve(
             None, config.max_budget_usd_per_call, config.daily_budget_usd, False
         )
-        prompt = (
-            "Dougle 시작 점검입니다. 업무 질문이 아닙니다. 아래 스킬을 Skill 도구로 각각 "
-            "한 번 로드하여 사용 가능 여부만 확인하세요. 스킬 본문의 업무 조사 절차는 실행하지 "
-            "마세요. 업무 자료·파일·DB를 읽거나 쓰지 마세요. 도구로 연결을 시험하지 마세요. "
-            "모두 로드하면 ready=true, 불가능하면 ready=false를 구조화 결과로 반환하세요.\n"
-            + json.dumps(list(config.required_skills), ensure_ascii=False)
-        )
+        if config.compact_policy:
+            prompt = (
+                "Dougle 시작 점검입니다. 업무 질문이 아닙니다. 도구나 업무 자료를 사용하지 "
+                "마세요. 구조화 결과로 ready=true만 반환하세요."
+            )
+        else:
+            prompt = (
+                "Dougle 시작 점검입니다. 업무 질문이 아닙니다. 아래 스킬을 Skill 도구로 각각 "
+                "한 번 로드하여 사용 가능 여부만 확인하세요. 스킬 본문의 업무 조사 절차는 실행하지 "
+                "마세요. 업무 자료·파일·DB를 읽거나 쓰지 마세요. 도구로 연결을 시험하지 마세요. "
+                "모두 로드하면 ready=true, 불가능하면 ready=false를 구조화 결과로 반환하세요.\n"
+                + json.dumps(list(config.required_skills), ensure_ascii=False)
+            )
         result = engine.run(prompt, None, budget, timeout_seconds=90)
-        if not set(config.required_skills).issubset(result.activated):
+        if not set(config.execution_skills).issubset(result.activated):
             raise BotError("required_skills")
         if (
             not isinstance(result.output, dict)

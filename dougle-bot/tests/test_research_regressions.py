@@ -6,7 +6,7 @@ import json
 import pytest
 from test_answer_style import SESSION, SKILLS, answer
 from test_developer_handoff import metadata
-from test_evidence import output, result
+from test_evidence import output
 from test_memory_worker import batch
 from test_runtime import event
 from test_scenario_catalog import automatic
@@ -181,13 +181,15 @@ def test_explicit_data_request_survives_mixed_explanatory_clause(app, question):
         "SELECT COUNT(*) FROM `project.ds.orders` JOIN `project.ds.INFORMATION_SCHEMA.TABLES` ON TRUE",
     ],
 )
-def test_successful_business_queries_keep_data_read_capability(app, query):
+def test_successful_business_queries_keep_capability_but_need_claim_review(app, query):
+    from dougle_bot.evidence import sql_data_relations
+
     good = response(
         "live",
         "mcp__example__execute_sql_readonly",
         {"query": query},
         '[{"count":3}]',
-        "demo.orders",
+        sql_data_relations({"query": query})[0],
     )
     assert good.reads["read1"] == {"live", "knowledge"}
     assert good.reads["read1"].metadata["content_type"] == "data_query"
@@ -195,6 +197,7 @@ def test_successful_business_queries_keep_data_read_capability(app, query):
     assert row["status"] == "needs_lookup"
     draft = app.store.current(row)
     assert draft["engine_status"] == "needs_lookup"
+    assert "문의 조건" in draft["body"]
     verification = json.loads(draft["verification_json"])
     assert verification["checks"] == []
     assert verification["missing"] == ["live"]
@@ -228,7 +231,7 @@ def test_original_code_answer_remains_answerable(app):
     )
 
 
-def test_unknown_sql_freshness_hands_off_then_manual_report_posts_without_stale_memory(app):
+def test_unverified_sql_does_not_auto_post_or_persist_live_memory(app):
     automatic(app)
     source, batch_id = batch(app)
     good = response(
@@ -240,13 +243,8 @@ def test_unknown_sql_freshness_hands_off_then_manual_report_posts_without_stale_
     good.memory_batch = batch_id
     row = process(app, [good], "현재 운영 센터는 몇 개인가요?")
     assert row["status"] == "needs_lookup"
-    assert row["card_channel_id"].startswith("D")
-    card = app.slack.cards[(row["card_channel_id"], row["card_ts"])]
-    private = json.dumps(card, ensure_ascii=False)
-    assert "demo.centers" in private and "복제 반영 시점" in private
-    assert "17개" not in private
     public = [call[3] for call in app.slack.calls if call[0] == "post"]
-    assert public and all("17" not in text for text in public)
+    assert not any("17개" in text or "조회 결과 기준" in text for text in public)
     assert not app.store.one("SELECT id FROM audit WHERE action='auto_reply_ready'")
     assert not app.store.one("SELECT id FROM audit WHERE action='memory_batch_ready'")
     assert app.store.one(
@@ -257,23 +255,6 @@ def test_unknown_sql_freshness_hands_off_then_manual_report_posts_without_stale_
     assert source.read_text() == "이전 안내입니다.\n"
     audit = app.store.one("SELECT detail FROM audit WHERE action='evidence_checks_verified'")
     assert json.loads(audit["detail"])["missing"] == ["live"]
-    assert not app.worker.run_once()  # Wait for developer evidence, no automatic query loop.
-
-    app.actions.submit(
-        "UAPPROVER", metadata(app, row, "lookup"), "lookup",
-        "운영 원본에서 확인한 활성 센터는 19개입니다.",
-    )
-    resumed = output(
-        "current_state", ("live",),
-        checks=[dict(kind="live", receipt="developer_report", source_index=0)],
-    )
-    resumed["body"] = "개발자 조회 결과 기준, 운영 센터는 19개입니다."
-    app.engine.results = [result(resumed)]
-    app.worker.run_once()
-    assert app.store.inquiry(row["id"])["status"] == "posted"
-    public = [call[3] for call in app.slack.calls if call[0] == "post"]
-    assert any("19개" in text for text in public)
-    assert all("17개" not in text for text in public)
     assert not app.store.one("SELECT id FROM audit WHERE action='memory_batch_ready'")
     assert not dispatch_batches(app.store, app.cfg.home)
     assert not drain_one(app.cfg.home)
@@ -281,13 +262,14 @@ def test_unknown_sql_freshness_hands_off_then_manual_report_posts_without_stale_
 
 
 @pytest.mark.parametrize("query_kind", ["live", "knowledge"])
-def test_manual_centers_report_does_not_attest_separate_orders_query(app, query_kind):
+def test_manual_centers_report_and_separate_orders_query_keep_their_own_checks(app, query_kind):
     automatic(app)
     initial = response(
         "live", "mcp__example__execute_sql_readonly",
         {"query": "SELECT COUNT(*) FROM demo.centers LIMIT 1"},
         '[{"count":17}]', "demo.centers",
     )
+    initial.output = output("current_state", ("live",), ("live",), status="needs_lookup")
     row = process(app, [initial], "현재 운영 센터 수와 주문 정보를 확인해 주세요.")
     assert row["status"] == "needs_lookup"
     app.actions.submit(
@@ -317,19 +299,17 @@ def test_manual_centers_report_does_not_attest_separate_orders_query(app, query_
     app.worker.run_once()
     final = app.store.inquiry(row["id"])
     public = [call[3] for call in app.slack.calls if call[0] == "post"]
-    assert all("17" not in text for text in public)
     assert len(app.engine.calls) == 2
-    if query_kind == "live":
-        assert final["status"] == "needs_lookup"
-        assert final["card_channel_id"].startswith("D")
-        draft = app.store.current(final)
-        assert json.loads(draft["lookup_json"])["target"] == "demo.orders"
-        assert json.loads(draft["verification_json"])["missing"] == ["live"]
-        assert not app.store.one("SELECT id FROM audit WHERE action='auto_reply_ready'")
-    else:
-        assert final["status"] == "posted"
-        assert any("19개" in text for text in public)
-        assert json.loads(app.store.current(final)["verification_json"])["missing"] == []
+    assert final["status"] == ("needs_lookup" if query_kind == "live" else "posted")
+    assert (
+        not any("19개" in text or "17건" in text for text in public)
+        if query_kind == "live" else any("19개" in text for text in public)
+    )
+    verification = json.loads(app.store.current(final)["verification_json"])
+    assert verification["missing"] == (["live"] if query_kind == "live" else [])
+    assert {check["receipt"] for check in verification["checks"]} == (
+        set() if query_kind == "live" else {"read1", "developer_report"}
+    )
 
 
 @pytest.mark.parametrize(

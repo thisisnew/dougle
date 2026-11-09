@@ -153,6 +153,9 @@ def test_repeated_missing_session_does_not_loop(app):
     ident = receive(app.store, app.cfg, event(), "UBOT")
     with app.store.tx() as db:
         db.execute("UPDATE threads SET engine_session_id=?", (SESSION,))
+    fingerprint = app.worker._session_fingerprint(app.store.inquiry(ident))
+    action, detail = app.worker._session_policy_audit(fingerprint)
+    app.store.audit(ident, "system", action, detail)
     app.engine.results = [BotError("session_not_found"), BotError("session_not_found")]
     app.worker.run_once()
     assert len(app.engine.calls) == 2
