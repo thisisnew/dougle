@@ -22,6 +22,7 @@
   "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime",
   "categorySourceRestriction": "DEFERRED by user",
   "ciRuns": [
-    42610759267
+    42610759267,
+    42611183203
   ]
 }
