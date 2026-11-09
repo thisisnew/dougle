@@ -66,6 +66,9 @@ class Store:
             # Additive performance indexes: no record/schema contract change, and status/stop
             # with migrate=False must not alter an active older runtime's database.
             self.db.executescript(
+                "CREATE TABLE IF NOT EXISTS engine_accounting("
+                "run_id INTEGER PRIMARY KEY REFERENCES engine_runs(id),"
+                "scope TEXT NOT NULL, reported_cost REAL, usage_json TEXT, ttl_json TEXT, quality TEXT NOT NULL);"
                 "CREATE INDEX IF NOT EXISTS inquiry_status ON inquiries(status,id);"
                 "CREATE INDEX IF NOT EXISTS audit_inquiry_action_detail ON audit(inquiry_id,action,detail);"
                 "CREATE INDEX IF NOT EXISTS inquiry_thread ON inquiries(thread_key,id);"
@@ -410,12 +413,13 @@ class Store:
                 "SELECT COALESCE(SUM(COALESCE(cost_usd,reserved)),0) FROM engine_runs WHERE day=?",
                 (day,),
             ).fetchone()[0]
-            amount = min(maximum, daily - used)
-            if amount < 0.01:
+            options = [v for v in (maximum, daily - used if daily is not None else None) if v is not None]
+            amount = min(options) if options else None
+            if amount is not None and amount < 0.01:
                 raise BotError("daily_budget_exceeded")
             ident = db.execute(
                 "INSERT INTO engine_runs(inquiry_id,resumed,reserved,started_at,day) VALUES(?,?,?,?,?)",
-                (inquiry, int(resumed), amount, now, day),
+                (inquiry, int(resumed), amount if amount is not None else 0, now, day),
             ).lastrowid
             return ident, amount
 
@@ -454,11 +458,31 @@ class Store:
                 (ident, actor, "developer_result_received", str(new_job), self.clock()),
             )
 
-    def finish_run(self, ident, *, cost=None, session=None, ok=False, error=None, duration=0):
+    def finish_run(self, ident, *, cost=None, session=None, ok=False, error=None, duration=0,
+                   cost_scope="call", usage=None, cache_ttl_usage=None):
+        from .accounting import bounded_metrics, incremental_cost
+
         with self.tx() as db:
+            row = db.execute("SELECT * FROM engine_runs WHERE id=?", (ident,)).fetchone()
+            if not row or row["finished"]:
+                return
+            previous = None
+            if cost_scope == "session" and session:
+                previous = db.execute(
+                    "SELECT a.reported_cost FROM engine_accounting a JOIN engine_runs r ON r.id=a.run_id "
+                    "WHERE r.session_id=? AND a.scope='session' AND r.finished=1 ORDER BY r.id DESC LIMIT 1",
+                    (session,),
+                ).fetchone()
+            delta, quality = incremental_cost(cost, cost_scope, bool(row["resumed"]),
+                                              previous[0] if previous else None)
+            db.execute(
+                "INSERT INTO engine_accounting VALUES(?,?,?,?,?,?)",
+                (ident, cost_scope, cost, json.dumps(bounded_metrics(usage)),
+                 json.dumps(bounded_metrics(cache_ttl_usage, ttl=True)), quality),
+            )
             db.execute(
                 "UPDATE engine_runs SET cost_usd=?,session_id=?,ok=?,error=?,duration_ms=?,finished=1 WHERE id=? AND finished=0",
-                (cost, session, int(ok), error, duration, ident),
+                (delta, session, int(ok), error, duration, ident),
             )
 
     def save_draft(

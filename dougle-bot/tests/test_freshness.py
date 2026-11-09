@@ -272,8 +272,16 @@ def test_plain_set_live_receipt_cannot_bypass_automatic_hold():
     assert "live" in held["verification"]["missing"]
 
 
-@pytest.mark.parametrize("status", ["needs_lookup", "cannot_answer"])
+@pytest.mark.parametrize("status", ["needs_lookup"])
 def test_existing_unresolved_output_unchanged(status):
     value = answer()
     value["status"] = status
     assert convert_unverified_live(value, observed({"rows": []})) is value
+
+
+def test_cannot_answer_cannot_publish_unverified_live_claim():
+    value = answer()
+    value["status"] = "cannot_answer"
+    changed = convert_unverified_live(value, observed({"rows": []}))
+    assert changed["status"] == "needs_lookup"
+    assert "17" not in changed["body"]

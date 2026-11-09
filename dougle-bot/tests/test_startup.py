@@ -57,7 +57,7 @@ def test_bounded_probe_does_not_resume_a_customer_session(app):
     value = check_engine(app.cfg.engine, app.store, engine)
     assert value["phase"] == "ready" and value["connections"] is None
     assert engine.calls[0][1:] == (None, app.cfg.engine.max_budget_usd_per_call)
-    assert engine.timeouts == [90]
+    assert engine.timeouts == [None]
     assert all(skill in engine.calls[0][0] for skill in app.cfg.engine.required_skills)
     assert not app.store.all("SELECT * FROM threads")
     assert not app.store.all("SELECT * FROM inquiries")
@@ -66,7 +66,7 @@ def test_bounded_probe_does_not_resume_a_customer_session(app):
 def test_startup_probe_can_exceed_old_fixed_half_dollar_cap(app):
     engine = FakeEngine([result(app)])
     check_engine(app.cfg.engine, app.store, engine)
-    assert engine.calls[0][2] == 3.0
+    assert engine.calls[0][2] is None
 
 
 def test_startup_probe_uses_configured_call_cap(app):
@@ -103,7 +103,7 @@ def test_failed_probe_safe_report_and_no_unknown_cost_as_zero(app, failure):
         check_engine(app.cfg.engine, app.store, FakeEngine([BotError(failure)]))
     row = app.store.one("SELECT * FROM engine_runs")
     assert row["finished"] == 1 and row["cost_usd"] is None
-    assert row["reserved"] == app.cfg.engine.max_budget_usd_per_call
+    assert row["reserved"] == 0  # No configured reservation; observed cost remains unknown.
     assert latest_report(app.store)["phase"] == (
         "bot_stopped" if failure == "bot_stopped" else "engine_check"
     )
@@ -242,7 +242,7 @@ def test_probe_command_and_guard_preserve_alias_cwd_and_normal_policy(app):
     args = probe.command(None, 0.5, app.cfg.home / "policy.json")
     assert args[:5] == ["/bin/zsh", "-lic", 'claude-work "$@"', "dougle-launch", "-p"]
     assert args[args.index("--tools") + 1] == "Skill"
-    assert args[args.index("--max-turns") + 1] == "8"
+    assert "--max-turns" not in args
     assert "--resume" not in args
     assert json.loads(args[args.index("--json-schema") + 1])["required"] == ["ready"]
     policy = {"startup_probe": True, "skills": cfg.required_skills}

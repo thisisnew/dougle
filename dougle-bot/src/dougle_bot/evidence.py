@@ -10,6 +10,7 @@ import re
 from pathlib import PurePosixPath
 from urllib.parse import parse_qsl, unquote, urlencode, urlsplit
 
+from .bq_state import query_failure
 from .safety import BotError
 from .trusted_query import parse_complete_count_result, parse_count_all_sql
 
@@ -429,6 +430,13 @@ def github_read_metadata(args, body):
         return None
     if args.get("expected_commit") not in (None, commit):
         return None
+    start, end = value.get("start_line", 1), value.get("end_line", len(value["content"].splitlines()))
+    if type(start) is not int or type(end) is not int or start < 1 or end < start - 1:
+        return None
+    if ("start_line" in args or "end_line" in args) and (start != args.get("start_line") or end != args.get("end_line")):
+        return None
+    if end - start + 1 != len(value["content"].splitlines()):
+        return None
     return {
         "tool": "mcp__dougle_source__read_file",
         "content_type": "content",
@@ -436,7 +444,7 @@ def github_read_metadata(args, body):
         "repository": repository,
         "commit": commit,
         "requested_ref": ref,
-        "line_range": [1, len(value["content"].splitlines())],
+        "line_range": [start, end],
         "indirect": False,
     }
 
@@ -768,7 +776,7 @@ def read_receipts(raw):
                     and body
                     and not block.get("is_error")
                     and not failed_read(body)
-                    and not (name.endswith("__execute_sql_readonly") and _query_incomplete(body))
+                    and not (name.endswith("__execute_sql_readonly") and (_query_incomplete(body) or query_failure(body)))
                 ):
                     metadata = read_metadata(name, args, body)
                     if (

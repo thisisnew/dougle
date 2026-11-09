@@ -27,6 +27,14 @@ ID = re.compile(r"[0-9a-f]{32}")
 STAGED_FILES = "files/.dougle"
 
 
+def protected_metadata(relative):
+    parts = Path(relative).parts
+    return bool(parts) and (
+        parts[0].casefold() in {"sources", "sharing", "ledger", "bindings", "registries", ".git"}
+        or Path(relative).name.casefold() in {"binding.md", "bq-sync-registry.md"}
+    )
+
+
 def safe_path(root, relative):
     """Reject traversal and every existing symlink below a trusted root."""
     root = Path(root)
@@ -278,6 +286,8 @@ def _redirect(policy, name, args):
     root = files if raw.is_relative_to(files) else memory
     relative = raw.relative_to(root).as_posix()
     safe_path(root, relative)
+    if name in {"Write", "Edit"} and protected_metadata(relative):
+        raise BotError("protected_memory_metadata")
     with _lock(safe_path(area, "session.lock")):
         record = _load(area)
         if record["state"] != "open":
@@ -389,6 +399,8 @@ def _finalize(area, record):
             raise BotError("memory_staged_file_missing")
         if _hash(current) == base_hash:
             continue
+        if protected_metadata(relative):
+            raise BotError("protected_memory_metadata")
         _content(current)
         check_content(relative, personal=True)
         base = _read(safe_path(area, "base/" + relative))
@@ -464,6 +476,10 @@ def _commit(area, record):
 
     def conflict():
         _rollback(area, record)
+
+    if any(protected_metadata(relative) for relative in changes):
+        conflict()
+        return
 
     # Check *all* read dependencies before modifying any shared file. During recovery,
     # journaled intent allows a file already replaced just before a crash to match new.

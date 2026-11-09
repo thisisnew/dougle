@@ -21,7 +21,7 @@ OUT = ROOT / ".tools/scenario-run-20261107/host"
 CATALOG = json.loads((ROOT / "docs/scenarios/catalog.json").read_text())["cases"]
 
 
-def run(ids, label, policy="baseline", *, source_check_available=True):
+def run(ids, label, policy="baseline", *, source_check_available=True, model=None, effort=None):
     cases = [c for c in CATALOG if c["id"] in ids]
     assert len(cases) == len(ids)
     out = OUT / label
@@ -129,6 +129,10 @@ REQUESTS:
         "-c",
         'web_search="disabled"',
     ]
+    if model:
+        cmd += ["--model", model]
+    if effort:
+        cmd += ["-c", f'model_reasoning_effort="{effort}"']
     for feature in (
         "shell_tool",
         "apps",
@@ -155,6 +159,9 @@ REQUESTS:
     ]
     record = {
         "kind": "host_skill_execution",
+        "model": model,
+        "effort": effort,
+        "initial_state_sha256": hashlib.sha256(json.dumps(state, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
         "policy": policy,
         "label": label,
         "case_ids": ids,
@@ -223,5 +230,7 @@ if __name__ == "__main__":
         "--policy", choices=("baseline", "bot-baseline", "compact", "compact-prefetch"), default="baseline"
     )
     p.add_argument("--disable-source-check", action="store_true")
+    p.add_argument("--model")
+    p.add_argument("--effort", choices=("low", "medium", "high"))
     a = p.parse_args()
-    run(a.ids.split(","), a.label, a.policy, source_check_available=not a.disable_source_check)
+    run(a.ids.split(","), a.label, a.policy, source_check_available=not a.disable_source_check, model=a.model, effort=a.effort)

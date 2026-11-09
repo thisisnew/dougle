@@ -103,7 +103,7 @@ def check_engine(config, store, engine, *, allow_unverified_readers=False):
                 "모두 로드하면 ready=true, 불가능하면 ready=false를 구조화 결과로 반환하세요.\n"
                 + json.dumps(list(config.required_skills), ensure_ascii=False)
             )
-        result = engine.run(prompt, None, budget, timeout_seconds=90)
+        result = engine.run(prompt, None, budget, timeout_seconds=config.timeout_seconds)
         if not set(config.execution_skills).issubset(result.activated):
             raise BotError("required_skills")
         if (
@@ -120,7 +120,9 @@ def check_engine(config, store, engine, *, allow_unverified_readers=False):
         if run_id is not None:
             store.finish_run(
                 run_id,
-                cost=result.cost_usd if result else None,
+                **({"cost": result.cost_usd, "session": result.session_id, "cost_scope": result.cost_scope,
+                   "usage": result.usage, "cache_ttl_usage": result.cache_ttl_usage}
+                   if result else getattr(exc, "accounting", {})),
                 error=phase,
                 duration=int((time.monotonic() - started) * 1000),
             )
@@ -128,6 +130,7 @@ def check_engine(config, store, engine, *, allow_unverified_readers=False):
     store.finish_run(
         run_id,
         cost=result.cost_usd,
+        cost_scope=result.cost_scope, usage=result.usage, cache_ttl_usage=result.cache_ttl_usage,
         session=result.session_id,
         ok=True,
         duration=int((time.monotonic() - started) * 1000),

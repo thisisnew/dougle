@@ -425,10 +425,14 @@ class Worker:
                         m for m in messages if Decimal(m["ts"]) > Decimal(inquiry["last_seen_ts"])
                     ]
                 progress.phase("prepare")
+                from .claim_index import candidates
+
+                navigation = candidates(self.memory_root, self.config.home / "claim-index.json", inquiry["question_text"])
                 text = prompt(
                     self.config.engine,
                     inquiry,
                     prompt_messages(context_messages),
+                    navigation=navigation,
                     instruction=payload.get("instruction", ""),
                     lookup=lookup,
                     restored=restored,
@@ -444,6 +448,7 @@ class Worker:
                 )
                 progress.sizes(prompt=len(text), prompt_bytes=len(text.encode("utf-8")))
                 start = time.monotonic()
+                result = None
                 try:
                     attempt += 1
                     progress.phase("retry" if attempt > 1 else "engine", attempt=attempt)
@@ -466,11 +471,19 @@ class Worker:
                             ident, "system", "memory_batch_failed", result.memory_error
                         )
                     progress.usage(result.usage)
+                    for failure in result.query_failures:
+                        self.store.audit(ident, "system", "query_failure", json.dumps({
+                            "reason": failure["reason"], "attempt": attempt, "run_id": run_id,
+                        }))
                     if progress.remaining(self.config.engine.timeout_seconds) <= 0:
                         raise BotError("engine_timeout")
                 except BotError as exc:
                     self.store.finish_run(
-                        run_id, error=exc.code, duration=int((time.monotonic() - start) * 1000)
+                        run_id, error=exc.code, duration=int((time.monotonic() - start) * 1000),
+                        **({"cost": result.cost_usd, "session": result.session_id,
+                            "cost_scope": result.cost_scope, "usage": result.usage,
+                            "cache_ttl_usage": result.cache_ttl_usage}
+                           if result is not None else getattr(exc, "accounting", {}))
                     )
                     if exc.code == "session_not_found" and session and not restored:
                         progress.retry("session")
@@ -493,6 +506,7 @@ class Worker:
                 self.store.finish_run(
                     run_id,
                     cost=result.cost_usd,
+                    cost_scope=result.cost_scope, usage=result.usage, cache_ttl_usage=result.cache_ttl_usage,
                     session=result.session_id,
                     ok=True,
                     duration=int((time.monotonic() - start) * 1000),
@@ -580,6 +594,13 @@ class Worker:
                             or "live" in required_evidence
                         ):
                             raise BotError("repair_changed_evidence")
+                    from .evidence_binding import bind_receipts
+
+                    rebound = []
+                    if presentation_repair is None and verification_repair is None:
+                        output, rebound = bind_receipts(output, result.reads)
+                    if rebound:
+                        self.store.audit(ident, "system", "receipt_binding_repaired", json.dumps({"run_id": run_id, "checks": rebound}))
                     validate_verification(
                         output,
                         repair_reads
@@ -794,6 +815,19 @@ class Worker:
                                 reason = "presentation"
                         except (BotError, TypeError, KeyError):
                             pass
+                    if reason == "research":
+                        locator_hints = []
+                        for receipt in result.reads.values():
+                            metadata = getattr(receipt, "metadata", {})
+                            locator = metadata.get("locator")
+                            if locator and metadata.get("content_type") == "content" and "live" not in receipt:
+                                locator_hints.append({"locator": locator, "lines": metadata.get("line_range"), "kinds": sorted(receipt)})
+                        if locator_hints:
+                            text_hint = json.dumps(locator_hints[:30], ensure_ascii=False)
+                            payload["instruction"] = payload.get("instruction", "") + (
+                                "\nPrevious attempt locator hints (not current-call receipts). "
+                                "Skip repeated discovery, but obtain current-call reads for every source used in the final answer. Do not use old receipt IDs: " + text_hint
+                            )
                     progress.retry(reason)
                     self.store.audit(
                         ident,

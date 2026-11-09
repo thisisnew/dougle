@@ -691,3 +691,24 @@ def test_init_fallback_denies_writes_even_with_owned_session_but_preserves_reads
         assert permitted(config, "Read", args)
         result = decision(config, {"tool_name": "Read", "tool_input": args})["hookSpecificOutput"]
         assert result["permissionDecision"] == "allow"
+
+
+def test_old_prepared_metadata_batch_cannot_bypass_new_write_boundary(space, monkeypatch):
+    home, root = space
+    target = root / 'sharing/binding.md'
+    target.parent.mkdir()
+    target.write_text('old base')
+    session = MemorySession(home, root)
+    original = memory.protected_metadata
+    monkeypatch.setattr(memory, 'protected_metadata', lambda relative: False)
+    # Simulate the pre-upgrade writer through the staging layer directly.
+    read(session, target)
+    staged = memory.redirect(policy(session), 'Write', {'file_path':str(target), 'content':'bad base'})
+    Path(staged['file_path']).write_text('bad base')
+    accept_batch(home, session.finish())
+    record = manifest(session)
+    memory._finalize(session.path, record)
+    monkeypatch.setattr(memory, 'protected_metadata', original)
+    assert drain_one(home)
+    assert target.read_text() == 'old base'
+    assert manifest(session)['state'] == 'conflict'

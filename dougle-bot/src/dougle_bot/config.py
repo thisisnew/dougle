@@ -65,10 +65,12 @@ class EngineConfig:
     claude_bin: str = "claude"
     model: str = ""
     workdir: str = "~/.dougle-bot/engine"
-    timeout_seconds: int = 900
-    max_turns: int = 60
-    max_budget_usd_per_call: float = 3.0
-    daily_budget_usd: float = 30.0
+    timeout_seconds: int | None = None
+    max_turns: int | None = None
+    max_budget_usd_per_call: float | None = None
+    daily_budget_usd: float | None = None
+    prompt_cache_ttl: str = ""
+    effort: str = ""
     max_parallel: int = 4
     allowed_tools: list[str] = field(default_factory=lambda: sorted(BUILTINS) + DEFAULT_READERS)
     disallowed_tools: list[str] = field(default_factory=lambda: ["Bash", "Agent", "Task"])
@@ -116,8 +118,6 @@ class Config:
             raise BotError("invalid_approval_setting")
         ranges = [
             (self.slack.thread_history_limit, 1, 500),
-            (self.engine.timeout_seconds, 10, 3600),
-            (self.engine.max_turns, 1, 200),
             (self.engine.parallelism_version, 1, 1),
         ]
         if any(type(v) is not int or not lo <= v <= hi for v, lo, hi in ranges):
@@ -127,8 +127,15 @@ class Config:
             or not 1 <= self.engine.max_parallel <= 2**63 - 1
         ):
             raise BotError("invalid_integer_setting")
+        for value in (self.engine.timeout_seconds, self.engine.max_turns):
+            if value is not None and (type(value) is not int or value < 1):
+                raise BotError("invalid_integer_setting")
+        if self.engine.prompt_cache_ttl not in ("", "5m", "1h") or self.engine.effort not in ("", "low", "medium", "high", "xhigh", "max"):
+            raise BotError("invalid_config")
         for v in (self.engine.max_budget_usd_per_call, self.engine.daily_budget_usd):
-            if type(v) not in (int, float) or not math.isfinite(v) or not 0 < v <= 1000:
+            if v is None:
+                continue
+            if type(v) not in (int, float) or not math.isfinite(v) or not v > 0:
                 raise BotError("invalid_budget")
         for value in (self.engine.claude_bin, self.engine.workdir):
             if not isinstance(value, str) or not value.strip() or any(ord(c) < 32 for c in value):
@@ -240,7 +247,7 @@ def save(config: Config, path: Path):
     }
     content = "\n".join(
         f"[{section}]\n"
-        + "\n".join(f"{k} = {json.dumps(v, ensure_ascii=False)}" for k, v in values.items())
+        + "\n".join(f"{k} = {json.dumps(v, ensure_ascii=False)}" for k, v in values.items() if v is not None)
         + "\n"
         for section, values in sections.items()
     )

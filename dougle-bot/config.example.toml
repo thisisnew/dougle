@@ -11,10 +11,9 @@ require_approval = false # 기본: 바로 답변, 도움이 필요한 문의만 
 claude_bin = "claude"
 model = ""
 workdir = "~/.dougle-bot/engine"
-timeout_seconds = 900
-max_turns = 60
-max_budget_usd_per_call = 3.0
-daily_budget_usd = 30.0
+# 비용·턴·총 시간은 기본 제한이 없습니다. 필요할 때만 명시하세요.
+prompt_cache_ttl = "" # 비교 시험: "5m" 또는 "1h"
+effort = "" # 비교 시 동일한 값을 명시하세요.
 max_parallel = 4
 parallelism_version = 1
 allowed_tools = ["Edit", "Glob", "Grep", "Read", "Skill", "WebFetch", "Write", "mcp__claude_ai_Google_Cloud_BigQuery__execute_sql_readonly", "mcp__claude_ai_Google_Cloud_BigQuery__get_table_info", "mcp__claude_ai_Google_Cloud_BigQuery__list_table_ids", "mcp__claude_ai_Google_Cloud_BigQuery__list_dataset_ids", "mcp__claude_ai_Google_Cloud_BigQuery__get_dataset_info", "mcp__claude_ai_Atlassian__getConfluencePage", "mcp__claude_ai_Atlassian__searchConfluenceUsingCql", "mcp__claude_ai_Slack__slack_read_thread", "mcp__claude_ai_Slack__slack_search_public"]

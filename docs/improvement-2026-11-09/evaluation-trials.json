@@ -1,0 +1,475 @@
+[
+  {
+    "case": "DG-ASK-017",
+    "repeat": 0,
+    "mode": "baseline",
+    "answer": "Alpha A센터의 일반 상품 공급사 안내 메일은 **승인 다음 날 오전 9시에 예약 발송됩니다.** 반려된 경우에는 반려 직후 즉시 안내합니다.\n\n수신 이메일이 등록되어 있지 않으면 두 경우 모두 발송하지 않습니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-baseline-017",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 309660,
+          "cached_input_tokens": 275584,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1162,
+          "reasoning_output_tokens": 41
+        }
+      }
+    ],
+    "question_sha256": "e9e9ff74fa594316da49bedb6f7c087d2badaf4bb3c372bdda28c1be98d9cd0b",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ab6980e5b08ed011350bc8e4b1d6606296e79135b9a2801369850019ce2e5be",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#017",
+    "reviewed_facts": [
+      "승인 다음 날 09:00 예약 발송",
+      "반려 직후 즉시 안내",
+      "수신 이메일 없음: 승인·반려 모두 미발송"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 56.19233775138855
+  },
+  {
+    "case": "DG-ASK-017",
+    "repeat": 0,
+    "mode": "candidate",
+    "answer": "Alpha A센터 일반 상품 업무에서는 승인 다음 날 오전 9시에 공급사 안내 메일이 예약 발송됩니다. 반려된 경우에는 반려 직후 즉시 안내합니다.\n\n수신 이메일이 등록되어 있지 않으면 승인·반려 안내 메일 모두 발송되지 않습니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-candidate-017-0",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 95389,
+          "cached_input_tokens": 77824,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 437,
+          "reasoning_output_tokens": 68
+        }
+      }
+    ],
+    "question_sha256": "e9e9ff74fa594316da49bedb6f7c087d2badaf4bb3c372bdda28c1be98d9cd0b",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ab6980e5b08ed011350bc8e4b1d6606296e79135b9a2801369850019ce2e5be",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#017",
+    "reviewed_facts": [
+      "승인 다음 날 09:00 예약 발송",
+      "반려 직후 즉시 안내",
+      "수신 이메일 없음: 승인·반려 모두 미발송"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 27.228844165802002
+  },
+  {
+    "case": "DG-ASK-017",
+    "repeat": 1,
+    "mode": "baseline",
+    "answer": "Alpha A센터 일반 상품의 공급사 안내 메일은 **승인 다음 날 오전 9시에 예약 발송됩니다.** 반려된 경우에는 반려 직후 즉시 안내합니다.\n\n수신 이메일이 등록되어 있지 않으면 두 메일 모두 발송되지 않습니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-baseline-017-1",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 287184,
+          "cached_input_tokens": 261760,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1251,
+          "reasoning_output_tokens": 38
+        }
+      }
+    ],
+    "question_sha256": "e9e9ff74fa594316da49bedb6f7c087d2badaf4bb3c372bdda28c1be98d9cd0b",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ab6980e5b08ed011350bc8e4b1d6606296e79135b9a2801369850019ce2e5be",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#017",
+    "reviewed_facts": [
+      "승인 다음 날 09:00 예약 발송",
+      "반려 직후 즉시 안내",
+      "수신 이메일 없음: 승인·반려 모두 미발송"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 59.39855885505676
+  },
+  {
+    "case": "DG-ASK-017",
+    "repeat": 1,
+    "mode": "candidate",
+    "answer": "Alpha A센터 일반 상품의 공급사 안내 메일은 승인 다음 날 오전 9시에 예약 발송됩니다. 반려된 경우에는 반려 직후 즉시 안내합니다.\n\n수신 이메일이 등록되어 있지 않으면 승인·반려 안내 메일 모두 발송되지 않습니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-candidate-017-1",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 94982,
+          "cached_input_tokens": 63360,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 321,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "question_sha256": "e9e9ff74fa594316da49bedb6f7c087d2badaf4bb3c372bdda28c1be98d9cd0b",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ab6980e5b08ed011350bc8e4b1d6606296e79135b9a2801369850019ce2e5be",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#017",
+    "reviewed_facts": [
+      "승인 다음 날 09:00 예약 발송",
+      "반려 직후 즉시 안내",
+      "수신 이메일 없음: 승인·반려 모두 미발송"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 24.03139901161194
+  },
+  {
+    "case": "DG-ASK-017",
+    "repeat": 2,
+    "mode": "baseline",
+    "answer": "Alpha A센터 일반 상품의 공급사 안내 메일은 **승인 다음 날 오전 9시에 예약 발송**됩니다. 반려된 경우에는 **반려 직후 즉시 안내**합니다.\n\n수신 이메일이 없으면 두 경우 모두 발송하지 않습니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-baseline-017-2",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 288057,
+          "cached_input_tokens": 240512,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1317,
+          "reasoning_output_tokens": 64
+        }
+      }
+    ],
+    "question_sha256": "e9e9ff74fa594316da49bedb6f7c087d2badaf4bb3c372bdda28c1be98d9cd0b",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ab6980e5b08ed011350bc8e4b1d6606296e79135b9a2801369850019ce2e5be",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#017",
+    "reviewed_facts": [
+      "승인 다음 날 09:00 예약 발송",
+      "반려 직후 즉시 안내",
+      "수신 이메일 없음: 승인·반려 모두 미발송"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 62.45356321334839
+  },
+  {
+    "case": "DG-ASK-017",
+    "repeat": 2,
+    "mode": "candidate",
+    "answer": "Alpha A센터 일반 상품의 공급사 안내 메일은 승인 다음 날 오전 9시에 예약 발송됩니다. 반려 안내 메일은 반려 직후 즉시 발송됩니다.\n\n수신 이메일이 등록되어 있지 않으면 두 메일 모두 발송되지 않습니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-candidate-017-2",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 95279,
+          "cached_input_tokens": 86528,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 391,
+          "reasoning_output_tokens": 63
+        }
+      }
+    ],
+    "question_sha256": "e9e9ff74fa594316da49bedb6f7c087d2badaf4bb3c372bdda28c1be98d9cd0b",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ab6980e5b08ed011350bc8e4b1d6606296e79135b9a2801369850019ce2e5be",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#017",
+    "reviewed_facts": [
+      "승인 다음 날 09:00 예약 발송",
+      "반려 직후 즉시 안내",
+      "수신 이메일 없음: 승인·반려 모두 미발송"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 23.17677903175354
+  },
+  {
+    "case": "DG-ASK-049",
+    "repeat": 0,
+    "mode": "baseline",
+    "answer": "Alpha A센터 일반 상품 업무 문서에 명시된 **폐기 예외는 다음 4가지입니다.**\n\n- **식품:** 품질팀의 별도 승인이 필요합니다.\n- **위험물:** 안전팀의 별도 절차를 따라야 합니다.\n- **보류 상품:** 보류를 해제하기 전에는 처리할 수 없습니다. 해제는 운영관리자만 가능하며, 센터 작업자에게는 권한이 없습니다.\n- **이미 완료된 건:** 중복 처리할 수 없습니다.\n\n추가로, **폐기 취소는 ‘신청대기’ 상태에서만 가능합니다.** ‘처리중’이나 ‘완료’ 상태에서는 취소할 수 없으므로 운영팀에 확인하셔야 합니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-baseline-049-0",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 225732,
+          "cached_input_tokens": 192000,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1339,
+          "reasoning_output_tokens": 101
+        }
+      }
+    ],
+    "question_sha256": "8adb2c66ba4fec7a8113f631ec63b9f7189ec4ad6a6474ad7260f27387cd9689",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ff516a62adcf8c28069c96ef9b5497b7f410055dcbd95576b1c7edef8a2cfd2",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#049",
+    "reviewed_facts": [
+      "식품: 품질팀 별도 승인",
+      "위험물: 안전팀 별도 절차",
+      "보류: 해제 전 처리 불가",
+      "보류 해제: 운영관리자만, 센터 작업자 권한 없음",
+      "완료: 중복 처리 불가",
+      "취소: 신청대기에서만 가능",
+      "처리중·완료 취소 불가: 운영팀 확인"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 63.71646523475647
+  },
+  {
+    "case": "DG-ASK-049",
+    "repeat": 0,
+    "mode": "candidate",
+    "answer": "Alpha A센터 업무 문서 v2에 명시된 폐기 예외는 다음 네 가지입니다.\n\n1. 식품은 품질팀의 별도 승인이 필요합니다. 문제 등록도 일반 단말기가 아닌, 품질팀 확인 후 별도 식품 접수 화면에서 진행해야 합니다.\n2. 위험물은 안전팀의 별도 절차를 따라야 합니다.\n3. 보류 상품은 보류를 해제하기 전까지 폐기할 수 없습니다. 해제는 운영관리자만 가능하며, 센터 작업자에게는 권한이 없습니다.\n4. 이미 완료된 건은 중복 처리할 수 없습니다.\n\n폐기 취소에도 제한이 있습니다. 신청대기 상태에서만 취소할 수 있으며, 처리중이거나 완료된 뒤에는 취소할 수 없으므로 운영팀에 확인해야 합니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-candidate-049-0",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 95438,
+          "cached_input_tokens": 77952,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 534,
+          "reasoning_output_tokens": 83
+        }
+      }
+    ],
+    "question_sha256": "8adb2c66ba4fec7a8113f631ec63b9f7189ec4ad6a6474ad7260f27387cd9689",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ff516a62adcf8c28069c96ef9b5497b7f410055dcbd95576b1c7edef8a2cfd2",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#049",
+    "reviewed_facts": [
+      "식품: 품질팀 별도 승인",
+      "식품: 일반 단말기 대신 품질팀 확인 후 별도 접수 화면",
+      "위험물: 안전팀 별도 절차",
+      "보류: 해제 전 처리 불가",
+      "보류 해제: 운영관리자만, 센터 작업자 권한 없음",
+      "완료: 중복 처리 불가",
+      "취소: 신청대기에서만 가능",
+      "처리중·완료 취소 불가: 운영팀 확인"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 28.746450185775757
+  },
+  {
+    "case": "DG-ASK-049",
+    "repeat": 1,
+    "mode": "baseline",
+    "answer": "Alpha A센터 일반 상품 업무 문서에 명시된 폐기 예외는 다음 네 가지입니다.\n\n- **식품**은 품질팀의 별도 승인이 필요합니다. 문제 등록도 일반 단말기가 아니라 품질팀 확인 후 별도 식품 접수 화면에서 진행합니다.\n- **위험물**은 안전팀의 별도 절차를 따라야 합니다.\n- **보류 상품**은 보류 해제 전에는 처리할 수 없습니다. 해제는 운영관리자만 할 수 있으며, 센터 작업자에게는 권한이 없습니다.\n- **이미 완료된 건**은 중복 처리할 수 없습니다.\n\n추가로, **폐기 취소는 ‘신청대기’ 상태에서만 가능합니다.** ‘처리중’이나 ‘완료’ 이후에는 취소할 수 없으므로 운영팀에 확인하셔야 합니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-baseline-049-1",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 256656,
+          "cached_input_tokens": 233600,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1461,
+          "reasoning_output_tokens": 94
+        }
+      }
+    ],
+    "question_sha256": "8adb2c66ba4fec7a8113f631ec63b9f7189ec4ad6a6474ad7260f27387cd9689",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ff516a62adcf8c28069c96ef9b5497b7f410055dcbd95576b1c7edef8a2cfd2",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#049",
+    "reviewed_facts": [
+      "식품: 품질팀 별도 승인",
+      "식품: 일반 단말기 대신 품질팀 확인 후 별도 접수 화면",
+      "위험물: 안전팀 별도 절차",
+      "보류: 해제 전 처리 불가",
+      "보류 해제: 운영관리자만, 센터 작업자 권한 없음",
+      "완료: 중복 처리 불가",
+      "취소: 신청대기에서만 가능",
+      "처리중·완료 취소 불가: 운영팀 확인"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 61.08526802062988
+  },
+  {
+    "case": "DG-ASK-049",
+    "repeat": 1,
+    "mode": "candidate",
+    "answer": "Alpha A센터 일반 상품 업무 문서에 명시된 폐기 예외는 다음 네 가지입니다.\n\n1. 식품은 품질팀의 별도 승인이 필요합니다. 문제 등록도 일반 단말기가 아니라 품질팀 확인 후 별도 식품 접수 화면에서 진행하셔야 합니다.\n2. 위험물은 안전팀의 별도 절차를 따라야 합니다.\n3. 보류 상품은 보류를 해제하기 전에는 처리할 수 없습니다. 해제는 운영관리자만 가능하며, 센터 작업자에게는 권한이 없습니다.\n4. 이미 완료된 건은 중복 처리할 수 없습니다.\n\n폐기 취소에도 제한이 있습니다. 신청대기 상태에서만 취소할 수 있으며, 처리중이나 완료 후에는 취소할 수 없으므로 운영팀에 확인하셔야 합니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-candidate-049-1",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 95642,
+          "cached_input_tokens": 88960,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 561,
+          "reasoning_output_tokens": 103
+        }
+      }
+    ],
+    "question_sha256": "8adb2c66ba4fec7a8113f631ec63b9f7189ec4ad6a6474ad7260f27387cd9689",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ff516a62adcf8c28069c96ef9b5497b7f410055dcbd95576b1c7edef8a2cfd2",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#049",
+    "reviewed_facts": [
+      "식품: 품질팀 별도 승인",
+      "식품: 일반 단말기 대신 품질팀 확인 후 별도 접수 화면",
+      "위험물: 안전팀 별도 절차",
+      "보류: 해제 전 처리 불가",
+      "보류 해제: 운영관리자만, 센터 작업자 권한 없음",
+      "완료: 중복 처리 불가",
+      "취소: 신청대기에서만 가능",
+      "처리중·완료 취소 불가: 운영팀 확인"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 51.380380153656006
+  },
+  {
+    "case": "DG-ASK-049",
+    "repeat": 2,
+    "mode": "baseline",
+    "answer": "Alpha A센터 일반 상품 업무 문서에 명시된 폐기 예외는 **4가지**입니다.\n\n- **식품:** 품질팀의 별도 승인이 필요합니다. 문제 등록도 일반 단말기가 아니라 품질팀 확인 후 별도 식품 접수 화면에서 진행합니다.\n- **위험물:** 안전팀의 별도 절차를 따라야 합니다.\n- **보류 상품:** 보류를 해제하기 전에는 처리할 수 없습니다. 해제는 운영관리자만 가능하며, 센터 작업자에게는 해제 권한이 없습니다.\n- **이미 완료된 건:** 중복 처리할 수 없습니다.\n\n폐기 취소에도 제한이 있습니다. **신청대기에서만 취소할 수 있으며**, 처리중이거나 완료된 뒤에는 취소할 수 없으므로 운영팀에 확인하셔야 합니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-baseline-049-2",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 262323,
+          "cached_input_tokens": 237312,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1362,
+          "reasoning_output_tokens": 135
+        }
+      }
+    ],
+    "question_sha256": "8adb2c66ba4fec7a8113f631ec63b9f7189ec4ad6a6474ad7260f27387cd9689",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ff516a62adcf8c28069c96ef9b5497b7f410055dcbd95576b1c7edef8a2cfd2",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#049",
+    "reviewed_facts": [
+      "식품: 품질팀 별도 승인",
+      "식품: 일반 단말기 대신 품질팀 확인 후 별도 접수 화면",
+      "위험물: 안전팀 별도 절차",
+      "보류: 해제 전 처리 불가",
+      "보류 해제: 운영관리자만, 센터 작업자 권한 없음",
+      "완료: 중복 처리 불가",
+      "취소: 신청대기에서만 가능",
+      "처리중·완료 취소 불가: 운영팀 확인"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 123.58442902565002
+  },
+  {
+    "case": "DG-ASK-049",
+    "repeat": 2,
+    "mode": "candidate",
+    "answer": "Alpha A센터 일반 상품 업무 문서에 명시된 폐기 예외는 다음 4가지입니다.\n\n1. 식품은 품질팀의 별도 승인이 필요합니다. 문제 등록도 일반 단말기가 아니라 품질팀 확인 후 별도 식품 접수 화면에서 진행합니다.\n2. 위험물은 안전팀의 별도 절차를 따라야 합니다.\n3. 보류 상품은 보류를 해제하기 전에는 처리할 수 없습니다. 해제는 운영관리자만 할 수 있으며, 센터 작업자에게는 권한이 없습니다.\n4. 이미 완료된 건은 중복 처리할 수 없습니다.\n\n폐기 취소에도 상태 제한이 있습니다. 신청대기에서만 취소할 수 있으며, 처리중이거나 완료된 뒤에는 취소할 수 없으므로 운영팀에 확인해야 합니다.",
+    "attempt_count": 1,
+    "attempts": [
+      {
+        "id": "improvement-20261109-candidate-049-2",
+        "provider": "codex",
+        "outcome": "success",
+        "usage": {
+          "input_tokens": 95224,
+          "cached_input_tokens": 77952,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 477,
+          "reasoning_output_tokens": 34
+        }
+      }
+    ],
+    "question_sha256": "8adb2c66ba4fec7a8113f631ec63b9f7189ec4ad6a6474ad7260f27387cd9689",
+    "source_sha256": "83aac12636cf75bdd456b77803f17ff1110aeca810ec4c4b32556fa103272923",
+    "initial_memory_sha256": "9ff516a62adcf8c28069c96ef9b5497b7f410055dcbd95576b1c7edef8a2cfd2",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "tools_sha256": "6694f85170ed6e9bdf00f79be641573940920cc771f02c6df26189c24f78fe76",
+    "review_status": "source_checked",
+    "review_reference": "model-originals.json#049",
+    "reviewed_facts": [
+      "식품: 품질팀 별도 승인",
+      "식품: 일반 단말기 대신 품질팀 확인 후 별도 접수 화면",
+      "위험물: 안전팀 별도 절차",
+      "보류: 해제 전 처리 불가",
+      "보류 해제: 운영관리자만, 센터 작업자 권한 없음",
+      "완료: 중복 처리 불가",
+      "취소: 신청대기에서만 가능",
+      "처리중·완료 취소 불가: 운영팀 확인"
+    ],
+    "unsupported_claims": [],
+    "evidence_verified": true,
+    "duration_seconds": 100.16378808021545
+  }
+]

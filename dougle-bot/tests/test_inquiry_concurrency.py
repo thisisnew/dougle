@@ -244,6 +244,8 @@ def test_p04_p08_lease_outlives_job_transition_and_prevents_slot_reuse(app, tran
 
 def test_p01_p02_p03_real_overlap_short_answer_first_third_waits_without_reservation(app):
     """P01/P02: B posts while A remains gated; P03/P15: C waits without a reservation."""
+    app.cfg = replace(app.cfg, engine=replace(app.cfg.engine, timeout_seconds=900))
+    app.worker.config = app.cfg
     automatic(app)
     ids = {label: enqueue(app, n, label) for n, label in enumerate("ABC", 1)}
     started = {label: threading.Event() for label in "ABC"}

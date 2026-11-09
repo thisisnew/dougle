@@ -33,6 +33,7 @@ INQUIRY_FAILURE_CODES = (
             "operation_failed",
             "processing_failed",
             "engine_failed",
+            "engine_budget_exceeded",
             "engine_launch_failed",
             "engine_output_too_large",
             "invalid_engine_output",
@@ -186,10 +187,16 @@ def usage_report(home, config_path, day):
                         complete = False
                     usage[key] += metric["total"] or 0
             complete = complete and reported_attempts == row["attempts"]
+            has_accounting = store.one("SELECT name FROM sqlite_master WHERE name='engine_accounting'")
+            uncertain_legacy = store.one(
+                "SELECT id FROM engine_runs WHERE inquiry_id IS ? AND day=? AND resumed=1 "
+                + ("AND id NOT IN (SELECT run_id FROM engine_accounting) " if has_accounting else "")
+                + "LIMIT 1", (inquiry_id, day),
+            )
             result.append({
                 "inquiry_id": inquiry_id,
                 "attempts": row["attempts"],
-                "cost_usd": row["cost_usd"] if row["cost_samples"] == row["attempts"] else None,
+                "cost_usd": row["cost_usd"] if row["cost_samples"] == row["attempts"] and not uncertain_legacy else None,
                 "usage": usage if complete else None,
             })
         known_cost = round(sum(row["cost_usd"] or 0 for row in result), 6)
@@ -291,6 +298,17 @@ def status(home, config_path):
                 # field/reason issues, run_id and attempt. Never merge unparsed JSON.
                 if (summary := safe_failure_summary(row["detail"])) is not None
             ]
+            result["recent_query_failures"] = []
+            for row in store.all("SELECT inquiry_id,detail FROM audit WHERE action='query_failure' ORDER BY id DESC LIMIT 10"):
+                try:
+                    item = json.loads(row["detail"])
+                    if (isinstance(item, dict) and isinstance(item.get("reason"), str)
+                        and item["reason"] in {"access_denied", "not_found", "query_error", "incomplete"}
+                        and type(item.get("attempt")) is int and type(item.get("run_id")) is int):
+                        result["recent_query_failures"].append({"inquiry_id": _inquiry_id(row["inquiry_id"]),
+                            "reason": item["reason"], "attempt": item["attempt"], "run_id": item["run_id"]})
+                except (ValueError, TypeError):
+                    pass
             result["recent_retry_reasons"] = [
                 {"inquiry_id": _inquiry_id(row["inquiry_id"]), **record}
                 for row in store.all(
@@ -383,6 +401,8 @@ def parser():
         if name in ("start", "run"):
             command.add_argument("--allow-unverified-readers", action="store_true")
     usage = sub.add_parser("usage")
+    usage.add_argument("--attempts", action="store_true")
+    usage.add_argument("--legacy-session-totals", action="store_true")
     usage.add_argument("--day", default=datetime.datetime.now(datetime.UTC).date().isoformat())
     d = sub.add_parser("doctor")
     d.add_argument("--online", action="store_true")
@@ -399,6 +419,7 @@ def parser():
     r.add_argument("inquiry_id", type=int)
     a = sub.add_parser("ask")
     a.add_argument("question", nargs="?")
+    sub.add_parser("index-build")
     graph = sub.add_parser("graph-build")
     graph.add_argument("repository")
     graph.add_argument("ref")
@@ -415,7 +436,21 @@ def execute(args, secrets=None):
     if args.command == "status":
         return status(home, path)
     if args.command == "usage":
-        return usage_report(home, path, args.day)
+        value = usage_report(home, path, args.day)
+        if args.attempts or args.legacy_session_totals:
+            from .accounting import report_runs
+            cfg = load(path)
+            store = Store(cfg.home / "bot.db", migrate=False)
+            try:
+                value["runs"] = report_runs(store, args.day, legacy_session_totals=args.legacy_session_totals)
+                value["corrected_estimated_total_usd"] = (
+                    round(sum(r["estimated_increment_usd"] for r in value["runs"]), 12)
+                    if all(r["estimated_increment_usd"] is not None for r in value["runs"]) else None
+                )
+                value["estimate_notice"] = "제공자 추정 비용이며 실제 청구액이 아닙니다. 과거 행은 변경하지 않습니다."
+            finally:
+                store.close()
+        return value
     if args.command == "secrets":
         if args.action == "guide":
             return {
@@ -452,6 +487,9 @@ def execute(args, secrets=None):
             "menu": ["1. 시작", "2. 상태 확인", "3. 중지", "4. 채널 추가"],
         }
     cfg = load(path)
+    if args.command == "index-build":
+        from .claim_index import build_index
+        return build_index(Path.home() / ".dougle", cfg.home / "claim-index.json")
     if args.command == "graph-build":
         from .graphify_index import GraphError, build_graph
 

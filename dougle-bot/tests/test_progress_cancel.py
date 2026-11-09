@@ -324,6 +324,8 @@ def test_periodic_progress_updates_same_dm_and_never_overwrites_final(app):
 
 
 def test_retries_share_one_deadline(app, monkeypatch):
+    app.cfg = replace(app.cfg, engine=replace(app.cfg.engine, timeout_seconds=900))
+    app.worker.config = app.cfg
     import dougle_bot.worker as worker
 
     now = [0]
@@ -346,6 +348,8 @@ def test_retries_share_one_deadline(app, monkeypatch):
 
 
 def test_expired_total_budget_prevents_retry(app, monkeypatch):
+    app.cfg = replace(app.cfg, engine=replace(app.cfg.engine, timeout_seconds=900))
+    app.worker.config = app.cfg
     import dougle_bot.worker as worker
 
     now = [0]

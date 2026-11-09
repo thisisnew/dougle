@@ -15,6 +15,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Protocol
 
+from .bq_state import failed_queries
 from .compact_policy import COMPACT_POLICY
 from .config import BUILTINS, private_dir
 from .evidence import read_receipts
@@ -38,6 +39,9 @@ class EngineResult:
     memory_batch: str | None = None
     memory_error: str | None = None
     policy_digest: str | None = None
+    query_failures: list = field(default_factory=list)
+    cost_scope: str = "call"
+    cache_ttl_usage: dict | None = None
 
 
 def token_usage(value):
@@ -59,6 +63,14 @@ def token_usage(value):
     }
 
 
+def cache_ttl_usage(value):
+    raw = value.get("cache_creation") if isinstance(value, dict) else None
+    if not isinstance(raw, dict):
+        return None
+    return {key: raw[key] if type(raw.get(key)) is int and 0 <= raw[key] <= 10**12 else None
+            for key in ("ephemeral_5m_input_tokens", "ephemeral_1h_input_tokens")}
+
+
 class Engine(Protocol):
     def run(
         self,
@@ -71,6 +83,27 @@ class Engine(Protocol):
         timeout_seconds=None,
         cancel_requested=None,
     ) -> EngineResult: ...
+
+
+def trace_accounting(raw):
+    result = None
+    for line in raw.splitlines():
+        try:
+            item = json.loads(line)
+        except (ValueError, UnicodeError):
+            continue
+        if isinstance(item, dict) and item.get('type') == 'result':
+            result = item
+    if result is None:
+        return {}
+    session = result.get('session_id')
+    try:
+        uuid.UUID(session)
+    except (ValueError, TypeError, AttributeError):
+        session = None
+    return {'cost': valid_cost(result.get('total_cost_usd')), 'session': session,
+            'cost_scope': 'session', 'usage': token_usage(result.get('usage')),
+            'cache_ttl_usage': cache_ttl_usage(result.get('usage'))}
 
 
 def parse_trace(raw: bytes):
@@ -144,26 +177,37 @@ def parse_trace(raw: bytes):
                     successful.add(calls[block["tool_use_id"]])
     if not result:
         raise BotError("invalid_engine_output")
+    def failure(code):
+        error = BotError(code)
+        error.accounting = {
+            "cost": valid_cost(result.get("total_cost_usd")),
+            "session": result.get("session_id"),
+            "cost_scope": "session",
+            "usage": token_usage(result.get("usage")),
+            "cache_ttl_usage": cache_ttl_usage(result.get("usage")),
+        }
+        return error
+
     if result.get("is_error") or result.get("subtype", "success") != "success":
         errors = str(result.get("result", "")) + " " + str(result.get("errors", ""))
         if result.get("subtype") == "error_max_budget_usd" or re.search(
             r"max.?budget|budget.{0,40}(?:exceed|limit|초과)", errors, re.I
         ):
-            raise BotError("engine_budget_exceeded")
+            raise failure("engine_budget_exceeded")
         if re.search(
             r"image.{0,80}(?:invalid|decode|process|too large|exceed)|(?:invalid|decode).{0,40}image",
             errors,
             re.I,
         ):
-            raise BotError("image_input_failed")
+            raise failure("image_input_failed")
         if re.search(r"(?:No conversation found|session.{0,40}not found)", errors, re.I):
-            raise BotError("session_not_found")
-        raise BotError("engine_failed")
+            raise failure("session_not_found")
+        raise failure("engine_failed")
     session = result.get("session_id")
     try:
         uuid.UUID(session)
     except (ValueError, TypeError, AttributeError):
-        raise BotError("invalid_session") from None
+        raise failure("invalid_session") from None
     return EngineResult(
         session,
         result.get("structured_output"),
@@ -172,6 +216,9 @@ def parse_trace(raw: bytes):
         read_receipts(raw),
         connections,
         token_usage(result.get("usage")),
+        query_failures=failed_queries(raw),
+        cost_scope="session",
+        cache_ttl_usage=cache_ttl_usage(result.get("usage")),
     )
 
 
@@ -234,11 +281,13 @@ class ClaudeCliEngine:
             ",".join(
                 sorted(set(cfg.disallowed_tools) | {"Bash", "Agent", "Task"} | ({"Skill"} if compact else set()))
             ),
-            "--max-turns",
-            str(min(cfg.max_turns, 8) if self.startup_probe else cfg.max_turns),
-            "--max-budget-usd",
-            str(budget),
         ]
+        if cfg.max_turns is not None:
+            args += ["--max-turns", str(cfg.max_turns)]
+        if budget is not None:
+            args += ["--max-budget-usd", str(budget)]
+        if cfg.effort:
+            args += ["--effort", cfg.effort]
         if compact or cfg.isolated_cli:
             # Explicit per-call hooks still come from --settings. Do not use
             # --strict-mcp-config: account connectors may supply the approved
@@ -479,6 +528,8 @@ class ClaudeCliEngine:
             and not re.search(r"xox[baprs]-|xapp-", v)
         }
         env.pop("CLAUDECODE", None)
+        if self.config.prompt_cache_ttl:
+            env["CLAUDE_CODE_PROMPT_CACHE_TTL"] = self.config.prompt_cache_ttl
         try:
             proc = self.popen(
                 self.command(session, budget, settings, images=bool(images)),
@@ -496,11 +547,8 @@ class ClaudeCliEngine:
         start = time.monotonic()
         streams = None
         telemetry = StreamProgress(on_progress or (lambda event: None))
-        limit = (
-            min(self.config.timeout_seconds, timeout_seconds)
-            if timeout_seconds is not None
-            else self.config.timeout_seconds
-        )
+        limits = [v for v in (self.config.timeout_seconds, timeout_seconds) if v is not None]
+        limit = min(limits) if limits else float("inf")
         try:
             # stdin is bounded; write in its own selector to avoid full-pipe deadlock.
             streams = selectors.DefaultSelector()
@@ -583,6 +631,10 @@ class ClaudeCliEngine:
                     if "code" in receipt and hasattr(receipt, "metadata"):
                         receipt.metadata["source_policy"] = source_policy
             return result
+        except BotError as exc:
+            if not hasattr(exc, "accounting"):
+                exc.accounting = trace_accounting(bytes(out))
+            raise
         finally:
             if streams is not None:
                 streams.close()

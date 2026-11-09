@@ -115,17 +115,19 @@ def test_successful_fake_process_records_applied_policy_digest(tmp_path, monkeyp
     (memory_root / "index.md").write_text("Alpha → knowledge/T001.md\n")
     monkeypatch.setattr(Path, "home", classmethod(lambda cls: user_home))
     prompt_capture = tmp_path / "prompt.txt"
+    env_capture = tmp_path / "ttl.txt"
     script = tmp_path / "fake-cli"
     script.write_text(
         f"#!{sys.executable}\n"
-        "import json,sys\n"
+        "import json,sys,os\n"
+        f"open({str(env_capture)!r},'w').write(os.environ.get('CLAUDE_CODE_PROMPT_CACHE_TTL',''))\n"
         f"open({str(prompt_capture)!r},'w').write(sys.stdin.read())\n"
         f"print(json.dumps({{'type':'result','session_id':{SESSION!r},"
         "'structured_output':{'status':'answered'},'subtype':'success'}))\n"
     )
     script.chmod(0o700)
     config = replace(
-        EngineConfig(), compact_policy=True, claude_bin=str(script),
+        EngineConfig(), compact_policy=True, claude_bin=str(script), prompt_cache_ttl="5m",
         workdir=str(tmp_path / "engine"),
     )
     policy_dir = tmp_path / "policy"
@@ -133,6 +135,7 @@ def test_successful_fake_process_records_applied_policy_digest(tmp_path, monkeyp
     result = ClaudeCliEngine(config, tmp_path)._run_call(
         "synthetic", None, 1, policy_dir=policy_dir, memory=None
     )
+    assert env_capture.read_text() == "5m"
     assert result.policy_digest == COMPACT_POLICY_DIGEST
     assert result.activated == set()
     policy = json.loads((policy_dir / "tools.json").read_text())

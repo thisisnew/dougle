@@ -236,7 +236,7 @@ def test_session_not_found_gets_only_one_fresh_retry(app):
         ("max_parallel", -1),
         ("max_parallel", True),
         ("timeout_seconds", 0),
-        ("max_turns", 201),
+        ("max_turns", 0),
         ("daily_budget_usd", float("nan")),
         ("max_budget_usd_per_call", -1),
         ("claude_bin", "claude; echo secret"),

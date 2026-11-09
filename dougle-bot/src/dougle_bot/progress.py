@@ -348,7 +348,7 @@ class Progress:
             )
 
     def remaining(self, limit):
-        return max(0.0, limit - (self.clock() - self.started))
+        return float("inf") if limit is None else max(0.0, limit - (self.clock() - self.started))
 
 
 class StreamProgress:

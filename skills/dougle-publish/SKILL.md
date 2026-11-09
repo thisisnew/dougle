@@ -17,6 +17,8 @@ For large collections, follow the sharing protocol's inventory/changed-projectio
 
 A sensitive-data finding or incomplete/failed check blocks the entire publish, including private targets. Do not auto-redact and continue or claim a pass from reading instructions. Complete staged-content semantic review AND run the bundled local shell scanner successfully for the exact final package immediately before upload. A changed stage invalidates the previous review/receipt. If a shell/tool is unavailable, do not publish.
 
+Read [publication invariants](references/publication-check.md), prepare the four snapshots, and run the bundled structural gate for the exact staged package. Commit its publication manifest and ledger with the same package. This gate does not replace source meaning review or the sensitive-data scan.
+
 Reconcile existing remote knowledge before committing. Preserve teammates' additions and local user corrections. Record contradictions; do not resolve by timestamp. Apply the merged result directly without a PR; branch protection is a stop condition, not permission to bypass it. Use checked-base writes/normal fast-forward pushes, never force push or modify the source project checkout. Stop when the safe write capability or required disclosure approval is missing.
 
 Verify the resulting remote commit, then reconcile affected shared claims locally before advancing the common comparison base. A push receipt and a fully synchronized base are separate checkpoints. On a rejected/ambiguous upload, inspect remote state before a bounded retry. Report the commit link and exact scope, exclusions and unresolved conflicts. No automatic background push follows.

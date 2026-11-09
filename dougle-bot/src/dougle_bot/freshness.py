@@ -91,7 +91,7 @@ def _verified_whole_table_count(output, reads, question, report):
 
 def convert_unverified_live(output, reads, report=False, *, question=None):
     """After receipt validation, render a proved count or hold unproved live data."""
-    if output["status"] != "answered":
+    if output["status"] not in {"answered", "cannot_answer"}:
         return output
-    verified = _verified_whole_table_count(output, reads, question, report)
+    verified = _verified_whole_table_count(output, reads, question, report) if output["status"] == "answered" else None
     return verified if verified is not None else _hold_unverified_live(output, reads)

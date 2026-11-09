@@ -249,7 +249,7 @@ class GitHubReader:
             "complete": True,
         }
 
-    def read_file(self, repository, ref, path, expected_commit=None):
+    def read_file(self, repository, ref, path, expected_commit=None, start_line=None, end_line=None):
         if (
             not isinstance(path, str)
             or not 0 < len(path) <= 4096
@@ -311,7 +311,16 @@ class GitHubReader:
         except (KeyError, ValueError, TypeError):
             raise ReaderError("invalid_github_blob") from None
         self._remember(endpoint, blob)
+        lines = content.splitlines(keepends=True)
+        coverage = {}
+        if start_line is not None or end_line is not None:
+            if (type(start_line) is not int or type(end_line) is not int
+                or not 1 <= start_line <= end_line <= len(lines)):
+                raise ReaderError("invalid_line_range")
+            content = "".join(lines[start_line - 1:end_line])
+            coverage = {"start_line": start_line, "end_line": end_line, "total_lines": len(lines)}
         return {
+            **coverage,
             **self._metadata(repository, ref, commit, "file", path),
             "path": path,
             "blob_sha": tree,
@@ -356,8 +365,9 @@ def tool_definitions(graph_enabled=False):
             ),
             (
                 "read_file",
-                "Read a regular UTF-8 file at the remote registered ref, pinned to a commit.",
-                {**properties, "path": {"type": "string"}, "expected_commit": {"type": "string"}},
+                "Read UTF-8 code at a pinned remote commit; optional start_line/end_line return only that range. Extend through complete conditions and dependencies.",
+                {**properties, "path": {"type": "string"}, "expected_commit": {"type": "string"},
+                 "start_line": {"type": "integer", "minimum": 1}, "end_line": {"type": "integer", "minimum": 1}},
                 ["repository", "ref", "path"],
             ),
         )
@@ -409,7 +419,7 @@ def dispatch(reader, method, params):
         if (
             not isinstance(args, dict)
             or not set(schema["required"]) <= set(args) <= set(schema["properties"])
-            or any(not isinstance(value, str) for value in args.values())
+            or any((type(value) is not int if schema["properties"][key].get("type") == "integer" else not isinstance(value, str)) for key, value in args.items())
         ):
             raise ReaderError("invalid_arguments")
         result = getattr(reader, name)(**args)

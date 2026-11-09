@@ -126,8 +126,11 @@ def _permitted(policy, name, args):
         raw_path = Path(raw).expanduser()
         if not raw_path.is_absolute() or ".." in raw_path.parts or _sensitive_path(raw_path):
             return False
+        from .memory import protected_metadata
+
         if _owned_files(policy, raw_path):
-            return raw_path != session_area(policy) / STAGED_FILES
+            files = session_area(policy) / STAGED_FILES
+            return raw_path != files and not protected_metadata(raw_path.relative_to(files))
         target = raw_path.resolve()
         memory_path = Path(policy["memory"]).expanduser()
         if memory_path.is_symlink():
@@ -138,7 +141,7 @@ def _permitted(policy, name, args):
         if not raw_path.is_relative_to(memory) or target == memory:
             return False
         safe_path(memory, raw_path.relative_to(memory))
-        return True
+        return not protected_metadata(raw_path.relative_to(memory))
     if name in ("Read", "Grep", "Glob"):
         raw = args.get("file_path", "") if name == "Read" else args.get("path", "")
         if not isinstance(raw, str) or not raw:

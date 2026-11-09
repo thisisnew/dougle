@@ -1,6 +1,6 @@
 # Dougle Slack 봇
 
-현재 프리뷰 **스킬 0.8.28 / 봇 0.1.25**는 등록된 GitHub 코드의 호출 경로 탐색에 선택형 Graphify 그래프를 추가했습니다. 그래프는 파일 후보를 찾는 데만 쓰며 답변 근거는 지정 ref의 원격 커밋 원문을 다시 읽어 확인합니다. 0.8.26의 [Codex 합성 평가](../docs/dougle-bot/token-consistency-codex-pilot.md)에서는 10개 질문의 입력·출력 토큰 합계가 60.28% 줄었습니다. 회사 Claude에서 Graphify의 실제 효과와 토큰 절감률은 아직 측정하지 않았습니다.
+현재 프리뷰 **스킬 0.8.29 / 봇 0.1.26**는 등록된 GitHub 코드의 호출 경로 탐색에 선택형 Graphify 그래프를 추가했습니다. 그래프는 파일 후보를 찾는 데만 쓰며 답변 근거는 지정 ref의 원격 커밋 원문을 다시 읽어 확인합니다. 0.8.26의 [Codex 합성 평가](../docs/dougle-bot/token-consistency-codex-pilot.md)에서는 10개 질문의 입력·출력 토큰 합계가 60.28% 줄었습니다. 회사 Claude에서 Graphify의 실제 효과와 토큰 절감률은 아직 측정하지 않았습니다.
 
 회사 서버에서 운영할 계획은 [서버 전환 설계 · TO-BE](../docs/server/README.md)를 참고해 주세요. 아래는 현재 로컬 봇의 사용법입니다.
 
@@ -72,7 +72,7 @@ security add-generic-password -U -a dougle-bot -s dougle-bot.slack-app-token -w
 
 등록된 자료 연결에 문제가 있으면 **복구 후 시작**하거나 **이번에는 미확인 연결을 둔 채 시작**할 수 있습니다. 필수 항목은 건너뛸 수 없습니다. 연결됐다는 표시는 실제 코드·DB 조회 권한을 보장하지 않으므로, 답변할 때 필요한 근거 확인은 그대로 수행합니다.
 
-Claude 점검에는 최대90초·8턴 한도를 둡니다. 시작 점검만의 고정 비용 상한은 없으며 설정한 호출 한도와 남은 일일 예산을 따릅니다. 업무 자료를 조회하거나 시험 답글을 보내지 않습니다. 상태 확인은 AI를 추가 호출하지 않습니다. [점검 범위와 복구 안내](../docs/dougle-bot/startup-checks.md)
+Claude 점검에는 기본 시간·턴·비용 상한이 없으며 설정한 호출 한도와 남은 일일 예산을 따릅니다. 업무 자료를 조회하거나 시험 답글을 보내지 않습니다. 상태 확인은 AI를 추가 호출하지 않습니다. [점검 범위와 복구 안내](../docs/dougle-bot/startup-checks.md)
 
 ## 업데이트 적용
 
@@ -125,7 +125,7 @@ uv run --project dougle-bot dougle-bot status
 uv run --project dougle-bot dougle-bot stop
 ```
 
-비밀이 아닌 설정은 `~/.dougle-bot/config.toml`에 저장합니다. [설정 예시](config.example.toml)에서 Claude 명령·모델·읽기 도구·예산을 조정할 수 있습니다. `--home`과 `--config`는 하위 명령 앞에 넣습니다. 0.1.25의 기본 문의 동시 처리 수는 4입니다. 표식 없는 이전 `max_parallel = 1`은 설정을 읽을 때 메모리에서만 4로 적용하며 파일을 자동으로 다시 쓰지 않습니다. 한 문의씩 처리하려면 기존 `[engine]`에 `max_parallel = 1`과 `parallelism_version = 1`을 함께 명시하세요. 표식이 있는 명시적 1은 유지하며 정상 설정 저장 시 표식도 저장합니다. 같은 스레드는 순서를 지키고 지식 변경은 임시 저장 후 백그라운드에서 순차 반영합니다. 최종 검증 결과는 별도로 기록합니다.
+비밀이 아닌 설정은 `~/.dougle-bot/config.toml`에 저장합니다. [설정 예시](config.example.toml)에서 Claude 명령·모델·읽기 도구·예산을 조정할 수 있습니다. `--home`과 `--config`는 하위 명령 앞에 넣습니다. 0.1.26의 기본 문의 동시 처리 수는 4입니다. 표식 없는 이전 `max_parallel = 1`은 설정을 읽을 때 메모리에서만 4로 적용하며 파일을 자동으로 다시 쓰지 않습니다. 한 문의씩 처리하려면 기존 `[engine]`에 `max_parallel = 1`과 `parallelism_version = 1`을 함께 명시하세요. 표식이 있는 명시적 1은 유지하며 정상 설정 저장 시 표식도 저장합니다. 같은 스레드는 순서를 지키고 지식 변경은 임시 저장 후 백그라운드에서 순차 반영합니다. 최종 검증 결과는 별도로 기록합니다.
 
 `approver_user_id`는 호환을 위해 유지한 내부 확인 담당자 설정입니다. 자동 모드 전환에 새 토큰이나 Slack 권한은 필요하지 않습니다. 조회 요청의 SQL은 런타임이 실행하지 않으며, 허용된 읽기 도구를 통한 AI 조회와 개발자 보고를 구분합니다. 환경을 고쳤다는 보고만으로 원본 확인을 대신하지 않습니다.
 
@@ -133,7 +133,7 @@ uv run --project dougle-bot dougle-bot stop
 
 `recent_timings`는 관측한 단계별 시간이며 순수 추론 시간이나 토큰 수가 아닙니다. 진행 로그는 최대 1MiB씩 3개로 순환하며 질문·자료 원문·토큰을 남기지 않습니다.
 
-`status`의 `recent_retry_reasons`는 최근 재시도의 시도 번호·분류·고정 오류 코드를 최대 10건 보여줍니다. 0.1.25부터 기록되는 재시도에만 적용되며 과거 문의의 사유를 소급해 복원하지 않습니다. `usage --day YYYY-MM-DD`는 문의별 토큰·비용 합계를 표시합니다.
+`status`의 `recent_retry_reasons`는 최근 재시도의 시도 번호·분류·고정 오류 코드를 최대 10건 보여줍니다. 0.1.26부터 기록되는 재시도에만 적용되며 과거 문의의 사유를 소급해 복원하지 않습니다. `usage --day YYYY-MM-DD`는 문의별 토큰·비용 합계를 표시합니다.
 
 </details>
 
@@ -152,3 +152,11 @@ uv run --project dougle-bot ruff check dougle-bot
 </details>
 
 [실행 명세](SPEC.md) · [자동 답변과 개발자 확인](../docs/dougle-bot/internal-handoff.md) · [근거 확인](../docs/dougle-bot/research-verification.md) · [속도 측정 범위](../docs/skills/large-corpus.md)
+
+## 0.1.26 실행별 진단과 범위 탐색
+
+`usage --day YYYY-MM-DD --attempts`는 실행별 입력·출력·캐시·TTL과 제공자 추정 비용을 표시합니다. 재개 세션의 누적 비용은 알려진 직전 기준에서 차분합니다. `--legacy-session-totals`는 과거 누적 동작을 확인한 기록의 읽기 전용 보정이며 원본 DB를 바꾸지 않습니다. 비용 추정과 실제 청구액은 다릅니다.
+
+`index-build`는 공통 지식의 제목별 원문 해시·행 범위 색인을 봇 폴더에 만듭니다. compact_policy에서 후보 탐색에 쓰며 오래되거나 손상된 색인은 기존 탐색으로 돌아갑니다. 원문·예외·의존관계 검증은 유지합니다. 등록 원격 GitHub `read_file`은 start_line/end_line으로 필요한 범위를 반환합니다. 전체 blob 검증은 그대로이므로 네트워크 다운로드 절감과 모델 입력 절감을 구분합니다.
+
+기본 시간·턴·비용 제한은 없습니다. 기존 명시 설정은 업데이트로 지우지 않습니다. `prompt_cache_ttl = "5m"` 또는 `"1h"`, `effort`는 선택 설정이며 비어 있으면 CLI 설정을 따릅니다. TTL은 비용/캐시 실험이며 토큰 50% 절감의 증명이 아닙니다. [개선 단계와 회사 시험](../docs/improvement-2026-11-09/PROGRESS.md)을 참고하세요.

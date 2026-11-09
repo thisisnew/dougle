@@ -1,0 +1,26 @@
+{
+  "accepted": true,
+  "errors": [],
+  "tokens": {
+    "baseline": 1637504,
+    "candidate": 574675
+  },
+  "failed_attempts": {
+    "baseline": 0,
+    "candidate": 0
+  },
+  "token_reduction": 0.6490542923864613,
+  "scope": "provided trials and external source review only; not production certification",
+  "actual_calls": 12,
+  "company_acceptance": "NOT_RUN",
+  "reviewer": "primary agent compared all answer bodies with observed synthetic originals",
+  "candidate_observed_wrong_claims": 0,
+  "candidate_observed_missing_required_facts": 0,
+  "baseline_missing_fact_occurrences": 1,
+  "same_wording_guaranteed": false,
+  "provider_cost": "not available; token counts are not subscription billing",
+  "baseline_findings": [
+    "incomplete_or_incorrect_baseline_facts",
+    "inconsistent_baseline_facts"
+  ]
+}
