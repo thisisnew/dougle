@@ -20,8 +20,9 @@
     "ruff": "PASS",
     "prescribedChecks": "PASS",
     "authenticatedDownload": "PASS byte-for-byte",
-    "ci": "PASS Python 3.12 and 3.13",
-    "localBotSkillInstall": "PASS 2 locations after exact prior-byte comparison and backup"
+    "ci": "PASS Python 3.12 and 3.13 on source and two verification commits",
+    "localBotSkillInstall": "PASS 2 locations after exact prior-byte comparison and backup",
+    "anonymousDownload": "PASS byte-for-byte"
   },
   "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime",
   "tokenGoal": "PASS synthetic Codex 10 paired cases; 60.28% reduction, 0 observed factual errors/required omissions",

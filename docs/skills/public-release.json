@@ -4,7 +4,7 @@
   "ci": "https://github.com/thisisnew/dougle/actions/runs/42610759267",
   "ciStatus": "PASS",
   "authenticatedDownload": "PASS byte-for-byte",
-  "anonymousDownload": "NOT_RUN",
+  "anonymousDownload": "PASS byte-for-byte",
   "assets": [
     {
       "name": "Dougle_Skills_0.8.26.zip",
@@ -23,6 +23,7 @@
   "categorySourceRestriction": "DEFERRED by user",
   "ciRuns": [
     42610759267,
-    42611183203
+    42611183203,
+    42611396246
   ]
 }
