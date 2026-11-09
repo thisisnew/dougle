@@ -1,8 +1,8 @@
 {
   "version": "0.8.30",
   "optionalBotRuntime": "0.1.27",
-  "status": "LOCAL_VERIFIED",
-  "publication": "PENDING",
+  "status": "PASS_RELEASE",
+  "publication": "PUBLISHED",
   "archive": ".tools/releases/0.8.30/Dougle_Skills_0.8.30.zip",
   "files": 60,
   "archiveBytes": 340733,
@@ -15,8 +15,14 @@
     "archiveBytesAndCRC": "PASS",
     "isolatedWheelInstall": "PASS Python 3.13",
     "botTests": "1736 passed; failures=0, xfail=0",
-    "ruff": "PASS"
+    "ruff": "PASS",
+    "ci": "PASS Python 3.12 and 3.13; 1736 passed each; https://github.com/thisisnew/dougle/actions/runs/42704023325",
+    "prescribedChecks": "PASS",
+    "authenticatedDownload": "PASS ZIP/checksum byte-for-byte",
+    "anonymousDownload": "PASS ZIP byte-for-byte"
   },
   "companyAcceptance": "NOT_RUN; real reviewed query definitions must be registered on company PC",
-  "realModelCalls": 0
+  "realModelCalls": 0,
+  "source": "07ffd6b9d16bfa1052ff2755b736abe4c5f3379e",
+  "release": "https://github.com/thisisnew/dougle/releases/tag/v0.8.30-skills-preview.1"
 }

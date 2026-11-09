@@ -43,3 +43,7 @@
 invalid_query_plan은 형식·중복 질문·허용 도구·증거 경로/해시·SQL 형태를 확인합니다. query_plan_changed는 조사/게시 사이 정의나 증거가 바뀐 것으로, 원문 재검토 후 새 문의로 다시 조회합니다. 결과에 jobComplete=true 또는 job_complete=true가 없다면 커넥터의 실제 반환 형식을 확인합니다. 완료 표시를 모델이 만들어 붙이거나 검증을 끄지 않습니다.
 
 회사 Claude는 설치/실행 버전, 정의 ID와 검토한 범위, 질문별 실제 결과·최종 답변·재시도와 오류 코드·사용량을 보고해 주세요. 인증정보·개인정보·원시 업무 행은 보고서에 넣지 않습니다.
+
+## 최종 배포 검증
+
+[0.8.30 Preview](https://github.com/thisisnew/dougle/releases/tag/v0.8.30-skills-preview.1)를 공개했습니다. 배포 소스는 `07ffd6b9d16bfa1052ff2755b736abe4c5f3379e`이며 [Python 3.12/3.13 CI](https://github.com/thisisnew/dougle/actions/runs/42704023325)에서 각각 **1,736개 통과·실패 0·기대 실패 0**입니다. 인증 ZIP/체크섬과 익명 ZIP 다운로드가 로컬 검증본과 바이트 일치합니다. 실제 회사 정의 등록·Slack 시험은 위 안내에 따라 회사에서 수행해야 합니다.

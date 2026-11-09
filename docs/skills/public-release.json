@@ -1,23 +1,23 @@
 {
-  "tag": "v0.8.29-skills-preview.1",
-  "source": "82ab51463df42a2dbfecc082ae67da1ff99258f1",
-  "ci": "https://github.com/thisisnew/dougle/actions/runs/42635930781",
-  "ciStatus": "PASS Python 3.12 and 3.13",
+  "tag": "v0.8.30-skills-preview.1",
+  "source": "07ffd6b9d16bfa1052ff2755b736abe4c5f3379e",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42704023325",
+  "ciStatus": "PASS Python 3.12 and 3.13; 1736 passed, 0 xfailed",
   "authenticatedDownload": "PASS byte-for-byte",
   "anonymousDownload": "PASS ZIP byte-for-byte",
   "assets": [
     {
-      "name": "Dougle_Skills_0.8.29.zip",
-      "bytes": 333913,
-      "sha256": "552e59b88b3b3b7e54019a11c1693a25af5014a4e9257cb2c40fcae2d8afde2e",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.29-skills-preview.1/Dougle_Skills_0.8.29.zip"
+      "name": "Dougle_Skills_0.8.30.zip",
+      "bytes": 340733,
+      "sha256": "0c7faebcac3dc00d5e880c022fc96dbe104f354d1fa09f10f803fce7640db2b9",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.30-skills-preview.1/Dougle_Skills_0.8.30.zip"
     },
     {
-      "name": "Dougle_Skills_0.8.29_SHA256SUMS",
+      "name": "Dougle_Skills_0.8.30_SHA256SUMS",
       "bytes": 91,
-      "sha256": "2008e8ebdd0b472109bfd81c91668cba3ea61ffbfefc9d36af49def853ec657f",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.29-skills-preview.1/Dougle_Skills_0.8.29_SHA256SUMS"
+      "sha256": "4cf14f8f4a95722e4d802f7b4b7bdcc9ee5ef7ac269c768f0f61a4bc0725fae8",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.30-skills-preview.1/Dougle_Skills_0.8.30_SHA256SUMS"
     }
   ],
-  "companyAcceptance": "NOT_RUN; follow docs/improvement-2026-11-09/09-regression-release.md"
+  "companyAcceptance": "NOT_RUN; company-reviewed business query definitions still require registration"
 }

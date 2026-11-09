@@ -4,7 +4,7 @@
 
 2026-11-10 사용자가 기존 기대 실패 두 건의 수정을 요청했습니다. 보호된 registries/query-plans.json에 호스트가 실제 자료를 검토한 질문·채널·도구·테이블·SQL·범위·증거 해시를 등록하면, 현재 호출의 완료된 COUNT 결과와 정확히 대조해 업무 건수를 자동 답변합니다. 0건은 동일 안내, 0→1은 새 결과로 렌더링합니다. 모델의 잘못된 숫자를 사용하지 않으며 오류/미완료/다른 테이블·필터·기간·문맥/정의 변경은 보류합니다. fingerprint를 초안과 원자적으로 저장하고 게시 직전에 재검사합니다. 일반 질문의 고정 프롬프트는 늘리지 않았습니다.
 
-기존 테스트의 잘못된 centers 테이블 및 빈 COUNT 결과 fixture를 수정하고 xfail 두 표시를 제거했습니다. [구현·검증·회사 안내](docs/dougle-bot/business-count-query-plans.md), [조회 정의 형식](skills/dougle-bot/references/query-plans.md). 회사 실제 정의는 이 개발 Mac에서 등록하지 않았고 회사 서비스·설치본·기존 설정·인증정보를 변경하지 않았습니다. 전체 로컬 pytest 1,736개 통과, 실패·기대 실패 0개이며 필수 검사·wheel 소스·사본·ZIP·격리 설치를 확인했습니다. CI/공개 다운로드 결과는 최종 검증 기록에 남깁니다.
+기존 테스트의 잘못된 centers 테이블 및 빈 COUNT 결과 fixture를 수정하고 xfail 두 표시를 제거했습니다. [구현·검증·회사 안내](docs/dougle-bot/business-count-query-plans.md), [조회 정의 형식](skills/dougle-bot/references/query-plans.md). 회사 실제 정의는 이 개발 Mac에서 등록하지 않았고 회사 서비스·설치본·기존 설정·인증정보를 변경하지 않았습니다. 전체 로컬 pytest 1,736개 통과, 실패·기대 실패 0개이며 필수 검사·wheel 소스·사본·ZIP·격리 설치를 확인했습니다. 배포 소스 `07ffd6b9d16bfa1052ff2755b736abe4c5f3379e`의 Python 3.12/3.13 CI도 각각 1,736개 통과·실패/기대 실패 0개입니다. [0.8.30 Preview](https://github.com/thisisnew/dougle/releases/tag/v0.8.30-skills-preview.1)를 공개했고 인증 ZIP/체크섬·익명 ZIP 바이트 일치를 확인했습니다.
 
 ## 0.8.29 / 0.1.26: 개선 1~9 구현 및 배포 검증
 
