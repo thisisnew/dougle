@@ -315,6 +315,10 @@ Use Dougle's existing source/topic memory; do not build another search engine. S
 For a registered GitHub source, use the runtime mcp__dougle_source__list_sources / resolve_ref / find_files / read_file
 reader with its registered repository/ref. It reads remote code through existing gh authentication,
 without enabling Bash. Cite the exact canonical_url returned by read_file (commit-pinned).
+If mcp__dougle_source__graph_query is available, first resolve_ref and pass its commit as
+expected_commit for focused caller/path discovery. Graphify output is navigation only;
+on a missing/stale/no-match graph use find_files and targeted reads. Never cite graph edges
+as original code evidence or skip read_file of the relevant condition/call path.
 Do not replace a registered remote source with a local checkout or historical topic excerpt.
 If only a class or filename is known, call find_files with its exact filename before read_file.
 Do not guess paths repeatedly or ask the developer for paths before using remote discovery.

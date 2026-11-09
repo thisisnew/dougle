@@ -49,6 +49,21 @@ def read_failure(app, ident, detail):
         )
 
 
+def test_retry_reason_status_is_bounded_and_redacted(app, inspect_status):
+    ident = inquiry(app)
+    for detail in (
+        {"attempt": 1, "reason": "research", "code": "required_read_not_verified"},
+        {"attempt": 2, "reason": "schema", "code": "private_secret_123"},
+        {"attempt": 3, "reason": ["private"], "code": "required_read_not_verified"},
+    ):
+        app.store.audit(ident, "system", "answer_retry", json.dumps(detail))
+    assert inspect_status()["recent_retry_reasons"] == [
+        {"inquiry_id": ident, "attempt": 2, "reason": "schema", "code": "operation_failed"},
+        {"inquiry_id": ident, "attempt": 1, "reason": "research", "code": "required_read_not_verified"},
+    ]
+    assert "private_secret_123" not in json.dumps(inspect_status())
+
+
 def test_recent_inquiry_failures_are_bounded_newest_inquiry_first_with_only_safe_fields(
     app, inspect_status
 ):
@@ -244,6 +259,9 @@ def test_final_failure_code_is_distinct_from_earlier_read_failure_attempt(app, i
     ]
     runs = app.store.all("SELECT id FROM engine_runs WHERE inquiry_id=? ORDER BY id", (ident,))
     assert len(runs) == 2
+    assert state["recent_retry_reasons"] == [
+        {"inquiry_id": ident, "attempt": 1, "reason": "research", "code": "required_read_not_verified"}
+    ]
     assert state["recent_read_failures"] == [
         {
             "inquiry_id": ident,

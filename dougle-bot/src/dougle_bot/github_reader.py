@@ -93,11 +93,12 @@ def load_sources(path):
 
 
 class GitHubReader:
-    def __init__(self, sources, runner=subprocess.run):
+    def __init__(self, sources, runner=subprocess.run, graph_cache=None):
         self.sources = frozenset(sources)
         if any(not valid_source(*pair) for pair in self.sources):
             raise ReaderError("invalid_sources_config")
         self.runner = runner
+        self.graph_cache = Path(graph_cache) if graph_cache is not None else None
         # Serialized values bound retained payload and avoid shared mutable trees.
         # Endpoint includes repository, object kind and immutable SHA; never refs.
         self._cache = OrderedDict()
@@ -190,6 +191,22 @@ class GitHubReader:
                 {"repository": repository, "ref": ref} for repository, ref in sorted(self.sources)
             ],
         }
+
+    def graph_query(self, repository, ref, query, expected_commit):
+        """Use a commit-bound Graphify index only to locate candidate files."""
+        from .graphify_index import GraphError, query_graph
+
+        if self.graph_cache is None:
+            raise ReaderError("graph_unavailable")
+        if not isinstance(expected_commit, str) or not SHA.fullmatch(expected_commit):
+            raise ReaderError("invalid_expected_commit")
+        commit, _ = self._resolve(repository, ref)
+        if commit != expected_commit:
+            raise ReaderError("github_ref_changed")
+        try:
+            return query_graph(self.graph_cache, repository, ref, commit, query)
+        except GraphError as exc:
+            raise ReaderError(str(exc)) from None
 
     def find_files(self, repository, ref, filename, expected_commit=None):
         """Find exact basenames remotely; paths are discovery, never file evidence."""
@@ -303,9 +320,9 @@ class GitHubReader:
         }
 
 
-def tool_definitions():
+def tool_definitions(graph_enabled=False):
     properties = {name: {"type": "string"} for name in ("repository", "ref")}
-    return [
+    definitions = [
         {
             "name": name,
             "description": description,
@@ -345,6 +362,27 @@ def tool_definitions():
             ),
         )
     ]
+    if graph_enabled:
+        definitions.append(
+            {
+                "name": "graph_query",
+                "description": "Query a prepared Graphify code graph for candidate paths/callers at a "
+                "registered remote commit. Navigation only; read_file is required for code evidence. "
+                "A missing/stale graph must fall back to remote source discovery.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        **properties,
+                        "query": {"type": "string"},
+                        "expected_commit": {"type": "string"},
+                    },
+                    "required": ["repository", "ref", "query", "expected_commit"],
+                    "additionalProperties": False,
+                },
+                "annotations": {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": False},
+            }
+        )
+    return definitions
 
 
 def dispatch(reader, method, params):
@@ -358,12 +396,12 @@ def dispatch(reader, method, params):
     if method == "ping":
         return {}
     if method == "tools/list":
-        return {"tools": tool_definitions()}
+        return {"tools": tool_definitions(reader.graph_cache is not None)}
     if method != "tools/call":
         raise ReaderError("method_not_found")
     try:
         name = params.get("name")
-        definitions = {item["name"]: item for item in tool_definitions()}
+        definitions = {item["name"]: item for item in tool_definitions(reader.graph_cache is not None)}
         if not isinstance(name, str) or name not in definitions:
             raise ReaderError("unknown_tool")
         args = params.get("arguments", {})
@@ -427,9 +465,10 @@ def serve(reader, input_stream, output_stream):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", required=True)
+    parser.add_argument("--graph-cache")
     args = parser.parse_args()
     try:
-        reader = GitHubReader(load_sources(args.sources))
+        reader = GitHubReader(load_sources(args.sources), graph_cache=args.graph_cache)
     except ReaderError as exc:
         print(str(exc), file=sys.stderr)
         return 2

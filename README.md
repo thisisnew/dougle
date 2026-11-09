@@ -101,4 +101,4 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 
 업무 지식은 `~/.dougle/`의 Markdown에, 봇 문의와 전송 상태는 `~/.dougle-bot/`의 SQLite에 저장합니다. 그림은 개념 관계를 설명하며 실제 테이블의 모든 열을 나열하지 않습니다. [그림 원본](docs/diagrams/archify/domain.json) · [확대해서 보기](docs/diagrams/archify/domain.html) · [구현 근거](docs/design-reference.md)
 
-[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [0.8.27 배포](https://github.com/thisisnew/dougle/releases/tag/v0.8.27-skills-preview.1) · [원격 파일명 탐색](docs/dougle-bot/remote-file-discovery-cases.md) · [개발·검증](docs/skills/development.md)
+[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [0.8.28 배포](https://github.com/thisisnew/dougle/releases/tag/v0.8.28-skills-preview.1) · [원격 파일명 탐색](docs/dougle-bot/remote-file-discovery-cases.md) · [개발·검증](docs/skills/development.md)

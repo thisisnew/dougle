@@ -9,6 +9,8 @@ Use respectful Korean 존댓말 for all guidance and failures. Keep instructions
 
 Run the bundled `scripts/bot.sh status` using its absolute path first. Resolve paths relative to this installed skill, never the current project. A missing runtime/config is first-run setup, not a connection failure. Read [setup](references/setup.md) when setup, runtime upgrade, missing credentials or channel registration requires it. If runtime_installed=false but configured=true, prepare only the new runtime; preserve configuration and Keychain entries. After preparing, check status: update_required=true means an old or unverified process is still running. Explain that the new behavior requires stop confirmation then start; never report a plugin reload alone as a running bot upgrade. Never read token values, user memory, the bot DB or provider credential files with host tools. Use runtime status/doctor output instead.
 
+If the user explicitly asks to prepare Graphify code navigation, read setup and use `scripts/bot.sh graph-build` for the requested registered GitHub repository/ref after the optional CLI is installed. Report the returned commit. This is an explicit preparation action, not part of start or routine inquiries. The graph only finds candidates; the bot still reads exact remote code for evidence. Keep the four-item entry menu unchanged.
+
 ## Entry menu
 
 When invoked without an explicit action and configured, present exactly:

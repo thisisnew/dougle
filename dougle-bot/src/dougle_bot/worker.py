@@ -60,6 +60,8 @@ class Worker:
         except SourceRegistryError:
             return None
         index = read_navigation_index(self.memory_root)
+        from .graphify_index import graph_inventory
+
         if index is None and (self.memory_root / "index.md").exists():
             return None
         scope = {
@@ -71,6 +73,7 @@ class Worker:
             "thread": inquiry["thread_key"],
             "registered_github": github,
             "registered_local": local,
+            "graph_inventory": graph_inventory(self.config.home / "graphify"),
             "index_sha256": hashlib.sha256(index.encode("utf-8")).hexdigest() if index else None,
             "compact_policy_sha256": (
                 hashlib.sha256(COMPACT_POLICY.encode("utf-8")).hexdigest()
@@ -471,6 +474,12 @@ class Worker:
                     )
                     if exc.code == "session_not_found" and session and not restored:
                         progress.retry("session")
+                        self.store.audit(
+                            ident,
+                            "system",
+                            "answer_retry",
+                            json.dumps({"attempt": attempt, "reason": "session", "code": "session_not_found"}),
+                        )
                         session = None
                         presentation_repair = repair_reads = None
                         verification_repair = None
@@ -786,6 +795,12 @@ class Worker:
                         except (BotError, TypeError, KeyError):
                             pass
                     progress.retry(reason)
+                    self.store.audit(
+                        ident,
+                        "system",
+                        "answer_retry",
+                        json.dumps({"attempt": attempt, "reason": reason, "code": exc.code}),
+                    )
             output = route_unresolved(output)
             if self._session_fingerprint(inquiry) != session_fingerprint:
                 raise BotError("source_scope_changed")

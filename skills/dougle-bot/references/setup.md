@@ -43,9 +43,9 @@ doctor는 AI를 실행하거나 채널에 메시지를 쓰지 않습니다. Slac
 
 1. `scripts/bot.sh status`에서 새 실행 환경 준비가 필요하면 `scripts/bot.sh prepare`를 실행합니다. 기존 설정·키체인·지식은 재등록하지 않습니다.
 2. 실행 중이면 업데이트 적용을 위해 중지하고 다시 시작할 것을 안내합니다. 사용자가 업데이트 적용을 요청했다면 `scripts/bot.sh stop` 후 실제 중지를 확인합니다.
-3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.24`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
+3. `scripts/bot.sh start` 후 `status`에서 `healthy=true`, `update_required=false`, 실행 버전 `0.1.25`를 확인합니다. 멈추는 중이면 시작하지 않습니다.
 
-0.1.24의 기본 문의 동시 처리 수는 4입니다. `[engine]`에 `parallelism_version`이 없고 정수 `max_parallel = 1`인 이전 설정은 읽을 때 **메모리에서만 4로 적용**합니다. 이 읽기만으로 기존 config.toml을 다시 쓰지 않습니다. 한 문의씩 처리하려면 다음 두 값을 함께 명시합니다. 표식이 있는 새 설정의 1은 그대로 존중하며, 정상 설정 저장 시 표식도 저장합니다.
+0.1.25의 기본 문의 동시 처리 수는 4입니다. `[engine]`에 `parallelism_version`이 없고 정수 `max_parallel = 1`인 이전 설정은 읽을 때 **메모리에서만 4로 적용**합니다. 이 읽기만으로 기존 config.toml을 다시 쓰지 않습니다. 한 문의씩 처리하려면 다음 두 값을 함께 명시합니다. 표식이 있는 새 설정의 1은 그대로 존중하며, 정상 설정 저장 시 표식도 저장합니다.
 
 ```toml
 [engine]
@@ -57,6 +57,10 @@ parallelism_version = 1
 
 명시적 검토 모드의 `preview_updated_review_again`은 업데이트된 게시 미리보기를 다시 확인하라는 뜻입니다. 기존 카드를 누르자마자 예전 형식의 답변을 보내지 않습니다. `publication_changed_regenerating`이면 새 초안을 준비하므로 새 카드에서 다시 승인합니다.
 
+## 선택형 Graphify 코드 탐색
+
+사용자가 코드 그래프 사용을 요청한 경우에만 봇 Mac에 `uv tool install graphifyy==0.9.104`를 설치합니다. `~/.dougle/`에 등록된 GitHub 저장소/ref만 `scripts/bot.sh graph-build OWNER/REPO REF --graphify "$(command -v graphify)"`로 색인할 수 있습니다. 완료 결과의 `commit`을 확인하고 봇을 재시작합니다. ref가 이동하면 다시 색인합니다. 그래프는 후보 경로를 찾는 용도이며 답변 근거는 해당 원격 커밋의 `read_file`로 확인해야 합니다. 그래프가 없어도 기존 원격 코드 탐색은 계속됩니다. 원본과 사용자 지식은 변경하지 않습니다. [상세 안내](https://github.com/thisisnew/dougle/blob/main/dougle-bot/README.md#선택형-코드-그래프-탐색)
+
 ## 기존 앱에서 이미지 질문 사용하기
 
 Slack 앱 설정 → OAuth & Permissions → Bot Token Scopes에 `files:read`를 추가하고 Reinstall to Workspace를 진행합니다. 회사 승인 필요 시 우회하지 않습니다. 재설치 후 봇 토큰이 바뀐 경우만 사용자 터미널에서 키체인의 bot 값을 다시 등록합니다. 호스트가 토큰을 읽거나 대화로 받지 않습니다. 텍스트 질문은 파일 권한 없이도 기존대로 사용합니다.
@@ -65,7 +69,7 @@ Slack 앱 설정 → OAuth & Permissions → Bot Token Scopes에 `files:read`를
 
 ## 자동 답변 기본값
 
-0.8.11부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요. 0.1.24의 압축 정책은 기존 설정을 자동 변경하지 않으며, 기존 `[engine]`에 `compact_policy = true`를 명시한 뒤 봇을 재시작하면 자동 답변 모드에서도 사용합니다. 이 설정을 켰으면 실제 계정의 MCP 읽기 접근을 개인 시험 채널에서 확인하고, 시작 점검 성공만으로 커넥터 접근까지 검증됐다고 안내하지 않습니다.
+0.8.11부터 새 문의는 기본 자동 답변이며, 내부 확인이 필요할 때만 기존 approver_user_id로 DM을 보냅니다. 기존 config에 require_approval이 없으면 새 실행기에서 자동 모드가 됩니다. 설정을 명시적으로 true로 둔 검토 모드는 보존합니다. 이전 승인 대기 답변을 자동 게시하지 않습니다. 상태의 reply_mode를 확인해 안내하세요. 0.1.25의 압축 정책은 기존 설정을 자동 변경하지 않으며, 기존 `[engine]`에 `compact_policy = true`를 명시한 뒤 봇을 재시작하면 자동 답변 모드에서도 사용합니다. 이 설정을 켰으면 실제 계정의 MCP 읽기 접근을 개인 시험 채널에서 확인하고, 시작 점검 성공만으로 커넥터 접근까지 검증됐다고 안내하지 않습니다.
 
 
 ## 시작할 때 자동 점검

@@ -118,6 +118,22 @@ def _inquiry_id(value):
     return value if type(value) is int and 0 < value < 2**63 else None
 
 
+def _retry_record(value):
+    try:
+        data = json.loads(value)
+    except (TypeError, ValueError):
+        return None
+    if not isinstance(data, dict) or set(data) != {"attempt", "reason", "code"}:
+        return None
+    if type(data["attempt"]) is not int or not 1 <= data["attempt"] <= 64:
+        return None
+    if not isinstance(data["reason"], str) or data["reason"] not in {
+        "session", "research", "schema", "activation", "presentation"
+    }:
+        return None
+    return {"attempt": data["attempt"], "reason": data["reason"], "code": _inquiry_error(data["code"])}
+
+
 def default_home():
     return Path.home() / ".dougle-bot"
 
@@ -275,6 +291,13 @@ def status(home, config_path):
                 # field/reason issues, run_id and attempt. Never merge unparsed JSON.
                 if (summary := safe_failure_summary(row["detail"])) is not None
             ]
+            result["recent_retry_reasons"] = [
+                {"inquiry_id": _inquiry_id(row["inquiry_id"]), **record}
+                for row in store.all(
+                    "SELECT inquiry_id,detail FROM audit WHERE action='answer_retry' ORDER BY id DESC LIMIT 10"
+                )
+                if (record := _retry_record(row["detail"])) is not None
+            ]
             result["recent_verification_failures"] = []
             for row in store.all(
                 "SELECT inquiry_id,detail FROM audit WHERE action='verification_record_invalid' ORDER BY id DESC LIMIT 5"
@@ -376,6 +399,10 @@ def parser():
     r.add_argument("inquiry_id", type=int)
     a = sub.add_parser("ask")
     a.add_argument("question", nargs="?")
+    graph = sub.add_parser("graph-build")
+    graph.add_argument("repository")
+    graph.add_argument("ref")
+    graph.add_argument("--graphify", default="graphify")
     return p
 
 
@@ -425,6 +452,19 @@ def execute(args, secrets=None):
             "menu": ["1. 시작", "2. 상태 확인", "3. 중지", "4. 채널 추가"],
         }
     cfg = load(path)
+    if args.command == "graph-build":
+        from .graphify_index import GraphError, build_graph
+
+        try:
+            return build_graph(
+                cfg.home,
+                Path.home() / ".dougle",
+                args.repository,
+                args.ref,
+                args.graphify,
+            )
+        except GraphError as exc:
+            raise BotError(str(exc)) from None
     if args.command == "channel-add":
         if running(cfg.home):
             raise BotError("stop_before_channel_change")
