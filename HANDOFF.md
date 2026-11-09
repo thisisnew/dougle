@@ -8,7 +8,7 @@
 
 사용자 회사 지식·설정·설치본·실행 봇은 수정하지 않았습니다. Downloads/dougle-개선작업-2026-11-09에 00 안내 및 01~09 단계 문서와 합성 원문·답변·평가 결과를 작성했습니다. 회사 Claude는 09 순서로 백업→업데이트→기존 명시 한도 제거→prepare/정상 중지 확인/시작→버전 확인→색인 생성→고정 질문 시험을 진행합니다. source registry 범위 확대나 회사 지식 전체 자동 이전은 하지 않습니다.
 
-GitHub CI 및 Preview 배포 결과는 아래 검증 기록에서 최종 확인합니다. [패키지 검증](docs/skills/package-verification.json).
+배포 소스 `82ab51463df42a2dbfecc082ae67da1ff99258f1`의 Python 3.12/3.13 CI는 각각 1,711개 통과·2개 기대 실패입니다. [0.8.29 Preview](https://github.com/thisisnew/dougle/releases/tag/v0.8.29-skills-preview.1)를 공개하고 인증 ZIP/체크섬·익명 ZIP 바이트 일치를 확인했습니다. [패키지 검증](docs/skills/package-verification.json).
 
 ## 0.8.28 배포 완료: 선택형 Graphify 코드 탐색 / 회사 적용 대기
 

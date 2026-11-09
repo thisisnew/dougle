@@ -36,12 +36,15 @@ def test_error_result_preserves_usage():
     assert err.value.accounting['usage']['input_tokens'] == 8
 
 
-def test_nonzero_process_preserves_reported_cost_and_usage(tmp_path):
+def test_nonzero_process_preserves_reported_cost_and_usage(tmp_path, monkeypatch):
     import sys
     from dataclasses import replace
+    from pathlib import Path
 
     from dougle_bot.config import EngineConfig
     from dougle_bot.engine import ClaudeCliEngine
+
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
     script = tmp_path / 'fake-cli'
     result = {'type':'result','subtype':'error_max_budget_usd','total_cost_usd':0.8,
               'session_id':'11111111-1111-1111-1111-111111111111','usage':{'input_tokens':12}}

@@ -1,8 +1,8 @@
 {
   "version": "0.8.29",
   "optionalBotRuntime": "0.1.26",
-  "status": "LOCAL_VERIFIED",
-  "publication": "PENDING",
+  "status": "PASS_RELEASE",
+  "publication": "PUBLISHED",
   "archive": ".tools/releases/0.8.29/Dougle_Skills_0.8.29.zip",
   "files": 59,
   "archiveBytes": 333913,
@@ -17,8 +17,13 @@
     "prescribedChecks": "PASS",
     "publicationStructuralAndSensitiveIntegration": "15 PASS",
     "realCodexCalls": 12,
-    "isolatedWheelInstall": "PASS Python 3.13; imported wheel from isolated site-packages"
+    "isolatedWheelInstall": "PASS Python 3.13; imported wheel from isolated site-packages",
+    "ci": "PASS Python 3.12/3.13, each 1711 passed and 2 expected failures; https://github.com/thisisnew/dougle/actions/runs/42635930781",
+    "authenticatedDownload": "PASS ZIP/checksum byte-for-byte",
+    "anonymousDownload": "PASS ZIP byte-for-byte"
   },
   "companyAcceptance": "NOT_RUN",
-  "tokenGoal": "synthetic 2 cases x 3 repeats: 64.91% reduction; company 50% not verified"
+  "tokenGoal": "synthetic 2 cases x 3 repeats: 64.91% reduction; company 50% not verified",
+  "source": "82ab51463df42a2dbfecc082ae67da1ff99258f1",
+  "release": "https://github.com/thisisnew/dougle/releases/tag/v0.8.29-skills-preview.1"
 }

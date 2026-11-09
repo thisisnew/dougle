@@ -1,24 +1,23 @@
 {
-  "tag": "v0.8.28-skills-preview.1",
-  "source": "a47a63dd3326ee1a9d1537e5a4ff231c9e5776d8",
-  "ci": "https://github.com/thisisnew/dougle/actions/runs/42622083218",
-  "ciStatus": "PASS",
+  "tag": "v0.8.29-skills-preview.1",
+  "source": "82ab51463df42a2dbfecc082ae67da1ff99258f1",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42635930781",
+  "ciStatus": "PASS Python 3.12 and 3.13",
   "authenticatedDownload": "PASS byte-for-byte",
-  "anonymousDownload": "PASS byte-for-byte",
+  "anonymousDownload": "PASS ZIP byte-for-byte",
   "assets": [
     {
-      "name": "Dougle_Skills_0.8.28.zip",
-      "bytes": 319918,
-      "sha256": "cd6b2e92be1f6b05be1f3b1b07b0b39acf97b66e4cf3e6f056ba607b4ed0b918",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.28-skills-preview.1/Dougle_Skills_0.8.28.zip"
+      "name": "Dougle_Skills_0.8.29.zip",
+      "bytes": 333913,
+      "sha256": "552e59b88b3b3b7e54019a11c1693a25af5014a4e9257cb2c40fcae2d8afde2e",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.29-skills-preview.1/Dougle_Skills_0.8.29.zip"
     },
     {
-      "name": "Dougle_Skills_0.8.28_SHA256SUMS",
+      "name": "Dougle_Skills_0.8.29_SHA256SUMS",
       "bytes": 91,
-      "sha256": "96049432be4d5f77521464e0e1b0bd6a8ae4edbb37f7425e770b58082b0e0e22",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.28-skills-preview.1/Dougle_Skills_0.8.28_SHA256SUMS"
+      "sha256": "2008e8ebdd0b472109bfd81c91668cba3ea61ffbfefc9d36af49def853ec657f",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.29-skills-preview.1/Dougle_Skills_0.8.29_SHA256SUMS"
     }
   ],
-  "companyAcceptance": "Graphify installation/build and Slack behavior not yet tested on company PC; compact-policy retest requires retry diagnostics",
-  "sourceRegistry": "registered GitHub source mismatch remains to diagnose on company PC"
+  "companyAcceptance": "NOT_RUN; follow docs/improvement-2026-11-09/09-regression-release.md"
 }
