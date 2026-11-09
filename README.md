@@ -101,6 +101,8 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 
 업무 지식은 `~/.dougle/`의 Markdown에, 봇 문의와 전송 상태는 `~/.dougle-bot/`의 SQLite에 저장합니다. 그림은 개념 관계를 설명하며 실제 테이블의 모든 열을 나열하지 않습니다. [그림 원본](docs/diagrams/archify/domain.json) · [확대해서 보기](docs/diagrams/archify/domain.html) · [구현 근거](docs/design-reference.md)
 
-[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [0.8.29 배포](https://github.com/thisisnew/dougle/releases/tag/v0.8.29-skills-preview.1) · [원격 파일명 탐색](docs/dougle-bot/remote-file-discovery-cases.md) · [개발·검증](docs/skills/development.md)
+[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [0.8.30 배포](https://github.com/thisisnew/dougle/releases/tag/v0.8.30-skills-preview.1) · [원격 파일명 탐색](docs/dougle-bot/remote-file-discovery-cases.md) · [개발·검증](docs/skills/development.md)
 
 [0.8.29 개선 내역과 검증·회사 적용 절차](docs/improvement-2026-11-09/PROGRESS.md): 비용 계측, 범위 읽기, 근거 연결, 게시 보존 검사와 고정 질문 평가를 정리했습니다.
+
+[0.8.30 업무 건수 자동 답변](docs/dougle-bot/business-count-query-plans.md): 검토된 업무 조회 정의에 따라 반복 0건 안내와 실제 건수 변경을 반영하며, 기존 기대 실패 두 건을 정상 테스트로 전환했습니다.

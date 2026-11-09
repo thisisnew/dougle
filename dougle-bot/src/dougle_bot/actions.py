@@ -310,6 +310,7 @@ class Actions:
             if not automatic and (not receipt or receipt["detail"] != cards.preview_receipt(draft)):
                 self.worker.show_card(ident)
                 raise BotError("preview_updated_review_again")
+            self.worker.check_count_plan_before_post(inquiry, draft)
             self.store.claim_post(ident, draft["id"], parts, user)
             deliveries = self.store.all(
                 "SELECT * FROM deliveries WHERE inquiry_id=? AND draft_id=? ORDER BY part",

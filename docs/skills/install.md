@@ -39,11 +39,11 @@
    $dougle-connect 연결할_URL을 읽고 업무 지식으로 정리해 줘.
    ```
 
-현재 프리뷰 **스킬 0.8.29 / 봇 0.1.26**는 등록된 GitHub 코드에서 선택형 Graphify 탐색을 지원합니다. 그래프는 파일·호출 관계의 후보만 제공하고 원격 커밋의 원문 확인은 유지합니다. 기존 `Fact-v1` 정리·퍼블리시 비교, 선택형 압축 정책, BigQuery 전체 0건 안내도 유지합니다. [봇 코드 그래프 준비](../../dougle-bot/README.md#선택형-코드-그래프-탐색)
+현재 프리뷰 **스킬 0.8.30 / 봇 0.1.27**는 등록된 GitHub 코드에서 선택형 Graphify 탐색을 지원합니다. 그래프는 파일·호출 관계의 후보만 제공하고 원격 커밋의 원문 확인은 유지합니다. 기존 `Fact-v1` 정리·퍼블리시 비교, 선택형 압축 정책, BigQuery 전체 0건 안내도 유지합니다. [봇 코드 그래프 준비](../../dougle-bot/README.md#선택형-코드-그래프-탐색)
 
 봇 업데이트 시 표식 없는 이전 `max_parallel = 1`은 메모리에서만 4로 적용됩니다. 명시적으로 1을 유지하려면 `[engine]`의 `max_parallel = 1`과 `parallelism_version = 1`을 함께 설정하세요. 기존 설정 파일을 읽는 것만으로 파일을 변경하지 않습니다. [설정 안내](../../dougle-bot/README.md)를 참고하세요.
 
-공개 후 직접 설치하려면 [0.8.29 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.29-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
+공개 후 직접 설치하려면 [0.8.30 배포 ZIP](https://github.com/thisisnew/dougle/releases/tag/v0.8.30-skills-preview.1)을 풀고 `Dougle/skills/` 안의 모든 스킬 폴더를 `~/.agents/skills/`에 복사하세요.
 
 설치할 때 `SKILL.md`만 복사하지 말고 각 스킬의 `references/`, `scripts/`, `assets/`도 함께 포함하세요. publish의 번들 셸 검사가 빠지면 게시할 수 없습니다. 내부 답변 스킬인 `i-have-adhd/`, `plain-language/` 폴더의 SKILL.md와 LICENSE.md도 포함하세요. 기존 개인 수정본은 백업하고 변경 내용을 비교하세요.
 

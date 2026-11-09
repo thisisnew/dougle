@@ -62,6 +62,8 @@ INQUIRY_FAILURE_CODES = (
             "invalid_memory_batch",
             "unsafe_policy_path",
             "unsafe_memory_path",
+            "query_plan_changed",
+            "invalid_query_plan",
             "unsafe_storage_path",
             "unsafe_storage_owner",
             "stale_job",
@@ -420,6 +422,7 @@ def parser():
     a = sub.add_parser("ask")
     a.add_argument("question", nargs="?")
     sub.add_parser("index-build")
+    sub.add_parser("query-plans-check")
     graph = sub.add_parser("graph-build")
     graph.add_argument("repository")
     graph.add_argument("ref")
@@ -488,6 +491,9 @@ def execute(args, secrets=None):
             "menu": ["1. 시작", "2. 상태 확인", "3. 중지", "4. 채널 추가"],
         }
     cfg = load(path)
+    if args.command == "query-plans-check":
+        from .query_plans import check_plans
+        return check_plans(Path.home() / ".dougle", cfg.engine.allowed_tools)
     if args.command == "index-build":
         from .claim_index import build_index
         return build_index(Path.home() / ".dougle", cfg.home / "claim-index.json")

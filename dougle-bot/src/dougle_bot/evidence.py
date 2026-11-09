@@ -11,6 +11,7 @@ from pathlib import PurePosixPath
 from urllib.parse import parse_qsl, unquote, urlencode, urlsplit
 
 from .bq_state import query_failure
+from .query_plans import sql_digest
 from .safety import BotError
 from .trusted_query import parse_complete_count_result, parse_count_all_sql
 
@@ -626,8 +627,10 @@ def read_metadata(name, args, body=None):
             result_rows=_query_row_count(body),
             zero_count=_simple_count_aggregate(args) and _query_zero_count(body),
             strict_count_all_relation=strict_relation,
+            query_sha256=sql_digest(sql),
             complete_count=(
-                parse_complete_count_result(body) if strict_relation is not None else None
+                parse_complete_count_result(body)
+                if "bigquery" in name.lower() and _simple_count_aggregate(args) else None
             ),
         )
     elif re.search(r"__(?:get_table_info|get_dataset_info|get_schema)$", name, re.I):

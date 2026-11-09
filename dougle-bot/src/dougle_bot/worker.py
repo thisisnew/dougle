@@ -26,6 +26,7 @@ from .navigation import read_navigation_index
 from .presentation import REACTION_FALLBACKS, reaction_names
 from .progress import Progress
 from .prompts import prompt, validate_output
+from .query_plans import plan_instruction, select_plan
 from .safety import BotError, check_content
 from .slack_gateway import SlackFailure, history_hash
 from .source_registry import SourceRegistryError, discover_github_sources, discover_local_sources
@@ -40,6 +41,24 @@ class Worker:
         self.memory_root = Path(memory_root) if memory_root is not None else Path.home() / ".dougle"
         self.cards_lock = threading.RLock()
         self.monitor = Monitor(config.home)
+
+    def count_plan(self, inquiry, *, context_clear=True):
+        return select_plan(self.memory_root, inquiry['question_text'], inquiry['channel_id'],
+                           self.config.engine.allowed_tools, context_clear=context_clear)
+
+    def check_count_plan_before_post(self, inquiry, draft):
+        row = self.store.one(
+            "SELECT detail FROM audit WHERE inquiry_id=? AND action='query_plan_verified' "
+            "ORDER BY id DESC LIMIT 1", (inquiry['id'],),
+        )
+        if row is None:
+            return
+        record = json.loads(row['detail'])
+        if record['draft_id'] != draft['id']:
+            return  # An explicitly edited/replaced draft has its own approval path.
+        current = self.count_plan(inquiry)
+        if current is None or current['fingerprint'] != record['fingerprint']:
+            raise BotError('query_plan_changed')
 
     def _execution_setup_confirmed(self, result):
         if self.config.engine.compact_policy:
@@ -71,6 +90,7 @@ class Worker:
             "asker": inquiry["asker_user_id"],
             "channel": inquiry["channel_id"],
             "thread": inquiry["thread_key"],
+            "query_plan": (self.count_plan(inquiry) or {}).get("fingerprint"),
             "registered_github": github,
             "registered_local": local,
             "graph_inventory": graph_inventory(self.config.home / "graphify"),
@@ -376,6 +396,8 @@ class Worker:
                         "UPDATE inquiries SET lookup_basis=? WHERE id=?",
                         (json.dumps(lookup, ensure_ascii=False), ident),
                     )
+            count_plan = self.count_plan(inquiry, context_clear=len(messages) <= 1 and not lookup and not images)
+            query_plan_fingerprint = None
             session_fingerprint = self._session_fingerprint(inquiry)
             session = inquiry["engine_session_id"]
             if session and not self._session_policy_compatible(
@@ -433,7 +455,7 @@ class Worker:
                     inquiry,
                     prompt_messages(context_messages),
                     navigation=navigation,
-                    instruction=payload.get("instruction", ""),
+                    instruction=payload.get("instruction", "") + plan_instruction(count_plan),
                     lookup=lookup,
                     restored=restored,
                     correction=correction,
@@ -639,7 +661,7 @@ class Worker:
                         self.store.audit(ident, "system", "static_claim_scoped", str(run_id))
                     scoped = convert_unverified_live(
                         output, evidence_reads, report=lookup or False,
-                        question=inquiry["question_text"],
+                        question=inquiry["question_text"], plan=count_plan,
                     )
                     if scoped is not output:
                         output = validate_output(
@@ -658,6 +680,8 @@ class Worker:
                             question=inquiry["question_text"],
                         )
                         self.store.audit(ident, "system", "live_query_scoped", str(run_id))
+                        if count_plan is not None and output["status"] == "answered":
+                            query_plan_fingerprint = count_plan["fingerprint"]
                     self.store.audit(
                         ident,
                         "system",
@@ -836,6 +860,8 @@ class Worker:
                         json.dumps({"attempt": attempt, "reason": reason, "code": exc.code}),
                     )
             output = route_unresolved(output)
+            if query_plan_fingerprint is not None and (self.count_plan(inquiry) or {}).get("fingerprint") != query_plan_fingerprint:
+                raise BotError("query_plan_changed")
             if self._session_fingerprint(inquiry) != session_fingerprint:
                 raise BotError("source_scope_changed")
             last_seen = max((m["ts"] for m in messages), key=Decimal, default=inquiry["trigger_ts"])
@@ -859,6 +885,7 @@ class Worker:
                 auto_reply=not self.config.slack.require_approval,
                 memory_batches=sorted(verified_batches),
                 execution_policy_audit=execution_policy_audit,
+                query_plan_fingerprint=query_plan_fingerprint,
             )
             accepted_batches = verified_batches
             if restored:

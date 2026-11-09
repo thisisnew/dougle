@@ -499,7 +499,13 @@ class Store:
         auto_reply=False,
         memory_batches=(),
         execution_policy_audit=None,
+        query_plan_fingerprint=None,
     ):
+        if query_plan_fingerprint is not None and (
+            not isinstance(query_plan_fingerprint, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", query_plan_fingerprint)
+        ):
+            raise BotError("invalid_query_plan")
         # Batch identities only: never persist proposal paths or unvalidated bytes.
         if not isinstance(memory_batches, (tuple, list)) or any(
             not isinstance(batch, str) or not re.fullmatch(r"[0-9a-f]{32}", batch)
@@ -566,6 +572,11 @@ class Store:
                 db.execute(
                     "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,'system',?,?,?)",
                     (ident, *execution_policy_audit, self.clock()),
+                )
+            if query_plan_fingerprint is not None:
+                db.execute(
+                    "INSERT INTO audit(inquiry_id,actor,action,detail,at) VALUES(?,'system','query_plan_verified',?,?)",
+                    (ident, json.dumps({"draft_id": draft, "fingerprint": query_plan_fingerprint}), self.clock()),
                 )
             for batch in dict.fromkeys(memory_batches):
                 db.execute(

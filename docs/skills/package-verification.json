@@ -1,29 +1,22 @@
 {
-  "version": "0.8.29",
-  "optionalBotRuntime": "0.1.26",
-  "status": "PASS_RELEASE",
-  "publication": "PUBLISHED",
-  "archive": ".tools/releases/0.8.29/Dougle_Skills_0.8.29.zip",
-  "files": 59,
-  "archiveBytes": 333913,
-  "sha256": "552e59b88b3b3b7e54019a11c1693a25af5014a4e9257cb2c40fcae2d8afde2e",
-  "wheelSha256": "38424e818f9c29082b034cc92b8056698ff5f24cb7339a2598226bcdad879ce9",
+  "version": "0.8.30",
+  "optionalBotRuntime": "0.1.27",
+  "status": "LOCAL_VERIFIED",
+  "publication": "PENDING",
+  "archive": ".tools/releases/0.8.30/Dougle_Skills_0.8.30.zip",
+  "files": 60,
+  "archiveBytes": 340733,
+  "sha256": "0c7faebcac3dc00d5e880c022fc96dbe104f354d1fa09f10f803fce7640db2b9",
+  "wheelSha256": "c5fc4a17190dcc9541e989462a7b28d5be59c1590fc9742e83a030f7094457d7",
   "checks": {
     "wheelCurrentSourceBytes": "PASS",
     "skillMirrors": "PASS",
     "runtimeChecksums": "PASS",
     "archiveBytesAndCRC": "PASS",
-    "botTests": "1709 passed, 2 expected failures; final evaluator 4 passed separately",
-    "prescribedChecks": "PASS",
-    "publicationStructuralAndSensitiveIntegration": "15 PASS",
-    "realCodexCalls": 12,
-    "isolatedWheelInstall": "PASS Python 3.13; imported wheel from isolated site-packages",
-    "ci": "PASS Python 3.12/3.13, each 1711 passed and 2 expected failures; https://github.com/thisisnew/dougle/actions/runs/42635930781",
-    "authenticatedDownload": "PASS ZIP/checksum byte-for-byte",
-    "anonymousDownload": "PASS ZIP byte-for-byte"
+    "isolatedWheelInstall": "PASS Python 3.13",
+    "botTests": "1736 passed; failures=0, xfail=0",
+    "ruff": "PASS"
   },
-  "companyAcceptance": "NOT_RUN",
-  "tokenGoal": "synthetic 2 cases x 3 repeats: 64.91% reduction; company 50% not verified",
-  "source": "82ab51463df42a2dbfecc082ae67da1ff99258f1",
-  "release": "https://github.com/thisisnew/dougle/releases/tag/v0.8.29-skills-preview.1"
+  "companyAcceptance": "NOT_RUN; real reviewed query definitions must be registered on company PC",
+  "realModelCalls": 0
 }

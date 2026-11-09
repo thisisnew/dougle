@@ -1,7 +1,7 @@
 """Repeated-answer contract with synthetic questions and fake model/source results.
 
-Passing cases protect evidence, scope, and live-result boundaries. Strict xfails
-describe stable-answer behavior until a verified reuse path exists. No company
+Passing cases protect evidence, scope, and live-result boundaries. Business count
+answers require a host-reviewed query contract and a fresh completed read. No company
 source, network, Slack account, or paid model is used.
 """
 
@@ -9,8 +9,8 @@ import json
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 
-import pytest
 from test_answer_style import READS, SKILLS, answer
+from test_query_plans import RELATION, SQL, TOOL, install_plan
 from test_runtime import event
 
 from dougle_bot.engine import EngineResult
@@ -90,15 +90,14 @@ def _local_result(body, source, session):
     return EngineResult(session, output, 0.01, SKILLS, reads)
 
 
-def _live_result(body, rows, session):
-    query = "SELECT COUNT(*) AS count FROM synthetic.replica.centers"
+def _live_result(body, rows, session, *, query=SQL, complete=True, error=False):
     events = [
         {
             "type": "assistant",
             "message": {"content": [{
                 "type": "tool_use",
                 "id": "query",
-                "name": "mcp__bigquery__execute_sql_readonly",
+                "name": TOOL,
                 "input": {"query": query},
             }]},
         },
@@ -107,7 +106,8 @@ def _live_result(body, rows, session):
             "message": {"content": [{
                 "type": "tool_result",
                 "tool_use_id": "query",
-                "content": json.dumps({"rows": rows}),
+                "content": json.dumps({"rows": rows, "jobComplete": complete}),
+                "is_error": error,
             }]},
         },
     ]
@@ -115,7 +115,7 @@ def _live_result(body, rows, session):
     output = {
         "status": "answered",
         "body": body,
-        "sources": [{"title": "가상 BigQuery 조회", "location": "synthetic.replica.centers"}],
+        "sources": [{"title": "가상 BigQuery 조회", "location": RELATION}],
         "lookup": None,
         "verification": {
             "question_kind": "current_state",
@@ -307,14 +307,14 @@ def test_named_whole_table_zero_to_one_uses_new_result(app):
     assert "1건" in _draft(app, second)["body"]
 
 
-@pytest.mark.xfail(strict=True, reason="Automatic BigQuery answers await verified query-plan and claim mapping")
-def test_repeated_empty_live_result_posts_the_same_bounded_answer(app):
-    """Each live result is fresh; identical empty results get identical wording."""
+def test_repeated_zero_live_result_posts_the_same_bounded_answer(app):
+    """Each completed COUNT returns one row; zero matches have stable wording."""
     _automatic(app)
+    install_plan(app)
     body = "현재 BigQuery 조회 결과가 없습니다. 잠시 후 다시 문의해 주세요."
     app.engine.results = [
-        _live_result(body, [], SESSION_A),
-        _live_result(body, [], SESSION_B),
+        _live_result(body, [{"count": 0}], SESSION_A),
+        _live_result(body, [{"count": 0}], SESSION_B),
     ]
     first = _enqueue(app, "1001.000001", question="현재 입하 이슈는 몇 건인가요?")
     assert app.worker.run_once()
@@ -325,10 +325,10 @@ def test_repeated_empty_live_result_posts_the_same_bounded_answer(app):
     assert _draft(app, first)["body"] == _draft(app, second)["body"]
 
 
-@pytest.mark.xfail(strict=True, reason="Automatic BigQuery answers await verified query-plan and claim mapping")
 def test_changed_live_result_changes_the_answer(app):
     """A prior zero result must never hide the next fresh nonzero result."""
     _automatic(app)
+    install_plan(app)
     app.engine.results = [
         _live_result("현재 BigQuery 조회 기준 0건입니다.", [{"count": 0}], SESSION_A),
         _live_result("현재 BigQuery 조회 기준 1건입니다.", [{"count": 1}], SESSION_B),
@@ -339,7 +339,11 @@ def test_changed_live_result_changes_the_answer(app):
     assert app.worker.run_once()
     assert app.store.inquiry(first)["status"] == "posted"
     assert app.store.inquiry(second)["status"] == "posted"
-    assert _draft(app, first)["body"] != _draft(app, second)["body"]
+    assert "결과가 없습니다" in _draft(app, first)["body"]
+    assert "1건" in _draft(app, second)["body"]
+    assert SQL in app.engine.calls[0][0]
+    assert len(app.engine.calls) == 2
+    assert app.store.one("SELECT COUNT(*) n FROM audit WHERE action='query_plan_verified'")["n"] == 2
 
 
 def test_concurrent_same_static_question_converges_on_one_answer(app):

@@ -89,9 +89,38 @@ def _verified_whole_table_count(output, reads, question, report):
     return value
 
 
-def convert_unverified_live(output, reads, report=False, *, question=None):
+def _verified_business_count(output, reads, plan, report):
+    if plan is None or report or output['status'] != 'answered':
+        return None
+    verification = output['verification']
+    if verification['question_kind'] != 'current_state' or not set(verification['required']) <= {'knowledge', 'live'}:
+        return None
+    checks = [c for c in verification['checks'] if c['kind'] == 'live']
+    if len(checks) != 1 or sum('live' in r for r in reads.values()) != 1:
+        return None
+    check = checks[0]
+    receipt = reads.get(check['receipt'])
+    if not isinstance(receipt, ReadReceipt) or 'live' not in receipt:
+        return None
+    from .query_plans import sql_digest
+    meta = receipt.metadata
+    count = meta.get('complete_count')
+    if (meta.get('tool') != plan['tool'] or meta.get('query_sha256') != sql_digest(plan['sql'])
+        or meta.get('relations') != (plan['relation'].lower(),)
+        or output['sources'][check['source_index']]['location'] != plan['relation']
+        or type(count) is not int or count < 0):
+        return None
+    value = copy.deepcopy(output)
+    value['body'] = ('이번 BigQuery 조회에서는 결과가 없습니다. 잠시 후 다시 문의해 주세요.'
+                     if count == 0 else f"이번 BigQuery 조회 기준 {plan['scope']}는 {count:,}건입니다.")
+    return value
+
+
+def convert_unverified_live(output, reads, report=False, *, question=None, plan=None):
     """After receipt validation, render a proved count or hold unproved live data."""
     if output["status"] not in {"answered", "cannot_answer"}:
         return output
-    verified = _verified_whole_table_count(output, reads, question, report) if output["status"] == "answered" else None
+    verified = _verified_business_count(output, reads, plan, report)
+    if verified is None and plan is None:
+        verified = _verified_whole_table_count(output, reads, question, report) if output["status"] == "answered" else None
     return verified if verified is not None else _hold_unverified_live(output, reads)
