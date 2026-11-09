@@ -2,8 +2,8 @@
   "version": "0.8.26",
   "optionalBotRuntime": "0.1.23",
   "embeddedRuntimeVersion": "0.1.23",
-  "status": "PASS_LOCAL",
-  "publication": "PENDING",
+  "status": "PASS_RELEASE",
+  "publication": "PUBLISHED",
   "archive": ".tools/releases/0.8.26/Dougle_Skills_0.8.26.zip",
   "files": 57,
   "archiveBytes": 304517,
@@ -19,8 +19,8 @@
     "botTests": "PASS 1673, 2 expected failures",
     "ruff": "PASS",
     "prescribedChecks": "PASS",
-    "authenticatedDownload": "PENDING",
-    "ci": "PENDING"
+    "authenticatedDownload": "PASS byte-for-byte",
+    "ci": "PASS Python 3.12 and 3.13"
   },
   "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime",
   "tokenGoal": "PASS synthetic Codex 10 paired cases; 60.28% reduction, 0 observed factual errors/required omissions",

@@ -1,28 +1,27 @@
 {
-  "tag": "v0.8.25-skills-preview.1",
-  "source": "a185472436cfd45dc034496088ead9e5fcec9672",
-  "ci": "https://github.com/thisisnew/dougle/actions/runs/42525812913",
+  "tag": "v0.8.26-skills-preview.1",
+  "source": "dcc0c0e68a4d173a857f6c9c7a8dc1619079d791",
+  "ci": "https://github.com/thisisnew/dougle/actions/runs/42610759267",
   "ciStatus": "PASS",
   "authenticatedDownload": "PASS byte-for-byte",
   "anonymousDownload": "NOT_RUN",
   "assets": [
     {
-      "name": "Dougle_Skills_0.8.25.zip",
-      "bytes": 288299,
-      "sha256": "133c93f0230286c27219e7d7159e57a5858eae7d8a98a61fdb4294bcd3f9f639",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.25-skills-preview.1/Dougle_Skills_0.8.25.zip"
+      "name": "Dougle_Skills_0.8.26.zip",
+      "bytes": 304517,
+      "sha256": "dfd110c8ff790dc9c201f8058dbb029daa81fae8ca0ceb0d8d8e7c131d151729",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.26-skills-preview.1/Dougle_Skills_0.8.26.zip"
     },
     {
-      "name": "Dougle_Skills_0.8.25_SHA256SUMS",
+      "name": "Dougle_Skills_0.8.26_SHA256SUMS",
       "bytes": 91,
-      "sha256": "4220d1083726dd00f77584daba4e05780b68623cb4e9f07e16050a27661b9be6",
-      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.25-skills-preview.1/Dougle_Skills_0.8.25_SHA256SUMS"
+      "sha256": "5e2f0d578419b93fa3ccffdfb10f261699de4694f820e53a5af2688a52715ee4",
+      "url": "https://github.com/thisisnew/dougle/releases/download/v0.8.26-skills-preview.1/Dougle_Skills_0.8.26_SHA256SUMS"
     }
   ],
   "actualCompanySlack": "NOT_RUN on x86_64 development Mac without bot config or runtime",
-  "categorySourceRestriction": "NOT_INCLUDED",
+  "categorySourceRestriction": "DEFERRED by user",
   "ciRuns": [
-    42525812913,
-    42525797769
+    42610759267
   ]
 }
