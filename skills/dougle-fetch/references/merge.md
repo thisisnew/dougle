@@ -24,11 +24,24 @@ dependents; report the pending scope rather than guessing a mapping.
 
 ## 2. Compare records, not summaries
 
-Core = exact statement, applicability, conditions, exceptions, dependency IDs, provenance
-class (observed/reported/inferred), and explicit withdrawal/supersession state. Compare
-structured fields when present; otherwise compare the entire claim body conservatively.
-Only normalize CRLF to LF and field ordering. Do not normalize numbers, negation, units,
-identifiers, dates, code, casing, or rewrite paraphrases as equal. Unclear equality is unequal.
+Core = claim meaning: applicability, conditions, exceptions, dependency IDs, provenance
+class (observed/reported/inferred), and explicit withdrawal/supersession state, plus either
+the complete source-checked `Fact-v1` slots in records.md or the exact `Statement`.
+Use `Fact-v1` equality only when BOTH sides have complete blocks, the same qualified claim
+identity/lineage, every statement qualifier is represented, and the changed projection's
+statement and original evidence have been checked against its slots. For a remote claim
+whose original is unavailable, a previously validated synchronized base may establish that
+side's binding; otherwise use exact-statement comparison or preserve alternatives. A
+`Fact-v1` declaration, terminology map, similar wording, or model judgment by itself is
+not proof. A wording-only difference with equal verified cores keeps the existing stable
+portable statement (prefer B, then R) and retains the other wording in local history; it
+does not create a new business claim or a portable timestamp. If the wording adds a fact,
+condition, exception or uncertainty absent from the slots, the core is not equal.
+Compare structured fields when present; otherwise compare the entire claim body
+conservatively. Only normalize CRLF to LF and field ordering. Normalize an alias to its
+preferred term only with a verified scoped terminology mapping that preserves exact
+meaning. Do not normalize numbers, negation, units, identifiers, dates, code, casing,
+or unverified paraphrases. Unclear equality is unequal.
 
 Evidence is a separate set keyed by original source identity, revision/observation, locator
 and provenance. Equal cores may union evidence; conflicting evidence remains visibly
@@ -71,7 +84,7 @@ before this table, never widened automatically.
 
 ## 3. Preserve uncertainty and stable output
 
-Different IDs with exact same core AND proven shared lineage may reuse the saved mapping;
+Different IDs with equal verified core AND proven shared lineage may reuse the saved mapping;
 otherwise keep separate claims. Suspected duplicates/contradictions across IDs get related
 links and, when incompatible, an unresolved group. Never discard them on semantic similarity.
 This conservative rule deliberately prefers a possible duplicate over lost knowledge.

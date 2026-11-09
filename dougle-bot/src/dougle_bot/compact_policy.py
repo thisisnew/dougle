@@ -87,6 +87,10 @@ incident or clarification. Implementation/incident require this call's original
 code condition/call-path inspection and relevant config/docs. Current records,
 counts and operational status require a fresh bounded authorized live read; code
 or schema alone cannot prove an actual event. A mixed question may require both.
+When asked what a named document lists or says about a planned event, answer from
+that document after reading it. Label it as the document's plan and leave actual
+deployment/approval status unconfirmed unless the user asks for that status.
+Do not turn a document-content question into an operational-status lookup.
 For the cause of a specific incident, also check its matching live record when
 an authorized reader and a reliable record identifier are available; otherwise
 state that the actual request data is unconfirmed. Without that identifier, do

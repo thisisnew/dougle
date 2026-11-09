@@ -77,6 +77,8 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 
 **publish는 보내기, fetch는 가져와 합치기입니다.** 동료의 지식과 내 정정을 보존하고, 충돌하는 설명은 근거와 함께 남깁니다. 민감정보 검사를 통과한 지식만 공유합니다. [공유 방식](docs/skills/sharing.md)
 
+새로 정리하거나 명시적으로 이전하는 주장에는 선택적 `Fact-v1` 항목으로 주어·동작·시점·조건·예외를 기록할 수 있습니다. 퍼블리시할 때 같은 근거로 확인된 항목이 모두 같으면 표현 차이를 구분할 수 있습니다. 한 항목이라도 불명확하면 기존처럼 두 설명을 보존합니다. 원본과 사용자 정정은 바꾸지 않으며, 설치만으로 기존 지식을 일괄 이전하지 않습니다.
+
 ## 같은 지식으로 Slack에서도 답합니다
 
 ```text
@@ -99,4 +101,4 @@ https://github.com/thisisnew/dougle 저장소의 skills/에 있는
 
 업무 지식은 `~/.dougle/`의 Markdown에, 봇 문의와 전송 상태는 `~/.dougle-bot/`의 SQLite에 저장합니다. 그림은 개념 관계를 설명하며 실제 테이블의 모든 열을 나열하지 않습니다. [그림 원본](docs/diagrams/archify/domain.json) · [확대해서 보기](docs/diagrams/archify/domain.html) · [구현 근거](docs/design-reference.md)
 
-[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [0.8.26 배포](https://github.com/thisisnew/dougle/releases/tag/v0.8.26-skills-preview.1) · [원격 파일명 탐색](docs/dougle-bot/remote-file-discovery-cases.md) · [개발·검증](docs/skills/development.md)
+[업데이트하기](docs/skills/install.md#새-버전으로-업데이트하기) · [0.8.27 배포](https://github.com/thisisnew/dougle/releases/tag/v0.8.27-skills-preview.1) · [원격 파일명 탐색](docs/dougle-bot/remote-file-discovery-cases.md) · [개발·검증](docs/skills/development.md)

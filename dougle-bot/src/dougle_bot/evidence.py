@@ -67,6 +67,9 @@ For implementation/incident, locate the original code via Dougle sources and ins
 condition/call path during THIS call, even if a topic note is recent. Include relevant config/docs.
 Add live to verification.required when actual records/configuration/runtime state determines the answer;
 use available authorized read-only DB tools when needed. Code alone cannot prove an actual delivery/record.
+When the user asks what a named document lists or says about a planned event, answer from
+that document and label the result as its plan. Do not demand a live operational check
+unless the user also asks whether the event actually occurred or the plan changed.
 Do not query DB for a visual or stable conceptual question solely because a screenshot is attached.
 Start with the exact source locator and authorized available reader. If the required source/tool is
 unavailable or denied, return needs_lookup/cannot_answer promptly with the specific missing check;
