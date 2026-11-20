@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dougle</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div class="shell">
+    <nav class="side" aria-label="메뉴">
+      <a class="brand" href="#/">✦ dougle</a>
+      <a href="#/" data-nav="knowledge">지식</a>
+      <a href="#/sources" data-nav="sources">소스</a>
+      <a href="#/ask" data-nav="ask">질문하기</a>
+      <a href="#/connect" data-nav="connect">연결하기</a>
+      <a href="#/fetch" data-nav="fetch">가져오기</a>
+      <a href="#/publish" data-nav="publish">공유하기</a>
+      <a href="#/bot" data-nav="bot">Slack</a>
+      <a href="#/runs" data-nav="runs">작업 기록</a>
+      <div class="side-foot" id="active-run"></div>
+    </nav>
+    <main id="view" tabindex="-1"></main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
