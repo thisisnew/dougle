@@ -7,6 +7,7 @@
 | `skills/` | 정본 스킬과 참조 규칙 |
 | `plugins/dougle/` | Claude·Codex 플러그인 배포 사본 |
 | `dougle-bot/` | 선택형 Slack 봇과 테스트 |
+| `dougle-gui/` | 선택형 로컬 브라우저 GUI와 테스트 ([안내](../dougle-gui/README.md)) |
 | `scripts/` | 스킬·병합·문서·민감정보 검사 |
 | `docs/` | 사용법·설계·검증 근거 |
 

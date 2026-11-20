@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dougle-gui"
+version = "0.1.0"
+description = "Optional local browser GUI for Dougle knowledge skills"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+dougle-gui = "dougle_gui.main:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dougle_gui"]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP"]

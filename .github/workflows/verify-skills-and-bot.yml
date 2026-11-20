@@ -1,9 +1,9 @@
 name: Verify skills and optional bot
 on:
   push:
-    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/build-scenarios.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', 'scripts/check-large-package.mjs', 'scripts/test-publish-sensitive.mjs', 'scripts/test-publication.mjs', 'scripts/scenarios/**', 'scripts/benchmark-publish-sensitive.py', 'scripts/stress-publish-sensitive.py', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'dougle-gui/**', 'scripts/check-skills.mjs', 'scripts/build-scenarios.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', 'scripts/check-large-package.mjs', 'scripts/test-publish-sensitive.mjs', 'scripts/test-publication.mjs', 'scripts/scenarios/**', 'scripts/benchmark-publish-sensitive.py', 'scripts/stress-publish-sensitive.py', '.github/workflows/verify-skills-and-bot.yml']
   pull_request:
-    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'scripts/check-skills.mjs', 'scripts/build-scenarios.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', 'scripts/check-large-package.mjs', 'scripts/test-publish-sensitive.mjs', 'scripts/test-publication.mjs', 'scripts/scenarios/**', 'scripts/benchmark-publish-sensitive.py', 'scripts/stress-publish-sensitive.py', '.github/workflows/verify-skills-and-bot.yml']
+    paths: ['README.md', 'AGENTS.md', 'HANDOFF.md', 'docs/**', 'skills/**', 'plugins/dougle/**', 'dougle-bot/**', 'dougle-gui/**', 'scripts/check-skills.mjs', 'scripts/build-scenarios.mjs', 'scripts/check-sharing-merge.mjs', 'scripts/check-current-tree.mjs', 'scripts/check-large-package.mjs', 'scripts/test-publish-sensitive.mjs', 'scripts/test-publication.mjs', 'scripts/scenarios/**', 'scripts/benchmark-publish-sensitive.py', 'scripts/stress-publish-sensitive.py', '.github/workflows/verify-skills-and-bot.yml']
 permissions:
   contents: read
 jobs:
@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: python -m pip install ./dougle-bot pytest==9.2.0 ruff==0.17.4
+      - run: python -m pip install ./dougle-bot ./dougle-gui pytest==9.2.0 ruff==0.17.4
       - run: node scripts/check-skills.mjs
       - run: node scripts/check-sharing-merge.mjs
       - run: node scripts/test-publication.mjs
@@ -34,3 +34,5 @@ jobs:
       - run: python scripts/benchmark-publish-sensitive.py --counts 3 --output /tmp/dougle-scanner-smoke.json
       - run: python scripts/stress-publish-sensitive.py --files 3 --output /tmp/dougle-stress-smoke.json
       - run: pytest -q dougle-bot/tests
+      - run: ruff check dougle-gui
+      - run: pytest -q dougle-gui/tests
